@@ -53,7 +53,7 @@
   pain.add(new Box.Filler(d2,d2,d2));
   JPanel panel=new JPanel();
   panel.add(new JLabel("Size:"));
-  sizeSelector=new JTextField("48 ");
+  sizeSelector=new JTextField(" 48 ");
   sizeSelector.getDocument().addDocumentListener(new DocumentListener(){
     public void insertUpdate(    DocumentEvent e){
       update();
@@ -66,11 +66,6 @@
   }
 );
   panel.add(sizeSelector);
-  JLabel rec=new JLabel("(Recommended size for 3D use is 48 points)");
-  if (PdeBase.platform == PdeBase.MACOSX) {
-    rec.setFont(new Font("Dialog",Font.PLAIN,10));
-  }
-  panel.add(rec);
   smoothBox=new JCheckBox("Smooth");
   smoothBox.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -80,6 +75,15 @@
 );
   smoothBox.setSelected(smooth);
   panel.add(smoothBox);
+  allBox=new JCheckBox("All Characters");
+  allBox.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      all=allBox.isSelected();
+    }
+  }
+);
+  allBox.setSelected(all);
+  panel.add(allBox);
   pain.add(panel);
   JPanel filestuff=new JPanel();
   filestuff.add(new JLabel("Filename:"));
