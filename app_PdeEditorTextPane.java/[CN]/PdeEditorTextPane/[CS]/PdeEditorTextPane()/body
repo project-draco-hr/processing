@@ -1,9 +1,10 @@
 {
   document=new HighLightedDocument();
   setStyledDocument(document);
-  textPane=this;
   colorer=new Colorer();
-  colorer.start();
+  if (PdeBase.getBoolean("editor.syntax_coloring",false)) {
+    colorer.start();
+  }
   SimpleAttributeSet dstyle=new SimpleAttributeSet();
   StyleConstants.setFontFamily(dstyle,"Monospaced");
   StyleConstants.setFontSize(dstyle,12);

@@ -1,6 +1,14 @@
 {
   this.editor=editor;
   lineCount=PdeBase.getInteger("editor.console.lines",6);
+  maxLineCount=1000;
+  lines=new String[maxLineCount];
+  isError=new boolean[maxLineCount];
+  for (int i=0; i < maxLineCount; i++) {
+    lines[i]="";
+    isError[i]=false;
+  }
+  firstLine=0;
   if (systemOut == null) {
     systemOut=System.out;
     systemErr=System.err;
@@ -25,17 +33,7 @@
     }
     consoleOut=new PrintStream(new PdeEditorConsoleStream(this,false,stdoutFile));
     consoleErr=new PrintStream(new PdeEditorConsoleStream(this,true,stderrFile));
-    System.setOut(consoleOut);
-    System.setErr(consoleErr);
   }
-  maxLineCount=1000;
-  lines=new String[maxLineCount];
-  isError=new boolean[maxLineCount];
-  for (int i=0; i < maxLineCount; i++) {
-    lines[i]="";
-    isError[i]=false;
-  }
-  firstLine=0;
   addMouseListener(new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
       int x=e.getX();
