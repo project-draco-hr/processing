@@ -1,5 +1,6 @@
 {
   this.editor=editor;
+  maxLineCount=PdePreferences.getInteger("console.length");
   consoleTextPane=new JTextPane();
   consoleTextPane.setEditable(false);
   consoleDoc=consoleTextPane.getStyledDocument();
@@ -26,14 +27,12 @@
   StyleConstants.setItalic(errStyle,font.isItalic());
   consoleTextPane.setBackground(bgColor);
   this.setViewportView(consoleTextPane);
-  System.out.println("BLRHUHG");
   FontMetrics metrics=this.getFontMetrics(font);
   int height=metrics.getAscent() + metrics.getDescent();
   int lines=PdePreferences.getInteger("console.lines");
   int sizeFudge=6;
   setPreferredSize(new Dimension(1024,(height * lines) + sizeFudge));
   setMinimumSize(new Dimension(1024,(height * 4) + sizeFudge));
-  System.out.println("BLRHUHG 2");
   if (systemOut == null) {
     systemOut=System.out;
     systemErr=System.err;
@@ -50,27 +49,19 @@
  catch (    IOException e) {
       PdeBase.showWarning("Console Error","A problem occurred while trying to open the\n" + "files used to store the console output.",e);
     }
-    System.out.println("BLRHUHG 2b ");
     consoleOut=new PrintStream(new PdeEditorConsoleStream(this,false,stdoutFile));
-    System.out.println("BLRHUHG 2c " + consoleOut);
     consoleErr=new PrintStream(new PdeEditorConsoleStream(this,true,stderrFile));
-    System.out.println("BLRHUHG 2d " + consoleErr);
     if (PdePreferences.getBoolean("console")) {
-      System.out.println("BLRHUHG 2e " + consoleOut);
       try {
         System.setOut(consoleOut);
-        System.out.println("BLRHUHG 2f " + consoleErr);
         System.setErr(consoleErr);
-        System.out.println("BLRHUHG 2g " + consoleErr);
       }
  catch (      Exception e) {
-        e.printStackTrace();
+        e.printStackTrace(systemOut);
       }
     }
   }
-  System.out.println("BLRHUHG 3");
   if (PdeBase.platform == PdeBase.MACOSX) {
     setBorder(null);
   }
-  System.out.println("BLRHUHG 4");
 }
