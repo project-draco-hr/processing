@@ -1,11 +1,34 @@
 {
+  float hradius=w / 2f;
+  float vradius=h / 2f;
+  float centerX=x1 + hradius;
+  float centerY=y1 + vradius;
   int cAccuracy=(int)(4 + Math.sqrt(hradius + vradius) * 3);
   float inc=(float)SINCOS_LENGTH / cAccuracy;
   float val=0;
-  beginShape(POLYGON);
-  for (int i=0; i < cAccuracy; i++) {
-    vertex(x + cosLUT[(int)val] * hradius,y + sinLUT[(int)val] * vradius);
-    val+=inc;
+  if (fill) {
+    boolean savedStroke=stroke;
+    stroke=false;
+    beginShape(TRIANGLE_FAN);
+    vertex(centerX,centerY);
+    for (int i=0; i < cAccuracy; i++) {
+      vertex(centerX + cosLUT[(int)val] * hradius,centerY + sinLUT[(int)val] * vradius);
+      val+=inc;
+    }
+    vertex(centerX + cosLUT[0] * hradius,centerY + sinLUT[0] * vradius);
+    endShape();
+    stroke=savedStroke;
   }
-  endShape();
+  if (stroke) {
+    boolean savedFill=fill;
+    fill=false;
+    val=0;
+    beginShape(LINE_LOOP);
+    for (int i=0; i < cAccuracy; i++) {
+      vertex(centerX + cosLUT[(int)val] * hradius,centerY + sinLUT[(int)val] * vradius);
+      val+=inc;
+    }
+    endShape();
+    fill=savedFill;
+  }
 }
