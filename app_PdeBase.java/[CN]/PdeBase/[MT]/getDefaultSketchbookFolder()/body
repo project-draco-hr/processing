@@ -1,9 +1,10 @@
 {
+  File sketchbookFolder=null;
   if (platform == MACOSX) {
     try {
       MRJOSType domainDocuments=new MRJOSType("docs");
       File libraryFolder=MRJFileUtils.findFolder(domainDocuments);
-      return new File(libraryFolder,"Processing");
+      sketchbookFolder=new File(libraryFolder,"Processing");
     }
  catch (    FileNotFoundException e) {
       showError("sketch folder problem","Could not locate default sketch folder location.",e);
@@ -17,11 +18,11 @@
       String personalPath=localKey.getStringValue("Personal");
       topKey.closeKey();
       localKey.closeKey();
-      return new File(personalPath,"Processing");
+      sketchbookFolder=new File(personalPath,"Processing");
     }
  catch (    Exception e) {
       showError("Problem getting documents folder","Error getting the Processing sketchbook folder.",e);
     }
   }
-  return null;
+  return sketchbookFolder;
 }
