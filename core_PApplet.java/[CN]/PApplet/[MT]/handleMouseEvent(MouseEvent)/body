@@ -1,8 +1,15 @@
 {
+  pmouseX=emouseX;
+  pmouseY=emouseY;
   mouseX=event.getX();
   mouseY=event.getY();
   mouseEvent=event;
   mouseEventMethods.handle(new Object[]{event});
+  if (firstMouse) {
+    pmouseX=mouseX;
+    pmouseY=mouseY;
+    firstMouse=false;
+  }
 switch (event.getID()) {
 case MouseEvent.MOUSE_PRESSED:
     mousePressed=true;
@@ -22,4 +29,6 @@ case MouseEvent.MOUSE_MOVED:
 mouseMoved();
 break;
 }
+emouseX=mouseX;
+emouseY=mouseY;
 }
