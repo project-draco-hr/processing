@@ -1,0 +1,14 @@
+{
+  String externalized=url.toExternalForm();
+  if (externalized.startsWith("file:/") && !externalized.startsWith("file:///")) {
+    externalized="file:///" + url.getPath();
+  }
+  try {
+    DataRef urlRef=new DataRef(externalized);
+    movie=fromDataRef(urlRef);
+    init(parent,movie,ifps);
+  }
+ catch (  QTException e) {
+    e.printStackTrace();
+  }
+}

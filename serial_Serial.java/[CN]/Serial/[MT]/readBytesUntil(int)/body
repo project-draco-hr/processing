@@ -1,0 +1,20 @@
+{
+  if (bufferIndex == bufferLast)   return null;
+  byte what=(byte)interesting;
+synchronized (buffer) {
+    int found=-1;
+    for (int k=bufferIndex; k < bufferLast; k++) {
+      if (buffer[k] == what) {
+        found=k;
+        break;
+      }
+    }
+    if (found == -1)     return null;
+    int length=found - bufferIndex + 1;
+    byte outgoing[]=new byte[length];
+    System.arraycopy(buffer,bufferIndex,outgoing,0,length);
+    bufferIndex=0;
+    bufferLast=0;
+    return outgoing;
+  }
+}

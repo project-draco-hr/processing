@@ -1,0 +1,49 @@
+{
+  try {
+    if (firstFrame) {
+      movieRect=movie.getBox();
+      movieGraphics=new QDGraphics(movieRect);
+    }
+    Pict pict=movie.getPict(movie.getTime());
+    pict.draw(movieGraphics,movieRect);
+    PixMap pixmap=movieGraphics.getPixMap();
+    raw=pixmap.getPixelData();
+    if (firstFrame) {
+      int movieWidth=movieRect.getWidth();
+      int movieHeight=movieRect.getHeight();
+      int j=raw.getRowBytes() - movieWidth * 4;
+      int k=j / 4;
+      int dataWidth=movieWidth + k;
+      if (dataWidth != movieWidth) {
+        if (removeBorders) {
+          int bpixels[]=new int[dataWidth * movieHeight];
+          borderImage=new PImage(bpixels,dataWidth,movieHeight,RGB);
+        }
+ else {
+          movieWidth=dataWidth;
+        }
+      }
+      int vpixels[]=new int[movieWidth * movieHeight];
+      super.init(movieWidth,movieHeight,RGB);
+      firstFrame=false;
+    }
+    if (borderImage != null) {
+      raw.copyToArray(0,borderImage.pixels,0,borderImage.width * borderImage.height);
+      int borderIndex=0;
+      int targetIndex=0;
+      for (int i=0; i < height; i++) {
+        System.arraycopy(borderImage.pixels,borderIndex,pixels,targetIndex,width);
+        borderIndex+=borderImage.width;
+        targetIndex+=width;
+      }
+    }
+ else {
+      raw.copyToArray(0,pixels,0,width * height);
+    }
+    updatePixels();
+  }
+ catch (  QTException qte) {
+    qte.printStackTrace();
+    QTSession.close();
+  }
+}

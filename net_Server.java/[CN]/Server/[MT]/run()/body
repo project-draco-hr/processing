@@ -1,0 +1,29 @@
+{
+  while (Thread.currentThread() == thread) {
+    try {
+      Socket socket=server.accept();
+      Client client=new Client(parent,socket);
+synchronized (clients) {
+        clients.addElement(client);
+        if (serverEventMethod != null) {
+          try {
+            serverEventMethod.invoke(parent,new Object[]{this,client});
+          }
+ catch (          Exception e) {
+            System.err.println("error, disabling serverEvent() " + " for port " + port);
+            e.printStackTrace();
+            serverEventMethod=null;
+          }
+        }
+      }
+    }
+ catch (    IOException e) {
+      errorMessage("run",e);
+    }
+    try {
+      Thread.sleep(8);
+    }
+ catch (    InterruptedException ex) {
+    }
+  }
+}

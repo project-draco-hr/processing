@@ -1,0 +1,16 @@
+{
+synchronized (clients) {
+    int clientCount=clients.size();
+    int index=lastAvailable + 1;
+    if (index >= clientCount)     index=0;
+    for (int i=0; i < clientCount; i++) {
+      int which=(index + i) % clientCount;
+      Client client=(Client)clients.elementAt(which);
+      if (client.available() > 0) {
+        lastAvailable=which;
+        return client;
+      }
+    }
+  }
+  return null;
+}

@@ -1,0 +1,9 @@
+{
+  gl.glReadPixels(x,y,1,1,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,getset);
+  if (BIG_ENDIAN) {
+    return 0xff000000 | ((getset[0] >> 8) & 0x00ffffff);
+  }
+ else {
+    return 0xff000000 | ((getset[0] << 16) & 0xff0000) | (getset[0] & 0xff00)| ((getset[0] >> 16) & 0xff);
+  }
+}

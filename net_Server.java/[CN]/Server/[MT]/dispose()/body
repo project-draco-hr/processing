@@ -1,0 +1,19 @@
+{
+  try {
+    thread=null;
+    if (clients != null) {
+      Enumeration en=clients.elements();
+      while (en.hasMoreElements()) {
+        disconnect((Client)en.nextElement());
+      }
+      clients=null;
+    }
+    if (server != null) {
+      server.close();
+      server=null;
+    }
+  }
+ catch (  IOException e) {
+    errorMessage("stop",e);
+  }
+}

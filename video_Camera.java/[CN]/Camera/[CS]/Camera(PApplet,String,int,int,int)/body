@@ -1,0 +1,54 @@
+{
+  this.parent=parent;
+  this.name=name;
+  this.fps=fps;
+  try {
+    QDRect qdrect=new QDRect(requestWidth,requestHeight);
+    QDGraphics qdgraphics=new QDGraphics(qdrect);
+    capture=new SequenceGrabber();
+    capture.setGWorld(qdgraphics,null);
+    SGVideoChannel channel=new SGVideoChannel(capture);
+    channel.setBounds(qdrect);
+    channel.setUsage(2);
+    capture.startPreview();
+    PixMap pixmap=qdgraphics.getPixMap();
+    raw=pixmap.getPixelData();
+    if (name == null) {
+      channel.settingsDialog();
+    }
+ else     if (name.length() > 0) {
+      channel.setDevice(name);
+    }
+    dataRowBytes=raw.getRowBytes();
+    dataWidth=dataRowBytes / 4;
+    dataHeight=raw.getSize() / dataRowBytes;
+    if (dataWidth != requestWidth) {
+      crop=true;
+      cropX=0;
+      cropY=0;
+      cropW=requestWidth;
+      cropH=requestHeight;
+    }
+    super.init(requestWidth,requestHeight,RGB);
+    runner=new Thread(this);
+    runner.start();
+    parent.registerDispose(this);
+    try {
+      cameraEventMethod=parent.getClass().getMethod("cameraEvent",new Class[]{Camera.class});
+    }
+ catch (    Exception e) {
+    }
+  }
+ catch (  StdQTException qte) {
+    int errorCode=qte.errorCode();
+    if (errorCode == -9405) {
+      parent.die("The camera (or VDIG) is not " + "installed correctly (see readme.txt).",qte);
+    }
+ else {
+      parent.die("Error while setting up Camera",qte);
+    }
+  }
+catch (  Exception e) {
+    parent.die("Error while setting up Camera",e);
+  }
+}

@@ -1,0 +1,68 @@
+{
+  super.init(1,1,RGB);
+  URL url=null;
+  this.filename=filename;
+  if (filename.startsWith("http://")) {
+    try {
+      url=new URL(filename);
+      DataRef urlRef=new DataRef(url.toExternalForm());
+      movie=fromDataRef(urlRef);
+      init(parent,movie,ifps);
+      return;
+    }
+ catch (    QTException qte) {
+      qte.printStackTrace();
+      return;
+    }
+catch (    MalformedURLException e) {
+      e.printStackTrace();
+      return;
+    }
+  }
+  url=getClass().getResource(filename);
+  if (url != null) {
+    init(parent,url,ifps);
+    return;
+  }
+  url=getClass().getResource("data/" + filename);
+  if (url != null) {
+    init(parent,url,ifps);
+    return;
+  }
+  try {
+    try {
+      String location=parent.folder + File.separator + "data";
+      File file=new File(location,filename);
+      if (file.exists()) {
+        movie=fromDataRef(new DataRef(new QTFile(file)));
+        init(parent,movie,ifps);
+        return;
+      }
+    }
+ catch (    QTException e) {
+    }
+    try {
+      File file=new File("data",filename);
+      if (file.exists()) {
+        movie=fromDataRef(new DataRef(new QTFile(file)));
+        init(parent,movie,ifps);
+        return;
+      }
+    }
+ catch (    QTException e2) {
+    }
+    try {
+      File file=new File(filename);
+      if (file.exists()) {
+        movie=fromDataRef(new DataRef(new QTFile(file)));
+        init(parent,movie,ifps);
+        return;
+      }
+    }
+ catch (    QTException e1) {
+    }
+  }
+ catch (  SecurityException se) {
+  }
+  parent.die("Could not find movie file " + filename,null);
+}
