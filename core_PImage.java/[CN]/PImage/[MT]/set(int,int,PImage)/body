@@ -1,0 +1,33 @@
+{
+  int x2=x1 + image.width;
+  int y2=y1 + image.height;
+  if ((x2 < 0) || (y2 < 0))   return;
+  int ix1=0;
+  int iy1=0;
+  int ix2=image.width;
+  int iy2=image.height;
+  if (x1 < 0) {
+    ix1+=-x1;
+    x1=0;
+  }
+  if (y1 < 0) {
+    iy1+=-y1;
+    y1=0;
+  }
+  if (x2 >= width) {
+    ix2-=x2 - width;
+    x2=width;
+  }
+  if (y2 >= height) {
+    iy2-=y2 - height;
+    y2=height;
+  }
+  int src=iy1 * image.width + ix1;
+  int dest=y1 * width + x1;
+  int len=x2 - x1;
+  for (int y=y1; y < y2; y++) {
+    System.arraycopy(image.pixels,src,pixels,dest,len);
+    src+=len;
+    dest+=len;
+  }
+}
