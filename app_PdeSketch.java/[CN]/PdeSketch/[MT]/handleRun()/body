@@ -5,7 +5,13 @@
   }
   cleanup();
   if (dataFolder.exists()) {
-    PdeBase.copyDir(dataFolder,new File(tempBuildFolder,"data"));
+    try {
+      PdeBase.copyDir(dataFolder,new File(tempBuildFolder,"data"));
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+      throw new PdeException("Problem copying files from data folder");
+    }
   }
   String suggestedClassName=("Temporary_" + String.valueOf((int)(Math.random() * 10000)) + "_"+ String.valueOf((int)(Math.random() * 10000)));
   mainClassName=build(TEMP_BUILD_PATH,suggestedClassName);

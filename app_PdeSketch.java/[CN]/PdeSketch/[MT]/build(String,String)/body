@@ -16,13 +16,19 @@
   for (int i=0; i < codeCount; i++) {
     if (code[i].flavor == JAVA) {
       String filename=code[i].name + ".java";
-      PdeBase.saveFile(code[i].program,new File(buildPath,filename));
+      try {
+        PdeBase.saveFile(code[i].program,new File(buildPath,filename));
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+        throw new PdeException("Problem moving " + filename + " to the build folder");
+      }
       code[i].preprocName=filename;
     }
  else     if (code[i].flavor == PDE) {
       PdePreprocessor preprocessor=new PdePreprocessor();
       try {
-        String className=preprocessor.write(code[i].program,buildPath,(i == 0) ? suggestedClassName : null,additionalImports);
+        String className=preprocessor.write(code[i].program,buildPath,(i == 0) ? suggestedClassName : null,importPackageList);
         if (className == null) {
           System.err.println("class could not be determined for " + code[i].name + " hopefully an error has "+ "already been reported.");
           return null;
@@ -44,7 +50,13 @@ catch (      antlr.TokenStreamRecognitionException tsre) {
         PatternMatcher matcher=new Perl5Matcher();
         PatternCompiler compiler=new Perl5Compiler();
         String mess="^line (\\d+):(\\d+):\\s";
-        Pattern pattern=compiler.compile(mess);
+        Pattern pattern=null;
+        try {
+          pattern=compiler.compile(mess);
+        }
+ catch (        MalformedPatternException e) {
+          PdeBase.showWarning("Internal Problem","An internal error occurred while trying\n" + "to compile the sketch. Please report\n" + "this online at http://processing.org/bugs",e);
+        }
         PatternMatcherInput input=new PatternMatcherInput(tsre.toString());
         if (matcher.contains(input,pattern)) {
           MatchResult result=matcher.getMatch();

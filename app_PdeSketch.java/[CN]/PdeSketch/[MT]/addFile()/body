@@ -18,5 +18,10 @@
     if (!dataFolder.exists())     dataFolder.mkdirs();
     destFile=new File(dataFolder,filename);
   }
-  PdeBase.copyFile(sourceFile,destFile);
+  try {
+    PdeBase.copyFile(sourceFile,destFile);
+  }
+ catch (  IOException e) {
+    PdeBase.showWarning("Error adding file","Could not add '" + filename + "' to the sketch.",e);
+  }
 }
