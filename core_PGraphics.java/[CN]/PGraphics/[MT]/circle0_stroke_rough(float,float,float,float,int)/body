@@ -1,0 +1,25 @@
+{
+  int xc=(int)(xcf + 0.5f);
+  int yc=(int)(ycf + 0.5f);
+  int r=(int)(rf + 0.5f);
+  int x=0, y=r, u=1, v=2 * r - 1, E=0;
+  while (x < y) {
+    point0(xc + x,yc + y,z,color);
+    point0(xc + y,yc - x,z,color);
+    point0(xc - x,yc - y,z,color);
+    point0(xc - y,yc + x,z,color);
+    x++;
+    E+=u;
+    u+=2;
+    if (v < 2 * E) {
+      y--;
+      E-=v;
+      v-=2;
+    }
+    if (x > y)     break;
+    point0(xc + y,yc + x,z,color);
+    point0(xc + x,yc - y,z,color);
+    point0(xc - y,yc - x,z,color);
+    point0(xc - x,yc + y,z,color);
+  }
+}

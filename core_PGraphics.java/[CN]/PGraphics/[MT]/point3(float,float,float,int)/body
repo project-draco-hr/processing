@@ -1,0 +1,15 @@
+{
+  float x1=screenX(x - 0.5f,y - 0.5f,z);
+  float y1=screenY(x - 0.5f,y - 0.5f,z);
+  float x2=screenX(x + 0.5f,y + 0.5f,z);
+  float y2=screenY(x + 0.5f,y + 0.5f,z);
+  float weight=(abs(x2 - x1) + abs(y2 - y1)) / 2f;
+  if (weight < 1.5f) {
+    int xx=(int)((x1 + x2) / 2f);
+    int yy=(int)((y1 + y2) / 2f);
+    point0(xx,yy,z,color);
+    zbuffer[yy * width + xx]=screenZ(x,y,z);
+  }
+ else {
+  }
+}
