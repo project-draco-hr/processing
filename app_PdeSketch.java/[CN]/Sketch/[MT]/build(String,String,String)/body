@@ -1,17 +1,15 @@
 {
   externalRuntime=false;
   externalPaths=null;
+  String externalImports[]=null;
   externalCode=new File(sketchDir,"code");
   if (externalCode.exists()) {
     externalRuntime=true;
-    externalPaths=PdeCompiler.includeFolder(externalCode);
+    externalPaths=PdeCompiler.contentsToClassPath(externalCode);
+    externalImports=PdeCompiler.magicImports(externalPaths);
   }
  else {
     externalCode=null;
-  }
-  String imports[]=null;
-  if (externalCode != null) {
-    imports=PdeCompiler.magicImports(externalPaths);
   }
   PdePreprocessor preprocessor=null;
   preprocessor=new PdePreprocessor(program,buildPath);
