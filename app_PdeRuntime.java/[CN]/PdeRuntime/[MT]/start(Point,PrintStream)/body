@@ -6,7 +6,7 @@
   int y1=parentLoc.y;
   try {
     if (externalRuntime) {
-      String command[]=new String[]{"java","-cp",externalPaths,"BApplet",className};
+      String command[]=new String[]{"java","-cp",externalPaths,"BApplet","--location=" + x1 + ","+ y1,className};
       process=Runtime.getRuntime().exec(command);
       new PdeMessageSiphon(process.getInputStream(),this);
       new PdeMessageSiphon(process.getErrorStream(),this);
@@ -82,25 +82,25 @@
       }
  else {
         Insets insets=window.getInsets();
-        int mw=PdeBase.getInteger("run.window.width.minimum",120);
-        int mh=PdeBase.getInteger("run.window.height.minimum",120);
-        int ww=Math.max(applet.width,mw) + insets.left + insets.right;
-        int wh=Math.max(applet.height,mh) + insets.top + insets.bottom;
-        if (x1 - ww > 10) {
-          window.setBounds(x1 - ww,y1,ww,wh);
+        int minW=PdeBase.getInteger("run.window.width.minimum",120);
+        int minH=PdeBase.getInteger("run.window.height.minimum",120);
+        int windowW=Math.max(applet.width,minW) + insets.left + insets.right;
+        int windowH=Math.max(applet.height,minH) + insets.top + insets.bottom;
+        if (x1 - windowW > 10) {
+          window.setBounds(x1 - windowW,y1,windowW,windowH);
         }
  else {
           x1=parentLoc.x + PdeEditor.GRID_SIZE * 2;
           y1=parentLoc.y + PdeEditor.GRID_SIZE * 2;
-          if ((x1 + ww > screen.width - PdeEditor.GRID_SIZE) || (y1 + wh > screen.height - PdeEditor.GRID_SIZE)) {
-            x1=(screen.width - ww) / 2;
-            y1=(screen.height - wh) / 2;
+          if ((x1 + windowW > screen.width - PdeEditor.GRID_SIZE) || (y1 + windowH > screen.height - PdeEditor.GRID_SIZE)) {
+            x1=(screen.width - windowW) / 2;
+            y1=(screen.height - windowH) / 2;
           }
-          window.setBounds(x1,y1,ww,wh);
+          window.setBounds(x1,y1,windowW,windowH);
         }
         Color windowBgColor=PdeBase.getColor("run.window.bgcolor",SystemColor.control);
         window.setBackground(windowBgColor);
-        applet.setBounds((ww - applet.width) / 2,insets.top + ((wh - insets.top - insets.bottom) - applet.height) / 2,ww,wh);
+        applet.setBounds((windowW - applet.width) / 2,insets.top + ((windowH - insets.top - insets.bottom) - applet.height) / 2,windowW,windowH);
       }
       applet.setVisible(true);
       if (windowLocation != null) {
