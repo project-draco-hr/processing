@@ -1,60 +1,29 @@
 {
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   int windowX=-1, windowY=0, windowW=0, windowH=0;
-  Properties skprops=new Properties();
-  try {
-    if (PdeBase.platform == PdeBase.MACOSX) {
-      skprops.load(new FileInputStream("lib/sketch.properties"));
+  windowX=Integer.parseInt(skprops.getProperty("last.window.x","-1"));
+  windowY=Integer.parseInt(skprops.getProperty("last.window.y","-1"));
+  windowW=Integer.parseInt(skprops.getProperty("last.window.w","-1"));
+  windowH=Integer.parseInt(skprops.getProperty("last.window.h","-1"));
+  int screenW=Integer.parseInt(skprops.getProperty("last.screen.w","-1"));
+  int screenH=Integer.parseInt(skprops.getProperty("last.screen.h","-1"));
+  if ((screen.width != screenW) || (screen.height != screenH)) {
+    windowX=-1;
+  }
+  if (windowX != -1) {
+    String dividerLocation=skprops.getProperty("last.divider.location");
+    if (dividerLocation != null) {
+      splitPane.setDividerLocation(Integer.parseInt(dividerLocation));
     }
- else     if (PdeBase.platform == PdeBase.MACOS9) {
-      skprops.load(new FileInputStream("lib/sketch.properties"));
-    }
+  }
+  String path=skprops.getProperty("last.sketch.directory");
+  String name=skprops.getProperty("last.sketch.name");
+  if (new File(path + File.separator + name+ ".pde").exists()) {
+    editor.skOpen(path,name);
+  }
  else {
-      skprops.load(getClass().getResource("sketch.properties").openStream());
-    }
-    windowX=Integer.parseInt(skprops.getProperty("window.x","-1"));
-    windowY=Integer.parseInt(skprops.getProperty("window.y","-1"));
-    windowW=Integer.parseInt(skprops.getProperty("window.w","-1"));
-    windowH=Integer.parseInt(skprops.getProperty("window.h","-1"));
-    int screenW=Integer.parseInt(skprops.getProperty("screen.w","-1"));
-    int screenH=Integer.parseInt(skprops.getProperty("screen.h","-1"));
-    if ((screen.width != screenW) || (screen.height != screenH)) {
-      windowX=-1;
-    }
-    if (windowX != -1) {
-      String dividerLocation=skprops.getProperty("editor.divider.location");
-      if (dividerLocation != null) {
-        splitPane.setDividerLocation(Integer.parseInt(dividerLocation));
-      }
-    }
-    String name=skprops.getProperty("sketch.name");
-    String path=skprops.getProperty("sketch.directory");
-    String what=path + File.separator + name+ ".pde";
-    if (new File(what).exists()) {
-      userName=user;
-      skOpen(path,name);
-    }
- else {
-      userName="default";
-      skNew();
-    }
-    String serialPort=skprops.getProperty("serial.port");
-    if (serialPort != null) {
-      properties.put("serial.port",serialPort);
-    }
-    boolean ee=new Boolean(skprops.getProperty("editor.external","false")).booleanValue();
-    setExternalEditor(ee);
+    editor.skNew();
   }
- catch (  Exception e) {
-    firstTime=true;
-    userName="default";
-    skNew();
-  }
-  if (windowX == -1) {
-    windowW=PdePreferences.getInteger("window.width",500);
-    windowH=PdePreferences.getInteger("window.height",500);
-    windowX=(screen.width - windowW) / 2;
-    windowY=(screen.height - windowH) / 2;
-  }
-  base.setBounds(windowX,windowY,windowW,windowH);
+  firstTime=true;
+  skNew();
 }
