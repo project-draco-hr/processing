@@ -43,6 +43,21 @@
       if (description.indexOf(hasLoop) != -1) {
         description="Rename loop() to draw() in Processing 0070 and higher";
       }
+      String constructorProblem="No applicable overload was found for a constructor of type";
+      if (description.indexOf(constructorProblem) != -1) {
+        int nextSentence=description.indexOf("\".") + 3;
+        description=description.substring(nextSentence);
+      }
+      String overloadProblem="No applicable overload";
+      if (description.indexOf(overloadProblem) != -1) {
+        int nextSentence=description.indexOf("\".") + 3;
+        description=description.substring(nextSentence);
+      }
+      String classpathProblem="You need to modify your classpath";
+      if (description.indexOf(classpathProblem) != -1) {
+        int nextSentence=description.indexOf(". Package") + 2;
+        description=description.substring(nextSentence,description.indexOf(':')) + " the code folder or in any libraries.";
+      }
       exception=new PdeException(description,fileIndex,lineNumber - 1,-1);
     }
  else {
