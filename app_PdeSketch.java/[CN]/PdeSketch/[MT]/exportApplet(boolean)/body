@@ -1,2 +1,123 @@
 {
+  File appletDir=new File(directory,"applet");
+  boolean writeHtml=true;
+  if (appletDir.exists()) {
+    File htmlFile=new File(appletDir,"index.html");
+    if (htmlFile.exists() && !replaceHtml) {
+      writeHtml=false;
+    }
+  }
+ else {
+    appletDir.mkdirs();
+  }
+  String foundName=build(name,appletDir.getPath());
+  if (foundName == null)   return false;
+  if (!name.equals(foundName)) {
+    PdeBase.showWarning("Error during export","Sketch name is " + name + " but the sketch\n"+ "name in the code was "+ foundName);
+    return false;
+  }
+  if (writeHtml) {
+    int wide=BApplet.DEFAULT_WIDTH;
+    int high=BApplet.DEFAULT_HEIGHT;
+    PatternMatcher matcher=new Perl5Matcher();
+    PatternCompiler compiler=new Perl5Compiler();
+    String sizing="[\\s\\;]size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\S+)\\s*\\);";
+    Pattern pattern=compiler.compile(sizing);
+    PatternMatcherInput input=new PatternMatcherInput(" " + program);
+    if (matcher.contains(input,pattern)) {
+      MatchResult result=matcher.getMatch();
+      try {
+        wide=Integer.parseInt(result.group(1).toString());
+        high=Integer.parseInt(result.group(2).toString());
+      }
+ catch (      NumberFormatException e) {
+        final String message="The size of this applet could not automatically be\n" + "determined from your code. You'll have to edit the\n" + "HTML file to set the size of the applet.";
+        PdeBase.showWarning("Could not find applet size",message,null);
+      }
+    }
+    StringBuffer sources=new StringBuffer();
+    for (int i=0; i < codeCount; i++) {
+      sources.append("<a href=\'" + code[i].file.getName() + "\">"+ code[i].name+ "</a> ");
+    }
+    File htmlOutputFile=new File(appletDir,"index.html");
+    FileOutputStream fos=new FileOutputStream(htmlOutputFile);
+    PrintStream ps=new PrintStream(fos);
+    InputStream is=PdeBase.getStream("applet.html");
+    BufferedReader reader=new BufferedReader(new InputStreamReader(is));
+    String line=null;
+    while ((line=reader.readLine()) != null) {
+      if (line.indexOf("@@") != -1) {
+        StringBuffer sb=new StringBuffer(line);
+        int index=0;
+        while ((index=sb.indexOf("@@sketch@@")) != -1) {
+          sb.replace(index,index + "@@sketch@@".length(),name);
+        }
+        while ((index=sb.indexOf("@@source@@")) != -1) {
+          sb.replace(index,index + "@@source@@".length(),sources.toString());
+        }
+        while ((index=sb.indexOf("@@archive@@")) != -1) {
+          sb.replace(index,index + "@@archive@@".length(),name + ".jar");
+        }
+        while ((index=sb.indexOf("@@width@@")) != -1) {
+          sb.replace(index,index + "@@width@@".length(),String.valueOf(wide));
+        }
+        while ((index=sb.indexOf("@@height@@")) != -1) {
+          sb.replace(index,index + "@@height@@".length(),String.valueOf(wide));
+        }
+        line=sb.toString();
+      }
+      ps.println(line);
+    }
+    reader.close();
+    ps.flush();
+    ps.close();
+  }
+  for (int i=0; i < codeCount; i++) {
+    PdeBase.copyFile(code[i].file,new File(appletDir,code[i].file.getName()));
+  }
+  FileOutputStream zipOutputFile=new FileOutputStream(new File(appletDir,name + ".jar"));
+  ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
+  ZipEntry entry;
+  File codeFolder=new File(sketchDir,"code");
+  if (codeFolder.exists()) {
+    String includes=PdeCompiler.contentsToClassPath(codeFolder);
+    packClassPathIntoZipFile(includes,zos);
+  }
+  String jdkVersionStr=PdePreferences.get("compiler.jdk_version");
+  String bagelJar="lib/export11.jar";
+  if (jdkVersion.equals("1.3") || jdkVersion.equals("1.4")) {
+    bagelJar="lib/export13.jar";
+  }
+  packClassPathIntoZipFile(bagelJar);
+  if (dataFolder.exists()) {
+    String dataFiles[]=dataFolder.list();
+    for (int i=0; i < dataFiles.length; i++) {
+      if (dataFiles[i].charAt(0) == '.')       continue;
+      entry=new ZipEntry(dataFiles[i]);
+      zos.putNextEntry(entry);
+      zos.write(PdeBase.grabFile(new File(dataFolder,dataFiles[i])));
+      zos.closeEntry();
+    }
+  }
+  String classfiles[]=appletDir.list();
+  for (int i=0; i < classfiles.length; i++) {
+    if (classfiles[i].endsWith(".class")) {
+      entry=new ZipEntry(classfiles[i]);
+      zos.putNextEntry(entry);
+      zos.write(PdeBase.grabFile(new File(appletDir,classfiles[i])));
+      zos.closeEntry();
+    }
+  }
+  for (int i=0; i < classfiles.length; i++) {
+    if (classfiles[i].endsWith(".class")) {
+      File deadguy=new File(appletDir,classfiles[i]);
+      if (!deadguy.delete()) {
+        PdeBase.showWarning("Could not delete",classfiles[i] + " could not \n" + "be deleted from the applet folder.  \n"+ "You'll need to remove it by hand.",null);
+      }
+    }
+  }
+  zos.flush();
+  zos.close();
+  PdeBase.openFolder(appletDir);
+  return true;
 }

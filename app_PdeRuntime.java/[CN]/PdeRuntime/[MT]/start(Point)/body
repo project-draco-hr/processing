@@ -6,7 +6,7 @@
   int y1=parentLoc.y;
   try {
     if (sketch.externalRuntime) {
-      String location=(windowLocation != null) ? (BApplet.EXACT_LOCATION + windowLocation.x + ","+ windowLocation.y) : (x1 + "," + y1);
+      String location=(windowLocation != null) ? (BApplet.EXTERNAL_EXACT_LOCATION + windowLocation.x + ","+ windowLocation.y) : (x1 + "," + y1);
       String command[]=new String[]{"java","-Djava.library.path=" + sketch.libraryPath,"-cp",sketch.classPath,"BApplet",BApplet.EXTERNAL_FLAG + location,sketch.mainClassName};
       process=Runtime.getRuntime().exec(command);
       new SystemOutSiphon(process.getInputStream());
@@ -14,7 +14,7 @@
       processOutput=process.getOutputStream();
     }
  else {
-      Class c=Class.forName(className);
+      Class c=Class.forName(sketch.mainClassName);
       applet=(BApplet)c.newInstance();
       applet.leechErr=leechErr;
       applet.init();
