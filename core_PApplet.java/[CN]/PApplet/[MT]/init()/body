@@ -3,6 +3,7 @@
   addMouseListener(this);
   addMouseMotionListener(this);
   addKeyListener(this);
+  addFocusListener(this);
   millisOffset=System.currentTimeMillis();
   finished=false;
   drawn=false;
@@ -15,4 +16,11 @@
   this.width=g.width;
   this.height=g.height;
   g.applet=this;
+  try {
+    getAppletContext();
+    online=true;
+  }
+ catch (  NullPointerException e) {
+    online=false;
+  }
 }
