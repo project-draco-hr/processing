@@ -1,6 +1,12 @@
 {
   if (g == null) {
-    return 0xff000000 | ((x & 0xff) << 16) | ((y & 0xff) << 8)| (z & 0xff);
+    if (x > 255)     x=255;
+ else     if (x < 0)     x=0;
+    if (y > 255)     y=255;
+ else     if (y < 0)     y=0;
+    if (z > 255)     z=255;
+ else     if (z < 0)     z=0;
+    return 0xff000000 | (x << 16) | (y << 8)| z;
   }
   return g.color(x,y,z);
 }

@@ -1,7 +1,9 @@
 {
   if (g == null) {
-    gray&=0xff;
-    alpha&=0xff;
+    if (gray > 255)     gray=255;
+ else     if (gray < 0)     gray=0;
+    if (alpha > 255)     alpha=255;
+ else     if (alpha < 0)     alpha=0;
     return (alpha << 24) | (gray << 16) | (gray << 8)| gray;
   }
   return g.color(gray,alpha);
