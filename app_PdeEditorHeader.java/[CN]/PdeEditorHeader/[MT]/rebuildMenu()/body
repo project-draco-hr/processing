@@ -4,11 +4,15 @@
   }
  else {
     menu=new JMenu();
-    popup=menu.getPopUp();
+    popup=menu.getPopupMenu();
     add(popup);
     popup.addPopupMenuListener(new PopupMenuListener(){
       public void popupMenuCanceled(      PopupMenuEvent e){
         repaint();
+      }
+      public void popupMenuWillBecomeInvisible(      PopupMenuEvent e){
+      }
+      public void popupMenuWillBecomeVisible(      PopupMenuEvent e){
       }
     }
 );
@@ -81,8 +85,8 @@
     }
   }
 ;
-  for (int i=0; i < fileCount; i++) {
-    item=new JMenuItem(names[i]);
+  for (int i=0; i < sketch.codeCount; i++) {
+    item=new JMenuItem(sketch.code[i].name);
     item.addActionListener(jumpListener);
     menu.add(item);
   }
