@@ -1,0 +1,13 @@
+{
+  String command[]=new String[]{"jikes","+E","-d",buildPath,buildPath + File.separator + className+ ".java"};
+  int result;
+  try {
+    Process process=Runtime.getRuntime().exec(command);
+    new PdeMessageSiphon(process.getInputStream(),process.getErrorStream(),this);
+    result=process.waitFor();
+  }
+ catch (  Exception e) {
+    result=-1;
+  }
+  return result == 0 ? true : false;
+}

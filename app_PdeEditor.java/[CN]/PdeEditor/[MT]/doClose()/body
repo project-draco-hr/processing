@@ -4,7 +4,7 @@
   }
  else {
     try {
-      appletLocation=engine.window.getLocation();
+      appletLocation=pdeRuntime.window.getLocation();
     }
  catch (    NullPointerException e) {
     }
@@ -13,9 +13,14 @@
     doStop();
   }
   try {
-    engine.close();
-    engine=null;
+    if (pdeRuntime != null) {
+      pdeRuntime.close();
+      pdeRuntime=null;
+    }
   }
  catch (  Exception e) {
+  }
+  if (buildPath != null) {
+    cleanTempFiles(buildPath);
   }
 }

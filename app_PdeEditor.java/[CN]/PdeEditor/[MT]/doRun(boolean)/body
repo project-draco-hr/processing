@@ -15,21 +15,50 @@
     }
     String program=textarea.getText();
     makeHistory(program,RUN);
-    String buildPath="lib" + File.separator + "build";
+    buildPath="lib" + File.separator + "build";
     File buildDir=new File(buildPath);
-    if (!buildDir.exists())     buildDir.mkdirs();
+    if (!buildDir.exists()) {
+      buildDir.mkdirs();
+    }
     String dataPath=sketchFile.getParent() + File.separator + "data";
-    engine=new KjcEngine(this,program,buildPath,dataPath);
-    engine.start(presenting ? presentLocation : appletLocation);
-    watcher=new RunButtonWatcher();
+    if (dataPath != null) {
+      File dataDir=new File(dataPath);
+      if (dataDir.exists()) {
+        PdeEditor.copyDir(dataDir,buildDir);
+      }
+    }
+    int numero1=(int)(Math.random() * 10000);
+    int numero2=(int)(Math.random() * 10000);
+    String className=TEMP_CLASS + "_" + numero1+ "_"+ numero2;
+    PdePreprocessor preprocessorOro=new PdePreprocessorOro(program,buildPath);
+    className=preprocessorOro.writeJava(className,true);
+    PdeCompiler compilerKjc=new PdeCompilerKjc(buildPath,className,this);
+    messageStream=new PdeMessageStream(this,compilerKjc);
+    leechErr=new PrintStream(messageStream);
+    boolean result=compilerKjc.compileJava(leechErr);
+    if (result) {
+      pdeRuntime=new PdeRuntime(this,className);
+      messageStream.setMessageConsumer(pdeRuntime);
+      pdeRuntime.start(presenting ? presentLocation : appletLocation,leechErr);
+      watcher=new RunButtonWatcher();
+    }
+ else {
+      cleanTempFiles(buildPath);
+    }
   }
  catch (  PdeException e) {
-    engine.stop();
+    if (pdeRuntime != null) {
+      pdeRuntime.stop();
+    }
+    cleanTempFiles(buildPath);
     e.printStackTrace();
     error(e);
   }
 catch (  Exception e) {
     e.printStackTrace();
-    engine.stop();
+    if (pdeRuntime != null) {
+      pdeRuntime.stop();
+    }
+    cleanTempFiles(buildPath);
   }
 }

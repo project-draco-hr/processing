@@ -1,0 +1,38 @@
+{
+  if (newMessage) {
+    exception=new PdeException(s);
+    newMessage=false;
+    messageLineCount=0;
+  }
+ else {
+    messageLineCount++;
+    int index=s.indexOf(className + ".java");
+    if (index != -1) {
+      int len=(className + ".java").length();
+      String lineNumberStr=s.substring(index + len + 1);
+      index=lineNumberStr.indexOf(')');
+      lineNumberStr=lineNumberStr.substring(0,index);
+      try {
+        exception.line=Integer.parseInt(lineNumberStr) - 1;
+        editor.error(exception);
+      }
+ catch (      NumberFormatException e) {
+        e.printStackTrace();
+      }
+    }
+ else     if ((index=s.indexOf(className + ".class")) != -1) {
+      String functionStr=s.substring(index + (className + ".class").length() + 1);
+      index=functionStr.indexOf('(');
+      if (index != -1) {
+        functionStr=functionStr.substring(0,index);
+      }
+      exception=new PdeException(exception.getMessage() + " inside " + functionStr+ "() "+ "[add Compiler.disable() to setup()]");
+      editor.error(exception);
+    }
+ else     if (messageLineCount > 5) {
+      messageLineCount=-100;
+      exception=new PdeException(exception.getMessage());
+      editor.error(exception);
+    }
+  }
+}
