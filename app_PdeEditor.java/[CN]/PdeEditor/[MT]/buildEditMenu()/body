@@ -52,7 +52,12 @@
   item=newMenuItem("Find...",'F');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      find();
+      if (find == null) {
+        find=new PdeEditorFind(PdeEditor.this);
+      }
+ else {
+        find.show();
+      }
     }
   }
 );
@@ -60,7 +65,7 @@
   item=newMenuItem("Find Next",'G');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      findNext();
+      if (find != null)       find.find();
     }
   }
 );

@@ -1,11 +1,6 @@
 {
   try {
-    if ((PdeBase.platform == PdeBase.MACOSX) || (PdeBase.platform == PdeBase.MACOS9)) {
-      load(new FileInputStream("lib/pde.properties"));
-    }
- else {
-      load(getClass().getResource("pde.properties").openStream());
-    }
+    load(PdeBase.getStream("pde.properties"));
   }
  catch (  Exception e) {
     showError(null,"Could not read default settings.\n" + "You'll need to reinstall Processing.",e);
@@ -35,7 +30,7 @@
       load(new FileInputStream(preferencesFile));
     }
  catch (    Exception e) {
-      showError("Error reading preferences","Error reading the preferences file. Please delete\n" + perferencesFile.getAbsolutePath() + "\n"+ "and restart Processing.",e);
+      PdeBase.showError("Error reading preferences","Error reading the preferences file. " + "Please delete\n" + perferencesFile.getAbsolutePath() + "\n"+ "and restart Processing.",e);
     }
   }
   frame=new JFrame("Preferences");

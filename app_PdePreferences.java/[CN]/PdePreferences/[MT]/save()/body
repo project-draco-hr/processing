@@ -1,2 +1,16 @@
 {
+  try {
+    FileOutputStream output=new FileOutputStream(preferencesFile);
+    PrintWriter writer=new PrintWriter(new OutputStreamWriter(output));
+    Enumeration enum=properties.propertyNames();
+    while (enum.hasMoreElements()) {
+      String key=(String)e.nextElement();
+      writer.println(key + "=" + properties.get(key));
+    }
+    writer.flush();
+    writer.close();
+  }
+ catch (  IOException e) {
+    PdeBase.showWarning(null,"Error while saving the settings file",e);
+  }
 }

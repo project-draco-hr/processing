@@ -6,23 +6,17 @@
     menu.removeAll();
   }
   try {
-    sketchbookFolder=new File(PdePreferences.get("sketchbook.path","sketchbook"));
+    sketchbookFolder=new File(PdePreferences.get("sketchbook.path"));
     sketchbookPath=sketchbookFolder.getAbsolutePath();
     if (!sketchbookFolder.exists()) {
       System.err.println("sketchbook folder doesn't exist, " + "making a new one");
       sketchbookFolder.mkdirs();
     }
-    String userPath=sketchbookPath + File.separator + editor.userName;
-    File userFolder=new File(userPath);
-    if (!userFolder.exists()) {
-      System.err.println("sketchbook folder for '" + editor.userName + "' doesn't exist, creating a new one");
-      userFolder.mkdirs();
-    }
     if (addSketches(menu,userFolder,false)) {
       menu.addSeparator();
     }
     if (!addSketches(menu,sketchbookFolder,true)) {
-      MenuItem item=new MenuItem("No sketches");
+      JMenuItem item=new JMenuItem("No sketches");
       item.setEnabled(false);
       menu.add(item);
     }

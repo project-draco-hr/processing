@@ -1,12 +1,11 @@
 {
   menu.removeAll();
-  File hfile=new File(path);
-  if (!hfile.exists())   return;
+  if (!historyFile.exists())   return;
   JMenuItem item=new JMenuItem("Clear History");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       if (!historyFile.delete()) {
-        System.err.println("couldn't erase history");
+        PdeBase.showWarning("History Problem","Could not erase history",null);
       }
       rebuildMenu(historyFile.getPath());
     }
@@ -15,7 +14,7 @@
   menu.add(item);
   menu.addSeparator();
   try {
-    BufferedReader reader=new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(path))));
+    BufferedReader reader=new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(historyFile))));
     String line=null;
     int historyCount=0;
     String historyList[]=new String[100];
