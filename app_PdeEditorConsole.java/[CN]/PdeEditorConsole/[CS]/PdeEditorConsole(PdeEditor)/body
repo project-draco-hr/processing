@@ -1,2 +1,64 @@
 {
+  this.editor=editor;
+  consoleTextPane=new JTextPane();
+  consoleTextPane.setEditable(false);
+  consoleDoc=consoleTextPane.getStyledDocument();
+  MutableAttributeSet standard=new SimpleAttributeSet();
+  StyleConstants.setAlignment(standard,StyleConstants.ALIGN_LEFT);
+  consoleDoc.setParagraphAttributes(0,0,standard,true);
+  Color bgColor=PdeBase.getColor("editor.console.bgcolor",new Color(26,26,26));
+  Color fgColorOut=PdeBase.getColor("editor.console.fgcolor.output",new Color(153,153,153));
+  Color fgColorErr=PdeBase.getColor("editor.console.fgcolor.error",new Color(204,51,0));
+  Font font=PdeBase.getFont("editor.console.font",new Font("Monospaced",Font.PLAIN,11));
+  stdStyle=new SimpleAttributeSet();
+  StyleConstants.setForeground(stdStyle,fgColorOut);
+  StyleConstants.setBackground(stdStyle,bgColor);
+  StyleConstants.setFontSize(stdStyle,font.getSize());
+  StyleConstants.setFontFamily(stdStyle,font.getFamily());
+  StyleConstants.setBold(stdStyle,font.isBold());
+  StyleConstants.setItalic(stdStyle,font.isItalic());
+  errStyle=new SimpleAttributeSet();
+  StyleConstants.setForeground(errStyle,fgColorErr);
+  StyleConstants.setBackground(errStyle,bgColor);
+  StyleConstants.setFontSize(errStyle,font.getSize());
+  StyleConstants.setFontFamily(errStyle,font.getFamily());
+  StyleConstants.setBold(errStyle,font.isBold());
+  StyleConstants.setItalic(errStyle,font.isItalic());
+  consoleTextPane.setBackground(bgColor);
+  this.setViewportView(consoleTextPane);
+  FontMetrics metrics=this.getFontMetrics(font);
+  int height=metrics.getAscent() + metrics.getDescent();
+  int lines=PdeBase.getInteger("editor.console.lines",6);
+  int sizeFudge=10;
+  Dimension prefDimension=new Dimension(1024,(height * lines) + sizeFudge);
+  setPreferredSize(prefDimension);
+  if (systemOut == null) {
+    systemOut=System.out;
+    systemErr=System.err;
+    boolean tod=((PdeBase.platform != PdeBase.MACOSX) && (PdeBase.platform != PdeBase.MACOS9));
+    if (PdeBase.getBoolean("editor.console.out.enabled",tod)) {
+      String outFileName=PdeBase.get("editor.console.out.file","lib/stdout.txt");
+      try {
+        stdoutFile=new FileOutputStream(outFileName);
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (PdeBase.getBoolean("editor.console.err.enabled",tod)) {
+      String errFileName=PdeBase.get("editor.console.err.file","lib/stderr.txt");
+      try {
+        stderrFile=new FileOutputStream(errFileName);
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+      }
+    }
+    consoleOut=new PrintStream(new PdeEditorConsoleStream(this,false,stdoutFile));
+    consoleErr=new PrintStream(new PdeEditorConsoleStream(this,true,stderrFile));
+    if (PdeBase.getBoolean("editor.console.enabled",true)) {
+      System.setOut(consoleOut);
+      System.setErr(consoleErr);
+    }
+  }
 }
