@@ -1,39 +1,20 @@
 {
-  Image awtimage=null;
-  awtimage=Toolkit.getDefaultToolkit().createImage(loadBytes(filename));
-  if (awtimage == null) {
-    System.err.println("could not load image " + filename);
-    return null;
-  }
-  Component component=this;
-  if (component == null) {
-    component=new Frame();
-    ((Frame)component).pack();
-  }
-  MediaTracker tracker=new MediaTracker(component);
-  tracker.addImage(awtimage,0);
+  Image awtImage=Toolkit.getDefaultToolkit().createImage(loadBytes(filename));
+  MediaTracker tracker=new MediaTracker(this);
+  tracker.addImage(awtImage,0);
   try {
     tracker.waitForAll();
   }
  catch (  InterruptedException e) {
     e.printStackTrace();
   }
-  int jwidth=awtimage.getWidth(null);
-  int jheight=awtimage.getHeight(null);
-  int jpixels[]=new int[jwidth * jheight];
-  PixelGrabber pg=new PixelGrabber(awtimage,0,0,jwidth,jheight,jpixels,0,jwidth);
-  try {
-    pg.grabPixels();
-  }
- catch (  InterruptedException e) {
-    e.printStackTrace();
-  }
+  PImage image=new PImage(awtImage);
   if (filename.toLowerCase().endsWith(".gif")) {
-    for (int i=0; i < jpixels.length; i++) {
-      if ((jpixels[i] & 0xff000000) != 0xff000000) {
-        return new PImage(jpixels,jwidth,jheight,ARGB);
+    for (int i=0; i < image.pixels.length; i++) {
+      if ((image.pixels[i] & 0xff000000) != 0xff000000) {
+        image.format=ARGB;
       }
     }
   }
-  return new PImage(jpixels,jwidth,jheight,RGB);
+  return image;
 }

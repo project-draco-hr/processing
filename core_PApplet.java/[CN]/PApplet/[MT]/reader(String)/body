@@ -2,8 +2,13 @@
   try {
     return reader(openStream(filename));
   }
- catch (  IOException e) {
-    e.printStackTrace();
+ catch (  Exception e) {
+    if (filename == null) {
+      die("Filename passed to reader() was null",e);
+    }
+ else {
+      die("Couldn't create a reader for " + filename,e);
+    }
   }
   return null;
 }

@@ -2,8 +2,13 @@
   try {
     return writer(new FileOutputStream(file));
   }
- catch (  IOException e) {
-    e.printStackTrace();
+ catch (  Exception e) {
+    if (file == null) {
+      die("File object passed to writer() was null",e);
+    }
+ else {
+      die("Couldn't create a writer for " + file.getAbsolutePath(),e);
+    }
   }
   return null;
 }

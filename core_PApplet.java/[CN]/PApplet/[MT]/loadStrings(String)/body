@@ -1,10 +1,6 @@
 {
-  try {
-    return loadStrings(openStream(filename));
-  }
- catch (  IOException e) {
-    System.err.println("problem loading strings from " + filename);
-    e.printStackTrace();
-  }
+  InputStream is=openStream(filename);
+  if (is != null)   return loadStrings(is);
+  die("Couldn't open " + filename);
   return null;
 }

@@ -2,8 +2,13 @@
   try {
     return reader(new FileInputStream(file));
   }
- catch (  IOException e) {
-    e.printStackTrace();
+ catch (  Exception e) {
+    if (file == null) {
+      die("File object passed to reader() was null",e);
+    }
+ else {
+      die("Couldn't create a reader for " + file.getAbsolutePath(),e);
+    }
   }
   return null;
 }
