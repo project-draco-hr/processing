@@ -1,22 +1,20 @@
 {
-switch (ellipseMode) {
-case CENTER_RADIUS:
-    break;
-case CENTER:
-  hradius/=2f;
-vradius/=2f;
-break;
-case CORNER:
-hradius/=2f;
-vradius/=2f;
-x+=hradius;
-y+=vradius;
-break;
-case CORNERS:
-hradius=(hradius - x) / 2f;
-vradius=(vradius - y) / 2f;
-x+=hradius;
-y+=vradius;
-break;
-}
+  float x=a;
+  float y=b;
+  float w=c;
+  float h=d;
+  if (ellipseMode == CORNERS) {
+    w=c - a;
+    h=d - b;
+  }
+ else   if (ellipseMode == CENTER_RADIUS) {
+    x=a - c;
+    y=b - d;
+    w=c * 2;
+    h=d * 2;
+  }
+ else   if (ellipseMode == CENTER) {
+    x=a - c / 2f;
+    y=b - d / 2f;
+  }
 }
