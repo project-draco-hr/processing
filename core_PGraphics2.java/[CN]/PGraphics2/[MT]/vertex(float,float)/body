@@ -7,7 +7,7 @@
     vertices=temp;
   }
   vertices[vertexCount][MX]=x;
-  vertices[vertexCount][MY]=x;
+  vertices[vertexCount][MY]=y;
   vertexCount++;
 switch (shape) {
 case POINTS:
@@ -34,15 +34,8 @@ triangle(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY],vertices[ve
 }
 break;
 case TRIANGLE_STRIP:
-if (vertexCount == 3) {
-triangle(vertices[0][MX],vertices[0][MY],vertices[1][MX],vertices[1][MY],x,y);
-}
- else if (vertexCount > 3) {
-gpath=new GeneralPath();
-gpath.moveTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
-gpath.lineTo(vertices[vertexCount - 1][MX],vertices[vertexCount - 1][MY]);
-gpath.lineTo(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
-draw_shape(gpath);
+if (vertexCount >= 3) {
+triangle(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY],vertices[vertexCount - 1][MX],vertices[vertexCount - 1][MY],vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
 }
 break;
 case TRIANGLE_FAN:
@@ -63,16 +56,8 @@ quad(vertices[vertexCount - 4][MX],vertices[vertexCount - 4][MY],vertices[vertex
 }
 break;
 case QUAD_STRIP:
-if (vertexCount == 4) {
-quad(vertices[0][MX],vertices[0][MY],vertices[2][MX],vertices[2][MY],x,y,vertices[1][MX],vertices[1][MY]);
-}
- else if (vertexCount > 4) {
-gpath=new GeneralPath();
-gpath.moveTo(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
-gpath.lineTo(vertices[vertexCount - 1][MX],vertices[vertexCount - 1][MY]);
-gpath.lineTo(x,y);
-gpath.lineTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
-draw_shape(gpath);
+if ((vertexCount >= 4) && ((vertexCount % 2) == 0)) {
+quad(vertices[vertexCount - 4][MX],vertices[vertexCount - 4][MY],vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY],x,y,vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
 }
 break;
 case POLYGON:

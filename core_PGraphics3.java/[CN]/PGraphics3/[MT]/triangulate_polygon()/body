@@ -1,8 +1,7 @@
 {
-  System.out.println("triangulating polygon " + vertex_start + " "+ vertex_end);
   float area=0.0f;
   for (int p=vertex_end - 1, q=vertex_start; q < vertex_end; p=q++) {
-    area+=(vertices[q][X] * vertices[p][Y] - vertices[p][X] * vertices[q][Y]);
+    area+=(vertices[q][MX] * vertices[p][MY] - vertices[p][MX] * vertices[q][MY]);
   }
   int j=0;
   if (area > 0) {
@@ -30,12 +29,12 @@
     if (vc <= v)     v=0;
     int w=v + 1;
     if (vc <= w)     w=0;
-    float Ax=-vertices[vertex_order[u]][X];
-    float Ay=vertices[vertex_order[u]][Y];
-    float Bx=-vertices[vertex_order[v]][X];
-    float By=vertices[vertex_order[v]][Y];
-    float Cx=-vertices[vertex_order[w]][X];
-    float Cy=vertices[vertex_order[w]][Y];
+    float Ax=-vertices[vertex_order[u]][MX];
+    float Ay=vertices[vertex_order[u]][MY];
+    float Bx=-vertices[vertex_order[v]][MX];
+    float By=vertices[vertex_order[v]][MY];
+    float Cx=-vertices[vertex_order[w]][MX];
+    float Cy=vertices[vertex_order[w]][MY];
     if (EPSILON > (((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax)))) {
       continue;
     }
@@ -43,8 +42,8 @@
       if ((p == u) || (p == v) || (p == w)) {
         continue;
       }
-      float Px=-vertices[vertex_order[p]][X];
-      float Py=vertices[vertex_order[p]][Y];
+      float Px=-vertices[vertex_order[p]][MX];
+      float Py=vertices[vertex_order[p]][MY];
       float ax=Cx - Bx;
       float ay=Cy - By;
       float bx=Ax - Cx;
