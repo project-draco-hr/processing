@@ -60,6 +60,50 @@
   menu.add(new MenuItem("Quit",new MenuShortcut('Q')));
   menu.addActionListener(this);
   menubar.add(menu);
+  menu=new Menu("Edit");
+  undoItem=new MenuItem("Undo",new MenuShortcut('Z'));
+  undoItem.addActionListener(undoAction=new UndoAction());
+  menu.add(undoItem);
+  redoItem=new MenuItem("Redo",new MenuShortcut('Y'));
+  redoItem.addActionListener(redoAction=new RedoAction());
+  menu.add(redoItem);
+  menu.addSeparator();
+  item=new MenuItem("Cut",new MenuShortcut('X'));
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      editor.textarea.cut();
+    }
+  }
+);
+  menu.add(item);
+  item=new MenuItem("Copy",new MenuShortcut('C'));
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      editor.textarea.copy();
+    }
+  }
+);
+  menu.add(item);
+  item=new MenuItem("Paste",new MenuShortcut('V'));
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      editor.textarea.paste();
+    }
+  }
+);
+  menu.add(item);
+  menu.addSeparator();
+  item=new MenuItem("Select All",new MenuShortcut('A'));
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      editor.textarea.selectAll();
+    }
+  }
+);
+  menu.add(item);
+  menubar.add(menu);
+  Document document=editor.textarea.getDocument();
+  document.addUndoableEditListener(new MyUndoableEditListener());
   menu=new Menu("Sketch");
   menu.add(new MenuItem("Run",new MenuShortcut('R')));
   menu.add(new MenuItem("Present",new MenuShortcut('P')));
