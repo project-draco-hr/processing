@@ -1,12 +1,25 @@
 {
   menu.removeAll();
+  popup.removeAll();
   try {
+    JMenuItem item=new JMenuItem("Open...");
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        editor.handleOpen(null);
+      }
+    }
+);
+    popup.add(item);
+    popup.addSeparator();
     addSketches(menu,new File(PdePreferences.get("sketchbook.path")));
+    addSketches(popup,new File(PdePreferences.get("sketchbook.path")));
     menu.addSeparator();
+    popup.addSeparator();
     addSketches(menu,examplesFolder);
+    addSketches(popup,examplesFolder);
   }
  catch (  IOException e) {
-    PdeBase.showWarning("Problem while building sketchbook menu","There was a problem with building the\n" + "sketchbook menu. Things might get a little\n" + "kooky around here.\n",e);
+    PdeBase.showWarning("Problem while building sketchbook menu","There was a problem with building the\n" + "sketchbook menu. Things might get a little\n" + "kooky around here.",e);
   }
   return menu;
 }
