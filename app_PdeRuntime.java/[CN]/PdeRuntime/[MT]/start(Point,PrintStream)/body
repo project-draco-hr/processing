@@ -16,7 +16,7 @@
       Class c=Class.forName(className);
       applet=(BApplet)c.newInstance();
       applet.leechErr=leechErr;
-      applet.serialProperties(PdeBase.properties);
+      applet.serialProperties(PdePreferences.properties);
       applet.init();
       if (applet.exception != null) {
         if (applet.exception instanceof PortInUseException) {
@@ -83,8 +83,8 @@
       }
  else {
         Insets insets=window.getInsets();
-        int minW=PdeBase.getInteger("run.window.width.minimum",120);
-        int minH=PdeBase.getInteger("run.window.height.minimum",120);
+        int minW=PdePreferences.getInteger("run.window.width.minimum",120);
+        int minH=PdePreferences.getInteger("run.window.height.minimum",120);
         int windowW=Math.max(applet.width,minW) + insets.left + insets.right;
         int windowH=Math.max(applet.height,minH) + insets.top + insets.bottom;
         if (x1 - windowW > 10) {
@@ -99,7 +99,7 @@
           }
           window.setBounds(x1,y1,windowW,windowH);
         }
-        Color windowBgColor=PdeBase.getColor("run.window.bgcolor",SystemColor.control);
+        Color windowBgColor=PdePreferences.getColor("run.window.bgcolor",SystemColor.control);
         window.setBackground(windowBgColor);
         applet.setBounds((windowW - applet.width) / 2,insets.top + ((windowH - insets.top - insets.bottom) - applet.height) / 2,windowW,windowH);
       }

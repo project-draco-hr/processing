@@ -1,23 +1,23 @@
 {
-  String extendsWhat=extendsNormal ? "BApplet" : "BAppletGL";
+  String extendsWhat="BApplet";
   try {
     programType=BEGINNER;
     program=commentsCodec(program);
-    if (PdeBase.getBoolean("compiler.substitute_f",true)) {
+    if (PdePreferences.getBoolean("compiler.substitute_f",true)) {
       program=substipoot(program,"([\\s\\,\\;\\+\\-\\/\\*\\(\\)])(\\d+\\.\\d*)([\\s\\,\\;\\+\\-\\/\\*\\(\\)])","$1$2f$3");
       program=substipoot(program,"([\\s\\,\\;\\+\\-\\/\\*\\(\\)])(\\d*\\.\\d+)([\\s\\,\\;\\+\\-\\/\\*\\(\\)])","$1$2f$3");
     }
-    if (PdeBase.getBoolean("compiler.enhanced_casting",true)) {
+    if (PdePreferences.getBoolean("compiler.enhanced_casting",true)) {
       program=substipoot(program,"([^A-Za-z0-9_])byte\\((.*)\\)","$1(byte)($2)");
       program=substipoot(program,"([^A-Za-z0-9_])char\\((.*)\\)","$1(char)($2)");
       program=substipoot(program,"([^A-Za-z0-9_])int\\((.*)\\)","$1(int)($2)");
       program=substipoot(program,"([^A-Za-z0-9_])float\\((.*)\\)","$1(float)($2)");
     }
-    if (PdeBase.getBoolean("compiler.color_datatype",true)) {
+    if (PdePreferences.getBoolean("compiler.color_datatype",true)) {
       if (program.indexOf("color") == 0)       program=" " + program;
       program=substipoot(program,"([;\\s\\(])color([\\s\\[])","$1int$2");
     }
-    if (PdeBase.getBoolean("compiler.inline_web_colors",true)) {
+    if (PdePreferences.getBoolean("compiler.inline_web_colors",true)) {
       program=substipoot(program,"#([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])","0xff$1$2$3");
     }
     if ((program.indexOf("void setup()") != -1) || (program.indexOf("void loop()") != -1) || (program.indexOf("void draw()") != -1)) {

@@ -1,23 +1,23 @@
 {
   properties=new Properties();
-  try {
-    if (PdeBase.platform == PdeBase.MACOSX) {
-      properties.load(new FileInputStream("lib/pde.properties"));
-      properties.load(new FileInputStream("lib/pde_macosx.properties"));
-    }
- else     if (PdeBase.platform == PdeBase.MACOS9) {
-      properties.load(new FileInputStream("lib/pde.properties"));
-      properties.load(new FileInputStream("lib/pde_macos9.properties"));
-    }
+  String home=System.getProperty("user.home");
+  preferencesFile=new File(home,".processing");
+  if (!preferencesFile.exists()) {
+    String platformFilename="pde_" + PdeBase.platforms[PdeBase.platform] + ".properties";
+    try {
+      if ((PdeBase.platform == PdeBase.MACOSX) || (PdeBase.platform == PdeBase.MACOS9)) {
+        properties.load(new FileInputStream("lib/pde.properties"));
+        properties.load(new FileInputStream("lib/" + platformFilename));
+      }
  else {
-      properties.load(getClass().getResource("pde.properties").openStream());
-      String platformProps="pde_" + platforms[platform] + ".properties";
-      properties.load(getClass().getResource(platformProps).openStream());
+        properties.load(getClass().getResource("pde.properties").openStream());
+        properties.load(getClass().getResource(platformFilename).openStream());
+      }
     }
-  }
- catch (  Exception e) {
-    System.err.println("Error reading pde.properties");
-    e.printStackTrace();
+ catch (    Exception e) {
+      System.err.println("Error reading pde.properties");
+      e.printStackTrace();
+    }
   }
   frame=new JFrame("Preferences");
   frame.setResizable(false);
@@ -31,18 +31,18 @@
   JComboBox combo;
   Dimension d, d2, d3;
   int h, v, vmax;
-  newSketchPrompt=new JCheckBox("Prompt for name when creating a new sketch");
-  pain.add(newSketchPrompt);
-  d=newSketchPrompt.getPreferredSize();
-  newSketchPrompt.setBounds(left,top,d.width,d.height);
+  newSketchPromptBox=new JCheckBox("Prompt for name when creating a new sketch");
+  pain.add(newSketchPromptBox);
+  d=newSketchPromptBox.getPreferredSize();
+  newSketchPromptBox.setBounds(left,top,d.width,d.height);
   right=Math.max(right,left + d.width);
   top+=d.height + BETWEEN;
   label=new JLabel("Sketchbook location:");
   pain.add(label);
   d=label.getPreferredSize();
-  sketchbookLocation=new JTextField(18);
-  pain.add(sketchbookLocation);
-  d2=sketchbookLocation.getPreferredSize();
+  sketchbookLocationField=new JTextField(18);
+  pain.add(sketchbookLocationField);
+  d2=sketchbookLocationField.getPreferredSize();
   button=new JButton("Browse");
   pain.add(button);
   d3=button.getPreferredSize();
@@ -54,6 +54,12 @@
   button.setBounds(h,top + (vmax - d3.height) / 2,d3.width,d3.height);
   right=Math.max(right,h + d3.width + BIG);
   top+=vmax + BETWEEN;
+  externalEditorBox=new JCheckBox("Use external editor");
+  pain.add(externalEditorBox);
+  d=newSketchPromptBox.getPreferredSize();
+  newSketchPromptBox.setBounds(left,top,d.width,d.height);
+  right=Math.max(right,left + d.width);
+  top+=d.height + BETWEEN;
   String blather="More preferences are in the 'lib' folder inside text files\n" + "named pde.properties and pde_" + PdeBase.platforms[PdeBase.platform] + ".properties";
   JTextArea textarea=new JTextArea(blather);
   textarea.setBorder(new EmptyBorder(SMALL,SMALL,SMALL,SMALL));
@@ -73,7 +79,7 @@
   frame.setLocation((screen.width - wide) / 2,(screen.height - high) / 2);
   frame.addWindowListener(new WindowAdapter(){
     public void windowClosing(    WindowEvent e){
-      handleQuit();
+      frame.hide();
     }
   }
 );

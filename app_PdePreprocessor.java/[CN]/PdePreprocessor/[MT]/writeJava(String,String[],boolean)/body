@@ -27,12 +27,12 @@
   }
   PdeEmitter emitter=new PdeEmitter();
   PrintStream stream=new PrintStream(new FileOutputStream(buildPath + File.separator + name+ ".java"));
-  writeHeader(stream,imports,extendsNormal,exporting,name);
+  writeHeader(stream,imports,exporting,name);
   emitter.setOut(stream);
   emitter.print(rootNode);
   writeFooter(stream);
   stream.close();
-  if (PdeBase.getBoolean("compiler.output_parse_tree",false)) {
+  if (PdePreferences.getBoolean("compiler.output_parse_tree",false)) {
     stream=new PrintStream(new FileOutputStream("parseTree.xml"));
     stream.println("<?xml version=\"1.0\"?>");
     stream.println("<document>");
