@@ -1,16 +1,16 @@
 {
 switch (currentSelection) {
 case RUN:
-    if (e.shiftDown()) {
-      editor.doPresent();
-    }
- else {
-      editor.doRun(false);
-    }
+    editor.doRun(e.shiftDown());
   break;
 case STOP:
 setState(RUN,INACTIVE,true);
+if (editor.presenting) {
+editor.doClose();
+}
+ else {
 editor.doStop();
+}
 break;
 case NEW:
 editor.skNew();

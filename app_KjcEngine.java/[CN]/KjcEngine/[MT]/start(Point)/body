@@ -26,6 +26,15 @@
       applet.start();
       if (editor.presenting) {
         window=new Window(new Frame());
+        window.addKeyListener(new KeyAdapter(){
+          public void keyPressed(          KeyEvent e){
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+              stop();
+              editor.doClose();
+            }
+          }
+        }
+);
       }
  else {
         window=new Frame();
@@ -33,6 +42,7 @@
         window.pack();
         window.addWindowListener(new WindowAdapter(){
           public void windowClosing(          WindowEvent e){
+            stop();
             editor.doClose();
           }
         }
@@ -40,6 +50,15 @@
       }
       if (!(window instanceof Frame))       y1+=parentInsets.top;
       window.add(applet);
+      applet.addKeyListener(new KeyAdapter(){
+        public void keyPressed(        KeyEvent e){
+          if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            stop();
+            editor.doClose();
+          }
+        }
+      }
+);
       Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
       window.setLayout(null);
       if (editor.presenting) {
