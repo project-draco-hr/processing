@@ -26,23 +26,19 @@
     metrics=g.getFontMetrics();
     fontAscent=metrics.getAscent();
   }
-  if (projectLeft == 0) {
-    projectTitleLeft=PdeEditor.INSET_SIZE;
-    projectLeft=projectTitleLeft + metrics.stringWidth(PROJECT_TITLER) + PdeEditor.INSET_SIZE;
-  }
-  if (userLeft == 0) {
-    userLeft=sizeW - 20 - metrics.stringWidth(user);
-    userTitleLeft=userLeft - PdeEditor.INSET_SIZE - metrics.stringWidth(USER_TITLER);
-  }
+  sketchTitleLeft=PdeEditor.INSET_SIZE;
+  sketchLeft=sketchTitleLeft + metrics.stringWidth(SKETCH_TITLER) + PdeEditor.INSET_SIZE;
+  userLeft=sizeW - 20 - metrics.stringWidth(editor.userName);
+  userTitleLeft=userLeft - PdeEditor.INSET_SIZE - metrics.stringWidth(USER_TITLER);
   int baseline=(sizeH + fontAscent) / 2;
   g.setColor(backgroundColor);
   g.fillRect(0,0,imageW,imageH);
   boolean boringUser=user.equals("default");
   g.setColor(secondaryColor);
-  g.drawString(PROJECT_TITLER,projectTitleLeft,baseline);
+  g.drawString(SKETCH_TITLER,sketchTitleLeft,baseline);
   if (!boringUser)   g.drawString(USER_TITLER,userTitleLeft,baseline);
   g.setColor(primaryColor);
-  g.drawString(project,projectLeft,baseline);
-  if (!boringUser)   g.drawString(user,userLeft,baseline);
+  g.drawString(editor.sketchName,sketchLeft,baseline);
+  if (!boringUser)   g.drawString(editor.userName,userLeft,baseline);
   screen.drawImage(offscreen,0,0,null);
 }

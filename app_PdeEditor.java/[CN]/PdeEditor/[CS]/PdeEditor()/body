@@ -12,10 +12,9 @@
   add("West",leftPanel);
   Panel rightPanel=new Panel();
   rightPanel.setLayout(new BorderLayout());
-  header=new PdeEditorHeader(this,"untitled","default");
+  header=new PdeEditorHeader(this);
   rightPanel.add("North",header);
-  if (program == null)   program=DEFAULT_PROGRAM;
-  textarea=new TextArea(program,PdeBase.getInteger("editor.program.rows",20),PdeBase.getInteger("editor.program.columns",60),TextArea.SCROLLBARS_VERTICAL_ONLY);
+  textarea=new TextArea("",PdeBase.getInteger("editor.program.rows",20),PdeBase.getInteger("editor.program.columns",60),TextArea.SCROLLBARS_VERTICAL_ONLY);
   textarea.setFont(PdeBase.getFont("editor.program.font",new Font("Monospaced",Font.PLAIN,12)));
   rightPanel.add("Center",textarea);
   Panel statusPanel=new Panel();
@@ -33,4 +32,21 @@
     textarea.addKeyListener(new PdeKeyListener(this));
   }
   runner=new PdeRunner(this);
+  Properties skprops=new Properties();
+  try {
+    skprops.load(getClass().getResource("sketch.properties").openStream());
+    String sketch=(String)skprops.get("sketch.name");
+    String path=(String)skprops.get("sketch.directory");
+    String user=(String)skprops.get("user.name");
+    if (new File(path + File.separator + name+ File.separator+ name+ ".pde").exists()) {
+      userName=user;
+      skOpen(path,name);
+    }
+ else {
+      skNew();
+    }
+  }
+ catch (  Exception e) {
+    skNew();
+  }
 }

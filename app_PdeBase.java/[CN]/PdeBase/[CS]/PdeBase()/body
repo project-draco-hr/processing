@@ -18,28 +18,7 @@
   }
   int width=getInteger("window.width",600);
   int height=getInteger("window.height",350);
-  encoding=get("encoding");
-  boolean beautify=false;
-  boolean convertSemicolons=false;
-  String program=get("program");
-  if (program != null) {
-    program=getFile(program);
-  }
- else {
-    program=get("inline_program");
-    convertSemicolons=true;
-  }
-  if (program != null) {
-    if (program.indexOf("extends PdePlayer") == -1) {
-      if (program.charAt(0) != ';') {
-        if (convertSemicolons) {
-          program=program.replace(';','\n');
-        }
-        if (program.charAt(0) != '#')         beautify=true;
-      }
-    }
-  }
-  editor=new PdeEditor(program);
+  editor=new PdeEditor();
   frame.setLayout(new BorderLayout());
   frame.add("Center",editor);
   MenuBar menubar=new MenuBar();

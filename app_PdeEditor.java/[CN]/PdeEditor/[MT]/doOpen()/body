@@ -1,6 +1,8 @@
 {
   FileDialog fd=new FileDialog(new Frame(),"Open a PDE program...",FileDialog.LOAD);
-  fd.setDirectory(lastDirectory);
+  if (sketchFile != null) {
+    fd.setDirectory(sketchFile.getPath());
+  }
   fd.show();
   String directory=fd.getDirectory();
   String filename=fd.getFile();
@@ -8,5 +10,5 @@
     buttons.clear();
     return;
   }
-  handleOpen(new File(directory,filename),null);
+  handleOpen(filename,new File(directory,filename),null);
 }
