@@ -1,10 +1,14 @@
 {
   String importPackageList[]=null;
-  classPath=buildPath + File.pathSeparator + System.getProperty("java.class.path");
+  String javaClassPath=System.getProperty("java.class.path");
+  if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\"")) {
+    javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
+  }
+  classPath=buildPath + File.pathSeparator + javaClassPath;
   if (codeFolder.exists()) {
     externalRuntime=true;
-    classPath+=File.separator + PdeCompiler.contentsToClassPath(codeFolder);
-    importPackageList=PdeCompiler.magicImports(classPath);
+    classPath+=File.pathSeparator + PdeCompiler.contentsToClassPath(codeFolder);
+    importPackageList=PdeCompiler.makeImportsFromClassPath(classPath);
     libraryPath=codeFolder.getAbsolutePath();
   }
  else {
