@@ -2,25 +2,33 @@
   if (newSketchName.equals(sketchName)) {
     return;
   }
-  String textareaContents=textarea.getText();
-  int textareaPosition=textarea.getCaretPosition();
   File newSketchDir=new File(sketchDir.getParent() + File.separator + newSketchName);
   File newSketchFile=new File(newSketchDir,newSketchName + ".pde");
-  newSketchDir.mkdirs();
-  copyFile(sketchFile,newSketchFile);
-  copyDir(sketchDir,newSketchDir);
-  new File(newSketchDir,sketchName + ".pde").delete();
-  if (renaming) {
-    System.gc();
-    removeDir(sketchDir);
+  String textareaContents=textarea.getText();
+  int textareaPosition=textarea.getCaretPosition();
+  if (newSketchName.toLowerCase().equals(sketchName.toLowerCase())) {
+    boolean problem=(sketchDir.renameTo(newSketchDir) || sketchFile.renameTo(newSketchFile));
+    if (problem) {
+      status.error("Error while trying to re-save the sketch.");
+    }
   }
-  File appletDir=new File(newSketchDir,"applet");
-  File oldjar=new File(appletDir,sketchName + ".jar");
-  if (oldjar.exists())   oldjar.delete();
-  File oldjava=new File(appletDir,sketchName + ".java");
-  if (oldjava.exists())   oldjava.delete();
-  File oldclass=new File(appletDir,sketchName + ".class");
-  if (oldclass.exists())   oldclass.delete();
+ else {
+    newSketchDir.mkdirs();
+    copyFile(sketchFile,newSketchFile);
+    copyDir(sketchDir,newSketchDir);
+    new File(newSketchDir,sketchName + ".pde").delete();
+    if (renaming) {
+      System.gc();
+      removeDir(sketchDir);
+    }
+    File appletDir=new File(newSketchDir,"applet");
+    File oldjar=new File(appletDir,sketchName + ".jar");
+    if (oldjar.exists())     oldjar.delete();
+    File oldjava=new File(appletDir,sketchName + ".java");
+    if (oldjava.exists())     oldjava.delete();
+    File oldclass=new File(appletDir,sketchName + ".class");
+    if (oldclass.exists())     oldclass.delete();
+  }
   base.rebuildSketchbookMenu();
   handleOpen(newSketchName,newSketchFile,newSketchDir);
   changeText(textareaContents,true);
