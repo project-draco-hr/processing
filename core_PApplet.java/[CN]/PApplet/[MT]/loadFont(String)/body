@@ -1,3 +1,23 @@
 {
-  return g.loadFont(name);
+  try {
+    String lower=filename.toLowerCase();
+    InputStream input=null;
+    if (lower.endsWith(".vlw")) {
+      input=openStream(filename);
+    }
+ else     if (lower.endsWith(".vlw.gz")) {
+      input=new GZIPInputStream(openStream(filename));
+    }
+ else {
+      throw new IOException("don't know what type of file that is");
+    }
+    return new PFont(input);
+  }
+ catch (  IOException e) {
+    System.err.println("Could not load font " + filename);
+    System.err.println("Make sure that the font has been copied");
+    System.err.println("to the data folder of your sketch.");
+    e.printStackTrace();
+  }
+  return null;
 }

@@ -5,43 +5,68 @@
   }
   try {
     boolean external=false;
-    if (args[0].indexOf(EXTERNAL_FLAG) == 0)     external=true;
+    int location[]=null;
+    boolean exactLocation=false;
+    String folder=System.getProperty("user.dir");
+    String name=null;
+    int argIndex=0;
+    while (argIndex < args.length) {
+      if (args[argIndex].indexOf(EXT_LOCATION) == 0) {
+        external=true;
+        String locationStr=args[argIndex].substring(EXT_LOCATION.length());
+        location=toInt(split(locationStr,','));
+      }
+ else       if (args[argIndex].indexOf(EXT_EXACT_LOCATION) == 0) {
+        external=true;
+        String locationStr=args[argIndex].substring(EXT_LOCATION.length());
+        location=toInt(split(locationStr,','));
+        exactLocation=true;
+      }
+ else       if (args[argIndex].indexOf(EXT_SKETCH_FOLDER) == 0) {
+        folder=args[argIndex].substring(EXT_SKETCH_FOLDER.length());
+      }
+ else {
+        name=args[argIndex];
+        break;
+      }
+    }
     Frame frame=new Frame();
     frame.pack();
-    Class c=Class.forName(args[external ? 1 : 0]);
+    Class c=Class.forName(name);
     PApplet applet=(PApplet)c.newInstance();
+    applet.folder=folder;
+    int argc=args.length - argIndex;
+    applet.args=new String[argc];
+    System.arraycopy(args,argc,applet.args,0,argc);
     applet.init();
     applet.start();
     Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
     if (external) {
-      String argh=args[0].substring(EXTERNAL_FLAG.length());
-      boolean exact=argh.charAt(0) == EXTERNAL_EXACT_LOCATION;
-      if (exact)       argh=argh.substring(1);
-      int location[]=toInt(split(argh,','));
-      int x1=location[0] - 20;
-      int y1=location[1];
       Insets insets=frame.getInsets();
+      int locationX=location[0] - 20;
+      int locationY=location[1];
       int minW=120;
       int minH=120;
       int windowW=Math.max(applet.width,minW) + insets.left + insets.right;
       int windowH=Math.max(applet.height,minH) + insets.top + insets.bottom;
-      if (x1 - windowW > 10) {
-        frame.setBounds(x1 - windowW,y1,windowW,windowH);
-      }
- else {
-        x1=location[0] + 66;
-        y1=location[1] + 66;
-        if ((x1 + windowW > screen.width - 33) || (y1 + windowH > screen.height - 33)) {
-          x1=(screen.width - windowW) / 2;
-          y1=(screen.height - windowH) / 2;
-        }
-        frame.setBounds(x1,y1,windowW,windowH);
-      }
-      if (exact) {
+      frame.setSize(windowW,windowH);
+      if (exactLocation) {
         frame.setLocation(location[0],location[1]);
       }
-      applet.args=new String[args.length - 2];
-      System.arraycopy(args,2,applet.args,0,args.length - 2);
+ else {
+        if (locationX - windowW > 10) {
+          frame.setLocation(locationX - windowW,locationY);
+        }
+ else {
+          locationX=location[0] + 66;
+          locationY=location[1] + 66;
+          if ((locationX + windowW > screen.width - 33) || (locationY + windowH > screen.height - 33)) {
+            locationX=(screen.width - windowW) / 2;
+            locationY=(screen.height - windowH) / 2;
+          }
+          frame.setLocation(locationX,locationY);
+        }
+      }
       frame.setLayout(null);
       frame.add(applet);
       frame.setBackground(SystemColor.control);

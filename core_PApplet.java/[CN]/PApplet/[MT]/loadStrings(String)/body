@@ -1,3 +1,10 @@
 {
-  return g.loadStrings(filename);
+  try {
+    return loadStrings(openStream(filename));
+  }
+ catch (  IOException e) {
+    System.err.println("problem loading strings from " + filename);
+    e.printStackTrace();
+  }
+  return null;
 }

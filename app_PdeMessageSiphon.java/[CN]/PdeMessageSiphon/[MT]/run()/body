@@ -1,16 +1,20 @@
 {
-  String currentLine;
-  try {
-    while ((currentLine=streamReader.readLine()) != null) {
-      consumer.message(currentLine);
+  while (Thread.currentThread() == thread) {
+    String currentLine;
+    try {
+      while ((currentLine=streamReader.readLine()) != null) {
+        consumer.message(currentLine);
+      }
     }
-  }
- catch (  NullPointerException npe) {
-  }
-catch (  Exception e) {
-    if ((PdeBase.platform != PdeBase.LINUX) || (e.getMessage().indexOf("Bad file descriptor") == -1)) {
-      System.err.println("PdeMessageSiphon err " + e);
-      e.printStackTrace();
+ catch (    NullPointerException npe) {
+      thread=null;
+    }
+catch (    Exception e) {
+      if ((PdeBase.platform != PdeBase.LINUX) || (e.getMessage().indexOf("Bad file descriptor") == -1)) {
+        System.err.println("PdeMessageSiphon err " + e);
+        e.printStackTrace();
+        thread=null;
+      }
     }
   }
 }

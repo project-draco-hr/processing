@@ -1,6 +1,26 @@
 {
-  externalRuntime=true;
-  stopper=new Stopper();
+  Thread thread=new Thread(){
+    public void run(){
+      while ((Thread.currentThread() == this) && !finished) {
+        try {
+          int anything=System.in.read();
+          if (anything == EXTERNAL_STOP) {
+            finished=true;
+          }
+        }
+ catch (        IOException e) {
+          finished=true;
+        }
+        try {
+          Thread.sleep(250);
+        }
+ catch (        InterruptedException e) {
+        }
+      }
+    }
+  }
+;
+  thread.start();
   frame.addComponentListener(new ComponentAdapter(){
     public void componentMoved(    ComponentEvent e){
       Point where=((Frame)e.getSource()).getLocation();
