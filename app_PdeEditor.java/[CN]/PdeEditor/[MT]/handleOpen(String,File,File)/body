@@ -2,12 +2,14 @@
   try {
     FileInputStream input=new FileInputStream(isketchFile);
     int length=(int)isketchFile.length();
-    byte data[]=new byte[length];
-    int count=0;
-    while (count != length) {
-      data[count++]=(byte)input.read();
+    if (length == 0) {
+      byte data[]=new byte[length];
+      int count=0;
+      while (count != length) {
+        data[count++]=(byte)input.read();
+      }
+      textarea.setText(new String(data));
     }
-    textarea.setText(new String(data));
     sketchName=isketchName;
     sketchFile=isketchFile;
     sketchDir=isketchDir;
