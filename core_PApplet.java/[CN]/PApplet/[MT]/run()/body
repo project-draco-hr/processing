@@ -11,7 +11,7 @@
         g.beginFrame();
         if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " 1b draw");
         if (frameCount == 0) {
-          defaults();
+          g.defaults();
           setup();
           this.pixels=g.pixels;
           this.width=g.width;
@@ -30,6 +30,10 @@
           drawMethods.handle();
         }
         g.endFrame();
+        if (recorder != null) {
+          recorder.endFrame();
+          recorder=null;
+        }
         frameCount++;
         if (THREAD_DEBUG)         println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
         repaint();
