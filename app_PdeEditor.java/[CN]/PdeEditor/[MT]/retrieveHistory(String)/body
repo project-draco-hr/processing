@@ -18,13 +18,14 @@
         }
       }
       if (found) {
-        textarea.setText("");
         line=reader.readLine();
         String sep=System.getProperty("line.separator");
+        StringBuffer buffer=new StringBuffer();
         while ((line=reader.readLine()) != null) {
           if (line.equals(PdeEditor.HISTORY_SEPARATOR))           break;
-          textarea.append(line + sep);
+          buffer.append(line + sep);
         }
+        textarea.setText(buffer.toString());
         historyLast=textarea.getText();
         setSketchModified(false);
       }
