@@ -24,8 +24,10 @@
     if (newMessage) {
       exception=new PdeException(s);
       newMessage=false;
+      messageLineCount=0;
     }
  else {
+      messageLineCount++;
       int index=s.indexOf(tempFilename);
       if (index != -1) {
         int len=tempFilename.length();
@@ -47,6 +49,11 @@
           functionStr=functionStr.substring(0,index);
         }
         exception=new PdeException(exception.getMessage() + " inside " + functionStr+ "() "+ "[add Compiler.disable() to setup()]");
+        editor.error(exception);
+      }
+ else       if (messageLineCount > 5) {
+        messageLineCount=-100;
+        exception=new PdeException(exception.getMessage());
         editor.error(exception);
       }
     }

@@ -4,7 +4,9 @@
   tempClass=TEMP_CLASS + "_" + numero1+ "_"+ numero2;
   writeJava(tempClass,true);
   boolean result=compileJava();
-  if (!result)   return;
+  if (!result) {
+    return;
+  }
   messageMode=RUNNING;
   Frame frame=editor.frame;
   Point parentLoc=frame.getLocation();
@@ -13,8 +15,8 @@
   int y1=parentLoc.y;
   try {
     if (PdeBase.getBoolean("play.external",false)) {
-      String cmd=PdeBase.get("play.externalCommand");
-      process=Runtime.getRuntime().exec(cmd + " " + tempClass+ " "+ x1+ " "+ y1);
+      String cmd=PdeBase.get("play.external.command");
+      process=Runtime.getRuntime().exec(cmd + " " + tempClass+ " "+ tempClass+ " "+ x1+ " "+ y1);
       new KjcMessageSiphon(process.getInputStream(),process.getErrorStream(),leechErr);
     }
  else {
