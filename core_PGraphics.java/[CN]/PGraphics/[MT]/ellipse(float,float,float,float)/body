@@ -19,25 +19,12 @@ x+=hradius;
 y+=hradius;
 break;
 }
-int cAccuracy=(int)(4 + Math.sqrt(hradius + vradius) * 3);
-boolean plain=!lights && !smooth && (strokeWeight == 1)&& !fillAlpha&& !strokeAlpha;
-boolean flat=(dimensions == 0) || ((dimensions == 2) && (m00 == m11) && (m00 == 1));
-if (plain && flat) {
-if (hradius == vradius) {
-flat_circle((int)x,(int)y,(int)hradius);
+if (depth) {
+if (fill) ellipse3_fill(x,y,hradius,vradius);
+if (stroke) ellipse3_stroke(x,y,hradius,vradius);
 }
  else {
-flat_ellipse((int)x,(int)y,(int)hradius,(int)vradius);
-}
-}
- else {
-float inc=(float)SINCOS_LENGTH / cAccuracy;
-float val=0;
-beginShape(POLYGON);
-for (int i=0; i < cAccuracy; i++) {
-vertex(x + cosLUT[(int)val] * hradius,y + sinLUT[(int)val] * vradius);
-val+=inc;
-}
-endShape();
+if (fill) ellipse2_fill(x,y,hradius,vradius);
+if (stroke) ellipse2_stroke(x,y,hradius,vradius);
 }
 }
