@@ -2,15 +2,15 @@
   try {
     FileOutputStream output=new FileOutputStream(preferencesFile);
     PrintWriter writer=new PrintWriter(new OutputStreamWriter(output));
-    Enumeration enum=table.keys();
-    while (enum.hasMoreElements()) {
+    Enumeration e=table.keys();
+    while (e.hasMoreElements()) {
       String key=(String)e.nextElement();
       writer.println(key + "=" + ((String)table.get(key)));
     }
     writer.flush();
     writer.close();
   }
- catch (  IOException e) {
-    PdeBase.showWarning(null,"Error while saving the settings file",e);
+ catch (  IOException ex) {
+    PdeBase.showWarning(null,"Error while saving the settings file",ex);
   }
 }
