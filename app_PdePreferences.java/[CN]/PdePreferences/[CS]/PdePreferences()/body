@@ -37,7 +37,7 @@
       showError("Error reading preferences","Error reading the preferences file. Please delete\n" + perferencesFile.getAbsolutePath() + "\n"+ "and restart Processing.",e);
     }
   }
-  frame=new JDialog("Preferences");
+  frame=new JFrame("Preferences");
   frame.setResizable(false);
   Container pain=this;
   pain.setLayout(null);
@@ -103,7 +103,7 @@
   button.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       apply();
-      hideFrame();
+      disposeFrame();
     }
   }
 );
@@ -113,7 +113,7 @@
   button=new JButton(PROMPT_CANCEL);
   button.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      hideFrame();
+      disposeFrame();
     }
   }
 );
@@ -129,10 +129,4 @@
   frame.pack();
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   frame.setLocation((screen.width - wide) / 2,(screen.height - high) / 2);
-  frame.addWindowListener(new WindowAdapter(){
-    public void windowClosing(    WindowEvent e){
-      frame.hide();
-    }
-  }
-);
 }

@@ -1,0 +1,31 @@
+{
+  JMenuItem item;
+  JMenu menu=new Menu("File");
+  item=newMenuItem("New",'N');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      skNew();
+    }
+  }
+);
+  menu.add(item);
+  sketchbookMenu=new Menu("Open");
+  menu.add(sketchbookMenu);
+  saveMenuItem=new MenuItem("Save",new MenuShortcut('S'));
+  saveAsMenuItem=new MenuItem("Save as...",new MenuShortcut('S',true));
+  menu.add(saveMenuItem);
+  menu.add(saveAsMenuItem);
+  menu.add(new MenuItem("Rename..."));
+  menu.addSeparator();
+  menu.add(new MenuItem("Export to Web",new MenuShortcut('E')));
+  item=new MenuItem("Export Application",new MenuShortcut('E',true));
+  item.setEnabled(false);
+  menu.add(item);
+  if (PdeBase.platform != PdeBase.MACOSX) {
+    menu.add(new MenuItem("Preferences"));
+    menu.addSeparator();
+    menu.add(new MenuItem("Quit",new MenuShortcut('Q')));
+  }
+  menu.addActionListener(this);
+  return menu;
+}
