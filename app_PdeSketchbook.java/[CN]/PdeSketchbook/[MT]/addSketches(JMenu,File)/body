@@ -26,6 +26,14 @@
     File subfolder=new File(folder,list[i]);
     File entry=new File(subfolder,list[i] + ".pde");
     if (entry.exists()) {
+      String sanityCheck=sanitizedName(list[i]);
+      if (!sanityCheck.equals(list[i])) {
+        if (!builtOnce) {
+          String mess="The sketch \"" + list[i] + "\" cannot be used.\n"+ "Sketch names must contain only basic letters and numbers.\n"+ "(ascii only and no spaces, and it cannot start with a number)";
+          PdeBase.showMessage("Ignoring bad sketch name",mess);
+        }
+        continue;
+      }
       JMenuItem item=new JMenuItem(list[i]);
       item.addActionListener(listener);
       item.setActionCommand(entry.getAbsolutePath());
