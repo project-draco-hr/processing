@@ -1,0 +1,43 @@
+{
+  if (!recordingHistory)   return;
+  menu.removeAll();
+  File hfile=new File(path);
+  if (!hfile.exists())   return;
+  try {
+    BufferedReader reader=new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(path))));
+    String line=null;
+    int historyCount=0;
+    String historyList[]=new String[100];
+    try {
+      while ((line=reader.readLine()) != null) {
+        if (line.equals(PdeEditor.HISTORY_SEPARATOR)) {
+          line=reader.readLine();
+          int version=Integer.parseInt(line.substring(0,line.indexOf(' ')));
+          if (version == 1) {
+            String whysub=line.substring(2);
+            String why=whysub.substring(0,whysub.indexOf(" -"));
+            String readable=line.substring(line.lastIndexOf("-") + 2);
+            if (historyList.length == historyCount) {
+              String temp[]=new String[historyCount * 2];
+              System.arraycopy(historyList,0,temp,0,historyCount);
+              historyList=temp;
+            }
+            historyList[historyCount++]=why + " - " + readable;
+          }
+        }
+      }
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+    for (int i=historyCount - 1; i >= 0; --i) {
+      MenuItem mi=new MenuItem(historyList[i]);
+      mi.addActionListener(historyMenuListener);
+      menu.add(mi);
+    }
+    reader.close();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+}

@@ -6,13 +6,15 @@
   try {
     FileInputStream input=new FileInputStream(isketchFile);
     int length=(int)isketchFile.length();
+    String program="";
     if (length != 0) {
       byte data[]=new byte[length];
       int count=0;
       while (count != length) {
         data[count++]=(byte)input.read();
       }
-      textarea.setText(new String(data));
+      program=new String(data);
+      textarea.setText(program);
     }
  else {
       textarea.setText("");
@@ -21,6 +23,9 @@
     sketchFile=isketchFile;
     sketchDir=isketchDir;
     setSketchModified(false);
+    historyFile=new File(sketchFile.getParent(),"history.gz");
+    base.rebuildHistoryMenu(historyFile.getPath());
+    historyLast=program;
     header.reset();
     presentLocation=null;
     appletLocation=null;

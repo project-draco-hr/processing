@@ -58,6 +58,23 @@
   menu.add(new MenuItem("Present",new MenuShortcut('P')));
   menu.add(new MenuItem("Stop"));
   menu.addSeparator();
+  recordingHistory=getBoolean("history.recording",true);
+  if (recordingHistory) {
+    historyMenu=new Menu("History");
+    menu.add(historyMenu);
+    item=new MenuItem("Clear History");
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        if (!editor.historyFile.delete()) {
+          System.err.println("couldn't erase history");
+        }
+        rebuildHistoryMenu(historyMenu,editor.historyFile.getPath());
+      }
+    }
+);
+    menu.add(item);
+    menu.addSeparator();
+  }
   item=new MenuItem("Beautify",new MenuShortcut('B'));
   item.setEnabled(false);
   menu.add(item);
