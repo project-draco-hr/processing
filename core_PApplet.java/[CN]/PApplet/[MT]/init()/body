@@ -4,11 +4,23 @@
   addMouseMotionListener(this);
   addKeyListener(this);
   addFocusListener(this);
+  try {
+    if (jdkVersion >= 1.4) {
+      System.out.println("hello");
+      Method defocus=Component.class.getMethod("setFocusTraversalKeysEnabled",new Class[]{Boolean.TYPE});
+      defocus.invoke(this,new Object[]{Boolean.FALSE});
+    }
+ else {
+      System.out.println(jdkVersion);
+    }
+  }
+ catch (  Exception e) {
+  }
   millisOffset=System.currentTimeMillis();
   finished=false;
-  drawn=false;
   firstFrame=true;
   looping=true;
+  redraw=true;
   firstMouseEvent=true;
   setup();
   this.pixels=g.pixels;

@@ -3,14 +3,17 @@
     while ((Thread.currentThread() == thread) && !finished) {
       updated=false;
       if (PApplet.THREAD_DEBUG)       println("nextFrame()");
-      if (looping)       nextFrame();
+      if (looping || redraw)       nextFrame();
+      redraw=false;
       while (!updated) {
         try {
+          if (PApplet.THREAD_DEBUG)           System.out.println(looping + " " + redraw);
           if (PApplet.THREAD_DEBUG)           System.out.println("gonna sleep");
           Thread.sleep(looping ? 1 : 10000);
           if (PApplet.THREAD_DEBUG)           System.out.println("outta sleep");
         }
  catch (        InterruptedException e) {
+          break;
         }
       }
     }
