@@ -21,11 +21,11 @@ break;
 case LINE_STRIP:
 case LINE_LOOP:
 if (vertexCount == 1) {
-path=new GeneralPath();
-path.moveTo(x,y);
+gpath=new GeneralPath();
+gpath.moveTo(x,y);
 }
  else {
-path.lineTo(x,y);
+gpath.lineTo(x,y);
 }
 break;
 case TRIANGLES:
@@ -38,11 +38,11 @@ if (vertexCount == 3) {
 triangle(vertices[0][MX],vertices[0][MY],vertices[1][MX],vertices[1][MY],x,y);
 }
  else if (vertexCount > 3) {
-path=new GeneralPath();
-path.moveTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
-path.lineTo(vertices[vertexCount - 1][MX],vertices[vertexCount - 1][MY]);
-path.lineTo(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
-draw_shape(path);
+gpath=new GeneralPath();
+gpath.moveTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
+gpath.lineTo(vertices[vertexCount - 1][MX],vertices[vertexCount - 1][MY]);
+gpath.lineTo(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
+draw_shape(gpath);
 }
 break;
 case TRIANGLE_FAN:
@@ -50,11 +50,11 @@ if (vertexCount == 3) {
 triangle(vertices[0][MX],vertices[0][MY],vertices[1][MX],vertices[1][MY],x,y);
 }
  else if (vertexCount > 3) {
-path=new GeneralPath();
-path.moveTo(vertices[0][MX],vertices[0][MY]);
-path.lineTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
-path.lineTo(x,y);
-draw_shape(path);
+gpath=new GeneralPath();
+gpath.moveTo(vertices[0][MX],vertices[0][MY]);
+gpath.lineTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
+gpath.lineTo(x,y);
+draw_shape(gpath);
 }
 break;
 case QUADS:
@@ -67,23 +67,23 @@ if (vertexCount == 4) {
 quad(vertices[0][MX],vertices[0][MY],vertices[2][MX],vertices[2][MY],x,y,vertices[1][MX],vertices[1][MY]);
 }
  else if (vertexCount > 4) {
-path=new GeneralPath();
-path.moveTo(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
-path.lineTo(vertices[vertexCount - 1][MX],vertices[vertexCount - 1][MY]);
-path.lineTo(x,y);
-path.lineTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
-draw_shape(path);
+gpath=new GeneralPath();
+gpath.moveTo(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
+gpath.lineTo(vertices[vertexCount - 1][MX],vertices[vertexCount - 1][MY]);
+gpath.lineTo(x,y);
+gpath.lineTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
+draw_shape(gpath);
 }
 break;
 case POLYGON:
 case CONCAVE_POLYGON:
 case CONVEX_POLYGON:
 if (vertexCount == 1) {
-path=new GeneralPath();
-path.moveTo(x,y);
+gpath=new GeneralPath();
+gpath.moveTo(x,y);
 }
  else {
-path.lineTo(x,y);
+gpath.lineTo(x,y);
 }
 break;
 }
