@@ -1,48 +1,37 @@
 {
   while ((Thread.currentThread() == thread) && !finished) {
-    try {
-      if (timing) {
-        actualMillis=System.currentTimeMillis();
-        calendar=null;
-      }
-      if (!drawn) {
-        g.beginFrame();
-        draw();
-        if (!drawMethod) {
-        }
-        if (drawMethod) {
-          g.endFrame();
-          update();
-          finished=true;
-        }
-        drawn=true;
-      }
+    if (timing) {
+      actualMillis=System.currentTimeMillis();
+      calendar=null;
+    }
+    if (!drawn) {
+      g.beginFrame();
+      draw();
       if (!drawMethod) {
-        g.beginFrame();
-        loop();
+      }
+      if (drawMethod) {
         g.endFrame();
         update();
-      }
-      if (!loopMethod) {
         finished=true;
       }
-      if (mousePressedBriefly) {
-        mousePressedBriefly=false;
-        mousePressed=false;
-      }
-      if (keyPressedBriefly) {
-        keyPressedBriefly=false;
-        keyPressed=false;
-      }
+      drawn=true;
     }
- catch (    Exception e) {
-      if (errStream != null) {
-        errStream.print("MAKE WAY");
-        e.printStackTrace(errStream);
-      }
- else {
-        e.printStackTrace();
-      }
+    if (!drawMethod) {
+      g.beginFrame();
+      loop();
+      g.endFrame();
+      update();
+    }
+    if (!loopMethod) {
+      finished=true;
+    }
+    if (mousePressedBriefly) {
+      mousePressedBriefly=false;
+      mousePressed=false;
+    }
+    if (keyPressedBriefly) {
+      keyPressedBriefly=false;
+      keyPressed=false;
     }
     try {
       thread.sleep(5);
