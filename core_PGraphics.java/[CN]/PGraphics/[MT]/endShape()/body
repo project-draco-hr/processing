@@ -6,7 +6,7 @@
   shape=false;
   int vertexCount=polygon.vertexCount;
   float vertices[][]=polygon.vertices;
-  if ((camera_mode == PERSPECTIVE) && (dimensions == 0)) {
+  if ((cameraMode == PERSPECTIVE) && (dimensions == 0)) {
     polygon.interpZ=false;
     spolygon.interpZ=false;
     for (int i=0; i < vertexCount; i++) {
@@ -14,7 +14,7 @@
       vertices[i][Y]=vertices[i][MY];
     }
   }
- else   if ((camera_mode == PERSPECTIVE) && (dimensions == 2)) {
+ else   if ((cameraMode == PERSPECTIVE) && (dimensions == 2)) {
     polygon.interpZ=false;
     spolygon.interpZ=false;
     for (int i=0; i < vertexCount; i++) {
@@ -86,7 +86,7 @@
   if (polygon.interpUV) {
     fpolygon.texture(polygon.timage);
   }
-  if (!lighting) {
+  if (!lights) {
     spolygon.interpRGBA=strokeChanged;
     fpolygon.interpRGBA=fillChanged;
   }
@@ -120,7 +120,7 @@
   }
 switch (shapeKind) {
 case POINTS:
-    if ((dimensions == 0) && unchangedZ && (strokeWeight == ONE)&& !lighting) {
+    if ((dimensions == 0) && unchangedZ && (strokeWeight == ONE)&& !lights) {
       if (!strokeChanged) {
         for (int i=0; i < vertexCount; i++) {
           thin_point((int)vertices[i][X],(int)vertices[i][Y],0,strokeColor);
@@ -136,7 +136,7 @@ case POINTS:
       float f[]=vertices[0];
       for (int i=0; i < vertexCount; i++) {
         float v[]=vertices[i];
-        if ((i == 0) || lighting || strokeChanged) {
+        if ((i == 0) || lights || strokeChanged) {
           calc_lighting(v[SR],v[SG],v[SB],v[X],v[Y],v[Z],v[NX],v[NY],v[NZ],f,R);
         }
         thick_point(v[X],v[Y],v[Z],f[R],f[G],f[B],f[SA]);

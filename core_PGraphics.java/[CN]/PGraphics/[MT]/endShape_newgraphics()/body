@@ -115,13 +115,13 @@ triangulate_polygon();
 break;
 }
 }
-if ((camera_mode != CUSTOM) && (dimensions == 0)) {
+if ((cameraMode != CUSTOM) && (dimensions == 0)) {
 for (int i=vertex_start; i < vertex_end; i++) {
 vertices[i][X]=vertices[i][MX];
 vertices[i][Y]=vertices[i][MY];
 }
 }
- else if ((camera_mode != CUSTOM) && (dimensions == 2)) {
+ else if ((cameraMode != CUSTOM) && (dimensions == 2)) {
 for (int i=vertex_start; i < vertex_end; i++) {
 vertices[i][X]=m00 * vertices[i][MX] + m01 * vertices[i][MY] + m03;
 vertices[i][Y]=m10 * vertices[i][MX] + m11 * vertices[i][MY] + m13;
@@ -164,7 +164,7 @@ v[NY]/=nlen;
 v[NZ]/=nlen;
 }
 }
-if (!lighting) {
+if (!lights) {
 }
  else {
 float f[]=vertices[vertex_start];
@@ -188,7 +188,7 @@ calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,SR);
 }
 }
 }
-if ((camera_mode == PERSPECTIVE) && (dimensions == 3)) {
+if ((cameraMode == PERSPECTIVE) && (dimensions == 3)) {
 for (int i=vertex_start; i < vertex_end; i++) {
 float vx[]=vertices[i];
 float ox=p00 * vx[VX] + p01 * vx[VY] + p02 * vx[VZ] + p03 * vx[VW];
