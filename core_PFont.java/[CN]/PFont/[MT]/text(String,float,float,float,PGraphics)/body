@@ -1,24 +1,20 @@
 {
-  float startX=x;
-  int index=0;
-  char previous=0;
   int length=str.length();
-  if (length > c.length) {
-    c=new char[length + 10];
+  if (length > textBuffer.length) {
+    textBuffer=new char[length + 10];
   }
-  str.getChars(0,length,c,0);
+  str.getChars(0,length,textBuffer,0);
+  int start=0;
+  int index=0;
   while (index < length) {
-    if (c[index] == '\n') {
-      x=startX;
+    if (textBuffer[index] == '\n') {
+      textLine(start,index,x,y,z,parent);
+      start=index + 1;
       y+=leading;
-      previous=0;
-    }
- else {
-      text(c[index],x,y,z,parent);
-      x+=width(c[index]);
-      if (previous != 0)       x+=kern(previous,c[index]);
-      previous=c[index];
     }
     index++;
+  }
+  if (start < length) {
+    textLine(start,index,x,y,z,parent);
   }
 }

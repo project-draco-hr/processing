@@ -1,21 +1,21 @@
 {
-  float wide=0;
-  float pwide=0;
-  char previous=0;
-  char s[]=string.toCharArray();
-  for (int i=0; i < s.length; i++) {
-    if (s[i] == '\n') {
-      if (wide > pwide)       pwide=wide;
-      wide=0;
-      previous=0;
-    }
- else {
-      wide+=width(s[i]);
-      if (previous != 0) {
-        wide+=kern(previous,s[i]);
-      }
-      previous=s[i];
-    }
+  int length=str.length();
+  if (length > widthBuffer.length) {
+    widthBuffer=new char[length + 10];
   }
-  return (pwide > wide) ? pwide : wide;
+  str.getChars(0,length,widthBuffer,0);
+  float wide=0;
+  int index=0;
+  int start=0;
+  while (index < length) {
+    if (widthBuffer[index] == '\n') {
+      wide=Math.max(wide,calcWidth(widthBuffer,start,index));
+      start=index + 1;
+    }
+    index++;
+  }
+  if (start < length) {
+    wide=Math.max(wide,calcWidth(widthBuffer,start,index));
+  }
+  return wide;
 }
