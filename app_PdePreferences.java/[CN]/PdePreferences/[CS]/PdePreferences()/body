@@ -17,9 +17,8 @@
     }
   }
   setColor("run.window.bgcolor",SystemColor.control);
-  preferencesFile=new File(getProcessingHome(),PREFS_FILE);
+  preferencesFile=PdeBase.getProcessingHome(PREFS_FILE);
   if (!preferencesFile.exists()) {
-    getProcessingHome().mkdirs();
     save();
   }
  else {
@@ -84,7 +83,7 @@
   button.setBounds(h,top + (vmax - d2.height) / 2,d2.width,d2.height);
   right=Math.max(right,h + d2.width + GUI_BIG);
   top+=vmax + GUI_BETWEEN;
-  exportLibraryBox=new JCheckBox("Enable export to \"Library\"");
+  exportLibraryBox=new JCheckBox("Enable advanced \"Library\" features");
   pain.add(exportLibraryBox);
   d=exportLibraryBox.getPreferredSize();
   exportLibraryBox.setBounds(left,top,d.width,d.height);
@@ -96,12 +95,14 @@
   externalEditorBox.setBounds(left,top,d.width,d.height);
   right=Math.max(right,left + d.width);
   top+=d.height + GUI_BETWEEN;
-  label=new JLabel("More preferences can be edited directly");
+  label=new JLabel("More preferences can be edited directly in the file");
+  label.setForeground(Color.GRAY);
   pain.add(label);
   d=label.getPreferredSize();
   label.setBounds(left,top,d.width,d.height);
   top+=d.height;
-  label=new JLabel("in the file " + preferencesFile.getAbsolutePath());
+  label=new JLabel(preferencesFile.getAbsolutePath());
+  label.setForeground(Color.GRAY);
   pain.add(label);
   d=label.getPreferredSize();
   label.setBounds(left,top,d.width,d.height);
@@ -134,6 +135,12 @@
   wide=right + GUI_BIG;
   high=top + GUI_BIG;
   setSize(wide,high);
+  frame.addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      disposeFrame();
+    }
+  }
+);
   Container content=frame.getContentPane();
   content.setLayout(new BorderLayout());
   content.add(this,BorderLayout.CENTER);

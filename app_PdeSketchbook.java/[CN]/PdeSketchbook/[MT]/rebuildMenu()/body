@@ -1,7 +1,6 @@
 {
-  menu.removeAll();
-  popup.removeAll();
   try {
+    popup.removeAll();
     JMenuItem item=new JMenuItem("Open...");
     item.addActionListener(new ActionListener(){
       public void actionPerformed(      ActionEvent e){
@@ -17,6 +16,7 @@
     addSketches(examples,examplesFolder);
     popup.add(examples);
     builtOnce=true;
+    menu.removeAll();
     if (sketches) {
       addSketches(menu,new File(PdePreferences.get("sketchbook.path")));
       menu.addSeparator();
@@ -24,6 +24,10 @@
     examples=new JMenu("Examples");
     addSketches(examples,examplesFolder);
     menu.add(examples);
+    addlib.removeAll();
+    boolean libs=addLibraries(addlib,new File(PdePreferences.get("sketchbook.path")));
+    if (libs)     menu.addSeparator();
+    addLibraries(addlib,librariesFolder);
   }
  catch (  IOException e) {
     PdeBase.showWarning("Problem while building sketchbook menu","There was a problem with building the\n" + "sketchbook menu. Things might get a little\n" + "kooky around here.",e);

@@ -1,0 +1,53 @@
+{
+  if (!folder.isDirectory())   return false;
+  String list[]=folder.list();
+  if (list == null)   return false;
+  for (int i=0; i < list.length; i++) {
+    int who=i;
+    for (int j=i + 1; j < list.length; j++) {
+      if (list[j].compareTo(list[who]) < 0) {
+        who=j;
+      }
+    }
+    if (who != i) {
+      String temp=list[who];
+      list[who]=list[i];
+      list[i]=temp;
+    }
+  }
+  ActionListener listener=new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      editor.sketch.addLibrary(e.getActionCommand());
+    }
+  }
+;
+  boolean ifound=false;
+  for (int i=0; i < list.length; i++) {
+    if ((list[i].charAt(0) == '.') || list[i].equals("CVS"))     continue;
+    File subfolder=new File(folder,list[i]);
+    File exported=new File(subfolder,"library");
+    File entry=new File(exported,list[i] + ".jar");
+    if (entry.exists()) {
+      String sanityCheck=sanitizedName(list[i]);
+      if (!sanityCheck.equals(list[i])) {
+        String mess="The library \"" + list[i] + "\" cannot be used.\n"+ "Library names must contain only basic letters and numbers.\n"+ "(ascii only and no spaces, and it cannot start with a number)";
+        PdeBase.showMessage("Ignoring bad sketch name",mess);
+        continue;
+      }
+      JMenuItem item=new JMenuItem(list[i]);
+      item.addActionListener(listener);
+      item.setActionCommand(entry.getAbsolutePath());
+      menu.add(item);
+      ifound=true;
+    }
+ else {
+      JMenu submenu=new JMenu(list[i]);
+      boolean found=addLibraries(submenu,subfolder);
+      if (found) {
+        menu.add(submenu);
+        ifound=true;
+      }
+    }
+  }
+  return ifound;
+}

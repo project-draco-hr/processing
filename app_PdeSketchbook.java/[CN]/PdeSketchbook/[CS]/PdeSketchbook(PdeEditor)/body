@@ -2,13 +2,14 @@
   this.editor=editor;
   examplesFolder=new File(System.getProperty("user.dir"),"examples");
   examplesPath=examplesFolder.getAbsolutePath();
+  librariesFolder=new File(System.getProperty("user.dir"),"libraries");
+  librariesPath=librariesFolder.getAbsolutePath();
   if (PdePreferences.get("sketchbook.path") == null) {
-    File home=PdePreferences.getProcessingHome();
-    String folderName=PdePreferences.get("sketchbook.name.default");
-    File sketchbookFolder=new File(home,folderName);
+    File sketchbookFolder=PdeBase.getProcessingHome();
     PdePreferences.set("sketchbook.path",sketchbookFolder.getAbsolutePath());
     if (!sketchbookFolder.exists())     sketchbookFolder.mkdirs();
   }
   menu=new JMenu("Sketchbook");
   popup=new JMenu("Sketchbook");
+  addlib=new JMenu("Add Library");
 }
