@@ -1,3 +1,35 @@
 {
-  System.err.println("need to save ass here. code not yet finished.");
+  FileDialog fd=new FileDialog(editor,"Save sketch folder as...",FileDialog.SAVE);
+  fd.setDirectory(PdePreferences.get("sketchbook.path"));
+  fd.show();
+  String newParentDir=fd.getDirectory();
+  String newName=fd.getFile();
+  if (newName == null)   return false;
+  File newFolder=new File(newParentDir,newName);
+  if (newFolder.equals(folder)) {
+    PdeBase.showWarning("You can't fool me","The new sketch name and location are the same\n" + "as the old. I ain't not doin nuthin'.",null);
+    return false;
+  }
+  PdeBase.copyDir(folder,newFolder);
+  for (int i=0; i < codeCount; i++) {
+    code[i].file=new File(newFolder,code[i].file.getName());
+  }
+  for (int i=0; i < hiddenCount; i++) {
+    hidden[i].file=new File(newFolder,hidden[i].file.getName());
+  }
+  code[0].file.delete();
+  code[0].file=new File(newFolder,newName + ".pde");
+  code[0].name=newName;
+  code[0].save();
+  String oldName=name;
+  name=newName;
+  File oldFolder=folder;
+  folder=newFolder;
+  dataFolder=new File(folder,"data");
+  codeFolder=new File(folder,"code");
+  PdeBase.removeDir(new File(folder,"applet"));
+  PdeBase.removeDir(new File(folder,"application"));
+  PdeBase.removeDir(new File(folder,"library"));
+  save();
+  return true;
 }
