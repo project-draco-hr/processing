@@ -1,0 +1,24 @@
+{
+  float startY=y;
+  int index=0;
+  char previous=0;
+  int length=str.length();
+  if (length > c.length) {
+    c=new char[length + 10];
+  }
+  str.getChars(0,length,c,0);
+  while (index < length) {
+    if (c[index] == '\n') {
+      y=startY;
+      x+=leading;
+      previous=0;
+    }
+ else {
+      ltext(c[index],x,y,parent);
+      y-=width(c[index]);
+      if (previous != 0)       y-=kern(previous,c[index]);
+      previous=c[index];
+    }
+    index++;
+  }
+}
