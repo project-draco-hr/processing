@@ -1,44 +1,22 @@
 {
-  if (hints[NEW_GRAPHICS]) {
-    if (textureImage == null) {
-      message(PROBLEM,"gotta use texture() " + "after beginShape() and before vertexTexture()");
-      return;
-    }
-    if (textureMode == IMAGE_SPACE) {
-      textureU=(u < textureImage.width) ? u : textureImage.width;
-      if (textureU < 0)       textureU=0;
-      textureV=(v < textureImage.height) ? v : textureImage.height;
-      if (textureV < 0)       textureV=0;
-      textureU=u / (float)textureImage.width;
-      textureV=v / (float)textureImage.height;
-    }
- else {
-      textureU=u;
-      textureV=v;
-      if (textureU < 0)       textureU=0;
-      if (textureV < 0)       textureV=0;
-      if (textureU > ONE)       textureU=ONE;
-      if (textureV > ONE)       textureV=ONE;
-    }
+  if (textureImage == null) {
+    message(PROBLEM,"gotta use texture() " + "after beginShape() and before vertexTexture()");
+    return;
+  }
+  if (textureMode == IMAGE_SPACE) {
+    textureU=(u < textureImage.width) ? u : textureImage.width;
+    if (textureU < 0)     textureU=0;
+    textureV=(v < textureImage.height) ? v : textureImage.height;
+    if (textureV < 0)     textureV=0;
+    textureU=u / (float)textureImage.width;
+    textureV=v / (float)textureImage.height;
   }
  else {
-    if (textureImage == null) {
-      message(PROBLEM,"gotta use texture() " + "after beginShape() and before vertex()");
-      return;
-    }
-    if (textureMode == IMAGE_SPACE) {
-      textureU=(u < polygon.twidth) ? u : polygon.twidth;
-      if (textureU < 0)       textureU=0;
-      textureV=(v < polygon.theight) ? v : polygon.theight;
-      if (textureV < 0)       textureV=0;
-    }
- else {
-      if (textureU < 0)       textureU=0;
-      if (textureV < 0)       textureV=0;
-      if (textureU > ONE)       textureU=ONE;
-      if (textureV > ONE)       textureV=ONE;
-      textureU=u * polygon.twidth;
-      textureV=v * polygon.theight;
-    }
+    textureU=u;
+    textureV=v;
+    if (textureU < 0)     textureU=0;
+    if (textureV < 0)     textureV=0;
+    if (textureU > ONE)     textureU=ONE;
+    if (textureV > ONE)     textureV=ONE;
   }
 }
