@@ -1,48 +1,62 @@
 {
   if (!base.recordingHistory)   return;
   if (historyLast.equals(program))   return;
-  String modeStr=(mode == RUN) ? "run" : ((mode == SAVE) ? "save" : "autosave");
-  try {
-    ByteArrayOutputStream old=null;
-    if (historyFile.exists()) {
-      InputStream oldStream=new GZIPInputStream(new BufferedInputStream(new FileInputStream(historyFile)));
-      old=new ByteArrayOutputStream();
-      int c=oldStream.read();
-      while (c != -1) {
-        old.write(c);
-        c=oldStream.read();
-      }
-      oldStream.close();
-    }
-    OutputStream historyStream=new GZIPOutputStream(new FileOutputStream(historyFile));
-    if (old != null) {
-      historyStream.write(old.toByteArray());
-    }
-    PrintWriter historyWriter=new PrintWriter(new OutputStreamWriter(historyStream));
-    historyWriter.println();
-    historyWriter.println(HISTORY_SEPARATOR);
-    Calendar now=Calendar.getInstance();
-    int year=now.get(Calendar.YEAR);
-    int month=now.get(Calendar.MONTH) + 1;
-    int day=now.get(Calendar.DAY_OF_MONTH);
-    int hour=now.get(Calendar.HOUR_OF_DAY);
-    int minute=now.get(Calendar.MINUTE);
-    int second=now.get(Calendar.SECOND);
-    String parseDate=year + " " + month+ " "+ day+ " "+ hour+ " "+ minute+ " "+ second;
-    String readableDate=now.getTime().toString();
-    String historyVersion="1";
-    historyWriter.println(historyVersion + " " + modeStr+ " - "+ parseDate+ " - "+ readableDate);
-    historyWriter.println();
-    historyWriter.println(program);
-    historyWriter.flush();
-    historyLast=program;
-    MenuItem menuItem=new MenuItem(modeStr + " - " + readableDate);
-    menuItem.addActionListener(base.historyMenuListener);
-    base.historyMenu.insert(menuItem,0);
-    historyWriter.flush();
-    historyWriter.close();
-  }
- catch (  IOException e) {
-    e.printStackTrace();
-  }
+  String modeStr=null;
+switch (mode) {
+case RUN:
+    modeStr="run";
+  break;
+case SAVE:
+modeStr="save";
+break;
+case AUTOSAVE:
+modeStr="autosave";
+break;
+case BEAUTIFY:
+modeStr="beautify";
+break;
+}
+try {
+ByteArrayOutputStream old=null;
+if (historyFile.exists()) {
+InputStream oldStream=new GZIPInputStream(new BufferedInputStream(new FileInputStream(historyFile)));
+old=new ByteArrayOutputStream();
+int c=oldStream.read();
+while (c != -1) {
+old.write(c);
+c=oldStream.read();
+}
+oldStream.close();
+}
+OutputStream historyStream=new GZIPOutputStream(new FileOutputStream(historyFile));
+if (old != null) {
+historyStream.write(old.toByteArray());
+}
+PrintWriter historyWriter=new PrintWriter(new OutputStreamWriter(historyStream));
+historyWriter.println();
+historyWriter.println(HISTORY_SEPARATOR);
+Calendar now=Calendar.getInstance();
+int year=now.get(Calendar.YEAR);
+int month=now.get(Calendar.MONTH) + 1;
+int day=now.get(Calendar.DAY_OF_MONTH);
+int hour=now.get(Calendar.HOUR_OF_DAY);
+int minute=now.get(Calendar.MINUTE);
+int second=now.get(Calendar.SECOND);
+String parseDate=year + " " + month+ " "+ day+ " "+ hour+ " "+ minute+ " "+ second;
+String readableDate=now.getTime().toString();
+String historyVersion="1";
+historyWriter.println(historyVersion + " " + modeStr+ " - "+ parseDate+ " - "+ readableDate);
+historyWriter.println();
+historyWriter.println(program);
+historyWriter.flush();
+historyLast=program;
+MenuItem menuItem=new MenuItem(modeStr + " - " + readableDate);
+menuItem.addActionListener(base.historyMenuListener);
+base.historyMenu.insert(menuItem,0);
+historyWriter.flush();
+historyWriter.close();
+}
+ catch (IOException e) {
+e.printStackTrace();
+}
 }

@@ -26,6 +26,8 @@
     editField=new TextField();
     editField.addActionListener(this);
     editField.addKeyListener(new KeyAdapter(){
+      protected void noop(){
+      }
       public void keyPressed(      KeyEvent event){
         int c=event.getKeyChar();
         int code=event.getKeyCode();
@@ -35,22 +37,26 @@
           event.consume();
         }
  else         if ((code == KeyEvent.VK_BACK_SPACE) || (code == KeyEvent.VK_DELETE) || (code == KeyEvent.VK_RIGHT)|| (code == KeyEvent.VK_LEFT)|| (code == KeyEvent.VK_UP)|| (code == KeyEvent.VK_DOWN)|| (code == KeyEvent.VK_HOME)|| (code == KeyEvent.VK_END)|| (code == KeyEvent.VK_SHIFT)) {
+          noop();
         }
  else         if (code == KeyEvent.VK_ESCAPE) {
           unedit();
           editor.buttons.clear();
           event.consume();
         }
- else         if (c == ' ') {
+ else         if (code == KeyEvent.VK_SPACE) {
           String t=editField.getText();
           int start=editField.getSelectionStart();
           int end=editField.getSelectionEnd();
           editField.setText(t.substring(0,start) + "_" + t.substring(end));
+          editField.setCaretPosition(start + 1);
           event.consume();
         }
  else         if (c == '_') {
+          noop();
         }
  else         if (((code >= 'A') && (code <= 'Z')) && (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')))) {
+          noop();
         }
  else         if ((c >= '0') && (c <= '9')) {
           if (editField.getCaretPosition() == 0) {

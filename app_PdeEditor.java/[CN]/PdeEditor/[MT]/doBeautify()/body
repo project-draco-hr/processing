@@ -1,5 +1,6 @@
 {
   String prog=textarea.getText();
+  makeHistory(prog,BEAUTIFY);
   char program[]=prog.toCharArray();
   StringBuffer buffer=new StringBuffer();
   boolean gotBlankLine=false;
@@ -29,7 +30,6 @@
       }
     }
  else {
-      System.out.println(level);
       int idx=-1;
       String myline=line.substring(0);
       while (myline.lastIndexOf('}') != idx) {
@@ -37,7 +37,7 @@
         myline=myline.substring(idx + 1);
         level--;
       }
-      for (int i=0; i < level * 2; i++) {
+      for (int i=0; i < level; i++) {
         buffer.append(' ');
       }
       buffer.append(line);
@@ -53,5 +53,6 @@
     }
   }
   textarea.setText(buffer.toString());
+  setSketchModified(true);
   buttons.clear();
 }
