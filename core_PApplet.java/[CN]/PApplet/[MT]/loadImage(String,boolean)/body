@@ -17,6 +17,13 @@
       awtimage=gimmeImage(getClass().getResource("data/" + filename),force);
     }
     if (awtimage == null) {
+      try {
+        String url="file:/" + folder + "/data/"+ filename;
+        awtimage=gimmeImage(new URL(url),force);
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+      }
     }
   }
   if (awtimage == null) {

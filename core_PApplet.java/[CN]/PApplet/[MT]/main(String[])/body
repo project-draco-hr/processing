@@ -18,7 +18,7 @@
       }
  else       if (args[argIndex].indexOf(EXT_EXACT_LOCATION) == 0) {
         external=true;
-        String locationStr=args[argIndex].substring(EXT_LOCATION.length());
+        String locationStr=args[argIndex].substring(EXT_EXACT_LOCATION.length());
         location=toInt(split(locationStr,','));
         exactLocation=true;
       }
@@ -36,7 +36,7 @@
     Class c=Class.forName(name);
     PApplet applet=(PApplet)c.newInstance();
     applet.folder=folder;
-    int argc=args.length - argIndex;
+    int argc=args.length - (argIndex + 1);
     applet.args=new String[argc];
     System.arraycopy(args,argc,applet.args,0,argc);
     applet.init();
