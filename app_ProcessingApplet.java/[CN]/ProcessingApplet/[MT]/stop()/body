@@ -3,4 +3,11 @@
     thread.stop();
     thread=null;
   }
+  Thread threads[]=new Thread[Thread.activeCount()];
+  Thread.enumerate(threads);
+  for (int i=0; i < threads.length; i++) {
+    if (threads[i].getName().indexOf("Thread-") == 0) {
+      threads[i].stop();
+    }
+  }
 }
