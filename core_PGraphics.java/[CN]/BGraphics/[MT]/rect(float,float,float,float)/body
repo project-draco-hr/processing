@@ -1,0 +1,37 @@
+{
+  float hradius, vradius;
+switch (rect_mode) {
+case CORNERS:
+    break;
+case CORNER:
+  x2+=x1;
+y2+=y1;
+break;
+case CENTER_RADIUS:
+hradius=x2;
+vradius=y2;
+x2=x1 + hradius;
+y2=y1 + vradius;
+x1-=hradius;
+y1-=vradius;
+break;
+case CENTER_DIAMETER:
+hradius=x2 / 2.0f;
+vradius=y2 / 2.0f;
+x2=x1 + hradius;
+y2=y1 + vradius;
+x1-=hradius;
+y1-=vradius;
+}
+if ((dimensions == 0) && !lighting && !fill_alpha) {
+flat_rect((int)x1,(int)y1,(int)x2,(int)y2);
+}
+ else {
+beginShape(QUADS);
+vertex(x1,y1);
+vertex(x2,y1);
+vertex(x2,y2);
+vertex(x1,y2);
+endShape();
+}
+}

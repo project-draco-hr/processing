@@ -1,0 +1,47 @@
+{
+  InputStream stream=null;
+  boolean gz=filename.toLowerCase().endsWith(".gz");
+  if (filename.startsWith("http://")) {
+    try {
+      URL url=new URL(filename);
+      stream=url.openStream();
+      return gz ? new GZIPInputStream(stream) : stream;
+    }
+ catch (    MalformedURLException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+  try {
+    stream=getClass().getResourceAsStream(filename);
+    if (stream != null)     return gz ? new GZIPInputStream(stream) : stream;
+  }
+ catch (  IOException e) {
+  }
+  try {
+    stream=getClass().getResourceAsStream("data/" + filename);
+    if (stream != null)     return gz ? new GZIPInputStream(stream) : stream;
+  }
+ catch (  IOException e) {
+  }
+  try {
+    try {
+      stream=new FileInputStream(new File("data",filename));
+      if (stream != null)       return gz ? new GZIPInputStream(stream) : stream;
+    }
+ catch (    IOException e2) {
+    }
+    try {
+      stream=new FileInputStream(filename);
+      if (stream != null)       return gz ? new GZIPInputStream(stream) : stream;
+    }
+ catch (    IOException e1) {
+    }
+  }
+ catch (  SecurityException se) {
+  }
+  if (stream == null) {
+    throw new IOException("openStream() could not open " + filename);
+  }
+  return null;
+}

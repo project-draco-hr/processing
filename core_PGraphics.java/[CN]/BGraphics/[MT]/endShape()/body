@@ -1,0 +1,256 @@
+{
+  if (hints[NEW_GRAPHICS]) {
+    endShape_newgraphics();
+    return;
+  }
+  shape=false;
+  int vertexCount=polygon.vertexCount;
+  float vertices[][]=polygon.vertices;
+  if ((camera_mode == PERSPECTIVE) && (dimensions == 0)) {
+    polygon.interpZ=false;
+    spolygon.interpZ=false;
+    for (int i=0; i < vertexCount; i++) {
+      vertices[i][X]=vertices[i][MX];
+      vertices[i][Y]=vertices[i][MY];
+    }
+  }
+ else   if ((camera_mode == PERSPECTIVE) && (dimensions == 2)) {
+    polygon.interpZ=false;
+    spolygon.interpZ=false;
+    for (int i=0; i < vertexCount; i++) {
+      vertices[i][X]=m00 * vertices[i][MX] + m01 * vertices[i][MY] + m03;
+      vertices[i][Y]=m10 * vertices[i][MX] + m11 * vertices[i][MY] + m13;
+    }
+  }
+ else {
+    polygon.interpZ=true;
+    spolygon.interpZ=true;
+    for (int i=0; i < vertexCount; i++) {
+      float vertex[]=vertices[i];
+      float ax=m00 * vertex[MX] + m01 * vertex[MY] + m02 * vertex[MZ] + m03;
+      float ay=m10 * vertex[MX] + m11 * vertex[MY] + m12 * vertex[MZ] + m13;
+      float az=m20 * vertex[MX] + m21 * vertex[MY] + m22 * vertex[MZ] + m23;
+      float aw=m30 * vertex[MX] + m31 * vertex[MY] + m32 * vertex[MZ] + m33;
+      float ox=p00 * ax + p01 * ay + p02 * az + p03 * aw;
+      float oy=p10 * ax + p11 * ay + p12 * az + p13 * aw;
+      float oz=p20 * ax + p21 * ay + p22 * az + p23 * aw;
+      float ow=p30 * ax + p31 * ay + p32 * az + p33 * aw;
+      if (ow != 0) {
+        ox/=ow;
+        oy/=ow;
+        oz/=ow;
+      }
+      vertex[X]=width * (ONE + ox) / 2.0f;
+      vertex[Y]=height * (ONE + oy) / 2.0f;
+      vertex[Z]=(oz + ONE) / 2.0f;
+    }
+  }
+  boolean clipped=true;
+  int clipCode=thin_flat_lineClipCode(vertices[0][X],vertices[0][Y]);
+  for (int i=1; i < vertexCount; i++) {
+    int code=thin_flat_lineClipCode(vertices[i][X],vertices[i][Y]);
+    if (code != clipCode) {
+      clipped=false;
+      break;
+    }
+  }
+  if ((clipCode != 0) && clipped)   return;
+  if (!normalChanged) {
+    vertices[0][NX]=normalX;
+    vertices[0][NY]=normalY;
+    vertices[0][NZ]=normalZ;
+  }
+  for (int i=0; i < (normalChanged ? vertexCount : 1); i++) {
+    float v[]=vertices[i];
+    float nx=m00 * v[NX] + m01 * v[NY] + m02 * v[NZ] + m03;
+    float ny=m10 * v[NX] + m11 * v[NY] + m12 * v[NZ] + m13;
+    float nz=m20 * v[NX] + m21 * v[NY] + m22 * v[NZ] + m23;
+    float nw=m30 * v[NX] + m31 * v[NY] + m32 * v[NZ] + m33;
+    if (nw != 0) {
+      v[NX]=nx / nw;
+      v[NY]=ny / nw;
+      v[NZ]=nz / nw;
+    }
+ else {
+      v[NX]=nx;
+      v[NY]=ny;
+      v[NZ]=nz;
+    }
+    float nlen=mag(v[NX],v[NY],v[NZ]);
+    if (nlen != 0) {
+      v[NX]/=nlen;
+      v[NY]/=nlen;
+      v[NZ]/=nlen;
+    }
+  }
+  if (polygon.interpUV) {
+    fpolygon.texture(polygon.timage);
+  }
+  if (!lighting) {
+    spolygon.interpRGBA=strokeChanged;
+    fpolygon.interpRGBA=fillChanged;
+  }
+ else {
+    spolygon.interpRGBA=true;
+    fpolygon.interpRGBA=true;
+    float f[]=polygon.vertices[0];
+    for (int i=0; i < vertexCount; i++) {
+      float v[]=polygon.vertices[i];
+      if (normalChanged) {
+        if (_fill) {
+          calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,R);
+        }
+        if (_stroke) {
+          calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,SR);
+        }
+      }
+ else {
+        if (_fill) {
+          calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,R);
+        }
+        if (_stroke) {
+          calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,SR);
+        }
+      }
+    }
+  }
+  int increment;
+  if (shapeKind == POLYGON) {
+    shapeKind=isConvex() ? CONVEX_POLYGON : CONCAVE_POLYGON;
+  }
+switch (shapeKind) {
+case POINTS:
+    if ((dimensions == 0) && unchangedZ && (strokeWeight == ONE)&& !lighting) {
+      if (!strokeChanged) {
+        for (int i=0; i < vertexCount; i++) {
+          thin_point((int)vertices[i][X],(int)vertices[i][Y],0,stroke);
+        }
+      }
+ else {
+        for (int i=0; i < vertexCount; i++) {
+          thin_point((int)vertices[i][X],(int)vertices[i][Y],0,float_color(vertices[i][SR],vertices[i][SG],vertices[i][SB]));
+        }
+      }
+    }
+ else {
+      float f[]=vertices[0];
+      for (int i=0; i < vertexCount; i++) {
+        float v[]=vertices[i];
+        if ((i == 0) || lighting || strokeChanged) {
+          calc_lighting(v[SR],v[SG],v[SB],v[X],v[Y],v[Z],v[NX],v[NY],v[NZ],f,R);
+        }
+        thick_point(v[X],v[Y],v[Z],f[R],f[G],f[B],f[SA]);
+      }
+    }
+  break;
+case LINES:
+case LINE_STRIP:
+case LINE_LOOP:
+if (!_stroke) return;
+if (shapeKind == LINE_LOOP) {
+float v0[]=polygon.vertices[0];
+float v1[]=polygon.nextVertex();
+vertexCount++;
+v1[X]=v0[X];
+v1[Y]=v0[Y];
+v1[Z]=v0[Z];
+v1[SR]=v0[SR];
+v1[SG]=v0[SG];
+v1[SB]=v0[SB];
+}
+increment=(shapeKind == LINES) ? 2 : 1;
+draw_lines(vertices,vertexCount - 1,1,increment,0);
+break;
+case TRIANGLES:
+case TRIANGLE_STRIP:
+increment=(shapeKind == TRIANGLES) ? 3 : 1;
+if (_fill) {
+fpolygon.vertexCount=3;
+for (int i=0; i < vertexCount - 2; i+=increment) {
+for (int j=0; j < 3; j++) {
+fpolygon.vertices[j][R]=vertices[i + j][R];
+fpolygon.vertices[j][G]=vertices[i + j][G];
+fpolygon.vertices[j][B]=vertices[i + j][B];
+fpolygon.vertices[j][A]=vertices[i + j][A];
+fpolygon.vertices[j][X]=vertices[i + j][X];
+fpolygon.vertices[j][Y]=vertices[i + j][Y];
+fpolygon.vertices[j][Z]=vertices[i + j][Z];
+if (polygon.interpUV) {
+fpolygon.vertices[j][U]=vertices[i + j][U];
+fpolygon.vertices[j][V]=vertices[i + j][V];
+}
+}
+fpolygon.render();
+}
+}
+if (_stroke) {
+if (shapeKind == TRIANGLE_STRIP) {
+draw_lines(vertices,vertexCount - 1,1,1,0);
+}
+ else {
+draw_lines(vertices,vertexCount - 1,1,1,3);
+}
+draw_lines(vertices,vertexCount - 2,2,increment,0);
+}
+break;
+case QUADS:
+case QUAD_STRIP:
+increment=(shapeKind == QUADS) ? 4 : 2;
+if (_fill) {
+fpolygon.vertexCount=4;
+for (int i=0; i < vertexCount - 3; i+=increment) {
+for (int j=0; j < 4; j++) {
+fpolygon.vertices[j][R]=vertices[i + j][R];
+fpolygon.vertices[j][G]=vertices[i + j][G];
+fpolygon.vertices[j][B]=vertices[i + j][B];
+fpolygon.vertices[j][A]=vertices[i + j][A];
+fpolygon.vertices[j][X]=vertices[i + j][X];
+fpolygon.vertices[j][Y]=vertices[i + j][Y];
+fpolygon.vertices[j][Z]=vertices[i + j][Z];
+if (polygon.interpUV) {
+fpolygon.vertices[j][U]=vertices[i + j][U];
+fpolygon.vertices[j][V]=vertices[i + j][V];
+}
+}
+fpolygon.render();
+}
+}
+if (_stroke) {
+if (shapeKind == QUAD_STRIP) {
+draw_lines(vertices,vertexCount - 1,1,1,0);
+}
+ else {
+draw_lines(vertices,vertexCount,1,1,4);
+}
+draw_lines(vertices,vertexCount - 2,3,increment,0);
+}
+break;
+case POLYGON:
+case CONCAVE_POLYGON:
+if (_fill) {
+boolean smoov=smooth;
+if (_stroke && !hints[DISABLE_SMOOTH_HACK]) smooth=false;
+concaveRender();
+if (_stroke && !hints[DISABLE_SMOOTH_HACK]) smooth=smoov;
+}
+if (_stroke) {
+draw_lines(vertices,vertexCount - 1,1,1,0);
+svertices[0]=vertices[vertexCount - 1];
+svertices[1]=vertices[0];
+draw_lines(svertices,1,1,1,0);
+}
+break;
+case CONVEX_POLYGON:
+if (_fill) {
+polygon.render();
+if (_stroke) polygon.unexpand();
+}
+if (_stroke) {
+draw_lines(vertices,vertexCount - 1,1,1,0);
+svertices[0]=vertices[vertexCount - 1];
+svertices[1]=vertices[0];
+draw_lines(svertices,1,1,1,0);
+}
+break;
+}
+}

@@ -1,0 +1,60 @@
+{
+  int ix1=0;
+  int iy1=0;
+  int ix2=image.width;
+  int iy2=image.height;
+  if (image_mode == CENTER_DIAMETER) {
+    sx1-=image.width / 2;
+    sy1-=image.height / 2;
+  }
+  int sx2=sx1 + image.width;
+  int sy2=sy1 + image.height;
+  if ((sx1 > width1) || (sx2 < 0) || (sy1 > height1)|| (sy2 < 0))   return;
+  if (sx1 < 0) {
+    ix1-=sx1;
+    sx1=0;
+  }
+  if (sy1 < 0) {
+    iy1-=sy1;
+    sy1=0;
+  }
+  if (sx2 > width) {
+    ix2-=sx2 - width;
+    sx2=width;
+  }
+  if (sy2 > height) {
+    iy2-=sy2 - height;
+    sy2=height;
+  }
+  int source=iy1 * image.width + ix1;
+  int target=sy1 * width;
+  if (image.format == RGBA) {
+    for (int y=sy1; y < sy2; y++) {
+      int tx=0;
+      for (int x=sx1; x < sx2; x++) {
+        pixels[target + x]=_blend(pixels[target + x],image.pixels[source + tx],image.pixels[source + tx++] >>> 24);
+      }
+      source+=image.width;
+      target+=width;
+    }
+  }
+ else   if (image.format == ALPHA) {
+    for (int y=sy1; y < sy2; y++) {
+      int tx=0;
+      for (int x=sx1; x < sx2; x++) {
+        pixels[target + x]=_blend(pixels[target + x],fill,image.pixels[source + tx++]);
+      }
+      source+=image.width;
+      target+=width;
+    }
+  }
+ else   if (image.format == RGB) {
+    target+=sx1;
+    int tw=sx2 - sx1;
+    for (int y=sy1; y < sy2; y++) {
+      System.arraycopy(image.pixels,source,pixels,target,tw);
+      source+=image.width;
+      target+=width;
+    }
+  }
+}

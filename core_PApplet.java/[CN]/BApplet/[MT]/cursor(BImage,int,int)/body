@@ -1,0 +1,25 @@
+{
+  if (jdkVersion < 1.2) {
+    System.err.println("cursor() error: Java 1.2 or higher is " + "required to set cursors");
+    System.err.println("                (You're using version " + nf((float)jdkVersion,1,1) + ")");
+    return;
+  }
+  Image jimage=createImage(new MemoryImageSource(image.width,image.height,image.pixels,0,image.width));
+  Toolkit tk=Toolkit.getDefaultToolkit();
+  Point hotspot=new Point(hotspotX,hotspotY);
+  try {
+    Method mCustomCursor=Toolkit.class.getMethod("createCustomCursor",new Class[]{Image.class,Point.class,String.class});
+    Cursor cursor=(Cursor)mCustomCursor.invoke(Toolkit.getDefaultToolkit(),new Object[]{jimage,hotspot,"no cursor"});
+    setCursor(cursor);
+    cursor_visible=true;
+  }
+ catch (  NoSuchMethodError e) {
+    System.out.println("cursor() is not available on " + nf((float)jdkVersion,1,1));
+  }
+catch (  IndexOutOfBoundsException e) {
+    System.err.println("cursor() error: the hotspot " + hotspot + " is out of bounds for the given image.");
+  }
+catch (  Exception e) {
+    System.err.println(e);
+  }
+}

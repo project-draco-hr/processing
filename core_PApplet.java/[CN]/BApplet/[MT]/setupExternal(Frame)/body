@@ -1,0 +1,20 @@
+{
+  externalRuntime=true;
+  stopper=new Stopper();
+  frame.addComponentListener(new ComponentAdapter(){
+    public void componentMoved(    ComponentEvent e){
+      Point where=((Frame)e.getSource()).getLocation();
+      System.err.println(BApplet.EXTERNAL_MOVE + " " + where.x+ " "+ where.y);
+      System.err.flush();
+    }
+  }
+);
+  frame.addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      System.err.println(BApplet.EXTERNAL_QUIT);
+      System.err.flush();
+      System.exit(0);
+    }
+  }
+);
+}

@@ -1,0 +1,23 @@
+{
+  try {
+    if ((vwidth != 0) && (vheight != 0)) {
+      videoInput=new BVideo(this,vwidth,vheight,vfps,false);
+    }
+ else {
+      videoInput=new BVideo(this,320,240,vfps,false);
+    }
+    videoInput.start();
+    while (videoInput.image == null) {
+      try {
+        Thread.sleep(5);
+      }
+ catch (      InterruptedException e) {
+      }
+    }
+    video=videoInput.image;
+  }
+ catch (  Exception e) {
+    System.err.println("beginVideo() failed..");
+    e.printStackTrace();
+  }
+}

@@ -1,0 +1,24 @@
+{
+  m_tImage=image;
+  m_texture=image.pixels;
+  TEX_WIDTH=image.width;
+  TEX_HEIGHT=image.height;
+  F_TEX_WIDTH=TEX_WIDTH - 1;
+  F_TEX_HEIGHT=TEX_HEIGHT - 1;
+  INTERPOLATE_UV=true;
+  if (image.format == RGBA) {
+    m_drawFlags|=R_TEXTURE32;
+  }
+ else   if (image.format == RGB) {
+    m_drawFlags|=R_TEXTURE24;
+  }
+ else   if (image.format == ALPHA) {
+    m_drawFlags|=R_TEXTURE8;
+  }
+  if (parent.smooth) {
+    m_bilinear=true;
+  }
+ else {
+    m_bilinear=false;
+  }
+}

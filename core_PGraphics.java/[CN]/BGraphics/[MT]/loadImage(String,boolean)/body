@@ -1,0 +1,55 @@
+{
+  Image awtimage=null;
+  if (filename.startsWith("http://")) {
+    try {
+      URL url=new URL(filename);
+      awtimage=gimmeImage(url,force);
+    }
+ catch (    MalformedURLException e) {
+      System.err.println("error loading image from " + filename);
+      e.printStackTrace();
+      return null;
+    }
+  }
+ else {
+    awtimage=gimmeImage(getClass().getResource(filename),force);
+    if (awtimage == null) {
+      awtimage=gimmeImage(getClass().getResource("data/" + filename),force);
+    }
+  }
+  if (awtimage == null) {
+    System.err.println("could not load image " + filename);
+    return null;
+  }
+  Component component=applet;
+  if (component == null) {
+    component=new Frame();
+    ((Frame)component).pack();
+  }
+  MediaTracker tracker=new MediaTracker(component);
+  tracker.addImage(awtimage,0);
+  try {
+    tracker.waitForAll();
+  }
+ catch (  InterruptedException e) {
+    e.printStackTrace();
+  }
+  int jwidth=awtimage.getWidth(null);
+  int jheight=awtimage.getHeight(null);
+  int jpixels[]=new int[jwidth * jheight];
+  PixelGrabber pg=new PixelGrabber(awtimage,0,0,jwidth,jheight,jpixels,0,jwidth);
+  try {
+    pg.grabPixels();
+  }
+ catch (  InterruptedException e) {
+    e.printStackTrace();
+  }
+  if (filename.toLowerCase().endsWith(".gif")) {
+    for (int i=0; i < jpixels.length; i++) {
+      if ((jpixels[i] & 0xff000000) != 0xff000000) {
+        return new BImage(jpixels,jwidth,jheight,RGBA);
+      }
+    }
+  }
+  return new BImage(jpixels,jwidth,jheight,RGB);
+}

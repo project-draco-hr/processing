@@ -1,0 +1,10 @@
+{
+  if (fpsLastDelayTime == 0) {
+    fpsLastDelayTime=System.currentTimeMillis();
+    return;
+  }
+  long timeToLeave=fpsLastDelayTime + (long)(1000.0f / fpsTarget);
+  int napTime=(int)(timeToLeave - System.currentTimeMillis());
+  fpsLastDelayTime=timeToLeave;
+  delay(napTime);
+}

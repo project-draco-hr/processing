@@ -1,0 +1,30 @@
+{
+  float delta=p2[Y] - p1[Y];
+  if (delta == 0)   delta=ONE;
+  float fraction=y + HALF - p1[Y];
+  if (interpX) {
+    dp[X]=(p2[X] - p1[X]) / delta;
+    p[X]=p1[X] + dp[X] * fraction;
+  }
+  if (interpZ) {
+    dp[Z]=(p2[Z] - p1[Z]) / delta;
+    p[Z]=p1[Z] + dp[Z] * fraction;
+  }
+  if (interpRGBA) {
+    dp[R]=(p2[R] - p1[R]) / delta;
+    dp[G]=(p2[G] - p1[G]) / delta;
+    dp[B]=(p2[B] - p1[B]) / delta;
+    dp[A]=(p2[A] - p1[A]) / delta;
+    p[R]=p1[R] + dp[R] * fraction;
+    p[G]=p1[G] + dp[G] * fraction;
+    p[B]=p1[B] + dp[B] * fraction;
+    p[A]=p1[A] + dp[A] * fraction;
+  }
+  if (interpUV) {
+    dp[U]=(p2[U] - p1[U]) / delta;
+    dp[V]=(p2[V] - p1[V]) / delta;
+    p[U]=p1[U] + dp[U] * fraction;
+    p[V]=p1[V] + dp[V] * fraction;
+    if (FRY)     System.out.println("inc y p[U] p[V] = " + p[U] + " "+ p[V]);
+  }
+}

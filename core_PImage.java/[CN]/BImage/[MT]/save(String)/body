@@ -1,0 +1,21 @@
+{
+  try {
+    OutputStream os=null;
+    if (filename.toLowerCase().endsWith(".tga")) {
+      os=new BufferedOutputStream(new FileOutputStream(filename),32768);
+      write_targa(os,pixels,width,height);
+    }
+ else {
+      if (!filename.toLowerCase().endsWith(".tif") && !filename.toLowerCase().endsWith(".tiff")) {
+        filename+=".tif";
+      }
+      os=new BufferedOutputStream(new FileOutputStream(filename),32768);
+      write_tiff(os,pixels,width,height);
+    }
+    os.flush();
+    os.close();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+}

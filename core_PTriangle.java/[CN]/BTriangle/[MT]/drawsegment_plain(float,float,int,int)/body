@@ -1,0 +1,28 @@
+{
+  ytop*=SCREEN_WIDTH;
+  ybottom*=SCREEN_WIDTH;
+  int f=m_fill;
+  int p=m_index;
+  while (ytop < ybottom) {
+    int xstart=(int)(xleft + PIXEL_CENTER);
+    if (xstart < 0)     xstart=0;
+    int xend=(int)(xrght + PIXEL_CENTER);
+    if (xend > SCREEN_WIDTH)     xend=SCREEN_WIDTH;
+    float xdiff=(xstart + PIXEL_CENTER) - xleft;
+    float iz=izadd * xdiff + zleft;
+    xstart+=ytop;
+    xend+=ytop;
+    for (; xstart < xend; xstart++) {
+      if (iz <= m_zbuffer[xstart]) {
+        m_zbuffer[xstart]=iz;
+        m_pixels[xstart]=f;
+        m_stencil[xstart]=p;
+      }
+      iz+=izadd;
+    }
+    ytop+=SCREEN_WIDTH;
+    xleft+=leftadd;
+    xrght+=rghtadd;
+    zleft+=zleftadd;
+  }
+}

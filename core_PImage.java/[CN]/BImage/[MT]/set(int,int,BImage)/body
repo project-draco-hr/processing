@@ -1,0 +1,35 @@
+{
+  int sx=0;
+  int sy=0;
+  int sw=image.width;
+  int sh=image.height;
+  int tx=x;
+  int ty=y;
+  int tw=image.width;
+  int th=image.height;
+  if (tx < 0) {
+    sx-=tx;
+    sw+=tx;
+    tw+=tx;
+    tx=0;
+  }
+  if (ty < 0) {
+    sy-=ty;
+    sh+=ty;
+    th+=ty;
+    ty=0;
+  }
+  if (tx + tw > width) {
+    int extra=(tx + tw) - width;
+    sw-=extra;
+    tw-=extra;
+  }
+  if (ty + th > height) {
+    int extra=(ty + th) - height;
+    sh-=extra;
+    sw-=extra;
+  }
+  for (int row=sy; row < sy + sh; row++) {
+    System.arraycopy(image.pixels,row * image.width + sx,pixels,(y + row) * width + tx,sw);
+  }
+}

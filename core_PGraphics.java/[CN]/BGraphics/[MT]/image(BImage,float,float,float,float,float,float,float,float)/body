@@ -1,0 +1,51 @@
+{
+switch (image_mode) {
+case CORNERS:
+    break;
+case CORNER:
+  x2+=x1;
+y2+=y1;
+break;
+case CENTER_DIAMETER:
+x2/=2f;
+y2/=2f;
+case CENTER_RADIUS:
+float hr=x2;
+float vr=y2;
+x2=x1 + hr;
+y2=y1 + vr;
+x1-=hr;
+y1-=vr;
+break;
+}
+boolean savedStroke=_stroke;
+boolean savedFill=_fill;
+float savedFillR=fillR;
+float savedFillG=fillG;
+float savedFillB=fillB;
+float savedFillA=fillA;
+_stroke=false;
+_fill=true;
+if (_tint) {
+fillR=tintR;
+fillG=tintG;
+fillB=tintB;
+fillA=tintA;
+}
+ else {
+fillR=fillG=fillB=fillA=1;
+}
+beginShape(QUADS);
+texture(image);
+vertex(x1,y1,u1,v1);
+vertex(x1,y2,u1,v2);
+vertex(x2,y2,u2,v2);
+vertex(x2,y1,u2,v1);
+endShape();
+_stroke=savedStroke;
+_fill=savedFill;
+fillR=savedFillR;
+fillG=savedFillG;
+fillB=savedFillB;
+fillA=savedFillA;
+}

@@ -1,0 +1,34 @@
+{
+  if (BApplet.THREAD_DEBUG)   System.out.println("  2 endFrame");
+  if (hints[NEW_GRAPHICS]) {
+    if (z_order) {
+      for (int i=0; i < triangles_count; i++) {
+        float a[]=vertices[triangles[i][VA]];
+        float b[]=vertices[triangles[i][VB]];
+        float c[]=vertices[triangles[i][VC]];
+        int tex=triangles[i][TEX];
+        int index=triangles[i][TI];
+        triangle.reset();
+        if (tex > -1 && textures[tex] != null) {
+          triangle.setTexture(textures[tex]);
+          triangle.setUV(a[U],a[V],b[U],b[V],c[U],c[V]);
+        }
+        triangle.setIntensities(a[R],a[G],a[B],a[A],b[R],b[G],b[B],b[A],c[R],c[G],c[B],c[A]);
+        triangle.setVertices(a[X],a[Y],a[Z],b[X],b[Y],b[Z],c[X],c[Y],c[Z]);
+        triangle.setIndex(index);
+        triangle.render();
+      }
+      for (int i=0; i < lines_count; i++) {
+        float a[]=vertices[lines[i][PA]];
+        float b[]=vertices[lines[i][PB]];
+        int index=lines[i][LI];
+        line.reset();
+        line.setIntensities(a[SR],a[SG],a[SB],a[SA],b[SR],b[SG],b[SB],b[SA]);
+        line.setVertices(a[X],a[Y],a[Z],b[X],b[Y],b[Z]);
+        line.setIndex(index);
+        line.draw();
+      }
+    }
+  }
+  mis.newPixels(pixels,cm,0,width);
+}

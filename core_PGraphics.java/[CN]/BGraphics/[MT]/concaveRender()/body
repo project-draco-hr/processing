@@ -1,0 +1,119 @@
+{
+  float vertices[][]=polygon.vertices;
+  if (tpolygon == null) {
+    tpolygon=new BPolygon(this);
+    tpolygon_vertex_order=new int[TPOLYGON_MAX_VERTICES];
+  }
+  tpolygon.reset(3);
+  if (texture) {
+    tpolygon.texture(polygon.timage);
+  }
+  tpolygon.interpX=polygon.interpX;
+  tpolygon.interpZ=polygon.interpZ;
+  tpolygon.interpUV=polygon.interpUV;
+  tpolygon.interpRGBA=polygon.interpRGBA;
+  boolean ccw=false;
+  int n=polygon.vertexCount;
+  int mm;
+  float min[]=new float[2];
+  min[X]=vertices[0][X];
+  min[Y]=vertices[0][Y];
+  mm=0;
+  for (int i=0; i < n; i++) {
+    if ((vertices[i][Y] < min[Y]) || ((vertices[i][Y] == min[Y]) && (vertices[i][X] > min[X]))) {
+      mm=i;
+      min[X]=vertices[mm][X];
+      min[Y]=vertices[mm][Y];
+    }
+  }
+  float cp;
+  int mm1;
+  float a[]=new float[2];
+  float b[]=new float[2];
+  float c[]=new float[2];
+  mm1=(mm + (n - 1)) % n;
+  for (int i=0; i < 2; i++) {
+    a[i]=vertices[mm1][i];
+    b[i]=vertices[mm][i];
+    c[i]=vertices[(mm + 1) % n][i];
+  }
+  cp=a[0] * b[1] - a[1] * b[0] + a[1] * c[0] - a[0] * c[1] + b[0] * c[1] - c[0] * b[1];
+  if (cp > 0)   ccw=true;
+ else   ccw=false;
+  int j=0;
+  if (!ccw) {
+    for (int i=0; i < n; i++) {
+      tpolygon_vertex_order[i]=i;
+    }
+  }
+ else {
+    for (int i=0; i < n; i++) {
+      tpolygon_vertex_order[i]=(n - 1) - i;
+    }
+  }
+  int vc=n;
+  int count=2 * vc;
+  for (int m=0, v=vc - 1; vc > 2; ) {
+    boolean snip=true;
+    if (0 >= (count--)) {
+      break;
+    }
+    int u=v;
+    if (vc <= u)     u=0;
+    v=u + 1;
+    if (vc <= v)     v=0;
+    int w=v + 1;
+    if (vc <= w)     w=0;
+    float Ax, Ay, Bx, By, Cx, Cy, Px, Py;
+    Ax=-vertices[tpolygon_vertex_order[u]][X];
+    Ay=vertices[tpolygon_vertex_order[u]][Y];
+    Bx=-vertices[tpolygon_vertex_order[v]][X];
+    By=vertices[tpolygon_vertex_order[v]][Y];
+    Cx=-vertices[tpolygon_vertex_order[w]][X];
+    Cy=vertices[tpolygon_vertex_order[w]][Y];
+    if (EPSILON > (((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax)))) {
+      continue;
+    }
+    for (int p=0; p < vc; p++) {
+      float ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
+      float cCROSSap, bCROSScp, aCROSSbp;
+      if ((p == u) || (p == v) || (p == w)) {
+        continue;
+      }
+      Px=-vertices[tpolygon_vertex_order[p]][X];
+      Py=vertices[tpolygon_vertex_order[p]][Y];
+      ax=Cx - Bx;
+      ay=Cy - By;
+      bx=Ax - Cx;
+      by=Ay - Cy;
+      cx=Bx - Ax;
+      cy=By - Ay;
+      apx=Px - Ax;
+      apy=Py - Ay;
+      bpx=Px - Bx;
+      bpy=Py - By;
+      cpx=Px - Cx;
+      cpy=Py - Cy;
+      aCROSSbp=ax * bpy - ay * bpx;
+      cCROSSap=cx * apy - cy * apx;
+      bCROSScp=bx * cpy - by * cpx;
+      if ((aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f)) {
+        snip=false;
+      }
+    }
+    if (snip) {
+      int triangle_vertices[]=new int[3];
+      int s, t;
+      triangle_vertices[0]=tpolygon_vertex_order[u];
+      triangle_vertices[1]=tpolygon_vertex_order[v];
+      triangle_vertices[2]=tpolygon_vertex_order[w];
+      render_triangle(triangle_vertices);
+      m++;
+      for (s=v, t=v + 1; t < vc; s++, t++) {
+        tpolygon_vertex_order[s]=tpolygon_vertex_order[t];
+      }
+      vc--;
+      count=2 * vc;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  DataOutputStream os=new DataOutputStream(output);
+  os.writeInt(charCount);
+  os.writeInt(8);
+  os.writeInt(mbox);
+  os.writeInt(mbox);
+  os.writeInt(0);
+  os.writeInt(0);
+  for (int i=0; i < charCount; i++) {
+    os.writeInt(value[i]);
+    os.writeInt(height[i]);
+    os.writeInt(width[i]);
+    os.writeInt(setWidth[i]);
+    os.writeInt(topExtent[i]);
+    os.writeInt(leftExtent[i]);
+    os.writeInt(0);
+  }
+  for (int i=0; i < charCount; i++) {
+    for (int y=0; y < height[i]; y++) {
+      for (int x=0; x < width[i]; x++) {
+        os.write(images[i].pixels[y * width[i] + x] & 0xff);
+      }
+    }
+  }
+  os.flush();
+  os.close();
+}

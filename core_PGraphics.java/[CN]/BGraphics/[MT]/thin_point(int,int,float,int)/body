@@ -1,0 +1,18 @@
+{
+  if (x < 0 || x > width1 || y < 0 || y > height1)   return;
+  int index=y * width + x;
+  if ((color & 0xff000000) == 0xff000000) {
+    pixels[index]=color;
+  }
+ else {
+    int a2=(color >> 24) & 0xff;
+    int a1=a2 ^ 0xff;
+    int p2=stroke;
+    int p1=pixels[index];
+    int r=(a1 * ((p1 >> 16) & 0xff) + a2 * ((p2 >> 16) & 0xff)) & 0xff00;
+    int g=(a1 * ((p1 >> 8) & 0xff) + a2 * ((p2 >> 8) & 0xff)) & 0xff00;
+    int b=(a1 * (p1 & 0xff) + a2 * (p2 & 0xff)) >> 8;
+    pixels[index]=0xff000000 | (r << 8) | g| b;
+  }
+  zbuffer[index]=z;
+}

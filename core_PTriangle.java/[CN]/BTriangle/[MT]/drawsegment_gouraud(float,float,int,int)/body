@@ -1,0 +1,39 @@
+{
+  float irf=iradd;
+  float igf=igadd;
+  float ibf=ibadd;
+  ytop*=SCREEN_WIDTH;
+  ybottom*=SCREEN_WIDTH;
+  int p=m_index;
+  while (ytop < ybottom) {
+    int xstart=(int)(xleft + PIXEL_CENTER);
+    if (xstart < 0)     xstart=0;
+    int xend=(int)(xrght + PIXEL_CENTER);
+    if (xend > SCREEN_WIDTH)     xend=SCREEN_WIDTH;
+    float xdiff=(xstart + PIXEL_CENTER) - xleft;
+    int ir=(int)(irf * xdiff + rleft);
+    int ig=(int)(igf * xdiff + gleft);
+    int ib=(int)(ibf * xdiff + bleft);
+    float iz=izadd * xdiff + zleft;
+    xstart+=ytop;
+    xend+=ytop;
+    for (; xstart < xend; xstart++) {
+      if (iz <= m_zbuffer[xstart]) {
+        m_zbuffer[xstart]=iz;
+        m_pixels[xstart]=((ir & 0xFF0000) | ((ig >> 8) & 0xFF00) | (ib >> 16));
+        m_stencil[xstart]=p;
+      }
+      ir+=iradd;
+      ig+=igadd;
+      ib+=ibadd;
+      iz+=izadd;
+    }
+    ytop+=SCREEN_WIDTH;
+    xleft+=leftadd;
+    xrght+=rghtadd;
+    rleft+=rleftadd;
+    gleft+=gleftadd;
+    bleft+=bleftadd;
+    zleft+=zleftadd;
+  }
+}

@@ -1,0 +1,124 @@
+{
+  double tmp;
+  double dx=x1 - x0;
+  double dy=y1 - y0;
+  double adx=(dx >= 0) ? dx : -dx;
+  double ady=(dy >= 0) ? dy : -dy;
+  if (adx < 0.0001d && ady < 0.0001d)   return;
+  int pxl;
+  if (adx > ady) {
+    if (x0 > x1) {
+      tmp=x0;
+      x0=x1;
+      x1=tmp;
+      tmp=y0;
+      y0=y1;
+      y1=tmp;
+      dx=x1 - x0;
+      dy=y1 - y0;
+    }
+    double addy=dy / dx;
+    int ix0=(int)(x0 + PIXEL_CENTER);
+    if (ix0 < 0)     ix0=0;
+    int ix1=(int)(x1 + PIXEL_CENTER);
+    if (ix1 > SCREEN_WIDTH)     ix1=SCREEN_WIDTH;
+    double delta=(ix0 + PIXEL_CENTER) - x0;
+    double ys=y0 + delta * addy;
+    for (int a=ix0; a < ix1; a++, ys+=addy) {
+      int iy=(int)(ys - PIXEL_CENTER);
+      if ((iy >= 0) && (iy < SCREEN_HEIGHT1)) {
+        int ofs1=iy * SCREEN_WIDTH + a;
+        int ofs2=ofs1 + SCREEN_WIDTH;
+        if (m_stencil[ofs1] == m_index) {
+          pxl=m_pixels[ofs1];
+        }
+ else         if (m_stencil[ofs2] == m_index) {
+          pxl=m_pixels[ofs2];
+        }
+ else {
+          continue;
+        }
+        double frcf=ys - PIXEL_CENTER;
+        int frac1=((int)(frcf * 256f) & 0xFF);
+        int frac2=255 - frac1;
+        int pr=(pxl & 0xFF0000);
+        int pg=(pxl & 0xFF00);
+        int pb=(pxl & 0xFF);
+        int r0=m_pixels[ofs1];
+        int g0=(r0 & 0xFF00);
+        int b0=(r0 & 0xFF);
+        r0=(r0 & 0xFF0000);
+        r0=r0 + (((pr - r0) * frac2) >> 8);
+        g0=g0 + (((pg - g0) * frac2) >> 8);
+        b0=b0 + (((pb - b0) * frac2) >> 8);
+        m_pixels[ofs1]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+        r0=m_pixels[ofs2];
+        g0=(r0 & 0xFF00);
+        b0=(r0 & 0xFF);
+        r0=(r0 & 0xFF0000);
+        r0=r0 + (((pr - r0) * frac1) >> 8);
+        g0=g0 + (((pg - g0) * frac1) >> 8);
+        b0=b0 + (((pb - b0) * frac1) >> 8);
+        m_pixels[ofs2]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+      }
+    }
+  }
+ else {
+    if (y0 > y1) {
+      tmp=x0;
+      x0=x1;
+      x1=tmp;
+      tmp=y0;
+      y0=y1;
+      y1=tmp;
+      dx=x1 - x0;
+      dy=y1 - y0;
+    }
+    double addx=dx / dy;
+    int iy0=(int)(y0 + PIXEL_CENTER);
+    if (iy0 < 0)     iy0=0;
+    int iy1=(int)(y1 + PIXEL_CENTER);
+    if (iy1 > SCREEN_HEIGHT)     iy1=SCREEN_HEIGHT;
+    double delta=(iy0 + PIXEL_CENTER) - y0;
+    double xs=x0 + delta * addx;
+    iy0*=SCREEN_WIDTH;
+    iy1*=SCREEN_WIDTH;
+    for (int a=iy0; a < iy1; a+=SCREEN_WIDTH, xs+=addx) {
+      int ix=(int)(xs - PIXEL_CENTER);
+      if ((ix >= 0) && (ix < SCREEN_WIDTH1)) {
+        int ofs1=a + ix;
+        int ofs2=ofs1 + 1;
+        if (m_stencil[ofs1] == m_index) {
+          pxl=m_pixels[ofs1];
+        }
+ else         if (m_stencil[ofs2] == m_index) {
+          pxl=m_pixels[ofs2];
+        }
+ else {
+          continue;
+        }
+        int pr=(pxl & 0xFF0000);
+        int pg=(pxl & 0xFF00);
+        int pb=(pxl & 0xFF);
+        double frcf=xs - PIXEL_CENTER;
+        int frac1=((int)(frcf * 256f) & 0xFF);
+        int frac2=255 - frac1;
+        int r0=m_pixels[ofs1];
+        int g0=(r0 & 0xFF00);
+        int b0=(r0 & 0xFF);
+        r0=(r0 & 0xFF0000);
+        r0=r0 + (((pr - r0) * frac2) >> 8);
+        g0=g0 + (((pg - g0) * frac2) >> 8);
+        b0=b0 + (((pb - b0) * frac2) >> 8);
+        m_pixels[ofs1]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+        r0=m_pixels[ofs2];
+        g0=(r0 & 0xFF00);
+        b0=(r0 & 0xFF);
+        r0=(r0 & 0xFF0000);
+        r0=r0 + (((pr - r0) * frac1) >> 8);
+        g0=g0 + (((pg - g0) * frac1) >> 8);
+        b0=b0 + (((pb - b0) * frac1) >> 8);
+      }
+    }
+  }
+}
