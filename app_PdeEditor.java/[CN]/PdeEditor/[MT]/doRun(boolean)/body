@@ -9,7 +9,10 @@
     presentationWindow.toFront();
   }
   try {
-    sketch.run();
+    if (!sketch.handleRun())     return;
+    runtime=new PdeRuntime(sketch,this);
+    runtime.start(presenting ? presentLocation : appletLocation);
+    watcher=new RunButtonWatcher();
   }
  catch (  PdeException e) {
     error(e);
@@ -17,5 +20,4 @@
 catch (  Exception e) {
     e.printStackTrace();
   }
-  sketch.cleanup();
 }

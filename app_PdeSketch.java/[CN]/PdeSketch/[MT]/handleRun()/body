@@ -3,17 +3,11 @@
   if (PdePreferences.getBoolean("editor.external")) {
     load();
   }
+  cleanup();
   if (dataFolder.exists()) {
     PdeBase.copyDir(dataDir,new File(buildDir,"data"));
   }
   String suggestedClassName=("Temporary_" + String.valueOf((int)(Math.random() * 10000)) + "_"+ String.valueOf((int)(Math.random() * 10000)));
   mainClassName=build(TEMP_BUILD_PATH,suggestedClassName);
-  if (mainClassName != null) {
-    runtime=new PdeRuntime(this,editor);
-    runtime.start(presenting ? presentLocation : appletLocation);
-    watcher=new RunButtonWatcher();
-  }
- else {
-    cleanup();
-  }
+  return (mainClassName != null);
 }
