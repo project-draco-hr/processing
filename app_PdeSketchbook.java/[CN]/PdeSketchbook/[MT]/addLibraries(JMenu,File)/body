@@ -34,7 +34,12 @@
         PdeBase.showMessage("Ignoring bad sketch name",mess);
         continue;
       }
-      librariesClassPath+=File.pathSeparatorChar + PdeCompiler.contentsToClassPath(exported);
+      String libraryClassPath=PdeCompiler.contentsToClassPath(exported);
+      librariesClassPath+=File.pathSeparatorChar + libraryClassPath;
+      String packages[]=PdeCompiler.packageListFromClassPath(libraryClassPath);
+      for (int k=0; k < packages.length; k++) {
+        importToLibraryTable.put(packages[k],exported);
+      }
       JMenuItem item=new JMenuItem(list[i]);
       item.addActionListener(listener);
       item.setActionCommand(entry.getAbsolutePath());

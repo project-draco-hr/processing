@@ -33,7 +33,7 @@
   }
   PatternMatcher matcher=new Perl5Matcher();
   PatternCompiler compiler=new Perl5Compiler();
-  String mess="^\\s*(import\\s+\\S+\\s*;)";
+  String mess="^\\s*(import\\s+)(\\S+)(\\s*;)";
   java.util.Vector imports=new java.util.Vector();
   Pattern pattern=null;
   try {
@@ -47,9 +47,12 @@
     PatternMatcherInput input=new PatternMatcherInput(program);
     if (!matcher.contains(input,pattern))     break;
     MatchResult result=matcher.getMatch();
-    String piece=result.group(1).toString();
+    String piece1=result.group(1).toString();
+    String piece2=result.group(2).toString();
+    String piece3=result.group(3).toString();
+    String piece=piece1 + piece2 + piece3;
     int len=piece.length();
-    imports.add(piece);
+    imports.add(piece2);
     int idx=program.indexOf(piece);
     program=program.substring(0,idx) + program.substring(idx + len);
   }
@@ -88,7 +91,7 @@
   PdeEmitter emitter=new PdeEmitter();
   File streamFile=new File(buildPath,name + ".java");
   PrintStream stream=new PrintStream(new FileOutputStream(streamFile));
-  writeHeader(stream,extraImports,name);
+  writeHeader(stream,name);
   emitter.setOut(stream);
   emitter.print(rootNode);
   writeFooter(stream);
