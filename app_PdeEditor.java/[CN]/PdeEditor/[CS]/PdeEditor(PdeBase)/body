@@ -1,2 +1,121 @@
 {
+  this.base=base;
+  setLayout(new BorderLayout());
+  Panel leftPanel=new Panel();
+  leftPanel.setLayout(new BorderLayout());
+  buttons=new PdeEditorButtons(this);
+  Color buttonBgColor=PdeBase.getColor("editor.buttons.bgcolor",new Color(0x99,0x99,0x99));
+  buttons.setBackground(buttonBgColor);
+  leftPanel.add("North",buttons);
+  Label dummy=new Label();
+  dummy.setBackground(buttonBgColor);
+  leftPanel.add("Center",dummy);
+  add("West",leftPanel);
+  JPanel rightPanel=new JPanel();
+  rightPanel.setLayout(new BorderLayout());
+  header=new PdeEditorHeader(this);
+  rightPanel.add(header,BorderLayout.NORTH);
+  textarea=new JEditTextArea();
+  textarea.setTokenMarker(new PdeTokenMarker());
+  consolePanel=new JPanel();
+  consolePanel.setLayout(new BorderLayout());
+  status=new PdeEditorStatus(this);
+  consolePanel.add(status,BorderLayout.NORTH);
+  console=new PdeEditorConsole(this);
+  consolePanel.add(console,BorderLayout.CENTER);
+  splitPane=new JSplitPane(JSplitPane.VERTICAL_SPLIT,textarea,consolePanel);
+  splitPane.setOneTouchExpandable(true);
+  splitPane.setContinuousLayout(true);
+  splitPane.setResizeWeight(1D);
+  int dividerSize=PdeBase.getInteger("editor.divider.size",0);
+  if (dividerSize != 0) {
+    splitPane.setDividerSize(dividerSize);
+  }
+  rightPanel.add(splitPane,BorderLayout.CENTER);
+  add("Center",rightPanel);
+  PdeEditorListener listener=new PdeEditorListener(this,textarea);
+  textarea.pdeEditorListener=listener;
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  if ((PdeBase.platform == PdeBase.MACOSX) || (PdeBase.platform == PdeBase.MACOS9)) {
+    presentationWindow=new Frame();
+    Insets insets=new Insets(21,5,5 + 20,5);
+    presentationWindow.setBounds(-insets.left,-insets.top,screen.width + insets.left + insets.right,screen.height + insets.top + insets.bottom);
+  }
+ else {
+    presentationWindow=new Frame();
+    ((Frame)presentationWindow).setUndecorated(true);
+    presentationWindow.setBounds(0,0,screen.width,screen.height);
+  }
+  Label label=new Label("stop");
+  label.addMouseListener(new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
+      setVisible(true);
+      doClose();
+    }
+  }
+);
+  Dimension labelSize=new Dimension(60,20);
+  presentationWindow.setLayout(null);
+  presentationWindow.add(label);
+  label.setBounds(5,screen.height - 5 - labelSize.height,labelSize.width,labelSize.height);
+  Color presentationBgColor=PdeBase.getColor("run.present.bgcolor",new Color(102,102,102));
+  presentationWindow.setBackground(presentationBgColor);
+  presentationWindow.addFocusListener(new FocusAdapter(){
+    public void focusGained(    FocusEvent e){
+      try {
+        pdeRuntime.window.toFront();
+      }
+ catch (      Exception ex) {
+      }
+    }
+  }
+);
+  textarea.addFocusListener(new FocusAdapter(){
+    public void focusGained(    FocusEvent e){
+      if (presenting == true) {
+        try {
+          presentationWindow.toFront();
+        }
+ catch (        Exception ex) {
+        }
+      }
+    }
+  }
+);
+  this.addFocusListener(new FocusAdapter(){
+    public void focusGained(    FocusEvent e){
+      if (presenting == true) {
+        try {
+          presentationWindow.toFront();
+        }
+ catch (        Exception ex) {
+        }
+      }
+    }
+  }
+);
+  presentationWindow.addMouseListener(new MouseAdapter(){
+    public void mouseClicked(    MouseEvent e){
+      try {
+        pdeRuntime.window.toFront();
+      }
+ catch (      Exception ex) {
+      }
+    }
+    public void mousePressed(    MouseEvent e){
+      try {
+        pdeRuntime.window.toFront();
+      }
+ catch (      Exception ex) {
+      }
+    }
+    public void mouseReleased(    MouseEvent e){
+      try {
+        pdeRuntime.window.toFront();
+      }
+ catch (      Exception ex) {
+      }
+    }
+  }
+);
 }
