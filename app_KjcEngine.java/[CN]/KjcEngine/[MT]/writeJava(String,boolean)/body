@@ -52,29 +52,55 @@
     }
     if (programType == BEGINNER) {
       if (!kjc)       writer.println();
-      PatternMatcher matcher=new Perl5Matcher();
-      PatternCompiler compiler=new Perl5Compiler();
+      if ((program.indexOf("size(") == 0) || (program.indexOf("background(") == 0)) {
+        program=" " + program;
+      }
+      PatternMatcher matcher=null;
+      PatternCompiler compiler=null;
       Pattern pattern=null;
-      if (program.indexOf("size(") == 0)       program=" " + program;
+      Perl5Substitution subst=null;
+      PatternMatcherInput input=null;
+      matcher=new Perl5Matcher();
+      compiler=new Perl5Compiler();
       try {
         pattern=compiler.compile("^([^A-Za-z0-9_]+)(size\\(\\s*\\d+,\\s*\\d+\\s*\\);)");
       }
  catch (      MalformedPatternException e) {
-        System.err.println("Bad pattern.");
-        System.err.println(e.getMessage());
+        e.printStackTrace();
         System.exit(1);
       }
-      String sizeInfo="";
-      PatternMatcherInput input=new PatternMatcherInput(program);
+      String sizeInfo=null;
+      input=new PatternMatcherInput(program);
       if (matcher.contains(input,pattern)) {
         MatchResult result=matcher.getMatch();
-        sizeInfo="void setup() { " + result.group(0) + " } ";
+        sizeInfo=result.group(0);
       }
  else {
+        sizeInfo="size(" + BApplet.DEFAULT_WIDTH + ", "+ BApplet.DEFAULT_HEIGHT+ "); ";
       }
-      Perl5Substitution subst=new Perl5Substitution("$1",Perl5Substitution.INTERPOLATE_ALL);
+      subst=new Perl5Substitution("$1",Perl5Substitution.INTERPOLATE_ALL);
       program=Util.substitute(matcher,pattern,subst,program,Util.SUBSTITUTE_ALL);
+      matcher=new Perl5Matcher();
+      compiler=new Perl5Compiler();
+      try {
+        pattern=compiler.compile("^([^A-Za-z0-9_]+)(background\\(.*\\);)");
+      }
+ catch (      MalformedPatternException e) {
+        e.printStackTrace();
+        System.exit(1);
+      }
+      String backgroundInfo="";
+      input=new PatternMatcherInput(program);
+      if (matcher.contains(input,pattern)) {
+        MatchResult result=matcher.getMatch();
+        backgroundInfo=result.group(0);
+      }
+      subst=new Perl5Substitution("$1",Perl5Substitution.INTERPOLATE_ALL);
+      program=Util.substitute(matcher,pattern,subst,program,Util.SUBSTITUTE_ALL);
+      writer.print("void setup() { ");
       writer.print(sizeInfo);
+      writer.print(backgroundInfo);
+      writer.print("} ");
       writer.print("void draw() {");
     }
     program=commentsCodec(program);
