@@ -6,8 +6,8 @@
   int y1=parentLoc.y;
   try {
     if (sketch.externalRuntime) {
-      String location=(windowLocation != null) ? (BApplet.EXTERNAL_EXACT_LOCATION + windowLocation.x + ","+ windowLocation.y) : (x1 + "," + y1);
-      String command[]=new String[]{"java","-Djava.library.path=" + sketch.libraryPath,"-cp",sketch.classPath,"BApplet",BApplet.EXTERNAL_FLAG + location,sketch.mainClassName};
+      String location=(windowLocation != null) ? (PApplet.EXTERNAL_EXACT_LOCATION + windowLocation.x + ","+ windowLocation.y) : (x1 + "," + y1);
+      String command[]=new String[]{"java","-Djava.library.path=" + sketch.libraryPath,"-cp",sketch.classPath,"PApplet",PApplet.EXTERNAL_FLAG + location,sketch.mainClassName};
       process=Runtime.getRuntime().exec(command);
       new SystemOutSiphon(process.getInputStream());
       new PdeMessageSiphon(process.getErrorStream(),this);
@@ -15,16 +15,11 @@
     }
  else {
       Class c=Class.forName(sketch.mainClassName);
-      applet=(BApplet)c.newInstance();
+      applet=(PApplet)c.newInstance();
       applet.leechErr=leechErr;
       applet.init();
       if (applet.exception != null) {
-        if (applet.exception instanceof PortInUseException) {
-          throw new PdeException("Another program is already " + "using the serial port.");
-        }
- else {
-          throw new PdeException(applet.exception.getMessage());
-        }
+        throw new PdeException(applet.exception.getMessage());
       }
       applet.start();
       boolean drawMode=false;
@@ -113,7 +108,7 @@
   }
  catch (  Exception e) {
     applet.finished=true;
-    leechErr.println(BApplet.LEECH_WAKEUP);
+    leechErr.println(PApplet.LEECH_WAKEUP);
     e.printStackTrace(this.leechErr);
   }
 }
