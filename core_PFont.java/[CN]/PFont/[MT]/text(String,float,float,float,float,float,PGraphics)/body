@@ -1,25 +1,72 @@
 {
-  float space=width(' ');
-  float xx=x;
-  float yy=y;
-  float right=x + w;
-  yy+=ascent();
-  String paragraphs[]=PApplet.split(str,'\n');
-  for (int i=0; i < paragraphs.length; i++) {
-    String words[]=PApplet.split(paragraphs[i],' ');
-    float wide=0;
-    for (int j=0; j < words.length; j++) {
-      float size=width(words[j]);
-      if (xx + size > right) {
-        xx=x;
-        yy+=leading;
-        if (yy > y + h)         return;
+  float spaceWidth=width(' ');
+  float runningX=boxX1;
+  float currentY=boxY1;
+  float boxWidth=boxX2 - boxX1;
+  float lineX=boxX1;
+  if (align == ALIGN_CENTER) {
+    lineX=lineX + boxWidth / 2f;
+  }
+ else   if (align == ALIGN_RIGHT) {
+    lineX=boxX2;
+  }
+  currentY+=ascent();
+  if (currentY > boxY2)   return;
+  int length=str.length();
+  if (length > textBuffer.length) {
+    textBuffer=new char[length + 10];
+  }
+  str.getChars(0,length,textBuffer,0);
+  int wordStart=0;
+  int wordStop=0;
+  int lineStart=0;
+  int index=0;
+  while (index < length) {
+    if ((textBuffer[index] == ' ') || (index == length - 1)) {
+      float wordWidth=calcWidth(textBuffer,wordStart,index);
+      if (runningX + wordWidth > boxX2) {
+        if ((runningX == boxX1) && (wordWidth > boxWidth)) {
+          do {
+            index--;
+            if (index == wordStart) {
+              return;
+            }
+            wordWidth=calcWidth(textBuffer,wordStart,index);
+          }
+ while (wordWidth > boxWidth);
+          textLine(lineStart,index,lineX,currentY,boxZ,parent);
+        }
+ else {
+          textLine(lineStart,wordStop,lineX,currentY,boxZ,parent);
+          while ((index < length) && (textBuffer[index] == ' ')) {
+            index++;
+          }
+        }
+        lineStart=index;
+        wordStart=index;
+        wordStop=index;
+        runningX=boxX1;
+        currentY+=leading;
+        if (currentY > boxY2)         return;
       }
-      text(words[j],xx,yy,z,parent);
-      xx+=size + space;
+ else {
+        runningX+=wordWidth + spaceWidth;
+        wordStop=index;
+        wordStart=index + 1;
+      }
     }
-    xx=0;
-    yy+=leading;
-    if (yy > h)     return;
+ else     if (textBuffer[index] == '\n') {
+      if (lineStart != index) {
+        textLine(lineStart,index,lineX,currentY,boxZ,parent);
+      }
+      lineStart=index + 1;
+      wordStart=lineStart;
+      currentY+=leading;
+      if (currentY > boxY2)       return;
+    }
+    index++;
+  }
+  if ((lineStart < length) && (lineStart != index)) {
+    textLine(lineStart,index,lineX,currentY,boxZ,parent);
   }
 }
