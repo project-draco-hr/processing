@@ -15,6 +15,7 @@
     }
   }
  catch (  UnsatisfiedLinkError e) {
+    e.printStackTrace();
     problem=true;
   }
 catch (  Exception e) {
@@ -22,15 +23,8 @@ catch (  Exception e) {
     e.printStackTrace();
   }
   if (serialMenu.getItemCount() == 0) {
+    System.out.println("dimming serial menu");
     serialMenu.setEnabled(false);
-  }
-  if (platform == MACOSX) {
-    try {
-      System.loadLibrary("SolarisSerialParallel");
-    }
- catch (    UnsatisfiedLinkError e) {
-      problem=true;
-    }
   }
   if (problem && firstTime) {
     JOptionPane.showMessageDialog(frame,"Serial port support not installed.\n" + "Check the readme for instructions\n" + "if you need to use the serial port.    ","Serial Port Warning",JOptionPane.WARNING_MESSAGE);
