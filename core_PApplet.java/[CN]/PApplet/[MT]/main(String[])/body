@@ -1,0 +1,75 @@
+{
+  if (args.length < 1) {
+    System.err.println("error: PApplet <appletname>");
+    System.exit(1);
+  }
+  try {
+    boolean external=false;
+    if (args[0].indexOf(EXTERNAL_FLAG) == 0)     external=true;
+    Frame frame=new Frame();
+    frame.pack();
+    Class c=Class.forName(args[external ? 1 : 0]);
+    PApplet applet=(PApplet)c.newInstance();
+    applet.init();
+    applet.start();
+    Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+    if (external) {
+      String argh=args[0].substring(EXTERNAL_FLAG.length());
+      boolean exact=argh.charAt(0) == EXTERNAL_EXACT_LOCATION;
+      if (exact)       argh=argh.substring(1);
+      int location[]=toInt(split(argh,','));
+      int x1=location[0] - 20;
+      int y1=location[1];
+      Insets insets=frame.getInsets();
+      int minW=120;
+      int minH=120;
+      int windowW=Math.max(applet.width,minW) + insets.left + insets.right;
+      int windowH=Math.max(applet.height,minH) + insets.top + insets.bottom;
+      if (x1 - windowW > 10) {
+        frame.setBounds(x1 - windowW,y1,windowW,windowH);
+      }
+ else {
+        x1=location[0] + 66;
+        y1=location[1] + 66;
+        if ((x1 + windowW > screen.width - 33) || (y1 + windowH > screen.height - 33)) {
+          x1=(screen.width - windowW) / 2;
+          y1=(screen.height - windowH) / 2;
+        }
+        frame.setBounds(x1,y1,windowW,windowH);
+      }
+      if (exact) {
+        frame.setLocation(location[0],location[1]);
+      }
+      frame.addComponentListener(new ComponentAdapter(){
+        public void componentMoved(        ComponentEvent e){
+          int newX=e.getComponent().getX();
+          int newY=e.getComponent().getY();
+        }
+      }
+);
+      frame.setLayout(null);
+      frame.add(applet);
+      frame.setBackground(SystemColor.control);
+      applet.setBounds((windowW - applet.width) / 2,insets.top + ((windowH - insets.top - insets.bottom) - applet.height) / 2,windowW,windowH);
+      applet.setupExternal(frame);
+    }
+ else {
+      frame.setLayout(new BorderLayout());
+      frame.add(applet,BorderLayout.CENTER);
+      frame.pack();
+      frame.setLocation((screen.width - applet.g.width) / 2,(screen.height - applet.g.height) / 2);
+      frame.addWindowListener(new WindowAdapter(){
+        public void windowClosing(        WindowEvent e){
+          System.exit(0);
+        }
+      }
+);
+    }
+    frame.show();
+    applet.requestFocus();
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    System.exit(1);
+  }
+}

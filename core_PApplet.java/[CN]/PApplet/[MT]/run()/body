@@ -1,0 +1,29 @@
+{
+  try {
+    while ((Thread.currentThread() == thread) && !finished) {
+      updated=false;
+      if (PApplet.THREAD_DEBUG)       println("nextFrame()");
+      nextFrame();
+      while (!updated) {
+        try {
+          if (PApplet.THREAD_DEBUG)           System.out.println("gonna sleep");
+          Thread.sleep(1);
+          if (PApplet.THREAD_DEBUG)           System.out.println("outta sleep");
+        }
+ catch (        InterruptedException e) {
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    finished=true;
+    if (leechErr != null) {
+      leechErr.println(LEECH_WAKEUP);
+      e.printStackTrace(leechErr);
+    }
+ else {
+      System.err.println(LEECH_WAKEUP);
+      e.printStackTrace();
+    }
+  }
+}
