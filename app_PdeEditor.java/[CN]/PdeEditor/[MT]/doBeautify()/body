@@ -52,7 +52,12 @@
       gotBlankLine=false;
     }
   }
+  int selectionEnd=textarea.getSelectionEnd();
   changeText(buffer.toString(),false);
+  if (buffer.length() < selectionEnd - 1) {
+    selectionEnd=buffer.length() - 1;
+  }
+  textarea.select(selectionEnd,selectionEnd);
   setSketchModified(true);
   buttons.clear();
 }
