@@ -18,6 +18,10 @@
     if (!dataFolder.exists())     dataFolder.mkdirs();
     destFile=new File(dataFolder,filename);
   }
+  if (sourceFile.equals(destFile)) {
+    PdeBase.showWarning("You can't fool me","This file has already been copied to the\n" + "location where you're trying to add it.\n" + "I ain't not doin nuthin'.",null);
+    return;
+  }
   try {
     PdeBase.copyFile(sourceFile,destFile);
   }
