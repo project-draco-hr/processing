@@ -1,23 +1,12 @@
 {
   String currentLine;
-  while (Thread.currentThread() == thread) {
-    try {
-      if (stderr.ready()) {
-        currentLine=stderr.readLine();
-        System.err.println(currentLine);
-        consumer.message(currentLine);
-      }
-      if (stdout.ready()) {
-        currentLine=stdout.readLine();
-        System.err.println(currentLine);
-        consumer.message(currentLine);
-      }
-      Thread.sleep(10);
+  try {
+    while ((currentLine=streamReader.readLine()) != null) {
+      consumer.message(currentLine);
     }
- catch (    Exception e) {
-      System.err.println("PdeMessageSiphon err " + e);
-      thread.stop();
-      thread=null;
-    }
+  }
+ catch (  Exception e) {
+    System.err.println("PdeMessageSiphon err " + e);
+    thread.stop();
   }
 }

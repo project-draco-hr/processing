@@ -33,10 +33,10 @@
     String className=TEMP_CLASS + "_" + numero1+ "_"+ numero2;
     PdePreprocessor preprocessorOro=new PdePreprocessorOro(program,buildPath);
     className=preprocessorOro.writeJava(className,base.normalItem.getState(),false);
-    PdeCompiler compilerKjc=new PdeCompilerKjc(buildPath,className,this);
-    messageStream=new PdeMessageStream(this,compilerKjc);
+    PdeCompiler compiler=new PdeCompiler(buildPath,className,this);
+    messageStream=new PdeMessageStream(this,compiler);
     leechErr=new PrintStream(messageStream);
-    boolean result=compilerKjc.compileJava(leechErr);
+    boolean result=compiler.compileJava(leechErr);
     if (result) {
       pdeRuntime=new PdeRuntime(this,className);
       messageStream.setMessageConsumer(pdeRuntime);

@@ -1,13 +1,28 @@
 {
-  String command[]=new String[]{"jikes","+E","-d",buildPath,buildPath + File.separator + className+ ".java"};
-  int result;
+  String command[]=new String[]{"jikes","-nowarn","+E","-d",buildPath,buildPath + File.separator + className+ ".java"};
+  firstErrorFound=false;
+  secondErrorFound=false;
+  int result=0;
   try {
     Process process=Runtime.getRuntime().exec(command);
-    new PdeMessageSiphon(process.getInputStream(),process.getErrorStream(),this);
-    result=process.waitFor();
+    new PdeMessageSiphon(process.getInputStream(),this);
+    new PdeMessageSiphon(process.getErrorStream(),this);
+    boolean compiling=true;
+    while (compiling) {
+      try {
+        result=process.waitFor();
+        compiling=false;
+      }
+ catch (      InterruptedException intExc) {
+      }
+    }
   }
  catch (  Exception e) {
     result=-1;
+  }
+  if (result != 0 && result != 1) {
+    exception=new PdeException("Error while compiling, " + "please send code to bugs@proce55ing.net");
+    editor.error(exception);
   }
   return result == 0 ? true : false;
 }
