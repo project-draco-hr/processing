@@ -1,0 +1,39 @@
+{
+  if (bgColor == null) {
+    bgColor=PdeApplet.getColor("editor.console.bgcolor",new Color(26,26,26));
+    fgColorOut=PdeApplet.getColor("editor.console.fgcolor.output",new Color(153,153,153));
+    fgColorErr=PdeApplet.getColor("editor.console.fgcolor.error",new Color(153,0,0));
+    screen.setFont(font);
+    metrics=screen.getFontMetrics();
+    ascent=metrics.getAscent();
+    leading=ascent + metrics.getDescent();
+  }
+  Dimension size=getSize();
+  if ((size.width != sizeW) || (size.height != sizeH)) {
+    if ((size.width > imageW) || (size.height > imageH)) {
+      offscreen=null;
+    }
+ else {
+      sizeW=size.width;
+      sizeH=size.height;
+    }
+  }
+  if (offscreen == null) {
+    sizeW=size.width;
+    sizeH=size.height;
+    imageW=sizeW;
+    imageH=sizeH;
+    offscreen=createImage(imageW,imageH);
+  }
+  if (offscreen == null)   return;
+  Graphics g=offscreen.getGraphics();
+  g.setFont(font);
+  g.setColor(bgColor);
+  g.fillRect(0,0,imageW,imageH);
+  for (int i=0; i < lineCount; i++) {
+    int ii=(firstLine + i) % maxLineCount;
+    g.setColor(isError[ii] ? fgColorErr : fgColorOut);
+    g.drawString(lines[ii],HINSET,VINSET + ascent + i * ascent);
+  }
+  screen.drawImage(offscreen,0,0,null);
+}
