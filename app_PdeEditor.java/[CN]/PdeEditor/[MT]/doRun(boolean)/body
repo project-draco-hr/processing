@@ -32,7 +32,7 @@
     String className=TEMP_CLASS + "_" + numero1+ "_"+ numero2;
     PdePreprocessor preprocessorOro=new PdePreprocessorOro(program,buildPath);
     className=preprocessorOro.writeJava(className,base.normalItem.getState(),false);
-    PdeCompiler compiler=new PdeCompiler(buildPath,className,this);
+    PdeCompiler compiler=((PdeBase.platform == PdeBase.MACOS9) ? new PdeCompilerJavac(buildPath,className,this) : new PdeCompiler(buildPath,className,this));
     messageStream=new PdeMessageStream(this,compiler);
     leechErr=new PrintStream(messageStream);
     boolean result=compiler.compileJava(leechErr);
