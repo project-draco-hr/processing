@@ -1,4 +1,5 @@
 {
+  if (g == null)   return;
   g.resize(iwidth,iheight);
   this.pixels=g.pixels;
   this.width=g.width;
@@ -7,5 +8,17 @@
     if (libraryCalls[i][PLibrary.SIZE]) {
       libraries[i].size(width,height);
     }
+  }
+  if (frame != null) {
+    Insets insets=frame.getInsets();
+    int minW=120;
+    int minH=120;
+    int winW=Math.max(width,minW) + insets.left + insets.right;
+    int winH=Math.max(height,minH) + insets.top + insets.bottom;
+    frame.setSize(winW,winH);
+    setBounds((winW - width) / 2,insets.top + ((winH - insets.top - insets.bottom) - height) / 2,winW,winH);
+  }
+ else {
+    setBounds(0,0,width,height);
   }
 }

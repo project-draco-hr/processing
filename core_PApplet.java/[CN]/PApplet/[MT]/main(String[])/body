@@ -34,18 +34,19 @@
     Frame frame=new Frame();
     frame.setResizable(false);
     frame.pack();
+    frame.show();
     Class c=Class.forName(name);
     PApplet applet=(PApplet)c.newInstance();
+    applet.frame=frame;
     applet.folder=folder;
     int argc=args.length - (argIndex + 1);
     applet.args=new String[argc];
     System.arraycopy(args,argc,applet.args,0,argc);
+    System.out.println("calling applet.init");
     applet.init();
-    applet.start();
-    System.out.println("applet inited, started");
+    System.out.println("done calling applet.init");
     Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
     if (external) {
-      System.out.println("applet is external");
       Insets insets=frame.getInsets();
       int locationX=location[0] - 20;
       int locationY=location[1];
@@ -92,11 +93,8 @@
       }
 );
     }
-    System.out.println("showing frame");
     frame.show();
-    System.out.println("applet requesting focus");
     applet.requestFocus();
-    System.out.println("exiting main()");
   }
  catch (  Exception e) {
     e.printStackTrace();
