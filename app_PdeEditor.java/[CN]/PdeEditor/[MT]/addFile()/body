@@ -1,0 +1,21 @@
+{
+  String prompt="Select an image or other data file to copy to your sketch";
+  FileDialog fd=new FileDialog(new Frame(),prompt,FileDialog.LOAD);
+  fd.show();
+  String directory=fd.getDirectory();
+  String filename=fd.getFile();
+  if (filename == null)   return;
+  File sourceFile=new File(directory,filename);
+  File destFile=null;
+  if (filename.toLowerCase().endsWith(".class") || filename.toLowerCase().endsWith(".jar") || filename.toLowerCase().endsWith(".dll")|| filename.toLowerCase().endsWith(".jnilib")|| filename.toLowerCase().endsWith(".so")) {
+    File codeFolder=new File(sketchDir,"code");
+    if (!codeFolder.exists())     codeFolder.mkdirs();
+    destFile=new File(codeFolder,filename);
+  }
+ else {
+    File dataFolder=new File(sketchDir,"data");
+    if (!dataFolder.exists())     dataFolder.mkdirs();
+    destFile=new File(dataFolder,filename);
+  }
+  copyFile(sourceFile,destFile);
+}
