@@ -20,8 +20,24 @@
     try {
       className=preprocessor.writeJava(className,imports,extendsNormal,false);
     }
- catch (    antlr.RecognitionException ae) {
-      throw new PdeException(ae.getMessage(),ae.getLine() - 1,ae.getColumn());
+ catch (    antlr.RecognitionException re) {
+      throw new PdeException(re.getMessage(),re.getLine() - 1,re.getColumn());
+    }
+catch (    antlr.TokenStreamRecognitionException tsre) {
+      PatternMatcher matcher=new Perl5Matcher();
+      PatternCompiler compiler=new Perl5Compiler();
+      String mess="^line (\\d+):(\\d+):\\s";
+      Pattern pattern=compiler.compile(mess);
+      PatternMatcherInput input=new PatternMatcherInput(tsre.toString());
+      if (matcher.contains(input,pattern)) {
+        MatchResult result=matcher.getMatch();
+        int line=Integer.parseInt(result.group(1).toString());
+        int column=Integer.parseInt(result.group(2).toString());
+        throw new PdeException(tsre.getMessage(),line - 1,column);
+      }
+ else {
+        throw new PdeException(tsre.toString());
+      }
     }
 catch (    PdeException pe) {
       throw pe;
