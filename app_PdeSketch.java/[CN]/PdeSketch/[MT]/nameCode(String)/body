@@ -1,5 +1,5 @@
 {
-  if (renamingCode && newName.equals(current.name)) {
+  if (renamingCode && newName.equalsIgnoreCase(current.name)) {
     return;
   }
   String newFilename=null;
@@ -17,6 +17,10 @@
  else {
     newFilename=newName + ".pde";
     newFlavor=PDE;
+  }
+  if (newName.indexOf('.') != -1) {
+    newName=PdeSketchbook.sanitizedName(newName);
+    newFilename=newName + ((newFlavor == PDE) ? ".pde" : ".java");
   }
   File newFile=new File(folder,newFilename);
   if (newFile.exists()) {

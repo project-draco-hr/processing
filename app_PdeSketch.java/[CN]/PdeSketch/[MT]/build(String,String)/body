@@ -34,14 +34,15 @@
       try {
         String className=preprocessor.write(code[i].program,buildPath,(i == 0) ? suggestedClassName : null,importPackageList);
         if (className == null) {
-          System.err.println("no class found in " + code[i].name);
+          System.out.println("No class found in " + code[i].name);
+          System.out.println("(any code in that file will be ignored)");
+          System.out.println();
         }
  else {
           code[i].preprocName=className + ".java";
         }
         if (i == 0) {
           primaryClassName=className;
-          System.out.println("primary class " + primaryClassName);
           if (PdePreprocessor.programType == PdePreprocessor.JAVA) {
             externalRuntime=true;
           }
@@ -84,6 +85,5 @@ catch (      Exception ex) {
   }
   PdeCompiler compiler=new PdeCompiler();
   boolean success=compiler.compile(this,buildPath);
-  System.out.println("success = " + success + " ... "+ primaryClassName);
   return success ? primaryClassName : null;
 }
