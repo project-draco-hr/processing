@@ -49,10 +49,10 @@
   JComboBox combo;
   Dimension d, d2, d3;
   int h, v, vmax;
-  newSketchPromptBox=new JCheckBox("Prompt for name when creating a new sketch");
-  pain.add(newSketchPromptBox);
-  d=newSketchPromptBox.getPreferredSize();
-  newSketchPromptBox.setBounds(left,top,d.width,d.height);
+  sketchPromptBox=new JCheckBox("Prompt for name when opening or creating a sketch");
+  pain.add(sketchPromptBox);
+  d=sketchPromptBox.getPreferredSize();
+  sketchPromptBox.setBounds(left,top,d.width,d.height);
   right=Math.max(right,left + d.width);
   top+=d.height + BETWEEN;
   label=new JLabel("Sketchbook location:");
@@ -61,7 +61,25 @@
   sketchbookLocationField=new JTextField(18);
   pain.add(sketchbookLocationField);
   d2=sketchbookLocationField.getPreferredSize();
-  button=new JButton("Browse");
+  button=new JButton(PROMPT_BROWSE);
+  button.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      JFileChooser fc=new JFileChooser();
+      fc.setFile(sketchbookLocationField.getText());
+      fc.setFileSectionMode(JFileChooser.DIRECTORIES_ONLY);
+      int returned=fc.showOpenDialog(new JDialog());
+      if (returned == JFileChooser.APPROVE_OPTION) {
+        try {
+          File file=fc.getSelectedFile();
+          sketchbookLocationField.setText(file.getCanonicalPath());
+        }
+ catch (        IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+);
   pain.add(button);
   d3=button.getPreferredSize();
   vmax=Math.max(Math.max(d.height,d2.height),d3.height);
