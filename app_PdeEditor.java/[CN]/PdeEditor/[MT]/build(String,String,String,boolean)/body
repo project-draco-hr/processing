@@ -22,7 +22,19 @@ catch (    Exception ex) {
     preprocessor=new PdePreprocessorOro(program,buildPath);
     className=preprocessor.writeJava(className,extendsNormal,false);
   }
-  PdeCompiler compiler=new PdeCompiler(buildPath,className,this);
+  externalRuntime=false;
+  if (PdePreprocessor.programType == PdePreprocessor.ADVANCED) {
+    externalRuntime=true;
+  }
+  externalCode=new File(sketchDir,"code");
+  if (externalCode.exists()) {
+    externalRuntime=true;
+  }
+ else {
+    externalCode=null;
+  }
+  File includeFolder=null;
+  PdeCompiler compiler=new PdeCompiler(buildPath,className,includeFolder,this);
   messageStream=new PdeMessageStream(compiler);
   boolean success=compiler.compileJava(new PrintStream(messageStream));
   return success ? className : null;

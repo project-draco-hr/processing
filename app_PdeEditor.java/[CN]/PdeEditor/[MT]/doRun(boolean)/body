@@ -32,9 +32,9 @@
     String className=TEMP_CLASS + "_" + numero1+ "_"+ numero2;
     className=build(program,className,tempBuildPath,false);
     if (className != null) {
-      pdeRuntime=new PdeRuntime(this,className);
-      PdeMessageStream messageStream=new PdeMessageStream(pdeRuntime);
-      pdeRuntime.start(presenting ? presentLocation : appletLocation,new PrintStream(messageStream));
+      runtime=new PdeRuntime(this,className);
+      PdeMessageStream messageStream=new PdeMessageStream(runtime);
+      runtime.start(presenting ? presentLocation : appletLocation,new PrintStream(messageStream));
       watcher=new RunButtonWatcher();
     }
  else {
@@ -42,13 +42,13 @@
     }
   }
  catch (  PdeException e) {
-    if (pdeRuntime != null)     pdeRuntime.stop();
+    if (runtime != null)     runtime.stop();
     cleanTempFiles();
     error(e);
   }
 catch (  Exception e) {
     e.printStackTrace();
-    if (pdeRuntime != null)     pdeRuntime.stop();
+    if (runtime != null)     runtime.stop();
     cleanTempFiles();
   }
 }

@@ -1,0 +1,22 @@
+{
+  if (folder == null)   return "";
+  StringBuffer abuffer=new StringBuffer();
+  String sep=System.getProperty("path.separator");
+  try {
+    String path=folder.getCanonicalPath();
+    abuffer.append(sep);
+    abuffer.append(path);
+    String list[]=folder.list();
+    for (int i=0; i < list.length; i++) {
+      if (list[i].toLowerCase().endsWith(".jar") || list[i].toLowerCase().endsWith(".zip")) {
+        abuffer.append(sep);
+        abuffer.append(path);
+        abuffer.append(list[i]);
+      }
+    }
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+  return abuffer.toString();
+}
