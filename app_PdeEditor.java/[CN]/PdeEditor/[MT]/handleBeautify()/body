@@ -1,5 +1,6 @@
 {
   String prog=textarea.getText();
+  int tabSize=PdePreferences.getInteger("editor.tabs.size");
   char program[]=prog.toCharArray();
   StringBuffer buffer=new StringBuffer();
   boolean gotBlankLine=false;
@@ -29,6 +30,7 @@
       }
     }
  else {
+      System.out.println(level);
       int idx=-1;
       String myline=line.substring(0);
       while (myline.lastIndexOf('}') != idx) {
@@ -36,7 +38,7 @@
         myline=myline.substring(idx + 1);
         level--;
       }
-      for (int i=0; i < level; i++) {
+      for (int i=0; i < tabSize * level / 2; i++) {
         buffer.append(' ');
       }
       buffer.append(line);
