@@ -1,12 +1,15 @@
 {
   File home=new File(System.getProperty("user.home"));
+  File phome=null;
   if (PdeBase.platform == PdeBase.MACOSX) {
-    return new File(home,"Documents" + File.separator + "Processing");
+    phome=new File(home,"Documents" + File.separator + "Processing");
   }
  else   if (PdeBase.platform == PdeBase.WINDOWS) {
-    return new File(home,"My Documents" + File.separator + "Processing");
+    phome=new File(home,"My Documents" + File.separator + "Processing");
   }
-  File phome=new File(home,".processing");
+ else {
+    phome=new File(home,".processing");
+  }
   if (!phome.exists())   phome.mkdirs();
   return phome;
 }
