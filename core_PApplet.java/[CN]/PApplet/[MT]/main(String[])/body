@@ -1,103 +1,159 @@
 {
   if (args.length < 1) {
-    System.err.println("error: PApplet <appletname>");
+    System.err.println("Usage: PApplet <appletname>");
     System.exit(1);
   }
   try {
     boolean external=false;
     int location[]=null;
-    boolean exactLocation=false;
+    int editorLocation[]=null;
     String folder=System.getProperty("user.dir");
     String name=null;
-    int initialWidth=PApplet.DEFAULT_WIDTH;
-    int initialHeight=PApplet.DEFAULT_HEIGHT;
+    boolean present=false;
+    Color presentColor=Color.BLACK;
+    Color stopColor=Color.GRAY;
+    GraphicsDevice displayDevice=null;
+    String param=null, value=null;
     int argIndex=0;
     while (argIndex < args.length) {
-      if (args[argIndex].indexOf(EXT_LOCATION) == 0) {
-        external=true;
-        String locationStr=args[argIndex].substring(EXT_LOCATION.length());
-        location=toInt(split(locationStr,','));
-      }
- else       if (args[argIndex].indexOf(EXT_EXACT_LOCATION) == 0) {
-        external=true;
-        String locationStr=args[argIndex].substring(EXT_EXACT_LOCATION.length());
-        location=toInt(split(locationStr,','));
-        exactLocation=true;
-      }
- else       if (args[argIndex].indexOf(EXT_SKETCH_FOLDER) == 0) {
-        folder=args[argIndex].substring(EXT_SKETCH_FOLDER.length());
-      }
- else       if (args[argIndex].indexOf(EXT_SIZE) == 0) {
-        String sizeStr=args[argIndex].substring(EXT_SIZE.length());
-        int initial[]=toInt(split(sizeStr,','));
-        initialWidth=initial[0];
-        initialHeight=initial[1];
+      int equals=args[argIndex].indexOf('=');
+      if (equals != -1) {
+        param=args[argIndex].substring(0,equals);
+        value=args[argIndex].substring(equals + 1);
+        if (param.equals(ARGS_EDITOR_LOCATION)) {
+          external=true;
+          editorLocation=toInt(split(value,','));
+        }
+ else         if (param.equals(ARGS_DISPLAY)) {
+          int deviceIndex=Integer.parseInt(value) - 1;
+          GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
+          GraphicsDevice devices[]=environment.getScreenDevices();
+          if ((deviceIndex >= 0) && (deviceIndex < devices.length)) {
+            displayDevice=devices[deviceIndex];
+          }
+ else {
+            System.err.println("Display " + value + " does not exist, "+ "using the default display instead.");
+          }
+        }
+ else         if (param.equals(ARGS_PRESENT_BGCOLOR)) {
+          if (value.charAt(0) == '#')           value=value.substring(1);
+          presentColor=new Color(Integer.parseInt(value,16));
+        }
+ else         if (param.equals(ARGS_PRESENT_STOP_COLOR)) {
+          if (value.charAt(0) == '#')           value=value.substring(1);
+          stopColor=new Color(Integer.parseInt(value,16));
+        }
+ else         if (param.equals(ARGS_SKETCH_FOLDER)) {
+          folder=value;
+        }
+ else         if (param.equals(ARGS_LOCATION)) {
+          location=toInt(split(value,','));
+        }
       }
  else {
-        name=args[argIndex];
-        break;
+        if (args[argIndex].equals(ARGS_PRESENT)) {
+          present=true;
+        }
+ else         if (args[argIndex].equals(ARGS_EXTERNAL)) {
+          external=true;
+        }
+ else {
+          name=args[argIndex];
+          break;
+        }
       }
       argIndex++;
     }
-    Frame frame=new Frame();
+    Frame frame=null;
+    if (displayDevice != null) {
+      frame=new Frame(displayDevice.getDefaultConfiguration());
+    }
+ else {
+      frame=new Frame();
+    }
     frame.setResizable(false);
-    frame.pack();
     Class c=Class.forName(name);
     PApplet applet=(PApplet)c.newInstance();
     applet.frame=frame;
-    applet.INITIAL_WIDTH=initialWidth;
-    applet.INITIAL_HEIGHT=initialHeight;
     applet.folder=folder;
-    int argc=args.length - (argIndex + 1);
-    applet.args=new String[argc];
-    System.arraycopy(args,argc,applet.args,0,argc);
+    applet.args=PApplet.subset(args,1);
     applet.init();
-    Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
-    if (external) {
-      Insets insets=frame.getInsets();
-      int locationX=location[0] - 20;
-      int locationY=location[1];
-      int windowW=initialWidth + insets.left + insets.right;
-      int windowH=initialHeight + insets.top + insets.bottom;
-      frame.setSize(windowW,windowH);
-      if (exactLocation) {
-        frame.setLocation(location[0],location[1]);
+    while ((applet.width == 0) && !applet.finished) {
+      try {
+        Thread.sleep(5);
       }
- else {
-        if (locationX - windowW > 10) {
-          frame.setLocation(locationX - windowW,locationY);
-        }
- else {
-          locationX=location[0] + 66;
-          locationY=location[1] + 66;
-          if ((locationX + windowW > screen.width - 33) || (locationY + windowH > screen.height - 33)) {
-            locationX=(screen.width - windowW) / 2;
-            locationY=(screen.height - windowH) / 2;
-          }
-          frame.setLocation(locationX,locationY);
-        }
+ catch (      InterruptedException e) {
       }
-      frame.setLayout(null);
+    }
+    if (present) {
+      frame.setUndecorated(true);
+      frame.setBackground(presentColor);
+      displayDevice.setFullScreenWindow(frame);
       frame.add(applet);
-      frame.setBackground(SystemColor.control);
-      applet.setBounds((windowW - initialWidth) / 2,insets.top + ((windowH - insets.top - insets.bottom) - initialHeight) / 2,windowW,windowH);
-      applet.setupExternal(frame);
+      Dimension fullscreen=frame.getSize();
+      applet.setBounds((fullscreen.width - applet.width) / 2,(fullscreen.height - applet.height) / 2,applet.width,applet.height);
+      if (external) {
+        Label label=new Label("stop");
+        label.setForeground(stopColor);
+        label.addMouseListener(new MouseAdapter(){
+          public void mousePressed(          MouseEvent e){
+            System.exit(0);
+          }
+        }
+);
+        frame.add(label);
+        Dimension labelSize=label.getPreferredSize();
+        label.setSize(labelSize);
+        label.setLocation(20,fullscreen.height - labelSize.height - 20);
+        applet.setupExternal(frame);
+      }
     }
  else {
-      applet.args=new String[args.length - 1];
-      System.arraycopy(args,1,applet.args,0,args.length - 1);
-      frame.setLayout(new BorderLayout());
-      frame.add(applet,BorderLayout.CENTER);
       frame.pack();
-      frame.setLocation((screen.width - applet.g.width) / 2,(screen.height - applet.g.height) / 2);
-      frame.addWindowListener(new WindowAdapter(){
-        public void windowClosing(        WindowEvent e){
-          System.exit(0);
+      if (external) {
+        Insets insets=frame.getInsets();
+        int windowW=Math.max(applet.width,120) + insets.left + insets.right;
+        int windowH=Math.max(applet.height,120) + insets.top + insets.bottom;
+        frame.setSize(windowW,windowH);
+        if (location != null) {
+          frame.setLocation(location[0],location[1]);
         }
+ else {
+          int locationX=editorLocation[0] - 20;
+          int locationY=editorLocation[1];
+          if (locationX - windowW > 10) {
+            frame.setLocation(locationX - windowW,locationY);
+          }
+ else {
+            locationX=editorLocation[0] + 66;
+            locationY=editorLocation[1] + 66;
+            if ((locationX + windowW > screen.width - 33) || (locationY + windowH > screen.height - 33)) {
+              locationX=(screen.width - windowW) / 2;
+              locationY=(screen.height - windowH) / 2;
+            }
+            frame.setLocation(locationX,locationY);
+          }
+        }
+        frame.setLayout(null);
+        frame.add(applet);
+        frame.setBackground(SystemColor.control);
+        int usableWindowH=windowH - insets.top - insets.bottom;
+        applet.setBounds((windowW - applet.width) / 2,insets.top + (usableWindowH - applet.height) / 2,windowW,windowH);
+        applet.setupExternal(frame);
       }
+ else {
+        frame.setLayout(new BorderLayout());
+        frame.add(applet,BorderLayout.CENTER);
+        frame.setLocation((screen.width - applet.width) / 2,(screen.height - applet.height) / 2);
+        frame.addWindowListener(new WindowAdapter(){
+          public void windowClosing(          WindowEvent e){
+            System.exit(0);
+          }
+        }
 );
+      }
+      frame.show();
     }
-    frame.show();
     applet.requestFocus();
   }
  catch (  Exception e) {

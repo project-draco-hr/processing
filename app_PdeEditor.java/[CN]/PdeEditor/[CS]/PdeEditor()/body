@@ -1,10 +1,10 @@
 {
-  super(WINDOW_TITLE + " - " + PdeBase.VERSION);
+  super(WINDOW_TITLE);
   MRJApplicationUtils.registerAboutHandler(this);
   MRJApplicationUtils.registerPrefsHandler(this);
   MRJApplicationUtils.registerQuitHandler(this);
   MRJApplicationUtils.registerOpenDocumentHandler(this);
-  preferences=new PdePreferences();
+  PdePreferences.init();
   try {
     icon=PdeBase.getImage("icon.gif",this);
     setIconImage(icon);
@@ -52,7 +52,7 @@
   splitPane.setOneTouchExpandable(true);
   splitPane.setContinuousLayout(true);
   splitPane.setResizeWeight(1D);
-  if (PdeBase.platform == PdeBase.MACOSX) {
+  if (PdeBase.isMacOS()) {
     splitPane.setBorder(null);
   }
   int dividerSize=PdePreferences.getInteger("editor.divider.size");
@@ -65,72 +65,4 @@
   pain.add(box);
   Document document=textarea.getDocument();
   document.addUndoableEditListener(new PdeUndoableEditListener());
-  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
-  if ((PdeBase.platform == PdeBase.MACOSX) || (PdeBase.platform == PdeBase.MACOS9)) {
-    presentationWindow=new Frame();
-    Insets insets=new Insets(21,5,5 + 20,5);
-    presentationWindow.setBounds(-insets.left,-insets.top,screen.width + insets.left + insets.right,screen.height + insets.top + insets.bottom);
-  }
- else {
-    presentationWindow=new Frame();
-    try {
-      Method undecoratedMethod=Frame.class.getMethod("setUndecorated",new Class[]{Boolean.TYPE});
-      undecoratedMethod.invoke(presentationWindow,new Object[]{Boolean.TRUE});
-    }
- catch (    Exception e) {
-    }
-    presentationWindow.setBounds(0,0,screen.width,screen.height);
-  }
-  Label label=new Label("stop");
-  label.addMouseListener(new MouseAdapter(){
-    public void mousePressed(    MouseEvent e){
-      setVisible(true);
-      doClose();
-    }
-  }
-);
-  Dimension labelSize=new Dimension(60,20);
-  presentationWindow.setLayout(null);
-  presentationWindow.add(label);
-  label.setBounds(5,screen.height - 5 - labelSize.height,labelSize.width,labelSize.height);
-  Color presentationBgColor=PdePreferences.getColor("run.present.bgcolor");
-  presentationWindow.setBackground(presentationBgColor);
-  textarea.addFocusListener(new FocusAdapter(){
-    public void focusGained(    FocusEvent e){
-      if (presenting == true) {
-        try {
-          presentationWindow.toFront();
-          runtime.applet.requestFocus();
-        }
- catch (        Exception ex) {
-        }
-      }
-    }
-  }
-);
-  this.addFocusListener(new FocusAdapter(){
-    public void focusGained(    FocusEvent e){
-      if (presenting == true) {
-        try {
-          presentationWindow.toFront();
-          runtime.applet.requestFocus();
-        }
- catch (        Exception ex) {
-        }
-      }
-    }
-  }
-);
-  presentationWindow.addKeyListener(new KeyAdapter(){
-    public void keyPressed(    KeyEvent e){
-      if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        runtime.stop();
-        doClose();
-      }
- else {
-        runtime.applet.keyPressed(e);
-      }
-    }
-  }
-);
 }

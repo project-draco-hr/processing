@@ -1,0 +1,32 @@
+{
+  try {
+    load(PdeBase.getStream("preferences.txt"));
+  }
+ catch (  Exception e) {
+    PdeBase.showError(null,"Could not read default settings.\n" + "You'll need to reinstall Processing.",e);
+  }
+  String platformExtension="." + platforms[processing.core.PApplet.platform];
+  int extensionLength=platformExtension.length();
+  Enumeration e=table.keys();
+  while (e.hasMoreElements()) {
+    String key=(String)e.nextElement();
+    if (key.endsWith(platformExtension)) {
+      String actualKey=key.substring(0,key.length() - extensionLength);
+      String value=get(key);
+      table.put(actualKey,value);
+    }
+  }
+  setColor("run.window.bgcolor",SystemColor.control);
+  preferencesFile=PdeBase.getProcessingDataFile(PREFS_FILE);
+  if (!preferencesFile.exists()) {
+    save();
+  }
+ else {
+    try {
+      load(new FileInputStream(preferencesFile));
+    }
+ catch (    Exception ex) {
+      PdeBase.showError("Error reading preferences","Error reading the preferences file. " + "Please delete (or move)\n" + preferencesFile.getAbsolutePath() + " and restart Processing.",ex);
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   try {
-    if (platform == WINDOWS) {
+    if (PdeBase.isWindows()) {
       if (url.startsWith("http://")) {
         Runtime.getRuntime().exec("cmd /c start " + url);
       }
@@ -8,7 +8,7 @@
         Runtime.getRuntime().exec("cmd /c \"" + url + "\"");
       }
     }
- else     if (platform == MACOSX) {
+ else     if (PdeBase.isMacOS()) {
       if (!url.startsWith("http://")) {
         url="file://" + url;
         if (url.indexOf(' ') != -1) {
@@ -27,10 +27,7 @@
       }
       com.apple.mrj.MRJFileUtils.openURL(url);
     }
- else     if (platform == MACOS9) {
-      com.apple.mrj.MRJFileUtils.openURL(url);
-    }
- else     if (platform == LINUX) {
+ else     if (PdeBase.isLinux()) {
       String browser=PdePreferences.get("browser");
       Runtime.getRuntime().exec(new String[]{browser,url});
     }

@@ -1,0 +1,43 @@
+{
+  String currentRenderer=(g == null) ? null : g.getClass().getName();
+  if (currentRenderer != null) {
+    if (currentRenderer.equals(renderer)) {
+      if ((iwidth == g.width) && (iheight == g.height)) {
+        return;
+      }
+    }
+ else {
+      if (frameCount > 0) {
+        throw new RuntimeException("size() cannot be called to change " + "the renderer outside of setup()");
+      }
+    }
+  }
+  try {
+    Class rendererClass=Class.forName(renderer);
+    Class constructorParams[]=new Class[]{Integer.TYPE,Integer.TYPE,PApplet.class};
+    Constructor constructor=rendererClass.getConstructor(constructorParams);
+    Object constructorValues[]=new Object[]{new Integer(iwidth),new Integer(iheight),this};
+    g=(PGraphics)constructor.newInstance(constructorValues);
+    this.width=iwidth;
+    this.height=iheight;
+    setSize(width,height);
+  }
+ catch (  InvocationTargetException ite) {
+    String msg=ite.getTargetException().getMessage();
+    if (msg.indexOf("no jogl in java.library.path") != -1) {
+      throw new RuntimeException("Before using OpenGL, you must " + "first select Import Library > " + "opengl from the Sketch menu.");
+    }
+ else {
+      ite.getTargetException().printStackTrace();
+    }
+  }
+catch (  Exception e) {
+    e.printStackTrace();
+    die("Could not start because of a problem with size()",e);
+  }
+  if ((currentRenderer != null) && !currentRenderer.equals(renderer)) {
+    throw new RuntimeException(NEW_RENDERER);
+  }
+  Object methodArgs[]=new Object[]{new Integer(width),new Integer(height)};
+  sizeMethods.handle(methodArgs);
+}

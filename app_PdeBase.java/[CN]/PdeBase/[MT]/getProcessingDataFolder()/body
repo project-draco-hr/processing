@@ -4,7 +4,7 @@
   if (pref != null) {
     dataFolder=new File(pref);
   }
- else   if (platform == MACOSX) {
+ else   if (PdeBase.isMacOS()) {
     try {
       MRJOSType domainLibrary=new MRJOSType("dlib");
       Method findFolderMethod=MRJFileUtils.class.getMethod("findFolder",new Class[]{Short.TYPE,MRJOSType.class});
@@ -15,7 +15,7 @@
       showError("Problem getting data folder","Error getting the Processing data folder.",e);
     }
   }
- else   if (platform == WINDOWS) {
+ else   if (PdeBase.isWindows()) {
     try {
       RegistryKey topKey=Registry.HKEY_CURRENT_USER;
       String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";

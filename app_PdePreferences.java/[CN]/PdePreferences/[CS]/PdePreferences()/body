@@ -1,37 +1,6 @@
 {
-  try {
-    load(PdeBase.getStream("preferences.txt"));
-  }
- catch (  Exception e) {
-    PdeBase.showError(null,"Could not read default settings.\n" + "You'll need to reinstall Processing.",e);
-  }
-  String platformExtension="." + PdeBase.platforms[PdeBase.platform];
-  int extensionLength=platformExtension.length();
-  Enumeration e=table.keys();
-  while (e.hasMoreElements()) {
-    String key=(String)e.nextElement();
-    if (key.endsWith(platformExtension)) {
-      String actualKey=key.substring(0,key.length() - extensionLength);
-      String value=get(key);
-      table.put(actualKey,value);
-    }
-  }
-  setColor("run.window.bgcolor",SystemColor.control);
-  preferencesFile=PdeBase.getProcessingDataFile(PREFS_FILE);
-  if (!preferencesFile.exists()) {
-    save();
-  }
- else {
-    try {
-      load(new FileInputStream(preferencesFile));
-    }
- catch (    Exception ex) {
-      PdeBase.showError("Error reading preferences","Error reading the preferences file. " + "Please delete (or move)\n" + preferencesFile.getAbsolutePath() + " and restart Processing.",ex);
-    }
-  }
-  frame=new JFrame("Preferences");
-  frame.setResizable(false);
-  Container pain=this;
+  frame=new JDialog(editor,"Preferences",true);
+  Container pain=frame.getContentPane();
   pain.setLayout(null);
   int top=GUI_BIG;
   int left=GUI_BIG;
@@ -83,12 +52,16 @@
   button.setBounds(h,top + (vmax - d2.height) / 2,d2.width,d2.height);
   right=Math.max(right,h + d2.width + GUI_BIG);
   top+=vmax + GUI_BETWEEN;
-  exportLibraryBox=new JCheckBox("Enable advanced \"Library\" features" + " (requires restart)");
-  exportLibraryBox.setEnabled(false);
-  pain.add(exportLibraryBox);
-  d=exportLibraryBox.getPreferredSize();
-  exportLibraryBox.setBounds(left,top,d.width,d.height);
-  right=Math.max(right,left + d.width);
+  Container box=Box.createHorizontalBox();
+  label=new JLabel("Editor font size: ");
+  box.add(label);
+  fontSizeField=new JTextField(4);
+  box.add(fontSizeField);
+  pain.add(box);
+  d=box.getPreferredSize();
+  box.setBounds(left,top,d.width,d.height);
+  Font editorFont=PdePreferences.getFont("editor.font");
+  fontSizeField.setText(String.valueOf(editorFont.getSize()));
   top+=d.height + GUI_BETWEEN;
   externalEditorBox=new JCheckBox("Use external editor");
   pain.add(externalEditorBox);
@@ -97,13 +70,19 @@
   right=Math.max(right,left + d.width);
   top+=d.height + GUI_BETWEEN;
   label=new JLabel("More preferences can be edited directly in the file");
-  label.setForeground(Color.gray);
   pain.add(label);
   d=label.getPreferredSize();
+  label.setForeground(Color.gray);
   label.setBounds(left,top,d.width,d.height);
   top+=d.height;
   label=new JLabel(preferencesFile.getAbsolutePath());
-  label.setForeground(Color.gray);
+  label.addMouseListener(new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
+      PdeBase.openURL(preferencesFile.getAbsolutePath());
+    }
+  }
+);
+  label.setForeground(new Color(51,25,153));
   pain.add(label);
   d=label.getPreferredSize();
   label.setBounds(left,top,d.width,d.height);
@@ -148,4 +127,13 @@
   frame.pack();
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   frame.setLocation((screen.width - wide) / 2,(screen.height - high) / 2);
+  addKeyListener(new KeyAdapter(){
+    public void keyPressed(    KeyEvent e){
+      KeyStroke wc=PdeEditor.WINDOW_CLOSE_KEYSTROKE;
+      if ((e.getKeyCode() == KeyEvent.VK_ESCAPE) || (KeyStroke.getKeyStrokeForEvent(e).equals(wc))) {
+        disposeFrame();
+      }
+    }
+  }
+);
 }

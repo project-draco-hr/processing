@@ -1,6 +1,6 @@
 {
   File sketchbookFolder=null;
-  if (platform == MACOSX) {
+  if (PdeBase.isMacOS()) {
     try {
       MRJOSType domainDocuments=new MRJOSType("docs");
       Method findFolderMethod=MRJFileUtils.class.getMethod("findFolder",new Class[]{Short.TYPE,MRJOSType.class});
@@ -11,7 +11,7 @@
       showError("sketch folder problem","Could not locate default sketch folder location.",e);
     }
   }
- else   if (platform == WINDOWS) {
+ else   if (isWindows()) {
     try {
       RegistryKey topKey=Registry.HKEY_CURRENT_USER;
       String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";

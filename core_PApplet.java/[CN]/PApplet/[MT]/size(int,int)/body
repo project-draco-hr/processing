@@ -1,18 +1,17 @@
 {
-  if (g == null)   return;
-  g.resize(iwidth,iheight);
-  this.pixels=g.pixels;
-  this.width=g.width;
-  this.height=g.height;
-  Object methodArgs[]=new Object[]{new Integer(width),new Integer(height)};
-  sizeMethods.handle(methodArgs);
-  if (frame != null) {
-    Insets insets=frame.getInsets();
-    int minW=120;
-    int minH=120;
-    int winW=Math.max(width,minW) + insets.left + insets.right;
-    int winH=Math.max(height,minH) + insets.top + insets.bottom;
-    frame.setSize(winW,winH);
-    setBounds((winW - width) / 2,insets.top + ((winH - insets.top - insets.bottom) - height) / 2,winW,winH);
+  if (g != null) {
+    size(iwidth,iheight,g.getClass().getName());
+  }
+ else {
+    if (PApplet.JDK_VERSION >= 1.3) {
+      try {
+        Class c=Class.forName(JAVA2D);
+        size(iwidth,iheight,JAVA2D);
+        return;
+      }
+ catch (      ClassNotFoundException e) {
+      }
+    }
+    size(iwidth,iheight,P2D);
   }
 }

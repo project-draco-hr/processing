@@ -2,6 +2,16 @@
   setBoolean("sketchbook.prompt",sketchPromptBox.isSelected());
   setBoolean("sketchbook.auto_clean",sketchCleanBox.isSelected());
   set("sketchbook.path",sketchbookLocationField.getText());
-  setBoolean("export.library",exportLibraryBox.isSelected());
   setBoolean("editor.external",externalEditorBox.isSelected());
+  String newSizeText=fontSizeField.getText();
+  try {
+    int newSize=Integer.parseInt(newSizeText.trim());
+    String pieces[]=PApplet.split(get("editor.font"),',');
+    pieces[2]=String.valueOf(newSize);
+    set("editor.font",PApplet.join(pieces,','));
+  }
+ catch (  Exception e) {
+    System.err.println("ignoring invalid font size " + newSizeText);
+  }
+  editor.applyPreferences();
 }

@@ -1,60 +1,7 @@
 {
   try {
     while ((Thread.currentThread() == thread) && !finished) {
-      if (PApplet.THREAD_DEBUG)       println(Thread.currentThread().getName() + " formerly nextFrame()");
-      if (looping || redraw) {
-        if (frameCount == 0) {
-          createGraphics();
-        }
-synchronized (glock) {
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 1a beginFrame");
-          g.beginFrame();
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 1b draw");
-          if (frameCount == 0) {
-            g.defaults();
-            setup();
-            this.pixels=g.pixels;
-            this.width=g.width;
-            this.height=g.height;
-          }
- else {
-            if (fpsTarget != 0) {
-              if (fpsLastDelayTime == 0) {
-                fpsLastDelayTime=System.currentTimeMillis();
-              }
- else {
-                long timeToLeave=fpsLastDelayTime + (long)(1000.0f / fpsTarget);
-                int napTime=(int)(timeToLeave - System.currentTimeMillis());
-                fpsLastDelayTime=timeToLeave;
-                delay(napTime);
-              }
-            }
-            preMethods.handle();
-            pmouseX=dmouseX;
-            pmouseY=dmouseY;
-            draw();
-            dmouseX=mouseX;
-            dmouseY=mouseY;
-            dequeueMouseEvents();
-            dequeueKeyEvents();
-            if (THREAD_DEBUG)             println(Thread.currentThread().getName() + " 2b endFrame");
-            drawMethods.handle();
-            redraw=false;
-          }
-          g.endFrame();
-          if (recorder != null) {
-            recorder.endFrame();
-            recorder=null;
-          }
-          frameCount++;
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
-          repaint();
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3b calling Toolkit.sync " + frameCount);
-          getToolkit().sync();
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3c done " + frameCount);
-          postMethods.handle();
-        }
-      }
+      g.requestDisplay(this);
       try {
         if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " " + looping+ " "+ redraw);
         if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " gonna sleep");
@@ -70,6 +17,7 @@ synchronized (glock) {
  catch (  Exception e) {
     System.out.println("exception occurred (if you don't see a stack " + "trace below this message, we've got a bug)");
     finished=true;
+    exception=e;
     if (leechErr != null) {
       leechErr.println(LEECH_WAKEUP);
       e.printStackTrace(leechErr);
