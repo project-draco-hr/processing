@@ -1,15 +1,23 @@
 {
-  saveHeaderTGA(output,width,height);
-  int index=(height - 1) * width;
-  for (int y=height - 1; y >= 0; y--) {
-    for (int x=0; x < width; x++) {
-      int col=pixels[index + x];
-      output.write(col & 0xff);
-      output.write(col >> 8 & 0xff);
-      output.write(col >> 16 & 0xff);
-      output.write(col >>> 24 & 0xff);
+  try {
+    if (!saveHeaderTGA(output,width,height)) {
+      return false;
     }
-    index-=width;
+    int index=(height - 1) * width;
+    for (int y=height - 1; y >= 0; y--) {
+      for (int x=0; x < width; x++) {
+        int col=pixels[index + x];
+        output.write(col & 0xff);
+        output.write(col >> 8 & 0xff);
+        output.write(col >> 16 & 0xff);
+        output.write(col >>> 24 & 0xff);
+      }
+      index-=width;
+    }
+    output.flush();
   }
-  output.flush();
+ catch (  IOException e) {
+    e.printStackTrace();
+    return false;
+  }
 }

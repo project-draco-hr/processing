@@ -1,6 +1,6 @@
 {
-  vertex_end=vertex_count;
-  if (vertex_count == 0) {
+  vertex_end=vertexCount;
+  if (vertexCount == 0) {
     shape=0;
     return;
   }
@@ -132,7 +132,7 @@ break;
 case QUADS:
 case QUAD_STRIP:
 {
-stop=vertex_count - 3;
+stop=vertexCount - 3;
 increment=(shape == QUADS) ? 4 : 2;
 for (int i=vertex_start; i < stop; i+=increment) {
 add_triangle(i,i + 1,i + 2);
@@ -149,20 +149,12 @@ triangulate_polygon();
 break;
 }
 }
-if (depth) {
 for (int i=vertex_start; i < vertex_end; i++) {
 float vertex[]=vertices[i];
 vertex[VX]=m00 * vertex[MX] + m01 * vertex[MY] + m02 * vertex[MZ] + m03;
 vertex[VY]=m10 * vertex[MX] + m11 * vertex[MY] + m12 * vertex[MZ] + m13;
 vertex[VZ]=m20 * vertex[MX] + m21 * vertex[MY] + m22 * vertex[MZ] + m23;
 vertex[VW]=m30 * vertex[MX] + m31 * vertex[MY] + m32 * vertex[MZ] + m33;
-}
-}
- else {
-for (int i=vertex_start; i < vertex_end; i++) {
-vertices[i][X]=m00 * vertices[i][MX] + m01 * vertices[i][MY] + m03;
-vertices[i][Y]=m10 * vertices[i][MX] + m11 * vertices[i][MY] + m13;
-}
 }
 light_and_transform();
 if (hints[DEPTH_SORT]) {

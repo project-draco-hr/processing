@@ -1,14 +1,14 @@
 {
-  if (spline_vertex == null) {
-    spline_vertex=new float[SPLINE_VERTEX_ALLOC][VERTEX_FIELD_COUNT];
+  if (splineVertices == null) {
+    splineVertices=new float[DEFAULT_SPLINE_VERTICES][VERTEX_FIELD_COUNT];
   }
-  if (spline_vertex_index == SPLINE_VERTEX_ALLOC) {
-    System.arraycopy(spline_vertex[SPLINE_VERTEX_ALLOC - 3],0,spline_vertex[0],0,VERTEX_FIELD_COUNT);
-    System.arraycopy(spline_vertex[SPLINE_VERTEX_ALLOC - 2],0,spline_vertex[1],0,VERTEX_FIELD_COUNT);
-    System.arraycopy(spline_vertex[SPLINE_VERTEX_ALLOC - 1],0,spline_vertex[2],0,VERTEX_FIELD_COUNT);
-    spline_vertex_index=3;
+  if (splineVertexCount == DEFAULT_SPLINE_VERTICES) {
+    System.arraycopy(splineVertices[DEFAULT_SPLINE_VERTICES - 3],0,splineVertices[0],0,VERTEX_FIELD_COUNT);
+    System.arraycopy(splineVertices[DEFAULT_SPLINE_VERTICES - 2],0,splineVertices[1],0,VERTEX_FIELD_COUNT);
+    System.arraycopy(splineVertices[DEFAULT_SPLINE_VERTICES - 1],0,splineVertices[2],0,VERTEX_FIELD_COUNT);
+    splineVertexCount=3;
   }
-  float vertex[]=spline_vertex[spline_vertex_index];
+  float vertex[]=splineVertices[splineVertexCount];
   vertex[MX]=x;
   vertex[MY]=y;
   vertex[MZ]=z;
@@ -32,17 +32,17 @@
   vertex[NX]=normalX;
   vertex[NY]=normalY;
   vertex[NZ]=normalZ;
-  spline_vertex_index++;
-  if (spline_vertex_index > 3) {
+  splineVertexCount++;
+  if (splineVertexCount > 3) {
     if (bezier) {
-      if ((spline_vertex_index % 4) == 0) {
+      if ((splineVertexCount % 4) == 0) {
         if (!bezier_inited)         bezier_init();
-        spline3_segment(spline_vertex_index - 4,spline_vertex_index - 4,bezier_draw,bezier_detail);
+        spline3_segment(splineVertexCount - 4,splineVertexCount - 4,bezier_draw,bezier_detail);
       }
     }
  else {
       if (!curve_inited)       curve_init();
-      spline3_segment(spline_vertex_index - 4,spline_vertex_index - 3,curve_draw,curve_detail);
+      spline3_segment(splineVertexCount - 4,splineVertexCount - 3,curve_draw,curve_detail);
     }
   }
 }

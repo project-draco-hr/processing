@@ -44,7 +44,7 @@
   interpX=false;
   int tr, tg, tb, ta;
   for (int x=lx; x <= rx; x++) {
-    if (noDepthTest || (sp[Z] <= zbuffer[offset + x])) {
+    if (true) {
       if (interpUV) {
         int tu=(int)sp[U];
         int tv=(int)sp[V];
@@ -156,7 +156,6 @@
         }
         if ((ta == 254) || (ta == 255)) {
           pixels[offset + x]=0xff000000 | (tr << 16) | (tg << 8)| tb;
-          zbuffer[offset + x]=sp[Z];
         }
  else {
           int a1=255 - ta;
@@ -164,7 +163,6 @@
           int g1=(pixels[offset + x] >> 8) & 0xff;
           int b1=(pixels[offset + x]) & 0xff;
           pixels[offset + x]=0xff000000 | (((tr * ta + r1 * a1) >> 8) << 16) | ((tg * ta + g1 * a1) & 0xff00)| ((tb * ta + b1 * a1) >> 8);
-          if (ta > ZBUFFER_MIN_COVERAGE)           zbuffer[offset + x]=sp[Z];
         }
       }
  else {
@@ -183,7 +181,6 @@
         }
         if (weight == 255) {
           pixels[offset + x]=rgba;
-          zbuffer[offset + x]=sp[Z];
         }
  else {
           int r1=(pixels[offset + x] >> 16) & 0xff;
@@ -192,7 +189,6 @@
           a2=weight;
           int a1=255 - a2;
           pixels[offset + x]=(0xff000000 | ((r1 * a1 + r2 * a2) >> 8) << 16 | ((g1 * a1 + g2 * a2) >> 8) << 8 | ((b1 * a1 + b2 * a2) >> 8));
-          if (a2 > ZBUFFER_MIN_COVERAGE)           zbuffer[offset + x]=sp[Z];
         }
       }
     }

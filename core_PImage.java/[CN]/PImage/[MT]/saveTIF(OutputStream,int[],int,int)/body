@@ -1,9 +1,18 @@
 {
-  saveHeaderTIF(output,width,height);
-  for (int i=0; i < pixels.length; i++) {
-    output.write((pixels[i] >> 16) & 0xff);
-    output.write((pixels[i] >> 8) & 0xff);
-    output.write(pixels[i] & 0xff);
+  try {
+    if (!saveHeaderTIF(output,width,height)) {
+      return false;
+    }
+    for (int i=0; i < pixels.length; i++) {
+      output.write((pixels[i] >> 16) & 0xff);
+      output.write((pixels[i] >> 8) & 0xff);
+      output.write(pixels[i] & 0xff);
+    }
+    output.flush();
+    return true;
   }
-  output.flush();
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+  return false;
 }
