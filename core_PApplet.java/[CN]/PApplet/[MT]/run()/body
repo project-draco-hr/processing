@@ -18,16 +18,12 @@ synchronized (g) {
             this.height=g.height;
           }
  else {
-            for (int i=0; i < libraryCount; i++) {
-              if (libraryCalls[i][PLibrary.PRE])               libraries[i].pre();
-            }
+            preMethods.handle();
             draw();
             dequeueMouseEvents();
             dequeueKeyEvents();
             if (THREAD_DEBUG)             println(Thread.currentThread().getName() + " 2b endFrame");
-            for (int i=0; i < libraryCount; i++) {
-              if (libraryCalls[i][PLibrary.DRAW])               libraries[i].draw();
-            }
+            drawMethods.handle();
           }
           g.endFrame();
           frameCount++;
@@ -36,9 +32,7 @@ synchronized (g) {
           if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3b calling Toolkit.sync " + frameCount);
           getToolkit().sync();
           if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3c done " + frameCount);
-          for (int i=0; i < libraryCount; i++) {
-            if (libraryCalls[i][PLibrary.POST])             libraries[i].post();
-          }
+          postMethods.handle();
         }
       }
       redraw=false;
@@ -64,4 +58,5 @@ synchronized (g) {
     }
   }
   if (THREAD_DEBUG)   println(Thread.currentThread().getName() + " thread finished");
+  stop();
 }
