@@ -1,29 +1,15 @@
 {
-  properties=new Properties();
-  String home=System.getProperty("user.home");
-  preferencesFile=new File(home,".processing");
-  if (!preferencesFile.exists()) {
-    try {
-      if ((PdeBase.platform == PdeBase.MACOSX) || (PdeBase.platform == PdeBase.MACOS9)) {
-        load(new FileInputStream("lib/pde.properties"));
-      }
+  try {
+    if ((PdeBase.platform == PdeBase.MACOSX) || (PdeBase.platform == PdeBase.MACOS9)) {
+      load(new FileInputStream("lib/pde.properties"));
+    }
  else {
-        load(getClass().getResource("pde.properties").openStream());
-      }
+      load(getClass().getResource("pde.properties").openStream());
     }
- catch (    Exception e) {
-      showError(null,"Could not read default settings.\n" + "You'll need to reinstall Processing.",e);
-      System.exit(1);
-    }
-    firstTime=true;
   }
- else {
-    try {
-      load(new FileInputStream(preferencesFile));
-    }
- catch (    Exception e) {
-      showError("Error reading preferences","Error reading the preferences file. Please delete\n" + perferencesFile.getCanonicalPath() + "\n"+ "and restart Processing.",e);
-    }
+ catch (  Exception e) {
+    showError(null,"Could not read default settings.\n" + "You'll need to reinstall Processing.",e);
+    System.exit(1);
   }
   String platformExtension="." + PdeBase.platforms[PdeBase.platform];
   int extensionLength=platformExtension.length();
@@ -38,15 +24,28 @@
       System.out.println("now set to " + table.get(actualKey));
     }
   }
+  String home=System.getProperty("user.home");
+  preferencesFile=new File(home,".processing");
+  if (!preferencesFile.exists()) {
+    save();
+  }
+ else {
+    try {
+      load(new FileInputStream(preferencesFile));
+    }
+ catch (    Exception e) {
+      showError("Error reading preferences","Error reading the preferences file. Please delete\n" + perferencesFile.getCanonicalPath() + "\n"+ "and restart Processing.",e);
+    }
+  }
   frame=new JFrame("Preferences");
   frame.setResizable(false);
   Container pain=this;
   pain.setLayout(null);
-  int top=BIG;
-  int left=BIG;
+  int top=GUI_BIG;
+  int left=GUI_BIG;
   int right=0;
   JLabel label;
-  JButton button;
+  JButton button, button2;
   JComboBox combo;
   Dimension d, d2, d3;
   int h, v, vmax;
@@ -67,12 +66,12 @@
   d3=button.getPreferredSize();
   vmax=Math.max(Math.max(d.height,d2.height),d3.height);
   label.setBounds(left,top + (vmax - d.height) / 2,d.width,d.height);
-  h=left + d.width + BETWEEN;
+  h=left + d.width + GUI_BETWEEN;
   sketchbookLocation.setBounds(h,top + (vmax - d2.height) / 2,d2.width,d2.height);
-  h+=d2.width + BETWEEN;
+  h+=d2.width + GUI_BETWEEN;
   button.setBounds(h,top + (vmax - d3.height) / 2,d3.width,d3.height);
-  right=Math.max(right,h + d3.width + BIG);
-  top+=vmax + BETWEEN;
+  right=Math.max(right,h + d3.width + GUI_BIG);
+  top+=vmax + GUI_BETWEEN;
   externalEditorBox=new JCheckBox("Use external editor");
   pain.add(externalEditorBox);
   d=externalEditorBox.getPreferredSize();
@@ -87,6 +86,27 @@
   d=textarea.getPreferredSize();
   textarea.setBounds(left,top,d.width,d.height);
   top+=d.height + BETWEEN;
+  button=new JButton(PROMPT_OK);
+  button.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      apply();
+      hideFrame();
+    }
+  }
+);
+  pain.add(button);
+  button.setBounds(LEFT,top,BUTTON_WIDTH,BUTTON_HEIGHT);
+  h=LEFT + BUTTON_WIDTH + GUI_BETWEEN;
+  button=new JButton(PROMPT_CANCEL);
+  button.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      hideFrame();
+    }
+  }
+);
+  pain.add(button);
+  button.setBounds(h,top,BUTTON_WIDTH,BUTTON_HEIGHT);
+  top+=BUTTON_HEIGHT + BETWEEN;
   wide=right + BIG;
   high=top + BIG;
   setSize(wide,high);
