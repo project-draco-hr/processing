@@ -1,0 +1,25 @@
+{
+  try {
+    File sketchbookDir=new File("sketchbook",header.user);
+    File sketchDir=null;
+    String sketchName=null;
+    System.out.println("1");
+    do {
+      int index=(int)(Math.random() * 1000);
+      sketchName="sketch-" + pad3(index);
+      sketchDir=new File(sketchbookDir,sketchName);
+    }
+ while (sketchDir.exists());
+    System.out.println("2");
+    sketchDir.mkdirs();
+    new File(sketchDir,"data").mkdirs();
+    new File(sketchDir,"build").mkdirs();
+    System.out.println("3");
+    File sketchFile=new File(sketchDir,sketchName + ".pde");
+    new FileOutputStream(sketchFile);
+    handleOpen(sketchFile,sketchDir);
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+}

@@ -8,24 +8,5 @@
     buttons.clear();
     return;
   }
-  File file=new File(directory,filename);
-  try {
-    FileInputStream input=new FileInputStream(file);
-    int length=(int)file.length();
-    byte data[]=new byte[length];
-    int count=0;
-    while (count != length) {
-      data[count++]=(byte)input.read();
-    }
-    lastDirectory=directory;
-    lastFile=filename;
-    textarea.setText(new String(data));
-  }
- catch (  FileNotFoundException e1) {
-    e1.printStackTrace();
-  }
-catch (  IOException e2) {
-    e2.printStackTrace();
-  }
-  buttons.clear();
+  handleOpen(new File(directory,filename),null);
 }

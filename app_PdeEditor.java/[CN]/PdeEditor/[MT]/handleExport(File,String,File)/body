@@ -1,0 +1,83 @@
+{
+  try {
+    String program=textarea.getText();
+    KjcEngine engine=new KjcEngine(program,this);
+    appletDir.mkdirs();
+    projectName=engine.writeJava(projectName,false);
+    if (!engine.compileJava()) {
+      return;
+    }
+    String javaName=projectName + ".java";
+    copyFile(new File(javaName),new File(appletDir,javaName));
+    int wide=BApplet.DEFAULT_WIDTH;
+    int high=BApplet.DEFAULT_HEIGHT;
+    int index=program.indexOf("size(");
+    if (index != -1) {
+      try {
+        String str=program.substring(index + 5);
+        int comma=str.indexOf(',');
+        int paren=str.indexOf(')');
+        wide=Integer.parseInt(str.substring(0,comma).trim());
+        high=Integer.parseInt(str.substring(comma + 1,paren).trim());
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+    }
+    File htmlOutputFile=new File(appletDir,"index.html");
+    FileOutputStream fos=new FileOutputStream(htmlOutputFile);
+    PrintStream ps=new PrintStream(fos);
+    ps.println("<HTML> <BODY BGCOLOR=\"white\">");
+    ps.println();
+    ps.println("<BR> <BR> <BR> <CENTER>");
+    ps.println();
+    ps.print("<APPLET CODE=\"" + projectName + "\" ARCHIVE=\"");
+    ps.print(projectName + ".jar");
+    ps.println("\" WIDTH=" + wide + " HEIGHT="+ high+ ">");
+    ps.println("</APPLET>");
+    ps.println();
+    ps.println("<A HREF=\"" + projectName + ".java\">source code</A>");
+    ps.println();
+    ps.println("</CENTER>");
+    ps.println("</BODY> </HTML>");
+    ps.flush();
+    ps.close();
+    String exportDir=("lib" + File.separator + "export"+ File.separator);
+    String bagelClasses[]=new File(exportDir).list();
+    FileOutputStream zipOutputFile=new FileOutputStream(new File(appletDir,projectName + ".jar"));
+    ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
+    ZipEntry entry;
+    for (int i=0; i < bagelClasses.length; i++) {
+      if (!bagelClasses[i].endsWith(".class"))       continue;
+      entry=new ZipEntry(bagelClasses[i]);
+      zos.putNextEntry(entry);
+      zos.write(grabFile(new File(exportDir + bagelClasses[i])));
+      zos.closeEntry();
+    }
+    if (dataDir != null) {
+      String datafiles[]=dataDir.list();
+      for (int i=0; i < datafiles.length; i++) {
+        if (datafiles[i].equals(".") || datafiles[i].equals("..")) {
+          continue;
+        }
+        entry=new ZipEntry(datafiles[i]);
+        zos.putNextEntry(entry);
+        zos.write(grabFile(new File(dataDir,datafiles[i])));
+        zos.closeEntry();
+      }
+    }
+    entry=new ZipEntry(projectName + ".class");
+    zos.putNextEntry(entry);
+    zos.write(grabFile(new File("lib",projectName + ".class")));
+    zos.closeEntry();
+    zos.flush();
+    zos.close();
+    engine.cleanup();
+    message("Done exporting.");
+  }
+ catch (  Exception e) {
+    message("Error during export.");
+    e.printStackTrace();
+  }
+  buttons.clear();
+}

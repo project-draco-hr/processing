@@ -1,0 +1,22 @@
+{
+  try {
+    FileInputStream input=new FileInputStream(file);
+    int length=(int)file.length();
+    byte data[]=new byte[length];
+    int count=0;
+    while (count != length) {
+      data[count++]=(byte)input.read();
+    }
+    lastDirectory=file.getCanonicalPath();
+    lastFile=file.getName();
+    textarea.setText(new String(data));
+    header.setProject(file.getName(),projectDir);
+  }
+ catch (  FileNotFoundException e1) {
+    e1.printStackTrace();
+  }
+catch (  IOException e2) {
+    e2.printStackTrace();
+  }
+  buttons.clear();
+}
