@@ -1,5 +1,5 @@
 {
-  this.applet=applet;
+  this.parent=iparent;
   try {
     AudioInputStream stream=AudioSystem.getAudioInputStream(input);
     AudioFormat format=stream.getFormat();
@@ -13,7 +13,27 @@
     clip=(Clip)AudioSystem.getLine(info);
     gainControl=(FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
     clip.open(stream);
-    applet.registerDispose(this);
+    parent.registerDispose(this);
+    try {
+      soundEventMethod=parent.getClass().getMethod("soundEvent",new Class[]{PSound.class});
+      clip.addLineListener(new LineListener(){
+        public void update(        LineEvent event){
+          if (event.getType() == LineEvent.Type.STOP) {
+            try {
+              soundEventMethod.invoke(parent,new Object[]{PSound2.this});
+            }
+ catch (            Exception e) {
+              System.err.println("error, disabling soundEvent()");
+              e.printStackTrace();
+              soundEventMethod=null;
+            }
+          }
+        }
+      }
+);
+    }
+ catch (    Exception e) {
+    }
   }
  catch (  Exception e) {
     error("<init>",e);
