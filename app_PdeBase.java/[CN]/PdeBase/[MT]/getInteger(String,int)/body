@@ -1,4 +1,11 @@
 {
   String value=get(attribute,null);
-  return (value == null) ? defaultValue : Integer.parseInt(value);
+  if (value == null)   return defaultValue;
+  try {
+    return Integer.parseInt(value);
+  }
+ catch (  NumberFormatException e) {
+    System.err.println("expecting an integer: " + attribute + " = "+ value);
+  }
+  return defaultValue;
 }
