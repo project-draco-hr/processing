@@ -1,23 +1,17 @@
 {
   program=null;
-  try {
-    if (files[i].length() != 0) {
-      BufferedReader reader=new BufferedReader(new InputStreamReader(new FileInputStream(files[i])));
-      StringBuffer buffer=new StringBuffer();
-      String line=null;
-      while ((line=reader.readLine()) != null) {
-        buffer.append(line);
-        buffer.append('\n');
-      }
-      reader.close();
-      program=buffer.toString();
+  if (file.length() != 0) {
+    BufferedReader reader=new BufferedReader(new InputStreamReader(new FileInputStream(files[i])));
+    StringBuffer buffer=new StringBuffer();
+    String line=null;
+    while ((line=reader.readLine()) != null) {
+      buffer.append(line);
+      buffer.append('\n');
     }
- else {
-      program="";
-    }
+    reader.close();
+    program=buffer.toString();
   }
- catch (  IOException e) {
-    PdeBase.showWarning("Error loading file","Error while opening the file\n" + file.getPath(),e);
-    program=null;
+ else {
+    program="";
   }
 }

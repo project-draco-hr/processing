@@ -2,14 +2,14 @@
   this.checking=checking;
   openingPath=path;
   openingName=name;
-  if (sketchModified) {
+  if (sketch.isModified()) {
     String prompt="Save changes to " + sketch.name + "?  ";
     if (checking == DO_QUIT) {
       int result=0;
       Object[] options={"Yes","No"};
       result=JOptionPane.showOptionDialog(this,prompt,"Quit",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
       if (result == JOptionPane.YES_OPTION) {
-        doSave();
+        sketch.save();
         checkModified2();
       }
  else       if (result == JOptionPane.NO_OPTION) {
