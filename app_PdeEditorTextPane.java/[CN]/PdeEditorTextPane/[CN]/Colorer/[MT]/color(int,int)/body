@@ -1,0 +1,16 @@
+{
+  if (position < lastPosition) {
+    if (lastPosition < position - adjustment) {
+      change-=lastPosition - position;
+    }
+ else {
+      change+=adjustment;
+    }
+  }
+synchronized (lock) {
+    v.add(new RecolorEvent(position,adjustment));
+    if (asleep) {
+      this.interrupt();
+    }
+  }
+}

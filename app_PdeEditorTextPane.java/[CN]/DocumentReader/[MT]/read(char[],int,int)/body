@@ -1,0 +1,25 @@
+{
+  if (position < document.getLength()) {
+    int length=len;
+    if (position + length >= document.getLength()) {
+      length=document.getLength() - (int)position;
+    }
+    if (off + length >= cbuf.length) {
+      length=cbuf.length - off;
+    }
+    try {
+      String s=document.getText((int)position,length);
+      position+=length;
+      for (int i=0; i < length; i++) {
+        cbuf[off + i]=s.charAt(i);
+      }
+      return length;
+    }
+ catch (    BadLocationException x) {
+      return -1;
+    }
+  }
+ else {
+    return -1;
+  }
+}
