@@ -1,0 +1,84 @@
+{
+  if (!depth) {
+    for (int i=vertex_start; i < vertex_end; i++) {
+      vertices[i][X]=m00 * vertices[i][MX] + m01 * vertices[i][MY] + m03;
+      vertices[i][Y]=m10 * vertices[i][MX] + m11 * vertices[i][MY] + m13;
+    }
+  }
+  if (depth) {
+    for (int i=vertex_start; i < vertex_end; i++) {
+      float vertex[]=vertices[i];
+      vertex[VX]=m00 * vertex[MX] + m01 * vertex[MY] + m02 * vertex[MZ] + m03;
+      vertex[VY]=m10 * vertex[MX] + m11 * vertex[MY] + m12 * vertex[MZ] + m13;
+      vertex[VZ]=m20 * vertex[MX] + m21 * vertex[MY] + m22 * vertex[MZ] + m23;
+      vertex[VW]=m30 * vertex[MX] + m31 * vertex[MY] + m32 * vertex[MZ] + m33;
+    }
+  }
+  if (!normalChanged) {
+    vertices[vertex_start][NX]=normalX;
+    vertices[vertex_start][NY]=normalY;
+    vertices[vertex_start][NZ]=normalZ;
+  }
+  for (int i=vertex_start; i < (normalChanged ? vertex_end : 1); i++) {
+    float v[]=vertices[i];
+    float nx=m00 * v[NX] + m01 * v[NY] + m02 * v[NZ] + m03;
+    float ny=m10 * v[NX] + m11 * v[NY] + m12 * v[NZ] + m13;
+    float nz=m20 * v[NX] + m21 * v[NY] + m22 * v[NZ] + m23;
+    float nw=m30 * v[NX] + m31 * v[NY] + m32 * v[NZ] + m33;
+    if (nw != 0) {
+      v[NX]=nx / nw;
+      v[NY]=ny / nw;
+      v[NZ]=nz / nw;
+    }
+ else {
+      v[NX]=nx;
+      v[NY]=ny;
+      v[NZ]=nz;
+    }
+    float nlen=mag(v[NX],v[NY],v[NZ]);
+    if (nlen != 0) {
+      v[NX]/=nlen;
+      v[NY]/=nlen;
+      v[NZ]/=nlen;
+    }
+  }
+  if (lights) {
+    float f[]=vertices[vertex_start];
+    for (int i=vertex_start; i < vertex_end; i++) {
+      float v[]=vertices[i];
+      if (normalChanged) {
+        if (fill) {
+          calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,R);
+        }
+        if (stroke) {
+          calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,SR);
+        }
+      }
+ else {
+        if (fill) {
+          calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,R);
+        }
+        if (stroke) {
+          calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,SR);
+        }
+      }
+    }
+  }
+  if (depth) {
+    for (int i=vertex_start; i < vertex_end; i++) {
+      float vx[]=vertices[i];
+      float ox=p00 * vx[VX] + p01 * vx[VY] + p02 * vx[VZ] + p03 * vx[VW];
+      float oy=p10 * vx[VX] + p11 * vx[VY] + p12 * vx[VZ] + p13 * vx[VW];
+      float oz=p20 * vx[VX] + p21 * vx[VY] + p22 * vx[VZ] + p23 * vx[VW];
+      float ow=p30 * vx[VX] + p31 * vx[VY] + p32 * vx[VZ] + p33 * vx[VW];
+      if (ow != 0) {
+        ox/=ow;
+        oy/=ow;
+        oz/=ow;
+      }
+      vx[X]=width * (ONE + ox) / 2.0f;
+      vx[Y]=height * (ONE + oy) / 2.0f;
+      vx[Z]=(oz + ONE) / 2.0f;
+    }
+  }
+}
