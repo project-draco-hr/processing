@@ -8,7 +8,7 @@
     if (externalRuntime) {
       String command[]=new String[]{"java","-cp",externalPaths,"BApplet",BApplet.EXTERNAL_FLAG + ((windowLocation != null) ? ("e" + windowLocation.x + ","+ windowLocation.y) : (x1 + "," + y1)),className};
       process=Runtime.getRuntime().exec(command);
-      new PdeMessageSiphon(process.getInputStream(),this);
+      new SystemOutSiphon(process.getInputStream());
       new PdeMessageSiphon(process.getErrorStream(),this);
       processOutput=process.getOutputStream();
     }
