@@ -1,14 +1,37 @@
 {
 switch (kind) {
-case BLACK_WHITE:
-    int thresh=(int)(param * 255);
-  for (int i=0; i < pixels.length; i++) {
-    int max=Math.max((pixels[i] & RED_MASK) >> 16,Math.max((pixels[i] & GREEN_MASK) >> 8,(pixels[i] & BLUE_MASK)));
-    pixels[i]=(pixels[i] & ALPHA_MASK) | ((max < thresh) ? 0x000000 : 0xffffff);
-  }
-break;
-case GRAYSCALE:
-filter(GRAYSCALE);
-break;
+case BLUR:
+    break;
+case GRAY:
+  throw new RuntimeException("Use filter(GRAY) instead of " + "filter(GRAY, param)");
+case INVERT:
+throw new RuntimeException("Use filter(INVERT) instead of " + "filter(INVERT, param)");
+case POSTERIZE:
+int levels=(int)param;
+if ((levels < 2) || (levels > 255)) {
+throw new RuntimeException("Levels must be between 2 and 255 for " + "filter(POSTERIZE, levels)");
 }
+int levels256=256 / levels;
+int levels1=levels - 1;
+for (int i=0; i < pixels.length; i++) {
+int rlevel=((pixels[i] >> 16) & 0xff) / levels256;
+int glevel=((pixels[i] >> 8) & 0xff) / levels256;
+int blevel=(pixels[i] & 0xff) / levels256;
+rlevel=(rlevel * 255 / levels1) & 0xff;
+glevel=(glevel * 255 / levels1) & 0xff;
+blevel=(blevel * 255 / levels1) & 0xff;
+pixels[i]=((0xff000000 & pixels[i]) | (rlevel << 16) | (glevel << 8)| blevel);
+}
+break;
+case THRESHOLD:
+int thresh=(int)(param * 255);
+for (int i=0; i < pixels.length; i++) {
+int max=Math.max((pixels[i] & RED_MASK) >> 16,Math.max((pixels[i] & GREEN_MASK) >> 8,(pixels[i] & BLUE_MASK)));
+pixels[i]=(pixels[i] & ALPHA_MASK) | ((max < thresh) ? 0x000000 : 0xffffff);
+}
+break;
+case RGB:
+throw new RuntimeException("Use filter(RGB) instead of " + "filter(RGB, param)");
+}
+updatePixels();
 }

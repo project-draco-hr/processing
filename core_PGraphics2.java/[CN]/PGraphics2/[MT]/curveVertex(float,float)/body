@@ -1,3 +1,35 @@
 {
-  throw new RuntimeException("curveVertex() not yet implemented");
+  if ((shape != LINE_LOOP) && (shape != LINE_STRIP) && (shape != POLYGON)) {
+    throw new RuntimeException("curveVertex() can only be used with " + "LINE_LOOP, LINE_STRIP, and POLYGON shapes");
+  }
+  if (!curve_inited)   curve_init();
+  vertexCount=0;
+  if (splineVertices == null) {
+    splineVertices=new float[DEFAULT_SPLINE_VERTICES][VERTEX_FIELD_COUNT];
+  }
+  if (splineVertexCount == DEFAULT_SPLINE_VERTICES) {
+    System.arraycopy(splineVertices[DEFAULT_SPLINE_VERTICES - 3],0,splineVertices[0],0,VERTEX_FIELD_COUNT);
+    System.arraycopy(splineVertices[DEFAULT_SPLINE_VERTICES - 2],0,splineVertices[1],0,VERTEX_FIELD_COUNT);
+    splineVertexCount=3;
+  }
+  if (splineVertexCount >= 3) {
+    curveX[0]=splineVertices[splineVertexCount - 3][MX];
+    curveY[0]=splineVertices[splineVertexCount - 3][MY];
+    curveX[1]=splineVertices[splineVertexCount - 2][MX];
+    curveY[1]=splineVertices[splineVertexCount - 2][MY];
+    curveX[2]=splineVertices[splineVertexCount - 1][MX];
+    curveY[2]=splineVertices[splineVertexCount - 1][MY];
+    curveX[3]=x;
+    curveY[3]=y;
+    curveToBezierMatrix.mult(curveX,curveX);
+    curveToBezierMatrix.mult(curveY,curveY);
+    if (gpath == null) {
+      gpath=new GeneralPath();
+      gpath.moveTo(curveX[0],curveY[0]);
+    }
+    gpath.curveTo(curveX[1],curveY[1],curveX[2],curveY[2],curveX[3],curveY[3]);
+  }
+  splineVertices[splineVertexCount][MX]=x;
+  splineVertices[splineVertexCount][MY]=y;
+  splineVertexCount++;
 }

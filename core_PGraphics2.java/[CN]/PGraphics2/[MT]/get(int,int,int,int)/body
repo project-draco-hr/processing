@@ -1,5 +1,19 @@
 {
+  if (imageMode == CORNERS) {
+    w=(w - x);
+    h=(h - x);
+  }
+  if (x < 0) {
+    w+=x;
+    x=0;
+  }
+  if (y < 0) {
+    h+=y;
+    y=0;
+  }
+  if (x + w > width)   w=width - x;
+  if (y + h > height)   h=height - y;
   PImage output=new PImage(w,h);
-  ((BufferedImage)image).getRGB(x,y,w,h,output.pixels,0,width);
+  ((BufferedImage)image).getRGB(x,y,w,h,output.pixels,0,w);
   return output;
 }

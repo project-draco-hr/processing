@@ -1,4 +1,28 @@
 {
-  arc.setArc(x,y,w,h,start,stop - start,Arc2D.PIE);
-  draw_shape(arc);
+  if (stop - start >= TWO_PI) {
+    start=0;
+    stop=360;
+  }
+ else {
+    start=-start * RAD_TO_DEG;
+    stop=-stop * RAD_TO_DEG;
+    while (start < 0) {
+      start+=360;
+      stop+=360;
+    }
+    if (start > stop) {
+      float temp=start;
+      start=stop;
+      stop=temp;
+    }
+  }
+  float span=stop - start;
+  if (fill) {
+    arc.setArc(x,y,w,h,start,span,Arc2D.PIE);
+    fill_shape(arc);
+  }
+  if (stroke) {
+    arc.setArc(x,y,w,h,start,span,Arc2D.OPEN);
+    stroke_shape(arc);
+  }
 }

@@ -1,20 +1,30 @@
 {
 switch (kind) {
-case RGB:
-    for (int i=0; i < pixels.length; i++) {
-      pixels[i]|=0xff000000;
-    }
-  format=RGB;
+case BLUR:
+    break;
+case GRAY:
+  for (int i=0; i < pixels.length; i++) {
+    int col=pixels[i];
+    int lum=(77 * (col >> 16 & 0xff) + 151 * (col >> 8 & 0xff) + 28 * (col & 0xff)) >> 8;
+    pixels[i]=(col & ALPHA_MASK) | lum << 16 | lum << 8 | lum;
+  }
 break;
-case BLACK_WHITE:
-filter(BLACK_WHITE,0.5f);
-break;
-case GRAYSCALE:
+case INVERT:
 for (int i=0; i < pixels.length; i++) {
-int col=pixels[i];
-int lum=(77 * (col >> 16 & 0xff) + 151 * (col >> 8 & 0xff) + 28 * (col & 0xff)) >> 8;
-pixels[i]=(col & ALPHA_MASK) | lum << 16 | lum << 8 | lum;
+pixels[i]^=0xffffff;
 }
 break;
+case POSTERIZE:
+throw new RuntimeException("Use filter(POSTERIZE, int levels) " + "instead of filter(POSTERIZE)");
+case RGB:
+for (int i=0; i < pixels.length; i++) {
+pixels[i]|=0xff000000;
 }
+format=RGB;
+break;
+case THRESHOLD:
+filter(THRESHOLD,0.5f);
+break;
+}
+updatePixels();
 }
