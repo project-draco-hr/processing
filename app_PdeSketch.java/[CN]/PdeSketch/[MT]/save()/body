@@ -1,10 +1,13 @@
 {
+  if (current.modified) {
+    current.program=editor.getText();
+  }
   if (modified && isReadOnly()) {
     PdeBase.showMessage("Sketch is read-only","You can't save changes to this sketch\n" + "in the place it's currently located.\n" + "You'll have to save it to another location.");
     saveAs();
   }
   for (int i=0; i < codeCount; i++) {
-    code[i].save();
+    if (code[i].modified)     code[i].save();
   }
   calcModified();
 }
