@@ -3,20 +3,20 @@
     if (what.equals("Error loading SolarisSerial: java.lang.UnsatisfiedLinkError: no SolarisSerialParallel in java.library.path"))     return;
     if (what.equals("Caught java.lang.UnsatisfiedLinkError: readRegistrySerial while loading driver com.sun.comm.SolarisDriver"))     return;
   }
-  int currentLine=(firstLine + lineCount) % maxLineCount;
-  lines[currentLine]=what;
-  isError[currentLine]=err;
+  appendText(what,err);
+  if (err) {
+    systemErr.print(what);
+  }
+ else {
+    systemOut.print(what);
+  }
   if (advance) {
-    firstLine=(firstLine + 1) % maxLineCount;
+    appendText("\n",err);
     if (err) {
-      systemErr.println(what);
+      systemErr.println();
     }
  else {
-      systemOut.println(what);
+      systemOut.println();
     }
-    scrollOffset=0;
-    currentLine=(firstLine + lineCount) % maxLineCount;
-    lines[currentLine]="";
   }
-  update();
 }

@@ -1,14 +1,32 @@
 {
   this.editor=editor;
-  lineCount=PdeBase.getInteger("editor.console.lines",6);
-  maxLineCount=1000;
-  lines=new String[maxLineCount];
-  isError=new boolean[maxLineCount];
-  for (int i=0; i < maxLineCount; i++) {
-    lines[i]="";
-    isError[i]=false;
-  }
-  firstLine=0;
+  JTextPane consoleTextPane=new JTextPane();
+  consoleTextPane.setEditable(false);
+  consoleDoc=consoleTextPane.getStyledDocument();
+  MutableAttributeSet standard=new SimpleAttributeSet();
+  StyleConstants.setAlignment(standard,StyleConstants.ALIGN_LEFT);
+  consoleDoc.setParagraphAttributes(0,0,standard,true);
+  Color bgColor=PdeBase.getColor("editor.console.bgcolor",new Color(26,26,26));
+  Color fgColorOut=PdeBase.getColor("editor.console.fgcolor.output",new Color(153,153,153));
+  Color fgColorErr=PdeBase.getColor("editor.console.fgcolor.error",new Color(204,51,0));
+  Font font=PdeBase.getFont("editor.console.font",new Font("Monospaced",Font.PLAIN,11));
+  stdStyle=new SimpleAttributeSet();
+  StyleConstants.setForeground(stdStyle,fgColorOut);
+  StyleConstants.setBackground(stdStyle,bgColor);
+  StyleConstants.setFontSize(stdStyle,font.getSize());
+  StyleConstants.setFontFamily(stdStyle,font.getFamily());
+  StyleConstants.setBold(stdStyle,font.isBold());
+  StyleConstants.setItalic(stdStyle,font.isItalic());
+  errStyle=new SimpleAttributeSet();
+  StyleConstants.setForeground(errStyle,fgColorErr);
+  StyleConstants.setBackground(errStyle,bgColor);
+  StyleConstants.setFontSize(errStyle,font.getSize());
+  StyleConstants.setFontFamily(errStyle,font.getFamily());
+  StyleConstants.setBold(errStyle,font.isBold());
+  StyleConstants.setItalic(errStyle,font.isItalic());
+  consoleTextPane.setBackground(bgColor);
+  this.setViewportView(consoleTextPane);
+  this.setPreferredSize(new Dimension(200,50));
   if (systemOut == null) {
     systemOut=System.out;
     systemErr=System.err;
@@ -38,21 +56,4 @@
       System.setErr(consoleErr);
     }
   }
-  addMouseListener(new MouseAdapter(){
-    public void mousePressed(    MouseEvent e){
-      int x=e.getX();
-      int y=e.getY();
-      if (!((x > scrollLeft) && (x < scrollRight)))       return;
-      if ((y > scrollUpTop) && (y < scrollUpBottom)) {
-        scrollOffset-=lineCount;
-        update();
-      }
- else       if ((y > scrollDownTop) && (y < scrollDownBottom)) {
-        scrollOffset+=lineCount;
-        if (scrollOffset > 0)         scrollOffset=0;
-        update();
-      }
-    }
-  }
-);
 }
