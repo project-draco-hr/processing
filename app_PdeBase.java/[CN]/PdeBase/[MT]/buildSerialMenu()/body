@@ -1,6 +1,7 @@
 {
   SerialMenuListener listener=new SerialMenuListener();
   String defaultName=get("serial.port","unspecified");
+  boolean problem=false;
   try {
     Enumeration portList=CommPortIdentifier.getPortIdentifiers();
     while (portList.hasMoreElements()) {
@@ -14,11 +15,13 @@
     }
   }
  catch (  UnsatisfiedLinkError e) {
-    e.printStackTrace();
-    JOptionPane.showMessageDialog(frame,"Serial port support not installed. " + "Check the readme for instructions if you " + "need to use the serial port","Serial Port Warning",JOptionPane.WARNING_MESSAGE);
+    problem=true;
   }
 catch (  Exception e) {
     System.out.println("exception building serial menu");
     e.printStackTrace();
+  }
+  if (firstTime) {
+    JOptionPane.showMessageDialog(frame,"Serial port support not installed.\n" + "Check the readme for instructions if you " + "need to use the serial port.   ","Serial Port Warning",JOptionPane.WARNING_MESSAGE);
   }
 }
