@@ -164,12 +164,25 @@ vertex[VY]=m10 * vertex[MX] + m11 * vertex[MY] + m12 * vertex[MZ] + m13;
 vertex[VZ]=m20 * vertex[MX] + m21 * vertex[MY] + m22 * vertex[MZ] + m23;
 vertex[VW]=m30 * vertex[MX] + m31 * vertex[MY] + m32 * vertex[MZ] + m33;
 }
-light_and_transform();
-if (hints[DEPTH_SORT]) {
-shape=0;
-return;
+handle_lighting();
+for (int i=vertex_start; i < vertex_end; i++) {
+float vx[]=vertices[i];
+float ox=p00 * vx[VX] + p01 * vx[VY] + p02 * vx[VZ] + p03 * vx[VW];
+float oy=p10 * vx[VX] + p11 * vx[VY] + p12 * vx[VZ] + p13 * vx[VW];
+float oz=p20 * vx[VX] + p21 * vx[VY] + p22 * vx[VZ] + p23 * vx[VW];
+float ow=p30 * vx[VX] + p31 * vx[VY] + p32 * vx[VZ] + p33 * vx[VW];
+if (ow != 0) {
+ox/=ow;
+oy/=ow;
+oz/=ow;
 }
+vx[X]=width * (ONE + ox) / 2.0f;
+vx[Y]=height * (ONE + oy) / 2.0f;
+vx[Z]=(oz + ONE) / 2.0f;
+}
+if (!hints[DEPTH_SORT]) {
 if (fill) render_triangles();
 if (stroke) render_lines();
+}
 shape=0;
 }
