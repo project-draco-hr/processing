@@ -1,0 +1,25 @@
+{
+  File from=null;
+  for (int i=0; i < hiddenCount; i++) {
+    if (hidden[i].name.equals(what)) {
+      from=hidden[i].file;
+    }
+  }
+  if (from == null) {
+    System.err.println("could find " + what + " to unhide.");
+    return;
+  }
+  String filename=from.getName();
+  if (!filename.endsWith(".x")) {
+    System.err.println("error while trying to unhide a file");
+  }
+ else   if (!from.exists()) {
+    System.err.println("file no longer exists");
+  }
+ else {
+    File to=new File(from.getPath(),filename.substring(0,filename.length() - 2));
+    if (!from.renameTo(to)) {
+      System.err.println("problem while unhiding");
+    }
+  }
+}
