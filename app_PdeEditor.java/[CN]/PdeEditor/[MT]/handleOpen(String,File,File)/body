@@ -4,16 +4,17 @@
     return;
   }
   try {
-    FileInputStream input=new FileInputStream(isketchFile);
-    int length=(int)isketchFile.length();
-    String program="";
-    if (length != 0) {
-      byte data[]=new byte[length];
-      int count=0;
-      while (count != length) {
-        data[count++]=(byte)input.read();
+    String program=null;
+    if (isketchFile.length() != 0) {
+      FileInputStream input=new FileInputStream(isketchFile);
+      BufferedReader reader=new BufferedReader(new InputStreamReader(input));
+      StringBuffer buffer=new StringBuffer();
+      String line=null;
+      while ((line=reader.readLine()) != null) {
+        buffer.append(line);
+        buffer.append('\n');
       }
-      program=new String(data);
+      program=buffer.toString();
       textarea.editorSetText(program);
     }
  else {
