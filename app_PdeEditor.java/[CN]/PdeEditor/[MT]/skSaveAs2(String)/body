@@ -10,7 +10,10 @@
   copyFile(sketchFile,newSketchFile);
   copyDir(sketchDir,newSketchDir);
   new File(newSketchDir,sketchName + ".pde").delete();
-  if (renaming)   removeDir(sketchDir);
+  if (renaming) {
+    System.gc();
+    removeDir(sketchDir);
+  }
   File appletDir=new File(newSketchDir,"applet");
   File oldjar=new File(appletDir,sketchName + ".jar");
   if (oldjar.exists())   oldjar.delete();
