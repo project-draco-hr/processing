@@ -1,0 +1,24 @@
+{
+  while (Thread.currentThread() == thread) {
+    try {
+      if (error.available() > 0) {
+        while (error.available() > 0) {
+          System.out.print((char)error.read());
+        }
+        error=null;
+        throw new Exception();
+      }
+      while (input.available() > 0) {
+        System.out.print((char)input.read());
+      }
+      Thread.sleep(100);
+    }
+ catch (    Exception e) {
+      if ((error != null) && (leechErr != null)) {
+        System.out.println("KjcMessageSiphon err " + e);
+      }
+      thread.stop();
+      thread=null;
+    }
+  }
+}

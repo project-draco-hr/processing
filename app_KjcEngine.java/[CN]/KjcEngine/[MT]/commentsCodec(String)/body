@@ -1,0 +1,44 @@
+{
+  char p[]=program.toCharArray();
+  boolean insideComment=false;
+  boolean eolComment=false;
+  boolean slash=false;
+  for (int i=0; i < p.length; i++) {
+    if (insideComment) {
+      if (eolComment && ((p[i] == '\r') || (p[i] == '\n'))) {
+        insideComment=false;
+        slash=false;
+      }
+ else       if (!eolComment && (p[i] == '*') && (i != (p.length - 1))&& (p[i + 1] == '/')) {
+        insideComment=false;
+        slash=false;
+      }
+ else {
+        if ((p[i] > 32) && (p[i] < 127)) {
+          p[i]=rotateTable[p[i]];
+        }
+      }
+    }
+ else {
+      if (p[i] == '/') {
+        if (slash) {
+          insideComment=true;
+          eolComment=true;
+        }
+ else {
+          slash=true;
+        }
+      }
+ else       if (p[i] == '*') {
+        if (slash) {
+          insideComment=true;
+          eolComment=false;
+        }
+      }
+ else {
+        slash=false;
+      }
+    }
+  }
+  return new String(p);
+}

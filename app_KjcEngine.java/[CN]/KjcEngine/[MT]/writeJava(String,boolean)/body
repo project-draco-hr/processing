@@ -1,0 +1,97 @@
+{
+  try {
+    int programType=BEGINNER;
+    program=commentsCodec(program);
+    if (PdeBase.getBoolean("compiler.substitute_f",true)) {
+      program=substipoot(program,"(\\d+\\.\\d*)(\\D)","$1f$2");
+      program=substipoot(program,"(\\d+\\.\\d*)ff","$1f");
+      program=substipoot(program,"(\\d*\\.\\d+)(\\D)","$1f$2");
+      program=substipoot(program,"(\\d*\\.\\d+)ff","$1f");
+    }
+    if (PdeBase.getBoolean("compiler.enhanced_casting",true)) {
+      program=substipoot(program,"([^A-Za-z0-9_])byte\\((.*)\\)","$1(byte)($2)");
+      program=substipoot(program,"([^A-Za-z0-9_])char\\((.*)\\)","$1(char)($2)");
+      program=substipoot(program,"([^A-Za-z0-9_])int\\((.*)\\)","$1(int)($2)");
+      program=substipoot(program,"([^A-Za-z0-9_])float\\((.*)\\)","$1(float)($2)");
+    }
+    if (PdeBase.getBoolean("compiler.color_datatype",true)) {
+      if (program.indexOf("color") == 0)       program=" " + program;
+      program=substipoot(program,"([^A-Za-z0-9_])color([^A-Za-z0-9_\\(])","$1int$2");
+    }
+    if (PdeBase.getBoolean("compiler.inline_web_colors",true)) {
+      program=substipoot(program,"(=\\s*)\\#([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])","$1 0xff$2$3$4");
+    }
+    if ((program.indexOf("void setup()") != -1) || (program.indexOf("void loop()") != -1) || (program.indexOf("void draw()") != -1)) {
+      programType=INTERMEDIATE;
+    }
+    int index=program.indexOf("public class");
+    if (index != -1) {
+      programType=ADVANCED;
+      String s=program.substring(index + "public class".length()).trim();
+      index=s.indexOf(' ');
+      name=s.substring(0,index);
+      tempClass=name;
+      if (kjc) {
+        index=program.indexOf(EXTENDS);
+        if (index != -1) {
+          String left=program.substring(0,index);
+          String right=program.substring(index + EXTENDS.length());
+          program=left + ((usingExternal) ? EXTENDS : EXTENDS_KJC) + right;
+        }
+      }
+    }
+    tempFilename=name + ".java";
+    tempClassFilename=name + ".class";
+    PrintWriter writer=new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(buildPath + File.separator + tempFilename))));
+    if (programType < ADVANCED) {
+      for (int i=0; i < imports.length; i++) {
+        writer.print("import " + imports[i] + ".*; ");
+        if (!kjc)         writer.println();
+      }
+      if (!kjc)       writer.println();
+      writer.print("public class " + name + " extends "+ ((kjc && !usingExternal) ? "KjcApplet" : "BApplet")+ " {");
+    }
+    if (programType == BEGINNER) {
+      if (!kjc)       writer.println();
+      PatternMatcher matcher=new Perl5Matcher();
+      PatternCompiler compiler=new Perl5Compiler();
+      Pattern pattern=null;
+      if (program.indexOf("size(") == 0)       program=" " + program;
+      try {
+        pattern=compiler.compile("^([^A-Za-z0-9_]+)(size\\(\\s*\\d+,\\s*\\d+\\s*\\);)");
+      }
+ catch (      MalformedPatternException e) {
+        System.err.println("Bad pattern.");
+        System.err.println(e.getMessage());
+        System.exit(1);
+      }
+      String sizeInfo="";
+      PatternMatcherInput input=new PatternMatcherInput(program);
+      if (matcher.contains(input,pattern)) {
+        MatchResult result=matcher.getMatch();
+        sizeInfo="void setup() { " + result.group(0) + " } ";
+      }
+ else {
+      }
+      Perl5Substitution subst=new Perl5Substitution("$1",Perl5Substitution.INTERPOLATE_ALL);
+      program=Util.substitute(matcher,pattern,subst,program,Util.SUBSTITUTE_ALL);
+      writer.print(sizeInfo);
+      writer.print("void draw() {");
+    }
+    program=commentsCodec(program);
+    if (!kjc)     writer.println();
+    writer.println(program);
+    if (programType == BEGINNER) {
+      writer.println("}");
+    }
+    if (programType < ADVANCED) {
+      writer.print("}");
+    }
+    writer.flush();
+    writer.close();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+  return name;
+}

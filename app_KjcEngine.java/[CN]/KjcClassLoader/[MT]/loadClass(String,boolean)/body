@@ -1,0 +1,31 @@
+{
+  Class result;
+  byte classData[];
+  result=findLoadedClass(className);
+  if (result != null) {
+    return result;
+  }
+  try {
+    result=super.findSystemClass(className);
+    return result;
+  }
+ catch (  ClassNotFoundException e) {
+  }
+  if (className.startsWith("java.")) {
+    throw new ClassNotFoundException();
+  }
+  classData=getTypeFromBasePath(className);
+  if (classData == null) {
+    System.out.println("KjcClassLoader - Can't load class: " + className);
+    throw new ClassNotFoundException();
+  }
+  result=defineClass(className,classData,0,classData.length);
+  if (result == null) {
+    System.out.println("KjcClassLoader - Class format error: " + className);
+    throw new ClassFormatError();
+  }
+  if (resolveIt) {
+    resolveClass(result);
+  }
+  return result;
+}

@@ -1,0 +1,12 @@
+{
+  String args[]=new String[2];
+  args[0]="-d" + buildPath;
+  args[1]=buildPath + File.separator + tempFilename;
+  messageStream=new KjcMessageStream(this);
+  leechErr=new PrintStream(messageStream);
+  System.setErr(leechErr);
+  messageMode=COMPILING;
+  boolean success=compile(args);
+  System.setErr(PdeEditorConsole.consoleErr);
+  return success;
+}

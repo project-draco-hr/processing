@@ -1,0 +1,72 @@
+{
+  int numero1=(int)(Math.random() * 10000);
+  int numero2=(int)(Math.random() * 10000);
+  tempClass=TEMP_CLASS + "_" + numero1+ "_"+ numero2;
+  writeJava(tempClass,true);
+  boolean result=compileJava();
+  if (!result)   return;
+  messageMode=RUNNING;
+  Frame frame=editor.frame;
+  Point parentLoc=frame.getLocation();
+  Insets parentInsets=frame.getInsets();
+  int x1=parentLoc.x - 20;
+  int y1=parentLoc.y;
+  try {
+    if (PdeBase.getBoolean("play.external",false)) {
+      String cmd=PdeBase.get("play.externalCommand");
+      process=Runtime.getRuntime().exec(cmd + " " + tempClass+ " "+ x1+ " "+ y1);
+      new KjcMessageSiphon(process.getInputStream(),process.getErrorStream(),leechErr);
+    }
+ else {
+      Class c=Class.forName(tempClass);
+      applet=(KjcApplet)c.newInstance();
+      applet.setEngine(this);
+      applet.init();
+      applet.start();
+      if (editor.presenting) {
+        window=new Window(new Frame());
+      }
+ else {
+        window=new Frame();
+        ((Frame)window).setResizable(false);
+        window.pack();
+        window.addWindowListener(new WindowAdapter(){
+          public void windowClosing(          WindowEvent e){
+            editor.doClose();
+          }
+        }
+);
+      }
+      if (!(window instanceof Frame))       y1+=parentInsets.top;
+      window.add(applet);
+      window.addMouseListener(applet);
+      window.addMouseMotionListener(applet);
+      window.addKeyListener(applet);
+      Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+      window.setLayout(null);
+      if (editor.presenting) {
+        window.setBounds((screen.width - applet.width) / 2,(screen.height - applet.height) / 2,applet.width,applet.height);
+        applet.setBounds(0,0,applet.width,applet.height);
+      }
+ else {
+        Insets insets=window.getInsets();
+        int mw=PdeBase.getInteger("run.window.width.minimum",120);
+        int mh=PdeBase.getInteger("run.window.height.minimum",120);
+        int ww=Math.max(applet.width,mw) + insets.left + insets.right;
+        int wh=Math.max(applet.height,mh) + insets.top + insets.bottom;
+        window.setBounds(x1 - ww,y1,ww,wh);
+        Color windowBgColor=PdeBase.getColor("run.window.bgcolor",SystemColor.control);
+        window.setBackground(windowBgColor);
+        applet.setBounds((ww - applet.width) / 2,insets.top + ((wh - insets.top - insets.bottom) - applet.height) / 2,ww,wh);
+      }
+      applet.setVisible(true);
+      window.show();
+      applet.requestFocus();
+    }
+    running=true;
+  }
+ catch (  Exception e) {
+    newMessage=true;
+    e.printStackTrace(leechErr);
+  }
+}
