@@ -7,7 +7,6 @@
   try {
     if (sketch.externalRuntime) {
       String location=(windowLocation != null) ? (PApplet.EXT_EXACT_LOCATION + windowLocation.x + ","+ windowLocation.y) : (PApplet.EXT_LOCATION + x1 + ","+ y1);
-      System.out.println("library path is " + sketch.libraryPath);
       String command[]=new String[]{"java","-Djava.library.path=" + sketch.libraryPath + File.pathSeparator+ System.getProperty("java.library.path"),"-cp",sketch.classPath + PdeSketchbook.librariesClassPath,"processing.core.PApplet",location,PApplet.EXT_SKETCH_FOLDER + sketch.folder.getAbsolutePath(),sketch.mainClassName};
       process=Runtime.getRuntime().exec(command);
       processInput=new SystemOutSiphon(process.getInputStream());

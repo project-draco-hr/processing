@@ -55,8 +55,13 @@
       }
       String classpathProblem="You need to modify your classpath";
       if (description.indexOf(classpathProblem) != -1) {
-        int nextSentence=description.indexOf(". Package") + 2;
-        description=description.substring(nextSentence,description.indexOf(':')) + " the code folder or in any libraries.";
+        if (description.indexOf("quicktime/std") != -1) {
+          description="To run sketches that use the Processing video library, " + "you must first install QuickTime for Java.";
+        }
+ else {
+          int nextSentence=description.indexOf(". Package") + 2;
+          description=description.substring(nextSentence,description.indexOf(':')) + " the code folder or in any libraries.";
+        }
       }
       exception=new PdeException(description,fileIndex,lineNumber - 1,-1);
     }
