@@ -6,10 +6,10 @@
   MutableAttributeSet standard=new SimpleAttributeSet();
   StyleConstants.setAlignment(standard,StyleConstants.ALIGN_LEFT);
   consoleDoc.setParagraphAttributes(0,0,standard,true);
-  Color bgColor=PdePreferences.getColor("editor.console.bgcolor",new Color(0x1A,0x1A,0x00));
-  Color fgColorOut=PdePreferences.getColor("editor.console.fgcolor.output",new Color(0xcc,0xcc,0xbb));
-  Color fgColorErr=PdePreferences.getColor("editor.console.fgcolor.error",new Color(0xff,0x30,0x00));
-  Font font=PdePreferences.getFont("editor.console.font",new Font("Monospaced",Font.PLAIN,11));
+  Color bgColor=PdePreferences.getColor("console.color");
+  Color fgColorOut=PdePreferences.getColor("console.output.color");
+  Color fgColorErr=PdePreferences.getColor("console.error.color");
+  Font font=PdePreferences.getFont("console.font");
   stdStyle=new SimpleAttributeSet();
   StyleConstants.setForeground(stdStyle,fgColorOut);
   StyleConstants.setBackground(stdStyle,bgColor);
@@ -28,35 +28,29 @@
   this.setViewportView(consoleTextPane);
   FontMetrics metrics=this.getFontMetrics(font);
   int height=metrics.getAscent() + metrics.getDescent();
-  int lines=PdePreferences.getInteger("editor.console.lines",4);
+  int lines=PdePreferences.getInteger("console.lines");
   int sizeFudge=6;
   setPreferredSize(new Dimension(1024,(height * lines) + sizeFudge));
   setMinimumSize(new Dimension(1024,(height * 4) + sizeFudge));
   if (systemOut == null) {
     systemOut=System.out;
     systemErr=System.err;
-    boolean tod=((PdeBase.platform != PdeBase.MACOSX) && (PdeBase.platform != PdeBase.MACOS9));
-    if (PdePreferences.getBoolean("editor.console.out.enabled",tod)) {
-      String outFileName=PdePreferences.get("editor.console.out.file","lib/stdout.txt");
-      try {
+    try {
+      String outFileName=PdePreferences.get("console.output.file");
+      if (outFileName != null) {
         stdoutFile=new FileOutputStream(outFileName);
       }
- catch (      IOException e) {
-        e.printStackTrace();
+      String errFileName=PdePreferences.get("console.error.file");
+      if (errFileName != null) {
+        stderrFile=new FileOutputStream(outFileName);
       }
     }
-    if (PdePreferences.getBoolean("editor.console.err.enabled",tod)) {
-      String errFileName=PdePreferences.get("editor.console.err.file","lib/stderr.txt");
-      try {
-        stderrFile=new FileOutputStream(errFileName);
-      }
- catch (      IOException e) {
-        e.printStackTrace();
-      }
+ catch (    IOException e) {
+      PdeBase.showWarning("Console Error","A problem occurred while trying to open the\n" + "files used to store the console output.",e);
     }
     consoleOut=new PrintStream(new PdeEditorConsoleStream(this,false,stdoutFile));
     consoleErr=new PrintStream(new PdeEditorConsoleStream(this,true,stderrFile));
-    if (PdePreferences.getBoolean("editor.console.enabled",true)) {
+    if (PdePreferences.getBoolean("console")) {
       System.setOut(consoleOut);
       System.setErr(consoleErr);
     }
