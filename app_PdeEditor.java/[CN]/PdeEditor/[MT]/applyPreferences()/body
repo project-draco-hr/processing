@@ -1,18 +1,19 @@
 {
-  this.externalEditor=external;
+  boolean external=getBoolean("editor.external");
   textarea.setEditable(!external);
   base.saveMenuItem.setEnabled(!external);
   base.saveAsMenuItem.setEnabled(!external);
   base.beautifyMenuItem.setEnabled(!external);
   TextAreaPainter painter=textarea.getPainter();
   if (external) {
-    painter.setBackground(PdePreferences.getColor("editor.program.bgcolor.external",new Color(204,204,204)));
+    Color bg=PdePreferences.getColor("editor.program.bgcolor.external");
+    painter.setBackground(bg);
     painter.lineHighlight=false;
     textarea.setCaretVisible(false);
   }
  else {
-    painter.setBackground(PdePreferences.getColor("editor.program.bgcolor",Color.white));
-    painter.lineHighlight=PdePreferences.getBoolean("editor.program.linehighlight.enabled",true);
+    painter.setBackground(PdePreferences.getColor("editor.program.bgcolor"));
+    painter.lineHighlight=PdePreferences.getBoolean("editor.program.linehighlight");
     textarea.setCaretVisible(true);
   }
 }

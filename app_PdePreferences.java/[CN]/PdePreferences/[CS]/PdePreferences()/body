@@ -3,20 +3,39 @@
   String home=System.getProperty("user.home");
   preferencesFile=new File(home,".processing");
   if (!preferencesFile.exists()) {
-    String platformFilename="pde_" + PdeBase.platforms[PdeBase.platform] + ".properties";
     try {
       if ((PdeBase.platform == PdeBase.MACOSX) || (PdeBase.platform == PdeBase.MACOS9)) {
-        properties.load(new FileInputStream("lib/pde.properties"));
-        properties.load(new FileInputStream("lib/" + platformFilename));
+        load(new FileInputStream("lib/pde.properties"));
       }
  else {
-        properties.load(getClass().getResource("pde.properties").openStream());
-        properties.load(getClass().getResource(platformFilename).openStream());
+        load(getClass().getResource("pde.properties").openStream());
       }
     }
  catch (    Exception e) {
-      System.err.println("Error reading default settings");
-      e.printStackTrace();
+      showError(null,"Could not read default settings.\n" + "You'll need to reinstall Processing.",e);
+      System.exit(1);
+    }
+    firstTime=true;
+  }
+ else {
+    try {
+      load(new FileInputStream(preferencesFile));
+    }
+ catch (    Exception e) {
+      showError("Error reading preferences","Error reading the preferences file. Please delete\n" + perferencesFile.getCanonicalPath() + "\n"+ "and restart Processing.",e);
+    }
+  }
+  String platformExtension="." + PdeBase.platforms[PdeBase.platform];
+  int extensionLength=platformExtension.length();
+  Enumeration e=properties.propertyNames();
+  while (e.hasMoreElements()) {
+    String key=(String)e.nextElement();
+    if (key.endsWith(platformExtension)) {
+      String actualKey=key.substring(0,key.length() - extensionLength);
+      String value=get(key);
+      System.out.println("found platform specific prop \"" + actualKey + "\" \""+ value+ "\"");
+      properties.put(actualKey,value);
+      System.out.println("now set to " + table.get(actualKey));
     }
   }
   frame=new JFrame("Preferences");
