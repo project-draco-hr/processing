@@ -1,2 +1,130 @@
 {
+  super(WINDOW_TITLE + " - " + PdeBase.VERSION);
+  preferences=new PdePreferences();
+  MRJApplicationUtils.registerAboutHandler(this);
+  MRJApplicationUtils.registerPrefsHandler(this);
+  MRJApplicationUtils.registerQuitHandler(this);
+  try {
+    icon=PdeBase.getImage("icon.gif",this);
+    setIconImage(icon);
+  }
+ catch (  Exception e) {
+  }
+  addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      handleQuit();
+    }
+  }
+);
+  PdeKeywords keywords=new PdeKeywords();
+  sketchbook=new PdeSketchbook(this);
+  JMenuBar menubar=new JMenuBar();
+  menubar.add(buildFileMenu());
+  menubar.add(buildEditMenu());
+  menubar.add(buildSketchMenu());
+  menubar.add(buildHelpMenu());
+  setJMenuBar(menubar);
+  find=new PdeEditorFind(PdeEditor.this);
+  Container pain=getContentPane();
+  pain.setLayout(new BorderLayout());
+  buttons=new PdeEditorButtons(this);
+  pain.add("West",buttons);
+  JPanel rightPanel=new JPanel();
+  rightPanel.setLayout(new BorderLayout());
+  header=new PdeEditorHeader(this);
+  rightPanel.add(header,BorderLayout.NORTH);
+  textarea=new JEditTextArea(new PdeTextAreaDefaults());
+  textarea.setRightClickPopup(new TextAreaPopup());
+  textarea.setTokenMarker(new PdeKeywords());
+  consolePanel=new JPanel();
+  consolePanel.setLayout(new BorderLayout());
+  status=new PdeEditorStatus(this);
+  consolePanel.add(status,BorderLayout.NORTH);
+  console=new PdeEditorConsole(this);
+  consolePanel.add(console,BorderLayout.CENTER);
+  splitPane=new JSplitPane(JSplitPane.VERTICAL_SPLIT,textarea,consolePanel);
+  splitPane.setOneTouchExpandable(true);
+  splitPane.setContinuousLayout(true);
+  splitPane.setResizeWeight(1D);
+  if (PdeBase.platform == PdeBase.MACOSX) {
+    splitPane.setBorder(null);
+  }
+  int dividerSize=PdePreferences.getInteger("editor.divider.size");
+  if (dividerSize != 0) {
+    splitPane.setDividerSize(dividerSize);
+  }
+  rightPanel.add(splitPane,BorderLayout.CENTER);
+  pain.add("Center",rightPanel);
+  listener=new PdeEditorListener(this,textarea);
+  textarea.pdeEditorListener=listener;
+  Document document=textarea.getDocument();
+  document.addUndoableEditListener(new PdeUndoableEditListener());
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  if ((PdeBase.platform == PdeBase.MACOSX) || (PdeBase.platform == PdeBase.MACOS9)) {
+    presentationWindow=new Frame();
+    Insets insets=new Insets(21,5,5 + 20,5);
+    presentationWindow.setBounds(-insets.left,-insets.top,screen.width + insets.left + insets.right,screen.height + insets.top + insets.bottom);
+  }
+ else {
+    presentationWindow=new Frame();
+    try {
+      Method undecoratedMethod=Frame.class.getMethod("setUndecorated",new Class[]{Boolean.TYPE});
+      undecoratedMethod.invoke(presentationWindow,new Object[]{Boolean.TRUE});
+    }
+ catch (    NoSuchMethodError e) {
+    }
+    presentationWindow.setBounds(0,0,screen.width,screen.height);
+  }
+  Label label=new Label("stop");
+  label.addMouseListener(new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
+      setVisible(true);
+      doClose();
+    }
+  }
+);
+  Dimension labelSize=new Dimension(60,20);
+  presentationWindow.setLayout(null);
+  presentationWindow.add(label);
+  label.setBounds(5,screen.height - 5 - labelSize.height,labelSize.width,labelSize.height);
+  Color presentationBgColor=PdePreferences.getColor("run.present.bgcolor");
+  presentationWindow.setBackground(presentationBgColor);
+  textarea.addFocusListener(new FocusAdapter(){
+    public void focusGained(    FocusEvent e){
+      if (presenting == true) {
+        try {
+          presentationWindow.toFront();
+          runtime.applet.requestFocus();
+        }
+ catch (        Exception ex) {
+        }
+      }
+    }
+  }
+);
+  this.addFocusListener(new FocusAdapter(){
+    public void focusGained(    FocusEvent e){
+      if (presenting == true) {
+        try {
+          presentationWindow.toFront();
+          runtime.applet.requestFocus();
+        }
+ catch (        Exception ex) {
+        }
+      }
+    }
+  }
+);
+  presentationWindow.addKeyListener(new KeyAdapter(){
+    public void keyPressed(    KeyEvent e){
+      if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        runtime.stop();
+        doClose();
+      }
+ else {
+        runtime.applet.keyPressed(e);
+      }
+    }
+  }
+);
 }

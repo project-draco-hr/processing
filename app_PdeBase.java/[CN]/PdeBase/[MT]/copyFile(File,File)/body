@@ -1,2 +1,15 @@
 {
+  InputStream from=new BufferedInputStream(new FileInputStream(afile));
+  OutputStream to=new BufferedOutputStream(new FileOutputStream(bfile));
+  byte[] buffer=new byte[16 * 1024];
+  int bytesRead;
+  while ((bytesRead=from.read(buffer)) != -1) {
+    to.write(buffer,0,bytesRead);
+  }
+  to.flush();
+  from.close();
+  from=null;
+  to.close();
+  to=null;
+  bfile.setLastModified(afile.lastModified());
 }
