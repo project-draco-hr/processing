@@ -1,16 +1,16 @@
 {
-  Frame frame=null;
+  Frame parentFrame=null;
   Component comp=getParent();
   while (comp != null) {
     System.out.println(comp + " " + comp.getClass());
     if (comp instanceof Frame) {
-      frame=(Frame)comp;
+      parentFrame=(Frame)comp;
       break;
     }
     comp=comp.getParent();
   }
-  if (frame == null)   frame=new Frame();
-  FileDialog fd=new FileDialog(frame,prompt,FileDialog.SAVE);
+  if (parentFrame == null)   parentFrame=new Frame();
+  FileDialog fd=new FileDialog(parentFrame,prompt,FileDialog.SAVE);
   fd.show();
   String directory=fd.getDirectory();
   String filename=fd.getFile();

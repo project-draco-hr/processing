@@ -1,18 +1,18 @@
 {
   this.parent=iparent;
   try {
-    AudioInputStream stream=AudioSystem.getAudioInputStream(input);
-    AudioFormat format=stream.getFormat();
+    AudioInputStream ais=AudioSystem.getAudioInputStream(input);
+    AudioFormat format=ais.getFormat();
     if (format.getEncoding() != AudioFormat.Encoding.PCM_SIGNED) {
       format=new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,format.getSampleRate(),format.getSampleSizeInBits() * 2,format.getChannels(),format.getFrameSize() * 2,format.getFrameRate(),true);
-      stream=AudioSystem.getAudioInputStream(format,stream);
+      ais=AudioSystem.getAudioInputStream(format,ais);
     }
-    int frameLength=(int)stream.getFrameLength();
+    int frameLength=(int)ais.getFrameLength();
     int frameSize=format.getFrameSize();
-    DataLine.Info info=new DataLine.Info(Clip.class,stream.getFormat(),frameLength * frameSize);
+    DataLine.Info info=new DataLine.Info(Clip.class,ais.getFormat(),frameLength * frameSize);
     clip=(Clip)AudioSystem.getLine(info);
     gainControl=(FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
-    clip.open(stream);
+    clip.open(ais);
     parent.registerDispose(this);
     try {
       soundEventMethod=parent.getClass().getMethod("soundEvent",new Class[]{PSound.class});
