@@ -1,0 +1,40 @@
+{
+  String path=null;
+  try {
+    path=file.getCanonicalPath();
+  }
+ catch (  IOException e) {
+    path=file.getPath();
+  }
+  FileInputStream input=new FileInputStream(file);
+  byte data[]=null;
+  data=readBytes(input,0,(int)file.length());
+  input.close();
+  File tempFile=new File(path + ".temp");
+  FileOutputStream output=null;
+  output=new FileOutputStream(tempFile);
+  for (int i=0; i < data.length; i++) {
+    if (data[i] == 10) {
+      outputLF(output,outputKind);
+    }
+ else     if (data[i] == 13) {
+      outputLF(output,outputKind);
+      if (((i + 1) != data.length) && (data[i + 1] == 10)) {
+        i++;
+      }
+    }
+ else {
+      output.write(data[i]);
+    }
+  }
+  output.flush();
+  output.close();
+  if (!file.delete()) {
+    System.err.println("Could not delete original file.");
+  }
+ else {
+    if (!tempFile.renameTo(file)) {
+      System.err.println("Could not rename temp file.");
+    }
+  }
+}
