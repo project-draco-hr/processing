@@ -1,6 +1,6 @@
 {
   if (!PdePreferences.getBoolean("history.recording"))   return;
-  if ((historyLast != null) && (historyLast.equals(program)))   return;
+  if ((lastRecorded != null) && (lastRecorded.equals(program)))   return;
   String modeStr=null;
 switch (mode) {
 case RUN:
@@ -53,7 +53,7 @@ historyWriter.println(historyVersion + " " + modeStr+ " - "+ parseDate+ " - "+ r
 historyWriter.println();
 historyWriter.println(program);
 historyWriter.flush();
-historyLast=program;
+lastRecorded=program;
 JMenuItem menuItem=new JMenuItem(modeStr + " - " + readableDate);
 menuItem.addActionListener(menuListener);
 menu.insert(menuItem,2);

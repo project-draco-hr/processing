@@ -1,0 +1,35 @@
+{
+  if (keywordColoring == null) {
+    try {
+      keywords=new KeywordMap(false);
+      keywordToReference=new Hashtable();
+      InputStream input=PdeBase.getStream("keywords.txt");
+      BufferedReader reader=new BufferedReader(new InputStreamReader(input));
+      String line=null;
+      while ((line=reader.readLine()) != null) {
+        int tab=line.indexOf('\t');
+        if (tab == -1)         continue;
+        String keyword=line.substring(0,tab);
+        String second=line.substring(tab + 1);
+        tab=second.indexOf('\t');
+        String coloring=second.substring(0,tab);
+        String htmlFilename=second.substring(tab + 1);
+        if (coloring.length() > 0) {
+          boolean isKeyword=(coloring.charAt(0) == 'K');
+          int num=coloring.charAt(coloring.length() - 1) - '1';
+          int constant=(isKeyword ? KEYWORD : LITERAL) + num;
+          keywordColoring.add(keyword,constant);
+        }
+        if (htmlFilename.length() > 0) {
+          keywordToReference.put(keyword,htmlFilename);
+        }
+      }
+    }
+ catch (    Exception e) {
+      PdeBase.showError("Problem loading keywords","Could not find keywords.txt,\n" + "please re-install Processing.",e);
+      System.exit(1);
+    }
+    reader.close();
+  }
+  return keywordColoring;
+}

@@ -1,6 +1,5 @@
 {
   editor=new PdeEditor();
-  editor.pack();
   if (System.getProperty("mrj.version") != null) {
     platform=(System.getProperty("os.name").equals("Mac OS X")) ? MACOSX : MACOS9;
   }
@@ -31,16 +30,6 @@
  catch (  Exception e) {
     e.printStackTrace();
   }
-  keywords=new Properties();
-  try {
-    keywords.load(PdeBase.getStream("pde_keywords.properties"));
-  }
- catch (  Exception e) {
-    String message="An error occurred while loading the keywords,\n" + "\"Find in reference\" will not be available.";
-    JOptionPane.showMessageDialog(editor,message,"Problem loading keywords",JOptionPane.WARNING_MESSAGE);
-    System.err.println(e.toString());
-    e.printStackTrace();
-  }
-  editor.restorePreferences();
+  editor.pack();
   editor.show();
 }
