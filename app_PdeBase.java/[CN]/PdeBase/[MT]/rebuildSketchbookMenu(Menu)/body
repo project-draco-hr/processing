@@ -31,32 +31,7 @@
       menu.add(item);
     }
     menu.addSeparator();
-    String toplevel[]=sketchbookFolder.list();
-    added=false;
-    for (int i=0; i < toplevel.length; i++) {
-      if (toplevel[i].equals(editor.userName) || toplevel[i].equals(".") || toplevel[i].equals("..")|| toplevel[i].equals("CVS")|| toplevel[i].equals(".cvsignore"))       continue;
-      added=true;
-      Menu subMenu=new Menu(toplevel[i]);
-      File subFolder=new File(sketchbookFolder,toplevel[i]);
-      String subPath=subFolder.getCanonicalPath();
-      SketchbookMenuListener subMenuListener=new SketchbookMenuListener(subPath);
-      entries=subFolder.list();
-      if (entries != null) {
-        for (int j=0; j < entries.length; j++) {
-          if (entries[j].equals(".") || entries[j].equals("..") || entries[j].equals("CVS")|| entries[j].equals(".cvsignore"))           continue;
-          if (new File(subFolder,entries[j] + File.separator + entries[j]+ ".pde").exists()) {
-            MenuItem item=new MenuItem(entries[j]);
-            item.addActionListener(subMenuListener);
-            subMenu.add(item);
-          }
-        }
-      }
-      menu.add(subMenu);
-    }
-    if (added)     menu.addSeparator();
-    MenuItem item=new MenuItem("Refresh");
-    item.addActionListener(this);
-    menu.add(item);
+    addSketches(menu,sketchbookFolder,true);
   }
  catch (  IOException e) {
     e.printStackTrace();
