@@ -8,8 +8,15 @@
   isError[currentLine]=err;
   if (advance) {
     firstLine=(firstLine + 1) % maxLineCount;
-    systemOut.println(what);
+    if (err) {
+      systemErr.println(what);
+    }
+ else {
+      systemOut.println(what);
+    }
     scrollOffset=0;
+    currentLine=(firstLine + lineCount) % maxLineCount;
+    lines[currentLine]="";
   }
   update();
 }
