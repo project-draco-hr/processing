@@ -3,7 +3,24 @@
   openingPath=path;
   openingName=name;
   if (sketchModified) {
-    status.prompt("Save changes to " + sketchName + "?");
+    String prompt="Save changes to " + sketchName + "?";
+    if (checking == DO_QUIT) {
+      Object[] options={"Yes","No","Cancel"};
+      int value=0;
+      value=JOptionPane.showOptionDialog(this,prompt,"Quit",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[2]);
+      if (value == JOptionPane.YES_OPTION) {
+        doSave();
+        checkModified2();
+      }
+ else       if (value == JOptionPane.NO_OPTION) {
+        checkModified2();
+      }
+ else       if (value == JOptionPane.CANCEL_OPTION) {
+      }
+    }
+ else {
+      status.prompt(prompt);
+    }
   }
  else {
     checkModified2();
