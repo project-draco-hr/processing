@@ -5,10 +5,36 @@
     System.arraycopy(cvertex[CVERTEX_ALLOC - 1],0,cvertex[2],0,VERTEX_FIELD_COUNT);
     cvertexIndex=3;
   }
-  int savedIndex=cvertexIndex + 1;
-  if (cverticesFlat && (z != 0))   cverticesFlat=false;
-  setup_vertex(cvertex[cvertexIndex],x,y,z);
-  cvertexIndex=savedIndex;
+  if (cverticesFlat) {
+    if (z != 0)     cverticesFlat=false;
+  }
+  float vertex[]=cvertex[cvertexIndex];
+  vertex[MX]=x;
+  vertex[MY]=y;
+  vertex[MZ]=z;
+  if (_fill) {
+    vertex[R]=fillR;
+    vertex[G]=fillG;
+    vertex[B]=fillB;
+    vertex[A]=fillA;
+  }
+  if (_stroke) {
+    vertex[SR]=strokeR;
+    vertex[SG]=strokeG;
+    vertex[SB]=strokeB;
+    vertex[SA]=strokeA;
+    vertex[WT]=strokeWeight;
+  }
+  if (textureImage != null) {
+    vertex[U]=textureU;
+    vertex[V]=textureV;
+  }
+  if (normalChanged) {
+    vertex[NX]=normalX;
+    vertex[NY]=normalY;
+    vertex[NZ]=normalZ;
+  }
+  cvertexIndex++;
   if (cvertexIndex > 3) {
     if (bezier) {
       if ((cvertexIndex % 4) == 0) {
@@ -31,5 +57,4 @@
       }
     }
   }
-  cvertexIndex=savedIndex;
 }
