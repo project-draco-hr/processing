@@ -3,4 +3,16 @@
     PdeBase.showMessage("Can't do that","You cannot delete the main " + ".pde file from a sketch\n");
     return;
   }
+  Object[] options={"OK","Cancel"};
+  String prompt="Are you sure you want to delete \"" + current.name + "\"?";
+  int result=JOptionPane.showOptionDialog(editor,prompt,"Delete",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+  if (result == JOptionPane.YES_OPTION) {
+    if (!current.file.delete()) {
+      PdeBase.showMessage("Couldn't do it","Could not delete \"" + current.name + "\".");
+      return;
+    }
+    removeCode(current);
+    setCurrent(0);
+    editor.header.repaint();
+  }
 }
