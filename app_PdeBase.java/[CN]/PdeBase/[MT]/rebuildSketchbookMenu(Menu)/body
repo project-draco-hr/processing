@@ -3,7 +3,16 @@
   try {
     sketchbookFolder=new File("sketchbook");
     sketchbookPath=sketchbookFolder.getCanonicalPath();
-    String userPath=sketchbookPath + File.separator + header.user;
+    if (!sketchbookFolder.exists()) {
+      System.err.println("sketchbook folder doesn't exist, " + "making a new one");
+      sketchbookFolder.mkdirs();
+    }
+    String userPath=sketchbookPath + File.separator + editor.header.user;
+    File userFolder=new File(userPath);
+    if (!userFolder.exists()) {
+      System.err.println("sketchbook folder for '" + editor.header.user + "' doesn't exist, creating a new one");
+      userFolder.mkdirs();
+    }
     SketchbookMenuListener userMenuListener=new SketchbookMenuListener(userPath);
     String entries[]=new File(userPath).list();
     for (int j=0; j < entries.length; j++) {
@@ -14,20 +23,21 @@
     }
     menu.addSeparator();
     String toplevel[]=sketchbookFolder.list();
-    for (int i=0; i < toplevel; i++) {
-      if ((toplevel[i].equals(header.user)) || (toplevel[i].equals(".")) || (toplevel[i].equals("..")))       continue;
+    for (int i=0; i < toplevel.length; i++) {
+      if ((toplevel[i].equals(editor.header.user)) || (toplevel[i].equals(".")) || (toplevel[i].equals("..")))       continue;
       Menu subMenu=new Menu(toplevel[i]);
       File subFolder=new File(sketchbookFolder,toplevel[i]);
-      String subPath=subfolder.getCanonicalPath();
+      String subPath=subFolder.getCanonicalPath();
       SketchbookMenuListener subMenuListener=new SketchbookMenuListener(subPath);
-      String entries[]=subFolder.list();
+      entries=subFolder.list();
       for (int j=0; j < entries.length; j++) {
         if ((entries[j].equals(".")) || (entries[j].equals("..")))         continue;
-        subMenu.add(entries[j]);
+        MenuItem item=new MenuItem(entries[j]);
+        item.addActionListener(subMenuListener);
+        subMenu.add(item);
       }
       menu.add(subMenu);
     }
-    menu.addSeparator();
   }
  catch (  IOException e) {
     e.printStackTrace();

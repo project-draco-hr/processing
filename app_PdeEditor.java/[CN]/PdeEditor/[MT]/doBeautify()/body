@@ -1,3 +1,57 @@
 {
+  String prog=textarea.getText();
+  char program[]=prog.toCharArray();
+  StringBuffer buffer=new StringBuffer();
+  boolean gotBlankLine=false;
+  int index=0;
+  int level=0;
+  while (index != program.length) {
+    int begin=index;
+    while ((program[index] != '\n') && (program[index] != '\r')) {
+      index++;
+      if (program.length == index)       break;
+    }
+    int end=index;
+    if (index != program.length) {
+      if ((index + 1 != program.length) && (program[index] == '\r') && (program[index + 1] == '\n')) {
+        index+=2;
+      }
+ else {
+        index++;
+      }
+    }
+    String line=new String(program,begin,end - begin);
+    line=line.trim();
+    if (line.length() == 0) {
+      if (!gotBlankLine) {
+        buffer.append('\n');
+        gotBlankLine=true;
+      }
+    }
+ else {
+      System.out.println(level);
+      int idx=-1;
+      String myline=line.substring(0);
+      while (myline.lastIndexOf('}') != idx) {
+        idx=myline.indexOf('}');
+        myline=myline.substring(idx + 1);
+        level--;
+      }
+      for (int i=0; i < level * 2; i++) {
+        buffer.append(' ');
+      }
+      buffer.append(line);
+      buffer.append('\n');
+      idx=-1;
+      myline=line.substring(0);
+      while (myline.lastIndexOf('{') != idx) {
+        idx=myline.indexOf('{');
+        myline=myline.substring(idx + 1);
+        level++;
+      }
+      gotBlankLine=false;
+    }
+  }
+  textarea.setText(buffer.toString());
   buttons.clear();
 }
