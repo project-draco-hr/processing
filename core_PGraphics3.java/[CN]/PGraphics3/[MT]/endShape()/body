@@ -162,18 +162,18 @@ break;
 }
 for (int i=vertex_start; i < vertex_end; i++) {
 float vertex[]=vertices[i];
-vertex[VX]=m00 * vertex[MX] + m01 * vertex[MY] + m02 * vertex[MZ] + m03;
-vertex[VY]=m10 * vertex[MX] + m11 * vertex[MY] + m12 * vertex[MZ] + m13;
-vertex[VZ]=m20 * vertex[MX] + m21 * vertex[MY] + m22 * vertex[MZ] + m23;
-vertex[VW]=m30 * vertex[MX] + m31 * vertex[MY] + m32 * vertex[MZ] + m33;
+vertex[VX]=modelview.m00 * vertex[MX] + modelview.m01 * vertex[MY] + modelview.m02 * vertex[MZ] + modelview.m03;
+vertex[VY]=modelview.m10 * vertex[MX] + modelview.m11 * vertex[MY] + modelview.m12 * vertex[MZ] + modelview.m13;
+vertex[VZ]=modelview.m20 * vertex[MX] + modelview.m21 * vertex[MY] + modelview.m22 * vertex[MZ] + modelview.m23;
+vertex[VW]=modelview.m30 * vertex[MX] + modelview.m31 * vertex[MY] + modelview.m32 * vertex[MZ] + modelview.m33;
 }
 handle_lighting();
 for (int i=vertex_start; i < vertex_end; i++) {
 float vx[]=vertices[i];
-float ox=p00 * vx[VX] + p01 * vx[VY] + p02 * vx[VZ] + p03 * vx[VW];
-float oy=p10 * vx[VX] + p11 * vx[VY] + p12 * vx[VZ] + p13 * vx[VW];
-float oz=p20 * vx[VX] + p21 * vx[VY] + p22 * vx[VZ] + p23 * vx[VW];
-float ow=p30 * vx[VX] + p31 * vx[VY] + p32 * vx[VZ] + p33 * vx[VW];
+float ox=projection.m00 * vx[VX] + projection.m01 * vx[VY] + projection.m02 * vx[VZ] + projection.m03 * vx[VW];
+float oy=projection.m10 * vx[VX] + projection.m11 * vx[VY] + projection.m12 * vx[VZ] + projection.m13 * vx[VW];
+float oz=projection.m20 * vx[VX] + projection.m21 * vx[VY] + projection.m22 * vx[VZ] + projection.m23 * vx[VW];
+float ow=projection.m30 * vx[VX] + projection.m31 * vx[VY] + projection.m32 * vx[VZ] + projection.m33 * vx[VW];
 if (ow != 0) {
 ox/=ow;
 oy/=ow;

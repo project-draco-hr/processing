@@ -1,0 +1,12 @@
+{
+  if (((rgb & 0xff000000) == 0) && (rgb <= colorModeX)) {
+    return createSpotLight((float)rgb,x,y,z,nx,ny,nz,angle);
+  }
+ else {
+    if (lightCount >= MAX_LIGHTS) {
+      throw new RuntimeException("can only create " + MAX_LIGHTS + " lights");
+    }
+    calc_color_from(rgb);
+    return internalCreateSpotLight(calcR,calcG,calcB,x,y,z,nx,ny,nz,angle);
+  }
+}

@@ -1,3 +1,12 @@
 {
-  cameraMode=CUSTOM;
+  if (manipulatingCamera) {
+    throw new RuntimeException("cannot call beginCamera while already " + "in camera manipulation mode");
+  }
+ else {
+    projection.identity();
+    manipulatingCamera=true;
+    forwardTransform=inverseModelview;
+    reverseTransform=modelview;
+    cameraMode=CUSTOM;
+  }
 }

@@ -1,16 +1,13 @@
 {
+  resetProjection();
+  modelview.identity();
+  inverseModelview.identity();
   if (mode == PERSPECTIVE) {
-    beginCamera();
-    resetMatrix();
     perspective(cameraFOV,cameraAspect,cameraNear,cameraFar);
     lookat(cameraX,cameraY,cameraZ,cameraX,cameraY,0,0,1,0);
-    endCamera();
   }
  else   if (mode == ORTHOGRAPHIC) {
-    beginCamera();
-    resetMatrix();
     ortho(0,width,0,height,-10,10);
-    endCamera();
   }
   cameraMode=mode;
 }

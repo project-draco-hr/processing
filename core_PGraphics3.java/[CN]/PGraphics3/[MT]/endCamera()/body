@@ -1,19 +1,10 @@
 {
-  p00=m00;
-  p01=m01;
-  p02=m02;
-  p03=m03;
-  p10=m10;
-  p11=m11;
-  p12=m12;
-  p13=m13;
-  p20=m20;
-  p21=m21;
-  p22=m22;
-  p23=m23;
-  p30=m30;
-  p31=m31;
-  p32=m32;
-  p33=m33;
-  resetMatrix();
+  if (!manipulatingCamera) {
+    throw new RuntimeException("cannot call endCamera while not " + "in camera manipulation mode");
+  }
+ else {
+    manipulatingCamera=false;
+    forwardTransform=modelview;
+    reverseTransform=inverseModelview;
+  }
 }

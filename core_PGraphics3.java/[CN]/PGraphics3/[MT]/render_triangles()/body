@@ -6,11 +6,20 @@
     int tex=triangles[i][TEXTURE_INDEX];
     int index=triangles[i][INDEX];
     triangle.reset();
+    float ar=min(1,a[R] + a[SPR]);
+    float ag=min(1,a[G] + a[SPG]);
+    float ab=min(1,a[B] + a[SPB]);
+    float br=min(1,b[R] + b[SPR]);
+    float bg=min(1,b[G] + b[SPG]);
+    float bb=min(1,b[B] + b[SPB]);
+    float cr=min(1,c[R] + c[SPR]);
+    float cg=min(1,c[G] + c[SPG]);
+    float cb=min(1,c[B] + c[SPB]);
     if (tex > -1 && textures[tex] != null) {
       triangle.setTexture(textures[tex]);
       triangle.setUV(a[U],a[V],b[U],b[V],c[U],c[V]);
     }
-    triangle.setIntensities(a[R],a[G],a[B],a[A],b[R],b[G],b[B],b[A],c[R],c[G],c[B],c[A]);
+    triangle.setIntensities(ar,ag,ab,a[A],br,bg,bb,b[A],cr,cg,cb,c[A]);
     triangle.setVertices(a[X],a[Y],a[Z],b[X],b[Y],b[Z],c[X],c[Y],c[Z]);
     triangle.setIndex(index);
     triangle.render();
