@@ -1,0 +1,60 @@
+{
+  String list[]=directory.list();
+  for (int i=0; i < list.length; i++) {
+    if (list[i].endsWith(".pde"))     fileCount++;
+ else     if (list[i].endsWith(".java"))     fileCount++;
+ else     if (list[i].endsWith(".pde.x"))     hiddenCount++;
+ else     if (list[i].endsWith(".java.x"))     hiddenCount++;
+  }
+  code=new PdeCode[codeCount];
+  hidden=new PdeCode[hiddenCount];
+  int fileCounter=0;
+  int hiddenCounter=0;
+  for (int i=0; i < list.length; i++) {
+    if (list[i].endsWith(".pde")) {
+      code[fileCounter++]=new PdeCode(list[i].substring(0,list[i].length() - 4),new File(directory,list[i]),PDE);
+    }
+ else     if (list[i].endsWith(".java")) {
+      code[fileCounter++]=new PdeCode(list[i].substring(0,list[i].length() - 5),new File(directory,list[i]),JAVA);
+    }
+ else     if (list[i].endsWith(".pde.x")) {
+      hidden[hiddenCounter++]=new PdeCode(list[i].substring(0,list[i].length() - 6),new File(directory,list[i]),PDE);
+    }
+ else     if (list[i].endsWith(".java.x")) {
+      hidden[hiddenCounter++]=new PdeCode(list[i].substring(0,list[i].length() - 7),new File(directory,list[i]),JAVA);
+    }
+  }
+  int index=0;
+  while (index < codeCount) {
+    if (code[index].program == null) {
+      for (int i=index + 1; i < codeCount; i++) {
+        code[i - 1]=code[i];
+      }
+      codeCount--;
+    }
+ else {
+      index++;
+    }
+  }
+  for (int i=1; i < codeCount; i++) {
+    if (code[i].file.getName().equals("main")) {
+      System.out.println("found main code at slot " + i);
+      PdeCode temp=code[0];
+      code[0]=code[i];
+      code[i]=temp;
+    }
+  }
+  for (int i=1; i < codeCount; i++) {
+    int who=i;
+    for (int j=i + 1; j < codeCount; j++) {
+      if (code[j].name.compare(code[who].name) < 0) {
+        who=j;
+      }
+    }
+    if (who != i) {
+      PdeCode temp=code[who];
+      code[who]=code[i];
+      code[i]=temp;
+    }
+  }
+}

@@ -1,15 +1,15 @@
 {
-  externalRuntime=false;
-  externalPaths=null;
-  String externalImports[]=null;
-  externalCode=new File(sketchDir,"code");
-  if (externalCode.exists()) {
+  boolean externalRuntime=false;
+  String additionalImports[]=null;
+  String additionalClassPath=null;
+  File codeFolder=new File(sketchDir,"code");
+  if (codeFolder.exists()) {
     externalRuntime=true;
-    externalPaths=PdeCompiler.contentsToClassPath(externalCode);
-    externalImports=PdeCompiler.magicImports(externalPaths);
+    additionalClassPath=PdeCompiler.contentsToClassPath(codeFolder);
+    additionalImports=PdeCompiler.magicImports(additionalClassPath);
   }
  else {
-    externalCode=null;
+    codeFolder=null;
   }
   PdePreprocessor preprocessor=new PdePreprocessor();
   try {
@@ -43,6 +43,9 @@ catch (  Exception ex) {
     throw new PdeException(ex.toString());
   }
   if (PdePreprocessor.programType == PdePreprocessor.JAVA) {
+    externalRuntime=true;
+  }
+  if (codeCount > 1) {
     externalRuntime=true;
   }
   PdeCompiler compiler=new PdeCompiler(buildPath,mainClassName,externalCode,this);

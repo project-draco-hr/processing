@@ -1,7 +1,6 @@
 {
   try {
     current.program=textarea.getText();
-    current.history.record(program,PdeHistory.RUN);
     if (PdePreferences.getBoolean("editor.external")) {
       load();
     }
@@ -15,8 +14,8 @@
       PdeBase.copyDir(dataDir,new File(buildDir,"data"));
     }
     String suggestedClassName=("Temporary_" + String.valueOf((int)(Math.random() * 10000)) + "_"+ String.valueOf((int)(Math.random() * 10000)));
-    className=build(program,suggestedClassName,tempBuildPath);
-    if (className != null) {
+    String mainClassName=build(tempBuildPath,suggestedClassName);
+    if (mainClassName != null) {
       if (externalPaths == null) {
         externalPaths=PdeCompiler.calcClassPath(null) + File.pathSeparator + tempBuildPath;
       }
