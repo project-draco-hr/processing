@@ -34,8 +34,25 @@
   }
 );
   menu.add(item);
-  exportMenu=buildExportMenu();
-  menu.add(exportMenu);
+  item=newMenuItem("Export",'E');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      editor.message("Exporting code...");
+      try {
+        if (sketch.export()) {
+          message("Done exporting.");
+        }
+ else {
+        }
+      }
+ catch (      Exception e) {
+        editor.message("Error during export.");
+        e.printStackTrace();
+      }
+      buttons.clear();
+    }
+  }
+);
   menu.addSeparator();
   item=newMenuItem("Page Setup",'P',true);
   item.setEnabled(false);
