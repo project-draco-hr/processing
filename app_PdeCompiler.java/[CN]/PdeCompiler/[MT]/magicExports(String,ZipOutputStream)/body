@@ -1,0 +1,44 @@
+{
+  String pieces[]=BApplet.splitStrings(path,File.pathSeparatorChar);
+  for (int i=0; i < pieces.length; i++) {
+    if (pieces[i].length() == 0)     continue;
+    if (pieces[i].toLowerCase().endsWith(".jar") || pieces[i].toLowerCase().endsWith(".zip")) {
+      try {
+        ZipFile file=new ZipFile(pieces[i]);
+        Enumeration entries=file.entries();
+        while (entries.hasMoreElements()) {
+          ZipEntry entry=(ZipEntry)entries.nextElement();
+          if (entry.isDirectory()) {
+            String name=entry.getName();
+            if (name.equals("META-INF/"))             continue;
+          }
+ else {
+            ZipEntry entree=new ZipEntry(entry.getName());
+            zos.putNextEntry(entree);
+            byte buffer[]=new byte[(int)entry.getSize()];
+            InputStream is=file.getInputStream(entry);
+            int offset=0;
+            int remaining=buffer.length;
+            while (remaining > 0) {
+              int count=is.read(buffer,offset,remaining);
+              offset+=count;
+              remaining-=count;
+            }
+            zos.write(buffer);
+            zos.flush();
+            zos.closeEntry();
+          }
+        }
+      }
+ catch (      IOException e) {
+        System.err.println("Error in file " + pieces[i]);
+      }
+    }
+ else {
+      File dir=new File(pieces[i]);
+      if (dir.exists()) {
+        magicExportsRecursive(dir,null,zos);
+      }
+    }
+  }
+}
