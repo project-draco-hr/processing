@@ -3,17 +3,11 @@
   if (PdePreferences.getBoolean("editor.external")) {
     load();
   }
-  tempBuildPath="lib" + File.separator + "build";
-  File buildDir=new File(tempBuildPath);
-  if (!buildDir.exists()) {
-    buildDir.mkdirs();
-  }
-  File dataDir=new File(folder,"data");
-  if (dataDir.exists()) {
+  if (dataFolder.exists()) {
     PdeBase.copyDir(dataDir,new File(buildDir,"data"));
   }
   String suggestedClassName=("Temporary_" + String.valueOf((int)(Math.random() * 10000)) + "_"+ String.valueOf((int)(Math.random() * 10000)));
-  String mainClassName=build(tempBuildPath,suggestedClassName);
+  String mainClassName=build(TEMP_BUILD_PATH,suggestedClassName);
   if (mainClassName != null) {
     if (externalPaths == null) {
       externalPaths=PdeCompiler.calcClassPath(null) + File.pathSeparator + tempBuildPath;
@@ -21,7 +15,7 @@
  else {
       externalPaths=tempBuildPath + File.pathSeparator + PdeCompiler.calcClassPath(null)+ File.pathSeparator+ externalPaths;
     }
-    String codeFolderPath="";
+    String libraryPath="";
     if (externalCode != null) {
       libraryPath=externalCode.getCanonicalPath();
     }

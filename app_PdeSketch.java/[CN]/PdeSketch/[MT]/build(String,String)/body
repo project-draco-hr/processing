@@ -1,16 +1,16 @@
 {
-  String additionalImports[]=null;
-  classPath=buildPath;
+  String importPackageList[]=null;
+  classPath=buildPath + File.pathSeparator + System.getProperty("java.class.path");
   File codeFolder=new File(sketchDir,"code");
   if (codeFolder.exists()) {
     externalRuntime=true;
     classPath+=File.separator + PdeCompiler.contentsToClassPath(codeFolder);
-    additionalImports=PdeCompiler.magicImports(classPath);
+    importPackageList=PdeCompiler.magicImports(classPath);
     libraryPath=codeFolder.getCanonicalPath();
   }
  else {
     externalRuntime=(codeCount > 1);
-    additionalImports=null;
+    importPackageList=null;
     libraryPath="";
   }
   for (int i=0; i < codeCount; i++) {
@@ -18,55 +18,55 @@
       String filename=code[i].name + ".java";
       PdeBase.saveFile(code[i].program,new File(buildPath,filename));
       code[i].preprocName=filename;
-      continue;
     }
-    PdePreprocessor preprocessor=new PdePreprocessor();
-    try {
-      String className=preprocessor.write(code[i].program,buildPath,(i == 0) ? suggestedClassName : null,additionalImports);
-      if (className == null) {
-        System.err.println("class could not be determined for " + code[i].name + " hopefully the error has "+ "already been reported.");
-        return null;
-      }
+ else     if (code[i].flavor == PDE) {
+      PdePreprocessor preprocessor=new PdePreprocessor();
+      try {
+        String className=preprocessor.write(code[i].program,buildPath,(i == 0) ? suggestedClassName : null,additionalImports);
+        if (className == null) {
+          System.err.println("class could not be determined for " + code[i].name + " hopefully an error has "+ "already been reported.");
+          return null;
+        }
  else {
-        code[i].preprocName=className + ".java";
-      }
-      if (i == 0) {
-        mainClassName=className;
-        if (PdePreprocessor.programType == PdePreprocessor.JAVA) {
-          externalRuntime=true;
+          code[i].preprocName=className + ".java";
+        }
+        if (i == 0) {
+          mainClassName=className;
+          if (PdePreprocessor.programType == PdePreprocessor.JAVA) {
+            externalRuntime=true;
+          }
         }
       }
-    }
- catch (    antlr.RecognitionException re) {
-      throw new PdeException(re.getMessage(),re.getLine() - 1,re.getColumn());
-    }
-catch (    antlr.TokenStreamRecognitionException tsre) {
-      PatternMatcher matcher=new Perl5Matcher();
-      PatternCompiler compiler=new Perl5Compiler();
-      String mess="^line (\\d+):(\\d+):\\s";
-      Pattern pattern=compiler.compile(mess);
-      PatternMatcherInput input=new PatternMatcherInput(tsre.toString());
-      if (matcher.contains(input,pattern)) {
-        MatchResult result=matcher.getMatch();
-        int line=Integer.parseInt(result.group(1).toString());
-        int column=Integer.parseInt(result.group(2).toString());
-        throw new PdeException(tsre.getMessage(),line - 1,column);
+ catch (      antlr.RecognitionException re) {
+        throw new PdeException(re.getMessage(),re.getLine() - 1,re.getColumn());
       }
+catch (      antlr.TokenStreamRecognitionException tsre) {
+        PatternMatcher matcher=new Perl5Matcher();
+        PatternCompiler compiler=new Perl5Compiler();
+        String mess="^line (\\d+):(\\d+):\\s";
+        Pattern pattern=compiler.compile(mess);
+        PatternMatcherInput input=new PatternMatcherInput(tsre.toString());
+        if (matcher.contains(input,pattern)) {
+          MatchResult result=matcher.getMatch();
+          int line=Integer.parseInt(result.group(1).toString());
+          int column=Integer.parseInt(result.group(2).toString());
+          throw new PdeException(tsre.getMessage(),line - 1,column);
+        }
  else {
-        throw new PdeException(tsre.toString());
+          throw new PdeException(tsre.toString());
+        }
       }
-    }
-catch (    PdeException pe) {
-      throw pe;
-    }
-catch (    Exception ex) {
-      System.err.println("Uncaught exception type:" + ex.getClass());
-      ex.printStackTrace();
-      throw new PdeException(ex.toString());
+catch (      PdeException pe) {
+        throw pe;
+      }
+catch (      Exception ex) {
+        System.err.println("Uncaught exception type:" + ex.getClass());
+        ex.printStackTrace();
+        throw new PdeException(ex.toString());
+      }
     }
   }
-  PdeCompiler compiler=new PdeCompiler(this);
-  messageStream=new PdeMessageStream(compiler);
-  boolean success=compiler.compile(new PrintStream(messageStream));
+  PdeCompiler compiler=new PdeCompiler();
+  boolean success=compiler.compile(this,buildPath);
   return success ? className : null;
 }

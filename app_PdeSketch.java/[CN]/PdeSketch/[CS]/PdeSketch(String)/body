@@ -1,9 +1,16 @@
 {
   File mainFile=new File(path);
   System.out.println("main file is " + mainFile);
-  main=mainFile.getName();
-  System.out.println("main file is " + main);
+  mainFilename=mainFile.getName();
+  System.out.println("main file is " + mainFilename);
+  tempBuildFolder=new File(TEMP_BUILD_PATH);
+  if (!tempBuildFolder.exists()) {
+    tempBuildFolder.mkdirs();
+    PdeBase.showError("Required folder missing","A required folder was missing from \n" + "from your installation of Processing.\n" + "It has now been replaced, please restart    \n"+ "the application to complete the repair.",null);
+  }
   folder=new File(path.getParent());
   System.out.println("sketch dir is " + folder);
+  codeFolder=new File(folder,"code");
+  dataFolder=new File(folder,"data");
   load();
 }

@@ -1,8 +1,18 @@
 {
   System.err.print(s);
   if (s.indexOf("Caution") != -1)   return;
-  String partialTempPath=buildPath.replace(File.separatorChar,'/') + "/" + className+ ".java";
-  int partialStartIndex=s.indexOf(partialTempPath);
+  String buildPathSubst=buildPath.replace(File.separatorChar,'/') + "/";
+  String partialTempPath=null;
+  int partialStartIndex=-1;
+  int fileIndex=-1;
+  for (int i=0; i < sketch.codeCount; i++) {
+    partialTempPath=buildPathSubst + sketch.code[i].preprocName;
+    partialStartIndex=s.indexOf(partialTempPath);
+    if (partialStartIndex != -1) {
+      fileIndex=i;
+      break;
+    }
+  }
   if (partialStartIndex != -1) {
     String s1=s.substring(partialStartIndex + partialTempPath.length() + 1);
     int colon=s1.indexOf(':');
@@ -17,7 +27,6 @@
       String description=s1.substring(err + "Error:".length());
       description=description.trim();
       exception=new PdeException(description,lineNumber - 1);
-      editor.error(exception);
     }
  else {
       System.err.println("i suck: " + s);
