@@ -1,8 +1,10 @@
 {
   char p[]=program.toCharArray();
+  char lastp=0;
   boolean insideComment=false;
   boolean eolComment=false;
   boolean slash=false;
+  boolean insideQuote=false;
   for (int i=0; i < p.length; i++) {
     if (insideComment) {
       if (eolComment && ((p[i] == '\r') || (p[i] == '\n'))) {
@@ -14,31 +16,47 @@
         slash=false;
       }
  else {
-        if ((p[i] >= 0x30) && (p[i] < 127)) {
+        if ((p[i] >= 48) && (p[i] < 128)) {
           p[i]=rotateTable[p[i]];
         }
       }
     }
  else {
-      if (p[i] == '/') {
-        if (slash) {
-          insideComment=true;
-          eolComment=true;
+      if (insideQuote) {
+        if ((p[i] == '\"') && (lastp != '\\')) {
+          insideQuote=!insideQuote;
         }
  else {
-          slash=true;
-        }
-      }
- else       if (p[i] == '*') {
-        if (slash) {
-          insideComment=true;
-          eolComment=false;
+          if ((p[i] >= 48) && (p[i] < 128)) {
+            p[i]=rotateTable[p[i]];
+          }
         }
       }
  else {
-        slash=false;
+        if (p[i] == '/') {
+          if (slash) {
+            insideComment=true;
+            eolComment=true;
+          }
+ else {
+            slash=true;
+          }
+        }
+ else         if (p[i] == '\"') {
+          if (lastp != '\\')           insideQuote=!insideQuote;
+        }
+ else         if (p[i] == '*') {
+          if (slash) {
+            insideComment=true;
+            eolComment=false;
+          }
+        }
+ else {
+          slash=false;
+        }
       }
     }
+    lastp=p[i];
   }
   return new String(p);
 }

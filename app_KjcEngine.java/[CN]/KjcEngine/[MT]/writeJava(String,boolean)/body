@@ -14,7 +14,8 @@
     }
     if (PdeBase.getBoolean("compiler.color_datatype",true)) {
       if (program.indexOf("color") == 0)       program=" " + program;
-      program=substipoot(program,"([^A-Za-z0-9_])color([^A-Za-z0-9_\\(])","$1int$2");
+      program=substipoot(program,"([;\\s])color([\\s])","$1int$2");
+      program=substipoot(program,"([^A-Za-z0-9_])color\\((.*)\\)","$1(int)($2)");
     }
     if (PdeBase.getBoolean("compiler.inline_web_colors",true)) {
       program=substipoot(program,"#([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])","0xff$1$2$3");
