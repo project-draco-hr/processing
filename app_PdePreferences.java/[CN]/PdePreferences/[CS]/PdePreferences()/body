@@ -3,19 +3,19 @@
     load(PdeBase.getStream("pde.properties"));
   }
  catch (  Exception e) {
-    showError(null,"Could not read default settings.\n" + "You'll need to reinstall Processing.",e);
+    PdeBase.showError(null,"Could not read default settings.\n" + "You'll need to reinstall Processing.",e);
     System.exit(1);
   }
   String platformExtension="." + PdeBase.platforms[PdeBase.platform];
   int extensionLength=platformExtension.length();
-  Enumeration e=properties.propertyNames();
+  Enumeration e=table.keys();
   while (e.hasMoreElements()) {
     String key=(String)e.nextElement();
     if (key.endsWith(platformExtension)) {
       String actualKey=key.substring(0,key.length() - extensionLength);
       String value=get(key);
       System.out.println("found platform specific prop \"" + actualKey + "\" \""+ value+ "\"");
-      properties.put(actualKey,value);
+      table.put(actualKey,value);
       System.out.println("now set to " + table.get(actualKey));
     }
   }
