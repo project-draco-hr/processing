@@ -3,11 +3,11 @@
     while ((Thread.currentThread() == thread) && !finished) {
       updated=false;
       if (PApplet.THREAD_DEBUG)       println("nextFrame()");
-      nextFrame();
+      if (looping)       nextFrame();
       while (!updated) {
         try {
           if (PApplet.THREAD_DEBUG)           System.out.println("gonna sleep");
-          Thread.sleep(1);
+          Thread.sleep(looping ? 1 : 10000);
           if (PApplet.THREAD_DEBUG)           System.out.println("outta sleep");
         }
  catch (        InterruptedException e) {

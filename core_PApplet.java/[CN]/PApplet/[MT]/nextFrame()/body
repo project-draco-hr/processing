@@ -2,39 +2,20 @@
   mouseX=qmouseX;
   mouseY=qmouseY;
   if (fpsTarget != 0)   framerate_delay();
-  if (!drawn) {
 synchronized (g) {
-      g.beginFrame();
-      draw();
-      if (drawMethod) {
-        g.endFrame();
-        update();
-        finished=true;
-      }
-      drawn=true;
+    g.beginFrame();
+    draw();
+    if (qmouseMoved) {
+      mouseMoved();
+      qmouseMoved=false;
     }
-  }
-  if (!drawMethod) {
-synchronized (g) {
-      g.beginFrame();
-      insideLoop=true;
-      loop();
-      insideLoop=false;
-      if (qmouseMoved) {
-        mouseMoved();
-        qmouseMoved=false;
-      }
-      if (qmouseDragged) {
-        mouseDragged();
-        qmouseDragged=false;
-      }
-      g.endFrame();
+    if (qmouseDragged) {
+      mouseDragged();
+      qmouseDragged=false;
     }
-    update();
+    g.endFrame();
   }
-  if (!loopMethod) {
-    finished=true;
-  }
+  update();
   pmouseX=mouseX;
   pmouseY=mouseY;
   frame++;
