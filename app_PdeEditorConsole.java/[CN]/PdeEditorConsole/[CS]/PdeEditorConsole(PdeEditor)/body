@@ -33,6 +33,10 @@
     }
     consoleOut=new PrintStream(new PdeEditorConsoleStream(this,false,stdoutFile));
     consoleErr=new PrintStream(new PdeEditorConsoleStream(this,true,stderrFile));
+    if (PdeBase.getBoolean("editor.console.enabled",true)) {
+      System.setOut(consoleOut);
+      System.setErr(consoleErr);
+    }
   }
   addMouseListener(new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
