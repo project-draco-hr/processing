@@ -4,8 +4,26 @@
   if (systemOut == null) {
     systemOut=System.out;
     systemErr=System.err;
-    consoleOut=new PrintStream(new PdeEditorConsoleStream(this,false));
-    consoleErr=new PrintStream(new PdeEditorConsoleStream(this,true));
+    if (PdeBase.getBoolean("editor.console.out.enabled",false)) {
+      String outFileName=PdeBase.get("editor.console.out.file","lib/stdout.txt");
+      try {
+        stdoutFile=new FileOutputStream(outFileName);
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (PdeBase.getBoolean("editor.console.err.enabled",false)) {
+      String errFileName=PdeBase.get("editor.console.err.file","lib/stderr.txt");
+      try {
+        stderrFile=new FileOutputStream(errFileName);
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+      }
+    }
+    consoleOut=new PrintStream(new PdeEditorConsoleStream(this,false,stdoutFile));
+    consoleErr=new PrintStream(new PdeEditorConsoleStream(this,true,stderrFile));
     System.setOut(consoleOut);
     System.setErr(consoleErr);
   }

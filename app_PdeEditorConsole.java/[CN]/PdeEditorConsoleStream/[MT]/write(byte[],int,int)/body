@@ -1,3 +1,13 @@
 {
   parent.write(b,offset,length,err);
+  if (echo != null) {
+    try {
+      echo.write(b,offset,length);
+      echo.flush();
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+      echo=null;
+    }
+  }
 }
