@@ -1,7 +1,16 @@
 {
   Properties skprops=new Properties();
   try {
-    skprops.load(getClass().getResource("sketch.properties").openStream());
+    if (PdeBase.platform == PdeBase.MACOSX) {
+      String pkg="Proce55ing.app/Contents/Resources/Java/";
+      skprops.load(new FileInputStream(pkg + "sketch.properties"));
+    }
+ else     if (PdeBase.platform == PdeBase.MACOS9) {
+      skprops.load(new FileInputStream("lib/pde.properties"));
+    }
+ else {
+      skprops.load(getClass().getResource("sketch.properties").openStream());
+    }
     int windowX=Integer.parseInt(skprops.getProperty("window.x","-1"));
     int windowY=Integer.parseInt(skprops.getProperty("window.y","-1"));
     int windowW=Integer.parseInt(skprops.getProperty("window.w","-1"));

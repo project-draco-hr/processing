@@ -9,9 +9,20 @@
   frame.addWindowListener(windowListener);
   properties=new Properties();
   try {
-    properties.load(getClass().getResource("pde.properties").openStream());
-    String platformProps="pde.properties_" + platforms[platform];
-    properties.load(getClass().getResource(platformProps).openStream());
+    if (PdeBase.platform == PdeBase.MACOSX) {
+      String pkg="Proce55ing.app/Contents/Resources/Java/";
+      properties.load(new FileInputStream(pkg + "pde.properties"));
+      properties.load(new FileInputStream(pkg + "pde.properties_macosx"));
+    }
+ else     if (PdeBase.platform == PdeBase.MACOS9) {
+      properties.load(new FileInputStream("lib/pde.properties"));
+      properties.load(new FileInputStream("lib/pde.properties_macos9"));
+    }
+ else {
+      properties.load(getClass().getResource("pde.properties").openStream());
+      String platformProps="pde.properties_" + platforms[platform];
+      properties.load(getClass().getResource(platformProps).openStream());
+    }
   }
  catch (  Exception e) {
     System.err.println("Error reading pde.properties");

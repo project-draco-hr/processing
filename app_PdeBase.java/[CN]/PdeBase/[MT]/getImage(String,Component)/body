@@ -1,7 +1,16 @@
 {
   Image image=null;
   Toolkit tk=Toolkit.getDefaultToolkit();
-  image=tk.getImage(who.getClass().getResource(name));
+  if (PdeBase.platform == PdeBase.MACOSX) {
+    String pkg="Proce55ing.app/Contents/Resources/Java/";
+    image=tk.getImage(pkg + name);
+  }
+ else   if (PdeBase.platform == PdeBase.MACOS9) {
+    image=tk.getImage("lib/" + name);
+  }
+ else {
+    image=tk.getImage(who.getClass().getResource(name));
+  }
   MediaTracker tracker=new MediaTracker(who);
   tracker.addImage(image,0);
   try {

@@ -1,10 +1,20 @@
 {
   doStop();
   try {
-    URL url=getClass().getResource("buttons.gif");
-    String urlstr=url.getFile();
-    urlstr=urlstr.substring(0,urlstr.lastIndexOf("/") + 1) + "sketch.properties";
-    FileOutputStream output=new FileOutputStream(urlstr);
+    FileOutputStream output=null;
+    if (PdeBase.platform == PdeBase.MACOSX) {
+      String pkg="Proce55ing.app/Contents/Resources/Java/";
+      output=new FileOutputStream(pkg + "sketch.properties");
+    }
+ else     if (PdeBase.platform == PdeBase.MACOS9) {
+      output=new FileOutputStream("lib/pde.properties");
+    }
+ else {
+      URL url=getClass().getResource("buttons.gif");
+      String urlstr=url.getFile();
+      urlstr=urlstr.substring(0,urlstr.lastIndexOf("/") + 1) + "sketch.properties";
+      output=new FileOutputStream(urlstr);
+    }
     Properties skprops=new Properties();
     Rectangle window=PdeBase.frame.getBounds();
     Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
