@@ -17,6 +17,16 @@
       message(new String(cline,0,clength),cerror,true);
       clength=0;
     }
+ else     if (b[i] == TAB) {
+      if (clength + TAB_SIZE > cline.length) {
+        byte temp[]=new byte[clength * 2];
+        System.arraycopy(cline,0,temp,0,clength);
+        cline=temp;
+      }
+      for (int m=0; m < TAB_SIZE; m++) {
+        cline[clength++]=' ';
+      }
+    }
  else {
       if (cline.length == clength) {
         byte temp[]=new byte[clength * 2];

@@ -6,13 +6,7 @@
   if (dataPath != null) {
     File dataDir=new File(dataPath);
     if (dataDir.exists()) {
-      String files[]=dataDir.list();
-      for (int i=0; i < files.length; i++) {
-        File sourceFile=new File(dataDir,files[i]);
-        if (sourceFile.isDirectory())         continue;
-        File targetFile=new File(buildDir,files[i]);
-        PdeEditor.copyFile(sourceFile,targetFile);
-      }
+      PdeEditor.copyDir(dataDir,buildDir);
     }
   }
   usingExternal=PdeBase.getBoolean("play.external",false);

@@ -4,14 +4,12 @@
   buttons.run();
   try {
     String program=textarea.getText();
-    if (program.length() != 0) {
-      String buildPath="lib" + File.separator + "build";
-      File buildDir=new File(buildPath);
-      if (!buildDir.exists())       buildDir.mkdirs();
-      String dataPath=sketchFile.getParent() + File.separator + "data";
-      engine=new KjcEngine(this,program,buildPath,dataPath);
-      engine.start();
-    }
+    String buildPath="lib" + File.separator + "build";
+    File buildDir=new File(buildPath);
+    if (!buildDir.exists())     buildDir.mkdirs();
+    String dataPath=sketchFile.getParent() + File.separator + "data";
+    engine=new KjcEngine(this,program,buildPath,dataPath);
+    engine.start(presenting ? presentLocation : appletLocation);
   }
  catch (  PdeException e) {
     engine.stop();
