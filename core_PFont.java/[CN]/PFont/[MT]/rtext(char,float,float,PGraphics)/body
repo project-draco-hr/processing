@@ -9,15 +9,14 @@
   int py=0;
   int pw=width[glyph];
   int ph=height[glyph];
-  if ((sx + ph >= parent.width) || (sy >= parent.height) || (sy + pw < 0)|| (sx < 0))   return;
+  if ((sx - ph >= parent.width) || (sy >= parent.height) || (sy + pw < 0)|| (sx < 0))   return;
   if (sx < ph) {
-    ph-=(ph - sx);
+    ph-=(ph - sx) - 1;
   }
   if (sx >= parent.width) {
     int extra=sx - (parent.width - 1);
     py+=extra;
     ph-=extra;
-    sx=parent.width - 1;
   }
   if (sy < 0) {
     int extra=-sy;
@@ -26,7 +25,7 @@
     sy=0;
   }
   if (sy + pw >= parent.height - 1) {
-    int extra=(sy + pw) - (parent.height - 1);
+    int extra=(sy + pw) - parent.height;
     pw-=extra;
   }
   int fr=parent.fillRi;
@@ -41,7 +40,7 @@
       int a2=a1 ^ 0xff;
       int p1=fpixels[row * width[glyph] + col];
       try {
-        int index=(sy + px + col) * parent.width + (sx + row - py);
+        int index=(sy + px + col) * parent.width + (sx - row);
         int p2=spixels[index];
         spixels[index]=(0xff000000 | (((a1 * fr + a2 * ((p2 >> 16) & 0xff)) & 0xff00) << 8) | ((a1 * fg + a2 * ((p2 >> 8) & 0xff)) & 0xff00)| ((a1 * fb + a2 * (p2 & 0xff)) >> 8));
       }
