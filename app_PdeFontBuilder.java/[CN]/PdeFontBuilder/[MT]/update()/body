@@ -5,10 +5,12 @@
   }
  catch (  NumberFormatException e2) {
   }
-  if ((fontsize != 0) && (fontsize < 256) && (selection != -1)) {
-    font=new Font(list[selection],Font.PLAIN,fontsize);
+  if ((fontsize > 0) && (fontsize < 256) && (selection != -1)) {
+    Font instance=(Font)table.get(list[selection]);
+    font=instance.deriveFont(Font.PLAIN,fontsize);
     sample.setFont(font);
     String filenameSuggestion=list[selection].replace(' ','_');
+    filenameSuggestion+="-" + fontsize;
     filenameField.setText(filenameSuggestion);
   }
 }

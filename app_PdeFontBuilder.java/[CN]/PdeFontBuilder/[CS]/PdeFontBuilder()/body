@@ -17,9 +17,11 @@
   GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
   Font fonts[]=ge.getAllFonts();
   String flist[]=new String[fonts.length];
+  table=new Hashtable();
   int index=0;
   for (int i=0; i < fonts.length; i++) {
     flist[index++]=fonts[i].getPSName();
+    table.put(fonts[i].getPSName(),fonts[i]);
   }
   list=new String[index];
   System.arraycopy(flist,0,list,0,index);
@@ -70,6 +72,7 @@
   smoothBox.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       smooth=smoothBox.isSelected();
+      update();
     }
   }
 );
