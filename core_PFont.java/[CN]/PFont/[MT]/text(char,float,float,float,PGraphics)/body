@@ -6,20 +6,11 @@
     float bwidth=(float)width[glyph] / fwidth;
     float lextent=(float)leftExtent[glyph] / fwidth;
     float textent=(float)topExtent[glyph] / fheight;
-    boolean savedStroke=parent.stroke;
-    parent.stroke=false;
     float x1=x + lextent * size;
     float y1=y - textent * size;
     float x2=x1 + bwidth * size;
     float y2=y1 + high * size;
-    parent.beginShape(QUADS);
-    parent.texture(images[glyph]);
-    parent.vertex(x1,y1,z,0,0);
-    parent.vertex(x1,y2,z,0,height[glyph]);
-    parent.vertex(x2,y2,z,width[glyph],height[glyph]);
-    parent.vertex(x2,y1,z,width[glyph],0);
-    parent.endShape();
-    parent.stroke=savedStroke;
+    parent.imageImpl(images[glyph],x1,y1,x2 - x1,y2 - y1,0,0,width[glyph],height[glyph]);
   }
  else {
     int xx=(int)x + leftExtent[glyph];

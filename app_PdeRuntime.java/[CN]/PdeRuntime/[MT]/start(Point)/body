@@ -4,10 +4,31 @@
   Insets parentInsets=editor.getInsets();
   int x1=parentLoc.x - 20;
   int y1=parentLoc.y;
+  int initialWidth=PApplet.DEFAULT_WIDTH;
+  int initialHeight=PApplet.DEFAULT_HEIGHT;
+  try {
+    PatternMatcher matcher=new Perl5Matcher();
+    PatternCompiler compiler=new Perl5Compiler();
+    String sizing="[\\s\\;]size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\S+)\\s*\\);";
+    Pattern pattern=compiler.compile(sizing);
+    PatternMatcherInput input=new PatternMatcherInput(" " + sketch.code[0].program);
+    if (matcher.contains(input,pattern)) {
+      MatchResult result=matcher.getMatch();
+      try {
+        initialWidth=Integer.parseInt(result.group(1).toString());
+        initialHeight=Integer.parseInt(result.group(2).toString());
+      }
+ catch (      NumberFormatException e) {
+      }
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
   try {
     if (sketch.externalRuntime) {
       String location=(windowLocation != null) ? (PApplet.EXT_EXACT_LOCATION + windowLocation.x + ","+ windowLocation.y) : (PApplet.EXT_LOCATION + x1 + ","+ y1);
-      String command[]=new String[]{"java","-Djava.library.path=" + sketch.libraryPath + File.pathSeparator+ System.getProperty("java.library.path"),"-cp",sketch.classPath + PdeSketchbook.librariesClassPath,"processing.core.PApplet",location,PApplet.EXT_SKETCH_FOLDER + sketch.folder.getAbsolutePath(),sketch.mainClassName};
+      String command[]=new String[]{"java","-Djava.library.path=" + sketch.libraryPath + File.pathSeparator+ System.getProperty("java.library.path"),"-cp",sketch.classPath + PdeSketchbook.librariesClassPath,"processing.core.PApplet",location,PApplet.EXT_SIZE + initialWidth + ","+ initialHeight,PApplet.EXT_SKETCH_FOLDER + sketch.folder.getAbsolutePath(),sketch.mainClassName};
       process=Runtime.getRuntime().exec(command);
       processInput=new SystemOutSiphon(process.getInputStream());
       processError=new PdeMessageSiphon(process.getErrorStream(),this);
@@ -56,15 +77,19 @@
       Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
       window.setLayout(null);
       if (editor.presenting) {
-        window.setBounds((screen.width - applet.width) / 2,(screen.height - applet.height) / 2,applet.width,applet.height);
-        applet.setBounds(0,0,applet.width,applet.height);
+        window.setBounds((screen.width - initialWidth) / 2,(screen.height - initialHeight) / 2,initialWidth,initialHeight);
+        applet.setBounds(0,0,initialWidth,initialHeight);
       }
  else {
         Insets insets=window.getInsets();
+        if ((applet.width != 0) && (applet.height != 0) && (applet.width != PApplet.DEFAULT_WIDTH)&& (applet.height != PApplet.DEFAULT_HEIGHT)) {
+          initialWidth=applet.width;
+          initialHeight=applet.height;
+        }
         int minW=PdePreferences.getInteger("run.window.width.minimum");
         int minH=PdePreferences.getInteger("run.window.height.minimum");
-        int windowW=Math.max(applet.width,minW) + insets.left + insets.right;
-        int windowH=Math.max(applet.height,minH) + insets.top + insets.bottom;
+        int windowW=Math.max(initialWidth,minW) + insets.left + insets.right;
+        int windowH=Math.max(initialHeight,minH) + insets.top + insets.bottom;
         if (x1 - windowW > 10) {
           window.setBounds(x1 - windowW,y1,windowW,windowH);
         }
@@ -79,7 +104,7 @@
         }
         Color windowBgColor=PdePreferences.getColor("run.window.bgcolor");
         window.setBackground(windowBgColor);
-        applet.setBounds((windowW - applet.width) / 2,insets.top + ((windowH - insets.top - insets.bottom) - applet.height) / 2,windowW,windowH);
+        applet.setBounds((windowW - initialWidth) / 2,insets.top + ((windowH - insets.top - insets.bottom) - initialHeight) / 2,windowW,windowH);
       }
       applet.setVisible(true);
       if (windowLocation != null) {

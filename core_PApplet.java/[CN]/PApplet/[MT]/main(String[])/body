@@ -9,6 +9,8 @@
     boolean exactLocation=false;
     String folder=System.getProperty("user.dir");
     String name=null;
+    int initialWidth=PApplet.DEFAULT_WIDTH;
+    int initialHeight=PApplet.DEFAULT_HEIGHT;
     int argIndex=0;
     while (argIndex < args.length) {
       if (args[argIndex].indexOf(EXT_LOCATION) == 0) {
@@ -25,6 +27,12 @@
  else       if (args[argIndex].indexOf(EXT_SKETCH_FOLDER) == 0) {
         folder=args[argIndex].substring(EXT_SKETCH_FOLDER.length());
       }
+ else       if (args[argIndex].indexOf(EXT_SIZE) == 0) {
+        String sizeStr=args[argIndex].substring(EXT_SIZE.length());
+        int initial[]=toInt(split(sizeStr,','));
+        initialWidth=initial[0];
+        initialHeight=initial[1];
+      }
  else {
         name=args[argIndex];
         break;
@@ -37,6 +45,8 @@
     Class c=Class.forName(name);
     PApplet applet=(PApplet)c.newInstance();
     applet.frame=frame;
+    applet.INITIAL_WIDTH=initialWidth;
+    applet.INITIAL_HEIGHT=initialHeight;
     applet.folder=folder;
     int argc=args.length - (argIndex + 1);
     applet.args=new String[argc];
@@ -47,8 +57,8 @@
       Insets insets=frame.getInsets();
       int locationX=location[0] - 20;
       int locationY=location[1];
-      int windowW=120 + insets.left + insets.right;
-      int windowH=120 + insets.top + insets.bottom;
+      int windowW=initialWidth + insets.left + insets.right;
+      int windowH=initialHeight + insets.top + insets.bottom;
       frame.setSize(windowW,windowH);
       if (exactLocation) {
         frame.setLocation(location[0],location[1]);
@@ -70,7 +80,7 @@
       frame.setLayout(null);
       frame.add(applet);
       frame.setBackground(SystemColor.control);
-      applet.setBounds((windowW - 100) / 2,insets.top + ((windowH - insets.top - insets.bottom) - 100) / 2,windowW,windowH);
+      applet.setBounds((windowW - initialWidth) / 2,insets.top + ((windowH - insets.top - insets.bottom) - initialHeight) / 2,windowW,windowH);
       applet.setupExternal(frame);
     }
  else {
