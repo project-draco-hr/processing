@@ -30,16 +30,34 @@
     int numero1=(int)(Math.random() * 10000);
     int numero2=(int)(Math.random() * 10000);
     String className=TEMP_CLASS + "_" + numero1+ "_"+ numero2;
-    PdePreprocessor preprocessorOro=new PdePreprocessorOro(program,buildPath);
-    className=preprocessorOro.writeJava(className,base.normalItem.getState(),false);
+    PdePreprocessor preprocessor=null;
+    if (PdeBase.getBoolean("preprocessor.antlr",true)) {
+      preprocessor=new PdePreprocessor(program,buildPath);
+      try {
+        className=preprocessor.writeJava(className,base.normalItem.getState(),false);
+      }
+ catch (      antlr.RecognitionException ae) {
+        System.out.println(ae.toString());
+        throw new PdeException(ae.getMessage(),ae.getLine() - 1,ae.getColumn());
+      }
+catch (      Exception ex) {
+        System.err.println("Uncaught exception type:" + ex.getClass());
+        ex.printStackTrace();
+        throw new PdeException(ex.toString());
+      }
+    }
+ else {
+      preprocessor=new PdePreprocessorOro(program,buildPath);
+      className=preprocessor.writeJava(className,base.normalItem.getState(),false);
+    }
     PdeCompiler compiler=new PdeCompiler(buildPath,className,this);
-    messageStream=new PdeMessageStream(this,compiler);
-    leechErr=new PrintStream(messageStream);
+    messageStream=new PdeMessageStream(compiler);
+    PrintStream leechErr=new PrintStream(messageStream);
     boolean result=compiler.compileJava(leechErr);
     if (result) {
       pdeRuntime=new PdeRuntime(this,className);
-      messageStream.setMessageConsumer(pdeRuntime);
-      pdeRuntime.start(presenting ? presentLocation : appletLocation,leechErr);
+      PdeMessageStream messageStream=new PdeMessageStream(pdeRuntime);
+      pdeRuntime.start(presenting ? presentLocation : appletLocation,new PrintStream(messageStream));
       watcher=new RunButtonWatcher();
     }
  else {
@@ -47,18 +65,13 @@
     }
   }
  catch (  PdeException e) {
-    if (pdeRuntime != null) {
-      pdeRuntime.stop();
-    }
+    if (pdeRuntime != null)     pdeRuntime.stop();
     cleanTempFiles(buildPath);
-    e.printStackTrace();
     error(e);
   }
 catch (  Exception e) {
     e.printStackTrace();
-    if (pdeRuntime != null) {
-      pdeRuntime.stop();
-    }
+    if (pdeRuntime != null)     pdeRuntime.stop();
     cleanTempFiles(buildPath);
   }
 }
