@@ -17,13 +17,38 @@
   }
 );
   menu.add(item);
-  menu.add(new JMenuItem("Stop"));
+  item=new JMenuItem("Stop");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       handleStop();
     }
   }
 );
+  menu.add(item);
+  JMenu rendererMenu=new JMenu("Renderer");
+  menu.add(rendererMenu);
+  coreRendererItem=new JRadioButtonMenuItem("Processing");
+  rendererMenu.add(coreRendererItem);
+  coreRendererItem.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      PdePreferences.set("renderer","core");
+    }
+  }
+);
+  openglRendererItem=new JRadioButtonMenuItem("OpenGL");
+  rendererMenu.add(openglRendererItem);
+  openglRendererItem.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      PdePreferences.set("renderer","opengl");
+    }
+  }
+);
+  ButtonGroup rendererGroup=new ButtonGroup();
+  rendererGroup.add(coreRendererItem);
+  rendererGroup.add(openglRendererItem);
+  boolean useOpenGL=PdePreferences.get("renderer").equals("opengl");
+  coreRendererItem.setSelected(!useOpenGL);
+  openglRendererItem.setSelected(useOpenGL);
   menu.addSeparator();
   item=new JMenuItem("Add File...");
   item.addActionListener(new ActionListener(){
