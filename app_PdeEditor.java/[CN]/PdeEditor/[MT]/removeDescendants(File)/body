@@ -4,7 +4,9 @@
     if (files[i].equals(".") || files[i].equals(".."))     continue;
     File dead=new File(dir,files[i]);
     if (!dead.isDirectory()) {
-      if (!dead.delete()) {
+      if (!PdeBase.getBoolean("editor.save_build_files",false)) {
+        if (!dead.delete()) {
+        }
       }
     }
  else {
