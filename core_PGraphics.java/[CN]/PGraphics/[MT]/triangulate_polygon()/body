@@ -4,7 +4,7 @@
     area+=(vertices[q][X] * vertices[p][Y] - vertices[p][X] * vertices[q][Y]);
   }
   int j=0;
-  if (0.0f < area) {
+  if (area > 0) {
     for (int i=vertex_start; i < vertex_end; i++) {
       j=i - vertex_start;
       vertex_order[j]=i;
@@ -29,51 +29,44 @@
     if (vc <= v)     v=0;
     int w=v + 1;
     if (vc <= w)     w=0;
-    float Ax, Ay, Bx, By, Cx, Cy, Px, Py;
-    Ax=-vertices[vertex_order[u]][X];
-    Ay=vertices[vertex_order[u]][Y];
-    Bx=-vertices[vertex_order[v]][X];
-    By=vertices[vertex_order[v]][Y];
-    Cx=-vertices[vertex_order[w]][X];
-    Cy=vertices[vertex_order[w]][Y];
+    float Ax=-vertices[vertex_order[u]][X];
+    float Ay=vertices[vertex_order[u]][Y];
+    float Bx=-vertices[vertex_order[v]][X];
+    float By=vertices[vertex_order[v]][Y];
+    float Cx=-vertices[vertex_order[w]][X];
+    float Cy=vertices[vertex_order[w]][Y];
     if (EPSILON > (((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax)))) {
       continue;
     }
     for (int p=0; p < vc; p++) {
-      float ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
-      float cCROSSap, bCROSScp, aCROSSbp;
       if ((p == u) || (p == v) || (p == w)) {
         continue;
       }
-      Px=-vertices[vertex_order[p]][X];
-      Py=vertices[vertex_order[p]][Y];
-      ax=Cx - Bx;
-      ay=Cy - By;
-      bx=Ax - Cx;
-      by=Ay - Cy;
-      cx=Bx - Ax;
-      cy=By - Ay;
-      apx=Px - Ax;
-      apy=Py - Ay;
-      bpx=Px - Bx;
-      bpy=Py - By;
-      cpx=Px - Cx;
-      cpy=Py - Cy;
-      aCROSSbp=ax * bpy - ay * bpx;
-      cCROSSap=cx * apy - cy * apx;
-      bCROSScp=bx * cpy - by * cpx;
+      float Px=-vertices[vertex_order[p]][X];
+      float Py=vertices[vertex_order[p]][Y];
+      float ax=Cx - Bx;
+      float ay=Cy - By;
+      float bx=Ax - Cx;
+      float by=Ay - Cy;
+      float cx=Bx - Ax;
+      float cy=By - Ay;
+      float apx=Px - Ax;
+      float apy=Py - Ay;
+      float bpx=Px - Bx;
+      float bpy=Py - By;
+      float cpx=Px - Cx;
+      float cpy=Py - Cy;
+      float aCROSSbp=ax * bpy - ay * bpx;
+      float cCROSSap=cx * apy - cy * apx;
+      float bCROSScp=bx * cpy - by * cpx;
       if ((aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f)) {
         snip=false;
       }
     }
     if (snip) {
-      int a, b, c, s, t;
-      a=vertex_order[u];
-      b=vertex_order[v];
-      c=vertex_order[w];
-      add_triangle(a,b,c);
+      add_triangle(vertex_order[u],vertex_order[v],vertex_order[w]);
       m++;
-      for (s=v, t=v + 1; t < vc; s++, t++) {
+      for (int s=v, t=v + 1; t < vc; s++, t++) {
         vertex_order[s]=vertex_order[t];
       }
       vc--;

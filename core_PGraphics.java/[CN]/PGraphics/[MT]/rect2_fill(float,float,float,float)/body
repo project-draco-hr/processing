@@ -1,31 +1,13 @@
 {
-  if (y2 < y1) {
-    float temp=y1;
-    y1=y2;
-    y2=temp;
+  if ((m01 != 0) || (m10 != 0)) {
+    quad0(screenX(x1,y1),screenY(x1,y1),screenX(x2,y1),screenY(x2,y1),screenX(x2,y2),screenY(x2,y2),screenX(x1,y2),screenY(x1,y2));
   }
-  if (x2 < x1) {
-    float temp=x1;
-    x1=x2;
-    x2=temp;
+ else {
+    if ((m00 == 1) && (m11 == 1)) {
+      rect0_fill(x1 + m02,y1 + m12,x2 + m02,y2 + m12);
+    }
+ else {
+      rect0_fill(screenX(x1,y1),screenY(x1,y1),screenX(x2,y2),screenY(x2,y2));
+    }
   }
-  if ((x1 > width1) || (x2 < 0) || (y1 > height1)|| (y2 < 0))   return;
-  int fx1=(int)x1;
-  int fy1=(int)y1;
-  int fx2=(int)x2;
-  int fy2=(int)y2;
-  if (fx1 < 0)   fx1=0;
-  if (fx2 > width)   fx2=width;
-  if (fy1 < 0)   fy1=0;
-  if (fy2 > height)   fy2=height;
-  int ww=fx2 - fx1;
-  int hh=fy2 - fy1;
-  int[] row=new int[ww];
-  for (int i=0; i < ww; i++)   row[i]=fillColor;
-  int idx=fy1 * width + fx1;
-  for (int y=0; y < hh; y++) {
-    System.arraycopy(row,0,pixels,idx,ww);
-    idx+=width;
-  }
-  row=null;
 }
