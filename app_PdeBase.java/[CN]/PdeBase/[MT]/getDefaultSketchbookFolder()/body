@@ -10,6 +10,18 @@
     }
   }
  else   if (platform == WINDOWS) {
+    try {
+      RegistryKey topKey=Registry.HKEY_CURRENT_USER;
+      String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
+      RegistryKey localKey=topKey.openSubKey(localKeyPath);
+      String personalPath=localKey.getStringValue("Personal");
+      topKey.closeKey();
+      localKey.closeKey();
+      return new File(personalPath,"Processing");
+    }
+ catch (    Exception e) {
+      showError("Problem getting documents folder","Error getting the Processing sketchbook folder.",e);
+    }
   }
   return null;
 }
