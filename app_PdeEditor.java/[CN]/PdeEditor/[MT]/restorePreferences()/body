@@ -20,12 +20,17 @@
  else {
     setBounds(PdePreferences.getInteger("last.window.x"),PdePreferences.getInteger("last.window.y"),PdePreferences.getInteger("last.window.width"),PdePreferences.getInteger("last.window.height"));
   }
-  String sketchPath=PdePreferences.get("last.sketch.path");
-  if ((sketchPath != null) && (new File(sketchPath)).exists()) {
-    handleOpen2(sketchPath);
+  if (PdeBase.openedAtStartup != null) {
+    handleOpen2(PdeBase.openedAtStartup);
   }
  else {
-    handleNew2(true);
+    String sketchPath=PdePreferences.get("last.sketch.path");
+    if ((sketchPath != null) && (new File(sketchPath)).exists()) {
+      handleOpen2(sketchPath);
+    }
+ else {
+      handleNew2(true);
+    }
   }
   int location=PdePreferences.getInteger("last.divider.location");
   splitPane.setDividerLocation(location);

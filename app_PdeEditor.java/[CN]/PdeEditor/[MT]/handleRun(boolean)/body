@@ -11,16 +11,23 @@
     presentationWindow.show();
     presentationWindow.toFront();
   }
-  try {
-    if (!sketch.handleRun())     return;
-    runtime=new PdeRuntime(sketch,this);
-    runtime.start(presenting ? presentLocation : appletLocation);
-    watcher=new RunButtonWatcher();
+  final SwingWorker worker=new SwingWorker(){
+    public Object construct(){
+      try {
+        if (!sketch.handleRun())         return null;
+        runtime=new PdeRuntime(sketch,PdeEditor.this);
+        runtime.start(presenting ? presentLocation : appletLocation);
+        watcher=new RunButtonWatcher();
+      }
+ catch (      PdeException e) {
+        error(e);
+      }
+catch (      Exception e) {
+        e.printStackTrace();
+      }
+      return null;
+    }
   }
- catch (  PdeException e) {
-    error(e);
-  }
-catch (  Exception e) {
-    e.printStackTrace();
-  }
+;
+  worker.start();
 }

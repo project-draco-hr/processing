@@ -1,0 +1,25 @@
+{
+  File dataFolder=null;
+  if (platform == MACOSX) {
+    try {
+      if (false) {
+        new FileInputStream("ignored");
+      }
+      MRJOSType domainLibrary=new MRJOSType("dlib");
+      File libraryFolder=MRJFileUtils.findFolder(domainLibrary);
+      dataFolder=new File(libraryFolder,"Processing");
+    }
+ catch (    FileNotFoundException e) {
+      showError("Problem getting Library folder","Error getting the Processing library folder.",e);
+    }
+  }
+ else   if (platform == WINDOWS) {
+    return null;
+  }
+ else {
+    File home=new File(System.getProperty("user.home"));
+    dataFolder=new File(home,".processing");
+  }
+  if (!dataFolder.exists())   dataFolder.mkdirs();
+  return dataFolder;
+}

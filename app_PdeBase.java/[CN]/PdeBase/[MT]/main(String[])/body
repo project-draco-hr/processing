@@ -1,3 +1,15 @@
 {
+  if (args.length == 1) {
+    PdeBase.openedAtStartup=args[0];
+  }
+  MRJOpenDocumentHandler startupOpen=new MRJOpenDocumentHandler(){
+    public void handleOpenFile(    File file){
+      if (PdeBase.openedAtStartup == null) {
+        PdeBase.openedAtStartup=file.getAbsolutePath();
+      }
+    }
+  }
+;
+  MRJApplicationUtils.registerOpenDocumentHandler(startupOpen);
   PdeBase app=new PdeBase();
 }
