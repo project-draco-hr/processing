@@ -29,23 +29,26 @@
   find=new PdeEditorFind(PdeEditor.this);
   Container pain=getContentPane();
   pain.setLayout(new BorderLayout());
+  Box box=Box.createVerticalBox();
+  Box upper=Box.createVerticalBox();
   buttons=new PdeEditorButtons(this);
-  pain.add("West",buttons);
-  JPanel rightPanel=new JPanel();
-  rightPanel.setLayout(new BorderLayout());
+  upper.add(buttons);
   header=new PdeEditorHeader(this);
-  rightPanel.add(header,BorderLayout.NORTH);
+  upper.add(header);
   textarea=new JEditTextArea(new PdeTextAreaDefaults());
   textarea.setRightClickPopup(new TextAreaPopup());
   textarea.setTokenMarker(new PdeKeywords());
-  textarea.setHorizontalOffset(5);
+  textarea.setHorizontalOffset(6);
   consolePanel=new JPanel();
   consolePanel.setLayout(new BorderLayout());
   status=new PdeEditorStatus(this);
   consolePanel.add(status,BorderLayout.NORTH);
   console=new PdeEditorConsole(this);
   consolePanel.add(console,BorderLayout.CENTER);
-  splitPane=new JSplitPane(JSplitPane.VERTICAL_SPLIT,textarea,consolePanel);
+  lineStatus=new PdeEditorLineStatus(textarea);
+  consolePanel.add(lineStatus,BorderLayout.SOUTH);
+  upper.add(textarea);
+  splitPane=new JSplitPane(JSplitPane.VERTICAL_SPLIT,upper,consolePanel);
   splitPane.setOneTouchExpandable(true);
   splitPane.setContinuousLayout(true);
   splitPane.setResizeWeight(1D);
@@ -56,10 +59,10 @@
   if (dividerSize != 0) {
     splitPane.setDividerSize(dividerSize);
   }
-  rightPanel.add(splitPane,BorderLayout.CENTER);
-  pain.add("Center",rightPanel);
+  splitPane.setMinimumSize(new Dimension(600,600));
+  box.add(splitPane);
   listener=new PdeEditorListener(this,textarea);
-  textarea.pdeEditorListener=listener;
+  pain.add(box);
   Document document=textarea.getDocument();
   document.addUndoableEditListener(new PdeUndoableEditListener());
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();

@@ -3,16 +3,17 @@
     inactive=new Image[BUTTON_COUNT];
     rollover=new Image[BUTTON_COUNT];
     active=new Image[BUTTON_COUNT];
+    int IMAGE_SIZE=33;
     for (int i=0; i < BUTTON_COUNT; i++) {
       inactive[i]=createImage(BUTTON_WIDTH,BUTTON_HEIGHT);
       Graphics g=inactive[i].getGraphics();
-      g.drawImage(buttons,-(i * BUTTON_WIDTH),-2 * BUTTON_HEIGHT,null);
+      g.drawImage(buttons,-(i * IMAGE_SIZE) - 3,-2 * IMAGE_SIZE,null);
       rollover[i]=createImage(BUTTON_WIDTH,BUTTON_HEIGHT);
       g=rollover[i].getGraphics();
-      g.drawImage(buttons,-(i * BUTTON_WIDTH),-1 * BUTTON_HEIGHT,null);
+      g.drawImage(buttons,-(i * IMAGE_SIZE) - 3,-1 * IMAGE_SIZE,null);
       active[i]=createImage(BUTTON_WIDTH,BUTTON_HEIGHT);
       g=active[i].getGraphics();
-      g.drawImage(buttons,-(i * BUTTON_WIDTH),-0 * BUTTON_HEIGHT,null);
+      g.drawImage(buttons,-(i * IMAGE_SIZE) - 3,-0 * IMAGE_SIZE,null);
     }
     state=new int[buttonCount];
     stateImage=new Image[buttonCount];
@@ -25,29 +26,27 @@
     offscreen=createImage(size.width,size.height);
     width=size.width;
     height=size.height;
-    x1=0;
-    x2=BUTTON_WIDTH;
-    y1=new int[buttonCount];
-    y2=new int[buttonCount];
-    int offsetY=0;
+    y1=0;
+    y2=BUTTON_HEIGHT;
+    x1=new int[buttonCount];
+    x2=new int[buttonCount];
+    int offsetX=3;
     for (int i=0; i < buttonCount; i++) {
-      y1[i]=offsetY;
-      y2[i]=offsetY + BUTTON_HEIGHT;
-      offsetY=y2[i];
+      x1[i]=offsetX;
+      if (i == 2)       x1[i]+=BUTTON_GAP;
+      x2[i]=x1[i] + BUTTON_WIDTH;
+      offsetX=x2[i];
     }
   }
   Graphics g=offscreen.getGraphics();
   g.setColor(bgcolor);
   g.fillRect(0,0,width,height);
   for (int i=0; i < buttonCount; i++) {
-    g.drawImage(stateImage[i],x1,y1[i],null);
+    g.drawImage(stateImage[i],x1[i],y1,null);
   }
   g.setColor(statusColor);
   g.setFont(statusFont);
-  Graphics2D g2=(Graphics2D)g;
-  FontRenderContext frc=g2.getFontRenderContext();
-  float statusW=(float)statusFont.getStringBounds(status,frc).getWidth();
-  float statusX=(getSize().width - statusW) / 2;
-  g2.drawString(status,statusX,statusY);
+  int statusY=(BUTTON_HEIGHT + g.getFontMetrics().getAscent()) / 2;
+  g.drawString(status,buttonCount * BUTTON_WIDTH + 2 * BUTTON_GAP,statusY);
   screen.drawImage(offscreen,0,0,null);
 }
