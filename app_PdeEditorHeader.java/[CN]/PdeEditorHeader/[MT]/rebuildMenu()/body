@@ -18,10 +18,10 @@
 );
   }
   JMenuItem item;
-  item=new JMenuItem("New");
+  item=PdeEditor.newJMenuItem("New",'T');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      System.out.println("TODO write code for New");
+      editor.sketch.newCode();
     }
   }
 );
@@ -29,7 +29,7 @@
   item=new JMenuItem("Rename");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      System.out.println("TODO write code for Rename");
+      editor.sketch.renameCode();
     }
   }
 );
@@ -37,7 +37,7 @@
   item=new JMenuItem("Delete");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      System.out.println("TODO write code for Delete");
+      editor.sketch.deleteCode();
     }
   }
 );
@@ -45,7 +45,7 @@
   item=new JMenuItem("Hide");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      System.out.println("TODO write code for Hide");
+      editor.sketch.hideCode();
     }
   }
 );
@@ -53,7 +53,7 @@
   JMenu unhide=new JMenu("Unhide");
   ActionListener unhideListener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      editor.sketch.unhide((String)(e.getActionCommand()));
+      editor.sketch.unhideCode((String)(e.getActionCommand()));
       rebuildMenu();
     }
   }
@@ -75,7 +75,7 @@
     menu.addSeparator();
     ActionListener jumpListener=new ActionListener(){
       public void actionPerformed(      ActionEvent e){
-        System.out.println("jump to " + e);
+        editor.sketch.setCurrent(e.getActionCommand());
       }
     }
 ;

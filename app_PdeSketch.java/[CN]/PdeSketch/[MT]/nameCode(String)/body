@@ -1,0 +1,49 @@
+{
+  if (renamingCode && newName.equals(current.name)) {
+    return;
+  }
+  String newFilename=null;
+  int newFlavor=0;
+  if (newName.endsWith(".pde")) {
+    newFilename=newName;
+    newName=newName.substring(0,newName.length() - 4);
+    newFlavor=PDE;
+  }
+ else   if (newName.endsWith(".java")) {
+    newFilename=newName;
+    newName=newName.substring(0,newName.length() - 5);
+    newFlavor=JAVA;
+  }
+ else {
+    newFilename=newName + ".pde";
+    newFlavor=PDE;
+  }
+  File newFile=new File(folder,newFilename);
+  if (newFile.exists()) {
+    PdeBase.showMessage("Nope","A file named \"" + newFile + "\" already exists\n"+ "in \""+ folder.getAbsolutePath()+ "\"");
+    return;
+  }
+  if (renamingCode) {
+    if (!current.file.renameTo(newFile)) {
+      PdeBase.showWarning("Error","Could not rename \"" + current.file.getName() + "\" to \""+ newFile.getName()+ "\"",null);
+      return;
+    }
+    current.file=newFile;
+    current.name=newName;
+    current.flavor=newFlavor;
+  }
+ else {
+    try {
+      newFile.createNewFile();
+    }
+ catch (    IOException e) {
+      PdeBase.showWarning("Error","Could not create the file \"" + newFile + "\"\n"+ "in \""+ folder.getAbsolutePath()+ "\"",e);
+      return;
+    }
+    PdeCode newCode=new PdeCode(newName,newFile,newFlavor);
+    insertCode(newCode);
+  }
+  sortCode();
+  setCurrent(newName);
+  editor.header.repaint();
+}
