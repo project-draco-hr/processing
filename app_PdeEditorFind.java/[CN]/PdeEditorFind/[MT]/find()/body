@@ -1,0 +1,20 @@
+{
+  String search=findField.getText();
+  if (search.length() == 0)   return;
+  String text=editor.textarea.getText();
+  search=search.toLowerCase();
+  text=text.toLowerCase();
+  int selectionEnd=editor.textarea.getSelectionEnd();
+  int nextIndex=text.indexOf(search,selectionEnd);
+  if (nextIndex == -1) {
+    nextIndex=text.indexOf(search,0);
+    if (nextIndex == -1) {
+      found=false;
+      replaceButton.setEnabled(false);
+      return;
+    }
+  }
+  found=true;
+  replaceButton.setEnabled(true);
+  editor.textarea.select(nextIndex,nextIndex + search.length());
+}

@@ -1,0 +1,50 @@
+{
+  super("Find");
+  setResizable(false);
+  this.editor=editor;
+  Container pain=getContentPane();
+  pain.setLayout(null);
+  JLabel findLabel=new JLabel("Find:");
+  Dimension d0=findLabel.getPreferredSize();
+  JLabel replaceLabel=new JLabel("Replace with:");
+  Dimension d1=replaceLabel.getPreferredSize();
+  pain.add(findLabel);
+  pain.add(replaceLabel);
+  pain.add(findField=new JTextField(20));
+  pain.add(replaceField=new JTextField(20));
+  Dimension d2=findField.getPreferredSize();
+  int yoff=(1 + d2.height - d1.height) / 2;
+  findLabel.setBounds(BIG + (d1.width - d0.width) + yoff,BIG,d1.width,d1.height);
+  replaceLabel.setBounds(BIG,BIG + d2.height + SMALL+ yoff,d1.width,d1.height);
+  JPanel buttons=new JPanel();
+  buttons.setLayout(new FlowLayout());
+  if ((PdeBase.platform == PdeBase.MACOSX) || (PdeBase.platform == PdeBase.MACOS9)) {
+    buttons.add(replaceButton=new JButton("Replace"));
+    buttons.add(replaceAllButton=new JButton("Replace All"));
+    buttons.add(findButton=new JButton("Find"));
+  }
+ else {
+    buttons.add(findButton=new JButton("Find"));
+    buttons.add(replaceButton=new JButton("Replace"));
+    buttons.add(replaceAllButton=new JButton("Replace All"));
+  }
+  pain.add(buttons);
+  if (PdeBase.platform == PdeBase.MACOSX) {
+    buttons.setBorder(null);
+  }
+  Dimension d3=buttons.getPreferredSize();
+  buttons.setBounds(BIG,BIG + d2.height * 2 + SMALL + BIG,d3.width,d3.height);
+  findField.setBounds(BIG + d1.width + SMALL,BIG,d3.width - (d1.width + SMALL),d2.height);
+  replaceField.setBounds(BIG + d1.width + SMALL,BIG + d2.height + SMALL,d3.width - (d1.width + SMALL),d2.height);
+  replaceButton.addActionListener(this);
+  replaceAllButton.addActionListener(this);
+  findButton.addActionListener(this);
+  replaceButton.setEnabled(false);
+  findField.requestFocus();
+  getRootPane().setDefaultButton(findButton);
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  int wide=d3.width + BIG * 2;
+  int high=BIG + d2.height * 2 + SMALL + BIG * 3 + d3.height;
+  setBounds((screen.width - wide) / 2,(screen.height - high) / 2,wide,high);
+  show();
+}
