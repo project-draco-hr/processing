@@ -19,12 +19,16 @@ x+=hr;
 y+=vr;
 break;
 }
-if (depth) {
-if (fill) arc3_fill(start,stop,x,y,hr,vr);
-if (stroke) arc3_stroke(start,stop,x,y,hr,vr);
+if (angleMode == DEGREES) {
+start=start * DEG_TO_RAD;
+stop=stop * DEG_TO_RAD;
+if (Float.isInfinite(start) || Float.isInfinite(stop)) return;
+while (stop < start) stop+=TWO_PI;
+}
+if (depth || !optimize2) {
+arc3(start,stop,x,y,hr,vr);
 }
  else {
-if (fill) arc2_fill(start,stop,x,y,hr,vr);
-if (stroke) arc2_stroke(start,stop,x,y,hr,vr);
+arc2(start,stop,x,y,hr,vr);
 }
 }

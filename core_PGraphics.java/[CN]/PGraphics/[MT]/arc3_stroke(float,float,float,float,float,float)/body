@@ -1,2 +1,15 @@
 {
+  boolean savedFill=fill;
+  fill=false;
+  int startLUT=(int)(0.5f + (start / TWO_PI) * SINCOS_LENGTH);
+  int stopLUT=(int)(0.5f + (stop / TWO_PI) * SINCOS_LENGTH);
+  beginShape(LINE_STRIP);
+  int increment=1;
+  for (int i=startLUT; i < stopLUT; i+=increment) {
+    int ii=i % SINCOS_LENGTH;
+    vertex(x + cosLUT[ii] * hr,y + sinLUT[ii] * vr);
+  }
+  vertex(x + cosLUT[stopLUT % SINCOS_LENGTH] * hr,y + sinLUT[stopLUT % SINCOS_LENGTH] * vr);
+  endShape();
+  fill=savedFill;
 }

@@ -1,36 +1,5 @@
 {
-  if (depth) {
-    if (strokeWeight < 2) {
-      point0(screenX(x,y,z),screenY(x,y,z),screenZ(x,y,z),strokeColor);
-    }
- else {
-      float cx=screenX(x,y,z);
-      float cy=screenX(x,y,z);
-      float hsw=strokeWeight / 2f;
-      if (strokeCap == ROUND_ENDCAP) {
-        circle0_rough_fill(cx,cy,z,hsw,strokeColor);
-      }
- else {
-        int x1=(int)(cx - hsw + 0.5f);
-        int y1=(int)(cy - hsw + 0.5f);
-        int x2=(int)(cx + hsw + 0.5f);
-        int y2=(int)(cy + hsw + 0.5f);
-        rect0_rough_fill(x1,y1,x2,y2,z,strokeColor);
-      }
-    }
-  }
- else {
-    if (strokeWeight < 2) {
-      point0(screenX(x,y),screenY(x,y),0,strokeColor);
-    }
- else {
-      float hsw=strokeWeight / 2f;
-      if ((strokeCap == PROJECTED_ENDCAP) || (strokeCap == SQUARE_ENDCAP)) {
-        rect0_fill(x - hsw,y - hsw,x + hsw,y + hsw,0,strokeColor);
-      }
- else       if (strokeCap == ROUND_ENDCAP) {
-        circle0_fill(x - hsw,y - hsw,0,hsw,strokeColor);
-      }
-    }
-  }
+  beginShape(POINTS);
+  vertex(x,y,z);
+  endShape();
 }

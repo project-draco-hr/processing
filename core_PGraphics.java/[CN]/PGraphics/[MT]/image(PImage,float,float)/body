@@ -1,6 +1,10 @@
 {
-  if (!depth && !lights && !tint&& (imageMode != CENTER_RADIUS)) {
-    flat_image(image,(int)x1,(int)y1);
+  if (optimize0 && !depth && (m00 == 1)&& (m01 == 0)&& (m10 == 0)&& (m11 == 1)) {
+    if ((imageMode == CENTER) || (imageMode == CENTER_RADIUS)) {
+      x1-=image.width / 2f;
+      y1-=image.height / 2f;
+    }
+    image0(image,(int)(x1 + m02 + 0.5f),(int)(y1 + m12 + 0.5f));
   }
  else {
     int savedTextureMode=textureMode;
