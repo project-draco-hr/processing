@@ -1,4 +1,43 @@
 {
   String extendsWhat=extendsNormal ? "BApplet" : "BAppletGL";
-  return "";
+  PdeLexer lexer=new PdeLexer(programReader);
+  lexer.setTokenObjectClass("antlr.CommonHiddenStreamToken");
+  filter=new TokenStreamCopyingHiddenTokenFilter(lexer);
+  filter.hide(PdeRecognizer.SL_COMMENT);
+  filter.hide(PdeRecognizer.ML_COMMENT);
+  filter.hide(PdeRecognizer.WS);
+  filter.copy(PdeRecognizer.SEMI);
+  filter.copy(PdeRecognizer.LPAREN);
+  filter.copy(PdeRecognizer.RPAREN);
+  filter.copy(PdeRecognizer.LCURLY);
+  filter.copy(PdeRecognizer.RCURLY);
+  filter.copy(PdeRecognizer.COMMA);
+  filter.copy(PdeRecognizer.RBRACK);
+  filter.copy(PdeRecognizer.LBRACK);
+  filter.copy(PdeRecognizer.COLON);
+  PdeRecognizer parser=new PdeRecognizer(filter);
+  parser.setASTNodeClass("antlr.CommonASTWithHiddenTokens");
+  parser.compilationUnit();
+  ASTFactory factory=new ASTFactory();
+  AST parserAST=parser.getAST();
+  AST rootNode=factory.create(ROOT_ID,"AST ROOT");
+  rootNode.setFirstChild(parserAST);
+  ((CommonAST)parserAST).setVerboseStringConversion(true,parser.getTokenNames());
+  PdeEmitter emitter=new PdeEmitter();
+  PrintStream stream=new PrintStream(new FileOutputStream(buildPath + File.separator + "MyDemo.java"));
+  emitter.setOut(stream);
+  emitter.print(rootNode);
+  stream.close();
+  final boolean debug=true;
+  if (debug) {
+    stream=new PrintStream(new FileOutputStream("parseTree.xml"));
+    stream.println("<?xml version=\"1.0\"?>");
+    stream.println("<document>");
+    OutputStreamWriter writer=new OutputStreamWriter(stream);
+    ((CommonAST)parserAST).xmlSerialize(writer);
+    writer.flush();
+    stream.println("</document>");
+    writer.close();
+  }
+  return "MyDemo";
 }
