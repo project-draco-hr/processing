@@ -1,8 +1,17 @@
 {
-  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
-  fullScreenWindow=new Window(new Frame());
-  fullScreenWindow.setBounds(0,0,screen.width,screen.height);
-  fullScreenWindow.setBackground(new Color(102,102,102));
+  if (fullScreenWindow == null) {
+    Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+    if (PdeApplet.isMacintosh()) {
+      fullScreenWindow=new Frame();
+      Insets insets=new Insets(21,5,5 + 20,5);
+      fullScreenWindow.setBounds(-insets.left,-insets.top,screen.width + insets.left + insets.right,screen.height + insets.top + insets.bottom);
+    }
+ else {
+      fullScreenWindow=new Window(new Frame());
+      fullScreenWindow.setBounds(0,0,screen.width,screen.height);
+    }
+    fullScreenWindow.setBackground(new Color(102,102,102));
+  }
   fullScreenWindow.show();
   if (frame != null)   frame.toFront();
   try {
