@@ -1,7 +1,7 @@
 {
   menu.removeAll();
   try {
-    sketchbookFolder=new File("sketchbook");
+    sketchbookFolder=new File(get("sketchbook.path","sketchbook"));
     sketchbookPath=sketchbookFolder.getCanonicalPath();
     if (!sketchbookFolder.exists()) {
       System.err.println("sketchbook folder doesn't exist, " + "making a new one");
@@ -13,25 +13,14 @@
       System.err.println("sketchbook folder for '" + editor.userName + "' doesn't exist, creating a new one");
       userFolder.mkdirs();
     }
-    SketchbookMenuListener userMenuListener=new SketchbookMenuListener(userPath);
-    String entries[]=new File(userPath).list();
-    boolean added=false;
-    for (int j=0; j < entries.length; j++) {
-      if (entries[j].equals(".") || entries[j].equals("..") || entries[j].equals("CVS")|| entries[j].equals(".cvsignore"))       continue;
-      added=true;
-      if (new File(userPath,entries[j] + File.separator + entries[j]+ ".pde").exists()) {
-        MenuItem item=new MenuItem(entries[j]);
-        item.addActionListener(userMenuListener);
-        menu.add(item);
-      }
+    if (addSketches(menu,userFolder,false)) {
+      menu.addSeparator();
     }
-    if (!added) {
+    if (!addSketches(menu,sketchbookFolder,true)) {
       MenuItem item=new MenuItem("No sketches");
       item.setEnabled(false);
       menu.add(item);
     }
-    menu.addSeparator();
-    addSketches(menu,sketchbookFolder,true);
   }
  catch (  IOException e) {
     e.printStackTrace();

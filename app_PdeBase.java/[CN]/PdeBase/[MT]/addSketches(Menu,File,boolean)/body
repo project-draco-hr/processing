@@ -1,7 +1,8 @@
 {
-  if (!folder.isDirectory())   return;
+  if (!folder.isDirectory())   return false;
   String list[]=folder.list();
   SketchbookMenuListener listener=new SketchbookMenuListener(folder.getCanonicalPath());
+  boolean ifound=false;
   for (int i=0; i < list.length; i++) {
     if (list[i].equals(editor.userName) && root)     continue;
     if (list[i].equals(".") || list[i].equals("..") || list[i].equals("CVS"))     continue;
@@ -10,11 +11,16 @@
       MenuItem item=new MenuItem(list[i]);
       item.addActionListener(listener);
       menu.add(item);
+      ifound=true;
     }
  else {
       Menu submenu=new Menu(list[i]);
-      menu.add(submenu);
-      addSketches(submenu,subfolder,false);
+      boolean found=addSketches(submenu,subfolder,false);
+      if (found) {
+        menu.add(submenu);
+        ifound=true;
+      }
     }
   }
+  return ifound;
 }
