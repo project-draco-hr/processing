@@ -1,0 +1,26 @@
+{
+  boolean extendsNormal=base.normalItem.getState();
+  PdePreprocessor preprocessor=null;
+  if (PdeBase.getBoolean("preprocessor.antlr",true)) {
+    preprocessor=new PdePreprocessor(program,buildPath);
+    try {
+      className=preprocessor.writeJava(className,extendsNormal,false);
+    }
+ catch (    antlr.RecognitionException ae) {
+      throw new PdeException(ae.getMessage(),ae.getLine() - 1,ae.getColumn());
+    }
+catch (    Exception ex) {
+      System.err.println("Uncaught exception type:" + ex.getClass());
+      ex.printStackTrace();
+      throw new PdeException(ex.toString());
+    }
+  }
+ else {
+    preprocessor=new PdePreprocessorOro(program,buildPath);
+    className=preprocessor.writeJava(className,extendsNormal,false);
+  }
+  PdeCompiler compiler=new PdeCompiler(buildPath,className,this);
+  messageStream=new PdeMessageStream(compiler);
+  boolean success=compiler.compileJava(new PrintStream(messageStream));
+  return success ? className : null;
+}
