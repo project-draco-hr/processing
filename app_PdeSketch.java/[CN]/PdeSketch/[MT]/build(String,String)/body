@@ -1,19 +1,16 @@
 {
-  String importPackageList[]=null;
   String javaClassPath=System.getProperty("java.class.path");
   if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\"")) {
     javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
   }
-  classPath=buildPath + File.pathSeparator + javaClassPath;
+  classPath=buildPath + File.pathSeparator + PdeSketchbook.librariesClassPath+ File.pathSeparator+ javaClassPath;
   if (codeFolder.exists()) {
     externalRuntime=true;
     classPath+=File.pathSeparator + PdeCompiler.contentsToClassPath(codeFolder);
-    importPackageList=PdeCompiler.packageListFromClassPath(classPath);
     libraryPath=codeFolder.getAbsolutePath();
   }
  else {
     externalRuntime=(codeCount > 1);
-    importPackageList=null;
     libraryPath="";
   }
   if (dataFolder.exists() && PdeBase.calcFolderSize(dataFolder) > 768 * 1024) {

@@ -12,21 +12,25 @@
     popup.addSeparator();
     boolean sketches=addSketches(popup,new File(PdePreferences.get("sketchbook.path")));
     if (sketches)     popup.addSeparator();
-    JMenu examples=new JMenu("Examples");
-    addSketches(examples,examplesFolder);
-    popup.add(examples);
+    JMenu ex=new JMenu("Examples");
+    addSketches(ex,examplesFolder);
+    popup.add(ex);
+    if (PdePreferences.getBoolean("export.library")) {
+      JMenu m=new JMenu("Libraries");
+      addSketches(m,librariesFolder);
+      popup.add(m);
+    }
     builtOnce=true;
     menu.removeAll();
     if (sketches) {
       addSketches(menu,new File(PdePreferences.get("sketchbook.path")));
-      menu.addSeparator();
     }
     examples=new JMenu("Examples");
     addSketches(examples,examplesFolder);
-    menu.add(examples);
     addlib.removeAll();
+    librariesClassPath="";
     boolean libs=addLibraries(addlib,new File(PdePreferences.get("sketchbook.path")));
-    if (libs)     menu.addSeparator();
+    if (libs)     addlib.addSeparator();
     addLibraries(addlib,librariesFolder);
   }
  catch (  IOException e) {
