@@ -1,20 +1,35 @@
 {
   try {
     while ((Thread.currentThread() == thread) && !finished) {
-      updated=false;
-      if (PApplet.THREAD_DEBUG)       println("nextFrame()");
-      if (looping || redraw)       nextFrame();
+      if (PApplet.THREAD_DEBUG)       println(Thread.currentThread().getName() + " formerly nextFrame()");
+      if (looping || redraw) {
+        if (fpsTarget != 0)         framerate_delay();
+synchronized (g) {
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 1a beginFrame");
+          g.beginFrame();
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 1b draw");
+          draw();
+          dequeueMouseEvents();
+          dequeueKeyEvents();
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 2b endFrame");
+          g.endFrame();
+          frameCount++;
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
+          repaint();
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3b calling Toolkit.sync " + frameCount);
+          getToolkit().sync();
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3c done " + frameCount);
+        }
+      }
       redraw=false;
-      while (!updated) {
-        try {
-          if (PApplet.THREAD_DEBUG)           System.out.println(looping + " " + redraw);
-          if (PApplet.THREAD_DEBUG)           System.out.println("gonna sleep");
-          Thread.sleep(looping ? 1 : 10000);
-          if (PApplet.THREAD_DEBUG)           System.out.println("outta sleep");
-        }
- catch (        InterruptedException e) {
-          break;
-        }
+      try {
+        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " " + looping+ " "+ redraw);
+        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " gonna sleep");
+        Thread.sleep(looping ? 1 : 10000);
+        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " outta sleep");
+      }
+ catch (      InterruptedException e) {
+        break;
       }
     }
   }
@@ -29,4 +44,5 @@
       e.printStackTrace();
     }
   }
+  if (THREAD_DEBUG)   println(Thread.currentThread().getName() + " thread finished");
 }

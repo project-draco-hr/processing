@@ -1,11 +1,12 @@
 {
-  if (THREAD_DEBUG)   println("     5a enter paint");
-  if (firstFrame)   return;
-  if (THREAD_DEBUG)   println("     5b enter paint sync");
+  if (THREAD_DEBUG)   println(Thread.currentThread().getName() + "     5a enter paint");
+  if (frameCount == 0)   return;
+  if (THREAD_DEBUG)   println(Thread.currentThread().getName() + "     5b enter paint sync");
 synchronized (g) {
+    if (THREAD_DEBUG)     println(Thread.currentThread().getName() + "     5c inside paint sync");
     if (g != null) {
       screen.drawImage(g.image,0,0,null);
     }
   }
-  updated=true;
+  if (THREAD_DEBUG)   println(Thread.currentThread().getName() + "      6 exit paint");
 }
