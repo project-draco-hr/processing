@@ -3,50 +3,64 @@
     while ((Thread.currentThread() == thread) && !finished) {
       if (PApplet.THREAD_DEBUG)       println(Thread.currentThread().getName() + " formerly nextFrame()");
       if (looping || redraw) {
-        if (fpsTarget != 0)         framerate_delay();
         if (frameCount == 0) {
           createGraphics();
         }
-        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " 1a beginFrame");
-        g.beginFrame();
-        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " 1b draw");
-        if (frameCount == 0) {
-          g.defaults();
-          setup();
-          this.pixels=g.pixels;
-          this.width=g.width;
-          this.height=g.height;
-        }
+synchronized (glock) {
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 1a beginFrame");
+          g.beginFrame();
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 1b draw");
+          if (frameCount == 0) {
+            g.defaults();
+            setup();
+            this.pixels=g.pixels;
+            this.width=g.width;
+            this.height=g.height;
+          }
  else {
-          preMethods.handle();
-          pmouseX=dmouseX;
-          pmouseY=dmouseY;
-          draw();
-          dmouseX=mouseX;
-          dmouseY=mouseY;
-          dequeueMouseEvents();
-          dequeueKeyEvents();
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 2b endFrame");
-          drawMethods.handle();
+            if (fpsTarget != 0) {
+              if (fpsLastDelayTime == 0) {
+                fpsLastDelayTime=System.currentTimeMillis();
+              }
+ else {
+                long timeToLeave=fpsLastDelayTime + (long)(1000.0f / fpsTarget);
+                int napTime=(int)(timeToLeave - System.currentTimeMillis());
+                fpsLastDelayTime=timeToLeave;
+                delay(napTime);
+              }
+            }
+            preMethods.handle();
+            pmouseX=dmouseX;
+            pmouseY=dmouseY;
+            draw();
+            dmouseX=mouseX;
+            dmouseY=mouseY;
+            dequeueMouseEvents();
+            dequeueKeyEvents();
+            if (THREAD_DEBUG)             println(Thread.currentThread().getName() + " 2b endFrame");
+            drawMethods.handle();
+            redraw=false;
+          }
+          g.endFrame();
+          if (recorder != null) {
+            recorder.endFrame();
+            recorder=null;
+          }
+          frameCount++;
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
+          repaint();
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3b calling Toolkit.sync " + frameCount);
+          getToolkit().sync();
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3c done " + frameCount);
+          postMethods.handle();
         }
-        g.endFrame();
-        if (recorder != null) {
-          recorder.endFrame();
-          recorder=null;
-        }
-        frameCount++;
-        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
-        repaint();
-        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + "   3b calling Toolkit.sync " + frameCount);
-        getToolkit().sync();
-        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + "   3c done " + frameCount);
-        postMethods.handle();
       }
-      redraw=false;
       try {
         if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " " + looping+ " "+ redraw);
         if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " gonna sleep");
-        Thread.sleep(looping ? 1 : 10000);
+        int nap=looping ? 1 : 10000;
+        if (frameCount == 1)         nap=1;
+        Thread.sleep(nap);
         if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " outta sleep");
       }
  catch (      InterruptedException e) {

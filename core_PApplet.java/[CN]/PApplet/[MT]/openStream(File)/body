@@ -3,12 +3,12 @@
     return new FileInputStream(file);
   }
  catch (  IOException e) {
+    e.printStackTrace();
     if (file == null) {
-      die("File passed to openStream() was null",e);
+      throw new RuntimeException("File passed to openStream() was null");
     }
  else {
-      die("Couldn't openStream() for " + file.getAbsolutePath());
+      throw new RuntimeException("Couldn't openStream() for " + file.getAbsolutePath());
     }
   }
-  return null;
 }
