@@ -1,4 +1,6 @@
 {
+  this.programReader=new StringReader(program);
+  this.buildPath=buildPath;
   PdeLexer lexer=new PdeLexer(programReader);
   lexer.setTokenObjectClass("antlr.CommonHiddenStreamToken");
   filter=new TokenStreamCopyingHiddenTokenFilter(lexer);
@@ -22,12 +24,12 @@
   AST rootNode=factory.create(ROOT_ID,"AST ROOT");
   rootNode.setFirstChild(parserAST);
   ((CommonAST)parserAST).setVerboseStringConversion(true,parser.getTokenNames());
-  if (programType == ADVANCED) {
+  if (programType == JAVA) {
     name=getFirstClassName(parserAST);
   }
   PdeEmitter emitter=new PdeEmitter();
   PrintStream stream=new PrintStream(new FileOutputStream(buildPath + File.separator + name+ ".java"));
-  writeHeader(stream,imports,exporting,name);
+  writeHeader(stream,imports,javaVersion,name);
   emitter.setOut(stream);
   emitter.print(rootNode);
   writeFooter(stream);
