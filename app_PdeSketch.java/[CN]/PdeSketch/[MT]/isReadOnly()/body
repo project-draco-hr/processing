@@ -2,9 +2,12 @@
   if (folder.getAbsolutePath().startsWith(PdeSketchbook.examplesPath)) {
     return true;
   }
- else   if (!folder.canWrite()) {
-    System.err.println("read only directory...");
-    return true;
+ else {
+    for (int i=0; i < codeCount; i++) {
+      if (code[i].modified && !code[i].file.canWrite()) {
+        return true;
+      }
+    }
   }
   return false;
 }
