@@ -1,21 +1,22 @@
 {
-  boolean external=getBoolean("editor.external");
+  boolean external=PdePreferences.getBoolean("editor.external");
   textarea.setEditable(!external);
   saveMenuItem.setEnabled(!external);
   saveAsMenuItem.setEnabled(!external);
   beautifyMenuItem.setEnabled(!external);
   TextAreaPainter painter=textarea.getPainter();
   if (external) {
-    Color bg=PdePreferences.getColor("editor.program.bgcolor.external");
-    painter.setBackground(bg);
+    Color color=PdePreferences.getColor("editor.program.bgcolor.external");
+    painter.setBackground(color);
     painter.lineHighlight=false;
     textarea.setCaretVisible(false);
   }
  else {
-    painter.setBackground(PdePreferences.getColor("editor.program.bgcolor"));
+    Color color=PdePreferences.getColor("editor.program.bgcolor");
+    painter.setBackground(color);
     painter.lineHighlight=PdePreferences.getBoolean("editor.program.linehighlight");
     textarea.setCaretVisible(true);
   }
   buildExportMenu();
-  rebuildSketchbookMenu(sketchbookMenu);
+  sketchbook.rebuildMenu();
 }

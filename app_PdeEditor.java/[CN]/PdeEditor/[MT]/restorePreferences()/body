@@ -1,2 +1,36 @@
 {
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  boolean windowPositionInvalid=false;
+  if (PdePreferences.get("last.screen.height") != null) {
+    int screenW=PdePreferences.getInteger("last.screen.width");
+    int screenH=PdePreferences.getInteger("last.screen.height");
+    if ((screen.width != screenW) || (screen.height != screenH)) {
+      windowPositionInvalid=true;
+    }
+  }
+ else {
+    windowPositionInvalid=true;
+  }
+  if (windowPositionInvalid) {
+    int windowH=PdePreferences.getInteger("default.window.height");
+    int windowW=PdePreferences.getInteger("default.window.width");
+    setBounds((screen.width - windowW) / 2,(screen.height - windowH) / 2,windowW,windowH);
+    PdePreferences.setInteger("last.divider.location",splitPane.getDividerLocation());
+  }
+ else {
+    setBounds(PdePreferences.getInteger("last.window.x"),PdePreferences.getInteger("last.window.y"),PdePreferences.getInteger("last.window.width"),PdePreferences.getInteger("last.window.height"));
+  }
+  String sketchName=PdePreferences.get("last.sketch.name");
+  String sketchDir=PdePreferences.get("last.sketch.path");
+  if (sketchName != null) {
+    if (new File(sketchDir + File.separator + sketchName).exists()) {
+      skOpen(sketchDir,sketchName);
+    }
+ else {
+      skNew();
+    }
+  }
+  int location=PdePreferences.getInteger("last.divider.location");
+  splitPane.setDividerLocation(location);
+  applyPreferences();
 }

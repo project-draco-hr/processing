@@ -52,8 +52,8 @@
  else {
         window=new Frame(editor.sketchName);
         ((Frame)window).setResizable(false);
-        if (PdeBase.icon != null) {
-          ((Frame)window).setIconImage(PdeBase.icon);
+        if (editor.icon != null) {
+          ((Frame)window).setIconImage(editor.icon);
         }
         window.pack();
         window.addWindowListener(new WindowAdapter(){
@@ -91,15 +91,15 @@
           window.setBounds(x1 - windowW,y1,windowW,windowH);
         }
  else {
-          x1=parentLoc.x + PdeEditor.GRID_SIZE * 2;
-          y1=parentLoc.y + PdeEditor.GRID_SIZE * 2;
-          if ((x1 + windowW > screen.width - PdeEditor.GRID_SIZE) || (y1 + windowH > screen.height - PdeEditor.GRID_SIZE)) {
+          x1=parentLoc.x + PdePreferences.GRID_SIZE * 2;
+          y1=parentLoc.y + PdePreferences.GRID_SIZE * 2;
+          if ((x1 + windowW > screen.width - PdePreferences.GRID_SIZE) || (y1 + windowH > screen.height - PdePreferences.GRID_SIZE)) {
             x1=(screen.width - windowW) / 2;
             y1=(screen.height - windowH) / 2;
           }
           window.setBounds(x1,y1,windowW,windowH);
         }
-        Color windowBgColor=PdePreferences.getColor("run.window.bgcolor",SystemColor.control);
+        Color windowBgColor=PdePreferences.getColor("run.window.bgcolor");
         window.setBackground(windowBgColor);
         applet.setBounds((windowW - applet.width) / 2,insets.top + ((windowH - insets.top - insets.bottom) - applet.height) / 2,windowW,windowH);
       }
