@@ -2,26 +2,38 @@
   tindex=-1;
   int width2=(int)Math.pow(2,Math.ceil(Math.log(width) / Math.log(2)));
   int height2=(int)Math.pow(2,Math.ceil(Math.log(height) / Math.log(2)));
-  if ((width2 == width) && (height2 == height)) {
-    tpixels=pixels;
-    twidth=width;
-    theight=height;
+  if ((width2 > twidth) || (height2 > theight)) {
+    tpixels=null;
   }
- else {
-    if ((width2 > twidth) || (height2 > theight)) {
-      tpixels=null;
-    }
-    if (tpixels == null) {
-      twidth=width2;
-      theight=height2;
-      tpixels=new int[twidth * theight];
-    }
-    int p=0;
-    int t=0;
-    for (int y=0; y < height; y++) {
-      System.arraycopy(pixels,p,tpixels,t,width);
-      p+=width;
-      t+=twidth;
-    }
+  if (tpixels == null) {
+    twidth=width2;
+    theight=height2;
+    tpixels=new int[twidth * theight];
   }
+  int p=0;
+  int t=0;
+  for (int y=0; y < height; y++) {
+switch (format) {
+case ALPHA:
+      for (int x=0; x < width; x++) {
+        tpixels[t++]=0xFFFFFF00 | pixels[p++];
+      }
+    t+=twidth - width;
+  break;
+case RGB:
+for (int x=0; x < width; x++) {
+  int pixel=pixels[p++];
+  tpixels[t++]=(pixel << 8) | 0xff;
+}
+t+=twidth - width;
+break;
+case ARGB:
+for (int x=0; x < width; x++) {
+int pixel=pixels[p++];
+tpixels[t++]=(pixel << 8) | ((pixel >> 24) & 0xff);
+}
+t+=twidth - width;
+break;
+}
+}
 }
