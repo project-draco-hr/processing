@@ -21,6 +21,14 @@ catch (  Exception e) {
     System.out.println("exception building serial menu");
     e.printStackTrace();
   }
+  if (platform == MACOSX) {
+    try {
+      System.loadLibrary("SolarisSerialParallel");
+    }
+ catch (    UnsatisfiedLinkError e) {
+      problem=true;
+    }
+  }
   if (problem && firstTime) {
     JOptionPane.showMessageDialog(frame,"Serial port support not installed.\n" + "Check the readme for instructions if you " + "need to use the serial port.   ","Serial Port Warning",JOptionPane.WARNING_MESSAGE);
   }
