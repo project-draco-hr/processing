@@ -4,10 +4,12 @@
   openingName=name;
   if (sketch.isModified()) {
     String prompt="Save changes to " + sketch.name + "?  ";
-    if (checking == DO_QUIT) {
-      int result=0;
+    if (checking != DO_QUIT) {
+      status.prompt(prompt);
+    }
+ else {
       Object[] options={"Yes","No"};
-      result=JOptionPane.showOptionDialog(this,prompt,"Quit",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+      int result=JOptionPane.showOptionDialog(this,prompt,"Quit",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
       if (result == JOptionPane.YES_OPTION) {
         sketch.save();
         checkModified2();
@@ -17,9 +19,6 @@
       }
  else       if (result == JOptionPane.CANCEL_OPTION) {
       }
-    }
- else {
-      status.prompt(prompt);
     }
   }
  else {
