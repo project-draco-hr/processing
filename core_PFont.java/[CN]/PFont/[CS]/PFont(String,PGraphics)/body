@@ -1,7 +1,10 @@
 {
   String lower=filename.toLowerCase();
-  if (lower.endsWith(".vlw") || lower.endsWith(".vlw.gz")) {
+  if (lower.endsWith(".vlw")) {
     read(parent.openStream(filename));
+  }
+ else   if (lower.endsWith(".vlw.gz")) {
+    read(new GZIPInputStream(parent.openStream(filename)));
   }
  else {
     throw new IOException("don't know what type of file that is");
