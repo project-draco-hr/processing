@@ -1,28 +1,2 @@
 {
-  String command[]=new String[]{"jikes","-bootclasspath",System.getProperty("sun.boot.class.path"),"-nowarn","+E","-d",buildPath,buildPath + File.separator + className+ ".java"};
-  firstErrorFound=false;
-  secondErrorFound=false;
-  int result=0;
-  try {
-    Process process=Runtime.getRuntime().exec(command);
-    new PdeMessageSiphon(process.getInputStream(),this);
-    new PdeMessageSiphon(process.getErrorStream(),this);
-    boolean compiling=true;
-    while (compiling) {
-      try {
-        result=process.waitFor();
-        compiling=false;
-      }
- catch (      InterruptedException intExc) {
-      }
-    }
-  }
- catch (  Exception e) {
-    result=-1;
-  }
-  if (result != 0 && result != 1) {
-    exception=new PdeException(SUPER_BADNESS);
-    editor.error(exception);
-  }
-  return result == 0 ? true : false;
 }
