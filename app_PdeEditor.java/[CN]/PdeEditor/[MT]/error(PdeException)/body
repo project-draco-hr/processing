@@ -1,6 +1,11 @@
 {
   if (e.file >= 0)   sketch.setCurrent(e.file);
   if (e.line >= 0)   highlightLine(e.line);
-  status.error(e.getMessage());
+  String mess=e.getMessage();
+  String rxString="RuntimeException: ";
+  if (mess.indexOf(rxString) == 0) {
+    mess=mess.substring(rxString.length());
+  }
+  status.error(mess);
   buttons.clearRun();
 }
