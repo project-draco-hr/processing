@@ -1,0 +1,19 @@
+{
+  if (screenGrabCount == -1) {
+    File f=null;
+    do {
+      screenGrabCount++;
+      f=new File("screen-" + pad4(screenGrabCount) + ".tif");
+    }
+ while (f.exists());
+  }
+  try {
+    FileOutputStream fos=new FileOutputStream("screen-" + pad4(screenGrabCount++) + ".tif");
+    fos.write(makeTiffData(pixels,width,height));
+    fos.flush();
+    fos.close();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+}
