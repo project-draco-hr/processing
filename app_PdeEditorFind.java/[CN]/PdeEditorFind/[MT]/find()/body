@@ -3,8 +3,10 @@
   String search=findField.getText();
   if (search.length() == 0)   return;
   String text=editor.textarea.getText();
-  search=search.toLowerCase();
-  text=text.toLowerCase();
+  if (ignoreCase) {
+    search=search.toLowerCase();
+    text=text.toLowerCase();
+  }
   int selectionEnd=editor.textarea.getSelectionEnd();
   int nextIndex=text.indexOf(search,selectionEnd);
   if (nextIndex == -1) {
