@@ -1,2 +1,35 @@
 {
+  menu.removeAll();
+  try {
+    sketchbookFolder=new File("sketchbook");
+    sketchbookPath=sketchbookFolder.getCanonicalPath();
+    String userPath=sketchbookPath + File.separator + header.user;
+    SketchbookMenuListener userMenuListener=new SketchbookMenuListener(userPath);
+    String entries[]=new File(userPath).list();
+    for (int j=0; j < entries.length; j++) {
+      if ((entries[j].equals(".")) || (entries[j].equals("..")))       continue;
+      MenuItem item=new MenuItem(entries[j]);
+      item.addActionListener(userMenuListener);
+      menu.add(item);
+    }
+    menu.addSeparator();
+    String toplevel[]=sketchbookFolder.list();
+    for (int i=0; i < toplevel; i++) {
+      if ((toplevel[i].equals(header.user)) || (toplevel[i].equals(".")) || (toplevel[i].equals("..")))       continue;
+      Menu subMenu=new Menu(toplevel[i]);
+      File subFolder=new File(sketchbookFolder,toplevel[i]);
+      String subPath=subfolder.getCanonicalPath();
+      SketchbookMenuListener subMenuListener=new SketchbookMenuListener(subPath);
+      String entries[]=subFolder.list();
+      for (int j=0; j < entries.length; j++) {
+        if ((entries[j].equals(".")) || (entries[j].equals("..")))         continue;
+        subMenu.add(entries[j]);
+      }
+      menu.add(subMenu);
+    }
+    menu.addSeparator();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
 }
