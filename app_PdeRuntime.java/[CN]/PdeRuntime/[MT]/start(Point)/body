@@ -9,8 +9,8 @@
       String location=(windowLocation != null) ? (PApplet.EXT_EXACT_LOCATION + windowLocation.x + ","+ windowLocation.y) : (PApplet.EXT_LOCATION + x1 + ","+ y1);
       String command[]=new String[]{"java","-Djava.library.path=" + sketch.libraryPath,"-cp",sketch.classPath,"processing.core.PApplet",location,PApplet.EXT_SKETCH_FOLDER + sketch.folder.getAbsolutePath(),sketch.mainClassName};
       process=Runtime.getRuntime().exec(command);
-      new PdeMessageSiphon(process.getErrorStream(),this);
       new SystemOutSiphon(process.getInputStream());
+      new PdeMessageSiphon(process.getErrorStream(),this);
       processOutput=process.getOutputStream();
     }
  else {
