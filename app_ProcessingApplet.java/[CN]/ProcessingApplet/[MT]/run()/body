@@ -2,6 +2,7 @@
   while ((Thread.currentThread() == thread) && !finished) {
     if (timing) {
       actualMillis=System.currentTimeMillis();
+      millis=(int)(actualMillis - millisOffset);
       calendar=null;
     }
     if (!drawn) {
@@ -12,6 +13,7 @@
       if (drawMethod) {
         g.endFrame();
         update();
+        if (isMacintosh)         getToolkit().sync();
         finished=true;
       }
       drawn=true;
@@ -21,6 +23,7 @@
       loop();
       g.endFrame();
       update();
+      if (isMacintosh)       getToolkit().sync();
     }
     if (!loopMethod) {
       finished=true;
