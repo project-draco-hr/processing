@@ -20,42 +20,50 @@ case KeyEvent.VK_RIGHT:
 break;
 case KeyEvent.VK_UP:
 char contents[]=tc.getText().toCharArray();
-for (int i=0; i < 20; i++) System.out.print((int)contents[i] + " ");
 int howfar=0;
 int p=position;
-while ((p > 0) && (contents[p] != 13) && (contents[p] != 10)) {
+while ((p > 0) && (contents[p] != 10)) {
 p--;
 howfar++;
 }
-howfar--;
-System.out.println("howfar = " + howfar);
-while ((p > 0) && ((contents[p] == 13) || (contents[p] == 10))) {
 p--;
+if (p <= 0) {
+tc.setCaretPosition(0);
+return;
+}
+if (contents[p] == 10) {
+p--;
+}
+ else {
+howfar--;
 }
 if (p == 0) return;
 int howlong=0;
-while ((p > 0) && (contents[p] != 13) && (contents[p] != 10)) {
+while ((p >= 0) && (contents[p] != 10)) {
 p--;
 howlong++;
 }
-System.out.println("next line is " + howlong);
-tc.setCaretPosition(p + 1 + Math.min(howfar,howlong));
+tc.setCaretPosition(p + Math.min(howfar,howlong) + 1);
 break;
 case KeyEvent.VK_DOWN:
 contents=tc.getText().toCharArray();
 howfar=0;
 p=position;
-while ((p > 0) && (contents[p] != 13) && (contents[p] != 10)) {
+if (contents[p] == 10) {
+p--;
+position--;
+}
+while ((p > 0) && (contents[p] != 10)) {
 p--;
 howfar++;
 }
 p=position;
 int last=contents.length - 1;
-while ((p < last) && (contents[p] != 13) && (contents[p] != 10)) p++;
+while ((p < last) && (contents[p] != 10)) p++;
 if (p == last) return;
-while ((p < last) && ((contents[p] == 13) || (contents[p] == 10))) p++;
+while ((p < last) && (contents[p] == 10)) p++;
 int newline=p;
-while ((p < last) && (p < newline + howfar - 1) && (contents[p] != 13)&& (contents[p] != 10)) p++;
+while ((p < last) && (p < newline + howfar - 1) && (contents[p] != 10)) p++;
 tc.setCaretPosition(p);
 break;
 }
