@@ -49,7 +49,7 @@
         }
       }
  catch (      antlr.RecognitionException re) {
-        throw new PdeException(re.getMessage(),re.getLine() - 1,re.getColumn());
+        throw new PdeException(re.getMessage(),i,re.getLine() - 1,re.getColumn());
       }
 catch (      antlr.TokenStreamRecognitionException tsre) {
         PatternMatcher matcher=new Perl5Matcher();
@@ -67,10 +67,10 @@ catch (      antlr.TokenStreamRecognitionException tsre) {
           MatchResult result=matcher.getMatch();
           int line=Integer.parseInt(result.group(1).toString());
           int column=Integer.parseInt(result.group(2).toString());
-          throw new PdeException(tsre.getMessage(),line - 1,column);
+          throw new PdeException(tsre.getMessage(),i,line - 1,column);
         }
  else {
-          throw new PdeException(tsre.toString());
+          throw new PdeException(tsre.toString(),i,-1,-1);
         }
       }
 catch (      PdeException pe) {
