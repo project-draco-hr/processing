@@ -1,0 +1,46 @@
+{
+  super("Create Font");
+  this.targetFolder=targetFolder;
+  Container pain=getContentPane();
+  pain.setLayout(new BoxLayout(pain,BoxLayout.Y_AXIS));
+  String labelText="Use this tool to create bitmap fonts for your program.\n" + "Select a font and size, and click 'OK' to generate a font\n" + "and add it to the data folder of the current sketch.\n"+ "The recommended size for 3D applications is 48 points.";
+  JTextArea textarea=new JTextArea(labelText);
+  textarea.setFont(new Font("Dialog",Font.PLAIN,12));
+  pain.add(textarea);
+  JPanel panel=new JPanel();
+  GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+  Font fonts[]=ge.getAllFonts();
+  String families[]=ge.getAvailableFontFamilyNames();
+  fontSelector=new JList(families);
+  JScrollPane fontScroller=new JScrollPane(fontSelector);
+  panel.add(fontScroller);
+  styleSelector=new JComboBox();
+  for (int i=0; i < styles.length; i++) {
+    styleSelector.addItem(styles[i]);
+  }
+  styleSelector.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      String command=e.getActionCommand();
+      int style=Font.PLAIN;
+      if (command.indexOf("Bold") != -1) {
+        style|=Font.BOLD;
+      }
+      if (command.indexOf("Italic") != -1) {
+        style|=Font.ITALIC;
+      }
+    }
+  }
+);
+  panel.add(styleSelector);
+  sizeSelector=new JTextField("48");
+  panel.add(sizeSelector);
+  pain.add(panel);
+  JPanel buttons=new JPanel();
+  JButton cancelButton=new JButton("Cancel");
+  JButton okButton=new JButton("OK");
+  buttons.add(cancelButton);
+  buttons.add(okButton);
+  pain.add(buttons);
+  pack();
+  show();
+}

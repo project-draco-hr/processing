@@ -3,6 +3,18 @@
   menu.removeAll();
   File hfile=new File(path);
   if (!hfile.exists())   return;
+  MenuItem item=new MenuItem("Clear History");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (!editor.historyFile.delete()) {
+        System.err.println("couldn't erase history");
+      }
+      rebuildHistoryMenu(historyMenu,editor.historyFile.getPath());
+    }
+  }
+);
+  menu.add(item);
+  menu.addSeparator();
   try {
     BufferedReader reader=new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(path))));
     String line=null;
