@@ -1,31 +1,6 @@
 {
   Image awtimage=null;
-  if (filename.startsWith("http://")) {
-    try {
-      URL url=new URL(filename);
-      awtimage=gimmeImage(url,force);
-    }
- catch (    MalformedURLException e) {
-      System.err.println("error loading image from " + filename);
-      e.printStackTrace();
-      return null;
-    }
-  }
- else {
-    awtimage=gimmeImage(getClass().getResource(filename),force);
-    if (awtimage == null) {
-      awtimage=gimmeImage(getClass().getResource("data/" + filename),force);
-    }
-    if (awtimage == null) {
-      try {
-        String url="file:/" + folder + "/data/"+ filename;
-        awtimage=gimmeImage(new URL(url),force);
-      }
- catch (      IOException e) {
-        e.printStackTrace();
-      }
-    }
-  }
+  awtimage=Toolkit.getDefaultToolkit().createImage(loadBytes(filename));
   if (awtimage == null) {
     System.err.println("could not load image " + filename);
     return null;
