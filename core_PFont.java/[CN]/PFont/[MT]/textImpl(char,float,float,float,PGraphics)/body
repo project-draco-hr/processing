@@ -10,7 +10,25 @@
     float y1=y - textent * parent.textSize;
     float x2=x1 + bwidth * parent.textSize;
     float y2=y1 + high * parent.textSize;
-    parent.imageImpl(images[glyph],x1,y1,x2 - x1,y2 - y1,0,0,width[glyph],height[glyph]);
+    boolean savedTint=parent.tint;
+    int savedTintColor=parent.tintColor;
+    float savedTintR=parent.tintR;
+    float savedTintG=parent.tintG;
+    float savedTintB=parent.tintB;
+    float savedTintA=parent.tintA;
+    parent.tint=true;
+    parent.tintColor=parent.fillColor;
+    parent.tintR=parent.fillR;
+    parent.tintG=parent.fillG;
+    parent.tintB=parent.fillB;
+    parent.tintA=parent.fillA;
+    parent.imageImpl(images[glyph],x1,y1,x2,y2,0,0,width[glyph],height[glyph]);
+    parent.tint=savedTint;
+    parent.tintColor=savedTintColor;
+    parent.tintR=savedTintR;
+    parent.tintG=savedTintG;
+    parent.tintB=savedTintB;
+    parent.tintA=savedTintA;
   }
  else {
     int xx=(int)x + leftExtent[glyph];
