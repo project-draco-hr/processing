@@ -10,7 +10,7 @@
  else {
     appletDir.mkdirs();
   }
-  String foundName=build(name,appletDir.getPath());
+  String foundName=build(appletDir.getPath(),name);
   if (foundName == null)   return false;
   if (!name.equals(foundName)) {
     PdeBase.showWarning("Error during export","Sketch name is " + name + " but the sketch\n"+ "name in the code was "+ foundName,null);
@@ -37,12 +37,19 @@
     }
     StringBuffer sources=new StringBuffer();
     for (int i=0; i < codeCount; i++) {
-      sources.append("<a href=\'" + code[i].file.getName() + "\">"+ code[i].name+ "</a> ");
+      sources.append("<a href=\"" + code[i].file.getName() + "\">"+ code[i].name+ "</a> ");
     }
     File htmlOutputFile=new File(appletDir,"index.html");
     FileOutputStream fos=new FileOutputStream(htmlOutputFile);
     PrintStream ps=new PrintStream(fos);
-    InputStream is=PdeBase.getStream("applet.html");
+    InputStream is=null;
+    File customHtml=new File(folder,"applet.html");
+    if (customHtml.exists()) {
+      is=new FileInputStream(customHtml);
+    }
+    if (is == null) {
+      is=PdeBase.getStream("applet.html");
+    }
     BufferedReader reader=new BufferedReader(new InputStreamReader(is));
     String line=null;
     while ((line=reader.readLine()) != null) {
