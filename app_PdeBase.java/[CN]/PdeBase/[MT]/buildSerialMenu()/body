@@ -1,0 +1,19 @@
+{
+  SerialMenuListener listener=new SerialMenuListener();
+  String defaultName=get("serial.port","unspecified");
+  try {
+    Enumeration portList=CommPortIdentifier.getPortIdentifiers();
+    while (portList.hasMoreElements()) {
+      CommPortIdentifier portId=(CommPortIdentifier)portList.nextElement();
+      if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+        String name=portId.getName();
+        CheckboxMenuItem mi=new CheckboxMenuItem(name,name.equals(defaultName));
+        mi.addItemListener(listener);
+        serialMenu.add(mi);
+      }
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}
