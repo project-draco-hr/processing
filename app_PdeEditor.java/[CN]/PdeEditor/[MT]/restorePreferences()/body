@@ -1,17 +1,22 @@
 {
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
-  boolean windowPositionInvalid=false;
+  boolean windowPositionValid=true;
   if (PdePreferences.get("last.screen.height") != null) {
     int screenW=PdePreferences.getInteger("last.screen.width");
     int screenH=PdePreferences.getInteger("last.screen.height");
     if ((screen.width != screenW) || (screen.height != screenH)) {
-      windowPositionInvalid=true;
+      windowPositionValid=false;
+    }
+    int windowX=PdePreferences.getInteger("last.window.x");
+    int windowY=PdePreferences.getInteger("last.window.y");
+    if ((windowX < 0) || (windowY < 0) || (windowX > screenW)|| (windowY > screenH)) {
+      windowPositionValid=false;
     }
   }
  else {
-    windowPositionInvalid=true;
+    windowPositionValid=false;
   }
-  if (windowPositionInvalid) {
+  if (!windowPositionValid) {
     int windowH=PdePreferences.getInteger("default.window.height");
     int windowW=PdePreferences.getInteger("default.window.width");
     setBounds((screen.width - windowW) / 2,(screen.height - windowH) / 2,windowW,windowH);
