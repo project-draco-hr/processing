@@ -1,5 +1,7 @@
 {
   if (screen == null)   return;
+  PdeSketch sketch=editor.sketch;
+  if (sketch == null)   return;
   Dimension size=getSize();
   if ((size.width != sizeW) || (size.height != sizeH)) {
     if ((size.width > imageW) || (size.height > imageH)) {
@@ -24,6 +26,8 @@
     metrics=g.getFontMetrics();
     fontAscent=metrics.getAscent();
   }
+  g.setColor(backgroundColor);
+  g.fillRect(0,0,imageW,imageH);
   if ((tabLeft == null) || (tabLeft.length < sketch.codeCount)) {
     tabLeft=new int[sketch.codeCount];
     tabRight=new int[sketch.codeCount];

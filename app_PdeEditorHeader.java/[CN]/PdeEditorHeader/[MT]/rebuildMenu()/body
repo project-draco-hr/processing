@@ -53,16 +53,22 @@
   JMenu unhide=new JMenu("Unhide");
   ActionListener unhideListener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      sketch.unhide((String)(e.getActionCommand()));
+      editor.sketch.unhide((String)(e.getActionCommand()));
       rebuildMenu();
     }
   }
 ;
-  for (int i=0; i < sketch.hiddenCount; i++) {
-    item=new JMenuItem(sketch.hidden[i].name);
-    item.setActionCommand(sketch.hidden[i].name);
-    item.addActionListener(unhideListener);
-    unhide.add(item);
+  PdeSketch sketch=editor.sketch;
+  if (sketch != null) {
+    for (int i=0; i < sketch.hiddenCount; i++) {
+      item=new JMenuItem(sketch.hidden[i].name);
+      item.setActionCommand(sketch.hidden[i].name);
+      item.addActionListener(unhideListener);
+      unhide.add(item);
+    }
+  }
+  if (unhide.getItemCount() == 0) {
+    unhide.setEnabled(false);
   }
   menu.add(unhide);
   menu.addSeparator();
