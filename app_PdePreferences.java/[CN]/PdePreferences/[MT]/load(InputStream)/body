@@ -2,11 +2,13 @@
   BufferedReader reader=new BufferedReader(new InputStreamReader(input));
   String line=null;
   while ((line=reader.readLine()) != null) {
-    if (line.charAt(0) == '#')     continue;
+    if ((line.length() == 0) || (line.charAt(0) == '#'))     continue;
     int equals=line.indexOf('=');
-    String key=line.substring(0,equals).trim();
-    String value=line.substring(equals + 1).trim();
-    table.put(key,value);
+    if (equals != -1) {
+      String key=line.substring(0,equals).trim();
+      String value=line.substring(equals + 1).trim();
+      table.put(key,value);
+    }
   }
   reader.close();
 }

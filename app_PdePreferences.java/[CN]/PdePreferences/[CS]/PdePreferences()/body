@@ -13,17 +13,13 @@
     if (key.endsWith(platformExtension)) {
       String actualKey=key.substring(0,key.length() - extensionLength);
       String value=get(key);
-      System.out.println("found platform specific prop \"" + actualKey + "\" \""+ value+ "\"");
       table.put(actualKey,value);
-      System.out.println("now set to " + table.get(actualKey));
     }
   }
   setColor("run.window.bgcolor",SystemColor.control);
-  String home=System.getProperty("user.home");
+  File home=new File(System.getProperty("user.home"));
   preferencesFile=new File(home,".processing");
   if (!preferencesFile.exists()) {
-    File sketchbookDir=new File(home,"sketchbook");
-    set("sketchbook.path",sketchbookDir.getAbsolutePath());
     save();
   }
  else {

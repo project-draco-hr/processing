@@ -1,4 +1,23 @@
 {
   this.editor=editor;
+  sketchbookPath=PdePreferences.get("sketchbook.path");
+  if (sketchbookPath == null) {
+    File home=new File(System.getProperty("user.home"));
+    if (PdeBase.platform == PdeBase.MACOSX) {
+      home=new File(home,"Documents");
+    }
+ else     if (PdeBase.platform == PdeBase.WINDOWS) {
+      home=new File(home,"My Documents");
+    }
+    String folderName=PdePreferences.get("sketchbook.name.default");
+    sketchbookFolder=new File(home,folderName);
+    PdePreferences.set("sketchbook.path",sketchbookFolder.getAbsolutePath());
+    if (!sketchbookFolder.exists()) {
+      sketchbookFolder.mkdirs();
+    }
+  }
+ else {
+    sketchbookFolder=new File(sketchbookPath);
+  }
   menu=new JMenu("Open");
 }
