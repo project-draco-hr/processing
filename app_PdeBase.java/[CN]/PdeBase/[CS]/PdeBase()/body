@@ -34,6 +34,16 @@
     System.err.println("Error reading pde.properties");
     e.printStackTrace();
   }
+  final String KEYWORDS="pde_keywords.properties";
+  keywords=new Properties();
+  try {
+    keywords.load(getClass().getResource(KEYWORDS).openStream());
+  }
+ catch (  Exception e) {
+    System.err.println("Error loading keywords, " + "reference lookup will be unavailable");
+    System.err.println(e.toString());
+    e.printStackTrace();
+  }
   editor=new PdeEditor(this);
   frame.setLayout(new BorderLayout());
   frame.add("Center",editor);
@@ -101,12 +111,25 @@
   }
 );
   menu.add(item);
+  menu.addSeparator();
+  item=new MenuItem("Find in Reference");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (editor.textarea.isSelectionActive()) {
+        String text=editor.textarea.getSelectedText();
+        String referenceFile=(String)keywords.get(text);
+        showReference(referenceFile);
+      }
+    }
+  }
+);
+  menu.add(item);
   menubar.add(menu);
   Document document=editor.textarea.getDocument();
   document.addUndoableEditListener(new MyUndoableEditListener());
   menu=new Menu("Sketch");
   menu.add(new MenuItem("Run",new MenuShortcut('R')));
-  menu.add(new MenuItem("Present",new MenuShortcut('P')));
+  menu.add(new MenuItem("Present",new MenuShortcut('R',true)));
   menu.add(new MenuItem("Stop",new MenuShortcut('T')));
   menu.addSeparator();
   recordingHistory=getBoolean("history.recording",true);
