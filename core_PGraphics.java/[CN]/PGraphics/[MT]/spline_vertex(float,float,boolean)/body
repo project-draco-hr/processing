@@ -1,0 +1,39 @@
+{
+  if (spline_vertex == null) {
+    spline_vertex=new float[SPLINE_VERTEX_ALLOC][VERTEX_FIELD_COUNT];
+  }
+  if (spline_vertex_index == SPLINE_VERTEX_ALLOC) {
+    System.arraycopy(spline_vertex[SPLINE_VERTEX_ALLOC - 3],0,spline_vertex[0],0,VERTEX_FIELD_COUNT);
+    System.arraycopy(spline_vertex[SPLINE_VERTEX_ALLOC - 2],0,spline_vertex[1],0,VERTEX_FIELD_COUNT);
+    spline_vertex_index=3;
+  }
+  float vertex[]=spline_vertex[spline_vertex_index];
+  vertex[MX]=x;
+  vertex[MY]=y;
+  if (fill) {
+    vertex[R]=fillR;
+    vertex[G]=fillG;
+    vertex[B]=fillB;
+    vertex[A]=fillA;
+  }
+  if (stroke) {
+    vertex[SR]=strokeR;
+    vertex[SG]=strokeG;
+    vertex[SB]=strokeB;
+    vertex[SA]=strokeA;
+    vertex[SW]=strokeWeight;
+  }
+  spline_vertex_index++;
+  if (spline_vertex_index > 3) {
+    if (bezier) {
+      if ((spline_vertex_index % 4) == 0) {
+        if (!bezier_inited)         bezier_init();
+        spline2_segment(spline_vertex_index - 4,spline_vertex_index - 4,bezier_draw,bezier_detail);
+      }
+    }
+ else {
+      if (!curve_inited)       curve_init();
+      spline2_segment(spline_vertex_index - 4,spline_vertex_index - 3,curve_draw,curve_detail);
+    }
+  }
+}

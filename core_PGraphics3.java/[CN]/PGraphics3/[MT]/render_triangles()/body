@@ -1,0 +1,18 @@
+{
+  for (int i=0; i < triangleCount; i++) {
+    float a[]=vertices[triangles[i][VERTEX1]];
+    float b[]=vertices[triangles[i][VERTEX2]];
+    float c[]=vertices[triangles[i][VERTEX3]];
+    int tex=triangles[i][TEXTURE_INDEX];
+    int index=triangles[i][INDEX];
+    triangle.reset();
+    if (tex > -1 && textures[tex] != null) {
+      triangle.setTexture(textures[tex]);
+      triangle.setUV(a[U],a[V],b[U],b[V],c[U],c[V]);
+    }
+    triangle.setIntensities(a[R],a[G],a[B],a[A],b[R],b[G],b[B],b[A],c[R],c[G],c[B],c[A]);
+    triangle.setVertices(a[X],a[Y],a[Z],b[X],b[Y],b[Z],c[X],c[Y],c[Z]);
+    triangle.setIndex(index);
+    triangle.render();
+  }
+}

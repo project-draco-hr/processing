@@ -1,0 +1,175 @@
+{
+  vertex_end=vertex_count;
+  if (vertex_count == 0) {
+    shape=0;
+    return;
+  }
+  int increment=1;
+  int stop=0;
+  int counter=0;
+  if (stroke) {
+switch (shape) {
+case POINTS:
+{
+        stop=vertex_end;
+        for (int i=vertex_start; i < stop; i++) {
+          add_path();
+          add_line(i,i);
+        }
+      }
+    break;
+case LINES:
+case LINE_STRIP:
+case LINE_LOOP:
+{
+    int first=lineCount;
+    stop=vertex_end - 1;
+    increment=(shape == LINES) ? 2 : 1;
+    if (shape != LINES)     add_path();
+    for (int i=vertex_start; i < stop; i+=increment) {
+      if (shape == LINES)       add_path();
+      add_line(i,i + 1);
+    }
+    if (shape == LINE_LOOP) {
+      add_line(stop,lines[first][VERTEX1]);
+    }
+  }
+break;
+case TRIANGLES:
+{
+for (int i=vertex_start; i < vertex_end; i+=3) {
+  add_path();
+  counter=i - vertex_start;
+  add_line(i + 0,i + 1);
+  add_line(i + 1,i + 2);
+  add_line(i + 2,i + 0);
+}
+}
+break;
+case TRIANGLE_STRIP:
+{
+stop=vertex_end - 1;
+add_path();
+for (int i=vertex_start; i < stop; i++) {
+counter=i - vertex_start;
+add_line(i,i + 1);
+}
+stop=vertex_end - 2;
+for (int i=vertex_start; i < stop; i++) {
+add_path();
+add_line(i,i + 2);
+}
+}
+break;
+case TRIANGLE_FAN:
+{
+for (int i=vertex_start + 1; i < vertex_end; i++) {
+add_path();
+add_line(vertex_start,i);
+}
+add_path();
+for (int i=vertex_start + 1; i < vertex_end - 1; i++) {
+add_line(i,i + 1);
+}
+add_line(vertex_end - 1,vertex_start + 1);
+}
+break;
+case QUADS:
+{
+for (int i=vertex_start; i < vertex_end; i+=4) {
+add_path();
+counter=i - vertex_start;
+add_line(i + 0,i + 1);
+add_line(i + 1,i + 2);
+add_line(i + 2,i + 3);
+add_line(i + 3,i + 0);
+}
+}
+break;
+case QUAD_STRIP:
+{
+stop=vertex_end - 1;
+add_path();
+for (int i=vertex_start; i < stop; i++) {
+counter=i - vertex_start;
+add_line(i,i + 1);
+}
+stop=vertex_end - 2;
+increment=2;
+add_path();
+for (int i=vertex_start; i < stop; i+=increment) {
+add_line(i,i + 3);
+}
+}
+break;
+case POLYGON:
+case CONCAVE_POLYGON:
+case CONVEX_POLYGON:
+{
+int first=lineCount;
+stop=vertex_end - 1;
+add_path();
+for (int i=vertex_start; i < stop; i++) {
+add_line(i,i + 1);
+}
+add_line(stop,lines[first][VERTEX1]);
+}
+break;
+}
+}
+if (fill) {
+switch (shape) {
+case TRIANGLES:
+case TRIANGLE_STRIP:
+{
+stop=vertex_end - 2;
+increment=(shape == TRIANGLES) ? 3 : 1;
+for (int i=vertex_start; i < stop; i+=increment) {
+add_triangle(i,i + 1,i + 2);
+}
+}
+break;
+case QUADS:
+case QUAD_STRIP:
+{
+stop=vertex_count - 3;
+increment=(shape == QUADS) ? 4 : 2;
+for (int i=vertex_start; i < stop; i+=increment) {
+add_triangle(i,i + 1,i + 2);
+add_triangle(i,i + 2,i + 3);
+}
+}
+break;
+case POLYGON:
+case CONCAVE_POLYGON:
+case CONVEX_POLYGON:
+{
+triangulate_polygon();
+}
+break;
+}
+}
+if (depth) {
+for (int i=vertex_start; i < vertex_end; i++) {
+float vertex[]=vertices[i];
+vertex[VX]=m00 * vertex[MX] + m01 * vertex[MY] + m02 * vertex[MZ] + m03;
+vertex[VY]=m10 * vertex[MX] + m11 * vertex[MY] + m12 * vertex[MZ] + m13;
+vertex[VZ]=m20 * vertex[MX] + m21 * vertex[MY] + m22 * vertex[MZ] + m23;
+vertex[VW]=m30 * vertex[MX] + m31 * vertex[MY] + m32 * vertex[MZ] + m33;
+}
+}
+ else {
+for (int i=vertex_start; i < vertex_end; i++) {
+vertices[i][X]=m00 * vertices[i][MX] + m01 * vertices[i][MY] + m03;
+vertices[i][Y]=m10 * vertices[i][MX] + m11 * vertices[i][MY] + m13;
+}
+}
+light_and_transform();
+if (hints[DEPTH_SORT]) {
+shape=0;
+return;
+}
+if (fill) render_triangles();
+if (stroke) render_lines();
+shape=0;
+}

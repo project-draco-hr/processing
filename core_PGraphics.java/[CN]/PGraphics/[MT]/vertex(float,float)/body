@@ -1,3 +1,25 @@
 {
-  setup_vertex(x,y,0);
+  if (vertex_count == vertices.length) {
+    float temp[][]=new float[vertex_count << 1][VERTEX_FIELD_COUNT];
+    System.arraycopy(vertices,0,temp,0,vertex_count);
+    vertices=temp;
+    message(CHATTER,"allocating more vertices " + vertices.length);
+  }
+  float vertex[]=vertices[vertex_count++];
+  spline_vertex_index=0;
+  vertex[MX]=x;
+  vertex[MY]=y;
+  if (fill) {
+    vertex[R]=fillR;
+    vertex[G]=fillG;
+    vertex[B]=fillB;
+    vertex[A]=fillA;
+  }
+  if (stroke) {
+    vertex[SR]=strokeR;
+    vertex[SG]=strokeG;
+    vertex[SB]=strokeB;
+    vertex[SA]=strokeA;
+    vertex[SW]=strokeWeight;
+  }
 }

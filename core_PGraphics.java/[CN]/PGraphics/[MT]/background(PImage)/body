@@ -1,17 +1,9 @@
 {
   if ((image.width != width) || (image.height != height)) {
-    System.err.println("background image must be the same size " + "as your application");
-    return;
+    die("background image must be the same size " + "as your application");
   }
   if ((image.format != RGB) && (image.format != ARGB)) {
-    System.err.println("background images should be RGB or RGBA");
-    return;
+    die("background images should be RGB or ARGB");
   }
   System.arraycopy(image.pixels,0,pixels,0,pixels.length);
-  if (zbuffer != null) {
-    for (int i=0; i < pixelCount; i++) {
-      zbuffer[i]=MAX_FLOAT;
-      stencil[i]=0;
-    }
-  }
 }
