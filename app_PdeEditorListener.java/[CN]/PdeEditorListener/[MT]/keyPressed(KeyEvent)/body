@@ -3,52 +3,103 @@
   tc=(TextArea)event.getSource();
   deselect();
   char c=event.getKeyChar();
+  int code=event.getKeyCode();
   if (!editor.sketchModified) {
-    int code=event.getKeyCode();
     if ((code == KeyEvent.VK_BACK_SPACE) || (code == KeyEvent.VK_TAB) || (code == KeyEvent.VK_ENTER)|| ((c >= 32) && (c < 128))) {
       editor.setSketchModified(true);
     }
   }
+  if (fakeArrowKeys && (c == 65535) && (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN)) {
+    position=tc.getCaretPosition();
+switch (code) {
+case KeyEvent.VK_LEFT:
+      tc.setCaretPosition(Math.max(0,position - 1));
+    break;
+case KeyEvent.VK_RIGHT:
+  tc.setCaretPosition(position + 1);
+break;
+case KeyEvent.VK_UP:
+char contents[]=tc.getText().toCharArray();
+for (int i=0; i < 20; i++) System.out.print((int)contents[i] + " ");
+int howfar=0;
+int p=position;
+while ((p > 0) && (contents[p] != 13) && (contents[p] != 10)) {
+p--;
+howfar++;
+}
+howfar--;
+System.out.println("howfar = " + howfar);
+while ((p > 0) && ((contents[p] == 13) || (contents[p] == 10))) {
+p--;
+}
+if (p == 0) return;
+int howlong=0;
+while ((p > 0) && (contents[p] != 13) && (contents[p] != 10)) {
+p--;
+howlong++;
+}
+System.out.println("next line is " + howlong);
+tc.setCaretPosition(p + 1 + Math.min(howfar,howlong));
+break;
+case KeyEvent.VK_DOWN:
+contents=tc.getText().toCharArray();
+howfar=0;
+p=position;
+while ((p > 0) && (contents[p] != 13) && (contents[p] != 10)) {
+p--;
+howfar++;
+}
+p=position;
+int last=contents.length - 1;
+while ((p < last) && (contents[p] != 13) && (contents[p] != 10)) p++;
+if (p == last) return;
+while ((p < last) && ((contents[p] == 13) || (contents[p] == 10))) p++;
+int newline=p;
+while ((p < last) && (p < newline + howfar - 1) && (contents[p] != 13)&& (contents[p] != 10)) p++;
+tc.setCaretPosition(p);
+break;
+}
+}
 switch ((int)c) {
 case ')':
-    if (balanceParens) {
-      position=tc.getCaretPosition() + 1;
-      char contents[]=tc.getText().toCharArray();
-      int counter=1;
-      int index=tc.getCaretPosition() - 1;
-      boolean error=false;
-      if (index == -1) {
-        counter=0;
-        error=true;
-      }
-      while (counter != 0) {
-        if (contents[index] == ')')         counter++;
-        if (contents[index] == '(')         counter--;
-        index--;
-        if ((index == -1) && (counter != 0)) {
-          error=true;
-          break;
-        }
-      }
-      if (error) {
-        Toolkit.getDefaultToolkit().beep();
-        tc.select(0,0);
-        tc.setCaretPosition(position);
-      }
-      tc.insert(")",position - 1);
-      event.consume();
-      if (!error) {
-        selectionStart=index + 1;
-        selectionEnd=index + 2;
-        tc.select(selectionStart,selectionEnd);
-        balancing=true;
-      }
-    }
-  break;
+if (balanceParens) {
+position=tc.getCaretPosition() + 1;
+char contents[]=tc.getText().toCharArray();
+int counter=1;
+int index=tc.getCaretPosition() - 1;
+boolean error=false;
+if (index == -1) {
+counter=0;
+error=true;
+}
+while (counter != 0) {
+if (contents[index] == ')') counter++;
+if (contents[index] == '(') counter--;
+index--;
+if ((index == -1) && (counter != 0)) {
+error=true;
+break;
+}
+}
+if (error) {
+Toolkit.getDefaultToolkit().beep();
+tc.select(0,0);
+tc.setCaretPosition(position);
+}
+tc.insert(")",position - 1);
+event.consume();
+if (!error) {
+selectionStart=index + 1;
+selectionEnd=index + 2;
+tc.select(selectionStart,selectionEnd);
+balancing=true;
+}
+}
+break;
 case 9:
 if (expandTabs) {
-  tc.replaceRange(tabString,tc.getSelectionStart(),tc.getSelectionEnd());
-  event.consume();
+tc.replaceRange(tabString,tc.getSelectionStart(),tc.getSelectionEnd());
+event.consume();
 }
 break;
 case 10:
@@ -60,10 +111,10 @@ int spaceCount=0;
 boolean finished=false;
 while ((index != -1) && (!finished)) {
 if ((contents[index] == '\r') || (contents[index] == '\n')) {
-  finished=true;
+finished=true;
 }
  else {
-  spaceCount=(contents[index] == ' ') ? (spaceCount + 1) : 0;
+spaceCount=(contents[index] == ' ') ? (spaceCount + 1) : 0;
 }
 index--;
 }
