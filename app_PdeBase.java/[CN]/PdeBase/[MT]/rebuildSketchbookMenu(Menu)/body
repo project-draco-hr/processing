@@ -15,16 +15,25 @@
     }
     SketchbookMenuListener userMenuListener=new SketchbookMenuListener(userPath);
     String entries[]=new File(userPath).list();
+    boolean added=false;
     for (int j=0; j < entries.length; j++) {
       if ((entries[j].equals(".")) || (entries[j].equals("..")))       continue;
+      added=true;
       MenuItem item=new MenuItem(entries[j]);
       item.addActionListener(userMenuListener);
       menu.add(item);
     }
+    if (!added) {
+      MenuItem item=new MenuItem("No sketches");
+      item.setEnabled(false);
+      menu.add(item);
+    }
     menu.addSeparator();
     String toplevel[]=sketchbookFolder.list();
+    added=false;
     for (int i=0; i < toplevel.length; i++) {
       if ((toplevel[i].equals(editor.userName)) || (toplevel[i].equals(".")) || (toplevel[i].equals("..")))       continue;
+      added=true;
       Menu subMenu=new Menu(toplevel[i]);
       File subFolder=new File(sketchbookFolder,toplevel[i]);
       String subPath=subFolder.getCanonicalPath();
@@ -38,6 +47,10 @@
       }
       menu.add(subMenu);
     }
+    if (added)     menu.addSeparator();
+    MenuItem item=new MenuItem("Refresh");
+    item.addActionListener(this);
+    menu.add(item);
   }
  catch (  IOException e) {
     e.printStackTrace();

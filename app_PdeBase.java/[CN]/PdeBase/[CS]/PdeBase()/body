@@ -26,16 +26,15 @@
   MenuItem item;
   menu=new Menu("File");
   menu.add(new MenuItem("New",new MenuShortcut('N')));
-  Menu openMenu=new Menu("Open");
-  rebuildSketchbookMenu(openMenu);
-  menu.add(openMenu);
+  sketchbookMenu=new Menu("Open");
+  menu.add(sketchbookMenu);
   menu.add(new MenuItem("Save",new MenuShortcut('S')));
   menu.add(new MenuItem("Duplicate",new MenuShortcut('D')));
   menu.add(new MenuItem("Export to Web",new MenuShortcut('E')));
   menu.add(new MenuItem("Export Application",new MenuShortcut('E',true)));
   menu.addSeparator();
   menu.add(new MenuItem("Proce55ing.net",new MenuShortcut('5')));
-  menu.add(new MenuItem("Reference",new MenuShortcut('R')));
+  menu.add(new MenuItem("Reference",new MenuShortcut('F')));
   menu.addSeparator();
   menu.add(new MenuItem("Quit",new MenuShortcut('Q')));
   menu.addActionListener(this);
@@ -51,8 +50,8 @@
   menu.setEnabled(false);
   menubar.add(menu);
   menu=new Menu("Sketch");
-  menu.add(new MenuItem("Play",new MenuShortcut('P')));
-  menu.add(new MenuItem("Present",new MenuShortcut('P',true)));
+  menu.add(new MenuItem("Run",new MenuShortcut('R')));
+  menu.add(new MenuItem("Present",new MenuShortcut('P')));
   menu.add(new MenuItem("Stop"));
   menu.addSeparator();
   menu.add(new MenuItem("Beautify",new MenuShortcut('B')));
@@ -68,5 +67,6 @@
   frame.pack();
   editor.frame=frame;
   editor.init();
+  rebuildSketchbookMenu(sketchbookMenu);
   frame.show();
 }

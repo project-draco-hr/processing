@@ -1,7 +1,7 @@
 {
   message("Saving file...");
   String s=textarea.getText();
-  String directory=sketchFile.getPath();
+  String directory=sketchFile.getParent();
   String filename=sketchFile.getName();
   if (promptUser) {
     FileDialog fd=new FileDialog(new Frame(),"Save PDE program as...",FileDialog.SAVE);
@@ -23,6 +23,7 @@
     writer.flush();
     writer.close();
     sketchFile=file;
+    setSketchModified(false);
     message("Done saving " + filename + ".");
   }
  catch (  IOException e) {

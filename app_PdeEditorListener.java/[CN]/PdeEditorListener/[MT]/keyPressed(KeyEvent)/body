@@ -2,6 +2,12 @@
   tc=(TextArea)event.getSource();
   deselect();
   char c=event.getKeyChar();
+  if (!editor.sketchModified) {
+    int code=event.getKeyCode();
+    if ((code == KeyEvent.VK_BACK_SPACE) || (code == KeyEvent.VK_TAB) || (code == KeyEvent.VK_ENTER)|| ((c >= 32) && (c < 128))) {
+      editor.setSketchModified(true);
+    }
+  }
 switch ((int)c) {
 case ')':
     if (balanceParens) {
@@ -45,6 +51,7 @@ if (expandTabs) {
 }
 break;
 case 10:
+case 13:
 if (autoIndent) {
 char contents[]=tc.getText().toCharArray();
 int index=tc.getCaretPosition() - 1;

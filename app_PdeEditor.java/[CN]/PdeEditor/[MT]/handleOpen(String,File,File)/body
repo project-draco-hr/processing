@@ -2,7 +2,7 @@
   try {
     FileInputStream input=new FileInputStream(isketchFile);
     int length=(int)isketchFile.length();
-    if (length == 0) {
+    if (length != 0) {
       byte data[]=new byte[length];
       int count=0;
       while (count != length) {
@@ -10,9 +10,13 @@
       }
       textarea.setText(new String(data));
     }
+ else {
+      textarea.setText("");
+    }
     sketchName=isketchName;
     sketchFile=isketchFile;
     sketchDir=isketchDir;
+    setSketchModified(false);
     header.reset();
   }
  catch (  FileNotFoundException e1) {
