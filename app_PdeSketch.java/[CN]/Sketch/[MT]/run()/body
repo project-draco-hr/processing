@@ -1,2 +1,49 @@
 {
+  try {
+    current.program=textarea.getText();
+    current.history.record(program,PdeHistory.RUN);
+    if (PdePreferences.getBoolean("editor.external")) {
+      load();
+    }
+    tempBuildPath="lib" + File.separator + "build";
+    File buildDir=new File(tempBuildPath);
+    if (!buildDir.exists()) {
+      buildDir.mkdirs();
+    }
+    File dataDir=new File(directory,"data");
+    if (dataDir.exists()) {
+      PdeBase.copyDir(dataDir,new File(buildDir,"data"));
+    }
+    String suggestedClassName=("Temporary_" + String.valueOf((int)(Math.random() * 10000)) + "_"+ String.valueOf((int)(Math.random() * 10000)));
+    className=build(program,suggestedClassName,tempBuildPath);
+    if (className != null) {
+      if (externalPaths == null) {
+        externalPaths=PdeCompiler.calcClassPath(null) + File.pathSeparator + tempBuildPath;
+      }
+ else {
+        externalPaths=tempBuildPath + File.pathSeparator + PdeCompiler.calcClassPath(null)+ File.pathSeparator+ externalPaths;
+      }
+      String codeFolderPath="";
+      if (externalCode != null) {
+        codeFolderPath=externalCode.getCanonicalPath();
+      }
+      runtime=new PdeRuntime(this,className,externalRuntime,codeFolderPath,externalPaths);
+      PdeMessageStream messageStream=new PdeMessageStream(runtime);
+      runtime.start(presenting ? presentLocation : appletLocation,new PrintStream(messageStream));
+      watcher=new RunButtonWatcher();
+    }
+ else {
+      cleanTempFiles();
+    }
+  }
+ catch (  PdeException e) {
+    if (runtime != null)     runtime.stop();
+    cleanTempFiles();
+    error(e);
+  }
+catch (  Exception e) {
+    e.printStackTrace();
+    if (runtime != null)     runtime.stop();
+    cleanTempFiles();
+  }
 }

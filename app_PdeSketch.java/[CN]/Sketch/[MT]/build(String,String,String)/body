@@ -13,7 +13,7 @@
   }
   PdePreprocessor preprocessor=new PdePreprocessor();
   try {
-    className=preprocessor.write(program,buildPath,className,imports,false);
+    mainClassName=preprocessor.write(program,buildPath,suggestedClassName,externalImports);
   }
  catch (  antlr.RecognitionException re) {
     throw new PdeException(re.getMessage(),re.getLine() - 1,re.getColumn());
@@ -42,10 +42,10 @@ catch (  Exception ex) {
     ex.printStackTrace();
     throw new PdeException(ex.toString());
   }
-  if (PdePreprocessor.programType == PdePreprocessor.ADVANCED) {
+  if (PdePreprocessor.programType == PdePreprocessor.JAVA) {
     externalRuntime=true;
   }
-  PdeCompiler compiler=new PdeCompiler(buildPath,className,externalCode,this);
+  PdeCompiler compiler=new PdeCompiler(buildPath,mainClassName,externalCode,this);
   messageStream=new PdeMessageStream(compiler);
   boolean success=compiler.compile(new PrintStream(messageStream));
   return success ? className : null;
