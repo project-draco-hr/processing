@@ -1,2 +1,12 @@
 {
+  if (bootClassPath == null) {
+    if (PdeBase.platform == PdeBase.MACOSX) {
+      additional=contentsToClassPath(new File("/System/Library/Java/Extensions/"));
+    }
+ else {
+      additional="";
+    }
+    bootClassPath=System.getProperty("sun.boot.class.path") + additional;
+  }
+  return bootClassPath;
 }
