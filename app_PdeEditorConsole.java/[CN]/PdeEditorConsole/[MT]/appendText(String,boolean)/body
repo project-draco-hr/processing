@@ -1,8 +1,16 @@
 {
   try {
+    Element element=consoleDoc.getDefaultRootElement();
+    int lineCount=element.getElementCount();
+    int overage=lineCount - maxLineCount;
+    if (overage > 0) {
+      Element lineElement=element.getElement(overage);
+      int endOffset=lineElement.getEndOffset();
+      consoleDoc.remove(0,endOffset);
+    }
     consoleDoc.insertString(consoleDoc.getLength(),text,err ? errStyle : stdStyle);
     consoleTextPane.setCaretPosition(consoleDoc.getLength());
   }
- catch (  Exception e) {
+ catch (  BadLocationException e) {
   }
 }
