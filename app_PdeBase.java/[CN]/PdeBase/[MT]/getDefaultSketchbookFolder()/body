@@ -3,10 +3,11 @@
   if (platform == MACOSX) {
     try {
       MRJOSType domainDocuments=new MRJOSType("docs");
-      File libraryFolder=MRJFileUtils.findFolder(domainDocuments);
-      sketchbookFolder=new File(libraryFolder,"Processing");
+      Method findFolderMethod=MRJFileUtils.class.getMethod("findFolder",new Class[]{Short.TYPE,MRJOSType.class});
+      File documentsFolder=(File)findFolderMethod.invoke(null,new Object[]{new Short(kUserDomain),domainDocuments});
+      sketchbookFolder=new File(documentsFolder,"Processing");
     }
- catch (    FileNotFoundException e) {
+ catch (    Exception e) {
       showError("sketch folder problem","Could not locate default sketch folder location.",e);
     }
   }
