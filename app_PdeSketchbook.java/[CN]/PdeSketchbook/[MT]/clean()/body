@@ -1,17 +1,21 @@
 {
-  System.err.println("TODO sketchbook.clean() is disabled");
-  if (true)   return;
-  if (!PdePreferences.getBoolean("sketchbook.auto_clean"))   return;
   File sketchbookFolder=new File(PdePreferences.get("sketchbook.path"));
-  if (sketchbookFolder.exists()) {
-    String entries[]=sketchbookFolder.list();
-    if (entries != null) {
-      for (int j=0; j < entries.length; j++) {
-        if (entries[j].charAt(0) == '.')         continue;
-        File prey=new File(sketchbookFolder,entries[j]);
-        File pde=new File(prey,entries[j] + ".pde");
-        if (pde.exists()) {
-          if (PdeBase.calcFolderSize(prey) == 0) {
+  if (!sketchbookFolder.exists())   return;
+  String entries[]=sketchbookFolder.list();
+  if (entries != null) {
+    for (int j=0; j < entries.length; j++) {
+      if (entries[j].charAt(0) == '.')       continue;
+      File prey=new File(sketchbookFolder,entries[j]);
+      File pde=new File(prey,entries[j] + ".pde");
+      if (pde.exists() && (PdeBase.calcFolderSize(prey) == 0)) {
+        if (PdePreferences.getBoolean("sketchbook.auto_clean")) {
+          PdeBase.removeDir(prey);
+        }
+ else {
+          String prompt="Remove empty sketch titled \"" + entries[j] + "\"?";
+          Object[] options={"Yes","No"};
+          int result=JOptionPane.showOptionDialog(editor,prompt,"Housekeeping",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+          if (result == JOptionPane.YES_OPTION) {
             PdeBase.removeDir(prey);
           }
         }
