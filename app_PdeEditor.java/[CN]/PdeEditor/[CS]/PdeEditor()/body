@@ -29,15 +29,24 @@
     PdeEditorListener listener=new PdeEditorListener();
     textarea.addKeyListener(listener);
     textarea.addFocusListener(listener);
-    textarea.addKeyListener(new PdeKeyListener(this));
   }
   runner=new PdeRunner(this);
   Properties skprops=new Properties();
   try {
     skprops.load(getClass().getResource("sketch.properties").openStream());
-    String sketch=(String)skprops.get("sketch.name");
-    String path=(String)skprops.get("sketch.directory");
-    String user=(String)skprops.get("user.name");
+    int windowX=Integer.parseInt(skprops.getProperty("window.x"),-1);
+    int windowY=Integer.parseInt(skprops.getProperty("window.y"),-1);
+    int windowW=Integer.parseInt(skprops.getProperty("window.w"),-1);
+    int windowH=Integer.parseInt(skprops.getProperty("window.h"),-1);
+    int screenW=Integer.parseInt(skprops.getProperty("screen.w"),-1);
+    int screenH=Integer.parseInt(skprops.getProperty("screen.h"),-1);
+    Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+    if ((windowX != -1) && ((screen.width == screenW) || (screen.height == screenH))) {
+      PdeBase.frame.setBounds(windowX,windowY,windowW,windowH);
+    }
+    String name=skprops.getProperty("sketch.name");
+    String path=skprops.getProperty("sketch.directory");
+    String user=skprops.getProperty("user.name");
     if (new File(path + File.separator + name+ File.separator+ name+ ".pde").exists()) {
       userName=user;
       skOpen(path,name);
@@ -47,6 +56,7 @@
     }
   }
  catch (  Exception e) {
+    userName="default";
     skNew();
   }
 }

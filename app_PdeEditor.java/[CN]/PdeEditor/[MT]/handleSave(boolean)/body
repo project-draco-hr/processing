@@ -1,13 +1,12 @@
 {
   message("Saving file...");
   String s=textarea.getText();
-  String directory=lastDirectory;
-  String filename=lastFile;
-  System.out.println("1");
+  String directory=sketchFile.getPath();
+  String filename=sketchFile.getName();
   if (promptUser) {
     FileDialog fd=new FileDialog(new Frame(),"Save PDE program as...",FileDialog.SAVE);
-    fd.setDirectory(lastDirectory);
-    fd.setFile(lastFile);
+    fd.setDirectory(directory);
+    fd.setFile(filename);
     fd.show();
     directory=fd.getDirectory();
     filename=fd.getFile();
@@ -18,15 +17,12 @@
     }
   }
   File file=new File(directory,filename);
-  System.out.println("2");
   try {
     FileWriter writer=new FileWriter(file);
     writer.write(s);
     writer.flush();
     writer.close();
-    System.out.println("3");
-    lastDirectory=directory;
-    lastFile=filename;
+    sketchFile=file;
     message("Done saving " + filename + ".");
   }
  catch (  IOException e) {

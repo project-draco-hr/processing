@@ -3,11 +3,11 @@
     String program=textarea.getText();
     KjcEngine engine=new KjcEngine(program,this);
     appletDir.mkdirs();
-    projectName=engine.writeJava(projectName,false);
+    exportSketchName=engine.writeJava(exportSketchName,false);
     if (!engine.compileJava()) {
       return;
     }
-    String javaName=projectName + ".java";
+    String javaName=exportSketchName + ".java";
     copyFile(new File(javaName),new File(appletDir,javaName));
     int wide=BApplet.DEFAULT_WIDTH;
     int high=BApplet.DEFAULT_HEIGHT;
@@ -31,12 +31,12 @@
     ps.println();
     ps.println("<BR> <BR> <BR> <CENTER>");
     ps.println();
-    ps.print("<APPLET CODE=\"" + projectName + "\" ARCHIVE=\"");
-    ps.print(projectName + ".jar");
+    ps.print("<APPLET CODE=\"" + exportSketchName + "\" ARCHIVE=\"");
+    ps.print(exportSketchName + ".jar");
     ps.println("\" WIDTH=" + wide + " HEIGHT="+ high+ ">");
     ps.println("</APPLET>");
     ps.println();
-    ps.println("<A HREF=\"" + projectName + ".java\">source code</A>");
+    ps.println("<A HREF=\"" + exportSketchName + ".java\">source code</A>");
     ps.println();
     ps.println("</CENTER>");
     ps.println("</BODY> </HTML>");
@@ -44,7 +44,7 @@
     ps.close();
     String exportDir=("lib" + File.separator + "export"+ File.separator);
     String bagelClasses[]=new File(exportDir).list();
-    FileOutputStream zipOutputFile=new FileOutputStream(new File(appletDir,projectName + ".jar"));
+    FileOutputStream zipOutputFile=new FileOutputStream(new File(appletDir,exportSketchName + ".jar"));
     ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
     ZipEntry entry;
     for (int i=0; i < bagelClasses.length; i++) {
@@ -66,9 +66,9 @@
         zos.closeEntry();
       }
     }
-    entry=new ZipEntry(projectName + ".class");
+    entry=new ZipEntry(exportSketchName + ".class");
     zos.putNextEntry(entry);
-    zos.write(grabFile(new File("lib",projectName + ".class")));
+    zos.write(grabFile(new File("lib",exportSketchName + ".class")));
     zos.closeEntry();
     zos.flush();
     zos.close();

@@ -2,20 +2,22 @@
   message("Exporting to applet...");
   String s=textarea.getText();
   FileDialog fd=new FileDialog(new Frame(),"Create applet project named...",FileDialog.SAVE);
-  fd.setDirectory(lastDirectory);
-  fd.setFile(lastFile);
+  String directory=sketchFile.getPath();
+  String project=sketchFile.getName();
+  fd.setDirectory(directory);
+  fd.setFile(project);
   fd.show();
-  String directory=fd.getDirectory();
-  String projectName=fd.getFile();
-  if (projectName == null) {
+  directory=fd.getDirectory();
+  project=fd.getFile();
+  if (project == null) {
     message(EMPTY);
     buttons.clear();
     return;
   }
- else   if (projectName.indexOf(' ') != -1) {
+ else   if (project.indexOf(' ') != -1) {
     message("Project name cannot have spaces.");
     buttons.clear();
     return;
   }
-  handleExport(new File(directory),projectName,null);
+  handleExport(new File(directory),project,null);
 }
