@@ -11,13 +11,19 @@
 );
     popup.add(item);
     popup.addSeparator();
-    addSketches(popup,new File(PdePreferences.get("sketchbook.path")));
-    popup.addSeparator();
-    addSketches(popup,examplesFolder);
+    boolean sketches=addSketches(popup,new File(PdePreferences.get("sketchbook.path")));
+    if (sketches)     popup.addSeparator();
+    JMenu examples=new JMenu("Examples");
+    addSketches(examples,examplesFolder);
+    popup.add(examples);
     builtOnce=true;
-    addSketches(menu,new File(PdePreferences.get("sketchbook.path")));
-    menu.addSeparator();
-    addSketches(menu,examplesFolder);
+    if (sketches) {
+      addSketches(menu,new File(PdePreferences.get("sketchbook.path")));
+      menu.addSeparator();
+    }
+    examples=new JMenu("Examples");
+    addSketches(examples,examplesFolder);
+    menu.add(examples);
   }
  catch (  IOException e) {
     PdeBase.showWarning("Problem while building sketchbook menu","There was a problem with building the\n" + "sketchbook menu. Things might get a little\n" + "kooky around here.",e);
