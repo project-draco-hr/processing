@@ -13,8 +13,8 @@
     }
  else {
       Class c=Class.forName(className);
-      applet=(KjcApplet)c.newInstance();
-      applet.setRuntime(this);
+      applet=(BApplet)c.newInstance();
+      applet.leechErr=leechErr;
       applet.serialProperties(PdeBase.properties);
       applet.init();
       if (applet.exception != null) {
@@ -99,7 +99,7 @@
     }
   }
  catch (  Exception e) {
-    newMessage=true;
+    leechErr.println(BApplet.LEECH_WAKEUP);
     e.printStackTrace(this.leechErr);
   }
 }

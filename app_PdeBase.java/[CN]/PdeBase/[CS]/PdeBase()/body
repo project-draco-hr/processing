@@ -130,6 +130,26 @@
   menu.add(beautifyMenuItem);
   serialMenu=new Menu("Serial Port");
   menu.add(serialMenu);
+  Menu rendererMenu=new Menu("Renderer");
+  menu.add(rendererMenu);
+  normalItem=new CheckboxMenuItem("Normal");
+  rendererMenu.add(normalItem);
+  normalItem.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      openglItem.setState(false);
+      normalItem.setState(true);
+    }
+  }
+);
+  openglItem=new CheckboxMenuItem("OpenGL");
+  rendererMenu.add(openglItem);
+  openglItem.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      openglItem.setState(true);
+      normalItem.setState(false);
+    }
+  }
+);
   externalEditorItem=new CheckboxMenuItem("Use External Editor");
   externalEditorItem.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){

@@ -1,4 +1,5 @@
 {
+  String extendsWhat=extendsNormal ? "BApplet" : "BAppletGL";
   try {
     int programType=BEGINNER;
     program=commentsCodec(program);
@@ -29,20 +30,12 @@
       index=s.indexOf(' ');
       name=s.substring(0,index);
       tempClass=name;
-      if (kjc) {
-        index=program.indexOf(EXTENDS);
-        if (index != -1) {
-          String left=program.substring(0,index);
-          String right=program.substring(index + EXTENDS.length());
-          program=left + ((usingExternal) ? EXTENDS : EXTENDS_KJC) + right;
-        }
-      }
     }
     tempFilename=name + ".java";
     tempClassFilename=name + ".class";
     PrintWriter writer=new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(buildPath + File.separator + tempFilename))));
     if (programType < ADVANCED) {
-      if (kjc) {
+      if (!exporting) {
         for (int i=0; i < application_imports.length; i++) {
           writer.print("import " + application_imports[i] + ".*; ");
         }
@@ -52,11 +45,11 @@
           writer.println("import " + applet_imports[i] + ".*; ");
         }
       }
-      if (!kjc)       writer.println();
-      writer.print("public class " + name + " extends "+ ((kjc && !usingExternal) ? "KjcApplet" : "BApplet")+ " {");
+      if (exporting)       writer.println();
+      writer.print("public class " + name + " extends "+ extendsWhat+ " {");
     }
     if (programType == BEGINNER) {
-      if (!kjc)       writer.println();
+      if (exporting)       writer.println();
       if ((program.indexOf("size(") == 0) || (program.indexOf("background(") == 0)) {
         program=" " + program;
       }
@@ -109,7 +102,7 @@
       writer.print("void draw() {");
     }
     program=commentsCodec(program);
-    if (!kjc)     writer.println();
+    if (exporting)     writer.println();
     writer.println(program);
     if (programType == BEGINNER) {
       writer.println("}");
