@@ -1,0 +1,22 @@
+{
+  final Runnable doFinished=new Runnable(){
+    public void run(){
+      finished();
+    }
+  }
+;
+  Runnable doConstruct=new Runnable(){
+    public void run(){
+      try {
+        setValue(construct());
+      }
+  finally {
+        workerVar.clear();
+      }
+      javax.swing.SwingUtilities.invokeLater(doFinished);
+    }
+  }
+;
+  Thread t=new Thread(doConstruct);
+  workerVar=new WorkerVar(t);
+}
