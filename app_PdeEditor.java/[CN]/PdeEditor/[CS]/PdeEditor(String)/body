@@ -1,0 +1,36 @@
+{
+  setLayout(new BorderLayout());
+  Panel leftPanel=new Panel();
+  leftPanel.setLayout(new BorderLayout());
+  buttons=new PdeEditorButtons(this);
+  Color buttonBgColor=PdeBase.getColor("editor.buttons.bgcolor",new Color(153,0,0));
+  buttons.setBackground(buttonBgColor);
+  leftPanel.add("North",buttons);
+  Label dummy=new Label();
+  dummy.setBackground(buttonBgColor);
+  leftPanel.add("Center",dummy);
+  add("West",leftPanel);
+  Panel rightPanel=new Panel();
+  rightPanel.setLayout(new BorderLayout());
+  header=new PdeEditorHeader(this,"untitled","default");
+  rightPanel.add("North",header);
+  if (program == null)   program=DEFAULT_PROGRAM;
+  textarea=new TextArea(program,PdeBase.getInteger("editor.program.rows",20),PdeBase.getInteger("editor.program.columns",60),TextArea.SCROLLBARS_VERTICAL_ONLY);
+  textarea.setFont(PdeBase.getFont("editor.program.font",new Font("Monospaced",Font.PLAIN,12)));
+  rightPanel.add("Center",textarea);
+  Panel statusPanel=new Panel();
+  statusPanel.setLayout(new BorderLayout());
+  status=new PdeEditorStatus(this);
+  statusPanel.add("North",status);
+  console=new PdeEditorConsole(this);
+  statusPanel.add("South",console);
+  rightPanel.add("South",statusPanel);
+  add("Center",rightPanel);
+  if (!PdeBase.isMacintosh()) {
+    PdeEditorListener listener=new PdeEditorListener();
+    textarea.addKeyListener(listener);
+    textarea.addFocusListener(listener);
+    textarea.addKeyListener(new PdeKeyListener(this));
+  }
+  runner=new PdeRunner(this);
+}
