@@ -15,7 +15,7 @@
   float diffuse_g=0;
   float diffuse_b=0;
   for (int i=1; i < MAX_LIGHTS; i++) {
-    if (lightType[i] == DISABLED)     break;
+    if (!light[i])     continue;
     float lix=lightX[i] - ix;
     float liy=lightY[i] - iy;
     float liz=lightZ[i] - iz;
@@ -27,14 +27,14 @@
     }
     float n_dot_li=(nx * lix + ny * liy + nz * liz);
     if (n_dot_li > 0) {
-      diffuse_r+=lightR[i] * n_dot_li;
-      diffuse_g+=lightG[i] * n_dot_li;
-      diffuse_b+=lightB[i] * n_dot_li;
+      diffuse_r+=lightDiffuseR[i] * n_dot_li;
+      diffuse_g+=lightDiffuseG[i] * n_dot_li;
+      diffuse_b+=lightDiffuseB[i] * n_dot_li;
     }
   }
-  target[toffset + 0]=lightR[0] + (r * diffuse_r);
-  target[toffset + 1]=lightG[0] + (g * diffuse_g);
-  target[toffset + 2]=lightB[0] + (b * diffuse_b);
+  target[toffset + 0]=lightAmbientR[0] + (r * diffuse_r);
+  target[toffset + 1]=lightAmbientG[0] + (g * diffuse_g);
+  target[toffset + 2]=lightAmbientB[0] + (b * diffuse_b);
   if (target[toffset + 0] > ONE)   target[toffset + 0]=ONE;
   if (target[toffset + 1] > ONE)   target[toffset + 1]=ONE;
   if (target[toffset + 2] > ONE)   target[toffset + 2]=ONE;
