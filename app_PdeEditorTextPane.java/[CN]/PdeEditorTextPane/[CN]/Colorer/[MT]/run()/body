@@ -60,7 +60,15 @@ synchronized (doclock) {
           t=syntaxLexer.getNextToken();
         }
         newPositions.add(dpStart);
+        int sleepCounter=0;
         while (!done && t != null) {
+          if ((sleepCounter++ % 10) == 0) {
+            try {
+              Thread.sleep(5);
+            }
+ catch (            InterruptedException e) {
+            }
+          }
 synchronized (doclock) {
             if (t.getCharEnd() <= document.getLength()) {
               document.setCharacterAttributes(t.getCharBegin() + change,t.getCharEnd() - t.getCharBegin(),grabStyle(t.getDescription()),true);
@@ -100,7 +108,8 @@ synchronized (doclock) {
         iniPositions.addAll(newPositions);
         newPositions.clear();
       }
- catch (      IOException x) {
+ catch (      IOException ex) {
+        ex.printStackTrace();
       }
 synchronized (doclock) {
         lastPosition=-1;
