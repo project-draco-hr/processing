@@ -51,9 +51,11 @@
               break;
             }
           }
-          lineIndex=Integer.parseInt(fileAndLine.substring(colonIndex + 1));
-          exception=new PdeException(exception.getMessage(),codeIndex,lineIndex - 1,-1);
-          foundMessageSource=true;
+          if (codeIndex != -1) {
+            lineIndex=Integer.parseInt(fileAndLine.substring(colonIndex + 1));
+            exception=new PdeException(exception.getMessage(),codeIndex,lineIndex - 1,-1);
+            foundMessageSource=true;
+          }
         }
       }
       editor.error(exception);
