@@ -1,5 +1,4 @@
 {
-  String extendsWhat=extendsNormal ? "BApplet" : "BAppletGL";
   PdeLexer lexer=new PdeLexer(programReader);
   lexer.setTokenObjectClass("antlr.CommonHiddenStreamToken");
   filter=new TokenStreamCopyingHiddenTokenFilter(lexer);
@@ -23,16 +22,20 @@
  catch (  Exception e) {
     System.err.println("exception: " + e);
   }
-  System.err.println("programType = " + programType);
   ASTFactory factory=new ASTFactory();
   AST parserAST=parser.getAST();
   AST rootNode=factory.create(ROOT_ID,"AST ROOT");
   rootNode.setFirstChild(parserAST);
   ((CommonAST)parserAST).setVerboseStringConversion(true,parser.getTokenNames());
+  if (programType == ADVANCED) {
+    name=getFirstClassName(parserAST);
+  }
   PdeEmitter emitter=new PdeEmitter();
-  PrintStream stream=new PrintStream(new FileOutputStream(buildPath + File.separator + "MyDemo.java"));
+  PrintStream stream=new PrintStream(new FileOutputStream(buildPath + File.separator + name+ ".java"));
+  writeHeader(stream,extendsNormal,exporting,name);
   emitter.setOut(stream);
   emitter.print(rootNode);
+  writeFooter(stream);
   stream.close();
   final boolean debug=true;
   if (debug) {
@@ -45,5 +48,5 @@
     stream.println("</document>");
     writer.close();
   }
-  return "MyDemo";
+  return name;
 }
