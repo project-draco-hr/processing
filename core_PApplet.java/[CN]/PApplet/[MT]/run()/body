@@ -8,10 +8,16 @@ synchronized (g) {
           if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 1a beginFrame");
           g.beginFrame();
           if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 1b draw");
+          for (int i=0; i < libraryCount; i++) {
+            if (libraryCalls[PLibrary.PRE][i])             libraries[i].pre();
+          }
           draw();
           dequeueMouseEvents();
           dequeueKeyEvents();
           if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 2b endFrame");
+          for (int i=0; i < libraryCount; i++) {
+            if (libraryCalls[PLibrary.DRAW][i])             libraries[i].draw();
+          }
           g.endFrame();
           frameCount++;
           if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
@@ -19,6 +25,9 @@ synchronized (g) {
           if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3b calling Toolkit.sync " + frameCount);
           getToolkit().sync();
           if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3c done " + frameCount);
+          for (int i=0; i < libraryCount; i++) {
+            if (libraryCalls[PLibrary.POST][i])             libraries[i].post();
+          }
         }
       }
       redraw=false;

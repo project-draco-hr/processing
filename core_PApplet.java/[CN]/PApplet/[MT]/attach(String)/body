@@ -1,0 +1,21 @@
+{
+  try {
+    Class c=Class.forName(libraryName);
+    PLibrary library=(PLibrary)c.newInstance();
+    library.setup(this);
+  }
+ catch (  ClassNotFoundException e) {
+    System.err.println("Could not find library \"" + libraryName + "\"");
+    System.err.println("Make sure it's in the libraries folder, ");
+    System.err.println("or exported somewhere inside the sketchbook,");
+    System.err.println("or inside the \"code\" folder of this sketch.");
+  }
+catch (  IllegalAccessException e) {
+    System.err.println("Could not load library \"" + libraryName + "\"");
+    e.printStackTrace();
+  }
+catch (  InstantiationException e) {
+    System.err.println("Could not load library \"" + libraryName + "\"");
+    e.printStackTrace();
+  }
+}
