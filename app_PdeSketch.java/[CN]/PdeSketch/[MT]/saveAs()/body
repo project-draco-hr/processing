@@ -1,6 +1,11 @@
 {
   FileDialog fd=new FileDialog(editor,"Save sketch folder as...",FileDialog.SAVE);
-  fd.setDirectory(folder.getParent());
+  if (isReadOnly()) {
+    fd.setDirectory(PdePreferences.get("sketchbook.path"));
+  }
+ else {
+    fd.setDirectory(folder.getParent());
+  }
   fd.setFile(folder.getName());
   fd.show();
   String newParentDir=fd.getDirectory();

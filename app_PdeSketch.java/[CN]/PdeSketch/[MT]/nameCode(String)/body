@@ -2,6 +2,9 @@
   if (renamingCode && newName.equalsIgnoreCase(current.name)) {
     return;
   }
+  if (newName.trim().equals("")) {
+    return;
+  }
   String newFilename=null;
   int newFlavor=0;
   if (newName.endsWith(".pde")) {
@@ -10,6 +13,10 @@
     newFlavor=PDE;
   }
  else   if (newName.endsWith(".java")) {
+    if (code[0] == current) {
+      PdeBase.showWarning("Problem with rename","The main .pde file cannot be .java file.\n" + "(It may be time for your to graduate to a\n" + "\"real\" programming environment)",null);
+      return;
+    }
     newFilename=newName;
     newName=newName.substring(0,newName.length() - 5);
     newFlavor=JAVA;
@@ -32,9 +39,17 @@
       PdeBase.showWarning("Error","Could not rename \"" + current.file.getName() + "\" to \""+ newFile.getName()+ "\"",null);
       return;
     }
-    current.file=newFile;
-    current.name=newName;
-    current.flavor=newFlavor;
+    if (current == code[0]) {
+      File newFolder=new File(folder.getParentFile(),newName);
+      boolean success=folder.renameTo(newFolder);
+      folder=newFolder;
+      load();
+    }
+ else {
+      current.file=newFile;
+      current.name=newName;
+      current.flavor=newFlavor;
+    }
   }
  else {
     try {
