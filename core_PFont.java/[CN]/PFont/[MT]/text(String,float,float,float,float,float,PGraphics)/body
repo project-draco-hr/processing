@@ -4,10 +4,10 @@
   float currentY=boxY1;
   float boxWidth=boxX2 - boxX1;
   float lineX=boxX1;
-  if (align == ALIGN_CENTER) {
+  if (parent.textMode == ALIGN_CENTER) {
     lineX=lineX + boxWidth / 2f;
   }
- else   if (align == ALIGN_RIGHT) {
+ else   if (parent.textMode == ALIGN_RIGHT) {
     lineX=boxX2;
   }
   currentY+=ascent();
@@ -47,7 +47,7 @@
         wordStart=index;
         wordStop=index;
         runningX=boxX1;
-        currentY+=leading;
+        currentY+=parent.textLeading;
         if (currentY > boxY2)         return;
       }
  else {
@@ -62,7 +62,7 @@
       }
       lineStart=index + 1;
       wordStart=lineStart;
-      currentY+=leading;
+      currentY+=parent.textLeading;
       if (currentY > boxY2)       return;
     }
     index++;

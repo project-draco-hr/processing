@@ -1,56 +1,9 @@
 {
-  int glyph=index(c);
-  if (glyph == -1)   return;
-  if (space == OBJECT_SPACE) {
-    float high=(float)height[glyph] / fheight;
-    float bwidth=(float)width[glyph] / fwidth;
-    float lextent=(float)leftExtent[glyph] / fwidth;
-    float textent=(float)topExtent[glyph] / fheight;
-    float x1=x + lextent * size;
-    float y1=y - textent * size;
-    float x2=x1 + bwidth * size;
-    float y2=y1 + high * size;
-    parent.imageImpl(images[glyph],x1,y1,x2 - x1,y2 - y1,0,0,width[glyph],height[glyph]);
+  if (parent.textMode == ALIGN_CENTER) {
+    x-=parent.textSize * width(c) / 2f;
   }
- else {
-    int xx=(int)x + leftExtent[glyph];
-    ;
-    int yy=(int)y - topExtent[glyph];
-    int x0=0;
-    int y0=0;
-    int w0=width[glyph];
-    int h0=height[glyph];
-    if ((xx >= parent.width) || (yy >= parent.height) || (xx + w0 < 0)|| (yy + h0 < 0))     return;
-    if (xx < 0) {
-      x0-=xx;
-      w0+=xx;
-      xx=0;
-    }
-    if (yy < 0) {
-      y0-=yy;
-      h0+=yy;
-      yy=0;
-    }
-    if (xx + w0 > parent.width) {
-      w0-=((xx + w0) - parent.width);
-    }
-    if (yy + h0 > parent.height) {
-      h0-=((yy + h0) - parent.height);
-    }
-    int fr=parent.fillRi;
-    int fg=parent.fillGi;
-    int fb=parent.fillBi;
-    int fa=parent.fillAi;
-    int pixels1[]=images[glyph].pixels;
-    int pixels2[]=parent.pixels;
-    for (int row=y0; row < y0 + h0; row++) {
-      for (int col=x0; col < x0 + w0; col++) {
-        int a1=(fa * pixels1[row * twidth + col]) >> 8;
-        int a2=a1 ^ 0xff;
-        int p1=pixels1[row * width[glyph] + col];
-        int p2=pixels2[(yy + row - y0) * parent.width + (xx + col - x0)];
-        pixels2[(yy + row - y0) * parent.width + xx + col - x0]=(0xff000000 | (((a1 * fr + a2 * ((p2 >> 16) & 0xff)) & 0xff00) << 8) | ((a1 * fg + a2 * ((p2 >> 8) & 0xff)) & 0xff00)| ((a1 * fb + a2 * (p2 & 0xff)) >> 8));
-      }
-    }
+ else   if (parent.textMode == ALIGN_RIGHT) {
+    x-=parent.textSize * width(c);
   }
+  textImpl(c,x,y,z,parent);
 }
