@@ -24,13 +24,11 @@
       int fontsize=0;
       try {
         fontsize=Integer.parseInt(sizeSelector.getText().trim());
-        System.out.println("'" + sizeSelector.getText() + "'");
       }
  catch (      NumberFormatException e2) {
       }
       if (fontsize != 0) {
         font=new Font(list[selection],Font.PLAIN,fontsize);
-        System.out.println("setting font to " + font);
         sample.setFont(font);
       }
     }
@@ -51,6 +49,11 @@
   }
   panel.add(rec);
   pain.add(panel);
+  JPanel filestuff=new JPanel();
+  filestuff.add(new JLabel("Filename:"));
+  filestuff.add(filenameField=new JTextField(25));
+  filestuff.add(new JLabel(".vlw"));
+  pain.add(filestuff);
   JPanel buttons=new JPanel();
   JButton cancelButton=new JButton("Cancel");
   cancelButton.addActionListener(new ActionListener(){
@@ -73,6 +76,7 @@
   getRootPane().setDefaultButton(okButton);
   setResizable(false);
   pack();
+  sample.setFont(new Font(list[0],Font.PLAIN,48));
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   Dimension size=getSize();
   setLocation((screen.width - size.width) / 2,(screen.height - size.height) / 2);

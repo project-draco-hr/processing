@@ -1,7 +1,7 @@
 {
   int fontsize=0;
   try {
-    fontsize=Integer.parseInt(sizeSelector.getText());
+    fontsize=Integer.parseInt(sizeSelector.getText().trim());
   }
  catch (  NumberFormatException e) {
   }
@@ -9,6 +9,22 @@
     JOptionPane.showMessageDialog(this,"Bad font size, try again.","Badness",JOptionPane.WARNING_MESSAGE);
     return;
   }
-  font=new Font(list[selection],Font.PLAIN,fontsize);
+  String filename=filenameField.getText();
+  if (filename.length() == 0) {
+    JOptionPane.showMessageDialog(this,"Enter a file name for the font.","Lameness",JOptionPane.WARNING_MESSAGE);
+    return;
+  }
+  if (!filename.endsWith(".vlw")) {
+    filename+=".vlw";
+  }
+  try {
+    font=new Font(list[selection],Font.PLAIN,fontsize);
+    BFont f=new BFont(font,true);
+    f.write(new FileOutputStream(new File(targetFolder,filename)));
+  }
+ catch (  IOException e) {
+    JOptionPane.showMessageDialog(this,"An error occurred while creating font.","No font for you",JOptionPane.WARNING_MESSAGE);
+    e.printStackTrace();
+  }
   hide();
 }
