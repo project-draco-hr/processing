@@ -6,7 +6,7 @@
   int y1=parentLoc.y;
   try {
     if (externalRuntime) {
-      String command[]=new String[]{"java","-cp",externalPaths,"BApplet",BApplet.EXTERNAL_FLAG + ((windowLocation != null) ? ("e" + windowLocation.x + ","+ windowLocation.y) : (x1 + "," + y1)),className};
+      String command[]=new String[]{"java","-Djava.library.path=" + codeFolderPath,"-cp",externalPaths,"BApplet",BApplet.EXTERNAL_FLAG + ((windowLocation != null) ? ("e" + windowLocation.x + ","+ windowLocation.y) : (x1 + "," + y1)),className};
       process=Runtime.getRuntime().exec(command);
       new SystemOutSiphon(process.getInputStream());
       new PdeMessageSiphon(process.getErrorStream(),this);
