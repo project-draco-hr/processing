@@ -1,0 +1,24 @@
+{
+  int resampled[]=null;
+  float factor=0;
+  int newlength;
+  if (oldfreq > newfreq) {
+    factor=(float)oldfreq / (float)newfreq;
+    newlength=(int)(original.length / factor);
+    resampled=new int[newlength];
+    for (int i=0; i < newlength; i++) {
+      resampled[i]=original[(int)(i * factor)];
+    }
+    return resampled;
+  }
+ else   if (oldfreq < newfreq) {
+    factor=(float)newfreq / (float)oldfreq;
+    newlength=(int)(original.length * factor);
+    resampled=new int[newlength];
+    for (int i=0; i < newlength; i++) {
+      resampled[i]=original[(int)(i * factor)];
+    }
+    return resampled;
+  }
+  return original;
+}

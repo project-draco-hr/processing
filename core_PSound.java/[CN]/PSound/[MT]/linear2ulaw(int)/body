@@ -1,0 +1,17 @@
+{
+  if (linear > 32767) {
+    linear=32767;
+  }
+ else   if (linear < -32768) {
+    linear=-32768;
+  }
+  int sign=linear >> 8 & 0x80;
+  if (sign != 0)   linear=-linear;
+  if (linear > CLIP)   linear=CLIP;
+  linear+=BIAS;
+  int exponent=LAW_LUT[linear >> 7 & 0xFF];
+  int mantissa=linear >> exponent + 3 & 0xf;
+  byte ulaw=(byte)(~(sign | exponent << 4 | mantissa));
+  if (ulaw == 0)   ulaw=2;
+  return ulaw;
+}

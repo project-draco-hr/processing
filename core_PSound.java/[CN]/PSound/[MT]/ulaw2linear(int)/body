@@ -1,0 +1,8 @@
+{
+  ulaw=~ulaw;
+  int sign=ulaw & 0x80;
+  int exponent=(ulaw >> 4) & 7;
+  int mantissa=ulaw & 0x0F;
+  int linear=LINEAR_LUT[exponent] + (mantissa << exponent + 3);
+  return (short)((sign != 0) ? -linear : linear);
+}
