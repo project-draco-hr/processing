@@ -1,7 +1,10 @@
 {
   if (textFont != null) {
+    if ((textSpace == SCREEN_SPACE) && (size != textFont.mbox)) {
+      throw new RuntimeException("can't use textSize() with " + "textSpace(SCREEN_SPACE)");
+    }
     textSize=size;
-    textLeadingReset();
+    textLeading=textSize * ((textFont.ascent() + textFont.descent()) * 1.275f);
   }
  else {
     throw new RuntimeException("use textFont() before textSize()");
