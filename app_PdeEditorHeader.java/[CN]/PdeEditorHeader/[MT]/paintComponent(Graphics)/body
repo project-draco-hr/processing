@@ -35,7 +35,8 @@
   int x=PdePreferences.GUI_SMALL;
   for (int i=0; i < sketch.codeCount; i++) {
     PdeCode code=sketch.code[i];
-    String text="  " + code.name + (code.modified ? " \u00A7" : "  ");
+    String codeName=(code.flavor == PdeSketch.PDE) ? code.name : code.file.getName();
+    String text="  " + codeName + (code.modified ? " \u00A7" : "  ");
     int textWidth=metrics.stringWidth(text);
     int pieceCount=2 + (textWidth / PIECE_WIDTH);
     int pieceWidth=pieceCount * PIECE_WIDTH;
