@@ -31,6 +31,32 @@
       program=new String(p2,0,index);
     }
   }
+  PatternMatcher matcher=new Perl5Matcher();
+  PatternCompiler compiler=new Perl5Compiler();
+  String mess="^\\s*(import\\s+\\S+\\s*;)";
+  java.util.Vector imports=new java.util.Vector();
+  Pattern pattern=null;
+  try {
+    pattern=compiler.compile(mess);
+  }
+ catch (  MalformedPatternException e) {
+    e.printStackTrace();
+    return null;
+  }
+  do {
+    PatternMatcherInput input=new PatternMatcherInput(program);
+    if (!matcher.contains(input,pattern))     break;
+    MatchResult result=matcher.getMatch();
+    String piece=result.group(1).toString();
+    int len=piece.length();
+    imports.add(piece);
+    int idx=program.indexOf(piece);
+    program=program.substring(0,idx) + program.substring(idx + len);
+    System.out.println("removing " + piece);
+  }
+ while (true);
+  String extraImports[]=new String[imports.size()];
+  imports.copyInto(extraImports);
   this.programReader=new StringReader(program);
   this.buildPath=buildPath;
   PdeLexer lexer=new PdeLexer(programReader);
