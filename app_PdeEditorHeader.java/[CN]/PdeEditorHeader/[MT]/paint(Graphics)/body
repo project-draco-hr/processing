@@ -9,13 +9,11 @@
  else {
       sizeW=size.width;
       sizeH=size.height;
-      userLeft=0;
     }
   }
   if (offscreen == null) {
     sizeW=size.width;
     sizeH=size.height;
-    userLeft=0;
     imageW=sizeW;
     imageH=sizeH;
     offscreen=createImage(imageW,imageH);
@@ -31,19 +29,14 @@
   sketchLeft=sketchTitleLeft + metrics.stringWidth(SKETCH_TITLER) + PdeEditor.INSET_SIZE;
   sketchRight=sketchLeft + metrics.stringWidth(editor.sketchName);
   int modifiedLeft=sketchRight + PdeEditor.INSET_SIZE;
-  userLeft=sizeW - 20 - metrics.stringWidth(editor.userName);
-  userTitleLeft=userLeft - PdeEditor.INSET_SIZE - metrics.stringWidth(USER_TITLER);
   int baseline=(sizeH + fontAscent) / 2;
   g.setColor(backgroundColor);
   g.fillRect(0,0,imageW,imageH);
-  boolean boringUser=editor.userName.equals("default");
   g.setFont(font);
   g.setColor(secondaryColor);
   g.drawString(SKETCH_TITLER,sketchTitleLeft,baseline);
   if (sketchModified)   g.drawString("\u00A7",modifiedLeft,baseline);
-  if (!boringUser)   g.drawString(USER_TITLER,userTitleLeft,baseline);
   g.setColor(primaryColor);
   g.drawString(editor.sketchName,sketchLeft,baseline);
-  if (!boringUser)   g.drawString(editor.userName,userLeft,baseline);
   screen.drawImage(offscreen,0,0,null);
 }
