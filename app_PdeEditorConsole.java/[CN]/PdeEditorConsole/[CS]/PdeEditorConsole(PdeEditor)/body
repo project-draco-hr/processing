@@ -26,7 +26,12 @@
   StyleConstants.setItalic(errStyle,font.isItalic());
   consoleTextPane.setBackground(bgColor);
   this.setViewportView(consoleTextPane);
-  this.setPreferredSize(new Dimension(200,50));
+  FontMetrics metrics=this.getFontMetrics(font);
+  int height=metrics.getAscent() + metrics.getDescent();
+  int lines=PdeBase.getInteger("editor.console.lines",6);
+  int sizeFudge=10;
+  Dimension prefDimension=new Dimension(1024,(height * lines) + sizeFudge);
+  setPreferredSize(prefDimension);
   if (systemOut == null) {
     systemOut=System.out;
     systemErr=System.err;

@@ -9,6 +9,9 @@
     if (err != -1) {
       String description=s1.substring(err + "error:".length());
       description=description.trim();
+      if (description.indexOf("Constructor setup must be named") != -1) {
+        description="Missing function return type, or constructor does not match class name";
+      }
       exception=new PdeException(description,lineNumber - 1);
       editor.error(exception);
     }
