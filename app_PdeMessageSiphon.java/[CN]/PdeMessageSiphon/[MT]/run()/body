@@ -6,7 +6,9 @@
     }
   }
  catch (  Exception e) {
-    System.err.println("PdeMessageSiphon err " + e);
-    e.printStackTrace();
+    if ((PdeBase.platform != PdeBase.LINUX) || (e.getMessage().indexOf("Bad file descriptor") == -1)) {
+      System.err.println("PdeMessageSiphon err " + e);
+      e.printStackTrace();
+    }
   }
 }
