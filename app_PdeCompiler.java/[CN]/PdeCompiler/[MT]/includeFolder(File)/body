@@ -6,6 +6,9 @@
     String path=folder.getCanonicalPath();
     abuffer.append(sep);
     abuffer.append(path);
+    if (!path.endsWith(File.separator)) {
+      path+=File.separator;
+    }
     String list[]=folder.list();
     for (int i=0; i < list.length; i++) {
       if (list[i].toLowerCase().endsWith(".jar") || list[i].toLowerCase().endsWith(".zip")) {
@@ -18,5 +21,6 @@
  catch (  IOException e) {
     e.printStackTrace();
   }
+  magicImports(abuffer.toString());
   return abuffer.toString();
 }

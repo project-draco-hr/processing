@@ -32,7 +32,13 @@
     String className=TEMP_CLASS + "_" + numero1+ "_"+ numero2;
     className=build(program,className,tempBuildPath,false);
     if (className != null) {
-      runtime=new PdeRuntime(this,className);
+      if (externalPaths == null) {
+        externalPaths=PdeCompiler.calcClassPath(null) + File.pathSeparator + tempBuildPath;
+      }
+ else {
+        externalPaths=tempBuildPath + File.pathSeparator + PdeCompiler.calcClassPath(null)+ File.pathSeparator+ externalPaths;
+      }
+      runtime=new PdeRuntime(this,className,externalRuntime,externalPaths);
       PdeMessageStream messageStream=new PdeMessageStream(runtime);
       runtime.start(presenting ? presentLocation : appletLocation,new PrintStream(messageStream));
       watcher=new RunButtonWatcher();

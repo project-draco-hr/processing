@@ -1,6 +1,10 @@
 {
+  if (imports != null) {
+    for (int i=0; i < imports.length; i++) {
+      out.print("import " + imports[i] + ".*; ");
+    }
+  }
   if (programType < ADVANCED) {
-    String extendsWhat=extendsNormal ? "BApplet" : "BAppletGL";
     if (!exporting) {
       for (int i=0; i < application_imports.length; i++) {
         out.print("import " + application_imports[i] + ".*; ");
@@ -11,6 +15,7 @@
         out.print("import " + applet_imports[i] + ".*; ");
       }
     }
+    String extendsWhat=extendsNormal ? "BApplet" : "BAppletGL";
     out.print("public class " + name + " extends "+ extendsWhat+ " {");
     if (programType == BEGINNER) {
       String sizeInfo="";

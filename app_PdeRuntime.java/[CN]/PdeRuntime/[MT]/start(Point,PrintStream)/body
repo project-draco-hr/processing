@@ -5,9 +5,9 @@
   int x1=parentLoc.x - 20;
   int y1=parentLoc.y;
   try {
-    if (PdeBase.getBoolean("play.external",false)) {
-      String cmd=PdeBase.get("play.external.command");
-      process=Runtime.getRuntime().exec(cmd + " " + className+ " "+ className+ " "+ x1+ " "+ y1);
+    if (externalRuntime) {
+      String command[]=new String[]{"java","-cp",externalPaths,"BApplet",className};
+      process=Runtime.getRuntime().exec(command);
       new PdeMessageSiphon(process.getInputStream(),this);
       new PdeMessageSiphon(process.getErrorStream(),this);
     }

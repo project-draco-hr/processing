@@ -1,10 +1,24 @@
 {
   boolean extendsNormal=base.normalItem.getState();
+  externalRuntime=false;
+  externalPaths=null;
+  externalCode=new File(sketchDir,"code");
+  if (externalCode.exists()) {
+    externalRuntime=true;
+    externalPaths=PdeCompiler.includeFolder(externalCode);
+  }
+ else {
+    externalCode=null;
+  }
+  String imports[]=null;
+  if (externalCode != null) {
+    imports=PdeCompiler.magicImports(externalPaths);
+  }
   PdePreprocessor preprocessor=null;
   if (PdeBase.getBoolean("preprocessor.antlr",true)) {
     preprocessor=new PdePreprocessor(program,buildPath);
     try {
-      className=preprocessor.writeJava(className,extendsNormal,false);
+      className=preprocessor.writeJava(className,imports,extendsNormal,false);
     }
  catch (    antlr.RecognitionException ae) {
       throw new PdeException(ae.getMessage(),ae.getLine() - 1,ae.getColumn());
@@ -20,21 +34,12 @@ catch (    Exception ex) {
   }
  else {
     preprocessor=new PdePreprocessorOro(program,buildPath);
-    className=preprocessor.writeJava(className,extendsNormal,false);
+    className=preprocessor.writeJava(className,imports,extendsNormal,false);
   }
-  externalRuntime=false;
   if (PdePreprocessor.programType == PdePreprocessor.ADVANCED) {
     externalRuntime=true;
   }
-  externalCode=new File(sketchDir,"code");
-  if (externalCode.exists()) {
-    externalRuntime=true;
-  }
- else {
-    externalCode=null;
-  }
-  File includeFolder=null;
-  PdeCompiler compiler=new PdeCompiler(buildPath,className,includeFolder,this);
+  PdeCompiler compiler=new PdeCompiler(buildPath,className,externalCode,this);
   messageStream=new PdeMessageStream(compiler);
   boolean success=compiler.compileJava(new PrintStream(messageStream));
   return success ? className : null;
