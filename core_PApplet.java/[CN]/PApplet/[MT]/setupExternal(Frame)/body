@@ -1,10 +1,12 @@
 {
   Thread ethread=new Thread(){
     public void run(){
+      setPriority(Thread.MIN_PRIORITY);
       while ((Thread.currentThread() == this) && !finished) {
         try {
           int anything=System.in.read();
           if (anything == EXTERNAL_STOP) {
+            PApplet.this.stop();
             finished=true;
           }
         }
