@@ -63,21 +63,12 @@
   label.setBounds(5,screen.height - 5 - labelSize.height,labelSize.width,labelSize.height);
   Color presentationBgColor=PdeBase.getColor("run.present.bgcolor",new Color(102,102,102));
   presentationWindow.setBackground(presentationBgColor);
-  presentationWindow.addFocusListener(new FocusAdapter(){
-    public void focusGained(    FocusEvent e){
-      try {
-        pdeRuntime.window.toFront();
-      }
- catch (      Exception ex) {
-      }
-    }
-  }
-);
   textarea.addFocusListener(new FocusAdapter(){
     public void focusGained(    FocusEvent e){
       if (presenting == true) {
         try {
           presentationWindow.toFront();
+          pdeRuntime.applet.requestFocus();
         }
  catch (        Exception ex) {
         }
@@ -90,6 +81,7 @@
       if (presenting == true) {
         try {
           presentationWindow.toFront();
+          pdeRuntime.applet.requestFocus();
         }
  catch (        Exception ex) {
         }
@@ -97,26 +89,14 @@
     }
   }
 );
-  presentationWindow.addMouseListener(new MouseAdapter(){
-    public void mouseClicked(    MouseEvent e){
-      try {
-        pdeRuntime.window.toFront();
+  presentationWindow.addKeyListener(new KeyAdapter(){
+    public void keyPressed(    KeyEvent e){
+      if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        pdeRuntime.stop();
+        doClose();
       }
- catch (      Exception ex) {
-      }
-    }
-    public void mousePressed(    MouseEvent e){
-      try {
-        pdeRuntime.window.toFront();
-      }
- catch (      Exception ex) {
-      }
-    }
-    public void mouseReleased(    MouseEvent e){
-      try {
-        pdeRuntime.window.toFront();
-      }
- catch (      Exception ex) {
+ else {
+        pdeRuntime.applet.keyPressed(e);
       }
     }
   }

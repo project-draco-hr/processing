@@ -1,2 +1,96 @@
 {
+  this.leechErr=leechErr;
+  Point parentLoc=editor.base.getLocation();
+  Insets parentInsets=editor.base.getInsets();
+  int x1=parentLoc.x - 20;
+  int y1=parentLoc.y;
+  try {
+    if (PdeBase.getBoolean("play.external",false)) {
+      String cmd=PdeBase.get("play.external.command");
+      process=Runtime.getRuntime().exec(cmd + " " + className+ " "+ className+ " "+ x1+ " "+ y1);
+      new PdeMessageSiphon(process.getInputStream(),this);
+      new PdeMessageSiphon(process.getErrorStream(),this);
+    }
+ else {
+      Class c=Class.forName(className);
+      applet=(BApplet)c.newInstance();
+      applet.leechErr=leechErr;
+      applet.serialProperties(PdeBase.properties);
+      applet.init();
+      if (applet.exception != null) {
+        if (applet.exception instanceof PortInUseException) {
+          throw new PdeException("Another program is already " + "using the serial port.");
+        }
+ else {
+          throw new PdeException(applet.exception.getMessage());
+        }
+      }
+      applet.start();
+      if (editor.presenting) {
+        window=new Window(editor.presentationWindow);
+      }
+ else {
+        window=new Frame(editor.sketchName);
+        ((Frame)window).setResizable(false);
+        if (PdeBase.icon != null)         ((Frame)window).setIconImage(PdeBase.icon);
+        window.pack();
+        window.addWindowListener(new WindowAdapter(){
+          public void windowClosing(          WindowEvent e){
+            stop();
+            editor.doClose();
+          }
+        }
+);
+        applet.addKeyListener(new KeyAdapter(){
+          public void keyPressed(          KeyEvent e){
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+              stop();
+              editor.doClose();
+            }
+          }
+        }
+);
+        y1+=parentInsets.top;
+      }
+      window.add(applet);
+      Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+      window.setLayout(null);
+      if (editor.presenting) {
+        window.setBounds((screen.width - applet.width) / 2,(screen.height - applet.height) / 2,applet.width,applet.height);
+        applet.setBounds(0,0,applet.width,applet.height);
+      }
+ else {
+        Insets insets=window.getInsets();
+        int mw=PdeBase.getInteger("run.window.width.minimum",120);
+        int mh=PdeBase.getInteger("run.window.height.minimum",120);
+        int ww=Math.max(applet.width,mw) + insets.left + insets.right;
+        int wh=Math.max(applet.height,mh) + insets.top + insets.bottom;
+        if (x1 - ww > 10) {
+          window.setBounds(x1 - ww,y1,ww,wh);
+        }
+ else {
+          x1=parentLoc.x + PdeEditor.GRID_SIZE * 2;
+          y1=parentLoc.y + PdeEditor.GRID_SIZE * 2;
+          if ((x1 + ww > screen.width - PdeEditor.GRID_SIZE) || (y1 + wh > screen.height - PdeEditor.GRID_SIZE)) {
+            x1=(screen.width - ww) / 2;
+            y1=(screen.height - wh) / 2;
+          }
+          window.setBounds(x1,y1,ww,wh);
+        }
+        Color windowBgColor=PdeBase.getColor("run.window.bgcolor",SystemColor.control);
+        window.setBackground(windowBgColor);
+        applet.setBounds((ww - applet.width) / 2,insets.top + ((wh - insets.top - insets.bottom) - applet.height) / 2,ww,wh);
+      }
+      applet.setVisible(true);
+      if (windowLocation != null) {
+        window.setLocation(windowLocation);
+      }
+      window.show();
+      applet.requestFocus();
+    }
+  }
+ catch (  Exception e) {
+    leechErr.println(BApplet.LEECH_WAKEUP);
+    e.printStackTrace(this.leechErr);
+  }
 }
