@@ -19,14 +19,15 @@
   makeHistory(s,SAVE);
   File file=new File(directory,filename);
   try {
+    System.out.println("handleSave: results of getText");
     System.out.print(s);
     BufferedReader reader=new BufferedReader(new InputStreamReader(new ByteArrayInputStream(s.getBytes())));
+    PrintWriter writer=new PrintWriter(new BufferedWriter(new FileWriter(file)));
     String line=null;
     while ((line=reader.readLine()) != null) {
-      System.out.println("'" + line + "'");
+      System.out.println("w '" + line + "'");
+      writer.println(line);
     }
-    FileWriter writer=new FileWriter(file);
-    writer.write(s);
     writer.flush();
     writer.close();
     sketchFile=file;
