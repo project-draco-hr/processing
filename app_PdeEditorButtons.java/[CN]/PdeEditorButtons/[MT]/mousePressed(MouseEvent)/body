@@ -5,7 +5,9 @@
   if (sel == -1)   return;
   currentRollover=-1;
   currentSelection=sel;
-  setState(sel,ACTIVE,true);
+  if (!(disableRun && ((sel == RUN) || (sel == STOP)))) {
+    setState(sel,ACTIVE,true);
+  }
   if (currentSelection == OPEN) {
     if (popup == null) {
       popup=editor.sketchbook.getPopupMenu();

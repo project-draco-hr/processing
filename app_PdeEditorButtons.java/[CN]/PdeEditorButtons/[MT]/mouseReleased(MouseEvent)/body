@@ -1,11 +1,15 @@
 {
 switch (currentSelection) {
 case RUN:
-    editor.handleRun(e.isShiftDown());
+    if (!disableRun) {
+      editor.handleRun(e.isShiftDown());
+    }
   break;
 case STOP:
-setState(RUN,INACTIVE,true);
-editor.handleStop();
+if (!disableRun) {
+  setState(RUN,INACTIVE,true);
+  editor.handleStop();
+}
 break;
 case OPEN:
 setState(OPEN,INACTIVE,true);

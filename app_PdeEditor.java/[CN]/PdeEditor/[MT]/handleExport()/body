@@ -1,7 +1,9 @@
 {
-  message("Exporting code...");
+  String what=sketch.isLibrary() ? "Applet" : "Library";
+  message("Exporting " + what + "...");
   try {
-    if (sketch.export()) {
+    boolean success=sketch.isLibrary() ? sketch.exportLibrary() : sketch.exportApplet();
+    if (success) {
       message("Done exporting.");
     }
  else {

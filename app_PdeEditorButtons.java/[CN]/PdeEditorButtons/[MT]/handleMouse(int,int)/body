@@ -12,7 +12,9 @@
   int sel=findSelection(x,y);
   if (sel == -1)   return;
   if (state[sel] != ACTIVE) {
-    setState(sel,ROLLOVER,true);
-    currentRollover=sel;
+    if (!(disableRun && ((sel == RUN) || (sel == STOP)))) {
+      setState(sel,ROLLOVER,true);
+      currentRollover=sel;
+    }
   }
 }
