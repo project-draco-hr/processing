@@ -23,9 +23,9 @@
     Graphics g=(Graphics)getGraphicsMethod.invoke(playground,new Object[]{});
     Class renderingHintsClass=Class.forName("java.awt.RenderingHints");
     Class renderingHintsKeyClass=Class.forName("java.awt.RenderingHints$Key");
-    Field antialiasingKeyField=renderingHintsClass.getDeclaredField("KEY_ANTIALIASING");
+    Field antialiasingKeyField=renderingHintsClass.getDeclaredField("KEY_TEXT_ANTIALIASING");
     Object antialiasingKey=antialiasingKeyField.get(renderingHintsClass);
-    Field antialiasField=smooth ? renderingHintsClass.getField("VALUE_ANTIALIAS_ON") : renderingHintsClass.getField("VALUE_ANTIALIAS_OFF");
+    Field antialiasField=smooth ? renderingHintsClass.getField("VALUE_TEXT_ANTIALIAS_ON") : renderingHintsClass.getField("VALUE_TEXT_ANTIALIAS_OFF");
     Object antialiasState=antialiasField.get(renderingHintsClass);
     Method setRenderingHintMethod=graphicsClass.getMethod("setRenderingHint",new Class[]{renderingHintsKeyClass,Object.class});
     setRenderingHintMethod.invoke(g,new Object[]{antialiasingKey,antialiasState});
