@@ -1,0 +1,9 @@
+{
+  if ((x < 0) || (x > g.width1) || (y < 0)|| (y > g.height1)) {
+    return;
+  }
+  if (value < 0)   value=0;
+  if (value > g.colorMaxX)   value=g.colorMaxX;
+  int masked=(g.pixels[y * width + x]) & 0xff00ffff;
+  g.pixels[y * width + x]=masked | (((int)(255.0f * value / g.colorMaxX)) << 16);
+}
