@@ -1,17 +1,24 @@
 {
-  try {
-    Element element=consoleDoc.getDefaultRootElement();
-    int lineCount=element.getElementCount();
-    int overage=lineCount - maxLineCount;
-    if (overage > 0) {
-      Element lineElement=element.getElement(overage);
-      if (lineElement == null)       return;
-      int endOffset=lineElement.getEndOffset();
-      consoleDoc.remove(0,endOffset);
+  final String text=txt;
+  final boolean err=e;
+  SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      try {
+        Element element=consoleDoc.getDefaultRootElement();
+        int lineCount=element.getElementCount();
+        int overage=lineCount - maxLineCount;
+        if (overage > 0) {
+          Element lineElement=element.getElement(overage);
+          if (lineElement == null)           return;
+          int endOffset=lineElement.getEndOffset();
+          consoleDoc.remove(0,endOffset);
+        }
+        consoleDoc.insertString(consoleDoc.getLength(),text,err ? errStyle : stdStyle);
+        consoleTextPane.setCaretPosition(consoleDoc.getLength());
+      }
+ catch (      BadLocationException e) {
+      }
     }
-    consoleDoc.insertString(consoleDoc.getLength(),text,err ? errStyle : stdStyle);
-    consoleTextPane.setCaretPosition(consoleDoc.getLength());
   }
- catch (  BadLocationException e) {
-  }
+);
 }
