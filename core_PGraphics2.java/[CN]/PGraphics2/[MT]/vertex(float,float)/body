@@ -1,16 +1,15 @@
 {
+  splineVertexCount=0;
   float vertex[];
-  if (shapeVertices) {
-    if (vertexCount == vertices.length) {
-      float temp[][]=new float[vertexCount << 1][VERTEX_FIELD_COUNT];
-      System.arraycopy(vertices,0,temp,0,vertexCount);
-      vertices=temp;
-      message(CHATTER,"allocating more vertices " + vertices.length);
-    }
-    vertex=vertices[vertexCount++];
-    vertex[MX]=x;
-    vertex[MY]=y;
+  if (vertexCount == vertices.length) {
+    float temp[][]=new float[vertexCount << 1][VERTEX_FIELD_COUNT];
+    System.arraycopy(vertices,0,temp,0,vertexCount);
+    vertices=temp;
+    message(CHATTER,"allocating more vertices " + vertices.length);
   }
+  vertices[vertexCount][MX]=x;
+  vertices[vertexCount][MY]=x;
+  vertexCount++;
 switch (shape) {
 case POINTS:
     point(x,y);

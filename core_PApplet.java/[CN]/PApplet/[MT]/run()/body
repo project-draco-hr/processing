@@ -7,38 +7,36 @@
         if (frameCount == 0) {
           createGraphics();
         }
-synchronized (g) {
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 1a beginFrame");
-          g.beginFrame();
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 1b draw");
-          if (frameCount == 0) {
-            defaults();
-            setup();
-            this.pixels=g.pixels;
-            this.width=g.width;
-            this.height=g.height;
-          }
- else {
-            preMethods.handle();
-            pmouseX=dmouseX;
-            pmouseY=dmouseY;
-            draw();
-            dmouseX=mouseX;
-            dmouseY=mouseY;
-            dequeueMouseEvents();
-            dequeueKeyEvents();
-            if (THREAD_DEBUG)             println(Thread.currentThread().getName() + " 2b endFrame");
-            drawMethods.handle();
-          }
-          g.endFrame();
-          frameCount++;
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
-          repaint();
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3b calling Toolkit.sync " + frameCount);
-          getToolkit().sync();
-          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + "   3c done " + frameCount);
-          postMethods.handle();
+        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " 1a beginFrame");
+        g.beginFrame();
+        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " 1b draw");
+        if (frameCount == 0) {
+          defaults();
+          setup();
+          this.pixels=g.pixels;
+          this.width=g.width;
+          this.height=g.height;
         }
+ else {
+          preMethods.handle();
+          pmouseX=dmouseX;
+          pmouseY=dmouseY;
+          draw();
+          dmouseX=mouseX;
+          dmouseY=mouseY;
+          dequeueMouseEvents();
+          dequeueKeyEvents();
+          if (THREAD_DEBUG)           println(Thread.currentThread().getName() + " 2b endFrame");
+          drawMethods.handle();
+        }
+        g.endFrame();
+        frameCount++;
+        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
+        repaint();
+        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + "   3b calling Toolkit.sync " + frameCount);
+        getToolkit().sync();
+        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + "   3c done " + frameCount);
+        postMethods.handle();
       }
       redraw=false;
       try {
