@@ -1,0 +1,23 @@
+{
+  this.applet=applet;
+  try {
+    if (JDK12) {
+      AudioInputStream stream=AudioSystem.getAudioInputStream(input);
+      AudioFormat format=stream.getFormat();
+      if (format.getEncoding() != AudioFormat.Encoding.PCM_SIGNED) {
+        format=new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,format.getSampleRate(),format.getSampleSizeInBits() * 2,format.getChannels(),format.getFrameSize() * 2,format.getFrameRate(),true);
+        stream=AudioSystem.getAudioInputStream(format,stream);
+      }
+      int frameLength=(int)stream.getFrameLength();
+      int frameSize=format.getFrameSize();
+      DataLine.Info info=new DataLine.Info(Clip.class,stream.getFormat(),frameLength * frameSize);
+      Clip clip=(Clip)AudioSystem.getLine(info);
+      clip.open(stream);
+    }
+ else {
+    }
+  }
+ catch (  Exception e) {
+    error("<init>",e);
+  }
+}
