@@ -1,0 +1,34 @@
+{
+  message("Saving file...");
+  String s=textarea.getText();
+  String directory=lastDirectory;
+  String filename=lastFile;
+  if (promptUser) {
+    FileDialog fd=new FileDialog(new Frame(),"Save PDE program as...",FileDialog.SAVE);
+    fd.setDirectory(lastDirectory);
+    fd.setFile(lastFile);
+    fd.show();
+    directory=fd.getDirectory();
+    filename=fd.getFile();
+    if (filename == null) {
+      message(EMPTY);
+      buttons.clear();
+      return;
+    }
+  }
+  File file=new File(directory,filename);
+  try {
+    FileWriter writer=new FileWriter(file);
+    writer.write(s);
+    writer.flush();
+    writer.close();
+    lastDirectory=directory;
+    lastFile=filename;
+    message("Done saving file.");
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+    message("Did not write file.");
+  }
+  buttons.clear();
+}
