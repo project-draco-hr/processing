@@ -6,7 +6,7 @@
   if (startup)   prompt=false;
   if (prompt) {
     FileDialog fd=new FileDialog(editor,"Create sketch folder named:",FileDialog.SAVE);
-    fd.setDirectory(PdePreferences.get("sketchbook.path"));
+    fd.setDirectory(getSketchbookPath());
     fd.show();
     String newbieParentDir=fd.getDirectory();
     newbieName=fd.getFile();
@@ -15,7 +15,7 @@
     newbieDir=new File(newbieParentDir,newbieName);
   }
  else {
-    String newbieParentDir=PdePreferences.get("sketchbook.path");
+    String newbieParentDir=getSketchbookPath();
     int index=0;
     SimpleDateFormat formatter=new SimpleDateFormat("yyMMdd");
     String purty=formatter.format(new Date());
@@ -35,6 +35,6 @@
   if ((PdeBase.platform == PdeBase.MACOS9) || (PdeBase.platform == PdeBase.MACOSX)) {
     MRJFileUtils.setFileTypeAndCreator(newbieFile,MRJOSType.kTypeTEXT,new MRJOSType("Pde1"));
   }
-  rebuildMenu();
+  rebuildMenus();
   return newbieFile.getAbsolutePath();
 }
