@@ -1,10 +1,5 @@
 {
-  if (!normalChanged) {
-    vertices[vertex_start][NX]=normalX;
-    vertices[vertex_start][NY]=normalY;
-    vertices[vertex_start][NZ]=normalZ;
-  }
-  for (int i=vertex_start; i < (normalChanged ? vertex_end : 1); i++) {
+  for (int i=vertex_start; i < vertex_end; i++) {
     float v[]=vertices[i];
     float nx=m00 * v[NX] + m01 * v[NY] + m02 * v[NZ] + m03;
     float ny=m10 * v[NX] + m11 * v[NY] + m12 * v[NZ] + m13;
@@ -31,21 +26,11 @@
     float f[]=vertices[vertex_start];
     for (int i=vertex_start; i < vertex_end; i++) {
       float v[]=vertices[i];
-      if (normalChanged) {
-        if (fill) {
-          calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,R);
-        }
-        if (stroke) {
-          calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,SR);
-        }
+      if (fill) {
+        calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,R);
       }
- else {
-        if (fill) {
-          calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,R);
-        }
-        if (stroke) {
-          calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,SR);
-        }
+      if (stroke) {
+        calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,SR);
       }
     }
   }
