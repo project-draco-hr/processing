@@ -1,0 +1,18 @@
+{
+  try {
+    File sketchDir=new File("sketchbook",header.user);
+    int index=0;
+    File newguy=null;
+    while (new File(sketchDir,SKETCH_PREFIX_NAME + pad4(index)).exists()) {
+      index++;
+    }
+    String path=new File(sketchDir,SKETCH_PREFIX_NAME + pad4(index)).getCanonicalPath();
+    File newDir=new File(path);
+    newDir.mkdirs();
+    new FileOutputStream(new File(newDir,CODE_FILENAME));
+    handleOpen(path);
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+}
