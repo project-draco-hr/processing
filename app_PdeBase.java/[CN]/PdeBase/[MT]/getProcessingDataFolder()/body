@@ -10,11 +10,22 @@
       dataFolder=new File(libraryFolder,"Processing");
     }
  catch (    FileNotFoundException e) {
-      showError("Problem getting Library folder","Error getting the Processing library folder.",e);
+      showError("Problem getting data folder","Error getting the Processing data folder.",e);
     }
   }
  else   if (platform == WINDOWS) {
-    return null;
+    try {
+      RegistryKey topKey=Registry.HKEY_CURRENT_USER;
+      String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
+      RegistryKey localKey=topKey.openSubKey(localKeyPath);
+      String appDataPath=localKey.getStringValue("AppData");
+      System.out.println("app data path is " + appDataPath);
+      System.exit(0);
+      return new File(appDataPath,"Processing");
+    }
+ catch (    Exception e) {
+      showError("Problem getting data folder","Error getting the Processing data folder.",e);
+    }
   }
  else {
     File home=new File(System.getProperty("user.home"));
