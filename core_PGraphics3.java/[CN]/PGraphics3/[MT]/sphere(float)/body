@@ -1,3 +1,52 @@
 {
-  sphere(0,0,0,r);
+  float x=0;
+  float y=0;
+  float z=0;
+  if (sphereDetail == 0) {
+    sphereDetail(30);
+  }
+  int v1, v11, v2;
+  push();
+  if (x != 0f && y != 0f && z != 0f)   translate(x,y,z);
+  scale(r);
+  if (triangle != null) {
+    triangle.setCulling(true);
+  }
+  beginShape(TRIANGLE_STRIP);
+  for (int i=0; i < sphereDetail; i++) {
+    vertex(0,-1,0);
+    vertex(sphereX[i],sphereY[i],sphereZ[i]);
+  }
+  vertex(0,-1,0);
+  vertex(sphereX[0],sphereY[0],sphereZ[0]);
+  endShape();
+  int voff=0;
+  for (int i=2; i < sphereDetail; i++) {
+    v1=v11=voff;
+    voff+=sphereDetail;
+    v2=voff;
+    beginShape(TRIANGLE_STRIP);
+    for (int j=0; j < sphereDetail; j++) {
+      vertex(sphereX[v1],sphereY[v1],sphereZ[v1++]);
+      vertex(sphereX[v2],sphereY[v2],sphereZ[v2++]);
+    }
+    v1=v11;
+    v2=voff;
+    vertex(sphereX[v1],sphereY[v1],sphereZ[v1]);
+    vertex(sphereX[v2],sphereY[v2],sphereZ[v2]);
+    endShape();
+  }
+  beginShape(TRIANGLE_STRIP);
+  for (int i=0; i < sphereDetail; i++) {
+    v2=voff + i;
+    vertex(0,1,0);
+    vertex(sphereX[v2],sphereY[v2],sphereZ[v2]);
+  }
+  vertex(0,1,0);
+  vertex(sphereX[voff],sphereY[voff],sphereZ[voff]);
+  endShape();
+  pop();
+  if (triangle != null) {
+    triangle.setCulling(false);
+  }
 }
