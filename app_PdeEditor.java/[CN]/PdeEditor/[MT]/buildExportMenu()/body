@@ -1,0 +1,26 @@
+{
+  if (exportMenu == null) {
+    exportMenu=new JMenu("Export");
+  }
+ else {
+    exportMenu.removeAll();
+  }
+  JMenuItem item;
+  item=newMenuItem("Applet",'E');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      skExport();
+    }
+  }
+);
+  exportMenu.add(item);
+  item=newMenuItem("Application",'E',true);
+  item.setEnabled(false);
+  exportMenu.add(item);
+  if (PdePreferences.getBoolean("export.library")) {
+    item=new JMenuItem("Library");
+    item.setEnabled(false);
+    exportMenu.add(item);
+  }
+  return exportMenu;
+}

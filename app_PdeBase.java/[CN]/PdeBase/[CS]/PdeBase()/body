@@ -1,2 +1,52 @@
 {
+  if (System.getProperty("mrj.version") != null) {
+    platform=(System.getProperty("os.name").equals("Mac OS X")) ? MACOSX : MACOS9;
+  }
+ else {
+    String osname=System.getProperty("os.name");
+    if (osname.indexOf("Windows") != -1) {
+      platform=WINDOWS;
+    }
+ else     if (osname.equals("Linux")) {
+      platform=LINUX;
+    }
+ else     if (osname.equals("Irix")) {
+      platform=IRIX;
+    }
+ else {
+      platform=WINDOWS;
+      System.out.println("unhandled osname: \"" + osname + "\"");
+    }
+  }
+  try {
+    if (platform == LINUX) {
+      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    }
+ else {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  preferences=new PdePreferences();
+  final String KEYWORDS="pde_keywords.properties";
+  keywords=new Properties();
+  try {
+    if ((PdeBase.platform == PdeBase.MACOSX) || (PdeBase.platform == PdeBase.MACOS9)) {
+      keywords.load(new FileInputStream("lib/" + KEYWORDS));
+    }
+ else {
+      keywords.load(getClass().getResource(KEYWORDS).openStream());
+    }
+  }
+ catch (  Exception e) {
+    String message="An error occurred while loading the keywords,\n" + "\"Find in reference\" will not be available.";
+    JOptionPane.showMessageDialog(this,message,"Problem loading keywords",JOptionPane.WARNING_MESSAGE);
+    System.err.println(e.toString());
+    e.printStackTrace();
+  }
+  editor=new PdeEditor();
+  editor.pack();
+  editor.show();
 }

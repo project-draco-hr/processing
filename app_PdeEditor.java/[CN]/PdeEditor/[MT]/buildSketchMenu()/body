@@ -1,2 +1,61 @@
 {
+  JMenuItem item;
+  JMenu menu=new Menu("Sketch");
+  item=newMenuItem("Run",'R');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      doRun(false);
+    }
+  }
+);
+  menu.add(item);
+  item=newMenuItem("Present",'R',true);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      doRun(true);
+    }
+  }
+);
+  menu.add(item);
+  menu.add(newMenuItem("Stop",'T'));
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (presenting) {
+        doClose();
+      }
+ else {
+        doStop();
+      }
+    }
+  }
+);
+  menu.addSeparator();
+  item=newMenuItem("Add file...");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      addFile();
+    }
+  }
+);
+  menu.add(item);
+  item=newMenuItem("Create font...");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      new PdeFontBuilder(new File(sketchDir,"data"));
+    }
+  }
+);
+  menu.add(item);
+  if ((platform == WINDOWS) || (platform == MACOSX)) {
+    item=new JMenuItem("Show sketch folder");
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        PdeBase.openFolder(sketchDir);
+      }
+    }
+);
+    menu.add(item);
+  }
+  history.attachMenu(menu);
+  return menu;
 }
