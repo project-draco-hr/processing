@@ -57,8 +57,18 @@
     program=program.substring(0,idx) + program.substring(idx + len);
   }
  while (true);
-  extraImports=new String[imports.size()];
+  int importsCount=imports.size();
+  extraImports=new String[importsCount];
   imports.copyInto(extraImports);
+  if (codeFolderPackages != null) {
+    codeFolderImports=new String[codeFolderPackages.length];
+    for (int i=0; i < codeFolderPackages.length; i++) {
+      codeFolderImports[i]=codeFolderPackages[i] + ".*";
+    }
+  }
+ else {
+    codeFolderImports=null;
+  }
   this.programReader=new StringReader(program);
   this.buildPath=buildPath;
   PdeLexer lexer=new PdeLexer(programReader);

@@ -1,4 +1,5 @@
 {
+  String codeFolderPackages[]=null;
   String javaClassPath=System.getProperty("java.class.path");
   if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\"")) {
     javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
@@ -6,8 +7,10 @@
   classPath=buildPath + File.pathSeparator + PdeSketchbook.librariesClassPath+ File.pathSeparator+ javaClassPath;
   if (codeFolder.exists()) {
     externalRuntime=true;
-    classPath+=File.pathSeparator + PdeCompiler.contentsToClassPath(codeFolder);
+    classPath=PdeCompiler.contentsToClassPath(codeFolder) + File.pathSeparator + classPath;
     libraryPath=codeFolder.getAbsolutePath();
+    String codeFolderClassPath=PdeCompiler.contentsToClassPath(codeFolder);
+    codeFolderPackages=PdeCompiler.packageListFromClassPath(codeFolderClassPath);
   }
  else {
     externalRuntime=false;
@@ -33,7 +36,7 @@
   String primaryClassName=null;
   PdePreprocessor preprocessor=new PdePreprocessor();
   try {
-    String className=preprocessor.write(bigCode.toString(),buildPath,suggestedClassName);
+    String className=preprocessor.write(bigCode.toString(),buildPath,suggestedClassName,codeFolderPackages);
     if (className == null) {
       throw new PdeException("Could not find main class");
     }
@@ -99,7 +102,7 @@ catch (  Exception ex) {
     String entry=imports[i].substring(0,imports[i].lastIndexOf('.'));
     File libFolder=(File)PdeSketchbook.importToLibraryTable.get(entry);
     if (libFolder == null) {
-      throw new PdeException("Could not find library for " + entry);
+      continue;
     }
     importedLibraries.add(libFolder);
     libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();

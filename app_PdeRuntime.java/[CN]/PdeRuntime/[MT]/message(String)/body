@@ -15,8 +15,10 @@
     newMessage=true;
     return;
   }
+  System.err.print(s);
   if (newMessage && s.length() > 2) {
     exception=new PdeException(s);
+    exception.hideStackTrace=true;
     newMessage=false;
     foundMessageSource=false;
     messageLineCount=0;
@@ -53,6 +55,7 @@
           if (codeIndex != -1) {
             lineIndex=Integer.parseInt(fileAndLine.substring(colonIndex + 1));
             exception=new PdeException(exception.getMessage(),codeIndex,lineIndex - 1,-1);
+            exception.hideStackTrace=true;
             foundMessageSource=true;
           }
         }
@@ -62,6 +65,7 @@
  else     if (messageLineCount > 5) {
       messageLineCount=-100;
       exception=new PdeException(exception.getMessage());
+      exception.hideStackTrace=true;
       editor.error(exception);
     }
  else {
