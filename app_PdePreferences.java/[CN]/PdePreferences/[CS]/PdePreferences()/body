@@ -34,10 +34,10 @@
       load(new FileInputStream(preferencesFile));
     }
  catch (    Exception e) {
-      showError("Error reading preferences","Error reading the preferences file. Please delete\n" + perferencesFile.getCanonicalPath() + "\n"+ "and restart Processing.",e);
+      showError("Error reading preferences","Error reading the preferences file. Please delete\n" + perferencesFile.getAbsolutePath() + "\n"+ "and restart Processing.",e);
     }
   }
-  frame=new JFrame("Preferences");
+  frame=new JDialog("Preferences");
   frame.setResizable(false);
   Container pain=this;
   pain.setLayout(null);
@@ -69,13 +69,8 @@
       fc.setFileSectionMode(JFileChooser.DIRECTORIES_ONLY);
       int returned=fc.showOpenDialog(new JDialog());
       if (returned == JFileChooser.APPROVE_OPTION) {
-        try {
-          File file=fc.getSelectedFile();
-          sketchbookLocationField.setText(file.getCanonicalPath());
-        }
- catch (        IOException e) {
-          e.printStackTrace();
-        }
+        File file=fc.getSelectedFile();
+        sketchbookLocationField.setText(file.getAbsolutePath());
       }
     }
   }
