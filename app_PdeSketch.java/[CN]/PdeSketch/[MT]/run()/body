@@ -1,48 +1,35 @@
 {
-  try {
-    current.program=textarea.getText();
-    if (PdePreferences.getBoolean("editor.external")) {
-      load();
-    }
-    tempBuildPath="lib" + File.separator + "build";
-    File buildDir=new File(tempBuildPath);
-    if (!buildDir.exists()) {
-      buildDir.mkdirs();
-    }
-    File dataDir=new File(directory,"data");
-    if (dataDir.exists()) {
-      PdeBase.copyDir(dataDir,new File(buildDir,"data"));
-    }
-    String suggestedClassName=("Temporary_" + String.valueOf((int)(Math.random() * 10000)) + "_"+ String.valueOf((int)(Math.random() * 10000)));
-    String mainClassName=build(tempBuildPath,suggestedClassName);
-    if (mainClassName != null) {
-      if (externalPaths == null) {
-        externalPaths=PdeCompiler.calcClassPath(null) + File.pathSeparator + tempBuildPath;
-      }
- else {
-        externalPaths=tempBuildPath + File.pathSeparator + PdeCompiler.calcClassPath(null)+ File.pathSeparator+ externalPaths;
-      }
-      String codeFolderPath="";
-      if (externalCode != null) {
-        libraryPath=externalCode.getCanonicalPath();
-      }
-      runtime=new PdeRuntime(this,className,externalRuntime,libraryPath,classPath);
-      PdeMessageStream messageStream=new PdeMessageStream(runtime);
-      runtime.start(presenting ? presentLocation : appletLocation,new PrintStream(messageStream));
-      watcher=new RunButtonWatcher();
+  current.program=textarea.getText();
+  if (PdePreferences.getBoolean("editor.external")) {
+    load();
+  }
+  tempBuildPath="lib" + File.separator + "build";
+  File buildDir=new File(tempBuildPath);
+  if (!buildDir.exists()) {
+    buildDir.mkdirs();
+  }
+  File dataDir=new File(folder,"data");
+  if (dataDir.exists()) {
+    PdeBase.copyDir(dataDir,new File(buildDir,"data"));
+  }
+  String suggestedClassName=("Temporary_" + String.valueOf((int)(Math.random() * 10000)) + "_"+ String.valueOf((int)(Math.random() * 10000)));
+  String mainClassName=build(tempBuildPath,suggestedClassName);
+  if (mainClassName != null) {
+    if (externalPaths == null) {
+      externalPaths=PdeCompiler.calcClassPath(null) + File.pathSeparator + tempBuildPath;
     }
  else {
-      cleanTempFiles();
+      externalPaths=tempBuildPath + File.pathSeparator + PdeCompiler.calcClassPath(null)+ File.pathSeparator+ externalPaths;
     }
+    String codeFolderPath="";
+    if (externalCode != null) {
+      libraryPath=externalCode.getCanonicalPath();
+    }
+    runtime=new PdeRuntime(this,className,externalRuntime,libraryPath,classPath);
+    runtime.start(presenting ? presentLocation : appletLocation);
+    watcher=new RunButtonWatcher();
   }
- catch (  PdeException e) {
-    if (runtime != null)     runtime.stop();
-    cleanTempFiles();
-    error(e);
-  }
-catch (  Exception e) {
-    e.printStackTrace();
-    if (runtime != null)     runtime.stop();
+ else {
     cleanTempFiles();
   }
 }
