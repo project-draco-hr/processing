@@ -28,6 +28,7 @@
   }
   sketchTitleLeft=PdeEditor.INSET_SIZE;
   sketchLeft=sketchTitleLeft + metrics.stringWidth(SKETCH_TITLER) + PdeEditor.INSET_SIZE;
+  int modifiedLeft=sketchLeft + metrics.stringWidth(editor.sketchName) + PdeEditor.INSET_SIZE;
   userLeft=sizeW - 20 - metrics.stringWidth(editor.userName);
   userTitleLeft=userLeft - PdeEditor.INSET_SIZE - metrics.stringWidth(USER_TITLER);
   int baseline=(sizeH + fontAscent) / 2;
@@ -36,10 +37,10 @@
   boolean boringUser=editor.userName.equals("default");
   g.setColor(secondaryColor);
   g.drawString(SKETCH_TITLER,sketchTitleLeft,baseline);
+  if (sketchModified)   g.drawString("\u00A7",modifiedLeft,baseline);
   if (!boringUser)   g.drawString(USER_TITLER,userTitleLeft,baseline);
   g.setColor(primaryColor);
-  String additional=sketchModified ? "  \u00A7" : "";
-  g.drawString(editor.sketchName + additional,sketchLeft,baseline);
+  g.drawString(editor.sketchName,sketchLeft,baseline);
   if (!boringUser)   g.drawString(editor.userName,userLeft,baseline);
   screen.drawImage(offscreen,0,0,null);
 }

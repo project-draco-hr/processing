@@ -1,0 +1,16 @@
+{
+  if (newSketchName.equals(sketchName)) {
+    System.err.println("what kind of a loser " + (rename ? "renames the directory" : "creates a duplicate") + " using the same name?");
+    return;
+  }
+  doSave();
+  File newSketchDir=new File(sketchDir.getParent() + File.separator + newSketchName);
+  File newSketchFile=new File(newSketchDir,newSketchName + ".pde");
+  newSketchDir.mkdirs();
+  copyFile(sketchFile,newSketchFile);
+  copyDir(sketchDir,newSketchDir);
+  new File(newSketchDir,sketchName + ".pde").delete();
+  if (rename)   removeDir(sketchDir);
+  base.rebuildSketchbookMenu();
+  if (rename)   handleOpen(newSketchName,newSketchFile,newSketchDir);
+}

@@ -1,20 +1,25 @@
 {
 switch (currentSelection) {
 case RUN:
-    editor.doRun();
+    if (e.shiftDown()) {
+      editor.doPresent();
+    }
+ else {
+      editor.doRun(false);
+    }
   break;
 case STOP:
 setState(RUN,INACTIVE,true);
 editor.doStop();
 break;
-case OPEN:
-editor.doOpen();
+case NEW:
+editor.skNew();
 break;
 case SAVE:
-editor.doSaveAs();
+editor.doSave();
 break;
 case EXPORT:
-editor.doExport();
+editor.skExport();
 break;
 }
 currentSelection=-1;

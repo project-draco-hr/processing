@@ -7,6 +7,10 @@
     while ((bytesRead=from.read(buffer)) != -1) {
       to.write(buffer,0,bytesRead);
     }
+    to.flush();
+    from.close();
+    to.close();
+    bfile.setLastModified(afile.lastModified());
   }
  catch (  IOException e) {
     e.printStackTrace();

@@ -1,14 +1,12 @@
 {
   try {
     String program=textarea.getText();
-    KjcEngine engine=new KjcEngine(program,appletDir.getPath(),this);
+    KjcEngine engine=new KjcEngine(program,appletDir.getPath(),null,this);
     appletDir.mkdirs();
     exportSketchName=engine.writeJava(exportSketchName,false);
     if (!engine.compileJava()) {
       return;
     }
-    String javaName=exportSketchName + ".java";
-    copyFile(new File(javaName),new File(appletDir,javaName));
     int wide=BApplet.DEFAULT_WIDTH;
     int high=BApplet.DEFAULT_HEIGHT;
     int index=program.indexOf("size(");
@@ -66,13 +64,22 @@
         zos.closeEntry();
       }
     }
-    entry=new ZipEntry(exportSketchName + ".class");
-    zos.putNextEntry(entry);
-    zos.write(grabFile(new File("lib",exportSketchName + ".class")));
-    zos.closeEntry();
+    String classfiles[]=appletDir.list();
+    for (int i=0; i < classfiles.length; i++) {
+      if (classfiles[i].endsWith(".class")) {
+        entry=new ZipEntry(classfiles[i]);
+        zos.putNextEntry(entry);
+        zos.write(grabFile(new File(appletDir,classfiles[i])));
+        zos.closeEntry();
+      }
+    }
+    for (int i=0; i < classfiles.length; i++) {
+      if (classfiles[i].endsWith(".class")) {
+        new File(appletDir,classfiles[i]).delete();
+      }
+    }
     zos.flush();
     zos.close();
-    engine.cleanup();
     message("Done exporting.");
   }
  catch (  Exception e) {

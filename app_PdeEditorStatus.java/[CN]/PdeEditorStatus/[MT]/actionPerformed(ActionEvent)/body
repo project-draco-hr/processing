@@ -9,6 +9,15 @@
     editor.checkModified2();
   }
  else   if (e.getSource() == cancelButton) {
-    unprompt();
+    if (mode == PROMPT)     unprompt();
+    if (mode == EDIT)     unedit();
+    editor.buttons.clear();
+  }
+ else   if (e.getSource() == okButton) {
+    editor.skDuplicateRename2(editField.getText(),editRename);
+    unedit();
+  }
+ else   if (e.getSource() == editField) {
+    System.out.println("editfield: " + e);
   }
 }

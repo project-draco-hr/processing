@@ -18,7 +18,7 @@
   }
   int width=getInteger("window.width",600);
   int height=getInteger("window.height",350);
-  editor=new PdeEditor();
+  editor=new PdeEditor(this);
   frame.setLayout(new BorderLayout());
   frame.add("Center",editor);
   MenuBar menubar=new MenuBar();
@@ -29,9 +29,12 @@
   sketchbookMenu=new Menu("Open");
   menu.add(sketchbookMenu);
   menu.add(new MenuItem("Save",new MenuShortcut('S')));
+  menu.add(new MenuItem("Rename",new MenuShortcut('S',true)));
   menu.add(new MenuItem("Duplicate",new MenuShortcut('D')));
   menu.add(new MenuItem("Export to Web",new MenuShortcut('E')));
-  menu.add(new MenuItem("Export Application",new MenuShortcut('E',true)));
+  item=new MenuItem("Export Application",new MenuShortcut('E',true));
+  item.setEnabled(false);
+  menu.add(item);
   menu.addSeparator();
   menu.add(new MenuItem("Proce55ing.net",new MenuShortcut('5')));
   menu.add(new MenuItem("Reference",new MenuShortcut('F')));
