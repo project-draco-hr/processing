@@ -60,12 +60,33 @@ draw_shape(path);
 }
 break;
 case QUADS:
+if ((vertexCount % 4) == 0) {
+quad(vertices[vertexCount - 4][MX],vertices[vertexCount - 4][MY],vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY],vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY],x,y);
+}
 break;
 case QUAD_STRIP:
+if (vertexCount == 4) {
+quad(vertices[0][MX],vertices[0][MY],vertices[2][MX],vertices[2][MY],x,y,vertices[1][MX],vertices[1][MY]);
+}
+ else if (vertexCount > 4) {
+path=new GeneralPath();
+path.moveTo(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
+path.lineTo(vertices[vertexCount - 1][MX],vertices[vertexCount - 1][MY]);
+path.lineTo(x,y);
+path.lineTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
+draw_shape(path);
+}
 break;
 case POLYGON:
 case CONCAVE_POLYGON:
 case CONVEX_POLYGON:
+if (vertexCount == 1) {
+path=new GeneralPath();
+path.moveTo(x,y);
+}
+ else {
+path.lineTo(x,y);
+}
 break;
 }
 }
