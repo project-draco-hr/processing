@@ -1,0 +1,53 @@
+{
+  if (inactive == null) {
+    inactive=new Image[BUTTON_COUNT];
+    rollover=new Image[BUTTON_COUNT];
+    active=new Image[BUTTON_COUNT];
+    state=new int[BUTTON_COUNT];
+    for (int i=0; i < BUTTON_COUNT; i++) {
+      inactive[i]=createImage(BUTTON_WIDTH,BUTTON_HEIGHT);
+      Graphics g=inactive[i].getGraphics();
+      g.drawImage(buttons,-(i * BUTTON_WIDTH),-2 * BUTTON_HEIGHT,null);
+      rollover[i]=createImage(BUTTON_WIDTH,BUTTON_HEIGHT);
+      g=rollover[i].getGraphics();
+      g.drawImage(buttons,-(i * BUTTON_WIDTH),-1 * BUTTON_HEIGHT,null);
+      active[i]=createImage(BUTTON_WIDTH,BUTTON_HEIGHT);
+      g=active[i].getGraphics();
+      g.drawImage(buttons,-(i * BUTTON_WIDTH),-0 * BUTTON_HEIGHT,null);
+    }
+    state=new int[buttonCount];
+    stateImage=new Image[buttonCount];
+    for (int i=0; i < buttonCount; i++) {
+      setState(i,INACTIVE,false);
+    }
+  }
+  Dimension size=size();
+  if ((offscreen == null) || (size.width != width) || (size.height != height)) {
+    offscreen=createImage(size.width,size.height);
+    width=size.width;
+    height=size.height;
+    x1=new int[buttonCount];
+    x2=new int[buttonCount];
+    y1=(height - BUTTON_HEIGHT) / 2;
+    y2=y1 + BUTTON_HEIGHT;
+    int offsetX=8;
+    for (int i=0; i < 2; i++) {
+      x1[i]=offsetX;
+      x2[i]=offsetX + BUTTON_WIDTH;
+      offsetX+=BUTTON_WIDTH + 4;
+    }
+    offsetX=width - 8 - BUTTON_WIDTH;
+    for (int i=buttonCount - 1; i >= 2; --i) {
+      x1[i]=offsetX;
+      x2[i]=offsetX + BUTTON_WIDTH;
+      offsetX-=BUTTON_WIDTH + 4;
+    }
+  }
+  Graphics g=offscreen.getGraphics();
+  g.setColor(getBackground());
+  g.fillRect(0,0,width,height);
+  for (int i=0; i < buttonCount; i++) {
+    g.drawImage(stateImage[i],x1[i],y1,null);
+  }
+  screen.drawImage(offscreen,0,0,null);
+}

@@ -1,0 +1,73 @@
+{
+  tc=(TextArea)event.getSource();
+  deselect();
+  char c=event.getKeyChar();
+switch ((int)c) {
+case ')':
+    if (balanceParens) {
+      position=tc.getCaretPosition() + 1;
+      char contents[]=tc.getText().toCharArray();
+      int counter=1;
+      int index=tc.getCaretPosition() - 1;
+      boolean error=false;
+      if (index == -1) {
+        counter=0;
+        error=true;
+      }
+      while (counter != 0) {
+        if (contents[index] == ')')         counter++;
+        if (contents[index] == '(')         counter--;
+        index--;
+        if ((index == -1) && (counter != 0)) {
+          error=true;
+          break;
+        }
+      }
+      if (error) {
+        Toolkit.getDefaultToolkit().beep();
+        tc.select(0,0);
+        tc.setCaretPosition(position);
+      }
+      tc.insert(")",position - 1);
+      event.consume();
+      if (!error) {
+        selectionStart=index + 1;
+        selectionEnd=index + 2;
+        tc.select(selectionStart,selectionEnd);
+        balancing=true;
+      }
+    }
+  break;
+case 9:
+if (expandTabs) {
+  tc.replaceRange(tabString,tc.getSelectionStart(),tc.getSelectionEnd());
+  event.consume();
+}
+break;
+case 10:
+if (autoIndent) {
+char contents[]=tc.getText().toCharArray();
+int index=tc.getCaretPosition() - 1;
+int spaceCount=0;
+boolean finished=false;
+while ((index != -1) && (!finished)) {
+if ((contents[index] == '\r') || (contents[index] == '\n')) {
+  finished=true;
+}
+ else {
+  spaceCount=(contents[index] == ' ') ? (spaceCount + 1) : 0;
+}
+index--;
+}
+String insertion=newline + spaces.substring(0,spaceCount);
+int oldCarrot=tc.getSelectionStart();
+tc.replaceRange(insertion,oldCarrot,tc.getSelectionEnd());
+tc.setCaretPosition(oldCarrot + insertion.length() - 1);
+event.consume();
+}
+break;
+case 1:
+tc.selectAll();
+break;
+}
+}

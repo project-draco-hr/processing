@@ -1,0 +1,34 @@
+{
+  this.app=app;
+  setLayout(new BorderLayout());
+  Color bgColor=PdeApplet.getColor("bg_color",new Color(51,102,153));
+  Color bgStippleColor=PdeApplet.getColor("bg_stipple_color",null);
+  Color tickColor=PdeApplet.getColor("tick_color",new Color(204,204,204));
+  Color gutterBgColor=PdeApplet.getColor("gutter_bg_color",new Color(0,51,102));
+  Color buttonBgColor=PdeApplet.getColor("button_bg_color",new Color(153,153,153));
+  Color statusBgColor=PdeApplet.getColor("status_bg_color",new Color(204,204,204));
+  Panel top=new Panel();
+  top.setLayout(new BorderLayout());
+  boolean privileges=PdeApplet.hasFullPrivileges();
+  boolean courseware=PdeApplet.get("save_as") != null;
+  buttons=new PdeEditorButtons(this,privileges,courseware,(privileges & !courseware),true);
+  buttons.setBackground(buttonBgColor);
+  top.add("North",buttons);
+  Panel statusPanel=new Panel();
+  statusPanel.setBackground(statusBgColor);
+  statusPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+  statusPanel.add(status=new Label(EMPTY));
+  top.add("South",statusPanel);
+  add("North",top);
+  if (program == null)   program=DEFAULT_PROGRAM;
+  textarea=new TextArea(program,20,48);
+  textarea.setFont(PdeApplet.getFont("editor"));
+  add("Center",textarea);
+  if (!PdeApplet.isMacintosh()) {
+    PdeEditorListener listener=new PdeEditorListener();
+    textarea.addKeyListener(listener);
+    textarea.addFocusListener(listener);
+    textarea.addKeyListener(new PdeKeyListener(this));
+  }
+  runner=new PdeRunner(this);
+}

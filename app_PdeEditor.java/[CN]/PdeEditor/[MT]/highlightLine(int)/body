@@ -1,0 +1,32 @@
+{
+  if (lnum < 0) {
+    textarea.select(0,0);
+    return;
+  }
+  String s=textarea.getText();
+  int len=s.length();
+  int st=-1, end=-1;
+  int lc=0;
+  if (lnum == 0)   st=0;
+  for (int i=0; i < len; i++) {
+    boolean newline=false;
+    if (s.charAt(i) == '\r') {
+      if ((i != len - 1) && (s.charAt(i + 1) == '\n'))       i++;
+      lc++;
+      newline=true;
+    }
+ else     if (s.charAt(i) == '\n') {
+      lc++;
+      newline=true;
+    }
+    if (newline) {
+      if (lc == lnum)       st=i + 1;
+ else       if (lc == lnum + 1) {
+        end=i;
+        break;
+      }
+    }
+  }
+  if (end == -1)   end=len;
+  textarea.select(st,end + 1);
+}

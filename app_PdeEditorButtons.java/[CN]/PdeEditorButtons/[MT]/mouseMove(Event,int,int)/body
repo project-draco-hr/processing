@@ -1,0 +1,19 @@
+{
+  if (currentRollover != -1) {
+    if ((x > x1[currentRollover]) && (y > y1) && (x < x2[currentRollover])&& (y < y2)) {
+      return true;
+    }
+ else {
+      setState(currentRollover,INACTIVE,true);
+      editor.messageClear(title[currentRollover]);
+      currentRollover=-1;
+    }
+  }
+  int sel=findSelection(x,y);
+  if (sel == -1)   return true;
+  if (state[sel] != ACTIVE) {
+    setState(sel,ROLLOVER,true);
+    currentRollover=sel;
+  }
+  return true;
+}

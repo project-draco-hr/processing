@@ -1,0 +1,33 @@
+{
+  FileDialog fd=new FileDialog(new Frame(),"Open a PDE program...",FileDialog.LOAD);
+  fd.setDirectory(lastDirectory);
+  fd.setFile(lastFile);
+  fd.show();
+  String directory=fd.getDirectory();
+  String filename=fd.getFile();
+  if (filename == null) {
+    buttons.clear();
+    return;
+  }
+  File file=new File(directory,filename);
+  try {
+    FileInputStream input=new FileInputStream(file);
+    int length=(int)file.length();
+    byte data[]=new byte[length];
+    int count=0;
+    while (count != length) {
+      data[count++]=(byte)input.read();
+    }
+    lastDirectory=directory;
+    lastFile=filename;
+    if (app.encoding == null)     textarea.setText(new String(data));
+ else     textarea.setText(new String(data,app.encoding));
+  }
+ catch (  FileNotFoundException e1) {
+    e1.printStackTrace();
+  }
+catch (  IOException e2) {
+    e2.printStackTrace();
+  }
+  buttons.clear();
+}
