@@ -40,13 +40,8 @@
       if (exact) {
         frame.setLocation(location[0],location[1]);
       }
-      frame.addComponentListener(new ComponentAdapter(){
-        public void componentMoved(        ComponentEvent e){
-          int newX=e.getComponent().getX();
-          int newY=e.getComponent().getY();
-        }
-      }
-);
+      applet.args=new String[args.length - 2];
+      System.arraycopy(args,2,applet.args,0,args.length - 2);
       frame.setLayout(null);
       frame.add(applet);
       frame.setBackground(SystemColor.control);
@@ -54,6 +49,8 @@
       applet.setupExternal(frame);
     }
  else {
+      applet.args=new String[args.length - 1];
+      System.arraycopy(args,1,applet.args,0,args.length - 1);
       frame.setLayout(new BorderLayout());
       frame.add(applet,BorderLayout.CENTER);
       frame.pack();

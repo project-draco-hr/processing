@@ -190,19 +190,19 @@ calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,SR);
 }
 if ((camera_mode == PERSPECTIVE) && (dimensions == 3)) {
 for (int i=vertex_start; i < vertex_end; i++) {
-float vertex[]=vertices[i];
-float ox=p00 * vertex[VX] + p01 * vertex[VY] + p02 * vertex[VZ] + p03 * vertex[VW];
-float oy=p10 * vertex[VX] + p11 * vertex[VY] + p12 * vertex[VZ] + p13 * vertex[VW];
-float oz=p20 * vertex[VX] + p21 * vertex[VY] + p22 * vertex[VZ] + p23 * vertex[VW];
-float ow=p30 * vertex[VX] + p31 * vertex[VY] + p32 * vertex[VZ] + p33 * vertex[VW];
+float vx[]=vertices[i];
+float ox=p00 * vx[VX] + p01 * vx[VY] + p02 * vx[VZ] + p03 * vx[VW];
+float oy=p10 * vx[VX] + p11 * vx[VY] + p12 * vx[VZ] + p13 * vx[VW];
+float oz=p20 * vx[VX] + p21 * vx[VY] + p22 * vx[VZ] + p23 * vx[VW];
+float ow=p30 * vx[VX] + p31 * vx[VY] + p32 * vx[VZ] + p33 * vx[VW];
 if (ow != 0) {
 ox/=ow;
 oy/=ow;
 oz/=ow;
 }
-vertex[X]=width * (ONE + ox) / 2.0f;
-vertex[Y]=height * (ONE + oy) / 2.0f;
-vertex[Z]=(oz + ONE) / 2.0f;
+vx[X]=width * (ONE + ox) / 2.0f;
+vx[Y]=height * (ONE + oy) / 2.0f;
+vx[Z]=(oz + ONE) / 2.0f;
 }
 }
 if (z_order == true) {
