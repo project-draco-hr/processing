@@ -39,11 +39,13 @@
       String subPath=subFolder.getCanonicalPath();
       SketchbookMenuListener subMenuListener=new SketchbookMenuListener(subPath);
       entries=subFolder.list();
-      for (int j=0; j < entries.length; j++) {
-        if ((entries[j].equals(".")) || (entries[j].equals("..")))         continue;
-        MenuItem item=new MenuItem(entries[j]);
-        item.addActionListener(subMenuListener);
-        subMenu.add(item);
+      if (entries != null) {
+        for (int j=0; j < entries.length; j++) {
+          if ((entries[j].equals(".")) || (entries[j].equals("..")))           continue;
+          MenuItem item=new MenuItem(entries[j]);
+          item.addActionListener(subMenuListener);
+          subMenu.add(item);
+        }
       }
       menu.add(subMenu);
     }
