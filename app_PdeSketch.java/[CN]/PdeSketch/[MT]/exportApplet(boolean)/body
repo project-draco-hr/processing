@@ -73,12 +73,15 @@
     ps.close();
   }
   for (int i=0; i < codeCount; i++) {
-    PdeBase.copyFile(code[i].file,new File(appletDir,code[i].file.getName()));
+    try {
+      PdeBase.copyFile(code[i].file,new File(appletDir,code[i].file.getName()));
+    }
+ catch (    IOException e) {
+    }
   }
   FileOutputStream zipOutputFile=new FileOutputStream(new File(appletDir,name + ".jar"));
   ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
   ZipEntry entry;
-  File codeFolder=new File(sketchDir,"code");
   if (codeFolder.exists()) {
     String includes=PdeCompiler.contentsToClassPath(codeFolder);
     packClassPathIntoZipFile(includes,zos);

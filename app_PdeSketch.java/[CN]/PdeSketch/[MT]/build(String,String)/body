@@ -1,12 +1,11 @@
 {
   String importPackageList[]=null;
   classPath=buildPath + File.pathSeparator + System.getProperty("java.class.path");
-  File codeFolder=new File(sketchDir,"code");
   if (codeFolder.exists()) {
     externalRuntime=true;
     classPath+=File.separator + PdeCompiler.contentsToClassPath(codeFolder);
     importPackageList=PdeCompiler.magicImports(classPath);
-    libraryPath=codeFolder.getCanonicalPath();
+    libraryPath=codeFolder.getAbsolutePath();
   }
  else {
     externalRuntime=(codeCount > 1);
