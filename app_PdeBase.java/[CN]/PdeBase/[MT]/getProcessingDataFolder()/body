@@ -6,14 +6,12 @@
   }
  else   if (platform == MACOSX) {
     try {
-      if (false) {
-        new FileInputStream("ignored");
-      }
       MRJOSType domainLibrary=new MRJOSType("dlib");
-      File libraryFolder=MRJFileUtils.findFolder(domainLibrary);
+      Method findFolderMethod=MRJFileUtils.class.getMethod("findFolder",new Class[]{Short.TYPE,MRJOSType.class});
+      File libraryFolder=(File)findFolderMethod.invoke(null,new Object[]{new Short(kUserDomain),domainLibrary});
       dataFolder=new File(libraryFolder,"Processing");
     }
- catch (    FileNotFoundException e) {
+ catch (    Exception e) {
       showError("Problem getting data folder","Error getting the Processing data folder.",e);
     }
   }
