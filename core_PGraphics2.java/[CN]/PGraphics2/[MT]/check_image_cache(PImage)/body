@@ -1,0 +1,11 @@
+{
+  if (image.cache == null) {
+    cache=new BufferedImage(image.width,image.height,BufferedImage.TYPE_INT_ARGB);
+    image.modified();
+  }
+  if (image.modified) {
+    BufferedImage bi=(BufferedImage)image.cache;
+    bi.setRGB(image.mx1,image.my1,image.mx2 - image.mx1 + 1,image.my2 - image.my1 + 1,image.pixels,image.my1 * image.width + image.mx1,image.width);
+    image.resetModified();
+  }
+}
