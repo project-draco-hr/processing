@@ -26,23 +26,22 @@
     offscreen=createImage(size.width,size.height);
     width=size.width;
     height=size.height;
-    x1=new int[buttonCount];
-    x2=new int[buttonCount];
-    y1=(height - BUTTON_HEIGHT) / 2;
-    y2=y1 + BUTTON_HEIGHT;
-    int offsetX=8;
+    x1=0;
+    x2=BUTTON_WIDTH;
+    y1=new int[buttonCount];
+    y2=new int[buttonCount];
+    int offsetY=0;
     for (int i=0; i < buttonCount; i++) {
-      x1[i]=offsetX;
-      x2[i]=offsetX + BUTTON_WIDTH;
-      offsetX+=BUTTON_WIDTH + 4;
-      if (i == GAP_POSITION)       offsetX+=8;
+      y1[i]=offsetY;
+      y2[i]=offsetY + BUTTON_HEIGHT;
+      offsetY=y2[i];
     }
   }
   Graphics g=offscreen.getGraphics();
   g.setColor(getBackground());
   g.fillRect(0,0,width,height);
   for (int i=0; i < buttonCount; i++) {
-    g.drawImage(stateImage[i],x1[i],y1,null);
+    g.drawImage(stateImage[i],x1,y1[i],null);
   }
   screen.drawImage(offscreen,0,0,null);
 }
