@@ -1,2 +1,25 @@
 {
+  state=RUNNER_STARTED;
+  try {
+    if (program.length() == 0) {
+    }
+ else {
+      String buildPath="lib" + File.separator + "build";
+      File buildDir=new File(buildPath);
+      if (!buildDir.exists())       buildDir.mkdirs();
+      String dataPath=editor.sketchFile.getParent() + File.separator + "data";
+      engine=new KjcEngine(program,buildPath,dataPath,editor);
+      engine.start();
+    }
+  }
+ catch (  PdeException e) {
+    state=RUNNER_ERROR;
+    forceStop=false;
+    this.stop();
+    editor.error(e);
+  }
+catch (  Exception e) {
+    e.printStackTrace();
+    this.stop();
+  }
 }
