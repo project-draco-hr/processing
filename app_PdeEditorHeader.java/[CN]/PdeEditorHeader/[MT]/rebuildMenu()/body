@@ -1,0 +1,77 @@
+{
+  if (menu != null) {
+    menu.removeAll();
+  }
+ else {
+    menu=new JMenu();
+  }
+  JMenuItem item;
+  item=new JMenuItem("New");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+    }
+  }
+);
+  menu.add(item);
+  item=new JMenuItem("Rename");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+    }
+  }
+);
+  menu.add(item);
+  item=new JMenuItem("Delete");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+    }
+  }
+);
+  menu.add(item);
+  item=new JMenuItem("Hide");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+    }
+  }
+);
+  menu.add(item);
+  JMenu unhide=new JMenu("Unhide");
+  ActionListener unhideListener=new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      File from=(File)e.getActionCommand();
+      String filename=from.getName();
+      if (!filename.endsWith(".x")) {
+        System.err.println("error while trying to unhide a file");
+      }
+ else       if (!filename.exists()) {
+        System.err.println("file no longer exists");
+      }
+ else {
+        File to=new File(from.getPath(),filename.substring(0,filename.length() - 2));
+        if (!from.renameTo(to)) {
+          System.err.println("problem while unhiding");
+        }
+      }
+      rebuildMenu();
+    }
+  }
+;
+  for (int i=0; i < hiddenCount; i++) {
+    item=new JMenuItem(hiddenNames[i]);
+    item.setActionCommand(hiddenFiles[i]);
+    item.addActionListener(unhideListener);
+    hidden.add(item);
+  }
+  menu.add(unhide);
+  menu.addSeparator();
+  ActionListener jumpListener=new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      System.out.println("jump to " + e);
+    }
+  }
+;
+  for (int i=0; i < fileCount; i++) {
+    item=new JMenuItem(names[i]);
+    item.addActionListener(jumpListener);
+    menu.add(item);
+  }
+}

@@ -25,6 +25,10 @@
     metrics=g.getFontMetrics();
     fontAscent=metrics.getAscent();
   }
+  if ((tabLeft == null) || (tabLeft.length < sketch.fileCount)) {
+    tabLeft=new int[sketch.fileCount];
+    tabRight=new int[sketch.fileCount];
+  }
   int x=PdePreferences.GUI_SMALL;
   for (int i=0; i < sketch.fileCount; i++) {
     String text=sketch.modified[i] ? ("  " + sketch.names[i] + "  ") : ("  " + sketch.names[i] + " \u00A7");
@@ -35,10 +39,12 @@
     g.drawImage(pieces[state][LEFT],x,0,null);
     x+=PIECE_WIDTH;
     int contentLeft=x;
+    tabLeft[i]=x;
     for (int j=0; j < pieceCount; j++) {
       g.drawImage(pieces[state][MIDDLE],x,0,null);
       x+=PIECE_WIDTH;
     }
+    tabRight[i]=x;
     int textLeft=contentLeft + (pieceWidth - textWidth) / 2;
     g.setColor(textColor[STATUS]);
     int baseline=(sizeH + fontAscent) / 2;
@@ -46,5 +52,8 @@
     g.drawImage(pieces[state][RIGHT],x,0,null);
     x+=PIECE_WIDTH - 1;
   }
+  menuLeft=sizeW - (16 + pieces[0][MENU].getWidth());
+  menuRight=sizeW - 16;
+  g.drawImage(pieces[menuVisible ? SELECTED : UNSELECTED][MENU],menuLeft,0);
   screen.drawImage(offscreen,0,0,null);
 }
