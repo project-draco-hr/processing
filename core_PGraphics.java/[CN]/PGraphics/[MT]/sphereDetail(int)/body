@@ -1,30 +1,29 @@
 {
   if (res < 3)   res=3;
-  if (res != sphere_detail) {
-    float delta=(float)SINCOS_LENGTH / res;
-    float[] cx=new float[res];
-    float[] cz=new float[res];
-    for (int i=0; i < res; i++) {
-      cx[i]=cosLUT[(int)(i * delta) % SINCOS_LENGTH];
-      cz[i]=sinLUT[(int)(i * delta) % SINCOS_LENGTH];
-    }
-    int vertCount=res * (res - 1) + 2;
-    int currVert=0;
-    sphereX=new float[vertCount];
-    sphereY=new float[vertCount];
-    sphereZ=new float[vertCount];
-    float angle_step=(SINCOS_LENGTH * 0.5f) / res;
-    float angle=angle_step;
-    for (int i=1; i < res; i++) {
-      float curradius=sinLUT[(int)angle % SINCOS_LENGTH];
-      float currY=-cosLUT[(int)angle % SINCOS_LENGTH];
-      for (int j=0; j < res; j++) {
-        sphereX[currVert]=cx[j] * curradius;
-        sphereY[currVert]=currY;
-        sphereZ[currVert++]=cz[j] * curradius;
-      }
-      angle+=angle_step;
-    }
-    sphere_detail=res;
+  if (res == sphereDetail)   return;
+  float delta=(float)SINCOS_LENGTH / res;
+  float[] cx=new float[res];
+  float[] cz=new float[res];
+  for (int i=0; i < res; i++) {
+    cx[i]=cosLUT[(int)(i * delta) % SINCOS_LENGTH];
+    cz[i]=sinLUT[(int)(i * delta) % SINCOS_LENGTH];
   }
+  int vertCount=res * (res - 1) + 2;
+  int currVert=0;
+  sphereX=new float[vertCount];
+  sphereY=new float[vertCount];
+  sphereZ=new float[vertCount];
+  float angle_step=(SINCOS_LENGTH * 0.5f) / res;
+  float angle=angle_step;
+  for (int i=1; i < res; i++) {
+    float curradius=sinLUT[(int)angle % SINCOS_LENGTH];
+    float currY=-cosLUT[(int)angle % SINCOS_LENGTH];
+    for (int j=0; j < res; j++) {
+      sphereX[currVert]=cx[j] * curradius;
+      sphereY[currVert]=currY;
+      sphereZ[currVert++]=cz[j] * curradius;
+    }
+    angle+=angle_step;
+  }
+  sphereDetail=res;
 }
