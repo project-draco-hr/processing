@@ -56,6 +56,16 @@
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   int wide=d3.width + BIG * 2;
   Rectangle butt=buttons.getBounds();
-  int high=butt.y + butt.height + BIG * 2;
+  int high=butt.y + butt.height + BIG * 2 + SMALL;
   setBounds((screen.width - wide) / 2,(screen.height - high) / 2,wide,high);
+  findField.addKeyListener(this);
+  replaceField.addKeyListener(this);
+  addKeyListener(this);
+  addWindowListener(new WindowAdapter(){
+    public void windowActivated(    WindowEvent e){
+      findField.requestFocus();
+      findField.selectAll();
+    }
+  }
+);
 }
