@@ -1,0 +1,80 @@
+{
+  properties=new Properties();
+  try {
+    if (PdeBase.platform == PdeBase.MACOSX) {
+      properties.load(new FileInputStream("lib/pde.properties"));
+      properties.load(new FileInputStream("lib/pde_macosx.properties"));
+    }
+ else     if (PdeBase.platform == PdeBase.MACOS9) {
+      properties.load(new FileInputStream("lib/pde.properties"));
+      properties.load(new FileInputStream("lib/pde_macos9.properties"));
+    }
+ else {
+      properties.load(getClass().getResource("pde.properties").openStream());
+      String platformProps="pde_" + platforms[platform] + ".properties";
+      properties.load(getClass().getResource(platformProps).openStream());
+    }
+  }
+ catch (  Exception e) {
+    System.err.println("Error reading pde.properties");
+    e.printStackTrace();
+  }
+  frame=new JFrame("Preferences");
+  frame.setResizable(false);
+  Container pain=this;
+  pain.setLayout(null);
+  int top=BIG;
+  int left=BIG;
+  int right=0;
+  JLabel label;
+  JButton button;
+  JComboBox combo;
+  Dimension d, d2, d3;
+  int h, v, vmax;
+  newSketchPrompt=new JCheckBox("Prompt for name when creating a new sketch");
+  pain.add(newSketchPrompt);
+  d=newSketchPrompt.getPreferredSize();
+  newSketchPrompt.setBounds(left,top,d.width,d.height);
+  right=Math.max(right,left + d.width);
+  top+=d.height + BETWEEN;
+  label=new JLabel("Sketchbook location:");
+  pain.add(label);
+  d=label.getPreferredSize();
+  sketchbookLocation=new JTextField(18);
+  pain.add(sketchbookLocation);
+  d2=sketchbookLocation.getPreferredSize();
+  button=new JButton("Browse");
+  pain.add(button);
+  d3=button.getPreferredSize();
+  vmax=Math.max(Math.max(d.height,d2.height),d3.height);
+  label.setBounds(left,top + (vmax - d.height) / 2,d.width,d.height);
+  h=left + d.width + BETWEEN;
+  sketchbookLocation.setBounds(h,top + (vmax - d2.height) / 2,d2.width,d2.height);
+  h+=d2.width + BETWEEN;
+  button.setBounds(h,top + (vmax - d3.height) / 2,d3.width,d3.height);
+  right=Math.max(right,h + d3.width + BIG);
+  top+=vmax + BETWEEN;
+  String blather="More preferences are in the 'lib' folder inside text files\n" + "named pde.properties and pde_" + PdeBase.platforms[PdeBase.platform] + ".properties";
+  JTextArea textarea=new JTextArea(blather);
+  textarea.setBorder(new EmptyBorder(SMALL,SMALL,SMALL,SMALL));
+  textarea.setFont(new Font("Dialog",Font.PLAIN,12));
+  pain.add(textarea);
+  d=textarea.getPreferredSize();
+  textarea.setBounds(left,top,d.width,d.height);
+  top+=d.height + BETWEEN;
+  wide=right + BIG;
+  high=top + BIG;
+  setSize(wide,high);
+  Container content=frame.getContentPane();
+  content.setLayout(new BorderLayout());
+  content.add(this,BorderLayout.CENTER);
+  frame.pack();
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  frame.setLocation((screen.width - wide) / 2,(screen.height - high) / 2);
+  frame.addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      handleQuit();
+    }
+  }
+);
+}
