@@ -1,7 +1,7 @@
 {
   this.leechErr=leechErr;
-  Point parentLoc=editor.base.getLocation();
-  Insets parentInsets=editor.base.getInsets();
+  Point parentLoc=editor.getLocation();
+  Insets parentInsets=editor.getInsets();
   int x1=parentLoc.x - 20;
   int y1=parentLoc.y;
   try {
@@ -16,7 +16,6 @@
       Class c=Class.forName(className);
       applet=(BApplet)c.newInstance();
       applet.leechErr=leechErr;
-      applet.serialProperties(PdePreferences.properties);
       applet.init();
       if (applet.exception != null) {
         if (applet.exception instanceof PortInUseException) {
@@ -83,8 +82,8 @@
       }
  else {
         Insets insets=window.getInsets();
-        int minW=PdePreferences.getInteger("run.window.width.minimum",120);
-        int minH=PdePreferences.getInteger("run.window.height.minimum",120);
+        int minW=PdePreferences.getInteger("run.window.width.minimum");
+        int minH=PdePreferences.getInteger("run.window.height.minimum");
         int windowW=Math.max(applet.width,minW) + insets.left + insets.right;
         int windowH=Math.max(applet.height,minH) + insets.top + insets.bottom;
         if (x1 - windowW > 10) {

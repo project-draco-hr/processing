@@ -1,15 +1,14 @@
 {
-  if (!recordingHistory)   return;
   menu.removeAll();
   File hfile=new File(path);
   if (!hfile.exists())   return;
-  MenuItem item=new MenuItem("Clear History");
+  JMenuItem item=new JMenuItem("Clear History");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      if (!editor.historyFile.delete()) {
+      if (!historyFile.delete()) {
         System.err.println("couldn't erase history");
       }
-      rebuildHistoryMenu(historyMenu,editor.historyFile.getPath());
+      rebuildMenu(historyFile.getPath());
     }
   }
 );
@@ -22,7 +21,7 @@
     String historyList[]=new String[100];
     try {
       while ((line=reader.readLine()) != null) {
-        if (line.equals(PdeEditor.HISTORY_SEPARATOR)) {
+        if (line.equals(HISTORY_SEPARATOR)) {
           line=reader.readLine();
           int version=Integer.parseInt(line.substring(0,line.indexOf(' ')));
           if (version == 1) {
@@ -43,8 +42,8 @@
       e.printStackTrace();
     }
     for (int i=historyCount - 1; i >= 0; --i) {
-      MenuItem mi=new MenuItem(historyList[i]);
-      mi.addActionListener(historyMenuListener);
+      JMenuItem mi=new JMenuItem(historyList[i]);
+      mi.addActionListener(menuListener);
       menu.add(mi);
     }
     reader.close();

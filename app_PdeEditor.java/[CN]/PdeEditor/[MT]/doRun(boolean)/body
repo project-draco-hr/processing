@@ -3,10 +3,10 @@
   running=true;
   buttons.run();
   for (int i=0; i < 10; i++)   System.out.println();
-  if (PdeBase.getBoolen("editor.external")) {
-    String historySaved=historyLast;
+  if (PdeBase.getBoolean("editor.external")) {
+    String historySaved=history.lastRecorded;
     handleOpen(sketchName,sketchFile,sketchDir);
-    historyLast=historySaved;
+    history.lastRecorded=historySaved;
   }
   presenting=present;
   try {
@@ -15,7 +15,7 @@
       presentationWindow.toFront();
     }
     String program=textarea.getText();
-    makeHistory(program,RUN);
+    history.record(program,PdeHistory.RUN);
     tempBuildPath="lib" + File.separator + "build";
     File buildDir=new File(tempBuildPath);
     if (!buildDir.exists()) {
@@ -24,7 +24,7 @@
     String dataPath=sketchFile.getParent() + File.separator + "data";
     File dataDir=new File(dataPath);
     if (dataDir.exists()) {
-      PdeEditor.copyDir(dataDir,buildDir);
+      PdeBase.copyDir(dataDir,buildDir);
     }
     int numero1=(int)(Math.random() * 10000);
     int numero2=(int)(Math.random() * 10000);
