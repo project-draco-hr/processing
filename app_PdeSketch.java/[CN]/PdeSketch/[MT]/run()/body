@@ -1,5 +1,5 @@
 {
-  current.program=textarea.getText();
+  current.program=editor.getText();
   if (PdePreferences.getBoolean("editor.external")) {
     load();
   }
@@ -7,23 +7,13 @@
     PdeBase.copyDir(dataDir,new File(buildDir,"data"));
   }
   String suggestedClassName=("Temporary_" + String.valueOf((int)(Math.random() * 10000)) + "_"+ String.valueOf((int)(Math.random() * 10000)));
-  String mainClassName=build(TEMP_BUILD_PATH,suggestedClassName);
+  mainClassName=build(TEMP_BUILD_PATH,suggestedClassName);
   if (mainClassName != null) {
-    if (externalPaths == null) {
-      externalPaths=PdeCompiler.calcClassPath(null) + File.pathSeparator + tempBuildPath;
-    }
- else {
-      externalPaths=tempBuildPath + File.pathSeparator + PdeCompiler.calcClassPath(null)+ File.pathSeparator+ externalPaths;
-    }
-    String libraryPath="";
-    if (externalCode != null) {
-      libraryPath=externalCode.getCanonicalPath();
-    }
-    runtime=new PdeRuntime(this,className,externalRuntime,libraryPath,classPath);
+    runtime=new PdeRuntime(this,editor);
     runtime.start(presenting ? presentLocation : appletLocation);
     watcher=new RunButtonWatcher();
   }
  else {
-    cleanTempFiles();
+    cleanup();
   }
 }

@@ -5,8 +5,9 @@
   int x1=parentLoc.x - 20;
   int y1=parentLoc.y;
   try {
-    if (externalRuntime) {
-      String command[]=new String[]{"java","-Djava.library.path=" + libraryPath,"-cp",classPath,"BApplet",BApplet.EXTERNAL_FLAG + ((windowLocation != null) ? ("e" + windowLocation.x + ","+ windowLocation.y) : (x1 + "," + y1)),className};
+    if (sketch.externalRuntime) {
+      String location=(windowLocation != null) ? (BApplet.EXACT_LOCATION + windowLocation.x + ","+ windowLocation.y) : (x1 + "," + y1);
+      String command[]=new String[]{"java","-Djava.library.path=" + sketch.libraryPath,"-cp",sketch.classPath,"BApplet",BApplet.EXTERNAL_FLAG + location,sketch.mainClassName};
       process=Runtime.getRuntime().exec(command);
       new SystemOutSiphon(process.getInputStream());
       new PdeMessageSiphon(process.getErrorStream(),this);
@@ -49,7 +50,7 @@
         window=new Window(editor.presentationWindow);
       }
  else {
-        window=new Frame(editor.sketchName);
+        window=new Frame(sketch.name);
         ((Frame)window).setResizable(false);
         if (editor.icon != null) {
           ((Frame)window).setIconImage(editor.icon);
