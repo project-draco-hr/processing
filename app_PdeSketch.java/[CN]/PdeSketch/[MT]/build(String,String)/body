@@ -98,6 +98,9 @@ catch (  Exception ex) {
   for (int i=0; i < imports.length; i++) {
     String entry=imports[i].substring(0,imports[i].lastIndexOf('.'));
     File libFolder=(File)PdeSketchbook.importToLibraryTable.get(entry);
+    if (libFolder == null) {
+      throw new PdeException("Could not find library for " + entry);
+    }
     importedLibraries.add(libFolder);
     libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
   }
