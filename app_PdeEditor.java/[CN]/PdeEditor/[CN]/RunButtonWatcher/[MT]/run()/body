@@ -1,7 +1,12 @@
 {
   while (Thread.currentThread() == thread) {
-    if ((runtime != null) && (runtime.applet != null)) {
-      buttons.running(!runtime.applet.finished);
+    if (runtime != null) {
+      if (runtime.applet != null) {
+        buttons.running(!runtime.applet.finished);
+      }
+ else       if (runtime.process != null) {
+        buttons.running(true);
+      }
     }
     try {
       Thread.sleep(250);

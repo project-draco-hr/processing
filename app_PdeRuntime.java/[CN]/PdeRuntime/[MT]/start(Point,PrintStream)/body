@@ -6,10 +6,11 @@
   int y1=parentLoc.y;
   try {
     if (externalRuntime) {
-      String command[]=new String[]{"java","-cp",externalPaths,"BApplet","--location=" + x1 + ","+ y1,className};
+      String command[]=new String[]{"java","-cp",externalPaths,"BApplet","--external=" + x1 + ","+ y1,className};
       process=Runtime.getRuntime().exec(command);
       new PdeMessageSiphon(process.getInputStream(),this);
       new PdeMessageSiphon(process.getErrorStream(),this);
+      processOutput=process.getOutputStream();
     }
  else {
       Class c=Class.forName(className);

@@ -1,8 +1,17 @@
 {
-  if (applet != null)   applet.stop();
-  applet=null;
-  if (process != null) {
-    process.destroy();
-    process=null;
+  if (applet != null) {
+    applet.stop();
+    applet=null;
+  }
+ else   if (process != null) {
+    try {
+      processOutput.write('s');
+      processOutput.flush();
+    }
+ catch (    IOException e) {
+      System.err.println("error stopping external applet");
+      e.printStackTrace();
+      close();
+    }
   }
 }
