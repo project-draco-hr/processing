@@ -26,6 +26,25 @@
         }
       }
       applet.start();
+      boolean drawMode=false;
+      try {
+        Method meth[]=c.getDeclaredMethods();
+        for (int i=0; i < meth.length; i++) {
+          if (meth[i].getName().equals("draw"))           drawMode=true;
+        }
+      }
+ catch (      SecurityException e) {
+        e.printStackTrace();
+      }
+      if (drawMode) {
+        while (applet.frame != 1) {
+          try {
+            Thread.sleep(5);
+          }
+ catch (          InterruptedException e) {
+          }
+        }
+      }
       if (editor.presenting) {
         window=new Window(editor.presentationWindow);
       }
