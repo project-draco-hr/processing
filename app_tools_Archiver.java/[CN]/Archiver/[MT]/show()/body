@@ -3,21 +3,32 @@
   String name=location.getName();
   File parent=new File(location.getParent());
   File newbie=null;
+  String namely=null;
   int index=0;
   do {
     if (useDate) {
       String purty=dateFormat.format(new Date());
       String stamp=purty + ((char)('a' + index));
-      newbie=new File(parent,name + "-" + stamp+ ".zip");
+      namely=name + "-" + stamp;
+      newbie=new File(parent,namely + ".zip");
     }
  else {
       String diggie=numberFormat.format(index + 1);
-      newbie=new File(parent,name + "-" + diggie+ ".zip");
+      namely=name + "-" + diggie;
+      newbie=new File(parent,namely + ".zip");
     }
+    index++;
   }
  while (newbie.exists());
-  FileOutputStream zipOutputFile=new FileOutputStream(newbie);
-  ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
-  zos.flush();
-  zos.close();
+  try {
+    FileOutputStream zipOutputFile=new FileOutputStream(newbie);
+    ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
+    buildZip(location,name,zos);
+    zos.flush();
+    zos.close();
+    editor.message("Created archive " + newbie.getName() + ".");
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
 }

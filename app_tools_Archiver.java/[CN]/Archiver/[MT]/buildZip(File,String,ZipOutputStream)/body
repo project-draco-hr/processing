@@ -5,10 +5,14 @@
     File sub=new File(dir,files[i]);
     String nowfar=(sofar == null) ? files[i] : (sofar + "/" + files[i]);
     if (sub.isDirectory()) {
+      ZipEntry entry=new ZipEntry(nowfar + "/");
+      zos.putNextEntry(entry);
+      zos.closeEntry();
       buildZip(sub,nowfar,zos);
     }
  else {
       ZipEntry entry=new ZipEntry(nowfar);
+      entry.setTime(sub.lastModified());
       zos.putNextEntry(entry);
       zos.write(PdeBase.grabFile(sub));
       zos.closeEntry();
