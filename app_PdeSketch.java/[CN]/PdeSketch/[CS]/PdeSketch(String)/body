@@ -3,5 +3,46 @@
   System.out.println("main file is " + mainFile);
   directory=new File(path.getParent());
   System.out.println("sketch dir is " + directory);
-  rebuild();
+  String list[]=directory.list();
+  for (int i=0; i < list.length; i++) {
+    if (list[i].endsWith(".pde"))     fileCount++;
+ else     if (list[i].endsWith(".java"))     fileCount++;
+ else     if (list[i].endsWith(".pde.x"))     hiddenCount++;
+ else     if (list[i].endsWith(".java.x"))     hiddenCount++;
+  }
+  names=new String[fileCount];
+  files=new File[fileCount];
+  modified=new boolean[fileCount];
+  flavor=new int[fileCount];
+  program=new String[fileCount];
+  history=new PdeHistory[fileCount];
+  hiddenNames=new String[hiddenCount];
+  hiddenFiles=new File[hiddenCount];
+  int fileCounter=0;
+  int hiddenCounter=0;
+  for (int i=0; i < list.length; i++) {
+    int sub=0;
+    if (list[i].endsWith(".pde")) {
+      names[fileCounter]=list[i].substring(0,list[i].length() - 4);
+      files[fileCounter]=new File(directory,list[i]);
+      flavor[fileCounter]=PDE;
+      fileCounter++;
+    }
+ else     if (list[i].endsWith(".java")) {
+      names[fileCounter]=list[i].substring(0,list[i].length() - 5);
+      files[fileCounter]=new File(directory,list[i]);
+      flavor[fileCounter]=JAVA;
+      fileCounter++;
+    }
+ else     if (list[i].endsWith(".pde.x")) {
+      names[hiddenCounter]=list[i].substring(0,list[i].length() - 6);
+      files[hiddenCounter]=new File(directory,list[i]);
+      hiddenCounter++;
+    }
+ else     if (list[i].endsWith(".java.x")) {
+      names[hiddenCounter]=list[i].substring(0,list[i].length() - 7);
+      files[hiddenCounter]=new File(directory,list[i]);
+      hiddenCounter++;
+    }
+  }
 }
