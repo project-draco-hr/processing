@@ -1,8 +1,8 @@
 {
-  if (program.endsWith("//")) {
+  if (program.charAt(program.length() - 1) != '\n') {
     program+="\n";
   }
-  if (PdePreferences.getBoolean("compiler.substitute_unicode")) {
+  if (PdePreferences.getBoolean("preproc.substitute_unicode")) {
     char p[]=program.toCharArray();
     int unicodeCount=0;
     for (int i=0; i < p.length; i++) {
@@ -68,7 +68,7 @@
   emitter.print(rootNode);
   writeFooter(stream);
   stream.close();
-  if (PdePreferences.getBoolean("compiler.output_parse_tree")) {
+  if (PdePreferences.getBoolean("preproc.output_parse_tree")) {
     stream=new PrintStream(new FileOutputStream("parseTree.xml"));
     stream.println("<?xml version=\"1.0\"?>");
     stream.println("<document>");
