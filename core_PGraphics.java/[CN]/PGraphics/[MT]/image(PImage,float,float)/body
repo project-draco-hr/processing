@@ -1,15 +1,8 @@
 {
-  if (optimize0 && !depth && (m00 == 1)&& (m01 == 0)&& (m10 == 0)&& (m11 == 1)) {
-    if ((imageMode == CENTER) || (imageMode == CENTER_RADIUS)) {
-      x1-=image.width / 2f;
-      y1-=image.height / 2f;
-    }
-    image0(image,(int)(x1 + m02 + 0.5f),(int)(y1 + m12 + 0.5f));
+  if ((imageMode == CORNER) || (imageMode == CORNERS)) {
+    draw_image(image,x,y,x + image.width,y + image.height,0,0,image.width,image.height);
   }
- else {
-    int savedTextureMode=textureMode;
-    textureMode(IMAGE_SPACE);
-    image(image,x1,y1,image.width,image.height,0,0,image.width,image.height);
-    textureMode(savedTextureMode);
+ else   if ((imageMode == CENTER) || (imageMode == CENTER_RADIUS)) {
+    draw_image(image,x - image.width / 2.0f,y - image.height / 2.0f,x + image.width / 2.0f,y + image.height / 2.0f,0,0,image.width,image.height);
   }
 }

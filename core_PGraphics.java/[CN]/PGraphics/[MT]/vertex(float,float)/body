@@ -1,25 +1,90 @@
 {
+  splineVertexCount=0;
+  float vertex[];
   if (vertexCount == vertices.length) {
     float temp[][]=new float[vertexCount << 1][VERTEX_FIELD_COUNT];
     System.arraycopy(vertices,0,temp,0,vertexCount);
     vertices=temp;
-    message(CHATTER,"allocating more vertices " + vertices.length);
   }
-  float vertex[]=vertices[vertexCount++];
-  splineVertexCount=0;
-  vertex[MX]=x;
-  vertex[MY]=y;
-  if (fill) {
-    vertex[R]=fillR;
-    vertex[G]=fillG;
-    vertex[B]=fillB;
-    vertex[A]=fillA;
-  }
-  if (stroke) {
-    vertex[SR]=strokeR;
-    vertex[SG]=strokeG;
-    vertex[SB]=strokeB;
-    vertex[SA]=strokeA;
-    vertex[SW]=strokeWeight;
-  }
+  vertices[vertexCount][MX]=x;
+  vertices[vertexCount][MY]=x;
+  vertexCount++;
+switch (shape) {
+case POINTS:
+    point(x,y);
+  break;
+case LINES:
+if ((vertexCount % 2) == 0) {
+  line(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY],x,y);
+}
+break;
+case LINE_STRIP:
+case LINE_LOOP:
+if (vertexCount == 1) {
+path=new GeneralPath();
+path.moveTo(x,y);
+}
+ else {
+path.lineTo(x,y);
+}
+break;
+case TRIANGLES:
+if ((vertexCount % 3) == 0) {
+triangle(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY],vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY],x,y);
+}
+break;
+case TRIANGLE_STRIP:
+if (vertexCount == 3) {
+triangle(vertices[0][MX],vertices[0][MY],vertices[1][MX],vertices[1][MY],x,y);
+}
+ else if (vertexCount > 3) {
+path=new GeneralPath();
+path.moveTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
+path.lineTo(vertices[vertexCount - 1][MX],vertices[vertexCount - 1][MY]);
+path.lineTo(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
+draw_shape(path);
+}
+break;
+case TRIANGLE_FAN:
+if (vertexCount == 3) {
+triangle(vertices[0][MX],vertices[0][MY],vertices[1][MX],vertices[1][MY],x,y);
+}
+ else if (vertexCount > 3) {
+path=new GeneralPath();
+path.moveTo(vertices[0][MX],vertices[0][MY]);
+path.lineTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
+path.lineTo(x,y);
+draw_shape(path);
+}
+break;
+case QUADS:
+if ((vertexCount % 4) == 0) {
+quad(vertices[vertexCount - 4][MX],vertices[vertexCount - 4][MY],vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY],vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY],x,y);
+}
+break;
+case QUAD_STRIP:
+if (vertexCount == 4) {
+quad(vertices[0][MX],vertices[0][MY],vertices[2][MX],vertices[2][MY],x,y,vertices[1][MX],vertices[1][MY]);
+}
+ else if (vertexCount > 4) {
+path=new GeneralPath();
+path.moveTo(vertices[vertexCount - 3][MX],vertices[vertexCount - 3][MY]);
+path.lineTo(vertices[vertexCount - 1][MX],vertices[vertexCount - 1][MY]);
+path.lineTo(x,y);
+path.lineTo(vertices[vertexCount - 2][MX],vertices[vertexCount - 2][MY]);
+draw_shape(path);
+}
+break;
+case POLYGON:
+case CONCAVE_POLYGON:
+case CONVEX_POLYGON:
+if (vertexCount == 1) {
+path=new GeneralPath();
+path.moveTo(x,y);
+}
+ else {
+path.lineTo(x,y);
+}
+break;
+}
 }
