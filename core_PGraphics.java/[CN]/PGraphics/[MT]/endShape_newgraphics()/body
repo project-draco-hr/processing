@@ -4,7 +4,7 @@
   int increment=1;
   int stop=0;
   int counter=0;
-  boolean check=_stroke || smooth;
+  boolean check=stroke || smooth;
   if (textureImage != null && textureImage.format == ALPHA) {
     check=false;
   }
@@ -83,7 +83,7 @@ add_line(stop,lines[first][PA]);
 break;
 }
 }
-if (_fill) {
+if (fill) {
 switch (shapeKind) {
 case TRIANGLES:
 case TRIANGLE_STRIP:
@@ -171,18 +171,18 @@ float f[]=vertices[vertex_start];
 for (int i=vertex_start; i < vertex_end; i++) {
 float v[]=vertices[i];
 if (normalChanged) {
-if (_fill) {
+if (fill) {
 calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,R);
 }
-if (_stroke) {
+if (stroke) {
 calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,SR);
 }
 }
  else {
-if (_fill) {
+if (fill) {
 calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,R);
 }
-if (_stroke) {
+if (stroke) {
 calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,SR);
 }
 }
@@ -208,7 +208,7 @@ vx[Z]=(oz + ONE) / 2.0f;
 if (z_order == true) {
 return;
 }
-if (_fill) {
+if (fill) {
 for (int i=0; i < triangleCount; i++) {
 float a[]=vertices[triangles[i][VA]];
 float b[]=vertices[triangles[i][VB]];
@@ -223,7 +223,7 @@ triangle.setIndex(index);
 triangle.render();
 }
 }
-if (_stroke || smooth) {
+if (stroke || smooth) {
 for (int i=0; i < lines_count; i++) {
 float a[]=vertices[lines[i][PA]];
 float b[]=vertices[lines[i][PB]];

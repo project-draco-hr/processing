@@ -55,7 +55,7 @@
     }
     int offset=ny1 * width + nx1;
     for (int j=ny1; j <= ny2; j++) {
-      thin_pointAtIndex(offset,0,stroke);
+      thin_pointAtIndex(offset,0,strokeColor);
       offset+=width;
     }
     return;
@@ -67,21 +67,21 @@
       nx2=tx;
     }
     int offset=ny1 * width + nx1;
-    for (int j=nx1; j <= nx2; j++)     thin_pointAtIndex(offset++,0,stroke);
+    for (int j=nx1; j <= nx2; j++)     thin_pointAtIndex(offset++,0,strokeColor);
     return;
   }
  else   if (yLonger) {
     if (longLen > 0) {
       longLen+=ny1;
       for (int j=0x8000 + (nx1 << 16); ny1 <= longLen; ++ny1) {
-        thin_pointAt(j >> 16,ny1,0,stroke);
+        thin_pointAt(j >> 16,ny1,0,strokeColor);
         j+=decInc;
       }
       return;
     }
     longLen+=ny1;
     for (int j=0x8000 + (nx1 << 16); ny1 >= longLen; --ny1) {
-      thin_pointAt(j >> 16,ny1,0,stroke);
+      thin_pointAt(j >> 16,ny1,0,strokeColor);
       j-=decInc;
     }
     return;
@@ -89,14 +89,14 @@
  else   if (longLen > 0) {
     longLen+=nx1;
     for (int j=0x8000 + (ny1 << 16); nx1 <= longLen; ++nx1) {
-      thin_pointAt(nx1,j >> 16,0,stroke);
+      thin_pointAt(nx1,j >> 16,0,strokeColor);
       j+=decInc;
     }
     return;
   }
   longLen+=nx1;
   for (int j=0x8000 + (ny1 << 16); nx1 >= longLen; --nx1) {
-    thin_pointAt(nx1,j >> 16,0,stroke);
+    thin_pointAt(nx1,j >> 16,0,strokeColor);
     j-=decInc;
   }
 }

@@ -97,18 +97,18 @@
     for (int i=0; i < vertexCount; i++) {
       float v[]=polygon.vertices[i];
       if (normalChanged) {
-        if (_fill) {
+        if (fill) {
           calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,R);
         }
-        if (_stroke) {
+        if (stroke) {
           calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],v[NX],v[NY],v[NZ],v,SR);
         }
       }
  else {
-        if (_fill) {
+        if (fill) {
           calc_lighting(v[R],v[G],v[B],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,R);
         }
-        if (_stroke) {
+        if (stroke) {
           calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,SR);
         }
       }
@@ -123,7 +123,7 @@ case POINTS:
     if ((dimensions == 0) && unchangedZ && (strokeWeight == ONE)&& !lighting) {
       if (!strokeChanged) {
         for (int i=0; i < vertexCount; i++) {
-          thin_point((int)vertices[i][X],(int)vertices[i][Y],0,stroke);
+          thin_point((int)vertices[i][X],(int)vertices[i][Y],0,strokeColor);
         }
       }
  else {
@@ -146,7 +146,7 @@ case POINTS:
 case LINES:
 case LINE_STRIP:
 case LINE_LOOP:
-if (!_stroke) return;
+if (!stroke) return;
 if (shapeKind == LINE_LOOP) {
 float v0[]=polygon.vertices[0];
 float v1[]=polygon.nextVertex();
@@ -165,7 +165,7 @@ break;
 case TRIANGLES:
 case TRIANGLE_STRIP:
 increment=(shapeKind == TRIANGLES) ? 3 : 1;
-if (_fill) {
+if (fill) {
 fpolygon.vertexCount=3;
 for (int i=0; i < vertexCount - 2; i+=increment) {
 for (int j=0; j < 3; j++) {
@@ -184,7 +184,7 @@ fpolygon.vertices[j][V]=vertices[i + j][V];
 fpolygon.render();
 }
 }
-if (_stroke) {
+if (stroke) {
 if (shapeKind == TRIANGLE_STRIP) {
 draw_lines(vertices,vertexCount - 1,1,1,0);
 }
@@ -197,7 +197,7 @@ break;
 case QUADS:
 case QUAD_STRIP:
 increment=(shapeKind == QUADS) ? 4 : 2;
-if (_fill) {
+if (fill) {
 fpolygon.vertexCount=4;
 for (int i=0; i < vertexCount - 3; i+=increment) {
 for (int j=0; j < 4; j++) {
@@ -216,7 +216,7 @@ fpolygon.vertices[j][V]=vertices[i + j][V];
 fpolygon.render();
 }
 }
-if (_stroke) {
+if (stroke) {
 if (shapeKind == QUAD_STRIP) {
 draw_lines(vertices,vertexCount - 1,1,1,0);
 }
@@ -228,13 +228,13 @@ draw_lines(vertices,vertexCount - 2,3,increment,0);
 break;
 case POLYGON:
 case CONCAVE_POLYGON:
-if (_fill) {
+if (fill) {
 boolean smoov=smooth;
-if (_stroke && !hints[DISABLE_SMOOTH_HACK]) smooth=false;
+if (stroke && !hints[DISABLE_SMOOTH_HACK]) smooth=false;
 concave_render();
-if (_stroke && !hints[DISABLE_SMOOTH_HACK]) smooth=smoov;
+if (stroke && !hints[DISABLE_SMOOTH_HACK]) smooth=smoov;
 }
-if (_stroke) {
+if (stroke) {
 draw_lines(vertices,vertexCount - 1,1,1,0);
 svertices[0]=vertices[vertexCount - 1];
 svertices[1]=vertices[0];
@@ -242,11 +242,11 @@ draw_lines(svertices,1,1,1,0);
 }
 break;
 case CONVEX_POLYGON:
-if (_fill) {
+if (fill) {
 polygon.render();
-if (_stroke) polygon.unexpand();
+if (stroke) polygon.unexpand();
 }
-if (_stroke) {
+if (stroke) {
 draw_lines(vertices,vertexCount - 1,1,1,0);
 svertices[0]=vertices[vertexCount - 1];
 svertices[1]=vertices[0];

@@ -1,19 +1,19 @@
 {
-  if (x > colorMaxX)   x=colorMaxX;
-  if (y > colorMaxY)   y=colorMaxY;
-  if (z > colorMaxZ)   z=colorMaxZ;
-  if (a > colorMaxA)   a=colorMaxA;
+  if (x > colorModeX)   x=colorModeX;
+  if (y > colorModeY)   y=colorModeY;
+  if (z > colorModeZ)   z=colorModeZ;
+  if (a > colorModeA)   a=colorModeA;
   if (x < 0)   x=0;
   if (y < 0)   y=0;
   if (z < 0)   z=0;
   if (a < 0)   a=0;
-switch (color_mode) {
+switch (colorMode) {
 case RGB:
-    if (color_scale) {
-      calcR=x / colorMaxX;
-      calcG=y / colorMaxY;
-      calcB=z / colorMaxZ;
-      calcA=a / colorMaxA;
+    if (colorScale) {
+      calcR=x / colorModeX;
+      calcG=y / colorModeY;
+      calcB=z / colorModeZ;
+      calcA=a / colorModeA;
     }
  else {
       calcR=x;
@@ -23,10 +23,10 @@ case RGB:
     }
   break;
 case HSB:
-x/=colorMaxX;
-y/=colorMaxY;
-z/=colorMaxZ;
-calcA=color_scale ? (a / colorMaxA) : a;
+x/=colorModeX;
+y/=colorModeY;
+z/=colorModeZ;
+calcA=colorScale ? (a / colorModeA) : a;
 if (y == 0) {
 calcR=calcG=calcB=z;
 }
@@ -75,6 +75,6 @@ calcRi=(int)(255 * calcR);
 calcGi=(int)(255 * calcG);
 calcBi=(int)(255 * calcB);
 calcAi=(int)(255 * calcA);
-calci=(calcAi << 24) | (calcRi << 16) | (calcGi << 8)| calcBi;
-calc_alpha=(calcAi != 255);
+calcColor=(calcAi << 24) | (calcRi << 16) | (calcGi << 8)| calcBi;
+calcAlpha=(calcAi != 255);
 }

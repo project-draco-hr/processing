@@ -10,11 +10,11 @@
     float bwidth=(float)width[glyph] / fwidth;
     float lextent=(float)leftExtent[glyph] / fwidth;
     float textent=(float)topExtent[glyph] / fheight;
-    int savedTextureMode=parent.texture_mode;
-    boolean savedStroke=parent._stroke;
-    parent.texture_mode=IMAGE_SPACE;
+    int savedTextureMode=parent.textureMode;
+    boolean savedStroke=parent.stroke;
+    parent.textureMode=IMAGE_SPACE;
     parent.drawing_text=true;
-    parent._stroke=false;
+    parent.stroke=false;
     float x1=x + lextent * size;
     float y1=y - textent * size;
     float x2=x1 + bwidth * size;
@@ -26,9 +26,9 @@
     parent.vertex(x2,y2,z,width[glyph],height[glyph]);
     parent.vertex(x2,y1,z,width[glyph],0);
     parent.endShape();
-    parent.texture_mode=savedTextureMode;
+    parent.textureMode=savedTextureMode;
     parent.drawing_text=false;
-    parent._stroke=savedStroke;
+    parent.stroke=savedStroke;
   }
  else {
     int xx=(int)x + leftExtent[glyph];

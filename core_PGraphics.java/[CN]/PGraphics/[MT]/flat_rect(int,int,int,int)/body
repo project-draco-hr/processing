@@ -10,7 +10,7 @@
     x2=temp;
   }
   if ((x1 > width1) || (x2 < 0) || (y1 > height1)|| (y2 < 0))   return;
-  if (_fill) {
+  if (fill) {
     int fx1=x1;
     int fy1=y1;
     int fx2=x2;
@@ -22,7 +22,7 @@
     int ww=fx2 - fx1;
     int hh=fy2 - fy1;
     int[] row=new int[ww];
-    for (int i=0; i < ww; i++)     row[i]=fill;
+    for (int i=0; i < ww; i++)     row[i]=fillColor;
     int idx=fy1 * width + fx1;
     for (int y=0; y < hh; y++) {
       System.arraycopy(row,0,pixels,idx,ww);
@@ -31,7 +31,7 @@
     row=null;
   }
   if (!hints[NEW_GRAPHICS]) {
-    if (_stroke) {
+    if (stroke) {
       if (strokeWeight == 1) {
         thin_flat_line(x1,y1,x2,y1);
         thin_flat_line(x2,y1,x2,y2);
