@@ -63,7 +63,7 @@
       matcher=new Perl5Matcher();
       compiler=new Perl5Compiler();
       try {
-        pattern=compiler.compile("^([^A-Za-z0-9_]+)(size\\(\\s*\\d+,\\s*\\d+\\s*\\);)");
+        pattern=compiler.compile("[\\s\\;](size\\(\\s*\\d+,\\s*\\d+\\s*\\);)");
       }
  catch (      MalformedPatternException e) {
         e.printStackTrace();
@@ -78,12 +78,12 @@
  else {
         sizeInfo="size(" + BApplet.DEFAULT_WIDTH + ", "+ BApplet.DEFAULT_HEIGHT+ "); ";
       }
-      subst=new Perl5Substitution("$1",Perl5Substitution.INTERPOLATE_ALL);
+      subst=new Perl5Substitution("",Perl5Substitution.INTERPOLATE_ALL);
       program=Util.substitute(matcher,pattern,subst,program,Util.SUBSTITUTE_ALL);
       matcher=new Perl5Matcher();
       compiler=new Perl5Compiler();
       try {
-        pattern=compiler.compile("^([^A-Za-z0-9_]+)(background\\(.*\\);)");
+        pattern=compiler.compile("[\\s\\;](background\\(.*\\);)");
       }
  catch (      MalformedPatternException e) {
         e.printStackTrace();
@@ -95,7 +95,7 @@
         MatchResult result=matcher.getMatch();
         backgroundInfo=result.group(0);
       }
-      subst=new Perl5Substitution("$1",Perl5Substitution.INTERPOLATE_ALL);
+      subst=new Perl5Substitution("",Perl5Substitution.INTERPOLATE_ALL);
       program=Util.substitute(matcher,pattern,subst,program,Util.SUBSTITUTE_ALL);
       writer.print("void setup() { ");
       writer.print(sizeInfo);

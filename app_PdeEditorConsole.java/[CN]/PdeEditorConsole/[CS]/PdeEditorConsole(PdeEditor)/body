@@ -4,7 +4,8 @@
   if (systemOut == null) {
     systemOut=System.out;
     systemErr=System.err;
-    if (PdeBase.getBoolean("editor.console.out.enabled",false)) {
+    boolean tod=((PdeBase.platform != PdeBase.MACOSX) && (PdeBase.platform != PdeBase.MACOS9));
+    if (PdeBase.getBoolean("editor.console.out.enabled",tod)) {
       String outFileName=PdeBase.get("editor.console.out.file","lib/stdout.txt");
       try {
         stdoutFile=new FileOutputStream(outFileName);
@@ -13,7 +14,7 @@
         e.printStackTrace();
       }
     }
-    if (PdeBase.getBoolean("editor.console.err.enabled",false)) {
+    if (PdeBase.getBoolean("editor.console.err.enabled",tod)) {
       String errFileName=PdeBase.get("editor.console.err.file","lib/stderr.txt");
       try {
         stderrFile=new FileOutputStream(errFileName);
@@ -35,4 +36,21 @@
     isError[i]=false;
   }
   firstLine=0;
+  addMouseListener(new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
+      int x=e.getX();
+      int y=e.getY();
+      if (!((x > scrollLeft) && (x < scrollRight)))       return;
+      if ((y > scrollUpTop) && (y < scrollUpBottom)) {
+        scrollOffset-=lineCount;
+        update();
+      }
+ else       if ((y > scrollDownTop) && (y < scrollDownBottom)) {
+        scrollOffset+=lineCount;
+        if (scrollOffset > 0)         scrollOffset=0;
+        update();
+      }
+    }
+  }
+);
 }
