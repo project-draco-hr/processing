@@ -47,10 +47,8 @@
       Insets insets=frame.getInsets();
       int locationX=location[0] - 20;
       int locationY=location[1];
-      int minW=120;
-      int minH=120;
-      int windowW=Math.max(applet.width,minW) + insets.left + insets.right;
-      int windowH=Math.max(applet.height,minH) + insets.top + insets.bottom;
+      int windowW=120 + insets.left + insets.right;
+      int windowH=120 + insets.top + insets.bottom;
       frame.setSize(windowW,windowH);
       if (exactLocation) {
         frame.setLocation(location[0],location[1]);
@@ -72,11 +70,10 @@
       frame.setLayout(null);
       frame.add(applet);
       frame.setBackground(SystemColor.control);
-      applet.setBounds((windowW - applet.width) / 2,insets.top + ((windowH - insets.top - insets.bottom) - applet.height) / 2,windowW,windowH);
+      applet.setBounds((windowW - 100) / 2,insets.top + ((windowH - insets.top - insets.bottom) - 100) / 2,windowW,windowH);
       applet.setupExternal(frame);
     }
  else {
-      System.out.println("applet not external");
       applet.args=new String[args.length - 1];
       System.arraycopy(args,1,applet.args,0,args.length - 1);
       frame.setLayout(new BorderLayout());
