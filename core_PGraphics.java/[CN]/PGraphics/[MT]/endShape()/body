@@ -1,15 +1,10 @@
 {
-  shape=false;
   vertex_end=vertex_count;
   int increment=1;
   int stop=0;
   int counter=0;
-  boolean check=stroke || smooth;
-  if (textureImage != null && textureImage.format == ALPHA) {
-    check=false;
-  }
-  if (check) {
-switch (shapeKind) {
+  if (stroke) {
+switch (shape) {
 case POINTS:
 {
         stop=vertex_end;
@@ -22,13 +17,13 @@ case LINES:
 case LINE_STRIP:
 case LINE_LOOP:
 {
-    int first=lines_count;
+    int first=lineCount;
     stop=vertex_end - 1;
-    increment=(shapeKind == LINES) ? 2 : 1;
+    increment=(shape == LINES) ? 2 : 1;
     for (int i=vertex_start; i < stop; i+=increment) {
       add_line(i,i + 1);
     }
-    if (shapeKind == LINE_LOOP) {
+    if (shape == LINE_LOOP) {
       add_line(stop,lines[first][PA]);
     }
   }
@@ -40,12 +35,12 @@ stop=vertex_end - 1;
 for (int i=vertex_start; i < stop; i++) {
   counter=i - vertex_start;
   add_line(i,i + 1);
-  if ((shapeKind == TRIANGLES) && (counter % 3 == 1)) {
+  if ((shape == TRIANGLES) && (counter % 3 == 1)) {
     i++;
   }
 }
 stop=vertex_end - 2;
-increment=(shapeKind == TRIANGLE_STRIP) ? 1 : 3;
+increment=(shape == TRIANGLE_STRIP) ? 1 : 3;
 for (int i=vertex_start; i < stop; i+=increment) {
   add_line(i,i + 2);
 }
@@ -58,12 +53,12 @@ stop=vertex_end - 1;
 for (int i=vertex_start; i < stop; i++) {
 counter=i - vertex_start;
 add_line(i,i + 1);
-if ((shapeKind == QUADS) && (counter % 4 == 2)) {
+if ((shape == QUADS) && (counter % 4 == 2)) {
 i++;
 }
 }
 stop=vertex_end - 2;
-increment=(shapeKind == QUAD_STRIP) ? 2 : 4;
+increment=(shape == QUAD_STRIP) ? 2 : 4;
 for (int i=vertex_start; i < stop; i+=increment) {
 add_line(i,i + 3);
 }
@@ -73,7 +68,7 @@ case POLYGON:
 case CONCAVE_POLYGON:
 case CONVEX_POLYGON:
 {
-int first=lines_count;
+int first=lineCount;
 stop=vertex_end - 1;
 for (int i=vertex_start; i < stop; i++) {
 add_line(i,i + 1);
@@ -84,12 +79,12 @@ break;
 }
 }
 if (fill) {
-switch (shapeKind) {
+switch (shape) {
 case TRIANGLES:
 case TRIANGLE_STRIP:
 {
 stop=vertex_end - 2;
-increment=(shapeKind == TRIANGLES) ? 3 : 1;
+increment=(shape == TRIANGLES) ? 3 : 1;
 for (int i=vertex_start; i < stop; i+=increment) {
 add_triangle(i,i + 1,i + 2);
 }
@@ -99,7 +94,7 @@ case QUADS:
 case QUAD_STRIP:
 {
 stop=vertex_count - 3;
-increment=(shapeKind == QUADS) ? 4 : 2;
+increment=(shape == QUADS) ? 4 : 2;
 for (int i=vertex_start; i < stop; i+=increment) {
 add_triangle(i,i + 1,i + 2);
 add_triangle(i,i + 2,i + 3);
@@ -115,19 +110,13 @@ triangulate_polygon();
 break;
 }
 }
-if ((cameraMode != CUSTOM) && (dimensions == 0)) {
-for (int i=vertex_start; i < vertex_end; i++) {
-vertices[i][X]=vertices[i][MX];
-vertices[i][Y]=vertices[i][MY];
-}
-}
- else if ((cameraMode != CUSTOM) && (dimensions == 2)) {
+if (!depth) {
 for (int i=vertex_start; i < vertex_end; i++) {
 vertices[i][X]=m00 * vertices[i][MX] + m01 * vertices[i][MY] + m03;
 vertices[i][Y]=m10 * vertices[i][MX] + m11 * vertices[i][MY] + m13;
 }
 }
- else {
+if (depth) {
 for (int i=vertex_start; i < vertex_end; i++) {
 float vertex[]=vertices[i];
 vertex[VX]=m00 * vertex[MX] + m01 * vertex[MY] + m02 * vertex[MZ] + m03;
@@ -164,9 +153,7 @@ v[NY]/=nlen;
 v[NZ]/=nlen;
 }
 }
-if (!lights) {
-}
- else {
+if (lights) {
 float f[]=vertices[vertex_start];
 for (int i=vertex_start; i < vertex_end; i++) {
 float v[]=vertices[i];
@@ -188,7 +175,7 @@ calc_lighting(v[SR],v[SG],v[SB],v[MX],v[MY],v[MZ],f[NX],f[NY],f[NZ],v,SR);
 }
 }
 }
-if ((cameraMode == PERSPECTIVE) && (dimensions == 3)) {
+if (depth) {
 for (int i=vertex_start; i < vertex_end; i++) {
 float vx[]=vertices[i];
 float ox=p00 * vx[VX] + p01 * vx[VY] + p02 * vx[VZ] + p03 * vx[VW];
@@ -205,34 +192,11 @@ vx[Y]=height * (ONE + oy) / 2.0f;
 vx[Z]=(oz + ONE) / 2.0f;
 }
 }
-if (z_order == true) {
+if (hints[DEPTH_SORT]) {
+shape=0;
 return;
 }
-if (fill) {
-for (int i=0; i < triangleCount; i++) {
-float a[]=vertices[triangles[i][VA]];
-float b[]=vertices[triangles[i][VB]];
-float c[]=vertices[triangles[i][VC]];
-int index=triangles[i][TI];
-if (textureImage != null) {
-triangle.setUV(a[U],a[V],b[U],b[V],c[U],c[V]);
-}
-triangle.setIntensities(a[R],a[G],a[B],a[A],b[R],b[G],b[B],b[A],c[R],c[G],c[B],c[A]);
-triangle.setVertices(a[X],a[Y],a[Z],b[X],b[Y],b[Z],c[X],c[Y],c[Z]);
-triangle.setIndex(index);
-triangle.render();
-}
-}
-if (stroke || smooth) {
-for (int i=0; i < lines_count; i++) {
-float a[]=vertices[lines[i][PA]];
-float b[]=vertices[lines[i][PB]];
-int index=lines[i][LI];
-line.setIntensities(a[SR],a[SG],a[SB],a[SA],b[SR],b[SG],b[SB],b[SA]);
-line.setVertices(a[X],a[Y],a[Z],b[X],b[Y],b[Z]);
-line.setIndex(index);
-line.draw();
-}
-}
-shapeKind=0;
+if (fill) render_triangles();
+if (stroke) render_lines();
+shape=0;
 }

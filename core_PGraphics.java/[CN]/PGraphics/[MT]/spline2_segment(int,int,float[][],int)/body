@@ -1,0 +1,30 @@
+{
+  float x1=spline_vertex[offset][MX];
+  float y1=spline_vertex[offset][MY];
+  float x2=spline_vertex[offset + 1][MX];
+  float y2=spline_vertex[offset + 1][MY];
+  float x3=spline_vertex[offset + 2][MX];
+  float y3=spline_vertex[offset + 2][MY];
+  float x4=spline_vertex[offset + 3][MX];
+  float y4=spline_vertex[offset + 3][MY];
+  float x0=spline_vertex[start][MX];
+  float y0=spline_vertex[start][MY];
+  float xplot1=m[1][0] * x1 + m[1][1] * x2 + m[1][2] * x3 + m[1][3] * x4;
+  float xplot2=m[2][0] * x1 + m[2][1] * x2 + m[2][2] * x3 + m[2][3] * x4;
+  float xplot3=m[3][0] * x1 + m[3][1] * x2 + m[3][2] * x3 + m[3][3] * x4;
+  float yplot1=m[1][0] * y1 + m[1][1] * y2 + m[1][2] * y3 + m[1][3] * y4;
+  float yplot2=m[2][0] * y1 + m[2][1] * y2 + m[2][2] * y3 + m[2][3] * y4;
+  float yplot3=m[3][0] * y1 + m[3][1] * y2 + m[3][2] * y3 + m[3][3] * y4;
+  int splineVertexSaved=spline_vertex_index;
+  vertex(x0,y0);
+  for (int j=0; j < segments; j++) {
+    x0+=xplot1;
+    xplot1+=xplot2;
+    xplot2+=xplot3;
+    y0+=yplot1;
+    yplot1+=yplot2;
+    yplot2+=yplot3;
+    vertex(x0,y0);
+  }
+  spline_vertex_index=splineVertexSaved;
+}

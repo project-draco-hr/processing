@@ -4,19 +4,13 @@
     return;
   }
   if (textureMode == IMAGE_SPACE) {
-    textureU=(u < textureImage.width) ? u : textureImage.width;
-    if (textureU < 0)     textureU=0;
-    textureV=(v < textureImage.height) ? v : textureImage.height;
-    if (textureV < 0)     textureV=0;
-    textureU=u / (float)textureImage.width;
-    textureV=v / (float)textureImage.height;
+    u/=(float)textureImage.width;
+    v/=(float)textureImage.height;
   }
- else {
-    textureU=u;
-    textureV=v;
-    if (textureU < 0)     textureU=0;
-    if (textureV < 0)     textureV=0;
-    if (textureU > ONE)     textureU=ONE;
-    if (textureV > ONE)     textureV=ONE;
-  }
+  textureU=u;
+  textureV=v;
+  if (textureU < 0)   textureU=0;
+ else   if (textureU > ONE)   textureU=ONE;
+  if (textureV < 0)   textureV=0;
+ else   if (textureV > ONE)   textureV=ONE;
 }
