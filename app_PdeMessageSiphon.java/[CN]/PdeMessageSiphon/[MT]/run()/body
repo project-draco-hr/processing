@@ -1,6 +1,6 @@
 {
-  String currentLine;
   try {
+    String currentLine;
     while ((currentLine=streamReader.readLine()) != null) {
       consumer.message(currentLine);
     }
@@ -10,10 +10,10 @@
     thread=null;
   }
 catch (  Exception e) {
-    if (e.getMessage().indexOf("Bad file descriptor") == -1) {
-      System.err.println("PdeMessageSiphon err " + e);
+    String mess=e.getMessage();
+    if ((mess != null) && (mess.indexOf("Bad file descriptor") != -1)) {
       e.printStackTrace();
-      thread=null;
     }
+    thread=null;
   }
 }
