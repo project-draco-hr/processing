@@ -1,5 +1,43 @@
 {
   try {
+    File file=new File(path);
+    File parentFile=new File(file.getParent());
+    String parentName=parentFile.getName();
+    String pdeName=parentName + ".pde";
+    File altFile=new File(file.getParent(),pdeName);
+    if (pdeName.equals(file.getName())) {
+    }
+ else     if (altFile.exists()) {
+      path=altFile.getAbsolutePath();
+    }
+ else     if (!path.endsWith(".pde")) {
+      PdeBase.showWarning("Bad file selected","Processing can only open its own sketches\n" + "and other files ending in .pde",null);
+      return;
+    }
+ else {
+      String properParent=file.getName().substring(0,file.getName().length() - 4);
+      Object[] options={"OK","Cancel"};
+      String prompt="The file \"" + file.getName() + "\" needs to be inside\n"+ "a sketch folder named \""+ properParent+ "\".\n"+ "Create this folder, move the file, and continue?";
+      int result=JOptionPane.showOptionDialog(this,prompt,"Moving",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+      if (result == JOptionPane.YES_OPTION) {
+        File properFolder=new File(file.getParent(),properParent);
+        if (properFolder.exists()) {
+          PdeBase.showWarning("Error","A folder named \"" + properParent + "\" "+ "already exists. Can't open sketch.",null);
+          return;
+        }
+        if (!properFolder.mkdirs()) {
+          throw new IOException("Couldn't create sketch folder");
+        }
+        File properPdeFile=new File(properFolder,file.getName());
+        File origPdeFile=new File(path);
+        PdeBase.copyFile(origPdeFile,properPdeFile);
+        origPdeFile.delete();
+        path=properPdeFile.getAbsolutePath();
+      }
+ else       if (result == JOptionPane.NO_OPTION) {
+        return;
+      }
+    }
     sketch=new PdeSketch(this,path);
     header.rebuild();
     if (PdePreferences.getBoolean("console.auto_clear")) {
