@@ -1,14 +1,21 @@
 {
   if (!folder.isDirectory())   return false;
   String list[]=folder.list();
-  SketchbookMenuListener listener=new SketchbookMenuListener(folder.getAbsolutePath());
+  ActionListener listener=new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      editor.handleOpen(e.getActionCommand());
+    }
+  }
+;
   boolean ifound=false;
   for (int i=0; i < list.length; i++) {
-    if (list[i].equals(".") || list[i].equals("..") || list[i].equals("CVS"))     continue;
+    if ((list[i].charAt(0) == '.') || list[i].equals("CVS"))     continue;
     File subfolder=new File(folder,list[i]);
-    if (new File(subfolder,list[i] + ".pde").exists()) {
+    File entry=new File(subfolder,list[i] + ".pde");
+    if (entry.exists()) {
       JMenuItem item=new JMenuItem(list[i]);
       item.addActionListener(listener);
+      item.setActionCommand(entry.getAbsolutePath());
       menu.add(item);
       ifound=true;
     }

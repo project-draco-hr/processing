@@ -1,9 +1,8 @@
 {
   this.editor=editor;
   examplesFolder=new File(System.getProperty("user.dir"),"examples");
-  examplesPath=examplesFolder.getCanonicalPath();
-  String sketchbookPath=PdePreferences.get("sketchbook.path");
-  if (sketchbookPath == null) {
+  examplesPath=examplesFolder.getAbsolutePath();
+  if (PdePreferences.get("sketchbook.path") == null) {
     File home=new File(System.getProperty("user.home"));
     if (PdeBase.platform == PdeBase.MACOSX) {
       home=new File(home,"Documents");
@@ -14,19 +13,7 @@
     String folderName=PdePreferences.get("sketchbook.name.default");
     File sketchbookFolder=new File(home,folderName);
     PdePreferences.set("sketchbook.path",sketchbookFolder.getAbsolutePath());
-    if (!sketchbookFolder.exists()) {
-      sketchbookFolder.mkdirs();
-    }
-    try {
-      sketchbookPath=sketchbookFolder.getCanonicalPath();
-    }
- catch (    IOException e) {
-      sketchbookPath=sketchbookFolder.getPath();
-      e.printStackTrace();
-    }
-  }
- else {
-    sketchbookFolder=new File(sketchbookPath);
+    if (!sketchbookFolder.exists())     sketchbookFolder.mkdirs();
   }
   menu=new JMenu("Open");
 }
