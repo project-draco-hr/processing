@@ -94,8 +94,9 @@ catch (  Exception ex) {
   String imports[]=preprocessor.extraImports;
   for (int i=0; i < imports.length; i++) {
     String entry=imports[i].substring(0,imports[i].lastIndexOf('.'));
-    Object libFolder=PdeSketchbook.importToLibraryTable.get(entry);
+    File libFolder=(File)PdeSketchbook.importToLibraryTable.get(entry);
     importedLibraries.add(libFolder);
+    libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
   }
   for (int i=0; i < codeCount; i++) {
     if (code[i].flavor == JAVA) {
