@@ -15,7 +15,13 @@
     if (!sketchbookFolder.exists()) {
       sketchbookFolder.mkdirs();
     }
-    sketchbookPath=sketchbookFolder.getCanonicalPath();
+    try {
+      sketchbookPath=sketchbookFolder.getCanonicalPath();
+    }
+ catch (    IOException e) {
+      sketchbookPath=sketchbookFolder.getPath();
+      e.printStackTrace();
+    }
   }
  else {
     sketchbookFolder=new File(sketchbookPath);
