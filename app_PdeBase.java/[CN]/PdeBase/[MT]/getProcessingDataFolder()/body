@@ -1,6 +1,10 @@
 {
   File dataFolder=null;
-  if (platform == MACOSX) {
+  String pref=PdePreferences.get("settings.path");
+  if (pref != null) {
+    dataFolder=new File(pref);
+  }
+ else   if (platform == MACOSX) {
     try {
       if (false) {
         new FileInputStream("ignored");
@@ -19,8 +23,6 @@
       String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
       RegistryKey localKey=topKey.openSubKey(localKeyPath);
       String appDataPath=localKey.getStringValue("AppData");
-      topKey.closeKey();
-      localKey.closeKey();
       dataFolder=new File(appDataPath,"Processing");
     }
  catch (    Exception e) {
@@ -31,6 +33,19 @@
     File home=new File(System.getProperty("user.home"));
     dataFolder=new File(home,".processing");
   }
-  if (!dataFolder.exists())   dataFolder.mkdirs();
+  boolean result=true;
+  if (!dataFolder.exists()) {
+    result=dataFolder.mkdirs();
+  }
+  if (!result) {
+    String fallback=PdePreferences.get("settings.path.fallback");
+    dataFolder=new File(fallback);
+    if (!dataFolder.exists()) {
+      result=dataFolder.mkdirs();
+    }
+  }
+  if (!result) {
+    showError("Settings issues","Processing cannot run because it could not\n" + "create a folder to store your settings.",null);
+  }
   return dataFolder;
 }

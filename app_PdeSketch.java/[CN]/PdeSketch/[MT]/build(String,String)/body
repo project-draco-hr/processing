@@ -13,10 +13,7 @@
     codeFolderPackages=PdeCompiler.packageListFromClassPath(codeFolderClassPath);
   }
  else {
-    externalRuntime=false;
-    for (int i=0; i < codeCount; i++) {
-      if (code[i].flavor == JAVA)       externalRuntime=true;
-    }
+    externalRuntime=(codeCount > 1);
     libraryPath="";
   }
   if (dataFolder.exists() && PdeBase.calcFolderSize(dataFolder) > 768 * 1024) {
@@ -32,6 +29,9 @@
       bigCount+=countLines(code[i].program);
       code[i].preprocName=null;
     }
+  }
+  if ((bigCode.indexOf(" class ") != -1) || (bigCode.indexOf("\nclass ") != -1)) {
+    externalRuntime=true;
   }
   String primaryClassName=null;
   PdePreprocessor preprocessor=new PdePreprocessor();

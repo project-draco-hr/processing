@@ -16,14 +16,36 @@
       String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
       RegistryKey localKey=topKey.openSubKey(localKeyPath);
       String personalPath=localKey.getStringValue("Personal");
-      topKey.closeKey();
-      localKey.closeKey();
       sketchbookFolder=new File(personalPath,"Processing");
     }
  catch (    Exception e) {
       showError("Problem getting documents folder","Error getting the Processing sketchbook folder.",e);
     }
   }
-  if (!sketchbookFolder.exists())   sketchbookFolder.mkdirs();
+ else {
+    JFileChooser fc=new JFileChooser();
+    fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    int returned=fc.showOpenDialog(new JDialog());
+    if (returned == JFileChooser.APPROVE_OPTION) {
+      sketchbookFolder=fc.getSelectedFile();
+    }
+ else {
+      System.exit(0);
+    }
+  }
+  boolean result=true;
+  if (!sketchbookFolder.exists()) {
+    result=sketchbookFolder.mkdirs();
+  }
+  if (!result) {
+    String fallback=PdePreferences.get("sketchbook.path.fallback");
+    sketchbookFolder=new File(fallback);
+    if (!sketchbookFolder.exists()) {
+      result=sketchbookFolder.mkdirs();
+    }
+  }
+  if (!result) {
+    showError("error","Processing cannot run because it could not\n" + "create a folder to store your sketchbook.",null);
+  }
   return sketchbookFolder;
 }
