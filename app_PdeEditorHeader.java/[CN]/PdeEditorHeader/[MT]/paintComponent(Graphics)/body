@@ -37,7 +37,8 @@
     PdeCode code=sketch.code[i];
     String codeName=(code.flavor == PdeSketch.PDE) ? code.name : code.file.getName();
     String text="  " + codeName + (code.modified ? " \u00A7" : "  ");
-    int textWidth=metrics.stringWidth(text);
+    Graphics2D g2=(Graphics2D)g;
+    int textWidth=(int)font.getStringBounds(text,g2.getFontRenderContext()).getWidth();
     int pieceCount=2 + (textWidth / PIECE_WIDTH);
     int pieceWidth=pieceCount * PIECE_WIDTH;
     int state=(code == sketch.current) ? SELECTED : UNSELECTED;
