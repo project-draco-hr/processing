@@ -20,15 +20,9 @@
  else {
     setBounds(PdePreferences.getInteger("last.window.x"),PdePreferences.getInteger("last.window.y"),PdePreferences.getInteger("last.window.width"),PdePreferences.getInteger("last.window.height"));
   }
-  String sketchName=PdePreferences.get("last.sketch.name");
-  String sketchDir=PdePreferences.get("last.sketch.path");
-  if (sketchName != null) {
-    if (new File(sketchDir + File.separator + sketchName+ ".pde").exists()) {
-      skOpen(sketchDir,sketchName);
-    }
- else {
-      skNew2(true);
-    }
+  String sketchPath=PdePreferences.get("last.sketch.path");
+  if ((sketchPath != null) && (new File(sketchPath)).exists()) {
+    skOpen(new PdeSketch(sketchFile));
   }
  else {
     skNew2(true);

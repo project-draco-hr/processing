@@ -1,9 +1,15 @@
 {
   this.editor=eddie;
-  if (primaryColor == null) {
+  pieces=new Image[2][3];
+  for (int i=0; i < 2; i++) {
+    for (int j=0; j < 4; j++) {
+      pieces[i][j]=PdeBase.getImage("tab-" + STATUS[i] + "-"+ WHERE[j]+ ".gif",this);
+    }
+  }
+  if (backgroundColor == null) {
     backgroundColor=PdePreferences.getColor("header.bgcolor");
-    primaryColor=PdePreferences.getColor("header.fgcolor.primary");
-    secondaryColor=PdePreferences.getColor("header.fgcolor.secondary");
+    textColor[SELECTED]=PdePreferences.getColor("header.text.selected.color");
+    textColor[UNSELECTED]=PdePreferences.getColor("header.text.unselected.color");
   }
   addMouseListener(new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
