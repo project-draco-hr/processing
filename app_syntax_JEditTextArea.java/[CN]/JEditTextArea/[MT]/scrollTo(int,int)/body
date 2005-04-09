@@ -1,0 +1,25 @@
+{
+  if (visibleLines == 0) {
+    setFirstLine(Math.max(0,line - electricScroll));
+    return true;
+  }
+  int newFirstLine=firstLine;
+  int newHorizontalOffset=horizontalOffset;
+  if (line < firstLine + electricScroll) {
+    newFirstLine=Math.max(0,line - electricScroll);
+  }
+ else   if (line + electricScroll >= firstLine + visibleLines) {
+    newFirstLine=(line - visibleLines) + electricScroll + 1;
+    if (newFirstLine + visibleLines >= getLineCount())     newFirstLine=getLineCount() - visibleLines;
+    if (newFirstLine < 0)     newFirstLine=0;
+  }
+  int x=_offsetToX(line,offset);
+  int width=painter.getFontMetrics().charWidth('w');
+  if (x < 0) {
+    newHorizontalOffset=Math.min(0,horizontalOffset - x + width + 5);
+  }
+ else   if (x + width >= painter.getWidth()) {
+    newHorizontalOffset=horizontalOffset + (painter.getWidth() - x) - width - 5;
+  }
+  return setOrigin(newFirstLine,newHorizontalOffset);
+}

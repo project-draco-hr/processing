@@ -1,0 +1,41 @@
+{
+  if (getLineLength(line) == 0)   return;
+  try {
+    int bracket=TextUtilities.findMatchingBracket(document,Math.max(0,dot - 1));
+    if (bracket != -1) {
+      int mark=getMarkPosition();
+      if (bracket > mark) {
+        bracket++;
+        mark--;
+      }
+      select(mark,bracket);
+      return;
+    }
+  }
+ catch (  BadLocationException bl) {
+    bl.printStackTrace();
+  }
+  String lineText=getLineText(line);
+  char ch=lineText.charAt(Math.max(0,offset - 1));
+  String noWordSep=(String)document.getProperty("noWordSep");
+  if (noWordSep == null)   noWordSep="";
+  boolean selectNoLetter=(!Character.isLetterOrDigit(ch) && noWordSep.indexOf(ch) == -1);
+  int wordStart=0;
+  for (int i=offset - 1; i >= 0; i--) {
+    ch=lineText.charAt(i);
+    if (selectNoLetter ^ (!Character.isLetterOrDigit(ch) && noWordSep.indexOf(ch) == -1)) {
+      wordStart=i + 1;
+      break;
+    }
+  }
+  int wordEnd=lineText.length();
+  for (int i=offset; i < lineText.length(); i++) {
+    ch=lineText.charAt(i);
+    if (selectNoLetter ^ (!Character.isLetterOrDigit(ch) && noWordSep.indexOf(ch) == -1)) {
+      wordEnd=i;
+      break;
+    }
+  }
+  int lineStart=getLineStartOffset(line);
+  select(lineStart + wordStart,lineStart + wordEnd);
+}

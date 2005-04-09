@@ -1,0 +1,17 @@
+{
+  if (evt != null) {
+    Object o=evt.getSource();
+    if (o instanceof Component) {
+      Component c=(Component)o;
+      for (; ; ) {
+        if (c instanceof JEditTextArea)         return (JEditTextArea)c;
+ else         if (c == null)         break;
+        if (c instanceof JPopupMenu)         c=((JPopupMenu)c).getInvoker();
+ else         c=c.getParent();
+      }
+    }
+  }
+  System.err.println("BUG: getTextArea() returning null");
+  System.err.println("Report this to Slava Pestov <sp@gjt.org>");
+  return null;
+}

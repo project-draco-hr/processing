@@ -1,0 +1,17 @@
+{
+  JEditTextArea textArea=getTextArea(evt);
+  int caret=textArea.getCaretPosition();
+  int line=textArea.getCaretLine();
+  if (line == 0) {
+    textArea.getToolkit().beep();
+    return;
+  }
+  int magic=textArea.getMagicCaretPosition();
+  if (magic == -1) {
+    magic=textArea.offsetToX(line,caret - textArea.getLineStartOffset(line));
+  }
+  caret=textArea.getLineStartOffset(line - 1) + textArea.xToOffset(line - 1,magic);
+  if (select)   textArea.select(textArea.getMarkPosition(),caret);
+ else   textArea.setCaretPosition(caret);
+  textArea.setMagicCaretPosition(magic);
+}

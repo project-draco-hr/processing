@@ -1,0 +1,18 @@
+{
+  documentChanged(evt);
+  int offset=evt.getOffset();
+  int length=evt.getLength();
+  int newStart;
+  int newEnd;
+  if (selectionStart > offset) {
+    if (selectionStart > offset + length)     newStart=selectionStart - length;
+ else     newStart=offset;
+  }
+ else   newStart=selectionStart;
+  if (selectionEnd > offset) {
+    if (selectionEnd > offset + length)     newEnd=selectionEnd - length;
+ else     newEnd=offset;
+  }
+ else   newEnd=selectionEnd;
+  select(newStart,newEnd);
+}

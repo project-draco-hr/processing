@@ -1,0 +1,60 @@
+{
+  if (doc.getLength() == 0)   return -1;
+  char c=doc.getText(offset,1).charAt(0);
+  char cprime;
+  boolean direction;
+switch (c) {
+case '(':
+    cprime=')';
+  direction=false;
+break;
+case ')':
+cprime='(';
+direction=true;
+break;
+case '[':
+cprime=']';
+direction=false;
+break;
+case ']':
+cprime='[';
+direction=true;
+break;
+case '{':
+cprime='}';
+direction=false;
+break;
+case '}':
+cprime='{';
+direction=true;
+break;
+default :
+return -1;
+}
+int count;
+if (direction) {
+count=1;
+String text=doc.getText(0,offset);
+for (int i=offset - 1; i >= 0; i--) {
+char x=text.charAt(i);
+if (x == c) count++;
+ else if (x == cprime) {
+if (--count == 0) return i;
+}
+}
+}
+ else {
+count=1;
+offset++;
+int len=doc.getLength() - offset;
+String text=doc.getText(offset,len);
+for (int i=0; i < len; i++) {
+char x=text.charAt(i);
+if (x == c) count++;
+ else if (x == cprime) {
+if (--count == 0) return i + offset;
+}
+}
+}
+return -1;
+}

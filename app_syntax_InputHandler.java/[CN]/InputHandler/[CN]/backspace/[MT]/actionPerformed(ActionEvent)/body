@@ -1,0 +1,23 @@
+{
+  JEditTextArea textArea=getTextArea(evt);
+  if (!textArea.isEditable()) {
+    textArea.getToolkit().beep();
+    return;
+  }
+  if (textArea.getSelectionStart() != textArea.getSelectionEnd()) {
+    textArea.setSelectedText("");
+  }
+ else {
+    int caret=textArea.getCaretPosition();
+    if (caret == 0) {
+      textArea.getToolkit().beep();
+      return;
+    }
+    try {
+      textArea.getDocument().remove(caret - 1,1);
+    }
+ catch (    BadLocationException bl) {
+      bl.printStackTrace();
+    }
+  }
+}

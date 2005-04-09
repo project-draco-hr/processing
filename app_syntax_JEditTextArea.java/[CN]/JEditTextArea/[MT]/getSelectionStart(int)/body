@@ -1,0 +1,12 @@
+{
+  if (line == selectionStartLine)   return selectionStart;
+ else   if (rectSelect) {
+    Element map=document.getDefaultRootElement();
+    int start=selectionStart - map.getElement(selectionStartLine).getStartOffset();
+    Element lineElement=map.getElement(line);
+    int lineStart=lineElement.getStartOffset();
+    int lineEnd=lineElement.getEndOffset() - 1;
+    return Math.min(lineEnd,lineStart + start);
+  }
+ else   return getLineStartOffset(line);
+}

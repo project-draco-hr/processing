@@ -1,0 +1,18 @@
+{
+  if (editable) {
+    Clipboard clipboard=getToolkit().getSystemClipboard();
+    try {
+      String selection=((String)clipboard.getContents(this).getTransferData(DataFlavor.stringFlavor)).replace('\r','\n');
+      selection=selection.replace('\u00A0',' ');
+      int repeatCount=inputHandler.getRepeatCount();
+      StringBuffer buf=new StringBuffer();
+      for (int i=0; i < repeatCount; i++)       buf.append(selection);
+      selection=buf.toString();
+      setSelectedText(selection);
+    }
+ catch (    Exception e) {
+      getToolkit().beep();
+      System.err.println("Clipboard does not contain a string");
+    }
+  }
+}

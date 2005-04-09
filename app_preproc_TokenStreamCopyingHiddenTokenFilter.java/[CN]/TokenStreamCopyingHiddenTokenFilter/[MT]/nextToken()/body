@@ -1,0 +1,39 @@
+{
+  if (LA(1) == null) {
+    consumeFirst();
+  }
+  CommonHiddenStreamToken monitored=LA(1);
+  monitored.setHiddenBefore(lastHiddenToken);
+  lastHiddenToken=null;
+  consume();
+  CommonHiddenStreamToken prev=monitored;
+  while (hideMask.member(LA(1).getType()) || discardMask.member(LA(1).getType()) || copyMask.member(LA(1).getType())) {
+    if (copyMask.member(LA(1).getType())) {
+      if (hiddenCopy != null) {
+        linkAndCopyToken(hiddenCopy,monitored);
+      }
+ else {
+        linkAndCopyToken(prev,monitored);
+      }
+      return monitored;
+    }
+ else     if (hideMask.member(LA(1).getType())) {
+      prev.setHiddenAfter(LA(1));
+      if (prev != monitored) {
+        LA(1).setHiddenBefore(prev);
+      }
+ else       if (hiddenCopy != null) {
+        hiddenCopy.setHiddenAfter(LA(1));
+        LA(1).setHiddenBefore(hiddenCopy);
+        hiddenCopy=null;
+      }
+      prev=lastHiddenToken=LA(1);
+    }
+    consume();
+  }
+  if (hiddenCopy != null) {
+    lastHiddenToken=hiddenCopy;
+    hiddenCopy=null;
+  }
+  return monitored;
+}

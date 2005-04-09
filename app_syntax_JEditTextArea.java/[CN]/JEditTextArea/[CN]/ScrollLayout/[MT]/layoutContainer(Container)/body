@@ -1,0 +1,22 @@
+{
+  Dimension size=parent.getSize();
+  Insets insets=parent.getInsets();
+  int itop=insets.top;
+  int ileft=insets.left;
+  int ibottom=insets.bottom;
+  int iright=insets.right;
+  int rightWidth=right.getPreferredSize().width;
+  int bottomHeight=bottom.getPreferredSize().height;
+  int centerWidth=size.width - rightWidth - ileft- iright;
+  int centerHeight=size.height - bottomHeight - itop- ibottom;
+  center.setBounds(ileft,itop,centerWidth,centerHeight);
+  right.setBounds(ileft + centerWidth,itop,rightWidth,centerHeight);
+  Enumeration status=leftOfScrollBar.elements();
+  while (status.hasMoreElements()) {
+    Component comp=(Component)status.nextElement();
+    Dimension dim=comp.getPreferredSize();
+    comp.setBounds(ileft,itop + centerHeight,dim.width,bottomHeight);
+    ileft+=dim.width;
+  }
+  bottom.setBounds(ileft,itop + centerHeight,size.width - rightWidth - ileft- iright,bottomHeight);
+}

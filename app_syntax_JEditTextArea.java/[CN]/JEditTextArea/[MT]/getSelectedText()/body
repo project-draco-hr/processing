@@ -1,0 +1,30 @@
+{
+  if (selectionStart == selectionEnd)   return null;
+  if (rectSelect) {
+    Element map=document.getDefaultRootElement();
+    int start=selectionStart - map.getElement(selectionStartLine).getStartOffset();
+    int end=selectionEnd - map.getElement(selectionEndLine).getStartOffset();
+    if (end < start) {
+      int tmp=end;
+      end=start;
+      start=tmp;
+    }
+    StringBuffer buf=new StringBuffer();
+    Segment seg=new Segment();
+    for (int i=selectionStartLine; i <= selectionEndLine; i++) {
+      Element lineElement=map.getElement(i);
+      int lineStart=lineElement.getStartOffset();
+      int lineEnd=lineElement.getEndOffset() - 1;
+      int lineLen=lineEnd - lineStart;
+      lineStart=Math.min(lineStart + start,lineEnd);
+      lineLen=Math.min(end - start,lineEnd - lineStart);
+      getText(lineStart,lineLen,seg);
+      buf.append(seg.array,seg.offset,seg.count);
+      if (i != selectionEndLine)       buf.append('\n');
+    }
+    return buf.toString();
+  }
+ else {
+    return getText(selectionStart,selectionEnd - selectionStart);
+  }
+}

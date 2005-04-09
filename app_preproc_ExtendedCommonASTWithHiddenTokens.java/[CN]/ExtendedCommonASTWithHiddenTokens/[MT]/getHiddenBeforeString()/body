@@ -1,0 +1,16 @@
+{
+  antlr.CommonHiddenStreamToken child=null, parent=hiddenBefore;
+  if (parent == null) {
+    return "";
+  }
+  do {
+    child=parent;
+    parent=child.getHiddenBefore();
+  }
+ while (parent != null);
+  StringBuffer hiddenBeforeString=new StringBuffer(100);
+  for (CommonHiddenStreamToken t=child; t != null; t=t.getHiddenAfter()) {
+    hiddenBeforeString.append(t.getText());
+  }
+  return hiddenBeforeString.toString();
+}

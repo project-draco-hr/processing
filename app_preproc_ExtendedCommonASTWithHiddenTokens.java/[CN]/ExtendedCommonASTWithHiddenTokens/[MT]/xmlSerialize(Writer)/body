@@ -1,0 +1,12 @@
+{
+  for (AST node=this; node != null; node=node.getNextSibling()) {
+    if (node.getFirstChild() == null) {
+      ((BaseAST)node).xmlSerializeNode(out);
+    }
+ else {
+      ((BaseAST)node).xmlSerializeRootOpen(out);
+      ((BaseAST)node.getFirstChild()).xmlSerialize(out);
+      ((BaseAST)node).xmlSerializeRootClose(out);
+    }
+  }
+}

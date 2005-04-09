@@ -1,0 +1,17 @@
+{
+  if (lineIndex >= length) {
+    throw new IllegalArgumentException("Tokenizing invalid line: " + lineIndex);
+  }
+  lastToken=null;
+  LineInfo info=lineInfo[lineIndex];
+  LineInfo prev;
+  if (lineIndex == 0)   prev=null;
+ else   prev=lineInfo[lineIndex - 1];
+  byte oldToken=info.token;
+  byte token=markTokensImpl(prev == null ? Token.NULL : prev.token,line,lineIndex);
+  info.token=token;
+  if (!(lastLine == lineIndex && nextLineRequested))   nextLineRequested=(oldToken != token);
+  lastLine=lineIndex;
+  addToken(0,Token.END);
+  return firstToken;
+}

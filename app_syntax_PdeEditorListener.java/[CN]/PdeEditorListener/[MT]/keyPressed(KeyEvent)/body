@@ -1,0 +1,58 @@
+{
+  if (externalEditor)   return false;
+  char c=event.getKeyChar();
+  int code=event.getKeyCode();
+  if ((event.getModifiers() & KeyEvent.META_MASK) != 0) {
+    return false;
+  }
+  if (!editor.sketch.current.modified) {
+    if ((code == KeyEvent.VK_BACK_SPACE) || (code == KeyEvent.VK_TAB) || (code == KeyEvent.VK_ENTER)|| ((c >= 32) && (c < 128))) {
+      editor.sketch.setModified();
+    }
+  }
+switch ((int)c) {
+case 9:
+    if (expandTabs) {
+      textarea.setSelectedText(tabString);
+      event.consume();
+      return true;
+    }
+  break;
+case 10:
+case 13:
+if (autoIndent) {
+  char contents[]=textarea.getText().toCharArray();
+  int origIndex=textarea.getCaretPosition() - 1;
+  int offset=0;
+  int realIndex=origIndex;
+  for (int i=0; i < realIndex - 1; i++) {
+    if ((contents[i] == 13) && (contents[i + 1] == 10)) {
+      offset++;
+      realIndex++;
+    }
+  }
+  origIndex+=offset;
+  int index=origIndex;
+  int spaceCount=0;
+  boolean finished=false;
+  while ((index != -1) && (!finished)) {
+    if ((contents[index] == 10) || (contents[index] == 13)) {
+      finished=true;
+      index++;
+    }
+ else {
+      index--;
+    }
+  }
+  while ((index < contents.length) && (index >= 0) && (contents[index++] == ' ')) {
+    spaceCount++;
+  }
+  String insertion="\n" + PdeEditor.EMPTY.substring(0,spaceCount);
+  textarea.setSelectedText(insertion);
+  event.consume();
+  return true;
+}
+break;
+}
+return false;
+}

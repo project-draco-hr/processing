@@ -1,0 +1,361 @@
+{
+  if (ast == null) {
+    return;
+  }
+  AST parent=null;
+  if (!stack.isEmpty()) {
+    parent=(AST)stack.peek();
+  }
+  stack.push(ast);
+  AST child1=ast.getFirstChild();
+  AST child2=null;
+  AST child3=null;
+  if (child1 != null) {
+    child2=child1.getNextSibling();
+    if (child2 != null) {
+      child3=child2.getNextSibling();
+    }
+  }
+switch (ast.getType()) {
+case ROOT_ID:
+    dumpHiddenTokens(PdePreprocessor.filter.getInitialHiddenToken());
+  printChildren(ast);
+break;
+case PACKAGE_DEF:
+out.print("package");
+dumpHiddenAfter(ast);
+print(ast.getFirstChild());
+break;
+case IMPORT:
+out.print("import");
+dumpHiddenAfter(ast);
+print(ast.getFirstChild());
+break;
+case CLASS_DEF:
+case INTERFACE_DEF:
+print(getChild(ast,MODIFIERS));
+if (ast.getType() == CLASS_DEF) {
+out.print("class");
+}
+ else {
+out.print("interface");
+}
+dumpHiddenBefore(getChild(ast,IDENT));
+print(getChild(ast,IDENT));
+print(getChild(ast,EXTENDS_CLAUSE));
+print(getChild(ast,IMPLEMENTS_CLAUSE));
+print(getChild(ast,OBJBLOCK));
+break;
+case EXTENDS_CLAUSE:
+if (hasChildren(ast)) {
+out.print("extends");
+dumpHiddenBefore(getBestPrintableNode(ast,false));
+printChildren(ast);
+}
+break;
+case IMPLEMENTS_CLAUSE:
+if (hasChildren(ast)) {
+out.print("implements");
+dumpHiddenBefore(getBestPrintableNode(ast,false));
+printChildren(ast);
+}
+break;
+case DOT:
+print(child1);
+out.print(".");
+dumpHiddenAfter(ast);
+print(child2);
+break;
+case MODIFIERS:
+case OBJBLOCK:
+case CTOR_DEF:
+case PARAMETERS:
+case PARAMETER_DEF:
+case VARIABLE_DEF:
+case TYPE:
+case SLIST:
+case ELIST:
+case ARRAY_DECLARATOR:
+case TYPECAST:
+case EXPR:
+case ARRAY_INIT:
+case FOR_INIT:
+case FOR_CONDITION:
+case FOR_ITERATOR:
+case METHOD_CALL:
+case INSTANCE_INIT:
+case INDEX_OP:
+case SUPER_CTOR_CALL:
+case CTOR_CALL:
+printChildren(ast);
+break;
+case METHOD_DEF:
+AST modifiersChild=ast.getFirstChild();
+AST typeChild=modifiersChild.getNextSibling();
+AST methodNameChild=typeChild.getNextSibling();
+AST parametersChild=methodNameChild.getNextSibling();
+boolean foundSpecifier=false;
+AST child=modifiersChild.getFirstChild();
+while (child != null) {
+String childText=child.getText();
+if (childText.equals("public") || childText.equals("protected") || childText.equals("private")) {
+foundSpecifier=true;
+child=null;
+}
+ else {
+child=child.getNextSibling();
+}
+}
+if (!foundSpecifier) {
+out.print("public ");
+}
+printChildren(ast);
+break;
+case ASSIGN:
+if (child2 != null) {
+print(child1);
+out.print("=");
+dumpHiddenAfter(ast);
+print(child2);
+}
+ else {
+out.print("=");
+dumpHiddenAfter(ast);
+print(child1);
+}
+break;
+case PLUS:
+case MINUS:
+case DIV:
+case MOD:
+case NOT_EQUAL:
+case EQUAL:
+case LT:
+case GT:
+case LE:
+case GE:
+case LOR:
+case LAND:
+case BOR:
+case BXOR:
+case BAND:
+case SL:
+case SR:
+case BSR:
+case LITERAL_instanceof:
+case PLUS_ASSIGN:
+case MINUS_ASSIGN:
+case STAR_ASSIGN:
+case DIV_ASSIGN:
+case MOD_ASSIGN:
+case SR_ASSIGN:
+case BSR_ASSIGN:
+case SL_ASSIGN:
+case BAND_ASSIGN:
+case BXOR_ASSIGN:
+case BOR_ASSIGN:
+printBinaryOperator(ast);
+break;
+case LITERAL_for:
+out.print(name(ast));
+dumpHiddenAfter(ast);
+printChildren(ast);
+break;
+case POST_INC:
+case POST_DEC:
+print(child1);
+out.print(name(ast));
+dumpHiddenAfter(ast);
+break;
+case BNOT:
+case LNOT:
+case INC:
+case DEC:
+case UNARY_MINUS:
+case UNARY_PLUS:
+out.print(name(ast));
+dumpHiddenAfter(ast);
+print(child1);
+break;
+case LITERAL_new:
+out.print("new");
+dumpHiddenAfter(ast);
+print(child1);
+print(child2);
+if (child3 != null) {
+print(child3);
+}
+break;
+case LITERAL_return:
+out.print("return");
+dumpHiddenAfter(ast);
+print(child1);
+break;
+case STATIC_INIT:
+out.print("static");
+dumpHiddenBefore(getBestPrintableNode(ast,false));
+print(child1);
+break;
+case LITERAL_switch:
+out.print("switch");
+dumpHiddenAfter(ast);
+printChildren(ast);
+break;
+case CASE_GROUP:
+printChildren(ast);
+break;
+case LITERAL_case:
+out.print("case");
+dumpHiddenAfter(ast);
+printChildren(ast);
+break;
+case LITERAL_default:
+out.print("default");
+dumpHiddenAfter(ast);
+printChildren(ast);
+break;
+case NUM_INT:
+case CHAR_LITERAL:
+case STRING_LITERAL:
+case NUM_FLOAT:
+out.print(ast.getText());
+dumpHiddenAfter(ast);
+break;
+case LITERAL_private:
+case LITERAL_public:
+case LITERAL_protected:
+case LITERAL_static:
+case LITERAL_transient:
+case LITERAL_native:
+case LITERAL_threadsafe:
+case LITERAL_synchronized:
+case LITERAL_volatile:
+case FINAL:
+case ABSTRACT:
+case LITERAL_package:
+case LITERAL_void:
+case LITERAL_boolean:
+case LITERAL_byte:
+case LITERAL_char:
+case LITERAL_short:
+case LITERAL_int:
+case LITERAL_float:
+case LITERAL_long:
+case LITERAL_double:
+case LITERAL_true:
+case LITERAL_false:
+case LITERAL_null:
+case SEMI:
+case LITERAL_this:
+case LITERAL_super:
+case LITERAL_continue:
+case LITERAL_break:
+out.print(name(ast));
+dumpHiddenAfter(ast);
+break;
+case EMPTY_STAT:
+case EMPTY_FIELD:
+break;
+case STAR:
+if (hasChildren(ast)) {
+printBinaryOperator(ast);
+}
+ else {
+out.print("*");
+dumpHiddenAfter(ast);
+}
+break;
+case LITERAL_throws:
+out.print("throws");
+dumpHiddenAfter(ast);
+printChildren(ast);
+break;
+case LITERAL_if:
+out.print("if");
+dumpHiddenAfter(ast);
+print(child1);
+print(child2);
+if (child3 != null) {
+out.print("else");
+dumpHiddenBefore(getBestPrintableNode(child3,true));
+print(child3);
+}
+break;
+case LITERAL_while:
+out.print("while");
+dumpHiddenAfter(ast);
+printChildren(ast);
+break;
+case LITERAL_do:
+out.print("do");
+dumpHiddenAfter(ast);
+print(child1);
+out.print("while");
+dumpHiddenBefore(getBestPrintableNode(child2,false));
+print(child2);
+break;
+case LITERAL_try:
+out.print("try");
+dumpHiddenAfter(ast);
+printChildren(ast);
+break;
+case LITERAL_catch:
+out.print("catch");
+dumpHiddenAfter(ast);
+printChildren(ast);
+break;
+case LITERAL_finally:
+out.print("finally");
+dumpHiddenAfter(ast);
+printChildren(ast);
+break;
+case LITERAL_throw:
+out.print("throw");
+dumpHiddenAfter(ast);
+print(child1);
+break;
+case QUESTION:
+print(child1);
+out.print("?");
+dumpHiddenAfter(ast);
+print(child2);
+print(child3);
+break;
+case IDENT:
+out.print(ast.getText());
+dumpHiddenAfter(ast);
+break;
+case LITERAL_color:
+out.print("int");
+dumpHiddenAfter(ast);
+break;
+case WEBCOLOR_LITERAL:
+if (ast.getText().length() != 6) {
+System.err.println("Internal error: incorrect length of webcolor " + "literal should have been detected sooner.");
+break;
+}
+out.print("0xff" + ast.getText());
+dumpHiddenAfter(ast);
+break;
+case CONSTRUCTOR_CAST:
+AST nonTerminalTypeNode=child1;
+AST terminalTypeNode=child1.getFirstChild();
+AST exprToCast=child2;
+String pooType=terminalTypeNode.getText();
+out.print("PApplet.to" + Character.toUpperCase(pooType.charAt(0)) + pooType.substring(1));
+dumpHiddenAfter(terminalTypeNode);
+print(exprToCast);
+break;
+case NUM_DOUBLE:
+out.print(ast.getText());
+if (PdePreferences.getBoolean("preproc.substitute_floats")) {
+out.print("f");
+}
+dumpHiddenAfter(ast);
+break;
+default :
+debug.println("Invalid type:" + ast.getType());
+break;
+}
+stack.pop();
+}

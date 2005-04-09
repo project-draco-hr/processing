@@ -1,0 +1,19 @@
+{
+  Font defaultFont=getFont();
+  Color defaultColor=getForeground();
+  currentLineIndex=line;
+  int y=textArea.lineToY(line);
+  if (line < 0 || line >= textArea.getLineCount()) {
+    if (paintInvalid) {
+      paintHighlight(gfx,line,y);
+      styles[Token.INVALID].setGraphicsFlags(gfx,defaultFont);
+      gfx.drawString("~",0,y + fm.getHeight());
+    }
+  }
+ else   if (tokenMarker == null) {
+    paintPlainLine(gfx,line,defaultFont,defaultColor,x,y);
+  }
+ else {
+    paintSyntaxLine(gfx,tokenMarker,line,defaultFont,defaultColor,x,y);
+  }
+}

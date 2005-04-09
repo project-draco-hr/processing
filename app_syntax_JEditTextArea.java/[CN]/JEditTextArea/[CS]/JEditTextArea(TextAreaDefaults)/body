@@ -1,0 +1,35 @@
+{
+  enableEvents(AWTEvent.KEY_EVENT_MASK);
+  painter=new TextAreaPainter(this,defaults);
+  documentHandler=new DocumentHandler();
+  eventListenerList=new EventListenerList();
+  caretEvent=new MutableCaretEvent();
+  lineSegment=new Segment();
+  bracketLine=bracketPosition=-1;
+  blink=true;
+  setLayout(new ScrollLayout());
+  add(CENTER,painter);
+  add(RIGHT,vertical=new JScrollBar(JScrollBar.VERTICAL));
+  add(BOTTOM,horizontal=new JScrollBar(JScrollBar.HORIZONTAL));
+  vertical.addAdjustmentListener(new AdjustHandler());
+  horizontal.addAdjustmentListener(new AdjustHandler());
+  painter.addComponentListener(new ComponentHandler());
+  painter.addMouseListener(new MouseHandler());
+  painter.addMouseMotionListener(new DragHandler());
+  addFocusListener(new FocusHandler());
+  setInputHandler(defaults.inputHandler);
+  setDocument(defaults.document);
+  editable=defaults.editable;
+  caretVisible=defaults.caretVisible;
+  caretBlinks=defaults.caretBlinks;
+  electricScroll=defaults.electricScroll;
+  focusedComponent=this;
+  addMouseWheelListener(new MouseWheelListener(){
+    public void mouseWheelMoved(    MouseWheelEvent e){
+      if (!scrollBarsInitialized)       return;
+      int amt=e.getWheelRotation();
+      vertical.setValue(vertical.getValue() + amt * 3);
+    }
+  }
+);
+}

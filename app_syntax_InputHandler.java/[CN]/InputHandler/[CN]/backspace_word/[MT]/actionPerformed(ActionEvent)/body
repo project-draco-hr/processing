@@ -1,0 +1,28 @@
+{
+  JEditTextArea textArea=getTextArea(evt);
+  int start=textArea.getSelectionStart();
+  if (start != textArea.getSelectionEnd()) {
+    textArea.setSelectedText("");
+  }
+  int line=textArea.getCaretLine();
+  int lineStart=textArea.getLineStartOffset(line);
+  int caret=start - lineStart;
+  String lineText=textArea.getLineText(textArea.getCaretLine());
+  if (caret == 0) {
+    if (lineStart == 0) {
+      textArea.getToolkit().beep();
+      return;
+    }
+    caret--;
+  }
+ else {
+    String noWordSep=(String)textArea.getDocument().getProperty("noWordSep");
+    caret=TextUtilities.findWordStart(lineText,caret,noWordSep);
+  }
+  try {
+    textArea.getDocument().remove(caret + lineStart,start - (caret + lineStart));
+  }
+ catch (  BadLocationException bl) {
+    bl.printStackTrace();
+  }
+}
