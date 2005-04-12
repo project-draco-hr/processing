@@ -1,5 +1,5 @@
 {
-  if (!lights) {
+  if (lightCount == 0) {
     target[toffset + 0]=min(1.0f,er + dr);
     target[toffset + 1]=min(1.0f,eg + dg);
     target[toffset + 2]=min(1.0f,eb + db);
@@ -17,8 +17,7 @@
   float specular_r=0;
   float specular_g=0;
   float specular_b=0;
-  for (int i=0; i < MAX_LIGHTS; i++) {
-    if (!light[i])     continue;
+  for (int i=0; i < lightCount; i++) {
     float denom=lightConstantFalloff[i];
     float spotTerm=1;
     if (lightType[i] == AMBIENT) {
@@ -61,7 +60,7 @@
         }
         if (lightType[i] == SPOT) {
           lightDir_dot_li=-(lightNX[i] * lix + lightNY[i] * liy + lightNZ[i] * liz);
-          if (lightDir_dot_li <= lightCosSpotAngle[i]) {
+          if (lightDir_dot_li <= lightSpotAngleCos[i]) {
             continue;
           }
           spotTerm=pow(lightDir_dot_li,lightSpotConcentration[i]);
