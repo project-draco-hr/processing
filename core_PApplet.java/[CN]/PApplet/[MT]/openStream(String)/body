@@ -1,6 +1,25 @@
 {
+  InputStream stream=null;
+  if (!online) {
+    try {
+      String location=folder + File.separator + "data";
+      File file=new File(location,filename);
+      try {
+        String path=file.getCanonicalPath();
+        String filenameActual=new File(path).getName();
+        if (!filenameActual.equals(filename)) {
+          throw new RuntimeException("This file is named " + filenameActual + " not "+ filename+ ".");
+        }
+      }
+ catch (      IOException e) {
+      }
+      stream=new FileInputStream(file);
+      if (stream != null)       return stream;
+    }
+ catch (    IOException e) {
+    }
+  }
   try {
-    InputStream stream=null;
     if (filename.startsWith("http://")) {
       try {
         URL url=new URL(filename);
@@ -17,14 +36,6 @@
     stream=getClass().getResourceAsStream("data/" + filename);
     if (stream != null)     return stream;
     try {
-      try {
-        String location=folder + File.separator + "data";
-        File file=new File(location,filename);
-        stream=new FileInputStream(file);
-        if (stream != null)         return stream;
-      }
- catch (      Exception e) {
-      }
       try {
         File file=new File(folder,filename);
         stream=new FileInputStream(file);
