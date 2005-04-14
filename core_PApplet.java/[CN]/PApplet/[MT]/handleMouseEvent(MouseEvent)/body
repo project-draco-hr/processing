@@ -4,6 +4,21 @@
   mouseX=event.getX();
   mouseY=event.getY();
   mouseEvent=event;
+  int button=event.getButton();
+  if (button == 1) {
+    mouseButton=LEFT;
+  }
+ else   if (button == 2) {
+    mouseButton=CENTER;
+  }
+ else   if (button == 3) {
+    mouseButton=RIGHT;
+  }
+  if ((platform == MACOSX) || (platform == MACOS9)) {
+    if (mouseEvent.isPopupTrigger()) {
+      mouseButton=RIGHT;
+    }
+  }
   mouseEventMethods.handle(new Object[]{event});
   if (firstMouse) {
     pmouseX=mouseX;

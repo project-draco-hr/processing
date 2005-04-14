@@ -1,0 +1,31 @@
+{
+  if (platform == WINDOWS) {
+    try {
+      Runtime.getRuntime().exec("cmd /c \"" + filename + "\"");
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+      throw new RuntimeException("Could not open " + filename);
+    }
+  }
+ else   if ((platform == MACOSX) || (platform == MACOS9)) {
+    String url="file://" + filename;
+    if (url.indexOf(' ') != -1) {
+      StringBuffer sb=new StringBuffer();
+      char c[]=url.toCharArray();
+      for (int i=0; i < c.length; i++) {
+        if (c[i] == ' ') {
+          sb.append("%20");
+        }
+ else {
+          sb.append(c[i]);
+        }
+      }
+      url=sb.toString();
+    }
+    link(url);
+  }
+ else {
+    open(new String[]{filename});
+  }
+}

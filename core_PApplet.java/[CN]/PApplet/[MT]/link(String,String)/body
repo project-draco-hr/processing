@@ -1,14 +1,40 @@
 {
-  if (!online) {
-    System.err.println("Can't open " + here);
-    System.err.println("link() only works inside a web browser");
-    return;
+  if (online) {
+    try {
+      if (frame == null) {
+        getAppletContext().showDocument(new URL(url));
+      }
+ else {
+        getAppletContext().showDocument(new URL(url),frame);
+      }
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException("Could not open " + url);
+    }
   }
-  try {
-    getAppletContext().showDocument(new URL(here),there);
-  }
- catch (  Exception e) {
-    System.err.println("Could not open " + here);
-    e.printStackTrace();
+ else {
+    try {
+      if (platform == WINDOWS) {
+        Runtime.getRuntime().exec("cmd /c start " + url);
+      }
+ else       if ((platform == MACOSX) || (platform == MACOS9)) {
+        try {
+          Class mrjFileUtils=Class.forName("com.apple.mrj.MRJFileUtils");
+          Method openMethod=mrjFileUtils.getMethod("openURL",new Class[]{String.class});
+          openMethod.invoke(null,new Object[]{url});
+        }
+ catch (        Exception e) {
+          e.printStackTrace();
+        }
+      }
+ else {
+        throw new RuntimeException("Can't open URLs for this platform");
+      }
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+      throw new RuntimeException("Could not open " + url);
+    }
   }
 }
