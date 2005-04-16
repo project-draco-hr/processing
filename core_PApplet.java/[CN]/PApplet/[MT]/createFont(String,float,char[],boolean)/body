@@ -1,0 +1,27 @@
+{
+  if (PApplet.javaVersion < 1.3f) {
+    throw new RuntimeException("Can only create fonts with " + "Java 1.3 or higher");
+  }
+  String lowerName=name.toLowerCase();
+  Font font=null;
+  try {
+    Method deriveFontMethod=Font.class.getMethod("deriveFont",new Class[]{Float.TYPE});
+    Float floatSize=new Float(size);
+    if (lowerName.endsWith(".otf") || lowerName.endsWith(".ttf")) {
+      Method createFontMethod=Font.class.getMethod("createFont",new Class[]{Integer.TYPE,InputStream.class});
+      Field ttf=Font.class.getField("TRUETYPE_FONT");
+      Integer ttfInteger=new Integer(ttf.getInt(ttf));
+      Font baseFont=(Font)createFontMethod.invoke(name,new Object[]{ttfInteger,openStream(name)});
+      font=(Font)deriveFontMethod.invoke(baseFont,new Object[]{floatSize});
+    }
+ else {
+      Font baseFont=new Font(name,Font.PLAIN,1);
+      font=(Font)deriveFontMethod.invoke(font,new Object[]{floatSize});
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    throw new RuntimeException("Problem using createFont() " + "with the file " + name);
+  }
+  return new PFont(font,charset,smooth);
+}
