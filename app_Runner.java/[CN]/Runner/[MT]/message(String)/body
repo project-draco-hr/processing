@@ -1,0 +1,76 @@
+{
+  if (s.trim().length() == 0)   return;
+  if (s.indexOf(PApplet.EXTERNAL_QUIT) == 0) {
+    editor.doClose();
+    return;
+  }
+  if (s.indexOf(PApplet.EXTERNAL_MOVE) == 0) {
+    String nums=s.substring(s.indexOf(' ') + 1);
+    int space=nums.indexOf(' ');
+    int left=Integer.parseInt(nums.substring(0,space));
+    int top=Integer.parseInt(nums.substring(space + 1));
+    editor.appletLocation=new Point(left,top);
+    return;
+  }
+  if (s.indexOf(PApplet.LEECH_WAKEUP) == 0) {
+    newMessage=true;
+    return;
+  }
+  System.err.print(s);
+  System.err.flush();
+  if (newMessage) {
+    exception=new RunnerException(s);
+    exception.hideStackTrace=true;
+    newMessage=false;
+    foundMessageSource=false;
+    messageLineCount=0;
+  }
+ else {
+    messageLineCount++;
+    if (!foundMessageSource) {
+      int afterAt=s.indexOf("at") + 3;
+      if (afterAt == 2) {
+        System.err.println(s);
+        return;
+      }
+      s=s.substring(afterAt + 1);
+      int startParen=s.indexOf('(');
+      String pkgClassFxn=null;
+      int codeIndex=-1;
+      int lineIndex=-1;
+      if (startParen == -1) {
+        pkgClassFxn=s;
+      }
+ else {
+        pkgClassFxn=s.substring(0,startParen);
+        String fileAndLine=s.substring(startParen + 1);
+        fileAndLine=fileAndLine.substring(0,fileAndLine.length() - 1);
+        int colonIndex=fileAndLine.indexOf(':');
+        if (colonIndex != -1) {
+          String filename=fileAndLine.substring(0,colonIndex);
+          for (int i=0; i < sketch.codeCount; i++) {
+            if (sketch.code[i].preprocName.equals(filename)) {
+              codeIndex=i;
+              break;
+            }
+          }
+          if (codeIndex != -1) {
+            lineIndex=Integer.parseInt(fileAndLine.substring(colonIndex + 1));
+            exception=new RunnerException(exception.getMessage(),codeIndex,lineIndex - 1,-1);
+            exception.hideStackTrace=true;
+            foundMessageSource=true;
+          }
+        }
+      }
+      editor.error(exception);
+    }
+ else     if (messageLineCount > 5) {
+      messageLineCount=-100;
+      exception=new RunnerException(exception.getMessage());
+      exception.hideStackTrace=true;
+      editor.error(exception);
+    }
+ else {
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  this.editor=eddie;
+  pieces=new Image[STATUS.length][WHERE.length];
+  for (int i=0; i < STATUS.length; i++) {
+    for (int j=0; j < WHERE.length; j++) {
+      pieces[i][j]=Base.getImage("tab-" + STATUS[i] + "-"+ WHERE[j]+ ".gif",this);
+    }
+  }
+  if (backgroundColor == null) {
+    backgroundColor=Preferences.getColor("header.bgcolor");
+    textColor[SELECTED]=Preferences.getColor("header.text.selected.color");
+    textColor[UNSELECTED]=Preferences.getColor("header.text.unselected.color");
+  }
+  addMouseListener(new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
+      int x=e.getX();
+      int y=e.getY();
+      if ((x > menuLeft) && (x < menuRight)) {
+        popup.show(EditorHeader.this,x,y);
+      }
+ else {
+        for (int i=0; i < editor.sketch.codeCount; i++) {
+          if ((x > tabLeft[i]) && (x < tabRight[i])) {
+            editor.sketch.setCurrent(i);
+            repaint();
+          }
+        }
+      }
+    }
+  }
+);
+}

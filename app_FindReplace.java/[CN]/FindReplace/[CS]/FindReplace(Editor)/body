@@ -1,0 +1,71 @@
+{
+  super("Find");
+  setResizable(false);
+  this.editor=editor;
+  Container pain=getContentPane();
+  pain.setLayout(null);
+  JLabel findLabel=new JLabel("Find:");
+  Dimension d0=findLabel.getPreferredSize();
+  JLabel replaceLabel=new JLabel("Replace with:");
+  Dimension d1=replaceLabel.getPreferredSize();
+  pain.add(findLabel);
+  pain.add(replaceLabel);
+  pain.add(findField=new JTextField(20));
+  pain.add(replaceField=new JTextField(20));
+  Dimension d2=findField.getPreferredSize();
+  int yoff=(1 + d2.height - d1.height) / 2;
+  findLabel.setBounds(BIG + (d1.width - d0.width) + yoff,BIG,d1.width,d1.height);
+  replaceLabel.setBounds(BIG,BIG + d2.height + SMALL+ yoff,d1.width,d1.height);
+  ignoreCase=true;
+  ignoreCaseBox=new JCheckBox("Ignore Case");
+  ignoreCaseBox.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      ignoreCase=ignoreCaseBox.isSelected();
+    }
+  }
+);
+  ignoreCaseBox.setSelected(ignoreCase);
+  pain.add(ignoreCaseBox);
+  JPanel buttons=new JPanel();
+  buttons.setLayout(new FlowLayout());
+  if (Base.isMacOS()) {
+    buttons.add(replaceButton=new JButton("Replace"));
+    buttons.add(replaceAllButton=new JButton("Replace All"));
+    buttons.add(findButton=new JButton("Find"));
+  }
+ else {
+    buttons.add(findButton=new JButton("Find"));
+    buttons.add(replaceButton=new JButton("Replace"));
+    buttons.add(replaceAllButton=new JButton("Replace All"));
+  }
+  pain.add(buttons);
+  if (Base.isMacOS()) {
+    buttons.setBorder(null);
+  }
+  Dimension d3=buttons.getPreferredSize();
+  buttons.setBounds(BIG,BIG + d2.height * 3 + SMALL * 2 + BIG,d3.width,d3.height);
+  findField.setBounds(BIG + d1.width + SMALL,BIG,d3.width - (d1.width + SMALL),d2.height);
+  replaceField.setBounds(BIG + d1.width + SMALL,BIG + d2.height + SMALL,d3.width - (d1.width + SMALL),d2.height);
+  ignoreCaseBox.setBounds(BIG + d1.width + SMALL,BIG + d2.height * 2 + SMALL * 2,d3.width,d2.height);
+  replaceButton.addActionListener(this);
+  replaceAllButton.addActionListener(this);
+  findButton.addActionListener(this);
+  replaceButton.setEnabled(false);
+  findField.requestFocus();
+  getRootPane().setDefaultButton(findButton);
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  int wide=d3.width + BIG * 2;
+  Rectangle butt=buttons.getBounds();
+  int high=butt.y + butt.height + BIG * 2 + SMALL;
+  setBounds((screen.width - wide) / 2,(screen.height - high) / 2,wide,high);
+  findField.addKeyListener(this);
+  replaceField.addKeyListener(this);
+  addKeyListener(this);
+  addWindowListener(new WindowAdapter(){
+    public void windowActivated(    WindowEvent e){
+      findField.requestFocus();
+      findField.selectAll();
+    }
+  }
+);
+}

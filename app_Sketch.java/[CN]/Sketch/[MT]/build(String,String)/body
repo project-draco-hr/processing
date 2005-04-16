@@ -1,0 +1,126 @@
+{
+  String codeFolderPackages[]=null;
+  String javaClassPath=System.getProperty("java.class.path");
+  if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\"")) {
+    javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
+  }
+  classPath=buildPath + File.pathSeparator + Sketchbook.librariesClassPath+ File.pathSeparator+ javaClassPath;
+  if (codeFolder.exists()) {
+    externalRuntime=true;
+    classPath=Compiler.contentsToClassPath(codeFolder) + File.pathSeparator + classPath;
+    libraryPath=codeFolder.getAbsolutePath();
+    String codeFolderClassPath=Compiler.contentsToClassPath(codeFolder);
+    codeFolderPackages=Compiler.packageListFromClassPath(codeFolderClassPath);
+  }
+ else {
+    externalRuntime=(codeCount > 1);
+    libraryPath="";
+  }
+  if (dataFolder.exists() && Base.calcFolderSize(dataFolder) > 768 * 1024) {
+    externalRuntime=true;
+  }
+  StringBuffer bigCode=new StringBuffer(code[0].program);
+  int bigCount=countLines(code[0].program);
+  for (int i=1; i < codeCount; i++) {
+    if (code[i].flavor == PDE) {
+      code[i].lineOffset=++bigCount;
+      bigCode.append('\n');
+      bigCode.append(code[i].program);
+      bigCount+=countLines(code[i].program);
+      code[i].preprocName=null;
+    }
+  }
+  if ((bigCode.indexOf(" class ") != -1) || (bigCode.indexOf("\nclass ") != -1)) {
+    externalRuntime=true;
+  }
+  String primaryClassName=null;
+  PdePreprocessor preprocessor=new PdePreprocessor();
+  try {
+    String className=preprocessor.write(bigCode.toString(),buildPath,suggestedClassName,codeFolderPackages);
+    if (className == null) {
+      throw new RunnerException("Could not find main class");
+    }
+ else {
+      code[0].preprocName=className + ".java";
+    }
+    primaryClassName=className;
+    if ((PdePreprocessor.programType == PdePreprocessor.JAVA) || (preprocessor.extraImports.length != 0)) {
+      externalRuntime=true;
+    }
+  }
+ catch (  antlr.RecognitionException re) {
+    int errorFile=0;
+    int errorLine=re.getLine() - 1;
+    for (int i=1; i < codeCount; i++) {
+      if ((code[i].flavor == PDE) && (code[i].lineOffset < errorLine)) {
+        errorFile=i;
+      }
+    }
+    errorLine-=code[errorFile].lineOffset;
+    throw new RunnerException(re.getMessage(),errorFile,errorLine,re.getColumn());
+  }
+catch (  antlr.TokenStreamRecognitionException tsre) {
+    PatternMatcher matcher=new Perl5Matcher();
+    PatternCompiler compiler=new Perl5Compiler();
+    String mess="^line (\\d+):(\\d+):\\s";
+    Pattern pattern=null;
+    try {
+      pattern=compiler.compile(mess);
+    }
+ catch (    MalformedPatternException e) {
+      Base.showWarning("Internal Problem","An internal error occurred while trying\n" + "to compile the sketch. Please report\n" + "this online at http://processing.org/bugs",e);
+    }
+    PatternMatcherInput input=new PatternMatcherInput(tsre.toString());
+    if (matcher.contains(input,pattern)) {
+      MatchResult result=matcher.getMatch();
+      int errorLine=Integer.parseInt(result.group(1).toString()) - 1;
+      int errorColumn=Integer.parseInt(result.group(2).toString());
+      int errorFile=0;
+      for (int i=1; i < codeCount; i++) {
+        if ((code[i].flavor == PDE) && (code[i].lineOffset < errorLine)) {
+          errorFile=i;
+        }
+      }
+      errorLine-=code[errorFile].lineOffset;
+      throw new RunnerException(tsre.getMessage(),errorFile,errorLine,errorColumn);
+    }
+ else {
+      throw new RunnerException(tsre.toString(),0,-1,-1);
+    }
+  }
+catch (  RunnerException pe) {
+    throw pe;
+  }
+catch (  Exception ex) {
+    System.err.println("Uncaught exception type:" + ex.getClass());
+    ex.printStackTrace();
+    throw new RunnerException(ex.toString());
+  }
+  importedLibraries=new Vector();
+  String imports[]=preprocessor.extraImports;
+  for (int i=0; i < imports.length; i++) {
+    String entry=imports[i].substring(0,imports[i].lastIndexOf('.'));
+    File libFolder=(File)Sketchbook.importToLibraryTable.get(entry);
+    if (libFolder == null) {
+      continue;
+    }
+    importedLibraries.add(libFolder);
+    libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
+  }
+  for (int i=0; i < codeCount; i++) {
+    if (code[i].flavor == JAVA) {
+      String filename=code[i].name + ".java";
+      try {
+        Base.saveFile(code[i].program,new File(buildPath,filename));
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+        throw new RunnerException("Problem moving " + filename + " to the build folder");
+      }
+      code[i].preprocName=filename;
+    }
+  }
+  Compiler compiler=new Compiler();
+  boolean success=compiler.compile(this,buildPath);
+  return success ? primaryClassName : null;
+}

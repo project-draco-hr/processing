@@ -1,0 +1,22 @@
+{
+  doClose();
+  running=true;
+  buttons.run();
+  for (int i=0; i < 10; i++)   System.out.println();
+  if (Preferences.getBoolean("console.auto_clear")) {
+    console.clear();
+  }
+  presenting=present;
+  try {
+    if (!sketch.handleRun())     return;
+    runtime=new Runner(sketch,Editor.this);
+    runtime.start(appletLocation);
+    watcher=new RunButtonWatcher();
+  }
+ catch (  RunnerException e) {
+    error(e);
+  }
+catch (  Exception e) {
+    e.printStackTrace();
+  }
+}

@@ -1,0 +1,20 @@
+{
+  this.leechErr=new PrintStream(new MessageStream(this));
+  try {
+    if (editor.presenting) {
+      startPresenting();
+    }
+ else     if (sketch.externalRuntime) {
+      startExternalRuntime(windowLocation);
+    }
+ else {
+      startInternal(windowLocation);
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    if (applet != null)     applet.finished=true;
+    leechErr.println(PApplet.LEECH_WAKEUP);
+    e.printStackTrace(this.leechErr);
+  }
+}

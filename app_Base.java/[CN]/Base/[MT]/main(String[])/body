@@ -1,0 +1,18 @@
+{
+  if (PApplet.javaVersion < 1.4f) {
+    Base.showError("Need to install Java 1.4","This version of Processing requires    \n" + "Java 1.4 or later to run properly.\n" + "Please visit java.com to upgrade.",null);
+  }
+  if (args.length == 1) {
+    Base.openedAtStartup=args[0];
+  }
+  MRJOpenDocumentHandler startupOpen=new MRJOpenDocumentHandler(){
+    public void handleOpenFile(    File file){
+      if (Base.openedAtStartup == null) {
+        Base.openedAtStartup=file.getAbsolutePath();
+      }
+    }
+  }
+;
+  MRJApplicationUtils.registerOpenDocumentHandler(startupOpen);
+  Base app=new Base();
+}

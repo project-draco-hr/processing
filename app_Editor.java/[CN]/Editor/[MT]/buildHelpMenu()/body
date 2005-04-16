@@ -1,0 +1,62 @@
+{
+  JMenu menu=new JMenu("Help");
+  JMenuItem item;
+  item=new JMenuItem("Environment");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.openURL(System.getProperty("user.dir") + File.separator + "reference"+ File.separator+ "environment"+ File.separator+ "index.html");
+    }
+  }
+);
+  menu.add(item);
+  item=new JMenuItem("Reference");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.openURL(System.getProperty("user.dir") + File.separator + "reference"+ File.separator+ "index.html");
+    }
+  }
+);
+  menu.add(item);
+  item=newJMenuItem("Find in Reference",'F',true);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (textarea.isSelectionActive()) {
+        String text=textarea.getSelectedText();
+        if (text.length() == 0) {
+          message("First select a word to find in the reference.");
+        }
+ else {
+          String referenceFile=PdeKeywords.getReference(text);
+          if (referenceFile == null) {
+            message("No reference available for \"" + text + "\"");
+          }
+ else {
+            Base.showReference(referenceFile);
+          }
+        }
+      }
+    }
+  }
+);
+  menu.add(item);
+  item=newJMenuItem("Visit Processing.org",'5');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.openURL("http://processing.org/");
+    }
+  }
+);
+  menu.add(item);
+  if (!Base.isMacOS()) {
+    menu.addSeparator();
+    item=new JMenuItem("About Processing");
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        handleAbout();
+      }
+    }
+);
+    menu.add(item);
+  }
+  return menu;
+}

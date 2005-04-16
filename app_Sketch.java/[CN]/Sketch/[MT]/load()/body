@@ -1,0 +1,55 @@
+{
+  codeFolder=new File(folder,"code");
+  dataFolder=new File(folder,"data");
+  File libraryFolder=new File(folder,"library");
+  if (libraryFolder.exists()) {
+    library=true;
+  }
+  String list[]=folder.list();
+  for (int i=0; i < list.length; i++) {
+    if (list[i].endsWith(".pde"))     codeCount++;
+ else     if (list[i].endsWith(".java"))     codeCount++;
+ else     if (list[i].endsWith(".pde.x"))     hiddenCount++;
+ else     if (list[i].endsWith(".java.x"))     hiddenCount++;
+  }
+  code=new SketchCode[codeCount];
+  hidden=new SketchCode[hiddenCount];
+  int codeCounter=0;
+  int hiddenCounter=0;
+  for (int i=0; i < list.length; i++) {
+    if (list[i].endsWith(".pde")) {
+      code[codeCounter++]=new SketchCode(list[i].substring(0,list[i].length() - 4),new File(folder,list[i]),PDE);
+    }
+ else     if (list[i].endsWith(".java")) {
+      code[codeCounter++]=new SketchCode(list[i].substring(0,list[i].length() - 5),new File(folder,list[i]),JAVA);
+    }
+ else     if (list[i].endsWith(".pde.x")) {
+      hidden[hiddenCounter++]=new SketchCode(list[i].substring(0,list[i].length() - 6),new File(folder,list[i]),PDE);
+    }
+ else     if (list[i].endsWith(".java.x")) {
+      hidden[hiddenCounter++]=new SketchCode(list[i].substring(0,list[i].length() - 7),new File(folder,list[i]),JAVA);
+    }
+  }
+  int index=0;
+  while (index < codeCount) {
+    if ((code[index] == null) || (code[index].program == null)) {
+      for (int i=index + 1; i < codeCount; i++) {
+        code[i - 1]=code[i];
+      }
+      codeCount--;
+    }
+ else {
+      index++;
+    }
+  }
+  for (int i=1; i < codeCount; i++) {
+    if (code[i].file.getName().equals(mainFilename)) {
+      SketchCode temp=code[0];
+      code[0]=code[i];
+      code[i]=temp;
+      break;
+    }
+  }
+  sortCode();
+  setCurrent(0);
+}

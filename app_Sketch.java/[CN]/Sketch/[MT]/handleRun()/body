@@ -1,0 +1,21 @@
+{
+  current.program=editor.getText();
+  if (Preferences.getBoolean("editor.external")) {
+    load();
+  }
+  cleanup();
+  String suggestedClassName=("Temporary_" + String.valueOf((int)(Math.random() * 10000)) + "_"+ String.valueOf((int)(Math.random() * 10000)));
+  mainClassName=build(tempBuildFolder.getAbsolutePath(),suggestedClassName);
+  if (!externalRuntime) {
+    if (dataFolder.exists()) {
+      try {
+        Base.copyDir(dataFolder,new File(tempBuildFolder,"data"));
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+        throw new RunnerException("Problem copying files from data folder");
+      }
+    }
+  }
+  return (mainClassName != null);
+}

@@ -1,0 +1,73 @@
+{
+  Point editorLocation=editor.getLocation();
+  int windowX=editorLocation.x;
+  int windowY=editorLocation.y + editor.getInsets().top;
+  RunnerClassLoader loader=new RunnerClassLoader();
+  Class c=loader.loadClass(sketch.mainClassName);
+  applet=(PApplet)c.newInstance();
+  applet.leechErr=leechErr;
+  applet.folder=sketch.folder.getAbsolutePath();
+  applet.init();
+  while ((applet.width == 0) && !applet.finished) {
+    try {
+      if (applet.exception != null) {
+        throw new RunnerException(applet.exception.getMessage());
+      }
+      Thread.sleep(5);
+    }
+ catch (    InterruptedException e) {
+    }
+  }
+  window=new Frame(sketch.name);
+  ((Frame)window).setResizable(false);
+  if (editor.icon != null) {
+    ((Frame)window).setIconImage(editor.icon);
+  }
+  window.pack();
+  window.addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      stop();
+      editor.doClose();
+    }
+  }
+);
+  applet.addKeyListener(new KeyAdapter(){
+    public void keyPressed(    KeyEvent e){
+      if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        stop();
+        editor.doClose();
+      }
+    }
+  }
+);
+  window.add(applet);
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  window.setLayout(null);
+  Insets insets=window.getInsets();
+  int minW=Preferences.getInteger("run.window.width.minimum");
+  int minH=Preferences.getInteger("run.window.height.minimum");
+  int windowW=Math.max(applet.width,minW) + insets.left + insets.right;
+  int windowH=Math.max(applet.height,minH) + insets.top + insets.bottom;
+  if (windowX - windowW > 10) {
+    window.setBounds(windowX - windowW,windowY,windowW,windowH);
+  }
+ else {
+    windowX=editorLocation.x + Preferences.GRID_SIZE * 2;
+    windowY=editorLocation.y + Preferences.GRID_SIZE * 2;
+    if ((windowX + windowW > screen.width - Preferences.GRID_SIZE) || (windowY + windowH > screen.height - Preferences.GRID_SIZE)) {
+      windowX=(screen.width - windowW) / 2;
+      windowY=(screen.height - windowH) / 2;
+    }
+    window.setBounds(windowX,windowY,windowW,windowH);
+  }
+  Color windowBgColor=Preferences.getColor("run.window.bgcolor");
+  window.setBackground(windowBgColor);
+  int usableH=windowH - insets.top - insets.bottom;
+  applet.setBounds((windowW - applet.width) / 2,insets.top + (usableH - applet.height) / 2,windowW,windowH);
+  applet.setVisible(true);
+  if (windowLocation != null) {
+    window.setLocation(windowLocation);
+  }
+  window.show();
+  applet.requestFocus();
+}

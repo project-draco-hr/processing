@@ -1,0 +1,16 @@
+{
+  String list[]=Compiler.packageListFromClassPath(jarPath);
+  if (current.flavor == PDE) {
+    setCurrent(0);
+  }
+  StringBuffer buffer=new StringBuffer();
+  for (int i=0; i < list.length; i++) {
+    buffer.append("import ");
+    buffer.append(list[i]);
+    buffer.append(".*;\n");
+  }
+  buffer.append('\n');
+  buffer.append(editor.getText());
+  editor.setText(buffer.toString(),false);
+  setModified();
+}

@@ -1,0 +1,69 @@
+{
+  if (renamingCode && newName.equalsIgnoreCase(current.name)) {
+    return;
+  }
+  if (newName.trim().equals("")) {
+    return;
+  }
+  String newFilename=null;
+  int newFlavor=0;
+  if (newName.endsWith(".pde")) {
+    newFilename=newName;
+    newName=newName.substring(0,newName.length() - 4);
+    newFlavor=PDE;
+  }
+ else   if (newName.endsWith(".java")) {
+    if (code[0] == current) {
+      Base.showWarning("Problem with rename","The main .pde file cannot be .java file.\n" + "(It may be time for your to graduate to a\n" + "\"real\" programming environment)",null);
+      return;
+    }
+    newFilename=newName;
+    newName=newName.substring(0,newName.length() - 5);
+    newFlavor=JAVA;
+  }
+ else {
+    newFilename=newName + ".pde";
+    newFlavor=PDE;
+  }
+  if (newName.indexOf('.') != -1) {
+    newName=Sketchbook.sanitizedName(newName);
+    newFilename=newName + ((newFlavor == PDE) ? ".pde" : ".java");
+  }
+  File newFile=new File(folder,newFilename);
+  if (newFile.exists()) {
+    Base.showMessage("Nope","A file named \"" + newFile + "\" already exists\n"+ "in \""+ folder.getAbsolutePath()+ "\"");
+    return;
+  }
+  if (renamingCode) {
+    if (!current.file.renameTo(newFile)) {
+      Base.showWarning("Error","Could not rename \"" + current.file.getName() + "\" to \""+ newFile.getName()+ "\"",null);
+      return;
+    }
+    if (current == code[0]) {
+      File newFolder=new File(folder.getParentFile(),newName);
+      boolean success=folder.renameTo(newFolder);
+      folder=newFolder;
+      editor.sketchbook.rebuildMenus();
+      load();
+    }
+ else {
+      current.file=newFile;
+      current.name=newName;
+      current.flavor=newFlavor;
+    }
+  }
+ else {
+    try {
+      newFile.createNewFile();
+    }
+ catch (    IOException e) {
+      Base.showWarning("Error","Could not create the file \"" + newFile + "\"\n"+ "in \""+ folder.getAbsolutePath()+ "\"",e);
+      return;
+    }
+    SketchCode newCode=new SketchCode(newName,newFile,newFlavor);
+    insertCode(newCode);
+  }
+  sortCode();
+  setCurrent(newName);
+  editor.header.repaint();
+}

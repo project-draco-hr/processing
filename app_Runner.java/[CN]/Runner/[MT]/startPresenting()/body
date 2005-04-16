@@ -1,0 +1,7 @@
+{
+  String command[]=new String[]{"java","-Djava.library.path=" + sketch.libraryPath + File.pathSeparator+ System.getProperty("java.library.path"),"-cp",sketch.classPath + Sketchbook.librariesClassPath,"processing.core.PApplet",PApplet.ARGS_EXTERNAL,PApplet.ARGS_PRESENT,PApplet.ARGS_PRESENT_BGCOLOR + "=" + Preferences.get("run.present.bgcolor"),PApplet.ARGS_DISPLAY + "=" + Preferences.get("run.display"),PApplet.ARGS_SKETCH_FOLDER + "=" + sketch.folder.getAbsolutePath(),sketch.mainClassName};
+  process=Runtime.getRuntime().exec(command);
+  processInput=new SystemOutSiphon(process.getInputStream());
+  processError=new MessageSiphon(process.getErrorStream(),this);
+  processOutput=process.getOutputStream();
+}

@@ -1,0 +1,35 @@
+{
+  if (yesButton == null)   setup();
+  Dimension size=getSize();
+  if ((size.width != sizeW) || (size.height != sizeH)) {
+    if ((size.width > imageW) || (size.height > imageH)) {
+      offscreen=null;
+    }
+ else {
+      sizeW=size.width;
+      sizeH=size.height;
+      setButtonBounds();
+    }
+  }
+  if (offscreen == null) {
+    sizeW=size.width;
+    sizeH=size.height;
+    setButtonBounds();
+    imageW=sizeW;
+    imageH=sizeH;
+    offscreen=createImage(imageW,imageH);
+  }
+  Graphics g=offscreen.getGraphics();
+  if (font == null) {
+    font=Preferences.getFont("status.font");
+    g.setFont(font);
+    metrics=g.getFontMetrics();
+    ascent=metrics.getAscent();
+  }
+  g.setColor(bgcolor[mode]);
+  g.fillRect(0,0,imageW,imageH);
+  g.setColor(fgcolor[mode]);
+  g.setFont(font);
+  g.drawString(message,Preferences.GUI_SMALL,(sizeH + ascent) / 2);
+  screen.drawImage(offscreen,0,0,null);
+}

@@ -1,0 +1,49 @@
+{
+  JMenuItem item;
+  JMenu menu=new JMenu("Sketch");
+  item=newJMenuItem("Run",'R');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleRun(false);
+    }
+  }
+);
+  menu.add(item);
+  item=newJMenuItem("Present",'R',true);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleRun(true);
+    }
+  }
+);
+  menu.add(item);
+  item=new JMenuItem("Stop");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleStop();
+    }
+  }
+);
+  menu.add(item);
+  menu.addSeparator();
+  item=new JMenuItem("Add File...");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      sketch.addFile();
+    }
+  }
+);
+  menu.add(item);
+  menu.add(sketchbook.getImportMenu());
+  if (Base.isWindows() || Base.isMacOS()) {
+    item=new JMenuItem("Show Sketch Folder");
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        Base.openFolder(sketch.folder);
+      }
+    }
+);
+    menu.add(item);
+  }
+  return menu;
+}

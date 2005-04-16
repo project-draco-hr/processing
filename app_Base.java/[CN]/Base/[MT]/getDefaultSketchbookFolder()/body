@@ -1,0 +1,52 @@
+{
+  File sketchbookFolder=null;
+  if (Base.isMacOS()) {
+    try {
+      MRJOSType domainDocuments=new MRJOSType("docs");
+      Method findFolderMethod=MRJFileUtils.class.getMethod("findFolder",new Class[]{Short.TYPE,MRJOSType.class});
+      File documentsFolder=(File)findFolderMethod.invoke(null,new Object[]{new Short(kUserDomain),domainDocuments});
+      sketchbookFolder=new File(documentsFolder,"Processing");
+    }
+ catch (    Exception e) {
+      showError("sketch folder problem","Could not locate default sketch folder location.",e);
+    }
+  }
+ else   if (isWindows()) {
+    try {
+      RegistryKey topKey=Registry.HKEY_CURRENT_USER;
+      String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
+      RegistryKey localKey=topKey.openSubKey(localKeyPath);
+      String personalPath=localKey.getStringValue("Personal");
+      sketchbookFolder=new File(personalPath,"Processing");
+    }
+ catch (    Exception e) {
+      showError("Problem getting documents folder","Error getting the Processing sketchbook folder.",e);
+    }
+  }
+ else {
+    JFileChooser fc=new JFileChooser();
+    fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    int returned=fc.showOpenDialog(new JDialog());
+    if (returned == JFileChooser.APPROVE_OPTION) {
+      sketchbookFolder=fc.getSelectedFile();
+    }
+ else {
+      System.exit(0);
+    }
+  }
+  boolean result=true;
+  if (!sketchbookFolder.exists()) {
+    result=sketchbookFolder.mkdirs();
+  }
+  if (!result) {
+    String fallback=Preferences.get("sketchbook.path.fallback");
+    sketchbookFolder=new File(fallback);
+    if (!sketchbookFolder.exists()) {
+      result=sketchbookFolder.mkdirs();
+    }
+  }
+  if (!result) {
+    showError("error","Processing cannot run because it could not\n" + "create a folder to store your sketchbook.",null);
+  }
+  return sketchbookFolder;
+}
