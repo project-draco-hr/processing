@@ -1,0 +1,21 @@
+{
+  if (PApplet.javaVersion < 1.3f) {
+    return Toolkit.getDefaultToolkit().getFontList();
+  }
+  try {
+    Class geClass=Class.forName("java.awt.GraphicsEnvironment");
+    Method glgeMethod=geClass.getMethod("getLocalGraphicsEnvironment",null);
+    Object ge=glgeMethod.invoke(null,null);
+    Method gafMethod=geClass.getMethod("getAllFonts",null);
+    Font fonts[]=(Font[])gafMethod.invoke(ge,null);
+    String list[]=new String[fonts.length];
+    for (int i=0; i < list.length; i++) {
+      list[i]=fonts[i].getName();
+    }
+    return list;
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    throw new RuntimeException("Error inside PFont.list()");
+  }
+}
