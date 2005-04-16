@@ -1,7 +1,7 @@
 {
   DataInputStream is=new DataInputStream(input);
   charCount=is.readInt();
-  int numBits=is.readInt();
+  int version=is.readInt();
   size=is.readInt();
   mbox2=is.readInt();
   fwidth=size;
@@ -52,5 +52,9 @@
         images[i].pixels[y * twidth + x]=valu;
       }
     }
+  }
+  if (version == 9) {
+    name=is.readUTF();
+    psname=is.readUTF();
   }
 }

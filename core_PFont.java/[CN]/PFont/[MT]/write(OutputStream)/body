@@ -1,7 +1,7 @@
 {
   DataOutputStream os=new DataOutputStream(output);
   os.writeInt(charCount);
-  os.writeInt(8);
+  os.writeInt((name != null) ? 9 : 8);
   os.writeInt(size);
   os.writeInt(mbox2);
   os.writeInt(ascent);
@@ -21,6 +21,9 @@
         os.write(images[i].pixels[y * mbox2 + x] & 0xff);
       }
     }
+  }
+  if (name != null) {
+    os.writeUTF(name);
   }
   os.flush();
 }
