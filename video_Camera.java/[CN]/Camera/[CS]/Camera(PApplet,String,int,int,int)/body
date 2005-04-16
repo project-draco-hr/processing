@@ -1,22 +1,19 @@
 {
   this.parent=parent;
   this.name=name;
-  this.fps=fps;
+  this.framerate=framerate;
   try {
     QDRect qdrect=new QDRect(requestWidth,requestHeight);
     QDGraphics qdgraphics=new QDGraphics(qdrect);
     capture=new SequenceGrabber();
     capture.setGWorld(qdgraphics,null);
-    SGVideoChannel channel=new SGVideoChannel(capture);
+    channel=new SGVideoChannel(capture);
     channel.setBounds(qdrect);
     channel.setUsage(2);
     capture.startPreview();
     PixMap pixmap=qdgraphics.getPixMap();
     raw=pixmap.getPixelData();
-    if (name == null) {
-      channel.settingsDialog();
-    }
- else     if (name.length() > 0) {
+    if ((name != null) && (name.length() > 0)) {
       channel.setDevice(name);
     }
     dataRowBytes=raw.getRowBytes();
@@ -41,8 +38,8 @@
   }
  catch (  StdQTException qte) {
     int errorCode=qte.errorCode();
-    if (errorCode == -9405) {
-      parent.die("The camera (or VDIG) is not " + "installed correctly (see readme.txt).",qte);
+    if (errorCode == Errors.couldntGetRequiredComponent) {
+      parent.die("No camera could be found, " + "or the VDIG is not installed correctly.",qte);
     }
  else {
       parent.die("Error while setting up Camera",qte);

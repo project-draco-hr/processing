@@ -1,0 +1,17 @@
+{
+  try {
+    VideoDigitizer digitizer=channel.getDigitizerComponent();
+    int count=digitizer.getNumberOfInputs();
+    for (int i=0; i < count; i++) {
+      if (digitizer.getInputFormat(i) == which) {
+        digitizer.setInput(i);
+        return;
+      }
+    }
+    throw new RuntimeException("The specified source() is not available.");
+  }
+ catch (  StdQTException e) {
+    e.printStackTrace();
+    throw new RuntimeException("Could not set the video input source.");
+  }
+}
