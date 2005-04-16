@@ -1,5 +1,15 @@
 {
   InputStream stream=null;
+  try {
+    URL url=new URL(filename);
+    stream=url.openStream();
+    return stream;
+  }
+ catch (  MalformedURLException e) {
+  }
+catch (  IOException e) {
+    throw new RuntimeException("Error downloading from URL " + filename);
+  }
   if (!online) {
     try {
       String location=folder + File.separator + "data";
@@ -20,17 +30,6 @@
     }
   }
   try {
-    if (filename.startsWith("http://")) {
-      try {
-        URL url=new URL(filename);
-        stream=url.openStream();
-        return stream;
-      }
- catch (      MalformedURLException e) {
-        e.printStackTrace();
-        return null;
-      }
-    }
     stream=getClass().getResourceAsStream(filename);
     if (stream != null)     return stream;
     stream=getClass().getResourceAsStream("data/" + filename);
