@@ -1,0 +1,26 @@
+{
+  Random r=new Random();
+  long id=r.nextLong();
+  String idString=Preferences.get("update.id");
+  if (idString != null) {
+    id=Long.parseLong(idString);
+  }
+ else {
+    Preferences.set("update.id",String.valueOf(id));
+  }
+  try {
+    int latest=readInt(downloadURL + "?" + id);
+    String prompt="A new version of Processing is available,\n" + "would you like to visit the Processing download page?";
+    if (latest > Base.VERSION) {
+      Object[] options={"Yes","No"};
+      int result=JOptionPane.showOptionDialog(editor,prompt,"Update",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+      if (result == JOptionPane.YES_OPTION) {
+        Base.openURL("http://processing.org/download/");
+      }
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    System.err.println("Error while trying to check for an update.");
+  }
+}
