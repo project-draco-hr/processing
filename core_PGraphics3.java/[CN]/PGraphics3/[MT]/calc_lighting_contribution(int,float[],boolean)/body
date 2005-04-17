@@ -7,12 +7,20 @@
   float wy=v[VY];
   float wz=v[VZ];
   float shine=v[SHINE];
+  float nx;
+  float ny;
+  float nz;
   if (!normalIsWorld) {
     toWorldNormal(v[NX],v[NY],v[NZ],worldNormal);
+    nx=worldNormal[X];
+    ny=worldNormal[Y];
+    nz=worldNormal[Z];
   }
-  float nx=worldNormal[X];
-  float ny=worldNormal[Y];
-  float nz=worldNormal[Z];
+ else {
+    nx=v[NX];
+    ny=v[NY];
+    nz=v[NZ];
+  }
   float dir=dot(nx,ny,nz,-wx,-wy,-wz);
   if (dir < 0) {
     nx=-nx;
