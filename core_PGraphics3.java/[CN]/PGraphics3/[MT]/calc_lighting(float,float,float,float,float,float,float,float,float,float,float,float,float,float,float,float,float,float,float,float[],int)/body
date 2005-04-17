@@ -18,26 +18,26 @@
   float specular_g=0;
   float specular_b=0;
   for (int i=0; i < lightCount; i++) {
-    float denom=lightConstantFalloff[i];
+    float denom=lightsFalloffConstant[i];
     float spotTerm=1;
-    if (lightType[i] == AMBIENT) {
-      if (lightQuadraticFalloff[i] != 0 || lightLinearFalloff[i] != 0) {
-        float distSq=mag(lightX[i] - wx,lightY[i] - wy,lightZ[i] - wz);
-        denom+=lightQuadraticFalloff[i] * distSq + lightLinearFalloff[i] * (float)sqrt(distSq);
+    if (lights[i] == AMBIENT) {
+      if (lightsFalloffQuadratic[i] != 0 || lightsFalloffLinear[i] != 0) {
+        float distSq=mag(lightsX[i] - wx,lightsY[i] - wy,lightsZ[i] - wz);
+        denom+=(lightsFalloffQuadratic[i] * distSq + lightsFalloffLinear[i] * (float)sqrt(distSq));
       }
       if (denom == 0)       denom=1;
-      diffuse_r+=lightDiffuseR[i] * ar / denom;
-      diffuse_g+=lightDiffuseG[i] * ag / denom;
-      diffuse_b+=lightDiffuseB[i] * ab / denom;
+      diffuse_r+=lightsDiffuseR[i] * ar / denom;
+      diffuse_g+=lightsDiffuseG[i] * ag / denom;
+      diffuse_b+=lightsDiffuseB[i] * ab / denom;
     }
  else {
       float lix, liy, liz;
       float lightDir_dot_li=0;
       float n_dot_li=0;
-      if (lightType[i] == DIRECTIONAL) {
-        lix=-lightNX[i];
-        liy=-lightNY[i];
-        liz=-lightNZ[i];
+      if (lights[i] == DIRECTIONAL) {
+        lix=-lightsNX[i];
+        liy=-lightsNY[i];
+        liz=-lightsNZ[i];
         denom=1;
         n_dot_li=(nx * lix + ny * liy + nz * liz);
         if (n_dot_li <= 0) {
@@ -45,9 +45,9 @@
         }
       }
  else {
-        lix=lightX[i] - wx;
-        liy=lightY[i] - wy;
-        liz=lightZ[i] - wz;
+        lix=lightsX[i] - wx;
+        liy=lightsY[i] - wy;
+        liz=lightsZ[i] - wz;
         float distSq=mag(lix,liy,liz);
         if (distSq != 0) {
           lix/=distSq;
@@ -58,23 +58,23 @@
         if (n_dot_li <= 0) {
           continue;
         }
-        if (lightType[i] == SPOT) {
-          lightDir_dot_li=-(lightNX[i] * lix + lightNY[i] * liy + lightNZ[i] * liz);
-          if (lightDir_dot_li <= lightSpotAngleCos[i]) {
+        if (lights[i] == SPOT) {
+          lightDir_dot_li=-(lightsNX[i] * lix + lightsNY[i] * liy + lightsNZ[i] * liz);
+          if (lightDir_dot_li <= lightsSpotAngleCos[i]) {
             continue;
           }
-          spotTerm=pow(lightDir_dot_li,lightSpotConcentration[i]);
+          spotTerm=pow(lightDir_dot_li,lightsSpotConcentration[i]);
         }
-        if (lightQuadraticFalloff[i] != 0 || lightLinearFalloff[i] != 0) {
-          denom+=lightQuadraticFalloff[i] * distSq + lightLinearFalloff[i] * (float)sqrt(distSq);
+        if (lightsFalloffQuadratic[i] != 0 || lightsFalloffLinear[i] != 0) {
+          denom+=(lightsFalloffQuadratic[i] * distSq + lightsFalloffLinear[i] * (float)sqrt(distSq));
         }
       }
       if (denom == 0)       denom=1;
       float mul=n_dot_li * spotTerm / denom;
-      diffuse_r+=lightDiffuseR[i] * mul;
-      diffuse_g+=lightDiffuseG[i] * mul;
-      diffuse_b+=lightDiffuseB[i] * mul;
-      if ((sr > 0 || sg > 0 || sb > 0) && (lightSpecularR[i] > 0 || lightSpecularG[i] > 0 || lightSpecularB[i] > 0)) {
+      diffuse_r+=lightsDiffuseR[i] * mul;
+      diffuse_g+=lightsDiffuseG[i] * mul;
+      diffuse_b+=lightsDiffuseB[i] * mul;
+      if ((sr > 0 || sg > 0 || sb > 0) && (lightsSpecularR[i] > 0 || lightsSpecularG[i] > 0 || lightsSpecularB[i] > 0)) {
         float vmag=mag(wx,wy,wz);
         if (vmag != 0) {
           wx/=vmag;
@@ -94,9 +94,9 @@
         if (s_dot_n > 0) {
           s_dot_n=pow(s_dot_n,shininess);
           mul=s_dot_n * spotTerm / denom;
-          specular_r+=lightSpecularR[i] * mul;
-          specular_g+=lightSpecularG[i] * mul;
-          specular_b+=lightSpecularB[i] * mul;
+          specular_r+=lightsSpecularR[i] * mul;
+          specular_g+=lightsSpecularG[i] * mul;
+          specular_b+=lightsSpecularB[i] * mul;
         }
       }
     }

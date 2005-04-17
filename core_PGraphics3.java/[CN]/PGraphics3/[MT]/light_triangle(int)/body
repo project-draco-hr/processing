@@ -1,0 +1,88 @@
+{
+  int vIndex;
+  if (normalMode == MANUAL_VERTEX_NORMAL) {
+    vIndex=triangles[triIndex][VERTEX1];
+    light_vertex_if_not_already_lit(vIndex,tempLightingContribution);
+    copy_prelit_vertex_color_to_triangle(triIndex,vIndex,0);
+    vIndex=triangles[triIndex][VERTEX2];
+    light_vertex_if_not_already_lit(vIndex,tempLightingContribution);
+    copy_prelit_vertex_color_to_triangle(triIndex,vIndex,1);
+    vIndex=triangles[triIndex][VERTEX3];
+    light_vertex_if_not_already_lit(vIndex,tempLightingContribution);
+    copy_prelit_vertex_color_to_triangle(triIndex,vIndex,2);
+  }
+ else   if (!lightingDependsOnVertexPosition) {
+    vIndex=triangles[triIndex][VERTEX1];
+    int vIndex2=triangles[triIndex][VERTEX2];
+    int vIndex3=triangles[triIndex][VERTEX3];
+    float[] dv1=new float[]{vertices[vIndex2][VX] - vertices[vIndex][VX],vertices[vIndex2][VY] - vertices[vIndex][VY],vertices[vIndex2][VZ] - vertices[vIndex][VZ]};
+    float[] dv2=new float[]{vertices[vIndex3][VX] - vertices[vIndex][VX],vertices[vIndex3][VY] - vertices[vIndex][VY],vertices[vIndex3][VZ] - vertices[vIndex][VZ]};
+    float[] norm=new float[3];
+    crossProduct(dv1,dv2,norm);
+    float nMag=mag(norm[X],norm[Y],norm[Z]);
+    if (nMag != 0 && nMag != ONE) {
+      norm[X]/=nMag;
+      norm[Y]/=nMag;
+      norm[Z]/=nMag;
+    }
+    vertices[vIndex][NX]=norm[X];
+    vertices[vIndex][NY]=norm[Y];
+    vertices[vIndex][NZ]=norm[Z];
+    calc_lighting_contribution(vIndex,tempLightingContribution,true);
+    copy_vertex_color_to_triangle(triIndex,vIndex,0,tempLightingContribution);
+    copy_vertex_color_to_triangle(triIndex,vIndex2,1,tempLightingContribution);
+    copy_vertex_color_to_triangle(triIndex,vIndex3,2,tempLightingContribution);
+  }
+ else {
+    if (normalMode == MANUAL_SHAPE_NORMAL) {
+      vIndex=triangles[triIndex][VERTEX1];
+      vertices[vIndex][NX]=vertices[vertex_start][NX];
+      vertices[vIndex][NY]=vertices[vertex_start][NY];
+      vertices[vIndex][NZ]=vertices[vertex_start][NZ];
+      calc_lighting_contribution(vIndex,tempLightingContribution);
+      copy_vertex_color_to_triangle(triIndex,vIndex,0,tempLightingContribution);
+      vIndex=triangles[triIndex][VERTEX2];
+      vertices[vIndex][NX]=vertices[vertex_start][NX];
+      vertices[vIndex][NY]=vertices[vertex_start][NY];
+      vertices[vIndex][NZ]=vertices[vertex_start][NZ];
+      calc_lighting_contribution(vIndex,tempLightingContribution);
+      copy_vertex_color_to_triangle(triIndex,vIndex,1,tempLightingContribution);
+      vIndex=triangles[triIndex][VERTEX3];
+      vertices[vIndex][NX]=vertices[vertex_start][NX];
+      vertices[vIndex][NY]=vertices[vertex_start][NY];
+      vertices[vIndex][NZ]=vertices[vertex_start][NZ];
+      calc_lighting_contribution(vIndex,tempLightingContribution);
+      copy_vertex_color_to_triangle(triIndex,vIndex,2,tempLightingContribution);
+    }
+ else {
+      vIndex=triangles[triIndex][VERTEX1];
+      int vIndex2=triangles[triIndex][VERTEX2];
+      int vIndex3=triangles[triIndex][VERTEX3];
+      float[] dv1=new float[]{vertices[vIndex2][VX] - vertices[vIndex][VX],vertices[vIndex2][VY] - vertices[vIndex][VY],vertices[vIndex2][VZ] - vertices[vIndex][VZ]};
+      float[] dv2=new float[]{vertices[vIndex3][VX] - vertices[vIndex][VX],vertices[vIndex3][VY] - vertices[vIndex][VY],vertices[vIndex3][VZ] - vertices[vIndex][VZ]};
+      float[] norm=new float[3];
+      crossProduct(dv1,dv2,norm);
+      float nMag=mag(norm[X],norm[Y],norm[Z]);
+      if (nMag != 0 && nMag != ONE) {
+        norm[X]/=nMag;
+        norm[Y]/=nMag;
+        norm[Z]/=nMag;
+      }
+      vertices[vIndex][NX]=norm[X];
+      vertices[vIndex][NY]=norm[Y];
+      vertices[vIndex][NZ]=norm[Z];
+      calc_lighting_contribution(vIndex,tempLightingContribution,true);
+      copy_vertex_color_to_triangle(triIndex,vIndex,0,tempLightingContribution);
+      vertices[vIndex2][NX]=norm[X];
+      vertices[vIndex2][NY]=norm[Y];
+      vertices[vIndex2][NZ]=norm[Z];
+      calc_lighting_contribution(vIndex2,tempLightingContribution,true);
+      copy_vertex_color_to_triangle(triIndex,vIndex2,1,tempLightingContribution);
+      vertices[vIndex3][NX]=norm[X];
+      vertices[vIndex3][NY]=norm[Y];
+      vertices[vIndex3][NZ]=norm[Z];
+      calc_lighting_contribution(vIndex3,tempLightingContribution,true);
+      copy_vertex_color_to_triangle(triIndex,vIndex3,2,tempLightingContribution);
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  for (int i=vertex_start; i < vertex_end; i++) {
+    float v[]=vertices[i];
+    float nx=modelviewInv.m00 * v[NX] + modelviewInv.m10 * v[NY] + modelviewInv.m20 * v[NZ] + modelviewInv.m30;
+    float ny=modelviewInv.m01 * v[NX] + modelviewInv.m11 * v[NY] + modelviewInv.m21 * v[NZ] + modelviewInv.m31;
+    float nz=modelviewInv.m02 * v[NX] + modelviewInv.m12 * v[NY] + modelviewInv.m22 * v[NZ] + modelviewInv.m32;
+    float nw=modelviewInv.m03 * v[NX] + modelviewInv.m13 * v[NY] + modelviewInv.m23 * v[NZ] + modelviewInv.m33;
+    v[NX]=nx;
+    v[NY]=ny;
+    v[NZ]=nz;
+    if (nw != 0) {
+      v[NX]/=nw;
+      v[NY]/=nw;
+      v[NZ]/=nw;
+    }
+    float nlen=mag(v[NX],v[NY],v[NZ]);
+    if (nlen != 0 && nlen != ONE) {
+      v[NX]/=nlen;
+      v[NY]/=nlen;
+      v[NZ]/=nlen;
+    }
+  }
+  if (lightCount > 0) {
+    for (int i=vertex_start; i < vertex_end; i++) {
+      float v[]=vertices[i];
+      float vx=v[VX];
+      float vy=v[VY];
+      float vz=v[VZ];
+      float vw=v[VW];
+      if (vw != 0 && vw != 1) {
+        vx/=vw;
+        vy/=vw;
+        vz/=vw;
+      }
+      if (fill) {
+        calc_lighting(v[AR],v[AG],v[AB],v[R],v[G],v[B],v[SPR],v[SPG],v[SPB],v[ER],v[EG],v[EB],vx,vy,vz,v[NX],v[NY],v[NZ],v[SHINE],v,R);
+      }
+    }
+  }
+}
