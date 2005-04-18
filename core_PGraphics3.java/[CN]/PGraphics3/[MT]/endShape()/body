@@ -110,6 +110,19 @@ add_line(stop,lines[first][VERTEX1]);
 break;
 }
 }
+for (int i=vertex_start; i < vertex_end; i++) {
+float vertex[]=vertices[i];
+vertex[VX]=modelview.m00 * vertex[MX] + modelview.m01 * vertex[MY] + modelview.m02 * vertex[MZ] + modelview.m03;
+vertex[VY]=modelview.m10 * vertex[MX] + modelview.m11 * vertex[MY] + modelview.m12 * vertex[MZ] + modelview.m13;
+vertex[VZ]=modelview.m20 * vertex[MX] + modelview.m21 * vertex[MY] + modelview.m22 * vertex[MZ] + modelview.m23;
+vertex[VW]=modelview.m30 * vertex[MX] + modelview.m31 * vertex[MY] + modelview.m32 * vertex[MZ] + modelview.m33;
+if (vertex[VW] != 0 && vertex[VW] != ONE) {
+vertex[VX]/=vertex[VW];
+vertex[VY]/=vertex[VW];
+vertex[VZ]/=vertex[VW];
+}
+vertex[VW]=ONE;
+}
 if (fill) {
 switch (shape) {
 case TRIANGLE_FAN:
@@ -159,19 +172,6 @@ triangulate_polygon();
 }
 break;
 }
-}
-for (int i=vertex_start; i < vertex_end; i++) {
-float vertex[]=vertices[i];
-vertex[VX]=modelview.m00 * vertex[MX] + modelview.m01 * vertex[MY] + modelview.m02 * vertex[MZ] + modelview.m03;
-vertex[VY]=modelview.m10 * vertex[MX] + modelview.m11 * vertex[MY] + modelview.m12 * vertex[MZ] + modelview.m13;
-vertex[VZ]=modelview.m20 * vertex[MX] + modelview.m21 * vertex[MY] + modelview.m22 * vertex[MZ] + modelview.m23;
-vertex[VW]=modelview.m30 * vertex[MX] + modelview.m31 * vertex[MY] + modelview.m32 * vertex[MZ] + modelview.m33;
-if (vertex[VW] != 0 && vertex[VW] != ONE) {
-vertex[VX]/=vertex[VW];
-vertex[VY]/=vertex[VW];
-vertex[VZ]/=vertex[VW];
-}
-vertex[VW]=ONE;
 }
 if (lightCount > 0 && fill) {
 handle_lighting();

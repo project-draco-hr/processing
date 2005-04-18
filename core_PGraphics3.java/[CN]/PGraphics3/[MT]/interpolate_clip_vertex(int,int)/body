@@ -1,0 +1,50 @@
+{
+  float[] va;
+  float[] vb;
+  if (vertices[a][VZ] < vertices[b][VZ]) {
+    va=vertices[b];
+    vb=vertices[a];
+  }
+ else {
+    va=vertices[a];
+    vb=vertices[b];
+  }
+  float az=va[VZ];
+  float bz=vb[VZ];
+  float dz=az - bz;
+  if (dz == 0) {
+    return a;
+  }
+  float pa=(az - cameraNear) / dz;
+  float pb=(cameraNear - bz) / dz;
+  vertex(pa * va[VX] + pb * vb[VX],pa * va[VY] + pb * vb[VY],pa * az + pb * bz);
+  int irv=vertexCount - 1;
+  float[] rv=vertices[irv];
+  rv[R]=pa * va[R] + pb * vb[R];
+  rv[G]=pa * va[G] + pb * vb[G];
+  rv[B]=pa * va[B] + pb * vb[B];
+  rv[A]=pa * va[A] + pb * vb[A];
+  rv[U]=pa * va[U] + pb * vb[U];
+  rv[V]=pa * va[V] + pb * vb[V];
+  rv[SR]=pa * va[SR] + pb * vb[SR];
+  rv[SG]=pa * va[SG] + pb * vb[SG];
+  rv[SB]=pa * va[SB] + pb * vb[SB];
+  rv[SA]=pa * va[SA] + pb * vb[SA];
+  rv[NX]=pa * va[NX] + pb * vb[NX];
+  rv[NY]=pa * va[NY] + pb * vb[NY];
+  rv[NZ]=pa * va[NZ] + pb * vb[NZ];
+  rv[SW]=pa * va[SW] + pb * vb[SW];
+  rv[AR]=pa * va[AR] + pb * vb[AR];
+  rv[AG]=pa * va[AG] + pb * vb[AG];
+  rv[AB]=pa * va[AB] + pb * vb[AB];
+  rv[SPR]=pa * va[SPR] + pb * vb[SPR];
+  rv[SPG]=pa * va[SPG] + pb * vb[SPG];
+  rv[SPB]=pa * va[SPB] + pb * vb[SPB];
+  rv[SPA]=pa * va[SPA] + pb * vb[SPA];
+  rv[ER]=pa * va[ER] + pb * vb[ER];
+  rv[EG]=pa * va[EG] + pb * vb[EG];
+  rv[EB]=pa * va[EB] + pb * vb[EB];
+  rv[SHINE]=pa * va[SHINE] + pb * vb[SHINE];
+  rv[BEEN_LIT]=0;
+  return irv;
+}
