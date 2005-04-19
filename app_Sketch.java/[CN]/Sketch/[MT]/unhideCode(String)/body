@@ -1,8 +1,8 @@
 {
-  int unhideIndex=-1;
+  SketchCode unhideCode=null;
   for (int i=0; i < hiddenCount; i++) {
     if (hidden[i].name.equals(what)) {
-      unhideIndex=i;
+      unhideCode=hidden[i];
       for (int j=i; j < hiddenCount - 1; j++) {
         hidden[j]=hidden[j + 1];
       }
@@ -10,11 +10,10 @@
       break;
     }
   }
-  if (unhideIndex == -1) {
+  if (unhideCode == null) {
     System.err.println("internal error: could find " + what + " to unhide.");
     return;
   }
-  SketchCode unhideCode=hidden[unhideIndex];
   if (!unhideCode.file.exists()) {
     Base.showMessage("Can't unhide","The file \"" + what + "\" no longer exists.");
     return;
