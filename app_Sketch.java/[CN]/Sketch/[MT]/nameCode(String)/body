@@ -43,7 +43,14 @@
     if (current == code[0]) {
       File newFolder=new File(folder.getParentFile(),newName);
       boolean success=folder.renameTo(newFolder);
+      if (!success) {
+        Base.showWarning("Error","Could not rename the sketch.",null);
+        return;
+      }
       folder=newFolder;
+      File mainFile=new File(newFolder,newName + ".pde");
+      mainFilename=mainFile.getAbsolutePath();
+      name=newName;
       editor.sketchbook.rebuildMenus();
       load();
     }
