@@ -31,7 +31,7 @@
     runner.start();
     parent.registerDispose(this);
     try {
-      cameraEventMethod=parent.getClass().getMethod("cameraEvent",new Class[]{Camera.class});
+      captureEventMethod=parent.getClass().getMethod("captureEvent",new Class[]{Capture.class});
     }
  catch (    Exception e) {
     }
@@ -39,13 +39,13 @@
  catch (  StdQTException qte) {
     int errorCode=qte.errorCode();
     if (errorCode == Errors.couldntGetRequiredComponent) {
-      parent.die("No camera could be found, " + "or the VDIG is not installed correctly.",qte);
+      parent.die("No capture could be found, " + "or the VDIG is not installed correctly.",qte);
     }
  else {
-      parent.die("Error while setting up Camera",qte);
+      parent.die("Error while setting up Capture",qte);
     }
   }
 catch (  Exception e) {
-    parent.die("Error while setting up Camera",e);
+    parent.die("Error while setting up Capture",e);
   }
 }
