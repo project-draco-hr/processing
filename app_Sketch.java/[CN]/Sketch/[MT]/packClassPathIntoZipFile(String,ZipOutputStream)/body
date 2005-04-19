@@ -11,9 +11,11 @@
           if (entry.isDirectory()) {
           }
  else {
-            String name=entry.getName();
-            if (name.indexOf("META-INF") == 0)             continue;
-            ZipEntry entree=new ZipEntry(name);
+            String entryName=entry.getName();
+            if (entryName.indexOf("META-INF") == 0)             continue;
+            if (zipFileContents.get(entryName) != null)             continue;
+            zipFileContents.put(entryName,new Object());
+            ZipEntry entree=new ZipEntry(entryName);
             zos.putNextEntry(entree);
             byte buffer[]=new byte[(int)entry.getSize()];
             InputStream is=file.getInputStream(entry);
