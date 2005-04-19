@@ -27,7 +27,9 @@
   }
  catch (  IOException e) {
   }
-  Base.removeDir(newFolder);
+  if (newFolder.exists()) {
+    Base.removeDir(newFolder);
+  }
   Base.copyDir(folder,newFolder);
   for (int i=0; i < codeCount; i++) {
     code[i].file=new File(newFolder,code[i].file.getName());
@@ -38,7 +40,7 @@
   code[0].file.delete();
   code[0].file=new File(newFolder,newName + ".pde");
   code[0].name=newName;
-  code[0].save();
+  code[0].modified=true;
   String oldName=name;
   name=newName;
   File oldFolder=folder;
