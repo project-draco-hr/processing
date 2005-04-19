@@ -1,8 +1,22 @@
 {
   vertex_end=vertexCount;
+  vertex_end_including_clip_verts=vertex_end;
   if (vertexCount == 0) {
     shape=0;
     return;
+  }
+  for (int i=vertex_start; i < vertex_end; i++) {
+    float vertex[]=vertices[i];
+    vertex[VX]=modelview.m00 * vertex[MX] + modelview.m01 * vertex[MY] + modelview.m02 * vertex[MZ] + modelview.m03;
+    vertex[VY]=modelview.m10 * vertex[MX] + modelview.m11 * vertex[MY] + modelview.m12 * vertex[MZ] + modelview.m13;
+    vertex[VZ]=modelview.m20 * vertex[MX] + modelview.m21 * vertex[MY] + modelview.m22 * vertex[MZ] + modelview.m23;
+    vertex[VW]=modelview.m30 * vertex[MX] + modelview.m31 * vertex[MY] + modelview.m32 * vertex[MZ] + modelview.m33;
+    if (vertex[VW] != 0 && vertex[VW] != ONE) {
+      vertex[VX]/=vertex[VW];
+      vertex[VY]/=vertex[VW];
+      vertex[VZ]/=vertex[VW];
+    }
+    vertex[VW]=ONE;
   }
   int increment=1;
   int stop=0;
@@ -110,19 +124,6 @@ add_line(stop,lines[first][VERTEX1]);
 break;
 }
 }
-for (int i=vertex_start; i < vertex_end; i++) {
-float vertex[]=vertices[i];
-vertex[VX]=modelview.m00 * vertex[MX] + modelview.m01 * vertex[MY] + modelview.m02 * vertex[MZ] + modelview.m03;
-vertex[VY]=modelview.m10 * vertex[MX] + modelview.m11 * vertex[MY] + modelview.m12 * vertex[MZ] + modelview.m13;
-vertex[VZ]=modelview.m20 * vertex[MX] + modelview.m21 * vertex[MY] + modelview.m22 * vertex[MZ] + modelview.m23;
-vertex[VW]=modelview.m30 * vertex[MX] + modelview.m31 * vertex[MY] + modelview.m32 * vertex[MZ] + modelview.m33;
-if (vertex[VW] != 0 && vertex[VW] != ONE) {
-vertex[VX]/=vertex[VW];
-vertex[VY]/=vertex[VW];
-vertex[VZ]/=vertex[VW];
-}
-vertex[VW]=ONE;
-}
 if (fill) {
 switch (shape) {
 case TRIANGLE_FAN:
@@ -179,7 +180,7 @@ handle_lighting();
  else {
 handle_no_lighting();
 }
-for (int i=vertex_start; i < vertex_end; i++) {
+for (int i=vertex_start; i < vertex_end_including_clip_verts; i++) {
 float vx[]=vertices[i];
 float ox=projection.m00 * vx[VX] + projection.m01 * vx[VY] + projection.m02 * vx[VZ] + projection.m03 * vx[VW];
 float oy=projection.m10 * vx[VX] + projection.m11 * vx[VY] + projection.m12 * vx[VZ] + projection.m13 * vx[VW];
