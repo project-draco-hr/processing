@@ -8,8 +8,9 @@
  else {
     Preferences.set("update.id",String.valueOf(id));
   }
+  String info=URLEncoder.encode(id + "\t" + PApplet.nf(Base.VERSION,4)+ "\t"+ System.getProperty("java.version")+ "\t"+ System.getProperty("java.vendor")+ "\t"+ System.getProperty("os.name")+ "\t"+ System.getProperty("os.version")+ "\t"+ System.getProperty("os.arch"));
   try {
-    int latest=readInt(downloadURL + "?" + id);
+    int latest=readInt(downloadURL + "?" + info);
     String prompt="A new version of Processing is available,\n" + "would you like to visit the Processing download page?";
     if (latest > Base.VERSION) {
       Object[] options={"Yes","No"};
