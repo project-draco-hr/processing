@@ -30,26 +30,24 @@
   if (newFolder.exists()) {
     Base.removeDir(newFolder);
   }
-  Base.copyDir(folder,newFolder);
-  for (int i=0; i < codeCount; i++) {
-    code[i].file=new File(newFolder,code[i].file.getName());
+  newFolder.mkdirs();
+  if (current.modified) {
+    current.program=editor.getText();
+  }
+  for (int i=1; i < codeCount; i++) {
+    File newFile=new File(newFolder,code[i].file.getName());
+    code[i].saveAs(newFile);
   }
   for (int i=0; i < hiddenCount; i++) {
-    hidden[i].file=new File(newFolder,hidden[i].file.getName());
+    File newFile=new File(newFolder,hidden[i].file.getName());
+    hidden[i].saveAs(newFile);
   }
-  code[0].file.delete();
-  code[0].file=new File(newFolder,newName + ".pde");
-  code[0].name=newName;
-  code[0].modified=true;
-  String oldName=name;
-  name=newName;
-  File oldFolder=folder;
-  folder=newFolder;
-  dataFolder=new File(folder,"data");
-  codeFolder=new File(folder,"code");
-  Base.removeDir(new File(folder,"applet"));
-  Base.removeDir(new File(folder,"application"));
-  save();
-  editor.header.repaint();
+  if (dataFolder.exists()) {
+    File newDataFolder=new File(newFolder,"data");
+    Base.copyDir(dataFolder,newDataFolder);
+  }
+  File newFile=new File(newFolder,newName + ".pde");
+  code[0].saveAs(newFile);
+  editor.handleOpenUnchecked(newFile.getPath());
   return true;
 }

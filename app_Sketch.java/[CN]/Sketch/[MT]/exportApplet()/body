@@ -1,116 +1,105 @@
 {
   ensureExistence();
   zipFileContents=new Hashtable();
-  boolean replaceHtml=true;
-  File appletDir=new File(folder,"applet");
-  boolean writeHtml=true;
-  if (appletDir.exists()) {
-    File htmlFile=new File(appletDir,"index.html");
-    if (htmlFile.exists() && !replaceHtml) {
-      writeHtml=false;
-    }
-  }
- else {
-    appletDir.mkdirs();
-  }
-  String foundName=build(appletDir.getPath(),name);
+  File appletFolder=new File(folder,"applet");
+  Base.removeDir(appletFolder);
+  appletFolder.mkdirs();
+  String foundName=build(appletFolder.getPath(),name);
   if (foundName == null)   return false;
   if (!name.equals(foundName)) {
     Base.showWarning("Error during export","Sketch name is " + name + " but the sketch\n"+ "name in the code was "+ foundName,null);
     return false;
   }
-  if (writeHtml) {
-    int wide=PApplet.DEFAULT_WIDTH;
-    int high=PApplet.DEFAULT_HEIGHT;
-    PatternMatcher matcher=new Perl5Matcher();
-    PatternCompiler compiler=new Perl5Compiler();
-    String sizing="[\\s\\;]size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\d+)";
-    Pattern pattern=compiler.compile(sizing);
-    PatternMatcherInput input=new PatternMatcherInput(" " + code[0].program);
-    if (matcher.contains(input,pattern)) {
-      MatchResult result=matcher.getMatch();
-      try {
-        wide=Integer.parseInt(result.group(1).toString());
-        high=Integer.parseInt(result.group(2).toString());
-      }
- catch (      NumberFormatException e) {
-        final String message="The size of this applet could not automatically be\n" + "determined from your code. You'll have to edit the\n" + "HTML file to set the size of the applet.";
-        Base.showWarning("Could not find applet size",message,null);
-      }
+  int wide=PApplet.DEFAULT_WIDTH;
+  int high=PApplet.DEFAULT_HEIGHT;
+  PatternMatcher matcher=new Perl5Matcher();
+  PatternCompiler compiler=new Perl5Compiler();
+  String sizing="[\\s\\;]size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\d+)";
+  Pattern pattern=compiler.compile(sizing);
+  PatternMatcherInput input=new PatternMatcherInput(" " + code[0].program);
+  if (matcher.contains(input,pattern)) {
+    MatchResult result=matcher.getMatch();
+    try {
+      wide=Integer.parseInt(result.group(1).toString());
+      high=Integer.parseInt(result.group(2).toString());
     }
-    StringBuffer dbuffer=new StringBuffer();
-    String lines[]=PApplet.split(code[0].program,'\n');
-    for (int i=0; i < lines.length; i++) {
-      if (lines[i].trim().startsWith("/**")) {
-        for (int j=i + 1; j < lines.length; j++) {
-          if (lines[j].trim().endsWith("*/")) {
-            break;
-          }
-          int offset=0;
-          while ((offset < lines[j].length()) && ((lines[j].charAt(offset) == '*') || (lines[j].charAt(offset) == ' '))) {
-            offset++;
-          }
-          dbuffer.append(lines[j].substring(offset) + "\n");
-        }
-      }
+ catch (    NumberFormatException e) {
+      final String message="The size of this applet could not automatically be\n" + "determined from your code. You'll have to edit the\n" + "HTML file to set the size of the applet.";
+      Base.showWarning("Could not find applet size",message,null);
     }
-    String description=dbuffer.toString();
-    StringBuffer sources=new StringBuffer();
-    for (int i=0; i < codeCount; i++) {
-      sources.append("<a href=\"" + code[i].file.getName() + "\">"+ code[i].name+ "</a> ");
-    }
-    File htmlOutputFile=new File(appletDir,"index.html");
-    FileOutputStream fos=new FileOutputStream(htmlOutputFile);
-    PrintStream ps=new PrintStream(fos);
-    InputStream is=null;
-    File customHtml=new File(folder,"applet.html");
-    if (customHtml.exists()) {
-      is=new FileInputStream(customHtml);
-    }
-    if (is == null) {
-      is=Base.getStream("applet.html");
-    }
-    BufferedReader reader=new BufferedReader(new InputStreamReader(is));
-    String line=null;
-    while ((line=reader.readLine()) != null) {
-      if (line.indexOf("@@") != -1) {
-        StringBuffer sb=new StringBuffer(line);
-        int index=0;
-        while ((index=sb.indexOf("@@sketch@@")) != -1) {
-          sb.replace(index,index + "@@sketch@@".length(),name);
-        }
-        while ((index=sb.indexOf("@@source@@")) != -1) {
-          sb.replace(index,index + "@@source@@".length(),sources.toString());
-        }
-        while ((index=sb.indexOf("@@archive@@")) != -1) {
-          sb.replace(index,index + "@@archive@@".length(),name + ".jar");
-        }
-        while ((index=sb.indexOf("@@width@@")) != -1) {
-          sb.replace(index,index + "@@width@@".length(),String.valueOf(wide));
-        }
-        while ((index=sb.indexOf("@@height@@")) != -1) {
-          sb.replace(index,index + "@@height@@".length(),String.valueOf(high));
-        }
-        while ((index=sb.indexOf("@@description@@")) != -1) {
-          sb.replace(index,index + "@@description@@".length(),description);
-        }
-        line=sb.toString();
-      }
-      ps.println(line);
-    }
-    reader.close();
-    ps.flush();
-    ps.close();
   }
+  StringBuffer dbuffer=new StringBuffer();
+  String lines[]=PApplet.split(code[0].program,'\n');
+  for (int i=0; i < lines.length; i++) {
+    if (lines[i].trim().startsWith("/**")) {
+      for (int j=i + 1; j < lines.length; j++) {
+        if (lines[j].trim().endsWith("*/")) {
+          break;
+        }
+        int offset=0;
+        while ((offset < lines[j].length()) && ((lines[j].charAt(offset) == '*') || (lines[j].charAt(offset) == ' '))) {
+          offset++;
+        }
+        dbuffer.append(lines[j].substring(offset) + "\n");
+      }
+    }
+  }
+  String description=dbuffer.toString();
+  StringBuffer sources=new StringBuffer();
+  for (int i=0; i < codeCount; i++) {
+    sources.append("<a href=\"" + code[i].file.getName() + "\">"+ code[i].name+ "</a> ");
+  }
+  File htmlOutputFile=new File(appletFolder,"index.html");
+  FileOutputStream fos=new FileOutputStream(htmlOutputFile);
+  PrintStream ps=new PrintStream(fos);
+  InputStream is=null;
+  File customHtml=new File(folder,"applet.html");
+  if (customHtml.exists()) {
+    is=new FileInputStream(customHtml);
+  }
+  if (is == null) {
+    is=Base.getStream("applet.html");
+  }
+  BufferedReader reader=new BufferedReader(new InputStreamReader(is));
+  String line=null;
+  while ((line=reader.readLine()) != null) {
+    if (line.indexOf("@@") != -1) {
+      StringBuffer sb=new StringBuffer(line);
+      int index=0;
+      while ((index=sb.indexOf("@@sketch@@")) != -1) {
+        sb.replace(index,index + "@@sketch@@".length(),name);
+      }
+      while ((index=sb.indexOf("@@source@@")) != -1) {
+        sb.replace(index,index + "@@source@@".length(),sources.toString());
+      }
+      while ((index=sb.indexOf("@@archive@@")) != -1) {
+        sb.replace(index,index + "@@archive@@".length(),name + ".jar");
+      }
+      while ((index=sb.indexOf("@@width@@")) != -1) {
+        sb.replace(index,index + "@@width@@".length(),String.valueOf(wide));
+      }
+      while ((index=sb.indexOf("@@height@@")) != -1) {
+        sb.replace(index,index + "@@height@@".length(),String.valueOf(high));
+      }
+      while ((index=sb.indexOf("@@description@@")) != -1) {
+        sb.replace(index,index + "@@description@@".length(),description);
+      }
+      line=sb.toString();
+    }
+    ps.println(line);
+  }
+  reader.close();
+  ps.flush();
+  ps.close();
   for (int i=0; i < codeCount; i++) {
     try {
-      Base.copyFile(code[i].file,new File(appletDir,code[i].file.getName()));
+      Base.copyFile(code[i].file,new File(appletFolder,code[i].file.getName()));
     }
  catch (    IOException e) {
       e.printStackTrace();
     }
   }
-  FileOutputStream zipOutputFile=new FileOutputStream(new File(appletDir,name + ".jar"));
+  FileOutputStream zipOutputFile=new FileOutputStream(new File(appletFolder,name + ".jar"));
   ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
   ZipEntry entry;
   addManifest(zos);
@@ -151,7 +140,7 @@
         packClassPathIntoZipFile(exportFile.getAbsolutePath(),zos);
       }
  else {
-        Base.copyFile(exportFile,new File(appletDir,exportFile.getName()));
+        Base.copyFile(exportFile,new File(appletFolder,exportFile.getName()));
       }
     }
   }
@@ -167,18 +156,18 @@
       zos.closeEntry();
     }
   }
-  String classfiles[]=appletDir.list();
+  String classfiles[]=appletFolder.list();
   for (int i=0; i < classfiles.length; i++) {
     if (classfiles[i].endsWith(".class")) {
       entry=new ZipEntry(classfiles[i]);
       zos.putNextEntry(entry);
-      zos.write(Base.grabFile(new File(appletDir,classfiles[i])));
+      zos.write(Base.grabFile(new File(appletFolder,classfiles[i])));
       zos.closeEntry();
     }
   }
   for (int i=0; i < classfiles.length; i++) {
     if (classfiles[i].endsWith(".class")) {
-      File deadguy=new File(appletDir,classfiles[i]);
+      File deadguy=new File(appletFolder,classfiles[i]);
       if (!deadguy.delete()) {
         Base.showWarning("Could not delete",classfiles[i] + " could not \n" + "be deleted from the applet folder.  \n"+ "You'll need to remove it by hand.",null);
       }
@@ -186,6 +175,6 @@
   }
   zos.flush();
   zos.close();
-  Base.openFolder(appletDir);
+  Base.openFolder(appletFolder);
   return true;
 }
