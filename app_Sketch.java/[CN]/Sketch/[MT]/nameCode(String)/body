@@ -35,28 +35,53 @@
     Base.showMessage("Nope","A file named \"" + newFile + "\" already exists\n"+ "in \""+ folder.getAbsolutePath()+ "\"");
     return;
   }
+  File newFileHidden=new File(folder,newFilename + ".x");
+  if (newFileHidden.exists()) {
+    Base.showMessage("No Way","A hidden tab with the same name already exists.\n" + "Use \"Unhide\" to bring it back.");
+    return;
+  }
   if (renamingCode) {
-    if (!current.file.renameTo(newFile)) {
-      Base.showWarning("Error","Could not rename \"" + current.file.getName() + "\" to \""+ newFile.getName()+ "\"",null);
-      return;
-    }
     if (current == code[0]) {
+      if (current.modified) {
+        current.program=editor.getText();
+        try {
+          current.save();
+        }
+ catch (        Exception e) {
+          Base.showWarning("Error","Could not rename the sketch. (0)",e);
+          return;
+        }
+      }
+      if (!current.file.renameTo(newFile)) {
+        Base.showWarning("Error","Could not rename \"" + current.file.getName() + "\" to \""+ newFile.getName()+ "\"",null);
+        return;
+      }
+      try {
+        for (int i=1; i < codeCount; i++) {
+          code[i].save();
+        }
+      }
+ catch (      Exception e) {
+        Base.showWarning("Error","Could not rename the sketch. (1)",e);
+        return;
+      }
       File newFolder=new File(folder.getParentFile(),newName);
       boolean success=folder.renameTo(newFolder);
       if (!success) {
-        Base.showWarning("Error","Could not rename the sketch.",null);
+        Base.showWarning("Error","Could not rename the sketch. (2)",null);
         return;
       }
-      folder=newFolder;
       File mainFile=new File(newFolder,newName + ".pde");
       mainFilename=mainFile.getAbsolutePath();
-      name=newName;
-      editor.sketchbook.rebuildMenus();
-      load();
+      editor.handleOpenUnchecked(mainFilename);
     }
  else {
-      current.file=newFile;
+      if (!current.file.renameTo(newFile)) {
+        Base.showWarning("Error","Could not rename \"" + current.file.getName() + "\" to \""+ newFile.getName()+ "\"",null);
+        return;
+      }
       current.name=newName;
+      current.file=newFile;
       current.flavor=newFlavor;
     }
   }
