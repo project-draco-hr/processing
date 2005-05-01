@@ -1,8 +1,13 @@
 {
   if (current != null) {
     current.program=editor.getText();
+    current.selectionStart=editor.textarea.getSelectionStart();
+    current.selectionStop=editor.textarea.getSelectionEnd();
+    current.scrollPosition=editor.textarea.getScrollPosition();
   }
   current=code[which];
   editor.setText(current.program,true);
+  editor.textarea.setScrollPosition(current.scrollPosition);
+  editor.textarea.select(current.selectionStart,current.selectionStop);
   editor.header.rebuild();
 }
