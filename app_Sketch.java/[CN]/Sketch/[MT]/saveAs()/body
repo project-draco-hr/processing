@@ -12,9 +12,14 @@
   String newName=fd.getFile();
   if (newName == null)   return false;
   newName=Sketchbook.sanitizeName(newName);
-  File checkAlready=new File(folder,newName + ".pde");
-  if (checkAlready.exists()) {
+  File codeAlready=new File(folder,newName + ".pde");
+  if (codeAlready.exists()) {
     Base.showMessage("Nope","You can't save the sketch as \"" + newName + "\"\n"+ "because the sketch already has a tab with that name.");
+    return false;
+  }
+  File hiddenAlready=new File(folder,newName + ".pde.x");
+  if (hiddenAlready.exists()) {
+    Base.showMessage("Nope","You can't save the sketch as \"" + newName + "\"\n"+ "because the sketch already has a "+ "hidden tab with that name.");
     return false;
   }
   File newFolder=new File(newParentDir,newName);

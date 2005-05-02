@@ -1,9 +1,15 @@
 {
-  String mess=e.getMessage();
-  String rxString="RuntimeException: ";
-  if (mess.indexOf(rxString) == 0) {
-    mess=mess.substring(rxString.length());
+  if (e == null) {
+    System.err.println("Editor.error() was passed a null exception.");
+    return;
   }
-  status.error(mess);
+  String mess=e.getMessage();
+  if (mess != null) {
+    String rxString="RuntimeException: ";
+    if (mess.indexOf(rxString) == 0) {
+      mess=mess.substring(rxString.length());
+    }
+    status.error(mess);
+  }
   e.printStackTrace();
 }
