@@ -7,6 +7,12 @@
     console.clear();
   }
   presenting=present;
+  if (presenting && Base.isMacOS()) {
+    String osver=System.getProperty("os.version").substring(0,4);
+    if (osver.equals("10.2")) {
+      Base.showWarning("Time for an OS Upgrade","The \"Present\" feature may not be available on\n" + "Mac OS X 10.2, because of what appears to be\n" + "a bug in the Java 1.4 implementation on 10.2.\n"+ "In case it works on your machine, present mode\n"+ "will start, but if you get a flickering white\n"+ "window, using Command-Q to quit the sketch",null);
+    }
+  }
   try {
     if (!sketch.handleRun())     return;
     runtime=new Runner(sketch,Editor.this);

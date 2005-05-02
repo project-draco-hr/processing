@@ -1,8 +1,16 @@
 {
   if (sketch != null) {
-    if (Base.calcFolderSize(sketch.folder) == 0) {
-      Base.removeDir(sketch.folder);
-      sketchbook.rebuildMenus();
+    try {
+      String oldPath=sketch.code[0].file.getCanonicalPath();
+      String newPath=new File(path).getCanonicalPath();
+      if (!oldPath.equals(newPath)) {
+        if (Base.calcFolderSize(sketch.folder) == 0) {
+          Base.removeDir(sketch.folder);
+          sketchbook.rebuildMenus();
+        }
+      }
+    }
+ catch (    Exception e) {
     }
   }
   try {
