@@ -12,6 +12,11 @@
   String newName=fd.getFile();
   if (newName == null)   return false;
   newName=Sketchbook.sanitizeName(newName);
+  File checkAlready=new File(folder,newName + ".pde");
+  if (checkAlready.exists()) {
+    Base.showMessage("Nope","You can't save the sketch as \"" + newName + "\"\n"+ "because the sketch already has a tab with that name.");
+    return false;
+  }
   File newFolder=new File(newParentDir,newName);
   if (newFolder.equals(folder)) {
     Base.showWarning("You can't fool me","The new sketch name and location are the same as\n" + "the old. I ain't not doin nuthin' not now.",null);
@@ -45,6 +50,10 @@
   if (dataFolder.exists()) {
     File newDataFolder=new File(newFolder,"data");
     Base.copyDir(dataFolder,newDataFolder);
+  }
+  if (codeFolder.exists()) {
+    File newCodeFolder=new File(newFolder,"code");
+    Base.copyDir(codeFolder,newCodeFolder);
   }
   File newFile=new File(newFolder,newName + ".pde");
   code[0].saveAs(newFile);
