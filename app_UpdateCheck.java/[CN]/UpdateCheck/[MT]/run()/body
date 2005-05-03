@@ -11,6 +11,15 @@
   String info=URLEncoder.encode(id + "\t" + PApplet.nf(Base.VERSION,4)+ "\t"+ System.getProperty("java.version")+ "\t"+ System.getProperty("java.vendor")+ "\t"+ System.getProperty("os.name")+ "\t"+ System.getProperty("os.version")+ "\t"+ System.getProperty("os.arch"));
   try {
     int latest=readInt(downloadURL + "?" + info);
+    String lastString=Preferences.get("update.last");
+    long now=System.currentTimeMillis();
+    if (lastString != null) {
+      long when=Long.parseLong(lastString);
+      if (now - when < ONE_DAY) {
+        return;
+      }
+    }
+    Preferences.set("update.last",String.valueOf(now));
     String prompt="A new version of Processing is available,\n" + "would you like to visit the Processing download page?";
     if (latest > Base.VERSION) {
       Object[] options={"Yes","No"};

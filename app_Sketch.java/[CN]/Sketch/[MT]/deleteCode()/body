@@ -1,5 +1,9 @@
 {
   ensureExistence();
+  if (isReadOnly()) {
+    Base.showMessage("Sketch is Read-Only","Some files are marked \"read-only\", so you'll\n" + "need to re-save the sketch in another location,\n" + "and try again.");
+    return;
+  }
   Object[] options={"OK","Cancel"};
   String prompt=(current == code[0]) ? "Are you sure you want to delete this sketch?" : "Are you sure you want to delete \"" + current.name + "\"?";
   int result=JOptionPane.showOptionDialog(editor,prompt,"Delete",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
