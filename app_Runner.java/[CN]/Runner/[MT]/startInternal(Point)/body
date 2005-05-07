@@ -5,8 +5,15 @@
   RunnerClassLoader loader=new RunnerClassLoader();
   Class c=loader.loadClass(sketch.mainClassName);
   applet=(PApplet)c.newInstance();
+  window=new Frame(sketch.name);
+  ((Frame)window).setResizable(false);
+  if (editor.icon != null) {
+    ((Frame)window).setIconImage(editor.icon);
+  }
+  window.pack();
   applet.leechErr=leechErr;
   applet.folder=sketch.folder.getAbsolutePath();
+  applet.frame=(Frame)window;
   applet.init();
   while ((applet.width == 0) && !applet.finished) {
     try {
@@ -18,12 +25,6 @@
  catch (    InterruptedException e) {
     }
   }
-  window=new Frame(sketch.name);
-  ((Frame)window).setResizable(false);
-  if (editor.icon != null) {
-    ((Frame)window).setIconImage(editor.icon);
-  }
-  window.pack();
   window.addWindowListener(new WindowAdapter(){
     public void windowClosing(    WindowEvent e){
       stop();
