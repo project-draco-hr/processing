@@ -1,0 +1,29 @@
+{
+  int i=0;
+  int sav_s_flg=s_flg;
+  if (j > 0) {
+    if (s_flg != 0) {
+      p_tabs();
+      s_flg=0;
+    }
+    string[j]='\0';
+    i=0;
+    while (string[i] == ' ')     i++;
+    if (lookup_com(w_jdoc) == 1)     jdoc=1;
+    String strBuffer=new String(string,0,j);
+    if (string[i] == '/' && string[i + 1] == '*') {
+      if ((last_char != ';') && (sav_s_flg == 1)) {
+        fprintf(outfil,strBuffer.substring(i,j));
+      }
+ else {
+        fprintf(outfil,strBuffer);
+      }
+    }
+ else {
+      if (string[i] == '*' || jdoc == 0)       fprintf(outfil," " + strBuffer.substring(i,j));
+ else       fprintf(outfil," * " + strBuffer.substring(i,j));
+    }
+    j=0;
+    string[0]='\0';
+  }
+}

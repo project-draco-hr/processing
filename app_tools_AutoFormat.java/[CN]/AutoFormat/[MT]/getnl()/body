@@ -1,0 +1,49 @@
+{
+  int save_s_flg;
+  save_s_flg=tabs;
+  peekc=getchr();
+  while (peekc == '\t' || peekc == ' ') {
+    string[j++]=peekc;
+    peek=-1;
+    peekc='`';
+    peekc=getchr();
+    peek=1;
+  }
+  peek=1;
+  if (peekc == '/') {
+    peek=-1;
+    peekc='`';
+    peekc=getchr();
+    if (peekc == '*') {
+      string[j++]='/';
+      string[j++]='*';
+      peek=-1;
+      peekc='`';
+      comment();
+    }
+ else     if (peekc == '/') {
+      string[j++]='/';
+      string[j++]='/';
+      peek=-1;
+      peekc='`';
+      cpp_comment();
+      return (1);
+    }
+ else {
+      string[j++]='/';
+      peek=1;
+    }
+  }
+  peekc=getchr();
+  if (peekc == '\n') {
+    lineNumber++;
+    peek=-1;
+    peekc='`';
+    tabs=save_s_flg;
+    return (1);
+  }
+ else {
+    peek=1;
+  }
+  return 0;
+}
