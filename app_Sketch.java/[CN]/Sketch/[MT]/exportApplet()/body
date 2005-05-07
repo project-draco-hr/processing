@@ -91,6 +91,12 @@
   reader.close();
   ps.flush();
   ps.close();
+  String LOADING_IMAGE="loading.gif";
+  File loadingImage=new File(folder,LOADING_IMAGE);
+  if (!loadingImage.exists()) {
+    loadingImage=new File("lib",LOADING_IMAGE);
+  }
+  Base.copyFile(loadingImage,new File(appletFolder,LOADING_IMAGE));
   for (int i=0; i < codeCount; i++) {
     try {
       Base.copyFile(code[i].file,new File(appletFolder,code[i].file.getName()));

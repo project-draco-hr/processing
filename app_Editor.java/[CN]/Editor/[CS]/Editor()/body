@@ -63,5 +63,14 @@
   listener=new EditorListener(this,textarea);
   pain.add(box);
   Document document=textarea.getDocument();
-  document.addUndoableEditListener(new PdeUndoableEditListener());
+  document.addUndoableEditListener(new UndoableEditListener(){
+    public void undoableEditHappened(    UndoableEditEvent e){
+      if (undo != null) {
+        undo.addEdit(e.getEdit());
+        undoAction.updateUndoState();
+        redoAction.updateRedoState();
+      }
+    }
+  }
+);
 }
