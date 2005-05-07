@@ -11,7 +11,13 @@
     int frameSize=format.getFrameSize();
     DataLine.Info info=new DataLine.Info(Clip.class,ais.getFormat(),frameLength * frameSize);
     clip=(Clip)AudioSystem.getLine(info);
-    gainControl=(FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+    try {
+      gainControl=(FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+    }
+ catch (    Exception e) {
+      System.err.println("Couldn't get gain control for this .wav file");
+      e.printStackTrace();
+    }
     clip.open(ais);
     parent.registerDispose(this);
     try {
