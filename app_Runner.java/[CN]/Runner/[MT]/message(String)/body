@@ -1,5 +1,4 @@
 {
-  if (s.trim().length() == 0)   return;
   if (s.indexOf(PApplet.EXTERNAL_QUIT) == 0) {
     editor.doClose();
     return;
@@ -18,6 +17,7 @@
   }
   System.err.print(s);
   System.err.flush();
+  if (s.trim().length() == 0)   return;
   if (newMessage) {
     exception=new RunnerException(s);
     exception.hideStackTrace=true;
@@ -37,30 +37,28 @@
       int startParen=s.indexOf('(');
       String pkgClassFxn=null;
       int codeIndex=-1;
-      int lineIndex=-1;
+      int lineNumber=-1;
       if (startParen == -1) {
         pkgClassFxn=s;
       }
  else {
         pkgClassFxn=s.substring(0,startParen);
         String fileAndLine=s.substring(startParen + 1);
-        fileAndLine=fileAndLine.substring(0,fileAndLine.length() - 1);
+        int stopParen=fileAndLine.indexOf(')');
+        fileAndLine=fileAndLine.substring(0,stopParen);
         int colonIndex=fileAndLine.indexOf(':');
         if (colonIndex != -1) {
           String filename=fileAndLine.substring(0,colonIndex);
+          lineNumber=Integer.parseInt(fileAndLine.substring(colonIndex + 1)) - 1;
           for (int i=0; i < sketch.codeCount; i++) {
-            if (sketch.code[i].preprocName.equals(filename)) {
+            SketchCode code=sketch.code[i];
+            if (((code.preprocName == null) && (lineNumber >= code.preprocOffset)) || ((code.preprocName != null) && code.preprocName.equals(filename))) {
               codeIndex=i;
-              break;
             }
           }
+          lineNumber-=sketch.code[codeIndex].preprocOffset;
           if (codeIndex != -1) {
-            int lastNumberIndex=colonIndex + 1;
-            while ((lastNumberIndex < fileAndLine.length()) && Character.isDigit(fileAndLine.charAt(lastNumberIndex))) {
-              lastNumberIndex++;
-            }
-            lineIndex=Integer.parseInt(fileAndLine.substring(colonIndex + 1,lastNumberIndex));
-            exception=new RunnerException(exception.getMessage(),codeIndex,lineIndex - 1,-1);
+            exception=new RunnerException(exception.getMessage(),codeIndex,lineNumber,-1);
             exception.hideStackTrace=true;
             foundMessageSource=true;
           }
@@ -68,7 +66,7 @@
       }
       editor.error(exception);
     }
- else     if (messageLineCount > 5) {
+ else     if (messageLineCount > 10) {
       messageLineCount=-100;
       exception=new RunnerException(exception.getMessage());
       exception.hideStackTrace=true;

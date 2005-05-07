@@ -14,7 +14,13 @@
     codeFolderPackages=Compiler.packageListFromClassPath(codeFolderClassPath);
   }
  else {
-    externalRuntime=(codeCount > 1);
+    externalRuntime=false;
+    for (int i=0; i < codeCount; i++) {
+      if (code[i].flavor == JAVA) {
+        externalRuntime=true;
+        break;
+      }
+    }
     libraryPath="";
   }
   if (dataFolder.exists() && Base.calcFolderSize(dataFolder) > 768 * 1024) {
@@ -24,7 +30,7 @@
   int bigCount=countLines(code[0].program);
   for (int i=1; i < codeCount; i++) {
     if (code[i].flavor == PDE) {
-      code[i].lineOffset=++bigCount;
+      code[i].preprocOffset=++bigCount;
       bigCode.append('\n');
       bigCode.append(code[i].program);
       bigCount+=countLines(code[i].program);
@@ -53,11 +59,11 @@
     int errorFile=0;
     int errorLine=re.getLine() - 1;
     for (int i=1; i < codeCount; i++) {
-      if ((code[i].flavor == PDE) && (code[i].lineOffset < errorLine)) {
+      if ((code[i].flavor == PDE) && (code[i].preprocOffset < errorLine)) {
         errorFile=i;
       }
     }
-    errorLine-=code[errorFile].lineOffset;
+    errorLine-=code[errorFile].preprocOffset;
     throw new RunnerException(re.getMessage(),errorFile,errorLine,re.getColumn());
   }
 catch (  antlr.TokenStreamRecognitionException tsre) {
@@ -78,11 +84,11 @@ catch (  antlr.TokenStreamRecognitionException tsre) {
       int errorColumn=Integer.parseInt(result.group(2).toString());
       int errorFile=0;
       for (int i=1; i < codeCount; i++) {
-        if ((code[i].flavor == PDE) && (code[i].lineOffset < errorLine)) {
+        if ((code[i].flavor == PDE) && (code[i].preprocOffset < errorLine)) {
           errorFile=i;
         }
       }
-      errorLine-=code[errorFile].lineOffset;
+      errorLine-=code[errorFile].preprocOffset;
       throw new RunnerException(tsre.getMessage(),errorFile,errorLine,errorColumn);
     }
  else {
