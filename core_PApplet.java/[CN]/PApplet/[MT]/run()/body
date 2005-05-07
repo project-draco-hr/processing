@@ -16,6 +16,9 @@
   }
  catch (  Exception e) {
     finished=true;
+    if (e instanceof InvocationTargetException) {
+      e=(Exception)(((InvocationTargetException)e).getTargetException());
+    }
     exception=e;
     if (leechErr != null) {
       leechErr.println(LEECH_WAKEUP);
