@@ -1,5 +1,5 @@
 {
-  String prog=textarea.getText();
+  String prog=editor.textarea.getText();
   int tabSize=Preferences.getInteger("editor.tabs.size");
   char program[]=prog.toCharArray();
   StringBuffer buffer=new StringBuffer();
@@ -52,12 +52,11 @@
       gotBlankLine=false;
     }
   }
-  int selectionEnd=textarea.getSelectionEnd();
-  setText(buffer.toString(),false);
+  int selectionEnd=editor.textarea.getSelectionEnd();
+  editor.setText(buffer.toString(),false);
   if (buffer.length() < selectionEnd - 1) {
     selectionEnd=buffer.length() - 1;
   }
-  textarea.select(selectionEnd,selectionEnd);
-  sketch.setModified();
-  buttons.clear();
+  editor.textarea.select(selectionEnd,selectionEnd);
+  editor.sketch.setModified();
 }
