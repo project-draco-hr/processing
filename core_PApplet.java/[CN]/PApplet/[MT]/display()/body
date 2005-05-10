@@ -1,69 +1,67 @@
 {
   if (PApplet.THREAD_DEBUG)   println(Thread.currentThread().getName() + " formerly nextFrame()");
   if (looping || redraw) {
-synchronized (glock) {
-      if (THREAD_DEBUG)       println(Thread.currentThread().getName() + " 1a beginFrame");
-      g.beginFrame();
-      if (THREAD_DEBUG)       println(Thread.currentThread().getName() + " 1b draw");
-      if (frameCount == 0) {
-        try {
-          setup();
-        }
- catch (        RuntimeException e) {
-          String msg=e.getMessage();
-          if ((msg != null) && (e.getMessage().indexOf(NEW_RENDERER) != -1)) {
-            return;
-          }
- else {
-            throw e;
-          }
-        }
-        this.width=g.width;
-        this.height=g.height;
+    if (THREAD_DEBUG)     println(Thread.currentThread().getName() + " 1a beginFrame");
+    g.beginFrame();
+    if (THREAD_DEBUG)     println(Thread.currentThread().getName() + " 1b draw");
+    if (frameCount == 0) {
+      try {
+        setup();
       }
- else {
-        if (framerateLastMillis != 0) {
-          float elapsed=(float)(System.currentTimeMillis() - framerateLastMillis);
-          if (elapsed != 0) {
-            framerate=(framerate * 0.9f) + ((1.0f / (elapsed / 1000.0f)) * 0.1f);
-          }
+ catch (      RuntimeException e) {
+        String msg=e.getMessage();
+        if ((msg != null) && (e.getMessage().indexOf(NEW_RENDERER) != -1)) {
+          return;
         }
-        framerateLastMillis=System.currentTimeMillis();
-        if (framerateTarget != 0) {
-          if (framerateLastDelayTime == 0) {
-            framerateLastDelayTime=System.currentTimeMillis();
-          }
  else {
-            long timeToLeave=framerateLastDelayTime + (long)(1000.0f / framerateTarget);
-            int napTime=(int)(timeToLeave - System.currentTimeMillis());
-            framerateLastDelayTime=timeToLeave;
-            delay(napTime);
-          }
+          throw e;
         }
-        preMethods.handle();
-        pmouseX=dmouseX;
-        pmouseY=dmouseY;
-        draw();
-        dmouseX=mouseX;
-        dmouseY=mouseY;
-        dequeueMouseEvents();
-        dequeueKeyEvents();
-        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " 2b endFrame");
-        drawMethods.handle();
-        redraw=false;
       }
-      g.endFrame();
-      if (recorder != null) {
-        recorder.endFrame();
-        recorder=null;
-      }
-      frameCount++;
-      if (THREAD_DEBUG)       println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
-      repaint();
-      if (THREAD_DEBUG)       println(Thread.currentThread().getName() + "   3b calling Toolkit.sync " + frameCount);
-      getToolkit().sync();
-      if (THREAD_DEBUG)       println(Thread.currentThread().getName() + "   3c done " + frameCount);
-      postMethods.handle();
+      this.width=g.width;
+      this.height=g.height;
     }
+ else {
+      if (framerateLastMillis != 0) {
+        float elapsed=(float)(System.currentTimeMillis() - framerateLastMillis);
+        if (elapsed != 0) {
+          framerate=(framerate * 0.9f) + ((1.0f / (elapsed / 1000.0f)) * 0.1f);
+        }
+      }
+      framerateLastMillis=System.currentTimeMillis();
+      if (framerateTarget != 0) {
+        if (framerateLastDelayTime == 0) {
+          framerateLastDelayTime=System.currentTimeMillis();
+        }
+ else {
+          long timeToLeave=framerateLastDelayTime + (long)(1000.0f / framerateTarget);
+          int napTime=(int)(timeToLeave - System.currentTimeMillis());
+          framerateLastDelayTime=timeToLeave;
+          delay(napTime);
+        }
+      }
+      preMethods.handle();
+      pmouseX=dmouseX;
+      pmouseY=dmouseY;
+      draw();
+      dmouseX=mouseX;
+      dmouseY=mouseY;
+      dequeueMouseEvents();
+      dequeueKeyEvents();
+      if (THREAD_DEBUG)       println(Thread.currentThread().getName() + " 2b endFrame");
+      drawMethods.handle();
+      redraw=false;
+    }
+    g.endFrame();
+    if (recorder != null) {
+      recorder.endFrame();
+      recorder=null;
+    }
+    frameCount++;
+    if (THREAD_DEBUG)     println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
+    repaint();
+    if (THREAD_DEBUG)     println(Thread.currentThread().getName() + "   3b calling Toolkit.sync " + frameCount);
+    getToolkit().sync();
+    if (THREAD_DEBUG)     println(Thread.currentThread().getName() + "   3c done " + frameCount);
+    postMethods.handle();
   }
 }
