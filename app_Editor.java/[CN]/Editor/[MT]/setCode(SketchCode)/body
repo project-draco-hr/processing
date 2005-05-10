@@ -1,0 +1,28 @@
+{
+  if (code.document == null) {
+    code.document=new SyntaxDocument();
+    code.document.setTokenMarker(new PdeKeywords());
+    try {
+      code.document.insertString(0,code.program,null);
+    }
+ catch (    BadLocationException bl) {
+      bl.printStackTrace();
+    }
+    code.undo=new UndoManager();
+    code.document.addUndoableEditListener(new UndoableEditListener(){
+      public void undoableEditHappened(      UndoableEditEvent e){
+        if (undo != null) {
+          undo.addEdit(e.getEdit());
+          undoAction.updateUndoState();
+          redoAction.updateRedoState();
+        }
+      }
+    }
+);
+  }
+  textarea.setDocument(code.document,code.selectionStart,code.selectionStop,code.scrollPosition);
+  textarea.requestFocus();
+  this.undo=code.undo;
+  undoAction.updateUndoState();
+  redoAction.updateRedoState();
+}
