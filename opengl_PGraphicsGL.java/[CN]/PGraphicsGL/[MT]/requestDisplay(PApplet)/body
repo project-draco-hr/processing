@@ -7,7 +7,17 @@
   try {
     canvas.display();
   }
- catch (  Exception e) {
-    e.printStackTrace();
+ catch (  GLException e) {
+    Throwable t=e.getCause();
+    if (t instanceof InvocationTargetException) {
+      Throwable target=((InvocationTargetException)t).getTargetException();
+      throw new RuntimeException(target);
+    }
+ else {
+      throw new RuntimeException(t);
+    }
+  }
+catch (  Exception e) {
+    throw new RuntimeException(e);
   }
 }
