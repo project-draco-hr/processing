@@ -13,6 +13,13 @@
           int endOffset=lineElement.getEndOffset();
           consoleDoc.remove(0,endOffset);
         }
+        lineCount=element.getElementCount();
+        Element currentElement=element.getElement(lineCount - 1);
+        int currentStart=currentElement.getStartOffset();
+        int currentEnd=currentElement.getEndOffset();
+        if (currentEnd - currentStart > 10000) {
+          consoleDoc.insertString(consoleDoc.getLength(),"\n",err ? errStyle : stdStyle);
+        }
         consoleDoc.insertString(consoleDoc.getLength(),text,err ? errStyle : stdStyle);
         consoleTextPane.setCaretPosition(consoleDoc.getLength());
       }

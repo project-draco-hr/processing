@@ -30,7 +30,6 @@
     if (!foundMessageSource) {
       int afterAt=s.indexOf("at") + 3;
       if (afterAt == 2) {
-        System.err.println(s);
         return;
       }
       s=s.substring(afterAt + 1);
@@ -56,8 +55,8 @@
               codeIndex=i;
             }
           }
-          lineNumber-=sketch.code[codeIndex].preprocOffset;
           if (codeIndex != -1) {
+            lineNumber-=sketch.code[codeIndex].preprocOffset;
             exception=new RunnerException(exception.getMessage(),codeIndex,lineNumber,-1);
             exception.hideStackTrace=true;
             foundMessageSource=true;
