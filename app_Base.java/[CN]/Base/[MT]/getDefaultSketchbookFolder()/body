@@ -16,7 +16,7 @@
       RegistryKey topKey=Registry.HKEY_CURRENT_USER;
       String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
       RegistryKey localKey=topKey.openSubKey(localKeyPath);
-      String personalPath=localKey.getStringValue("Personal");
+      String personalPath=cleanKey(localKey.getStringValue("Personal"));
       sketchbookFolder=new File(personalPath,"Processing");
     }
  catch (    Exception e) {
@@ -40,6 +40,7 @@
     result=sketchbookFolder.mkdirs();
   }
   if (!result) {
+    System.out.println("Using fallback path for sketchbook.");
     String fallback=Preferences.get("sketchbook.path.fallback");
     sketchbookFolder=new File(fallback);
     if (!sketchbookFolder.exists()) {

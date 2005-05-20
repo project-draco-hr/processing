@@ -4,7 +4,15 @@
   examplesPath=examplesFolder.getAbsolutePath();
   librariesFolder=new File(System.getProperty("user.dir"),"libraries");
   librariesPath=librariesFolder.getAbsolutePath();
-  if (Preferences.get("sketchbook.path") == null) {
+  String sketchbookPath=Preferences.get("sketchbook.path");
+  if (sketchbookPath != null) {
+    File skechbookFolder=new File(sketchbookPath);
+    if (!skechbookFolder.exists()) {
+      Base.showWarning("Sketchbook folder disappeared","The sketchbook folder no longer exists,\n" + "so a new sketchbook will be created in the\n" + "default location.",null);
+      sketchbookPath=null;
+    }
+  }
+  if (sketchbookPath == null) {
     File sketchbookFolder=Base.getDefaultSketchbookFolder();
     Preferences.set("sketchbook.path",sketchbookFolder.getAbsolutePath());
     if (!sketchbookFolder.exists())     sketchbookFolder.mkdirs();

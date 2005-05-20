@@ -20,7 +20,7 @@
       RegistryKey topKey=Registry.HKEY_CURRENT_USER;
       String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
       RegistryKey localKey=topKey.openSubKey(localKeyPath);
-      String appDataPath=localKey.getStringValue("AppData");
+      String appDataPath=cleanKey(localKey.getStringValue("AppData"));
       dataFolder=new File(appDataPath,"Processing");
     }
  catch (    Exception e) {
@@ -36,6 +36,7 @@
     result=dataFolder.mkdirs();
   }
   if (!result) {
+    System.out.println("Using fallback path for settings.");
     String fallback=Preferences.get("settings.path.fallback");
     dataFolder=new File(fallback);
     if (!dataFolder.exists()) {
