@@ -10,8 +10,14 @@
     grabber.disposeChannel(channel);
     return listing;
   }
- catch (  QTException e) {
-    e.printStackTrace();
+ catch (  QTException qte) {
+    int errorCode=qte.errorCode();
+    if (errorCode == Errors.couldntGetRequiredComponent) {
+      throw new RuntimeException("Couldn't find any capture devices, " + "check the FAQ for more info.");
+    }
+ else {
+      qte.printStackTrace();
+      throw new RuntimeException("Problem listing capture devices, " + "check the FAQ for more info.");
+    }
   }
-  return null;
 }

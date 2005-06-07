@@ -19,9 +19,6 @@
   mouseEventMethods=new RegisteredMethods();
   keyEventMethods=new RegisteredMethods();
   disposeMethods=new RegisteredMethods();
-  size(DEFAULT_WIDTH,DEFAULT_HEIGHT);
-  width=0;
-  height=0;
   try {
     getAppletContext();
     online=true;
@@ -29,5 +26,17 @@
  catch (  NullPointerException e) {
     online=false;
   }
+  if (javaVersion < 1.3f) {
+    addMouseListener(new MouseAdapter(){
+      public void mousePressed(      MouseEvent e){
+        link("http://java.com/");
+      }
+    }
+);
+    return;
+  }
+  size(DEFAULT_WIDTH,DEFAULT_HEIGHT);
+  width=0;
+  height=0;
   start();
 }
