@@ -1,21 +1,26 @@
 {
   try {
     OutputStream os=null;
+    boolean success=false;
     if (filename.toLowerCase().endsWith(".tga")) {
       os=new BufferedOutputStream(new FileOutputStream(filename),32768);
-      saveTGA(os,pixels,width,height);
+      success=saveTGA(os,pixels,width,height);
     }
  else {
       if (!filename.toLowerCase().endsWith(".tif") && !filename.toLowerCase().endsWith(".tiff")) {
         filename+=".tif";
       }
       os=new BufferedOutputStream(new FileOutputStream(filename),32768);
-      saveTIFF(os,pixels,width,height);
+      success=saveTIFF(os,pixels,width,height);
     }
     os.flush();
     os.close();
   }
  catch (  IOException e) {
     e.printStackTrace();
+    success=false;
+  }
+  if (!success) {
+    throw new RuntimeException("Error while saving image.");
   }
 }

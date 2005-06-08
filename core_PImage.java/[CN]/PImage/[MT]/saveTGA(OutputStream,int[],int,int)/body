@@ -1,24 +1,65 @@
 {
   try {
-    if (!saveHeaderTGA(output,width,height)) {
-      return false;
-    }
-    int index=(height - 1) * width;
-    for (int y=height - 1; y >= 0; y--) {
-      for (int x=0; x < width; x++) {
-        int col=pixels[index + x];
+    byte header[]=new byte[18];
+    header[2]=0x02 + 0x08;
+    header[12]=(byte)(width & 0xff);
+    header[13]=(byte)(width >> 8);
+    header[14]=(byte)(height & 0xff);
+    header[15]=(byte)(height >> 8);
+    header[16]=32;
+    header[17]=0x08 + 0x20;
+    output.write(header);
+    int maxLen=height * width;
+    int index=0;
+    int col, prevCol;
+    int[] currPack=new int[128];
+    while (index < maxLen) {
+      boolean isRLE=false;
+      currPack[0]=col=pixels[index];
+      int rle=1;
+      while (index + rle < maxLen) {
+        if (col != pixels[index + rle] || rle == 128) {
+          isRLE=(rle > 1);
+          break;
+        }
+        rle++;
+      }
+      if (isRLE) {
+        output.write(0x80 | (rle - 1));
         output.write(col & 0xff);
         output.write(col >> 8 & 0xff);
         output.write(col >> 16 & 0xff);
         output.write(col >>> 24 & 0xff);
       }
-      index-=width;
+ else {
+        rle=1;
+        while (index + rle < maxLen) {
+          int scanCol=pixels[index + rle];
+          if ((col != scanCol && rle < 128) || rle < 3) {
+            currPack[rle]=col=scanCol;
+          }
+ else {
+            if (col == scanCol)             rle-=2;
+            break;
+          }
+          rle++;
+        }
+        output.write(rle - 1);
+        for (int i=0; i < rle; i++) {
+          col=currPack[i];
+          output.write(col & 0xff);
+          output.write(col >> 8 & 0xff);
+          output.write(col >> 16 & 0xff);
+          output.write(col >>> 24 & 0xff);
+        }
+      }
+      index+=rle;
     }
     output.flush();
     return true;
   }
  catch (  IOException e) {
     e.printStackTrace();
+    return false;
   }
-  return false;
 }
