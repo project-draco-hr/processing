@@ -1,4 +1,7 @@
 {
+  if ((format != ARGB) && (format != RGB)) {
+    throw new RuntimeException("Only ARGB and RGB images can be saved " + "as .tga files");
+  }
   try {
     byte header[]=new byte[18];
     header[2]=0x02 + 0x08;
@@ -6,8 +9,14 @@
     header[13]=(byte)(width >> 8);
     header[14]=(byte)(height & 0xff);
     header[15]=(byte)(height >> 8);
-    header[16]=32;
-    header[17]=0x08 + 0x20;
+    if (format == RGB) {
+      header[16]=24;
+      header[17]=0x00 + 0x20;
+    }
+ else {
+      header[16]=32;
+      header[17]=0x08 + 0x20;
+    }
     output.write(header);
     int maxLen=height * width;
     int index=0;
@@ -29,7 +38,9 @@
         output.write(col & 0xff);
         output.write(col >> 8 & 0xff);
         output.write(col >> 16 & 0xff);
-        output.write(col >>> 24 & 0xff);
+        if (format == ARGB) {
+          output.write(col >>> 24 & 0xff);
+        }
       }
  else {
         rle=1;
@@ -50,7 +61,9 @@
           output.write(col & 0xff);
           output.write(col >> 8 & 0xff);
           output.write(col >> 16 & 0xff);
-          output.write(col >>> 24 & 0xff);
+          if (format == ARGB) {
+            output.write(col >>> 24 & 0xff);
+          }
         }
       }
       index+=rle;
