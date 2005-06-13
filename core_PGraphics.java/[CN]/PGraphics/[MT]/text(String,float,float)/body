@@ -1,3 +1,22 @@
 {
-  text(s,x,y,0);
+  if (textMode == SCREEN)   loadPixels();
+  int length=str.length();
+  if (length > textBuffer.length) {
+    textBuffer=new char[length + 10];
+  }
+  str.getChars(0,length,textBuffer,0);
+  int start=0;
+  int index=0;
+  while (index < length) {
+    if (textBuffer[index] == '\n') {
+      textLineImpl(textBuffer,start,index,x,y);
+      start=index + 1;
+      y+=textLeading;
+    }
+    index++;
+  }
+  if (start < length) {
+    textLineImpl(textBuffer,start,index,x,y);
+  }
+  if (textMode == SCREEN)   updatePixels();
 }

@@ -3,12 +3,7 @@
     String msg="textMode(SCREEN) cannot have a z coordinate";
     throw new RuntimeException(msg);
   }
-  if (textFont != null) {
-    if (textMode == SCREEN)     loadPixels();
-    textFont.text(c,x,y,z,this);
-    if (textMode == SCREEN)     updatePixels();
-  }
- else {
-    throw new RuntimeException("use textFont() before text()");
-  }
+  if (z != 0)   translate(0,0,z);
+  text(c,x,y);
+  if (z != 0)   translate(0,0,-z);
 }

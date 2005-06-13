@@ -1,3 +1,9 @@
 {
-  text(c,x,y,0);
+  if (textFont == null) {
+    throw new RuntimeException("use textFont() before text()");
+  }
+  if (textMode == SCREEN)   loadPixels();
+  textBuffer[0]=c;
+  textLineImpl(textBuffer,0,1,x,y);
+  if (textMode == SCREEN)   updatePixels();
 }
