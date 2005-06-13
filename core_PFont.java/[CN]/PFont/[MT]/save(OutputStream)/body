@@ -1,7 +1,11 @@
 {
   DataOutputStream os=new DataOutputStream(output);
   os.writeInt(charCount);
-  os.writeInt((name != null) ? 10 : 8);
+  if ((name == null) || (psname == null)) {
+    name="";
+    psname="";
+  }
+  os.writeInt(11);
   os.writeInt(size);
   os.writeInt(mbox2);
   os.writeInt(ascent);
@@ -22,9 +26,8 @@
       }
     }
   }
-  if (name != null) {
-    os.writeUTF(name);
-    os.writeUTF(psname);
-  }
+  os.writeUTF(name);
+  os.writeUTF(psname);
+  os.writeBoolean(smooth);
   os.flush();
 }
