@@ -8,7 +8,8 @@
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,textFont.smooth ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
   }
   g2.setColor(fillColorObject);
-  g2.drawChars(buffer,start,stop,(int)(x + 0.5f),(int)(y + 0.5f));
+  int length=stop - start;
+  g2.drawChars(buffer,start,length,(int)(x + 0.5f),(int)(y + 0.5f));
   if (textFont.smooth != savedSmooth) {
     if (savedSmooth) {
       smooth();
@@ -17,4 +18,7 @@
       noSmooth();
     }
   }
+  textX=x + textWidthImpl(buffer,start,stop);
+  textY=y;
+  textZ=0;
 }

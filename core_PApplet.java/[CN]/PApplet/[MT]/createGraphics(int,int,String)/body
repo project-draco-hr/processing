@@ -1,0 +1,24 @@
+{
+  if (renderer.equals(OPENGL)) {
+    throw new RuntimeException("createGraphics() with OPENGL is not " + "supported. Use P3D instead.");
+  }
+  PGraphics outgoing;
+  try {
+    Class rendererClass=Class.forName(renderer);
+    Class constructorParams[]=new Class[]{Integer.TYPE,Integer.TYPE,PApplet.class};
+    Constructor constructor=rendererClass.getConstructor(constructorParams);
+    Object constructorValues[]=new Object[]{new Integer(iwidth),new Integer(iheight),this};
+    outgoing=(PGraphics)constructor.newInstance(constructorValues);
+  }
+ catch (  InvocationTargetException ite) {
+    throw new RuntimeException(ite.getTargetException());
+  }
+catch (  ClassNotFoundException cnfe) {
+    throw new RuntimeException("You need to use \"Import Library\" " + "to add " + renderer + " to your sketch.");
+  }
+catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+  outgoing.defaults();
+  return outgoing;
+}

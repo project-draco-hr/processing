@@ -5,7 +5,7 @@
       try {
         if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " " + looping+ " "+ redraw);
         if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " gonna sleep");
-        int nap=looping ? 1 : 10000;
+        int nap=(looping || finished) ? 1 : 10000;
         if (frameCount == 1)         nap=1;
         Thread.sleep(nap);
         if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " outta sleep");
@@ -30,5 +30,8 @@
     }
   }
   if (THREAD_DEBUG)   println(Thread.currentThread().getName() + " thread finished");
+  if ((leechErr == null) && !online) {
+    System.exit(0);
+  }
   stop();
 }
