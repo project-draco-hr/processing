@@ -1,0 +1,19 @@
+{
+  ElementSpec[] elementArray=new ElementSpec[elements.size()];
+  elements.toArray(elementArray);
+  try {
+    Element element=super.getDefaultRootElement();
+    int lineCount=element.getElementCount();
+    int overage=lineCount - maxLineCount;
+    if (overage > 0) {
+      Element lineElement=element.getElement(overage);
+      if (lineElement == null)       return;
+      int endOffset=lineElement.getEndOffset();
+      super.remove(0,endOffset);
+    }
+    super.insert(super.getLength(),elementArray);
+  }
+ catch (  BadLocationException e) {
+  }
+  elements.clear();
+}

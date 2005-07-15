@@ -1,31 +1,3 @@
 {
-  final String text=txt;
-  final boolean err=e;
-  SwingUtilities.invokeLater(new Runnable(){
-    public void run(){
-      try {
-        Element element=consoleDoc.getDefaultRootElement();
-        int lineCount=element.getElementCount();
-        int overage=lineCount - maxLineCount;
-        if (overage > 0) {
-          Element lineElement=element.getElement(overage);
-          if (lineElement == null)           return;
-          int endOffset=lineElement.getEndOffset();
-          consoleDoc.remove(0,endOffset);
-        }
-        lineCount=element.getElementCount();
-        Element currentElement=element.getElement(lineCount - 1);
-        int currentStart=currentElement.getStartOffset();
-        int currentEnd=currentElement.getEndOffset();
-        if (currentEnd - currentStart > 10000) {
-          consoleDoc.insertString(consoleDoc.getLength(),"\n",err ? errStyle : stdStyle);
-        }
-        consoleDoc.insertString(consoleDoc.getLength(),text,err ? errStyle : stdStyle);
-        consoleTextPane.setCaretPosition(consoleDoc.getLength());
-      }
- catch (      BadLocationException e) {
-      }
-    }
-  }
-);
+  consoleDoc.appendString(txt,e ? errStyle : stdStyle);
 }

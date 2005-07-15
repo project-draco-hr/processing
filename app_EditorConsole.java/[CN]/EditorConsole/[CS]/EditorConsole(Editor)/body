@@ -1,9 +1,9 @@
 {
   this.editor=editor;
   maxLineCount=Preferences.getInteger("console.length");
-  consoleTextPane=new JTextPane();
+  consoleDoc=new BufferedStyledDocument(10000,maxLineCount);
+  consoleTextPane=new JTextPane(consoleDoc);
   consoleTextPane.setEditable(false);
-  consoleDoc=consoleTextPane.getStyledDocument();
   MutableAttributeSet standard=new SimpleAttributeSet();
   StyleConstants.setAlignment(standard,StyleConstants.ALIGN_LEFT);
   consoleDoc.setParagraphAttributes(0,0,standard,true);
@@ -64,4 +64,11 @@
   if (Base.isMacOS()) {
     setBorder(null);
   }
+  new javax.swing.Timer(250,new ActionListener(){
+    public void actionPerformed(    ActionEvent evt){
+      consoleDoc.insertAll();
+      consoleTextPane.setCaretPosition(consoleDoc.getLength());
+    }
+  }
+).start();
 }
