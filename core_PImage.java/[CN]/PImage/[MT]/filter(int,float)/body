@@ -1,7 +1,9 @@
 {
 switch (kind) {
 case BLUR:
-    blur(param);
+    if (format == ALPHA)     blurAlpha(param);
+ else     if (format == ARGB)     blurARGB(param);
+ else     blurRGB(param);
   break;
 case GRAY:
 throw new RuntimeException("Use filter(GRAY) instead of " + "filter(GRAY, param)");
@@ -33,6 +35,10 @@ int max=Math.max((pixels[i] & RED_MASK) >> 16,Math.max((pixels[i] & GREEN_MASK) 
 pixels[i]=(pixels[i] & ALPHA_MASK) | ((max < thresh) ? 0x000000 : 0xffffff);
 }
 break;
+case ERODE:
+throw new RuntimeException("Use filter(ERODE) instead of " + "filter(ERODE, param)");
+case DILATE:
+throw new RuntimeException("Use filter(DILATE) instead of " + "filter(DILATE, param)");
 }
 updatePixels();
 }
