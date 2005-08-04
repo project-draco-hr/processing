@@ -10,24 +10,22 @@
 catch (  IOException e) {
     throw new RuntimeException("Error downloading from URL " + filename);
   }
-  if (!online) {
+  try {
+    String location=folder + File.separator + "data";
+    File file=new File(location,filename);
     try {
-      String location=folder + File.separator + "data";
-      File file=new File(location,filename);
-      try {
-        String path=file.getCanonicalPath();
-        String filenameActual=new File(path).getName();
-        if (!filenameActual.equals(filename)) {
-          throw new RuntimeException("This file is named " + filenameActual + " not "+ filename+ ".");
-        }
+      String path=file.getCanonicalPath();
+      String filenameActual=new File(path).getName();
+      if (!filenameActual.equals(filename)) {
+        throw new RuntimeException("This file is named " + filenameActual + " not "+ filename+ ".");
       }
- catch (      Exception e) {
-      }
-      stream=new FileInputStream(file);
-      if (stream != null)       return stream;
     }
  catch (    Exception e) {
     }
+    stream=new FileInputStream(file);
+    if (stream != null)     return stream;
+  }
+ catch (  Exception e) {
   }
   try {
     stream=getClass().getResourceAsStream(filename);
