@@ -1,14 +1,12 @@
 {
   if (data instanceof double[]) {
     double[] d=(double[])data;
-    if (d.length == 6) {
-      double[] d2={d[0],d[1],d[2]};
-      gl.glVertex3dv(d2);
-      d2=new double[]{d[3],d[4],d[5]};
-      gl.glColor3dv(d2);
+    if (d.length != 3) {
+      throw new RuntimeException("TessCallback vertex() data " + "isn't length 3");
     }
- else     if (d.length == 3) {
-      gl.glVertex3dv(d);
-    }
+    vertexRedirect((float)d[0],(float)d[1],(float)d[2]);
+  }
+ else {
+    throw new RuntimeException("TessCallback vertex() data not understood");
   }
 }
