@@ -3,58 +3,84 @@
     super.textCharImpl(ch,x,y);
     return;
   }
-  textArray[0]=ch;
+  boolean strokeSaved=stroke;
+  stroke=false;
+  float textPoints[]=new float[6];
+  char textArray[]=new char[]{ch};
   Graphics2D graphics=(Graphics2D)canvas.getGraphics();
   FontRenderContext frc=graphics.getFontRenderContext();
   GlyphVector gv=textFontNative.createGlyphVector(frc,textArray);
   Shape shp=gv.getOutline();
   PathIterator iter=shp.getPathIterator(null);
-  glu.gluTessBeginPolygon(tobj,null);
+  boolean TESS=true;
+  if (TESS)   glu.gluTessBeginPolygon(tobj,null);
   float lastX=0;
   float lastY=0;
+  double vertex[];
   while (!iter.isDone()) {
     int type=iter.currentSegment(textPoints);
 switch (type) {
 case PathIterator.SEG_MOVETO:
-      glu.gluTessBeginContour(tobj);
-    textVertex[0]=textPoints[0];
-  textVertex[1]=textPoints[1];
-glu.gluTessVertex(tobj,textVertex,textVertex);
-lastX=textPoints[0];
-lastY=textPoints[1];
-break;
 case PathIterator.SEG_LINETO:
-textVertex[0]=textPoints[0];
-textVertex[1]=textPoints[1];
-glu.gluTessVertex(tobj,textVertex,textVertex);
+      if (type == PathIterator.SEG_MOVETO) {
+        if (TESS) {
+          glu.gluTessBeginContour(tobj);
+        }
+ else {
+          beginShape();
+        }
+      }
+ else {
+      }
+    vertex=new double[]{x + textPoints[0],y + textPoints[1],0};
+  if (TESS) {
+    glu.gluTessVertex(tobj,vertex,vertex);
+  }
+ else {
+    vertex((float)vertex[0],(float)vertex[1]);
+  }
 lastX=textPoints[0];
 lastY=textPoints[1];
 break;
 case PathIterator.SEG_QUADTO:
 for (int i=1; i < bezierDetail; i++) {
 float t=(float)i / (float)bezierDetail;
-textVertex[0]=bezierPoint(lastX,textPoints[0],textPoints[0],textPoints[2],t);
-textVertex[1]=bezierPoint(lastY,textPoints[1],textPoints[1],textPoints[3],t);
-glu.gluTessVertex(tobj,textVertex,textVertex);
+vertex=new double[]{x + bezierPoint(lastX,textPoints[0],textPoints[0],textPoints[2],t),y + bezierPoint(lastY,textPoints[1],textPoints[1],textPoints[3],t),0};
+if (TESS) {
+glu.gluTessVertex(tobj,vertex,vertex);
+}
+ else {
+vertex((float)vertex[0],(float)vertex[1]);
+}
+}
 lastX=textPoints[2];
 lastY=textPoints[3];
-}
 break;
 case PathIterator.SEG_CUBICTO:
 for (int i=1; i < bezierDetail; i++) {
 float t=(float)i / (float)bezierDetail;
-textVertex[0]=bezierPoint(lastX,textPoints[0],textPoints[2],textPoints[4],t);
-textVertex[1]=bezierPoint(lastY,textPoints[1],textPoints[3],textPoints[5],t);
-glu.gluTessVertex(tobj,textVertex,textVertex);
+vertex=new double[]{x + bezierPoint(lastX,textPoints[0],textPoints[2],textPoints[4],t),y + bezierPoint(lastY,textPoints[1],textPoints[3],textPoints[5],t),0};
+if (TESS) {
+glu.gluTessVertex(tobj,vertex,vertex);
+}
+ else {
+vertex((float)vertex[0],(float)vertex[1]);
+}
+}
 lastX=textPoints[4];
 lastY=textPoints[5];
-}
 break;
 case PathIterator.SEG_CLOSE:
+if (TESS) {
 glu.gluTessEndContour(tobj);
+}
+ else {
+endShape();
+}
 break;
 }
 iter.next();
 }
-glu.gluTessEndPolygon(tobj);
+if (TESS) glu.gluTessEndPolygon(tobj);
+stroke=strokeSaved;
 }
