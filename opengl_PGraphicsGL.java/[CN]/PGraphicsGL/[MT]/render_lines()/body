@@ -2,11 +2,12 @@
   report("render_lines in");
   int i=0;
   for (int j=0; j < pathCount; j++) {
-    if (lines[i][STROKE_WEIGHT] == 0)     continue;
-    gl.glLineWidth(lines[i][STROKE_WEIGHT]);
+    float sw=vertices[lines[i][VERTEX1]][SW];
+    if (sw == 0)     continue;
+    gl.glLineWidth(sw);
     gl.glBegin(GL.GL_LINE_STRIP);
     if (ai != null) {
-      ai.strokeWeight(lines[i][STROKE_WEIGHT]);
+      ai.strokeWeight(sw);
     }
     float a[]=vertices[lines[i][VERTEX1]];
     gl.glColor4f(a[SR],a[SG],a[SB],a[SA]);
