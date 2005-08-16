@@ -70,6 +70,14 @@
       gl.glColor4f(cr,cg,cb,c[A]);
       gl.glNormal3f(c[NX],c[NY],c[NZ]);
       gl.glVertex3f(c[VX],c[VY],c[VZ]);
+      if (ai != null) {
+        ai.fillColorRGBA((ar + br + cr) / 3.0f,(ag + bg + cg) / 3.0f,(ab + bb + cb) / 3.0f,(a[A] + b[A] + c[A]) / 3.0f);
+        ai.moveto(a[VX],a[VY]);
+        ai.lineto(b[VX],b[VY]);
+        ai.lineto(c[VX],c[VY]);
+        ai.lineto(a[VX],a[VY]);
+        ai.fillPath();
+      }
       gl.glEnd();
     }
   }

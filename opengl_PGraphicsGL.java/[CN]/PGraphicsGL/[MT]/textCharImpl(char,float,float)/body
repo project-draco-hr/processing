@@ -12,8 +12,7 @@
   GlyphVector gv=textFontNative.createGlyphVector(frc,textArray);
   Shape shp=gv.getOutline();
   PathIterator iter=shp.getPathIterator(null);
-  boolean TESS=true;
-  if (TESS)   glu.gluTessBeginPolygon(tobj,null);
+  glu.gluTessBeginPolygon(tobj,null);
   float lastX=0;
   float lastY=0;
   double vertex[];
@@ -23,22 +22,12 @@ switch (type) {
 case PathIterator.SEG_MOVETO:
 case PathIterator.SEG_LINETO:
       if (type == PathIterator.SEG_MOVETO) {
-        if (TESS) {
-          glu.gluTessBeginContour(tobj);
-        }
- else {
-          beginShape();
-        }
+        glu.gluTessBeginContour(tobj);
       }
  else {
       }
     vertex=new double[]{x + textPoints[0],y + textPoints[1],0};
-  if (TESS) {
-    glu.gluTessVertex(tobj,vertex,vertex);
-  }
- else {
-    vertex((float)vertex[0],(float)vertex[1]);
-  }
+  glu.gluTessVertex(tobj,vertex,vertex);
 lastX=textPoints[0];
 lastY=textPoints[1];
 break;
@@ -46,12 +35,7 @@ case PathIterator.SEG_QUADTO:
 for (int i=1; i < bezierDetail; i++) {
 float t=(float)i / (float)bezierDetail;
 vertex=new double[]{x + bezierPoint(lastX,textPoints[0],textPoints[0],textPoints[2],t),y + bezierPoint(lastY,textPoints[1],textPoints[1],textPoints[3],t),0};
-if (TESS) {
 glu.gluTessVertex(tobj,vertex,vertex);
-}
- else {
-vertex((float)vertex[0],(float)vertex[1]);
-}
 }
 lastX=textPoints[2];
 lastY=textPoints[3];
@@ -60,27 +44,17 @@ case PathIterator.SEG_CUBICTO:
 for (int i=1; i < bezierDetail; i++) {
 float t=(float)i / (float)bezierDetail;
 vertex=new double[]{x + bezierPoint(lastX,textPoints[0],textPoints[2],textPoints[4],t),y + bezierPoint(lastY,textPoints[1],textPoints[3],textPoints[5],t),0};
-if (TESS) {
 glu.gluTessVertex(tobj,vertex,vertex);
-}
- else {
-vertex((float)vertex[0],(float)vertex[1]);
-}
 }
 lastX=textPoints[4];
 lastY=textPoints[5];
 break;
 case PathIterator.SEG_CLOSE:
-if (TESS) {
 glu.gluTessEndContour(tobj);
-}
- else {
-endShape();
-}
 break;
 }
 iter.next();
 }
-if (TESS) glu.gluTessEndPolygon(tobj);
+glu.gluTessEndPolygon(tobj);
 stroke=strokeSaved;
 }

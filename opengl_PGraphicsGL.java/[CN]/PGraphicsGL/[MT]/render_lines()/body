@@ -1,17 +1,33 @@
 {
+  report("render_lines in");
   int i=0;
   for (int j=0; j < pathCount; j++) {
+    if (lines[i][STROKE_WEIGHT] == 0)     continue;
     gl.glLineWidth(lines[i][STROKE_WEIGHT]);
     gl.glBegin(GL.GL_LINE_STRIP);
+    if (ai != null) {
+      ai.strokeWeight(lines[i][STROKE_WEIGHT]);
+    }
     float a[]=vertices[lines[i][VERTEX1]];
     gl.glColor4f(a[SR],a[SG],a[SB],a[SA]);
     gl.glVertex3f(a[VX],a[VY],a[VZ]);
+    if (ai != null) {
+      ai.strokeColorRGBA(a[SR],a[SG],a[SB],a[SA]);
+      ai.moveto(a[VX],a[VY]);
+    }
     for (int k=0; k < pathLength[j]; k++) {
       float b[]=vertices[lines[i][VERTEX2]];
       gl.glColor4f(b[SR],b[SG],b[SB],b[SA]);
       gl.glVertex3f(b[VX],b[VY],b[VZ]);
+      if (ai != null) {
+        ai.lineto(b[VX],b[VY]);
+      }
       i++;
+    }
+    if (ai != null) {
+      ai.endPath();
     }
     gl.glEnd();
   }
+  report("render_lines out");
 }
