@@ -8,7 +8,7 @@
   int rx=(int)(r[X] - 0.5f);
   if (rx > width1)   rx=width1;
   if (lx > rx)   return;
-  if (smoothing) {
+  if (smooth) {
     int mody=MODYRES(y);
     aaleft[mody]=lx;
     aaright[mody]=rx;
@@ -31,9 +31,9 @@
     aarightfull=aarightmin / SUBXRES - 1;
   }
   incrementalize_x(l,r,sp,sdp,lx);
-  int offset=smoothing ? parent.width * (y / SUBYRES) : parent.width * y;
+  int offset=smooth ? parent.width * (y / SUBYRES) : parent.width * y;
   int truelx=0, truerx=0;
-  if (smoothing) {
+  if (smooth) {
     truelx=lx / SUBXRES;
     truerx=(rx + SUBXRES1) / SUBXRES;
     lx=aaleftmin / SUBXRES;
@@ -53,7 +53,7 @@
         if (tu < 0)         tu=0;
         if (tv < 0)         tv=0;
         int txy=tv * twidth + tu;
-        if (smoothing || texture_smooth) {
+        if (smooth || texture_smooth) {
           int tuf1=(int)(255f * (sp[U] - (float)tu));
           int tvf1=(int)(255f * (sp[V] - (float)tv));
           int tuf=255 - tuf1;
@@ -116,7 +116,7 @@
               tb=b2;
             }
           }
-          int weight=smoothing ? coverage(x) : 255;
+          int weight=smooth ? coverage(x) : 255;
           if (weight != 255)           ta=ta * weight >> 8;
         }
  else {
@@ -166,7 +166,7 @@
         }
       }
  else {
-        int weight=smoothing ? coverage(x) : 255;
+        int weight=smooth ? coverage(x) : 255;
         if (interpARGB) {
           r2=(int)(sp[R] * 255);
           g2=(int)(sp[G] * 255);
@@ -192,7 +192,7 @@
         }
       }
     }
-    if (!smoothing || ((x >= truelx) && (x <= truerx))) {
+    if (!smooth || ((x >= truelx) && (x <= truerx))) {
       increment(sp,sdp);
     }
   }
