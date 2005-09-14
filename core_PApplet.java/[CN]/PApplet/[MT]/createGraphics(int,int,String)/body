@@ -11,13 +11,16 @@
     outgoing=(PGraphics)constructor.newInstance(constructorValues);
   }
  catch (  InvocationTargetException ite) {
-    throw new RuntimeException(ite.getTargetException());
+    Throwable target=ite.getTargetException();
+    target.printStackTrace();
+    throw new RuntimeException(target.getMessage());
   }
 catch (  ClassNotFoundException cnfe) {
     throw new RuntimeException("You need to use \"Import Library\" " + "to add " + renderer + " to your sketch.");
   }
 catch (  Exception e) {
-    throw new RuntimeException(e);
+    e.printStackTrace();
+    throw new RuntimeException("Could not start because of a " + "problem inside size()");
   }
   outgoing.defaults();
   return outgoing;
