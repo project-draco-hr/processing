@@ -6,14 +6,31 @@
     if (sw == 0)     continue;
     gl.glLineWidth(sw);
     gl.glBegin(GL.GL_LINE_STRIP);
+    if (shapeListener != null) {
+      shapeListener.strokeWeight(sw);
+    }
     float a[]=vertices[lines[i][VERTEX1]];
     gl.glColor4f(a[SR],a[SG],a[SB],a[SA]);
     gl.glVertex3f(a[VX],a[VY],a[VZ]);
+    if (shapeListener != null) {
+      if (a[SA] > EPSILON) {
+        shapeListener.colorMode(RGB,1);
+        shapeListener.stroke(a[SR],a[SG],a[SB],a[SA]);
+        shapeListener.beginShape(LINE_STRIP);
+        shapeListener.vertex(a[VX],a[VY]);
+      }
+    }
     for (int k=0; k < pathLength[j]; k++) {
       float b[]=vertices[lines[i][VERTEX2]];
       gl.glColor4f(b[SR],b[SG],b[SB],b[SA]);
       gl.glVertex3f(b[VX],b[VY],b[VZ]);
+      if (shapeListener != null) {
+        shapeListener.vertex(b[VX],b[VY]);
+      }
       i++;
+    }
+    if (shapeListener != null) {
+      shapeListener.endShape();
     }
     gl.glEnd();
   }

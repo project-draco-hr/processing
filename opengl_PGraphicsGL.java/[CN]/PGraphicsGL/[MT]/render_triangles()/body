@@ -70,6 +70,19 @@
       gl.glColor4f(cr,cg,cb,c[A]);
       gl.glNormal3f(c[NX],c[NY],c[NZ]);
       gl.glVertex3f(c[VX],c[VY],c[VZ]);
+      if (shapeListener != null) {
+        shapeListener.colorMode(RGB,1);
+        shapeListener.noStroke();
+        float alpha=(a[A] + b[A] + c[A]) / 3.0f;
+        if (alpha > EPSILON) {
+          shapeListener.fill((ar + br + cr) / 3.0f,(ag + bg + cg) / 3.0f,(ab + bb + cb) / 3.0f,alpha);
+          shapeListener.beginShape(TRIANGLES);
+          shapeListener.vertex(a[VX],a[VY]);
+          shapeListener.vertex(b[VX],b[VY]);
+          shapeListener.vertex(c[VX],c[VY]);
+          shapeListener.endShape();
+        }
+      }
       gl.glEnd();
     }
   }
