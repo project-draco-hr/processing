@@ -39,11 +39,13 @@
     try {
       String outFileName=Preferences.get("console.output.file");
       if (outFileName != null) {
-        stdoutFile=new FileOutputStream(outFileName);
+        File outFile=new File(Base.getBuildFolder(),outFileName);
+        stdoutFile=new FileOutputStream(outFile);
       }
       String errFileName=Preferences.get("console.error.file");
       if (errFileName != null) {
-        stderrFile=new FileOutputStream(outFileName);
+        File errFile=new File(Base.getBuildFolder(),errFileName);
+        stderrFile=new FileOutputStream(errFile);
       }
     }
  catch (    IOException e) {
@@ -66,8 +68,10 @@
   }
   new javax.swing.Timer(250,new ActionListener(){
     public void actionPerformed(    ActionEvent evt){
-      consoleDoc.insertAll();
-      consoleTextPane.setCaretPosition(consoleDoc.getLength());
+      if (consoleDoc.hasAppendage) {
+        consoleDoc.insertAll();
+        consoleTextPane.setCaretPosition(consoleDoc.getLength());
+      }
     }
   }
 ).start();

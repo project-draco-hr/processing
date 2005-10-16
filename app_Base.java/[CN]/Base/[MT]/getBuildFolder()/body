@@ -1,7 +1,12 @@
 {
-  String buildPath=Preferences.get("build.path");
-  if (buildPath != null)   return new File(buildPath);
-  File folder=new File(getTempFolder(),"build");
-  if (!folder.exists())   folder.mkdirs();
-  return folder;
+  if (buildFolder == null) {
+    String buildPath=Preferences.get("build.path");
+    if (buildPath != null) {
+      buildFolder=new File(buildPath);
+    }
+ else {
+      buildFolder=getTempFolder("build");
+    }
+  }
+  return buildFolder;
 }
