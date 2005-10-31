@@ -1,0 +1,16 @@
+{
+  if (!folder.isDirectory())   return;
+  String list[]=folder.list();
+  if (list == null)   return;
+  for (int i=0; i < list.length; i++) {
+    if (list[i].charAt(0) == '.')     continue;
+    File subfolder=new File(folder,list[i]);
+    File entry=new File(subfolder,list[i] + ".pde");
+    if (entry.exists()) {
+      sketches.add(entry.getAbsolutePath());
+    }
+ else     if (subfolder.isDirectory()) {
+      addSketches(sketches,subfolder);
+    }
+  }
+}

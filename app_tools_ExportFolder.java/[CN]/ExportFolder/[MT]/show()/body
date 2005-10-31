@@ -1,0 +1,32 @@
+{
+  if (fc.showOpenDialog(new JDialog()) != JFileChooser.APPROVE_OPTION) {
+    return;
+  }
+  File folder=fc.getSelectedFile();
+  Vector sketches=new Vector();
+  try {
+    addSketches(sketches,folder);
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+  boolean success=true;
+  int counter=0;
+  try {
+    Enumeration en=sketches.elements();
+    while (en.hasMoreElements()) {
+      editor.message("Exporting sketch " + (++counter) + " of "+ sketches.size());
+      String path=(String)en.nextElement();
+      editor.handleOpen(path);
+      success=editor.sketch.exportApplet();
+      if (!success)       break;
+    }
+  }
+ catch (  Exception e) {
+    editor.error(e);
+    success=false;
+  }
+  if (success) {
+    editor.message("Done exporting.");
+  }
+}
