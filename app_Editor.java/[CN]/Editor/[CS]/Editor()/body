@@ -61,4 +61,58 @@
   box.add(splitPane);
   listener=new EditorListener(this,textarea);
   pain.add(box);
+  DropTarget dt=new DropTarget(this,new DropTargetListener(){
+    public void dragEnter(    DropTargetDragEvent event){
+      event.acceptDrag(DnDConstants.ACTION_COPY);
+    }
+    public void dragExit(    DropTargetEvent event){
+    }
+    public void dragOver(    DropTargetDragEvent event){
+      event.acceptDrag(DnDConstants.ACTION_COPY);
+    }
+    public void dropActionChanged(    DropTargetDragEvent event){
+    }
+    public void drop(    DropTargetDropEvent event){
+      event.acceptDrop(DnDConstants.ACTION_COPY);
+      Transferable transferable=event.getTransferable();
+      DataFlavor flavors[]=transferable.getTransferDataFlavors();
+      int successful=0;
+      for (int i=0; i < flavors.length; i++) {
+        try {
+          java.util.List list=(java.util.List)transferable.getTransferData(flavors[i]);
+          for (int j=0; j < list.size(); j++) {
+            Object item=list.get(j);
+            if (item instanceof File) {
+              File file=(File)item;
+              String filename=file.getName();
+              if (filename.endsWith(".pde")) {
+                String name=filename.substring(0,filename.length() - 4);
+                File parent=file.getParentFile();
+                if (name.equals(parent.getName())) {
+                  handleOpenFile(file);
+                  return;
+                }
+              }
+              if (sketch.addFile(file)) {
+                successful++;
+              }
+            }
+          }
+        }
+ catch (        Exception e) {
+          e.printStackTrace();
+        }
+      }
+      if (successful == 0) {
+        error("No files were added to the sketch.");
+      }
+ else       if (successful == 1) {
+        message("One file added to the sketch.");
+      }
+ else {
+        message(successful + " files added to the sketch.");
+      }
+    }
+  }
+);
 }

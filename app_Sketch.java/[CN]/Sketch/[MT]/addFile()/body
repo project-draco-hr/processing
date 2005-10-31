@@ -11,47 +11,5 @@
   String filename=fd.getFile();
   if (filename == null)   return;
   File sourceFile=new File(directory,filename);
-  File destFile=null;
-  boolean addingCode=false;
-  if (filename.toLowerCase().endsWith(".class") || filename.toLowerCase().endsWith(".jar") || filename.toLowerCase().endsWith(".dll")|| filename.toLowerCase().endsWith(".jnilib")|| filename.toLowerCase().endsWith(".so")) {
-    if (!codeFolder.exists())     codeFolder.mkdirs();
-    destFile=new File(codeFolder,filename);
-  }
- else   if (filename.toLowerCase().endsWith(".pde") || filename.toLowerCase().endsWith(".java")) {
-    destFile=new File(this.folder,filename);
-    addingCode=true;
-  }
- else {
-    if (!dataFolder.exists())     dataFolder.mkdirs();
-    destFile=new File(dataFolder,filename);
-  }
-  if (!addingCode && sourceFile.equals(destFile)) {
-    Base.showWarning("You can't fool me","This file has already been copied to the\n" + "location where you're trying to add it.\n" + "I ain't not doin nuthin'.",null);
-    return;
-  }
-  if (!sourceFile.equals(destFile)) {
-    try {
-      Base.copyFile(sourceFile,destFile);
-    }
- catch (    IOException e) {
-      Base.showWarning("Error adding file","Could not add '" + filename + "' to the sketch.",e);
-    }
-  }
-  if (addingCode) {
-    String newName=destFile.getName();
-    int newFlavor=-1;
-    if (newName.toLowerCase().endsWith(".pde")) {
-      newName=newName.substring(0,newName.length() - 4);
-      newFlavor=PDE;
-    }
- else {
-      newName=newName.substring(0,newName.length() - 5);
-      newFlavor=JAVA;
-    }
-    SketchCode newCode=new SketchCode(newName,destFile,newFlavor);
-    insertCode(newCode);
-    sortCode();
-    setCurrent(newName);
-    editor.header.repaint();
-  }
+  addFile(sourceFile);
 }

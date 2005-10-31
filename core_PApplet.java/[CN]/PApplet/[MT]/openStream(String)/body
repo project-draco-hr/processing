@@ -12,15 +12,16 @@ catch (  IOException e) {
   }
   if (!online) {
     try {
-      File file=new File(folder + File.separator + "data",filename);
+      File file=new File(dataPath(filename));
       if (!file.exists()) {
-        file=new File(folder,filename);
+        file=new File(path,filename);
       }
       if (file.exists()) {
         try {
-          String path=file.getCanonicalPath();
-          String filenameActual=new File(path).getName();
-          if (filenameActual.equalsIgnoreCase(filename) && !filenameActual.equals(filename)) {
+          String filePath=file.getCanonicalPath();
+          String filenameActual=new File(filePath).getName();
+          String filenameShort=new File(filename).getName();
+          if (!filenameActual.equals(filenameShort)) {
             throw new RuntimeException("This file is named " + filenameActual + " not "+ filename+ ".");
           }
         }
@@ -38,18 +39,18 @@ catch (    SecurityException se) {
   try {
     stream=getClass().getResourceAsStream(filename);
     if (stream != null)     return stream;
-    stream=getClass().getResourceAsStream("data/" + filename);
+    stream=getClass().getResourceAsStream(dataPath(filename));
     if (stream != null)     return stream;
     try {
       try {
-        File file=new File(folder,filename);
+        File file=new File(path,filename);
         stream=new FileInputStream(file);
         if (stream != null)         return stream;
       }
  catch (      Exception e) {
       }
       try {
-        stream=new FileInputStream(new File("data",filename));
+        stream=new FileInputStream(dataPath(filename));
         if (stream != null)         return stream;
       }
  catch (      IOException e2) {
