@@ -1,0 +1,15 @@
+{
+  file=new File(filename);
+  document=new Document(new Rectangle(width,height));
+  try {
+    writer=PdfWriter.getInstance(document,new FileOutputStream(file));
+    document.open();
+    content=writer.getDirectContent();
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    throw new RuntimeException("Problem saving the PDF file.");
+  }
+  g2=content.createGraphicsShapes(width,height);
+  super.beginFrame();
+}
