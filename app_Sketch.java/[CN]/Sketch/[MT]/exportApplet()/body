@@ -153,12 +153,15 @@
   String bagelJar="lib/core.jar";
   packClassPathIntoZipFile(bagelJar,zos);
   if (dataFolder.exists()) {
-    String dataFiles[]=dataFolder.list();
+    String dataFiles[]=Base.listFiles(dataFolder,false);
+    int offset=folder.getAbsolutePath().length() + 1;
     for (int i=0; i < dataFiles.length; i++) {
-      if (dataFiles[i].charAt(0) == '.')       continue;
-      entry=new ZipEntry(dataFiles[i]);
+      File dataFile=new File(dataFiles[i]);
+      if (dataFile.isDirectory())       continue;
+      if (dataFile.getName().charAt(0) == '.')       continue;
+      entry=new ZipEntry(dataFiles[i].substring(offset));
       zos.putNextEntry(entry);
-      zos.write(Base.grabFile(new File(dataFolder,dataFiles[i])));
+      zos.write(Base.grabFile(dataFile));
       zos.closeEntry();
     }
   }
