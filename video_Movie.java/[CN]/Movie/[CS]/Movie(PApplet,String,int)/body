@@ -19,27 +19,22 @@ catch (    MalformedURLException e) {
       return;
     }
   }
-  url=getClass().getResource(filename);
-  if (url != null) {
-    init(parent,url,ifps);
-    return;
-  }
-  url=getClass().getResource("data/" + filename);
+  ClassLoader cl=parent.getClass().getClassLoader();
+  url=cl.getResource("data/" + filename);
   if (url != null) {
     init(parent,url,ifps);
     return;
   }
   try {
     try {
-      String location=parent.dataPath("data");
-      File file=new File(location,filename);
+      File file=new File(parent.dataPath(filename));
       if (file.exists()) {
         movie=fromDataRef(new DataRef(new QTFile(file)));
         init(parent,movie,ifps);
         return;
       }
     }
- catch (    QTException e) {
+ catch (    Exception e) {
     }
     try {
       File file=new File("data",filename);
