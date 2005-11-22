@@ -156,6 +156,9 @@
     String dataFiles[]=Base.listFiles(dataFolder,false);
     int offset=folder.getAbsolutePath().length() + 1;
     for (int i=0; i < dataFiles.length; i++) {
+      if (PApplet.platform == PApplet.WINDOWS) {
+        dataFiles[i]=dataFiles[i].replace('\\','/');
+      }
       File dataFile=new File(dataFiles[i]);
       if (dataFile.isDirectory())       continue;
       if (dataFile.getName().charAt(0) == '.')       continue;
