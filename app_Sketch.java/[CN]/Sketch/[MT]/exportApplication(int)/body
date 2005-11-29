@@ -115,6 +115,9 @@
     if (commaList == null) {
       exportList=libraryFolder.list();
     }
+ else {
+      exportList=PApplet.split(commaList,", ");
+    }
     for (int i=0; i < exportList.length; i++) {
       if (exportList[i].equals(".") || exportList[i].equals(".."))       continue;
       exportList[i]=PApplet.trim(exportList[i]);
@@ -202,7 +205,9 @@
     ps.flush();
     ps.close();
     String shellPath=shellScript.getAbsolutePath();
-    Runtime.getRuntime().exec(new String[]{"chmod","+x",shellPath});
+    if (PApplet.platform != PConstants.WINDOWS) {
+      Runtime.getRuntime().exec(new String[]{"chmod","+x",shellPath});
+    }
   }
   File sourceFolder=new File(destFolder,"source");
   sourceFolder.mkdirs();
