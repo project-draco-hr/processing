@@ -1,6 +1,6 @@
 {
   ensureExistence();
-  int exportPlatform=PConstants.MACOSX;
+  int exportPlatform=PApplet.platform;
   File destFolder=new File(folder,"application");
   Base.removeDir(destFolder);
   destFolder.mkdirs();
@@ -29,6 +29,10 @@
     String stubPath=stubFile.getAbsolutePath();
     Runtime.getRuntime().exec(new String[]{"chmod","+x",stubPath});
     jarFolder=new File(dotAppFolder,"Contents/Resources/Java");
+  }
+  if (!jarFolder.exists())   jarFolder.mkdirs();
+  if (exportPlatform == PConstants.WINDOWS) {
+    Base.copyFile(new File("lib/export/application.exe"),new File(destFolder,this.name + ".exe"));
   }
   Vector jarListVector=new Vector();
   zipFileContents=new Hashtable();
@@ -120,6 +124,18 @@
       exportClassPath.append("$JAVAROOT/" + jarList[i]);
     }
   }
+ else   if (exportPlatform == PConstants.WINDOWS) {
+    for (int i=0; i < jarList.length; i++) {
+      if (i != 0)       exportClassPath.append(",");
+      exportClassPath.append(jarList[i]);
+    }
+  }
+ else {
+    for (int i=0; i < jarList.length; i++) {
+      if (i != 0)       exportClassPath.append(":");
+      exportClassPath.append("lib/" + jarList[i]);
+    }
+  }
   if (exportPlatform == PConstants.MACOSX) {
     String PLIST_TEMPLATE="template.plist";
     File plistTemplate=new File(folder,PLIST_TEMPLATE);
@@ -143,6 +159,15 @@
       }
       ps.println(lines[i]);
     }
+    ps.flush();
+    ps.close();
+  }
+ else   if (exportPlatform == PConstants.WINDOWS) {
+    File argsFile=new File(destFolder + "/lib/args.txt");
+    PrintStream ps=new PrintStream(new FileOutputStream(argsFile));
+    ps.println(Preferences.get("run.options"));
+    ps.println(this.name);
+    ps.println(exportClassPath);
     ps.flush();
     ps.close();
   }
