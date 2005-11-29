@@ -1,4 +1,5 @@
 {
+  foundMain=false;
   if ((program.length() > 0) && program.charAt(program.length() - 1) != '\n') {
     program+="\n";
   }
@@ -103,7 +104,7 @@
   writeHeader(stream,name);
   emitter.setOut(stream);
   emitter.print(rootNode);
-  writeFooter(stream);
+  writeFooter(stream,name);
   stream.close();
   if (Preferences.getBoolean("preproc.output_parse_tree")) {
     stream=new PrintStream(new FileOutputStream("parseTree.xml"));
