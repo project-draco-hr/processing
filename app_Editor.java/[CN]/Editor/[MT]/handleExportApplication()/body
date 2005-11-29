@@ -2,10 +2,8 @@
   if (!handleExportCheckModified())   return;
   message("Exporting application...");
   try {
-    boolean success=sketch.exportApplication();
-    if (success) {
-      File destFolder=new File(sketch.folder,"application");
-      Base.openFolder(destFolder);
+    if (sketch.exportApplication(PConstants.WINDOWS) && sketch.exportApplication(PConstants.MACOSX) && sketch.exportApplication(PConstants.LINUX)) {
+      Base.openFolder(sketch.folder);
       message("Done exporting.");
     }
  else {
