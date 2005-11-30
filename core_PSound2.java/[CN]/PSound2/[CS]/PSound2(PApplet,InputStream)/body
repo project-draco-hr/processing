@@ -25,6 +25,16 @@
       clip.addLineListener(new LineListener(){
         public void update(        LineEvent event){
           if (event.getType() == LineEvent.Type.STOP) {
+            if (!stopCalled) {
+              if (playing()) {
+                clip.stop();
+                clip.setFramePosition(0);
+              }
+ else {
+                clip.stop();
+              }
+            }
+            stopCalled=false;
             try {
               soundEventMethod.invoke(parent,new Object[]{PSound2.this});
             }
