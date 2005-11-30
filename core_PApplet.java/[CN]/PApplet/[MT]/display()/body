@@ -4,8 +4,8 @@
     if (THREAD_DEBUG)     println(Thread.currentThread().getName() + " 1a beginFrame");
     g.beginFrame();
     if (THREAD_DEBUG)     println(Thread.currentThread().getName() + " 1b draw");
-    boolean shapeRecorderNull=true;
-    boolean rawShapeRecorderNull=true;
+    boolean recorderNull=true;
+    boolean recorderRawNull=true;
     if (frameCount == 0) {
       try {
         setup();
@@ -45,8 +45,8 @@
       pmouseX=dmouseX;
       pmouseY=dmouseY;
       draw();
-      shapeRecorderNull=(recorder == null);
-      rawShapeRecorderNull=(g.rawShapeRecorder == null);
+      recorderNull=(recorder == null);
+      recorderRawNull=(g.recorderRaw == null);
       dmouseX=mouseX;
       dmouseY=mouseY;
       dequeueMouseEvents();
@@ -56,16 +56,16 @@
       redraw=false;
     }
     g.endFrame();
-    if (!shapeRecorderNull) {
+    if (!recorderNull) {
       if (recorder != null) {
         recorder.endFrame();
         recorder=null;
       }
     }
-    if (!rawShapeRecorderNull) {
-      if (g.rawShapeRecorder != null) {
-        g.rawShapeRecorder.endFrame();
-        g.rawShapeRecorder=null;
+    if (!recorderRawNull) {
+      if (g.recorderRaw != null) {
+        g.recorderRaw.endFrame();
+        g.recorderRaw=null;
       }
     }
     frameCount++;

@@ -13,10 +13,10 @@
     float cr=min(1,triangleColors[i][2][TRI_DIFFUSE_R] + triangleColors[i][2][TRI_SPECULAR_R]);
     float cg=min(1,triangleColors[i][2][TRI_DIFFUSE_G] + triangleColors[i][2][TRI_SPECULAR_G]);
     float cb=min(1,triangleColors[i][2][TRI_DIFFUSE_B] + triangleColors[i][2][TRI_SPECULAR_B]);
-    if (rawShapeRecorder != null) {
-      rawShapeRecorder.colorMode(RGB,1);
-      rawShapeRecorder.noStroke();
-      rawShapeRecorder.beginShape(TRIANGLES);
+    if (recorderRaw != null) {
+      recorderRaw.colorMode(RGB,1);
+      recorderRaw.noStroke();
+      recorderRaw.beginShape(TRIANGLES);
     }
     int textureIndex=triangles[i][TEXTURE_INDEX];
     if (textureIndex != -1) {
@@ -63,14 +63,14 @@
       gl.glEnd();
       report("non-binding 6");
       gl.glDisable(GL.GL_TEXTURE_2D);
-      if (rawShapeRecorder != null) {
-        rawShapeRecorder.texture(texture);
-        rawShapeRecorder.fill(ar,ag,ab,a[A]);
-        rawShapeRecorder.vertex(a[VX],a[VY],a[U] * uscale,a[V] * vscale);
-        rawShapeRecorder.fill(br,bg,bb,b[A]);
-        rawShapeRecorder.vertex(b[VX],b[VY],b[U] * uscale,b[V] * vscale);
-        rawShapeRecorder.fill(cr,cg,cb,c[A]);
-        rawShapeRecorder.vertex(c[VX],c[VY],c[U] * uscale,c[V] * vscale);
+      if (recorderRaw != null) {
+        recorderRaw.texture(texture);
+        recorderRaw.fill(ar,ag,ab,a[A]);
+        recorderRaw.vertex(a[VX],a[VY],a[U] * uscale,a[V] * vscale);
+        recorderRaw.fill(br,bg,bb,b[A]);
+        recorderRaw.vertex(b[VX],b[VY],b[U] * uscale,b[V] * vscale);
+        recorderRaw.fill(cr,cg,cb,c[A]);
+        recorderRaw.vertex(c[VX],c[VY],c[U] * uscale,c[V] * vscale);
       }
     }
  else {
@@ -84,19 +84,19 @@
       gl.glColor4f(cr,cg,cb,c[A]);
       gl.glNormal3f(c[NX],c[NY],c[NZ]);
       gl.glVertex3f(c[VX],c[VY],c[VZ]);
-      if (rawShapeRecorder != null) {
-        rawShapeRecorder.fill(ar,ag,ab,a[A]);
-        rawShapeRecorder.vertex(a[VX],a[VY]);
-        rawShapeRecorder.fill(br,bg,bb,b[A]);
-        rawShapeRecorder.vertex(b[VX],b[VY]);
-        rawShapeRecorder.fill(cr,cg,cb,c[A]);
-        rawShapeRecorder.vertex(c[VX],c[VY]);
+      if (recorderRaw != null) {
+        recorderRaw.fill(ar,ag,ab,a[A]);
+        recorderRaw.vertex(a[VX],a[VY]);
+        recorderRaw.fill(br,bg,bb,b[A]);
+        recorderRaw.vertex(b[VX],b[VY]);
+        recorderRaw.fill(cr,cg,cb,c[A]);
+        recorderRaw.vertex(c[VX],c[VY]);
       }
       gl.glEnd();
     }
   }
-  if (rawShapeRecorder != null) {
-    rawShapeRecorder.endShape();
+  if (recorderRaw != null) {
+    recorderRaw.endShape();
   }
   report("out of triangles");
 }
