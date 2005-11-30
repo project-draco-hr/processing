@@ -13,6 +13,7 @@
   for (int i=0; i < list.length; i++) {
     if ((list[i].charAt(0) == '.') || list[i].equals("CVS"))     continue;
     File subfolder=new File(folder,list[i]);
+    if (!subfolder.isDirectory())     continue;
     File exported=new File(subfolder,"library");
     File entry=new File(exported,list[i] + ".jar");
     if (entry.exists()) {
@@ -34,7 +35,7 @@
       menu.add(item);
       ifound=true;
     }
- else     if (subfolder.isDirectory()) {
+ else {
       JMenu submenu=new JMenu(list[i]);
       boolean found=addLibraries(submenu,subfolder);
       if (found) {
