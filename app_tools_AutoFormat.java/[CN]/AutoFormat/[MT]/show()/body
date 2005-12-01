@@ -28,17 +28,12 @@
   w_cpp_comment=new String("//");
   w_jdoc=new String("/**");
   line_feed=new String("\n");
-  try {
-    ByteArrayInputStream in=new ByteArrayInputStream(originalText.getBytes());
-    bin=new BufferedInputStream(in);
-  }
- catch (  Exception e) {
-    System.out.println(e.toString());
-  }
   EOF=0;
   bArray=new byte[BLOCK_MAXLEN];
   string=new char[BLOCK_MAXLEN];
   try {
+    ByteArrayInputStream in=new ByteArrayInputStream(originalText.getBytes());
+    bin=new BufferedInputStream(in);
     for (int ib=0; ib < BLOCK_MAXLEN; ib++)     bArray[ib]='\0';
     lineLength=nBytesRead=0;
     nBytesRead=bin.read(bArray);

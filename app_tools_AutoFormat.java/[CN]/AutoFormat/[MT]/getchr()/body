@@ -11,23 +11,18 @@
     if (indexBlock >= lineLength) {
       for (int ib=0; ib < nBytesRead; ib++)       bArray[ib]='\0';
       lineLength=nBytesRead=0;
-      try {
-        if (bin.available() > 0) {
-          nBytesRead=bin.read(bArray);
-          lineLength=nBytesRead;
-          strBlock=new String(bArray);
-          indexBlock=0;
-          last_char=strBlock.charAt(indexBlock);
-          peek=-1;
-          peekc='`';
-        }
- else {
-          EOF=1;
-          peekc='\0';
-        }
+      if (bin.available() > 0) {
+        nBytesRead=bin.read(bArray);
+        lineLength=nBytesRead;
+        strBlock=new String(bArray);
+        indexBlock=0;
+        last_char=strBlock.charAt(indexBlock);
+        peek=-1;
+        peekc='`';
       }
- catch (      IOException ioe) {
-        System.out.println(ioe.toString());
+ else {
+        EOF=1;
+        peekc='\0';
       }
     }
  else {
