@@ -357,21 +357,13 @@ editor.setText(strOut.toString(),selectionEnd,selectionEnd);
 editor.sketch.setModified();
 bin.close();
 }
- catch (IOException ioe) {
-editor.error(ioe);
+ catch (Exception e) {
+editor.error(e);
 }
-String ck_paren=new String("left");
-if (paren < 0) ck_paren="right";
 if (paren != 0) {
-setUhOh("Uh oh... too many " + ck_paren + " parentheses.");
-}
- else {
-ck_paren="left";
-if (c_level < 0) {
-ck_paren="right";
+System.err.println("Warning: Too many " + ((paren < 0) ? "right" : "left") + " parentheses.");
 }
  else if (c_level != 0) {
-setUhOh("Uh oh... too many " + ck_paren + " curled braces.");
-}
+System.err.println("Warning: Too many " + ((c_level < 0) ? "right" : "left") + " curly braces.");
 }
 }

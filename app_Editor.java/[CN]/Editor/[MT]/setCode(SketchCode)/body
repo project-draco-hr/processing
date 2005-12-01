@@ -11,7 +11,10 @@
     code.undo=new UndoManager();
     code.document.addUndoableEditListener(new UndoableEditListener(){
       public void undoableEditHappened(      UndoableEditEvent e){
-        if (undo != null) {
+        if (compoundEdit != null) {
+          compoundEdit.addEdit(e.getEdit());
+        }
+ else         if (undo != null) {
           undo.addEdit(e.getEdit());
           undoAction.updateUndoState();
           redoAction.updateRedoState();
