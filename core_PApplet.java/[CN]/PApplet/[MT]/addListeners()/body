@@ -4,6 +4,19 @@
     addMouseMotionListener(this);
     addKeyListener(this);
     addFocusListener(this);
+    addComponentListener(new ComponentAdapter(){
+      public void componentResized(      ComponentEvent e){
+        Component c=e.getComponent();
+        Rectangle bounds=c.getBounds();
+        System.out.println("componentResized()");
+        System.out.println("  " + e);
+        System.out.println("  bounds: " + bounds);
+        int newWidth=bounds.width - bounds.x * 2;
+        int newHeight=bounds.height - (bounds.y + bounds.x);
+        System.out.println("  new: " + newWidth + " "+ newHeight);
+      }
+    }
+);
     listenersAdded=true;
   }
 }
