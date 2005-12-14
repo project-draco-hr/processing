@@ -115,7 +115,15 @@
   buttons.add(cancelButton);
   buttons.add(okButton);
   pain.add(buttons);
-  getRootPane().setDefaultButton(okButton);
+  JRootPane root=getRootPane();
+  root.setDefaultButton(okButton);
+  ActionListener disposer=new ActionListener(){
+    public void actionPerformed(    ActionEvent actionEvent){
+      hide();
+    }
+  }
+;
+  Base.registerWindowCloseKeys(root,disposer);
   pack();
   sample.setFont(new Font(list[0],Font.PLAIN,48));
   fontSelector.setSelectedIndex(0);

@@ -1,6 +1,7 @@
 {
-  frame=new JDialog(editor,"Preferences",true);
-  Container pain=frame.getContentPane();
+  dialog=new JDialog(editor,"Preferences",true);
+  dialog.setResizable(false);
+  Container pain=dialog.getContentPane();
   pain.setLayout(null);
   int top=GUI_BIG;
   int left=GUI_BIG;
@@ -121,21 +122,27 @@
   top+=BUTTON_HEIGHT + GUI_BETWEEN;
   wide=right + GUI_BIG;
   high=top + GUI_SMALL;
-  setSize(wide,high);
-  frame.addWindowListener(new WindowAdapter(){
+  dialog.addWindowListener(new WindowAdapter(){
     public void windowClosing(    WindowEvent e){
       disposeFrame();
     }
   }
 );
-  Container content=frame.getContentPane();
-  content.setLayout(new BorderLayout());
-  content.add(this,BorderLayout.CENTER);
-  frame.pack();
+  ActionListener disposer=new ActionListener(){
+    public void actionPerformed(    ActionEvent actionEvent){
+      disposeFrame();
+    }
+  }
+;
+  Base.registerWindowCloseKeys(dialog.getRootPane(),disposer);
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
-  frame.setLocation((screen.width - wide) / 2,(screen.height - high) / 2);
-  addKeyListener(new KeyAdapter(){
+  dialog.setLocation((screen.width - wide) / 2,(screen.height - high) / 2);
+  dialog.pack();
+  Insets insets=dialog.getInsets();
+  dialog.setSize(wide + insets.left + insets.right,high + insets.top + insets.bottom);
+  pain.addKeyListener(new KeyAdapter(){
     public void keyPressed(    KeyEvent e){
+      System.out.println(e);
       KeyStroke wc=Editor.WINDOW_CLOSE_KEYSTROKE;
       if ((e.getKeyCode() == KeyEvent.VK_ESCAPE) || (KeyStroke.getKeyStrokeForEvent(e).equals(wc))) {
         disposeFrame();
