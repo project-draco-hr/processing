@@ -23,34 +23,27 @@ case 13:
 if (autoIndent) {
   char contents[]=textarea.getText().toCharArray();
   int origIndex=textarea.getCaretPosition() - 1;
-  int offset=0;
-  int realIndex=origIndex;
-  for (int i=0; i < realIndex - 1; i++) {
-    if ((contents[i] == 13) && (contents[i + 1] == 10)) {
-      offset++;
-      realIndex++;
-    }
+  int spaceCount=calcSpaces(origIndex,contents);
+  int index=origIndex + 1;
+  while ((index < contents.length) && (contents[index] == ' ')) {
+    spaceCount--;
+    index++;
   }
-  origIndex+=offset;
-  int index=origIndex;
-  int spaceCount=0;
-  boolean finished=false;
-  while ((index != -1) && (!finished)) {
-    if ((contents[index] == 10) || (contents[index] == 13)) {
-      finished=true;
-      index++;
+  if (origIndex != -1) {
+    if (contents[origIndex] == '{') {
+      spaceCount+=tabSize;
     }
- else {
-      index--;
-    }
-  }
-  while ((index < contents.length) && (index >= 0) && (contents[index++] == ' ')) {
-    spaceCount++;
   }
   String insertion="\n" + Editor.EMPTY.substring(0,spaceCount);
   textarea.setSelectedText(insertion);
   event.consume();
   return true;
+}
+break;
+case '}':
+if (autoIndent) {
+char contents[]=textarea.getText().toCharArray();
+int origIndex=textarea.getCaretPosition() - 1;
 }
 break;
 }
