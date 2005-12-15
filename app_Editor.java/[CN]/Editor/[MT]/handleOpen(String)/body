@@ -1,9 +1,16 @@
 {
-  if (path == null) {
-    path=sketchbook.handleOpen();
-    if (path == null)     return;
+  buttons.activate(EditorButtons.OPEN);
+  SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      String path=ipath;
+      if (path == null) {
+        path=sketchbook.handleOpen();
+        if (path == null)         return;
+      }
+      doClose();
+      handleOpenPath=path;
+      checkModified(HANDLE_OPEN);
+    }
   }
-  doClose();
-  handleOpenPath=path;
-  checkModified(HANDLE_OPEN);
+);
 }

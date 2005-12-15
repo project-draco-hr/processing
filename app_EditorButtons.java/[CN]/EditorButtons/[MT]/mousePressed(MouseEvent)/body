@@ -1,18 +1,36 @@
 {
-  int x=e.getX();
-  int y=e.getY();
+  final int x=e.getX();
+  final int y=e.getY();
   int sel=findSelection(x,y);
   if (sel == -1)   return;
   currentRollover=-1;
-  currentSelection=sel;
-  if (!(disableRun && ((sel == RUN) || (sel == STOP)))) {
-    setState(sel,ACTIVE,true);
-  }
-  if (currentSelection == OPEN) {
-    if (popup == null) {
-      popup=editor.sketchbook.getPopupMenu();
-      add(popup);
-    }
-    popup.show(this,x,y);
-  }
+switch (sel) {
+case RUN:
+    editor.handleRun(e.isShiftDown());
+  break;
+case STOP:
+editor.handleStop();
+break;
+case OPEN:
+if (popup == null) {
+popup=editor.sketchbook.getPopupMenu();
+add(popup);
+}
+popup.show(EditorButtons.this,x,y);
+break;
+case NEW:
+editor.handleNew(e.isShiftDown());
+break;
+case SAVE:
+editor.handleSave();
+break;
+case EXPORT:
+if (e.isShiftDown()) {
+editor.handleExportApplication();
+}
+ else {
+editor.handleExport();
+}
+break;
+}
 }

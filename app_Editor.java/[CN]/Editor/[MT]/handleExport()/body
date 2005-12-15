@@ -1,17 +1,23 @@
 {
   if (!handleExportCheckModified())   return;
-  try {
-    boolean success=sketch.exportApplet();
-    if (success) {
-      File appletFolder=new File(sketch.folder,"applet");
-      Base.openFolder(appletFolder);
-      message("Done exporting.");
-    }
+  buttons.activate(EditorButtons.EXPORT);
+  SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      try {
+        boolean success=sketch.exportApplet();
+        if (success) {
+          File appletFolder=new File(sketch.folder,"applet");
+          Base.openFolder(appletFolder);
+          message("Done exporting.");
+        }
  else {
+        }
+      }
+ catch (      Exception e) {
+        error(e);
+      }
+      buttons.clear();
     }
   }
- catch (  Exception e) {
-    error(e);
-  }
-  buttons.clear();
+);
 }

@@ -1,17 +1,23 @@
 {
   doStop();
-  message("Saving...");
-  try {
-    if (sketch.saveAs()) {
-      message("Done Saving.");
-      sketchbook.rebuildMenus();
-    }
+  buttons.activate(EditorButtons.SAVE);
+  SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      message("Saving...");
+      try {
+        if (sketch.saveAs()) {
+          message("Done Saving.");
+          sketchbook.rebuildMenus();
+        }
  else {
-      message("Save Cancelled.");
+          message("Save Cancelled.");
+        }
+      }
+ catch (      Exception e) {
+        error(e);
+      }
+      buttons.clear();
     }
   }
- catch (  Exception e) {
-    error(e);
-  }
-  buttons.clear();
+);
 }

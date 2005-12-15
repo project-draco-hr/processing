@@ -1,17 +1,23 @@
 {
   if (!handleExportCheckModified())   return;
-  message("Exporting application...");
-  try {
-    if (sketch.exportApplication(PConstants.WINDOWS) && sketch.exportApplication(PConstants.MACOSX) && sketch.exportApplication(PConstants.LINUX)) {
-      Base.openFolder(sketch.folder);
-      message("Done exporting.");
-    }
+  buttons.activate(EditorButtons.EXPORT);
+  SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      message("Exporting application...");
+      try {
+        if (sketch.exportApplication(PConstants.WINDOWS) && sketch.exportApplication(PConstants.MACOSX) && sketch.exportApplication(PConstants.LINUX)) {
+          Base.openFolder(sketch.folder);
+          message("Done exporting.");
+        }
  else {
+        }
+      }
+ catch (      Exception e) {
+        message("Error during export.");
+        e.printStackTrace();
+      }
+      buttons.clear();
     }
   }
- catch (  Exception e) {
-    message("Error during export.");
-    e.printStackTrace();
-  }
-  buttons.clear();
+);
 }
