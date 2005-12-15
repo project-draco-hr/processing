@@ -1,0 +1,22 @@
+{
+  int braceDepth=1;
+  boolean finished=false;
+  while ((index != -1) && (!finished)) {
+    if (contents[index] == '}') {
+      braceDepth++;
+      index--;
+    }
+ else     if (contents[index] == '{') {
+      braceDepth--;
+      if (braceDepth == 0) {
+        finished=true;
+      }
+      index--;
+    }
+ else {
+      index--;
+    }
+  }
+  if (!finished)   return -1;
+  return calcSpaceCount(index,contents);
+}
