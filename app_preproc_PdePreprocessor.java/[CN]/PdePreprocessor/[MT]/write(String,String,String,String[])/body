@@ -3,6 +3,38 @@
   if ((program.length() > 0) && program.charAt(program.length() - 1) != '\n') {
     program+="\n";
   }
+  if (true) {
+    char p[]=program.toCharArray();
+    boolean insideSlashes;
+    int index=0;
+    while (index < p.length) {
+      if ((p[index] == '/') && (index < p.length - 1) && (p[index + 1] == '/')) {
+        index+=2;
+        while ((index < p.length) && (index != '\n')) {
+          index++;
+        }
+      }
+ else       if ((p[index] == '/') && (index < p.length - 1) && (p[index + 1] == '*')) {
+        index+=2;
+        boolean endOfRainbow=false;
+        while (index < p.length - 1) {
+          if ((p[index] == '*') && (p[index + 1] == '/')) {
+            endOfRainbow=true;
+            break;
+          }
+ else {
+            index++;
+          }
+        }
+        if (!endOfRainbow) {
+          throw new RuntimeException("Missing the */ from the end of a " + "/* comment */");
+        }
+      }
+ else {
+        index++;
+      }
+    }
+  }
   if (Preferences.getBoolean("preproc.substitute_unicode")) {
     char p[]=program.toCharArray();
     int unicodeCount=0;
