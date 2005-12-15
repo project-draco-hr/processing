@@ -12,73 +12,87 @@
   }
 switch ((int)c) {
 case 9:
-    tabsExpand=false;
-  if (tabsExpand) {
-    textarea.setSelectedText(tabString);
-    event.consume();
-    return true;
-  }
- else {
-    char contents[]=textarea.getText().toCharArray();
-    int prevCharIndex=textarea.getCaretPosition() - 1;
-    int lineStart=calcLineStart(prevCharIndex,contents);
-    int indent=calcBraceIndent(lineStart,contents);
-    if (indent == -1) {
-      indent=0;
+    if (tabsExpand) {
+      textarea.setSelectedText(tabString);
+      event.consume();
+      return true;
     }
  else {
-      indent+=tabSize;
+      char contents[]=textarea.getText().toCharArray();
+      int prevCharIndex=textarea.getCaretPosition() - 1;
+      int lineStart=calcLineStart(prevCharIndex,contents);
+      int lineEnd=lineStart;
+      while ((lineEnd < contents.length - 1) && (contents[lineEnd] != 10)) {
+        lineEnd++;
+      }
+      int braceBalance=0;
+      int index=lineStart;
+      while ((index < contents.length) && (contents[index] != 10)) {
+        if (contents[index] == '{') {
+          braceBalance++;
+        }
+ else         if (contents[index] == '}') {
+          braceBalance--;
+        }
+        index++;
+      }
+      int where=(braceBalance > 0) ? lineStart : lineEnd;
+      int indent=calcBraceIndent(where,contents);
+      if (indent == -1) {
+        indent=0;
+      }
+ else {
+        indent+=tabSize;
+      }
+      int spaceCount=calcSpaceCount(prevCharIndex,contents);
+      textarea.setSelectionStart(lineStart);
+      textarea.setSelectionEnd(lineStart + spaceCount);
+      textarea.setSelectedText(Editor.EMPTY.substring(0,indent));
+      event.consume();
+      return true;
     }
-    int spaceCount=calcSpaceCount(prevCharIndex,contents);
-    System.out.println(indent + " " + lineStart+ " "+ spaceCount);
-    textarea.setSelectionStart(lineStart);
-    textarea.setSelectionEnd(lineStart + spaceCount);
-    textarea.setSelectedText(Editor.EMPTY.substring(0,indent));
-    event.consume();
-    return true;
-  }
 case 10:
 case 13:
-if (autoIndent) {
-  char contents[]=textarea.getText().toCharArray();
-  int origIndex=textarea.getCaretPosition() - 1;
-  int spaceCount=calcSpaceCount(origIndex,contents);
-  int index=origIndex + 1;
-  while ((index < contents.length) && (contents[index] == ' ')) {
-    spaceCount--;
-    index++;
-  }
-  if (origIndex != -1) {
-    if (contents[origIndex] == '{') {
-      spaceCount+=tabSize;
+  if (autoIndent) {
+    char contents[]=textarea.getText().toCharArray();
+    int origIndex=textarea.getCaretPosition() - 1;
+    int spaceCount=calcSpaceCount(origIndex,contents);
+    int index=origIndex + 1;
+    while ((index < contents.length) && (contents[index] == ' ')) {
+      spaceCount--;
+      index++;
     }
+    if (origIndex != -1) {
+      if (contents[origIndex] == '{') {
+        spaceCount+=tabSize;
+      }
+    }
+    String insertion="\n" + Editor.EMPTY.substring(0,spaceCount);
+    textarea.setSelectedText(insertion);
+    event.consume();
+    return true;
   }
-  String insertion="\n" + Editor.EMPTY.substring(0,spaceCount);
-  textarea.setSelectedText(insertion);
-  event.consume();
-  return true;
-}
 break;
 case '}':
 if (autoIndent) {
 if (textarea.getSelectionStart() != textarea.getSelectionEnd()) {
-textarea.setSelectedText("");
+  textarea.setSelectedText("");
 }
 char contents[]=textarea.getText().toCharArray();
 int prevCharIndex=textarea.getCaretPosition() - 1;
 int index=prevCharIndex;
 boolean finished=false;
 while ((index != -1) && (!finished)) {
-if (contents[index] == 10) {
-  finished=true;
-  index++;
-}
- else if (contents[index] != ' ') {
-  return false;
-}
+  if (contents[index] == 10) {
+    finished=true;
+    index++;
+  }
+ else   if (contents[index] != ' ') {
+    return false;
+  }
  else {
-  index--;
-}
+    index--;
+  }
 }
 if (!finished) return false;
 int lineStartIndex=index;
