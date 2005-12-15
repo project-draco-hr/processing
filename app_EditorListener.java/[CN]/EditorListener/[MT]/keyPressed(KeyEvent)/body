@@ -23,7 +23,7 @@ case 13:
 if (autoIndent) {
   char contents[]=textarea.getText().toCharArray();
   int origIndex=textarea.getCaretPosition() - 1;
-  int spaceCount=calcSpaces(origIndex,contents);
+  int spaceCount=calcSpaceCount(origIndex,contents);
   int index=origIndex + 1;
   while ((index < contents.length) && (contents[index] == ' ')) {
     spaceCount--;
@@ -42,8 +42,51 @@ if (autoIndent) {
 break;
 case '}':
 if (autoIndent) {
+if (textarea.getSelectionStart() != textarea.getSelectionEnd()) {
+textarea.setSelectedText("");
+}
 char contents[]=textarea.getText().toCharArray();
-int origIndex=textarea.getCaretPosition() - 1;
+int prevCharIndex=textarea.getCaretPosition() - 1;
+int index=prevCharIndex;
+boolean finished=false;
+while ((index != -1) && (!finished)) {
+if (contents[index] == 10) {
+  finished=true;
+  index++;
+}
+ else if (contents[index] != ' ') {
+  return false;
+}
+ else {
+  index--;
+}
+}
+if (!finished) return false;
+int lineStartIndex=index;
+index=prevCharIndex;
+int braceDepth=1;
+finished=false;
+while ((index != -1) && (!finished)) {
+if (contents[index] == '}') {
+  braceDepth++;
+  index--;
+}
+ else if (contents[index] == '{') {
+  braceDepth--;
+  if (braceDepth == 0) {
+    finished=true;
+  }
+}
+ else {
+  index--;
+}
+}
+if (!finished) return false;
+int pairedSpaceCount=calcSpaceCount(index,contents);
+textarea.setSelectionStart(lineStartIndex);
+textarea.setSelectedText(Editor.EMPTY.substring(0,pairedSpaceCount));
+event.consume();
+return true;
 }
 break;
 }
