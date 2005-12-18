@@ -1,0 +1,22 @@
+{
+  char c[]=textarea.getText().toCharArray();
+  int index=0;
+  while (index < c.length - 1) {
+    if ((c[index] == '/') && (c[index + 1] == '*')) {
+      c[index++]=0;
+      c[index++]=0;
+      while ((index < c.length - 1) && !((c[index] == '*') && (c[index + 1] == '/'))) {
+        c[index++]=0;
+      }
+    }
+ else     if ((c[index] == '/') && (c[index + 1] == '/')) {
+      while ((index < c.length) && (c[index] != 10)) {
+        c[index++]=0;
+      }
+      if (index != c.length) {
+        index++;
+      }
+    }
+  }
+  return c;
+}
