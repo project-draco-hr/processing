@@ -2,7 +2,12 @@
   if (!looping) {
     redraw=true;
     if (thread != null) {
-      notifyAll();
+      if (CRUSTY_THREADS) {
+        thread.interrupt();
+      }
+ else {
+        notifyAll();
+      }
     }
   }
 }

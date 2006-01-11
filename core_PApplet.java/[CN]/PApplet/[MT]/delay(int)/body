@@ -2,7 +2,12 @@
   if (frameCount == 0)   return;
   if (napTime > 0) {
     try {
-      thread.wait(napTime);
+      if (CRUSTY_THREADS) {
+        Thread.sleep(napTime);
+      }
+ else {
+        thread.wait(napTime);
+      }
     }
  catch (    InterruptedException e) {
     }
