@@ -1,0 +1,26 @@
+{
+  String currentRenderer=(g == null) ? null : g.getClass().getName();
+  if (currentRenderer != null) {
+    if (currentRenderer.equals(irenderer)) {
+      if ((iwidth == g.width) && (iheight == g.height)) {
+      }
+ else {
+        g.resize(iwidth,iheight);
+        updateSize(iwidth,iheight);
+        redraw();
+      }
+    }
+ else {
+      if (frameCount > 0) {
+        throw new RuntimeException("size() cannot be called to change " + "the renderer outside of setup()");
+      }
+      g=createGraphics(iwidth,iheight,irenderer,ipath);
+      updateSize(iwidth,iheight);
+      throw new RuntimeException(NEW_RENDERER);
+    }
+  }
+ else {
+    g=createGraphics(iwidth,iheight,irenderer,ipath);
+    updateSize(iwidth,iheight);
+  }
+}
