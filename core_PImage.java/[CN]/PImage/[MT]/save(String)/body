@@ -1,5 +1,10 @@
 {
   boolean success=false;
+  File file=new File(filename);
+  if (!file.isAbsolute()) {
+    System.err.println("PImage.save() requires an absolute path, " + "you might need to use savePath().");
+    return;
+  }
   try {
     OutputStream os=null;
     if (filename.toLowerCase().endsWith(".tga")) {
