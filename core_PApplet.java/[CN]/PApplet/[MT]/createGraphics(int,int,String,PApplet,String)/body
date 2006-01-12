@@ -24,7 +24,7 @@
  else {
       ite.getTargetException().printStackTrace();
       Throwable target=ite.getTargetException();
-      target.printStackTrace(System.out);
+      if (platform == MACOSX)       target.printStackTrace(System.out);
       throw new RuntimeException(target.getMessage());
     }
   }
@@ -37,13 +37,12 @@ catch (  ClassNotFoundException cnfe) {
     }
   }
 catch (  Exception e) {
-    System.out.println("ex3");
     if ((e instanceof IllegalArgumentException) || (e instanceof NoSuchMethodException) || (e instanceof IllegalAccessException)) {
       String msg="public " + irenderer.substring(irenderer.lastIndexOf('.') + 1) + "(int width, int height, PApplet parent"+ ((ipath == null) ? "" : ", String filename")+ ") does not exist.";
       throw new RuntimeException(msg);
     }
  else {
-      e.printStackTrace(System.out);
+      if (platform == MACOSX)       e.printStackTrace(System.out);
       throw new RuntimeException(e.getMessage());
     }
   }

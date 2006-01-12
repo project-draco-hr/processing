@@ -4,8 +4,6 @@
     if (THREAD_DEBUG)     println(Thread.currentThread().getName() + " 1a beginFrame");
     g.beginFrame();
     if (THREAD_DEBUG)     println(Thread.currentThread().getName() + " 1b draw");
-    boolean recorderNull=true;
-    boolean recorderRawNull=true;
     if (frameCount == 0) {
       try {
         setup();
@@ -46,8 +44,6 @@
       pmouseX=dmouseX;
       pmouseY=dmouseY;
       draw();
-      recorderNull=(recorder == null);
-      recorderRawNull=(g.recorderRaw == null);
       dmouseX=mouseX;
       dmouseY=mouseY;
       dequeueMouseEvents();
@@ -57,18 +53,6 @@
       redraw=false;
     }
     g.endFrame();
-    if (!recorderNull) {
-      if (recorder != null) {
-        recorder.endFrame();
-        recorder=null;
-      }
-    }
-    if (!recorderRawNull) {
-      if (g.recorderRaw != null) {
-        g.recorderRaw.endFrame();
-        g.recorderRaw=null;
-      }
-    }
     frameCount++;
     if (THREAD_DEBUG)     println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
     repaint();
