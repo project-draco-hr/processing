@@ -9,6 +9,7 @@
       constructorValues=new Object[]{new Integer(iwidth),new Integer(iheight),applet};
     }
  else {
+      ipath=applet.savePath(ipath);
       constructorParams=new Class[]{Integer.TYPE,Integer.TYPE,PApplet.class,String.class};
       constructorValues=new Object[]{new Integer(iwidth),new Integer(iheight),applet,ipath};
     }
@@ -21,8 +22,9 @@
       throw new RuntimeException(openglError);
     }
  else {
+      ite.getTargetException().printStackTrace();
       Throwable target=ite.getTargetException();
-      target.printStackTrace();
+      target.printStackTrace(System.out);
       throw new RuntimeException(target.getMessage());
     }
   }
@@ -35,13 +37,14 @@ catch (  ClassNotFoundException cnfe) {
     }
   }
 catch (  Exception e) {
+    System.out.println("ex3");
     if ((e instanceof IllegalArgumentException) || (e instanceof NoSuchMethodException) || (e instanceof IllegalAccessException)) {
       String msg="public " + irenderer.substring(irenderer.lastIndexOf('.') + 1) + "(int width, int height, PApplet parent"+ ((ipath == null) ? "" : ", String filename")+ ") does not exist.";
       throw new RuntimeException(msg);
     }
  else {
-      e.printStackTrace();
-      return null;
+      e.printStackTrace(System.out);
+      throw new RuntimeException(e.getMessage());
     }
   }
 }
