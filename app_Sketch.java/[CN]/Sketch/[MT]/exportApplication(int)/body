@@ -201,8 +201,8 @@
     File shellScript=new File(destFolder,this.name);
     PrintStream ps=new PrintStream(new FileOutputStream(shellScript));
     ps.print("#!/bin/sh\n\n");
-    ps.print("APPDIR=`dirname $0`\n");
-    ps.print("java " + Preferences.get("run.options") + " -Djava.library.path=$APPDIR"+ " -cp "+ exportClassPath+ " "+ this.name+ "\n");
+    ps.print("APPDIR=$(dirname \"$0\")\n");
+    ps.print("java " + Preferences.get("run.options") + " -Djava.library.path=\"$APPDIR\""+ " -cp \""+ exportClassPath+ "\""+ " "+ this.name+ "\n");
     ps.flush();
     ps.close();
     String shellPath=shellScript.getAbsolutePath();
