@@ -1,4 +1,9 @@
 {
+  if (raw != null) {
+    raw.colorMode(RGB,1);
+    raw.noFill();
+    raw.beginShape(LINES);
+  }
   for (int i=0; i < lineCount; i++) {
     float a[]=vertices[lines[i][VERTEX1]];
     float b[]=vertices[lines[i][VERTEX2]];
@@ -6,7 +11,26 @@
     line.reset();
     line.setIntensities(a[SR],a[SG],a[SB],a[SA],b[SR],b[SG],b[SB],b[SA]);
     line.setVertices(a[X],a[Y],a[Z],b[X],b[Y],b[Z]);
+    if (raw != null) {
+      if (raw instanceof PGraphics3) {
+        if ((a[VW] != 0) && (b[VW] != 0)) {
+          raw.stroke(a[SR],a[SG],a[SB],a[SA]);
+          raw.vertex(a[VX] / a[VW],a[VY] / a[VW],a[VZ] / a[VW]);
+          raw.stroke(b[SR],b[SG],b[SB],b[SA]);
+          raw.vertex(b[VX] / b[VW],b[VY] / b[VW],b[VZ] / b[VW]);
+        }
+      }
+ else {
+        raw.stroke(a[SR],a[SG],a[SB],a[SA]);
+        raw.vertex(a[X],a[Y]);
+        raw.stroke(b[SR],b[SG],b[SB],b[SA]);
+        raw.vertex(b[X],b[Y]);
+      }
+    }
     line.setIndex(index);
     line.draw();
+  }
+  if (raw != null) {
+    raw.endShape();
   }
 }

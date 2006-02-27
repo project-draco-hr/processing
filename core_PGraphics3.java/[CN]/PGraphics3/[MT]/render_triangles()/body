@@ -29,12 +29,24 @@
     triangle.setIndex(index);
     triangle.render();
     if (raw != null) {
-      raw.fill(ar,ag,ab,a[A]);
-      raw.vertex(a[X],a[Y]);
-      raw.fill(br,bg,bb,b[A]);
-      raw.vertex(b[X],b[Y]);
-      raw.fill(cr,cg,cb,c[A]);
-      raw.vertex(c[X],c[Y]);
+      if (raw instanceof PGraphics3) {
+        if ((a[VW] != 0) && (b[VW] != 0) && (c[VW] != 0)) {
+          raw.fill(ar,ag,ab,a[A]);
+          raw.vertex(a[VX] / a[VW],a[VY] / a[VW],a[VZ] / a[VW]);
+          raw.fill(br,bg,bb,b[A]);
+          raw.vertex(b[VX] / b[VW],b[VY] / b[VW],b[VZ] / b[VW]);
+          raw.fill(cr,cg,cb,c[A]);
+          raw.vertex(c[VX] / c[VW],c[VY] / c[VW],c[VZ] / c[VW]);
+        }
+      }
+ else {
+        raw.fill(ar,ag,ab,a[A]);
+        raw.vertex(a[X],a[Y]);
+        raw.fill(br,bg,bb,b[A]);
+        raw.vertex(b[X],b[Y]);
+        raw.fill(cr,cg,cb,c[A]);
+        raw.vertex(c[X],c[Y]);
+      }
     }
   }
   if (raw != null) {
