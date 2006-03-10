@@ -3,7 +3,12 @@
   char chars[]=str.toCharArray();
   int charCount=0;
   for (int i=0; i < chars.length; i++) {
-    if (Character.isDigit(chars[i])) {
+    boolean ok=Character.isDigit(chars[i]);
+    if (parentField.allowHex) {
+      if ((chars[i] >= 'A') && (chars[i] <= 'F'))       ok=true;
+      if ((chars[i] >= 'a') && (chars[i] <= 'f'))       ok=true;
+    }
+    if (ok) {
       if (charCount != i) {
         chars[charCount]=chars[i];
       }

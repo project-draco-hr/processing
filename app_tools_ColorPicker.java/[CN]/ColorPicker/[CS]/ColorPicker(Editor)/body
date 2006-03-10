@@ -1,3 +1,37 @@
 {
   this.editor=editor;
+  frame=new JFrame("Color Picker");
+  frame.getContentPane().setLayout(new BorderLayout());
+  Box box=Box.createHorizontalBox();
+  box.setBorder(new EmptyBorder(12,12,12,12));
+  range=new ColorRange();
+  range.init();
+  JPanel rangePanel=new JPanel();
+  rangePanel.setLayout(new BorderLayout());
+  rangePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+  rangePanel.add(range,BorderLayout.CENTER);
+  box.add(rangePanel);
+  box.add(Box.createHorizontalStrut(10));
+  slider=new ColorSlider();
+  slider.init();
+  JPanel sliderPanel=new JPanel();
+  sliderPanel.setLayout(new BorderLayout());
+  sliderPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+  sliderPanel.add(slider,BorderLayout.CENTER);
+  box.add(sliderPanel);
+  box.add(Box.createHorizontalStrut(10));
+  box.add(createColorFields());
+  box.add(Box.createHorizontalStrut(10));
+  frame.getContentPane().add(box,BorderLayout.CENTER);
+  frame.pack();
+  Dimension size=frame.getSize();
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  frame.setLocation((screen.width - size.width) / 2,(screen.height - size.height) / 2);
+  hueField.getDocument().addDocumentListener(this);
+  saturationField.getDocument().addDocumentListener(this);
+  brightnessField.getDocument().addDocumentListener(this);
+  redField.getDocument().addDocumentListener(this);
+  greenField.getDocument().addDocumentListener(this);
+  blueField.getDocument().addDocumentListener(this);
+  hexField.getDocument().addDocumentListener(this);
 }
