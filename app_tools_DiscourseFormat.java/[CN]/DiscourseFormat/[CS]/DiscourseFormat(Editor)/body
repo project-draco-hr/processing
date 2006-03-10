@@ -1,0 +1,24 @@
+{
+  this.editor=editor;
+  this.parent=editor.textarea;
+  textarea=new JEditTextArea(new PdeTextAreaDefaults());
+  textarea.setRightClickPopup(new DiscourseTextAreaPopup());
+  textarea.setTokenMarker(new PdeKeywords());
+  textarea.setHorizontalOffset(6);
+  textarea.setEditable(false);
+  wlistener=parent.editorListener;
+  frame=new JFrame(WINDOW_TITLE);
+  frame.setSize(500,500);
+  try {
+    icon=Base.getImage("icon.gif",frame);
+    frame.setIconImage(icon);
+  }
+ catch (  Exception e) {
+  }
+  frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+  Container pain=frame.getContentPane();
+  pain.setLayout(new BorderLayout());
+  pain.add(textarea,BorderLayout.CENTER);
+  frame.setResizable(true);
+  frame.pack();
+}

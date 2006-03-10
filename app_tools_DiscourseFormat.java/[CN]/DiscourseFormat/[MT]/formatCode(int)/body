@@ -1,0 +1,84 @@
+{
+  StringBuffer cf=new StringBuffer();
+  Segment lineSegment=new Segment();
+  TextAreaPainter painter=parent.getPainter();
+  TokenMarker tokenMarker=parent.getTokenMarker();
+  FontMetrics fm=painter.getFontMetrics();
+  parent.getLineText(line,lineSegment);
+  char[] segmentArray=lineSegment.array;
+  int limit=lineSegment.getEndIndex();
+  int segmentOffset=lineSegment.offset;
+  int segmentCount=lineSegment.count;
+  int width=0;
+  int x=0;
+  if (tokenMarker == null) {
+    for (int j=0; j < segmentCount; j++) {
+      char c=segmentArray[j + segmentOffset];
+      cf=cf.append(c);
+      int charWidth;
+      if (c == '\t') {
+        charWidth=(int)painter.nextTabStop(width,j) - width;
+      }
+ else {
+        charWidth=fm.charWidth(c);
+      }
+      width+=charWidth;
+    }
+  }
+ else {
+    Token tokens;
+    if ((painter.getCurrentLineIndex() == line) && (painter.getCurrentLineTokens() != null)) {
+      tokens=painter.getCurrentLineTokens();
+    }
+ else {
+      painter.setCurrentLineIndex(line);
+      painter.setCurrentLineTokens(tokenMarker.markTokens(lineSegment,line));
+      tokens=painter.getCurrentLineTokens();
+    }
+    int offset=0;
+    Toolkit toolkit=painter.getToolkit();
+    Font defaultFont=painter.getFont();
+    SyntaxStyle[] styles=painter.getStyles();
+    for (; ; ) {
+      byte id=tokens.id;
+      if (id == Token.END) {
+        char c=segmentArray[segmentOffset + offset];
+        if (segmentOffset + offset < limit) {
+          cf.append(c);
+        }
+ else {
+          cf.append('\n');
+        }
+        return cf.toString();
+      }
+      if (id == Token.NULL) {
+        fm=painter.getFontMetrics();
+      }
+ else {
+        cf.append("[color=#");
+        cf.append(PApplet.hex(styles[id].getColor().getRGB() & 0xFFFFFF,6));
+        cf.append("]");
+        if (styles[id].isBold())         cf.append("[b]");
+        fm=styles[id].getFontMetrics(defaultFont);
+      }
+      int length=tokens.length;
+      for (int j=0; j < length; j++) {
+        char c=segmentArray[segmentOffset + offset + j];
+        cf.append(c);
+        if (j == (length - 1) && id != Token.NULL && styles[id].isBold())         cf.append("[/b]");
+        if (j == (length - 1) && id != Token.NULL)         cf.append("[/color]");
+        int charWidth;
+        if (c == '\t') {
+          charWidth=(int)painter.nextTabStop(width,offset + j) - width;
+        }
+ else {
+          charWidth=fm.charWidth(c);
+        }
+        width+=charWidth;
+      }
+      offset+=length;
+      tokens=tokens.next;
+    }
+  }
+  return cf.toString();
+}
