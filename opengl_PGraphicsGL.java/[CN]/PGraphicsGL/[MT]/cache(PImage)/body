@@ -1,15 +1,15 @@
 {
   if (image.cache != null)   return;
-  int names[]=new int[1];
+  IntBuffer names=BufferUtil.newIntBuffer(1);
   gl.glGenTextures(1,names);
-  int index=names[0];
+  int index=names.get(0);
   image.cache=new ImageCache();
   ImageCache cash=(ImageCache)image.cache;
   cash.update(image);
   gl.glEnable(GL.GL_TEXTURE_2D);
   gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1);
   gl.glBindTexture(GL.GL_TEXTURE_2D,index);
-  gl.glTexImage2D(GL.GL_TEXTURE_2D,0,4,cash.twidth,cash.theight,0,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,cash.tpixels);
+  gl.glTexImage2D(GL.GL_TEXTURE_2D,0,4,cash.twidth,cash.theight,0,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,cash.tbuffer);
   gl.glTexParameterf(GL.GL_TEXTURE_2D,GL.GL_TEXTURE_MAG_FILTER,GL.GL_LINEAR);
   gl.glTexParameterf(GL.GL_TEXTURE_2D,GL.GL_TEXTURE_MIN_FILTER,GL.GL_LINEAR);
   gl.glTexEnvf(GL.GL_TEXTURE_ENV,GL.GL_TEXTURE_ENV_MODE,GL.GL_MODULATE);

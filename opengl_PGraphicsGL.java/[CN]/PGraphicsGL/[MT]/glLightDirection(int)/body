@@ -1,8 +1,10 @@
 {
-  if (lights[num] == DIRECTIONAL) {
-    gl.glLightfv(GL.GL_LIGHT0 + num,GL.GL_POSITION,new float[]{lightsNX[num],lightsNY[num],lightsNZ[num],1});
+  lightBuffer.put(lightNormal[num]);
+  if (lightType[num] == DIRECTIONAL) {
+    lightBuffer.put(lightNormal[num]);
+    gl.glLightfv(GL.GL_LIGHT0 + num,GL.GL_POSITION,lightBuffer);
   }
  else {
-    gl.glLightfv(GL.GL_LIGHT0 + num,GL.GL_SPOT_DIRECTION,new float[]{lightsNX[num],lightsNY[num],lightsNZ[num]});
+    gl.glLightfv(GL.GL_LIGHT0 + num,GL.GL_SPOT_DIRECTION,lightBuffer);
   }
 }

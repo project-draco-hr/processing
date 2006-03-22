@@ -2,18 +2,17 @@
   if (applet == null) {
     throw new RuntimeException("The applet passed to PGraphicsGL " + "cannot be null");
   }
-  GLCapabilities capabilities=new GLCapabilities();
-  canvas=GLDrawableFactory.getFactory().createGLCanvas(capabilities);
+  canvas=new GLCanvas();
   final PApplet parent=applet;
   canvas.addGLEventListener(new GLEventListener(){
-    public void display(    GLDrawable drawable){
+    public void display(    GLAutoDrawable drawable){
       parent.display();
     }
-    public void init(    GLDrawable drawable){
+    public void init(    GLAutoDrawable drawable){
     }
-    public void displayChanged(    GLDrawable drawable,    boolean modeChanged,    boolean deviceChanged){
+    public void displayChanged(    GLAutoDrawable drawable,    boolean modeChanged,    boolean deviceChanged){
     }
-    public void reshape(    GLDrawable drawable,    int x,    int y,    int width,    int height){
+    public void reshape(    GLAutoDrawable drawable,    int x,    int y,    int width,    int height){
     }
   }
 );
@@ -25,7 +24,7 @@
   canvas.addKeyListener(applet);
   canvas.addFocusListener(applet);
   gl=canvas.getGL();
-  glu=canvas.getGLU();
+  glu=new GLU();
   resize(width,height);
   tobj=glu.gluNewTess();
   tessCallback=new TessCallback();
@@ -34,4 +33,6 @@
   glu.gluTessCallback(tobj,GLU.GLU_TESS_VERTEX,tessCallback);
   glu.gluTessCallback(tobj,GLU.GLU_TESS_COMBINE,tessCallback);
   glu.gluTessCallback(tobj,GLU.GLU_TESS_ERROR,tessCallback);
+  lightBuffer=BufferUtil.newFloatBuffer(4);
+  lightBuffer.put(3,1.0f);
 }

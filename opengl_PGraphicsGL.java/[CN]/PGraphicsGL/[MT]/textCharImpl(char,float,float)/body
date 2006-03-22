@@ -30,7 +30,7 @@ case PathIterator.SEG_LINETO:
  else {
       }
     vertex=new double[]{x + textPoints[0],y + textPoints[1],0};
-  glu.gluTessVertex(tobj,vertex,vertex);
+  glu.gluTessVertex(tobj,vertex,0,vertex);
 lastX=textPoints[0];
 lastY=textPoints[1];
 break;
@@ -38,7 +38,7 @@ case PathIterator.SEG_QUADTO:
 for (int i=1; i < bezierDetail; i++) {
 float t=(float)i / (float)bezierDetail;
 vertex=new double[]{x + bezierPoint(lastX,textPoints[0],textPoints[2],textPoints[2],t),y + bezierPoint(lastY,textPoints[1],textPoints[3],textPoints[3],t),0};
-glu.gluTessVertex(tobj,vertex,vertex);
+glu.gluTessVertex(tobj,vertex,0,vertex);
 }
 lastX=textPoints[2];
 lastY=textPoints[3];
@@ -47,7 +47,7 @@ case PathIterator.SEG_CUBICTO:
 for (int i=1; i < bezierDetail; i++) {
 float t=(float)i / (float)bezierDetail;
 vertex=new double[]{x + bezierPoint(lastX,textPoints[0],textPoints[2],textPoints[4],t),y + bezierPoint(lastY,textPoints[1],textPoints[3],textPoints[5],t),0};
-glu.gluTessVertex(tobj,vertex,vertex);
+glu.gluTessVertex(tobj,vertex,0,vertex);
 }
 lastX=textPoints[4];
 lastY=textPoints[5];
