@@ -46,7 +46,10 @@
   item=newJMenuItem("Find...",'F');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      new FindReplace(Editor.this).show();
+      if (find == null) {
+        find=new FindReplace(Editor.this);
+      }
+      find.show();
     }
   }
 );
@@ -54,8 +57,9 @@
   item=newJMenuItem("Find Next",'G');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      FindReplace find=new FindReplace(Editor.this);
-      find.find(true);
+      if (find != null) {
+        find.find(true);
+      }
     }
   }
 );
