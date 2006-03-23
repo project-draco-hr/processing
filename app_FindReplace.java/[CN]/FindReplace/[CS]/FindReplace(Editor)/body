@@ -58,12 +58,6 @@
   Rectangle butt=buttons.getBounds();
   int high=butt.y + butt.height + BIG * 2 + SMALL;
   setBounds((screen.width - wide) / 2,(screen.height - high) / 2,wide,high);
-  ActionListener disposer=new ActionListener(){
-    public void actionPerformed(    ActionEvent actionEvent){
-      handleClose();
-    }
-  }
-;
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
   addWindowListener(new WindowAdapter(){
     public void windowClosing(    WindowEvent e){
@@ -71,5 +65,10 @@
     }
   }
 );
-  Base.registerWindowCloseKeys(getRootPane(),disposer);
+  Base.registerWindowCloseKeys(getRootPane(),new ActionListener(){
+    public void actionPerformed(    ActionEvent actionEvent){
+      handleClose();
+    }
+  }
+);
 }
