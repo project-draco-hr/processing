@@ -1,4 +1,6 @@
 {
   if ((x < 0) || (y < 0) || (x >= width)|| (y >= height))   return 0;
-  return ((BufferedImage)image).getRGB(x,y);
+  WritableRaster raster=((BufferedImage)image).getRaster();
+  raster.getDataElements(x,y,getset);
+  return getset[0];
 }
