@@ -20,7 +20,6 @@
   }
   int increment=1;
   int stop=0;
-  int counter=0;
   if (stroke) {
 switch (shape) {
 case POINTS:
@@ -53,7 +52,6 @@ case TRIANGLES:
 {
 for (int i=vertex_start; i < vertex_end - 2; i+=3) {
   add_path();
-  counter=i - vertex_start;
   add_line(i + 0,i + 1);
   add_line(i + 1,i + 2);
   add_line(i + 2,i + 0);
@@ -65,7 +63,6 @@ case TRIANGLE_STRIP:
 stop=vertex_end - 1;
 add_path();
 for (int i=vertex_start; i < stop; i++) {
-counter=i - vertex_start;
 add_line(i,i + 1);
 }
 stop=vertex_end - 2;
@@ -92,7 +89,6 @@ case QUADS:
 {
 for (int i=vertex_start; i < vertex_end; i+=4) {
 add_path();
-counter=i - vertex_start;
 add_line(i + 0,i + 1);
 add_line(i + 1,i + 2);
 add_line(i + 2,i + 3);
