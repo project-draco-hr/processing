@@ -1,0 +1,19 @@
+{
+  m_status=initial;
+  if (agg_basics.is_move_to(cmd)) {
+    m_src_vertices.modify_last(vertex_dist(x,y));
+  }
+ else {
+    if (is_vertex(cmd)) {
+      m_src_vertices.add(vertex_dist(x,y));
+    }
+ else {
+      if (is_end_poly(cmd)) {
+        m_closed=get_close_flag(cmd);
+        if (m_orientation == path_flags_none) {
+          m_orientation=get_orientation(cmd);
+        }
+      }
+    }
+  }
+}
