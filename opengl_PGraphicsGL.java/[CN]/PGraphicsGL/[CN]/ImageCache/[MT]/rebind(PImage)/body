@@ -1,7 +1,21 @@
 {
-  tindex=-1;
-  int width2=(int)Math.pow(2,Math.ceil(Math.log(source.width) / Math.log(2)));
-  int height2=(int)Math.pow(2,Math.ceil(Math.log(source.height) / Math.log(2)));
+  if (tindex != -1) {
+    gl.glDeleteTextures(1,new int[]{tindex},0);
+  }
+  int[] tmp=new int[1];
+  gl.glGenTextures(1,tmp,0);
+  tindex=tmp[0];
+  int width2=nextPowerOfTwo(source.width);
+  int height2=nextPowerOfTwo(source.height);
+  if (maxTextureSize == 0) {
+    int maxSize[]=new int[1];
+    gl.glGetIntegerv(GL.GL_MAX_TEXTURE_SIZE,maxSize,0);
+    maxTextureSize=maxSize[0];
+    System.out.println("max texture size is " + maxTextureSize);
+  }
+  if ((width2 > maxTextureSize) || (height2 > maxTextureSize)) {
+    throw new RuntimeException("Image width and height cannot be" + " larger than " + maxTextureSize + " with your graphics card.");
+  }
   if ((width2 > twidth) || (height2 > theight)) {
     tpixels=null;
   }
@@ -75,4 +89,10 @@ break;
 }
 tbuffer.put(tpixels);
 tbuffer.rewind();
+gl.glBindTexture(GL.GL_TEXTURE_2D,tindex);
+gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1);
+gl.glTexImage2D(GL.GL_TEXTURE_2D,0,4,twidth,theight,0,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,tbuffer);
+gl.glTexParameterf(GL.GL_TEXTURE_2D,GL.GL_TEXTURE_MAG_FILTER,GL.GL_LINEAR);
+gl.glTexParameterf(GL.GL_TEXTURE_2D,GL.GL_TEXTURE_MIN_FILTER,GL.GL_LINEAR);
+gl.glTexEnvf(GL.GL_TEXTURE_ENV,GL.GL_TEXTURE_ENV_MODE,GL.GL_MODULATE);
 }
