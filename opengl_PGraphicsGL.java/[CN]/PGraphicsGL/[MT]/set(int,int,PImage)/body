@@ -4,6 +4,7 @@
   javaToNativeARGB(source);
   IntBuffer setBuffer=BufferUtil.newIntBuffer(source.pixels.length);
   setBuffer.put(source.pixels);
+  setBuffer.rewind();
   gl.glRasterPos2f(x + EPSILON,(height - y) - EPSILON);
   gl.glDrawPixels(source.width,source.height,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,setBuffer);
   source.pixels=backup;
