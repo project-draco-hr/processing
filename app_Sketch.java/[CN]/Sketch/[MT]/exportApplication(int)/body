@@ -92,7 +92,20 @@
   }
   if (codeFolder.exists()) {
     String includes=Compiler.contentsToClassPath(codeFolder);
-    packClassPathIntoZipFile(includes,zos);
+    String codeList[]=PApplet.split(includes,File.separatorChar);
+    String cp="";
+    for (int i=0; i < codeList.length; i++) {
+      if (codeList[i].toLowerCase().endsWith(".jar") || codeList[i].toLowerCase().endsWith(".zip")) {
+        File exportFile=new File(codeFolder,codeList[i]);
+        String exportFilename=exportFile.getName();
+        Base.copyFile(exportFile,new File(jarFolder,exportFilename));
+        jarListVector.add(exportFilename);
+      }
+ else {
+        cp+=codeList[i] + File.separatorChar;
+      }
+    }
+    packClassPathIntoZipFile(cp,zos);
   }
   zos.flush();
   zos.close();
