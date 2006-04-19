@@ -1,0 +1,13 @@
+{
+  WritableRaster raster=((BufferedImage)image).getRaster();
+  if ((sx == 0) && (sy == 0) && (sw == src.width)&& (sh == src.height)) {
+    raster.setDataElements(dx,dy,src.width,src.height,src.pixels);
+  }
+ else {
+    int mode=src.imageMode;
+    src.imageMode=CORNERS;
+    PImage temp=src.get(sx,sy,sw,sh);
+    src.imageMode=mode;
+    raster.setPixels(dx,dy,temp.width,temp.height,temp.pixels);
+  }
+}
