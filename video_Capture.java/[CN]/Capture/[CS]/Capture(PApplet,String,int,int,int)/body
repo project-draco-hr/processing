@@ -4,7 +4,13 @@
   this.framerate=framerate;
   try {
     QDRect qdrect=new QDRect(requestWidth,requestHeight);
-    QDGraphics qdgraphics=new QDGraphics(qdrect);
+    QDGraphics qdgraphics=null;
+    if (quicktime.util.EndianOrder.isNativeLittleEndian()) {
+      graphics=new QDGraphics(QDConstants.k32BGRAPixelFormat,qdrect);
+    }
+ else {
+      graphics=new QDGraphics(QDGraphics.kDefaultPixelFormat,qdrect);
+    }
     capture=new SequenceGrabber();
     capture.setGWorld(qdgraphics,null);
     channel=new SGVideoChannel(capture);
