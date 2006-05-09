@@ -16,8 +16,16 @@
       if (a[SA] > EPSILON) {
         raw.colorMode(RGB,1);
         raw.beginShape(LINE_STRIP);
-        raw.stroke(a[SR],a[SG],a[SB],a[SA]);
-        raw.vertex(a[VX],a[VY]);
+        if (raw instanceof PGraphics3) {
+          if (a[VW] != 0) {
+            raw.stroke(a[SR],a[SG],a[SB],a[SA]);
+            raw.vertex(a[VX] / a[VW],a[VY] / a[VW],a[VZ] / a[VW]);
+          }
+        }
+ else {
+          raw.stroke(a[SR],a[SG],a[SB],a[SA]);
+          raw.vertex(a[X],a[Y]);
+        }
       }
     }
     for (int k=0; k < pathLength[j]; k++) {
@@ -25,8 +33,16 @@
       gl.glColor4f(b[SR],b[SG],b[SB],b[SA]);
       gl.glVertex3f(b[VX],b[VY],b[VZ]);
       if (raw != null) {
-        raw.stroke(b[SR],b[SG],b[SB],b[SA]);
-        raw.vertex(b[VX],b[VY]);
+        if (raw instanceof PGraphics3) {
+          if ((a[VW] != 0) && (b[VW] != 0)) {
+            raw.stroke(b[SR],b[SG],b[SB],b[SA]);
+            raw.vertex(b[VX] / b[VW],b[VY] / b[VW],b[VZ] / b[VW]);
+          }
+        }
+ else {
+          raw.stroke(b[SR],b[SG],b[SB],b[SA]);
+          raw.vertex(b[X],b[Y]);
+        }
       }
       i++;
     }
