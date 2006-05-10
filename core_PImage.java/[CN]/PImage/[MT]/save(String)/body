@@ -7,16 +7,37 @@
   }
   try {
     OutputStream os=null;
+    if (PApplet.javaVersion >= 1.4f) {
+      if (saveImageFormats == null) {
+        try {
+          Class ioClass=Class.forName("javax.imageio.ImageIO");
+          Method getFormatNamesMethod=ioClass.getMethod("getWriterFormatNames",(Class[])null);
+          saveImageFormats=(String[])getFormatNamesMethod.invoke((Class[])null,(Object[])null);
+        }
+ catch (        Exception e) {
+          e.printStackTrace();
+        }
+      }
+      if (saveImageFormats != null) {
+        for (int i=0; i < saveImageFormats.length; i++) {
+          System.out.println(saveImageFormats[i]);
+          if (filename.endsWith("." + saveImageFormats[i])) {
+            saveImageIO(filename);
+            return;
+          }
+        }
+      }
+    }
     if (filename.toLowerCase().endsWith(".tga")) {
       os=new BufferedOutputStream(new FileOutputStream(filename),32768);
-      success=saveTGA(os,pixels,width,height,format);
+      success=saveTGA(os);
     }
  else {
       if (!filename.toLowerCase().endsWith(".tif") && !filename.toLowerCase().endsWith(".tiff")) {
         filename+=".tif";
       }
       os=new BufferedOutputStream(new FileOutputStream(filename),32768);
-      success=saveTIFF(os,pixels,width,height);
+      success=saveTIFF(os);
     }
     os.flush();
     os.close();

@@ -1,9 +1,31 @@
 {
+  if (PApplet.javaVersion >= 1.4f) {
+    if (loadImageFormats == null) {
+      try {
+        Class ioClass=Class.forName("javax.imageio.ImageIO");
+        Method getFormatNamesMethod=ioClass.getMethod("getReaderFormatNames",(Class[])null);
+        loadImageFormats=(String[])getFormatNamesMethod.invoke((Class[])null,(Object[])null);
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+    }
+    if (loadImageFormats != null) {
+      for (int i=0; i < loadImageFormats.length; i++) {
+        if (filename.endsWith("." + loadImageFormats[i])) {
+          return loadImageIO(filename);
+        }
+      }
+    }
+  }
   if (filename.toLowerCase().endsWith(".tga")) {
     return loadImageTGA(filename);
   }
   byte bytes[]=loadBytes(filename);
   if (bytes == null)   return null;
+  if (filename.toLowerCase().endsWith(".tif") || filename.toLowerCase().endsWith(".tiff")) {
+    return PImage.loadTIFF(bytes);
+  }
   Image awtImage=Toolkit.getDefaultToolkit().createImage(bytes);
   MediaTracker tracker=new MediaTracker(this);
   tracker.addImage(awtImage,0);

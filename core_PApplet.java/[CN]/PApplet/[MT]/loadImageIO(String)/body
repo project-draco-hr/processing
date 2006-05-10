@@ -1,0 +1,26 @@
+{
+  InputStream stream=openStream(filename);
+  if (stream == null) {
+    System.err.println("The image " + filename + " could not be found.");
+    return null;
+  }
+  try {
+    Class ioClass=Class.forName("javax.imageio.ImageIO");
+    Method readMethod=ioClass.getMethod("read",new Class[]{InputStream.class});
+    Object bimage=readMethod.invoke(null,new Object[]{stream});
+    int px[]=null;
+    Class biClass=Class.forName("java.awt.image.BufferedImage");
+    Method getHeightMethod=biClass.getMethod("getHeight",(Class[])null);
+    Integer hi=(Integer)getHeightMethod.invoke(bimage,(Object[])null);
+    Method getWidthMethod=biClass.getMethod("getWidth",(Class[])null);
+    Integer wi=(Integer)getWidthMethod.invoke(bimage,(Object[])null);
+    PImage outgoing=new PImage(wi.intValue(),hi.intValue());
+    Method getRgbMethod=biClass.getMethod("getRGB",new Class[]{Integer.TYPE,Integer.TYPE,Integer.TYPE,Integer.TYPE,outgoing.pixels.getClass(),Integer.TYPE,Integer.TYPE});
+    getRgbMethod.invoke(bimage,new Object[]{new Integer(0),new Integer(0),new Integer(outgoing.width),new Integer(outgoing.height),outgoing.pixels,new Integer(0),new Integer(outgoing.width)});
+    return outgoing;
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    return null;
+  }
+}
