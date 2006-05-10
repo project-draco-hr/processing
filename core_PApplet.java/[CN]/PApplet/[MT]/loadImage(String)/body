@@ -19,7 +19,13 @@
     }
   }
   if (filename.toLowerCase().endsWith(".tga")) {
-    return loadImageTGA(filename);
+    try {
+      return loadImageTGA(filename);
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
   byte bytes[]=loadBytes(filename);
   if (bytes == null)   return null;

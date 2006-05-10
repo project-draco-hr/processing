@@ -1,22 +1,75 @@
 {
-  byte[] buffer=loadBytes(filename);
-  if (buffer == null)   return null;
-  if (buffer[2] == 2 && (buffer[16] == 24 || buffer[16] == 32)) {
-    int w=((buffer[13] & 0xff) << 8) + (buffer[12] & 0xff);
-    int h=((buffer[15] & 0xff) << 8) + (buffer[14] & 0xff);
-    boolean hasAlpha=(buffer[16] == 32);
-    PImage img=new PImage(w,h);
-    img.format=(hasAlpha ? ARGB : RGB);
-    int index=(h - 1) * w;
-    int offset=18;
-    for (int y=h - 1; y >= 0; y--) {
-      for (int x=0; x < w; x++) {
-        img.pixels[index + x]=(buffer[offset++] & 0xff) | ((buffer[offset++] & 0xff) << 8) | ((buffer[offset++] & 0xff) << 16)| (hasAlpha ? ((buffer[offset++] & 0xff) << 24) : 0xff000000);
-      }
-      index-=w;
-    }
-    return img;
+  InputStream is=openStream(filename);
+  if (is == null)   return null;
+  byte header[]=new byte[18];
+  int offset=0;
+  do {
+    int count=is.read(header,offset,header.length - offset);
+    if (count == -1)     return null;
+    offset+=count;
   }
-  System.err.println("loadImage(): bad targa image format");
-  return null;
+ while (offset < 18);
+  int format=0;
+  if ((header[2] == 0x0B) && (header[16] == 0x08) && (header[17] == 0x28)) {
+    format=ALPHA;
+  }
+ else   if ((header[2] == 0x0A) && (header[16] == 24) && (header[17] == 0x20)) {
+    format=RGB;
+  }
+ else   if ((header[2] == 0x0A) && (header[16] == 32) && (header[17] == 0x28)) {
+    format=ARGB;
+  }
+  if (format == 0) {
+    System.err.println("Unknown .tga file format for " + filename);
+    return null;
+  }
+  int w=((header[13] & 0xff) << 8) + (header[12] & 0xff);
+  int h=((header[15] & 0xff) << 8) + (header[14] & 0xff);
+  PImage outgoing=new PImage(w,h,format);
+  int index=0;
+  int px[]=outgoing.pixels;
+  while (index < px.length) {
+    int num=is.read();
+    boolean isRLE=(num & 0x80) != 0;
+    if (isRLE) {
+      num-=127;
+      int pixel=0;
+switch (format) {
+case ALPHA:
+        pixel=is.read();
+      break;
+case RGB:
+    pixel=0xFF000000 | is.read() | (is.read() << 8)| (is.read() << 16);
+  break;
+case ARGB:
+pixel=is.read() | (is.read() << 8) | (is.read() << 16)| (is.read() << 24);
+break;
+}
+for (int i=0; i < num; i++) {
+px[index++]=pixel;
+if (index == px.length) break;
+}
+}
+ else {
+num+=1;
+switch (format) {
+case ALPHA:
+for (int i=0; i < num; i++) {
+px[index++]=is.read();
+}
+break;
+case RGB:
+for (int i=0; i < num; i++) {
+px[index++]=0xFF000000 | is.read() | (is.read() << 8)| (is.read() << 16);
+}
+break;
+case ARGB:
+for (int i=0; i < num; i++) {
+px[index++]=is.read() | (is.read() << 8) | (is.read() << 16)| (is.read() << 24);
+}
+break;
+}
+}
+}
+return outgoing;
 }
