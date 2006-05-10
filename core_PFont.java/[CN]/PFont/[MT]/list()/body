@@ -1,6 +1,14 @@
 {
   if (PApplet.javaVersion < 1.3f) {
-    return Toolkit.getDefaultToolkit().getFontList();
+    try {
+      Toolkit tk=Toolkit.getDefaultToolkit();
+      Method getFontListMethod=tk.getClass().getMethod("getFontList",(Class[])null);
+      return (String[])getFontListMethod.invoke(tk,(Object[])null);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+      return new String[]{};
+    }
   }
   try {
     Class geClass=Class.forName("java.awt.GraphicsEnvironment");
