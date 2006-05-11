@@ -1,8 +1,8 @@
 {
   if (PApplet.THREAD_DEBUG)   println(Thread.currentThread().getName() + " formerly nextFrame()");
   if (looping || redraw) {
-    if (THREAD_DEBUG)     println(Thread.currentThread().getName() + " 1a beginFrame");
-    g.beginFrame();
+    if (THREAD_DEBUG)     println(Thread.currentThread().getName() + " 1a beginDraw");
+    g.beginDraw();
     if (THREAD_DEBUG)     println(Thread.currentThread().getName() + " 1b draw");
     if (frameCount == 0) {
       try {
@@ -35,9 +35,15 @@
         }
  else {
           long timeToLeave=framerateLastDelayTime + (long)(1000.0f / framerateTarget);
-          int napTime=(int)(timeToLeave - System.currentTimeMillis());
-          framerateLastDelayTime=timeToLeave;
-          delay(napTime);
+          long now=System.currentTimeMillis();
+          int napTime=(int)(timeToLeave - now);
+          if (napTime > 0) {
+            framerateLastDelayTime=timeToLeave;
+            delay(napTime);
+          }
+ else {
+            framerateLastDelayTime=now;
+          }
         }
       }
       preMethods.handle();
@@ -48,11 +54,11 @@
       dmouseY=mouseY;
       dequeueMouseEvents();
       dequeueKeyEvents();
-      if (THREAD_DEBUG)       println(Thread.currentThread().getName() + " 2b endFrame");
+      if (THREAD_DEBUG)       println(Thread.currentThread().getName() + " 2b endDraw");
       drawMethods.handle();
       redraw=false;
     }
-    g.endFrame();
+    g.endDraw();
     frameCount++;
     if (THREAD_DEBUG)     println(Thread.currentThread().getName() + "   3a calling repaint() " + frameCount);
     repaint();

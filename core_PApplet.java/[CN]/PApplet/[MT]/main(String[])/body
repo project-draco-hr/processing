@@ -14,6 +14,7 @@
     Color backgroundColor=Color.black;
     Color stopColor=Color.gray;
     GraphicsDevice displayDevice=null;
+    boolean hideStop=false;
     String param=null, value=null;
     int argIndex=0;
     while (argIndex < args.length) {
@@ -40,7 +41,7 @@
           if (value.charAt(0) == '#')           value=value.substring(1);
           backgroundColor=new Color(Integer.parseInt(value,16));
         }
- else         if (param.equals(ARGS_PRESENT_STOP_COLOR)) {
+ else         if (param.equals(ARGS_STOP_COLOR)) {
           if (value.charAt(0) == '#')           value=value.substring(1);
           stopColor=new Color(Integer.parseInt(value,16));
         }
@@ -54,6 +55,9 @@
  else {
         if (args[argIndex].equals(ARGS_PRESENT)) {
           present=true;
+        }
+ else         if (args[argIndex].equals(ARGS_HIDE_STOP)) {
+          hideStop=true;
         }
  else         if (args[argIndex].equals(ARGS_EXTERNAL)) {
           external=true;
@@ -92,19 +96,21 @@
       frame.add(applet);
       Dimension fullscreen=frame.getSize();
       applet.setBounds((fullscreen.width - applet.width) / 2,(fullscreen.height - applet.height) / 2,applet.width,applet.height);
-      Label label=new Label("stop");
-      label.setForeground(stopColor);
-      label.addMouseListener(new MouseAdapter(){
-        public void mousePressed(        MouseEvent e){
-          System.exit(0);
+      if (!hideStop) {
+        Label label=new Label("stop");
+        label.setForeground(stopColor);
+        label.addMouseListener(new MouseAdapter(){
+          public void mousePressed(          MouseEvent e){
+            System.exit(0);
+          }
         }
-      }
 );
-      frame.add(label);
-      Dimension labelSize=label.getPreferredSize();
-      labelSize=new Dimension(100,labelSize.height);
-      label.setSize(labelSize);
-      label.setLocation(20,fullscreen.height - labelSize.height - 20);
+        frame.add(label);
+        Dimension labelSize=label.getPreferredSize();
+        labelSize=new Dimension(100,labelSize.height);
+        label.setSize(labelSize);
+        label.setLocation(20,fullscreen.height - labelSize.height - 20);
+      }
       if (external) {
         applet.setupExternalMessages();
       }
