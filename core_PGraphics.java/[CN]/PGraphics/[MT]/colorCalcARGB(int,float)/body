@@ -1,6 +1,11 @@
 {
   calcColor=argb;
-  calcAi=(argb >> 24) & 0xff;
+  if (alpha == colorModeA) {
+    calcAi=(argb >> 24) & 0xff;
+  }
+ else {
+    calcAi=(int)(((argb >> 24) & 0xff) * (alpha / colorModeA));
+  }
   calcRi=(argb >> 16) & 0xff;
   calcGi=(argb >> 8) & 0xff;
   calcBi=argb & 0xff;
