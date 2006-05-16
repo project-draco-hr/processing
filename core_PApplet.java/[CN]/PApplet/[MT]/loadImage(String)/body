@@ -42,12 +42,7 @@
   }
   PImage image=new PImage(awtImage);
   if ((filename.toLowerCase().endsWith(".gif")) || (filename.toLowerCase().endsWith(".png"))) {
-    for (int i=0; i < image.pixels.length; i++) {
-      if ((image.pixels[i] & 0xff000000) != 0xff000000) {
-        image.format=ARGB;
-        break;
-      }
-    }
+    image.checkAlpha();
   }
   return image;
 }
