@@ -1,0 +1,30 @@
+{
+  int x, y, a2, b2, s, t;
+  a2=a * a;
+  b2=b * b;
+  x=0;
+  y=b;
+  s=a2 * (1 - 2 * b) + 2 * b2;
+  t=b2 - 2 * a2 * (2 * b - 1);
+  flat_ellipse_symmetry(centerX,centerY,x,y,filling);
+  do {
+    if (s < 0) {
+      s+=2 * b2 * (2 * x + 3);
+      t+=4 * b2 * (x + 1);
+      x++;
+    }
+ else     if (t < 0) {
+      s+=2 * b2 * (2 * x + 3) - 4 * a2 * (y - 1);
+      t+=4 * b2 * (x + 1) - 2 * a2 * (2 * y - 3);
+      x++;
+      y--;
+    }
+ else {
+      s-=4 * a2 * (y - 1);
+      t-=2 * a2 * (2 * y - 3);
+      y--;
+    }
+    flat_ellipse_symmetry(centerX,centerY,x,y,filling);
+  }
+ while (y > 0);
+}

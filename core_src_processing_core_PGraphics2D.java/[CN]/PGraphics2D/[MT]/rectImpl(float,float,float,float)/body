@@ -1,0 +1,31 @@
+{
+  if (untransformed() && !fillAlpha) {
+    int x1=(int)x1f;
+    int y1=(int)y1f;
+    int x2=(int)x2f;
+    int y2=(int)y2f;
+    rectImplFillUnRGB(x1,y1,x2,y2);
+    if (stroke) {
+      if (strokeWeight == 1) {
+        thin_flat_line(x1,y1,x2,y1);
+        thin_flat_line(x2,y1,x2,y2);
+        thin_flat_line(x2,y2,x1,y2);
+        thin_flat_line(x1,y2,x1,y1);
+      }
+ else {
+        thick_flat_line(x1,y1,fillR,fillG,fillB,fillA,x2,y1,fillR,fillG,fillB,fillA);
+        thick_flat_line(x2,y1,fillR,fillG,fillB,fillA,x2,y2,fillR,fillG,fillB,fillA);
+        thick_flat_line(x2,y2,fillR,fillG,fillB,fillA,x1,y2,fillR,fillG,fillB,fillA);
+        thick_flat_line(x1,y2,fillR,fillG,fillB,fillA,x1,y1,fillR,fillG,fillB,fillA);
+      }
+    }
+  }
+ else {
+    beginShape(QUADS);
+    vertex(x1f,y1f);
+    vertex(x2f,y1f);
+    vertex(x2f,y2f);
+    vertex(x1f,y2f);
+    endShape();
+  }
+}
