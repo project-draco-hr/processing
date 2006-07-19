@@ -1,7 +1,9 @@
 {
-  if (translateNoScale()) {
-    centerX=(int)screenX(centerX,centerY,0);
-    centerY=(int)screenY(centerX,centerY,0);
+  if (unwarped()) {
+    float x=m00 * centerX + m01 * centerY + m02;
+    float y=m10 * centerX + m11 * centerY + m12;
+    centerX=(int)x;
+    centerY=(int)y;
   }
   if (fill)   flat_circle_fill(centerX,centerY,radius);
   if (stroke)   flat_circle_stroke(centerX,centerY,radius);
