@@ -22,27 +22,27 @@
       this.defaultSize=false;
     }
  else {
-      if (framerateLastMillis != 0) {
-        float elapsed=(float)(System.currentTimeMillis() - framerateLastMillis);
+      if (frameRateLastMillis != 0) {
+        float elapsed=(float)(System.currentTimeMillis() - frameRateLastMillis);
         if (elapsed != 0) {
-          framerate=(framerate * 0.9f) + ((1.0f / (elapsed / 1000.0f)) * 0.1f);
+          frameRate=(frameRate * 0.9f) + ((1.0f / (elapsed / 1000.0f)) * 0.1f);
         }
       }
-      framerateLastMillis=System.currentTimeMillis();
-      if (framerateTarget != 0) {
-        if (framerateLastDelayTime == 0) {
-          framerateLastDelayTime=System.currentTimeMillis();
+      frameRateLastMillis=System.currentTimeMillis();
+      if (frameRateTarget != 0) {
+        if (frameRateLastDelayTime == 0) {
+          frameRateLastDelayTime=System.currentTimeMillis();
         }
  else {
-          long timeToLeave=framerateLastDelayTime + (long)(1000.0f / framerateTarget);
+          long timeToLeave=frameRateLastDelayTime + (long)(1000.0f / frameRateTarget);
           long now=System.currentTimeMillis();
           int napTime=(int)(timeToLeave - now);
           if (napTime > 0) {
-            framerateLastDelayTime=timeToLeave;
+            frameRateLastDelayTime=timeToLeave;
             delay(napTime);
           }
  else {
-            framerateLastDelayTime=now;
+            frameRateLastDelayTime=now;
           }
         }
       }
