@@ -3,17 +3,42 @@
     while ((Thread.currentThread() == thread) && !finished) {
       g.requestDisplay(this);
       try {
-        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " " + looping+ " "+ redraw);
-        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " gonna sleep");
         int nap=(looping || finished) ? 1 : 10000;
-        if (frameCount == 1)         nap=1;
+        if (frameCount == 1) {
+          nap=1;
+        }
+ else         if (finished) {
+          nap=0;
+        }
+ else         if (looping) {
+          if (frameRateTarget != 0) {
+            if (frameRateLastDelayTime == 0) {
+              frameRateLastDelayTime=System.currentTimeMillis();
+            }
+ else {
+              long timeToLeave=frameRateLastDelayTime + (long)(1000.0f / frameRateTarget);
+              long now=System.currentTimeMillis();
+              nap=(int)(timeToLeave - now);
+              if (nap > 0) {
+                frameRateLastDelayTime=timeToLeave;
+              }
+ else {
+                frameRateLastDelayTime=now;
+              }
+            }
+          }
+ else {
+            nap=1;
+          }
+        }
         if (CRUSTY_THREADS) {
           Thread.sleep(nap);
         }
  else {
-          wait(nap);
+synchronized (blocker) {
+            if (nap > 0)             blocker.wait(nap);
+          }
         }
-        if (THREAD_DEBUG)         println(Thread.currentThread().getName() + " outta sleep");
       }
  catch (      InterruptedException e) {
       }

@@ -29,23 +29,6 @@
         }
       }
       frameRateLastMillis=System.currentTimeMillis();
-      if (frameRateTarget != 0) {
-        if (frameRateLastDelayTime == 0) {
-          frameRateLastDelayTime=System.currentTimeMillis();
-        }
- else {
-          long timeToLeave=frameRateLastDelayTime + (long)(1000.0f / frameRateTarget);
-          long now=System.currentTimeMillis();
-          int napTime=(int)(timeToLeave - now);
-          if (napTime > 0) {
-            frameRateLastDelayTime=timeToLeave;
-            delay(napTime);
-          }
- else {
-            frameRateLastDelayTime=now;
-          }
-        }
-      }
       preMethods.handle();
       pmouseX=dmouseX;
       pmouseY=dmouseY;
