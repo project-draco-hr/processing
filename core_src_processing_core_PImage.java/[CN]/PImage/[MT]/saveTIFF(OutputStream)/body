@@ -1,6 +1,6 @@
 {
   if (format != RGB) {
-    System.out.println("Warning: only RGB information is saved with " + ".tif files. Use .tga or .png if you want alpha.");
+    System.err.println("Warning: only RGB information is saved with " + ".tif files. Use .tga or .png if you want alpha.");
   }
   try {
     byte tiff[]=new byte[768];
@@ -14,6 +14,7 @@
     tiff[115]=(byte)((count >> 16) & 0xff);
     tiff[116]=(byte)((count >> 8) & 0xff);
     tiff[117]=(byte)((count) & 0xff);
+    output.write(tiff);
     for (int i=0; i < pixels.length; i++) {
       output.write((pixels[i] >> 16) & 0xff);
       output.write((pixels[i] >> 8) & 0xff);
