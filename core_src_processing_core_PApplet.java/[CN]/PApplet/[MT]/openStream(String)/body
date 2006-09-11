@@ -4,14 +4,6 @@
   if (filename.length() == 0) {
     return null;
   }
-  ClassLoader cl=getClass().getClassLoader();
-  stream=cl.getResourceAsStream("data/" + filename);
-  if (stream != null) {
-    String cn=stream.getClass().getName();
-    if (!cn.equals("sun.plugin.cache.EmptyInputStream")) {
-      return stream;
-    }
-  }
   try {
     URL url=new URL(filename);
     stream=url.openStream();
@@ -21,6 +13,21 @@
   }
 catch (  IOException e) {
     throw new RuntimeException("Error downloading from URL " + filename);
+  }
+  ClassLoader cl=getClass().getClassLoader();
+  stream=cl.getResourceAsStream("data/" + filename);
+  if (stream != null) {
+    String cn=stream.getClass().getName();
+    if (!cn.equals("sun.plugin.cache.EmptyInputStream")) {
+      return stream;
+    }
+  }
+  stream=cl.getResourceAsStream(filename);
+  if (stream != null) {
+    String cn=stream.getClass().getName();
+    if (!cn.equals("sun.plugin.cache.EmptyInputStream")) {
+      return stream;
+    }
   }
   if (!online) {
     try {
