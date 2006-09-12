@@ -1,8 +1,11 @@
 {
-  pmouseX=emouseX;
-  pmouseY=emouseY;
-  mouseX=event.getX();
-  mouseY=event.getY();
+  int id=event.getID();
+  if ((id == MouseEvent.MOUSE_DRAGGED) || (id == MouseEvent.MOUSE_MOVED)) {
+    pmouseX=emouseX;
+    pmouseY=emouseY;
+    mouseX=event.getX();
+    mouseY=event.getY();
+  }
   mouseEvent=event;
   int modifiers=event.getModifiers();
   if ((modifiers & MouseEvent.BUTTON1_MASK) != 0) {
@@ -27,7 +30,6 @@
     dmouseY=mouseY;
     firstMouse=false;
   }
-  int id=event.getID();
 switch (id) {
 case MouseEvent.MOUSE_PRESSED:
     mousePressed=true;
@@ -47,6 +49,8 @@ case MouseEvent.MOUSE_MOVED:
 mouseMoved();
 break;
 }
+if ((id == MouseEvent.MOUSE_DRAGGED) || (id == MouseEvent.MOUSE_MOVED)) {
 emouseX=mouseX;
 emouseY=mouseY;
+}
 }
