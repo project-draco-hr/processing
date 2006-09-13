@@ -3,21 +3,12 @@
     super.textLinePlacedImpl(buffer,start,stop,x,y);
     return;
   }
-  boolean savedSmooth=smooth;
-  if (textFont.smooth != savedSmooth) {
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,textFont.smooth ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
-  }
+  Object textAntialias=g2.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+  g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,textFont.smooth ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
   g2.setColor(fillColorObject);
   int length=stop - start;
   g2.drawChars(buffer,start,length,(int)(x + 0.5f),(int)(y + 0.5f));
-  if (textFont.smooth != savedSmooth) {
-    if (savedSmooth) {
-      smooth();
-    }
- else {
-      noSmooth();
-    }
-  }
+  g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,textAntialias);
   textX=x + textWidthImpl(buffer,start,stop);
   textY=y;
   textZ=0;
