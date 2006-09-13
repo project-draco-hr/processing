@@ -15,7 +15,26 @@
   int codeCounter=0;
   int hiddenCounter=0;
   for (int i=0; i < list.length; i++) {
-    if (list[i].endsWith(".pde")) {
+    String base=list[i];
+    if (base.endsWith(".x")) {
+      base=base.substring(0,base.length() - 2);
+    }
+    if (base.endsWith(".pde")) {
+      base=base.substring(0,base.length() - 4);
+    }
+    if (base.endsWith(".java")) {
+      base=base.substring(0,base.length() - 4);
+    }
+    if (list[i].startsWith(".")) {
+      continue;
+    }
+ else     if (!Sketchbook.isSanitary(base)) {
+      continue;
+    }
+ else     if (new File(folder,list[i]).isDirectory()) {
+      continue;
+    }
+ else     if (list[i].endsWith(".pde")) {
       code[codeCounter++]=new SketchCode(list[i].substring(0,list[i].length() - 4),new File(folder,list[i]),PDE);
     }
  else     if (list[i].endsWith(".java")) {
