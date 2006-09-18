@@ -20,25 +20,14 @@
     }
     int textureIndex=triangles[i][TEXTURE_INDEX];
     if (textureIndex != -1) {
-      PImage texture=textures[textureIndex];
       report("before enable");
       gl.glEnable(GL.GL_TEXTURE_2D);
       report("after enable");
-      ImageCache cash=(ImageCache)texture.cache;
-      if (cash == null) {
-        cash=new ImageCache();
-        texture.cache=cash;
-        texture.modified=true;
-      }
-      if (texture.modified) {
-        cash.rebind(texture);
-        texture.modified=false;
-      }
- else {
-        gl.glBindTexture(GL.GL_TEXTURE_2D,cash.tindex);
-      }
+      PImage texture=textures[textureIndex];
+      bindTexture(texture);
       report("before bind");
       report("after bind");
+      ImageCache cash=(ImageCache)texture.cache;
       float uscale=(float)texture.width / (float)cash.twidth;
       float vscale=(float)texture.height / (float)cash.theight;
       gl.glBegin(GL.GL_TRIANGLES);

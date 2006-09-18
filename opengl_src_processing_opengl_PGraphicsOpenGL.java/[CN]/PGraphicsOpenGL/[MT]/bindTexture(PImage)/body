@@ -1,0 +1,15 @@
+{
+  ImageCache cash=(ImageCache)texture.cache;
+  if (cash == null) {
+    cash=new ImageCache();
+    texture.cache=cash;
+    texture.modified=true;
+  }
+  if (texture.modified) {
+    cash.rebind(texture);
+    texture.modified=false;
+  }
+ else {
+    gl.glBindTexture(GL.GL_TEXTURE_2D,cash.tindex);
+  }
+}
