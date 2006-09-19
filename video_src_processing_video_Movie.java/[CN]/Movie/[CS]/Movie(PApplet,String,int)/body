@@ -1,63 +1,63 @@
 {
   super.init(1,1,RGB);
-  URL url=null;
-  this.filename=filename;
-  if (filename.startsWith("http://")) {
-    try {
-      url=new URL(filename);
-      DataRef urlRef=new DataRef(url.toExternalForm());
-      movie=fromDataRef(urlRef);
-      init(parent,movie,ifps);
-      return;
-    }
- catch (    QTException qte) {
-      qte.printStackTrace();
-      return;
-    }
-catch (    MalformedURLException e) {
-      e.printStackTrace();
-      return;
-    }
-  }
-  ClassLoader cl=parent.getClass().getClassLoader();
-  url=cl.getResource("data/" + filename);
-  if (url != null) {
-    init(parent,url,ifps);
-    return;
-  }
+  this.parent=parent;
   try {
     try {
       File file=new File(parent.dataPath(filename));
       if (file.exists()) {
         movie=fromDataRef(new DataRef(new QTFile(file)));
-        init(parent,movie,ifps);
-        return;
       }
     }
  catch (    Exception e) {
     }
-    try {
-      File file=new File("data",filename);
-      if (file.exists()) {
-        movie=fromDataRef(new DataRef(new QTFile(file)));
-        init(parent,movie,ifps);
-        return;
+    if (movie == null) {
+      try {
+        File file=new File(filename);
+        if (file.exists()) {
+          movie=fromDataRef(new DataRef(new QTFile(file)));
+        }
       }
-    }
- catch (    QTException e2) {
-    }
-    try {
-      File file=new File(filename);
-      if (file.exists()) {
-        movie=fromDataRef(new DataRef(new QTFile(file)));
-        init(parent,movie,ifps);
-        return;
+ catch (      QTException e1) {
       }
-    }
- catch (    QTException e1) {
     }
   }
  catch (  SecurityException se) {
   }
-  parent.die("Could not find movie file " + filename,null);
+  if (movie == null) {
+    byte data[]=parent.loadBytes(filename);
+    int dot=filename.lastIndexOf(".");
+    String extension=(dot == -1) ? "mov" : filename.substring(dot + 1).toLowerCase();
+    try {
+      movie=fromDataRef(new DataRef(new QTHandle(data)));
+    }
+ catch (    QTException e) {
+      e.printStackTrace();
+    }
+  }
+  if (movie == null) {
+    parent.die("Could not find movie file " + filename,null);
+  }
+  try {
+    movie.prePreroll(0,1.0f);
+    movie.preroll(0,1.0f);
+    while (movie.maxLoadedTimeInMovie() == 0) {
+      movie.task(100);
+    }
+    movie.setRate(1);
+    fps=ifps;
+    parent.registerDispose(this);
+    try {
+      movieEventMethod=parent.getClass().getMethod("movieEvent",new Class[]{Movie.class});
+    }
+ catch (    Exception e) {
+    }
+    runner=new Thread(this);
+    runner.start();
+  }
+ catch (  QTException qte) {
+    qte.printStackTrace();
+  }
+catch (  Exception e) {
+    e.printStackTrace();
+  }
 }
