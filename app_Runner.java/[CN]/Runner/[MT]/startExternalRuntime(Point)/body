@@ -13,6 +13,10 @@
       }
     }
   }
+  if (Preferences.getBoolean("run.options.memory")) {
+    params.add("-Xms" + Preferences.get("run.options.memory.initial") + "m");
+    params.add("-Xmx" + Preferences.get("run.options.memory.maximum") + "m");
+  }
   params.add("-Djava.library.path=" + sketch.libraryPath + File.pathSeparator+ System.getProperty("java.library.path"));
   params.add("-cp");
   params.add(sketch.classPath + Sketchbook.librariesClassPath);
@@ -24,6 +28,7 @@
   params.add(sketch.mainClassName);
   String command[]=new String[params.size()];
   params.copyInto(command);
+  PApplet.println(command);
   process=Runtime.getRuntime().exec(command);
   processInput=new SystemOutSiphon(process.getInputStream());
   processError=new MessageSiphon(process.getErrorStream(),this);

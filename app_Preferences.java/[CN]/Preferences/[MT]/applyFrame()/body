@@ -5,6 +5,17 @@
   set("sketchbook.path",sketchbookLocationField.getText());
   setBoolean("editor.external",externalEditorBox.isSelected());
   setBoolean("update.check",checkUpdatesBox.isSelected());
+  setBoolean("run.options.memory",memoryOverrideBox.isSelected());
+  int memoryMin=Preferences.getInteger("run.options.memory.initial");
+  int memoryMax=Preferences.getInteger("run.options.memory.maximum");
+  try {
+    memoryMax=Integer.parseInt(memoryField.getText().trim());
+    if (memoryMax < memoryMin)     memoryMax=memoryMin;
+    setInteger("run.options.memory.maximum",memoryMax);
+  }
+ catch (  NumberFormatException e) {
+    System.err.println("Ignoring bad memory setting");
+  }
   String newSizeText=fontSizeField.getText();
   try {
     int newSize=Integer.parseInt(newSizeText.trim());

@@ -1,18 +1,16 @@
 {
-  int err=gl.glGetError();
-  if (err == 0) {
-    return;
-  }
- else {
-    System.out.print("GL_ERROR at " + where + ": ");
-    System.out.print(PApplet.hex(err,4) + "  ");
+  if (!hints[DISABLE_ERROR_REPORT]) {
+    int err=gl.glGetError();
+    if (err != 0) {
+      System.out.print("GL_ERROR at " + where + ": ");
+      System.out.print(PApplet.hex(err,4) + "  ");
 switch (err) {
 case 0x0500:
-      System.out.print("GL_INVALID_ENUM");
-    break;
+        System.out.print("GL_INVALID_ENUM");
+      break;
 case 0x0501:
-  System.out.print("GL_INVALID_VALUE");
-break;
+    System.out.print("GL_INVALID_VALUE");
+  break;
 case 0x0502:
 System.out.print("GL_INVALID_OPERATION");
 break;
@@ -29,5 +27,6 @@ default :
 System.out.print("UNKNOWN");
 }
 System.out.println();
+}
 }
 }
