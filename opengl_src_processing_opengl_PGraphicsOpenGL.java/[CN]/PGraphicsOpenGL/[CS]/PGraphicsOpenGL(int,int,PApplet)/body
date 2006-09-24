@@ -1,9 +1,9 @@
 {
-  if (applet == null) {
+  if (iparent == null) {
     throw new RuntimeException("The applet passed to PGraphicsGL " + "cannot be null");
   }
+  this.parent=iparent;
   canvas=new GLCanvas();
-  final PApplet parent=applet;
   canvas.addGLEventListener(new GLEventListener(){
     public void display(    GLAutoDrawable drawable){
       gl=drawable.getGL();
@@ -17,13 +17,13 @@
     }
   }
 );
-  applet.setLayout(null);
-  applet.add(canvas);
+  parent.setLayout(null);
+  parent.add(canvas);
   canvas.setBounds(0,0,width,height);
-  canvas.addMouseListener(applet);
-  canvas.addMouseMotionListener(applet);
-  canvas.addKeyListener(applet);
-  canvas.addFocusListener(applet);
+  canvas.addMouseListener(parent);
+  canvas.addMouseMotionListener(parent);
+  canvas.addKeyListener(parent);
+  canvas.addFocusListener(parent);
   gl=canvas.getGL();
   glu=new GLU();
   resize(width,height);

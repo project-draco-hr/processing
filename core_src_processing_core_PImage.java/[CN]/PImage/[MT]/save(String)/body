@@ -1,9 +1,13 @@
 {
   boolean success=false;
-  File file=new File(filename);
+  File file=new File(path);
   if (!file.isAbsolute()) {
-    System.err.println("PImage.save() requires an absolute path, " + "you might need to use savePath().");
-    return;
+    if (parent != null) {
+      path=parent.savePath(path);
+    }
+ else {
+      throw new RuntimeException("PImage.save() requires an absolute path. Or you can " + "use createImage() instead or pass savePath() to save().");
+    }
   }
   try {
     OutputStream os=null;
@@ -20,22 +24,22 @@
       }
       if (saveImageFormats != null) {
         for (int i=0; i < saveImageFormats.length; i++) {
-          if (filename.endsWith("." + saveImageFormats[i])) {
-            saveImageIO(filename);
+          if (path.endsWith("." + saveImageFormats[i])) {
+            saveImageIO(path);
             return;
           }
         }
       }
     }
-    if (filename.toLowerCase().endsWith(".tga")) {
-      os=new BufferedOutputStream(new FileOutputStream(filename),32768);
+    if (path.toLowerCase().endsWith(".tga")) {
+      os=new BufferedOutputStream(new FileOutputStream(path),32768);
       success=saveTGA(os);
     }
  else {
-      if (!filename.toLowerCase().endsWith(".tif") && !filename.toLowerCase().endsWith(".tiff")) {
-        filename+=".tif";
+      if (!path.toLowerCase().endsWith(".tif") && !path.toLowerCase().endsWith(".tiff")) {
+        path+=".tif";
       }
-      os=new BufferedOutputStream(new FileOutputStream(filename),32768);
+      os=new BufferedOutputStream(new FileOutputStream(path),32768);
       success=saveTIFF(os);
     }
     os.flush();

@@ -1,4 +1,41 @@
 {
+  String lower=filename.toLowerCase();
+  if (lower.endsWith(".tga")) {
+    try {
+      return loadImageTGA(filename);
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+  if (lower.endsWith(".tif") || lower.endsWith(".tiff")) {
+    byte bytes[]=loadBytes(filename);
+    return (bytes == null) ? null : PImage.loadTIFF(bytes);
+  }
+  if (lower.endsWith(".png") && PApplet.javaVersion < 1.3f) {
+    System.err.println("PNG images can only be loaded when " + "using Java 1.3 and later.");
+    return null;
+  }
+  try {
+    if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".gif")|| lower.endsWith(".png")) {
+      byte bytes[]=loadBytes(filename);
+      if (bytes == null) {
+        return null;
+      }
+ else {
+        Image awtImage=Toolkit.getDefaultToolkit().createImage(bytes);
+        PImage image=loadImageSync(awtImage);
+        if ((lower.endsWith(".gif")) || (lower.endsWith(".png"))) {
+          image.checkAlpha();
+        }
+        return image;
+      }
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
   if (PApplet.javaVersion >= 1.4f) {
     if (loadImageFormats == null) {
       try {
@@ -18,31 +55,5 @@
       }
     }
   }
-  if (filename.toLowerCase().endsWith(".tga")) {
-    try {
-      return loadImageTGA(filename);
-    }
- catch (    IOException e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-  byte bytes[]=loadBytes(filename);
-  if (bytes == null)   return null;
-  if (filename.toLowerCase().endsWith(".tif") || filename.toLowerCase().endsWith(".tiff")) {
-    return PImage.loadTIFF(bytes);
-  }
-  Image awtImage=Toolkit.getDefaultToolkit().createImage(bytes);
-  MediaTracker tracker=new MediaTracker(this);
-  tracker.addImage(awtImage,0);
-  try {
-    tracker.waitForAll();
-  }
- catch (  InterruptedException e) {
-  }
-  PImage image=new PImage(awtImage);
-  if ((filename.toLowerCase().endsWith(".gif")) || (filename.toLowerCase().endsWith(".png"))) {
-    image.checkAlpha();
-  }
-  return image;
+  return null;
 }
