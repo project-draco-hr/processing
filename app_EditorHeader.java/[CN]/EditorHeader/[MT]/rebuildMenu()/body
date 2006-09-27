@@ -6,16 +6,7 @@
     menu=new JMenu();
     popup=menu.getPopupMenu();
     add(popup);
-    popup.addPopupMenuListener(new PopupMenuListener(){
-      public void popupMenuCanceled(      PopupMenuEvent e){
-        repaint();
-      }
-      public void popupMenuWillBecomeInvisible(      PopupMenuEvent e){
-      }
-      public void popupMenuWillBecomeVisible(      PopupMenuEvent e){
-      }
-    }
-);
+    popup.setLightWeightPopupEnabled(true);
   }
   JMenuItem item;
   item=new JMenuItem("New Tab");
@@ -76,6 +67,23 @@
     unhide.setEnabled(false);
   }
   menu.add(unhide);
+  menu.addSeparator();
+  item=Editor.newJMenuItem("Previous Tab",'[',true);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      editor.sketch.prevCode();
+    }
+  }
+);
+  menu.add(item);
+  item=Editor.newJMenuItem("Next Tab",']',true);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      editor.sketch.nextCode();
+    }
+  }
+);
+  menu.add(item);
   if (sketch != null) {
     menu.addSeparator();
     ActionListener jumpListener=new ActionListener(){
