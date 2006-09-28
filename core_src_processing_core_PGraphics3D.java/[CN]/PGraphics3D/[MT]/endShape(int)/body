@@ -32,8 +32,6 @@ case POINTS:
       }
     break;
 case LINES:
-case LINE_STRIP:
-case LINE_LOOP:
 {
     int first=lineCount;
     stop=vertex_end - 1;
@@ -43,7 +41,7 @@ case LINE_LOOP:
       if (shape == LINES)       add_path();
       add_line(i,i + 1);
     }
-    if (shape == LINE_LOOP) {
+    if (mode == CLOSE) {
       add_line(stop,lines[first][VERTEX1]);
     }
   }
@@ -115,7 +113,9 @@ add_path();
 for (int i=vertex_start; i < stop; i++) {
 add_line(i,i + 1);
 }
+if (mode == CLOSE) {
 add_line(stop,lines[first][VERTEX1]);
+}
 }
 break;
 }
