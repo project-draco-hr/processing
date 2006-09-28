@@ -32,15 +32,27 @@
     index++;
   }
  while (newbie.exists());
-  try {
-    FileOutputStream zipOutputFile=new FileOutputStream(newbie);
-    ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
-    buildZip(location,name,zos);
-    zos.flush();
-    zos.close();
-    editor.message("Created archive " + newbie.getName() + ".");
+  FileDialog fd=new FileDialog(editor,"Archive sketch as:",FileDialog.SAVE);
+  fd.setDirectory(parent.getAbsolutePath());
+  fd.setFile(newbie.getName());
+  fd.show();
+  String directory=fd.getDirectory();
+  String filename=fd.getFile();
+  if (filename != null) {
+    newbie=new File(directory,filename);
+    try {
+      FileOutputStream zipOutputFile=new FileOutputStream(newbie);
+      ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
+      buildZip(location,name,zos);
+      zos.flush();
+      zos.close();
+      editor.message("Created archive " + newbie.getName() + ".");
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
   }
- catch (  IOException e) {
-    e.printStackTrace();
+ else {
+    editor.message("Archive sketch canceled.");
   }
 }
