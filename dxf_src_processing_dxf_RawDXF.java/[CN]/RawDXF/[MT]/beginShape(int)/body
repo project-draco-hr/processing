@@ -1,8 +1,11 @@
 {
   shape=kind;
-  if ((shape != LINES) && (shape != LINE_STRIP) && (shape != TRIANGLES)) {
-    String err="RawDXF should only be used with beginRaw(), " + "as it only supports lines and triangles";
+  if ((shape != LINES) && (shape != TRIANGLES) && (shape != POLYGON)) {
+    String err="RawDXF can only be used with beginRaw(), " + "because it only supports lines and triangles";
     throw new RuntimeException(err);
+  }
+  if ((shape == POLYGON) && fill) {
+    throw new RuntimeException("RawDXF only supports non-filled shapes.");
   }
   vertexCount=0;
 }
