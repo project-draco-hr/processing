@@ -2,8 +2,11 @@
   if (which != null) {
     textFont=which;
     if (hints[ENABLE_NATIVE_FONTS]) {
-      textFontNative=which.font;
+      if (which.font == null) {
+        which.findFont();
+      }
     }
+    textFontNative=which.font;
     if (textFontNative != null) {
       textFontNativeMetrics=Toolkit.getDefaultToolkit().getFontMetrics(textFontNative);
     }
