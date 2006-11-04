@@ -1,0 +1,24 @@
+{
+  if (Base.isMacOS()) {
+    if (frame == null)     frame=new Frame();
+    FileDialog fd=new FileDialog(frame,prompt,FileDialog.LOAD);
+    fd.setDirectory(folder.getParent());
+    System.setProperty("apple.awt.fileDialogForDirectories","true");
+    fd.show();
+    System.setProperty("apple.awt.fileDialogForDirectories","false");
+    return new File(fd.getDirectory(),fd.getFile());
+  }
+ else {
+    JFileChooser fc=new JFileChooser();
+    fc.setDialogTitle(prompt);
+    if (folder != null) {
+      fc.setSelectedFile(folder);
+    }
+    fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    int returned=fc.showOpenDialog(new JDialog());
+    if (returned == JFileChooser.APPROVE_OPTION) {
+      return fc.getSelectedFile();
+    }
+  }
+  return null;
+}
