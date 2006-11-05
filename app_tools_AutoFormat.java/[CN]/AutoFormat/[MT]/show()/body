@@ -352,18 +352,16 @@ String formattedText=strOut.toString();
 if (formattedText.equals(originalText)) {
 editor.message("No changes necessary for Auto Format.");
 }
+ else if (paren != 0) {
+editor.error("Auto Format Canceled: Too many " + ((paren < 0) ? "right" : "left") + " parentheses.");
+}
+ else if (c_level != 0) {
+editor.error("Auto Format Canceled: Too many " + ((c_level < 0) ? "right" : "left") + " curly braces.");
+}
  else {
 editor.setText(formattedText,selectionEnd,selectionEnd);
 editor.sketch.setModified(true);
-if (paren != 0) {
-editor.error("Warning: Too many " + ((paren < 0) ? "right" : "left") + " parentheses.");
-}
- else if (c_level != 0) {
-editor.error("Warning: Too many " + ((c_level < 0) ? "right" : "left") + " curly braces.");
-}
- else {
 editor.message("Auto Format finished.");
-}
 }
 }
  catch (Exception e) {
