@@ -1,40 +1,6 @@
 {
-  if (iparent == null) {
-    throw new RuntimeException("The applet passed to PGraphicsOpenGL " + "cannot be null");
+  super(width,height,iparent);
+  if (parent == null) {
+    throw new RuntimeException("PGraphicsOpenGL can only be used " + "as the main drawing surface");
   }
-  this.parent=iparent;
-  canvas=new GLCanvas();
-  canvas.addGLEventListener(new GLEventListener(){
-    public void display(    GLAutoDrawable drawable){
-      gl=drawable.getGL();
-      parent.handleDisplay();
-    }
-    public void init(    GLAutoDrawable drawable){
-    }
-    public void displayChanged(    GLAutoDrawable drawable,    boolean modeChanged,    boolean deviceChanged){
-    }
-    public void reshape(    GLAutoDrawable drawable,    int x,    int y,    int width,    int height){
-    }
-  }
-);
-  parent.setLayout(null);
-  parent.add(canvas);
-  canvas.setBounds(0,0,width,height);
-  canvas.addMouseListener(parent);
-  canvas.addMouseMotionListener(parent);
-  canvas.addKeyListener(parent);
-  canvas.addFocusListener(parent);
-  gl=canvas.getGL();
-  glu=new GLU();
-  resize(width,height);
-  tobj=glu.gluNewTess();
-  tessCallback=new TessCallback();
-  glu.gluTessCallback(tobj,GLU.GLU_TESS_BEGIN,tessCallback);
-  glu.gluTessCallback(tobj,GLU.GLU_TESS_END,tessCallback);
-  glu.gluTessCallback(tobj,GLU.GLU_TESS_VERTEX,tessCallback);
-  glu.gluTessCallback(tobj,GLU.GLU_TESS_COMBINE,tessCallback);
-  glu.gluTessCallback(tobj,GLU.GLU_TESS_ERROR,tessCallback);
-  lightBuffer=BufferUtil.newFloatBuffer(4);
-  lightBuffer.put(3,1.0f);
-  lightBuffer.rewind();
 }
