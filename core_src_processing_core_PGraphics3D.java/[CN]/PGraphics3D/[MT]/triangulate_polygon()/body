@@ -1,7 +1,35 @@
 {
-  float area=0.0f;
+  int d1=MX;
+  int d2=MY;
+  float area=0;
   for (int p=vertex_end - 1, q=vertex_start; q < vertex_end; p=q++) {
-    area+=(vertices[q][MX] * vertices[p][MY] - vertices[p][MX] * vertices[q][MY]);
+    area+=(vertices[q][d1] * vertices[p][d2] - vertices[p][d1] * vertices[q][d2]);
+  }
+  if (area == 0) {
+    boolean foundValidX=false;
+    boolean foundValidY=false;
+    for (int i=vertex_start; i < vertex_end; i++) {
+      if (vertices[i][MX] != 0)       foundValidX=true;
+      if (vertices[i][MY] != 0)       foundValidY=true;
+    }
+    if (foundValidX && !foundValidY) {
+      d2=MZ;
+    }
+ else     if (!foundValidX && foundValidY) {
+      d1=MY;
+      d2=MZ;
+    }
+ else {
+      return;
+    }
+    for (int p=vertex_end - 1, q=vertex_start; q < vertex_end; p=q++) {
+      area+=(vertices[q][d1] * vertices[p][d2] - vertices[p][d1] * vertices[q][d2]);
+    }
+  }
+  float vfirst[]=vertices[vertex_start];
+  float vlast[]=vertices[vertex_end - 1];
+  if ((abs(vfirst[MX] - vlast[MX]) < EPSILON) && (abs(vfirst[MY] - vlast[MY]) < EPSILON) && (abs(vfirst[MZ] - vlast[MZ]) < EPSILON)) {
+    vertex_end--;
   }
   int j=0;
   if (area > 0) {
@@ -29,12 +57,12 @@
     if (vc <= v)     v=0;
     int w=v + 1;
     if (vc <= w)     w=0;
-    float Ax=-vertices[vertex_order[u]][MX];
-    float Ay=vertices[vertex_order[u]][MY];
-    float Bx=-vertices[vertex_order[v]][MX];
-    float By=vertices[vertex_order[v]][MY];
-    float Cx=-vertices[vertex_order[w]][MX];
-    float Cy=vertices[vertex_order[w]][MY];
+    float Ax=-vertices[vertex_order[u]][d1];
+    float Ay=vertices[vertex_order[u]][d2];
+    float Bx=-vertices[vertex_order[v]][d1];
+    float By=vertices[vertex_order[v]][d2];
+    float Cx=-vertices[vertex_order[w]][d1];
+    float Cy=vertices[vertex_order[w]][d2];
     if (EPSILON > (((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax)))) {
       continue;
     }
@@ -42,8 +70,8 @@
       if ((p == u) || (p == v) || (p == w)) {
         continue;
       }
-      float Px=-vertices[vertex_order[p]][MX];
-      float Py=vertices[vertex_order[p]][MY];
+      float Px=-vertices[vertex_order[p]][d1];
+      float Py=vertices[vertex_order[p]][d2];
       float ax=Cx - Bx;
       float ay=Cy - By;
       float bx=Ax - Cx;

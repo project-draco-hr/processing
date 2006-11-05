@@ -7,7 +7,13 @@
     System.arraycopy(vertex_order,0,temp2,0,vertexCount);
     vertex_order=temp2;
   }
-  float vertex[]=vertices[vertexCount++];
+  float vertex[]=vertices[vertexCount];
+  if (vertexCount > 0) {
+    float pvertex[]=vertices[vertexCount - 1];
+    if ((abs(pvertex[MX] - x) < EPSILON) && (abs(pvertex[MY] - y) < EPSILON) && (abs(pvertex[MZ] - z) < EPSILON)) {
+      return;
+    }
+  }
   splineVertexCount=0;
   vertex[MX]=x;
   vertex[MY]=y;
@@ -44,4 +50,5 @@
   vertex[NY]=normalY;
   vertex[NZ]=normalZ;
   vertex[BEEN_LIT]=0;
+  vertexCount++;
 }
