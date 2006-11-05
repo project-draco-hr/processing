@@ -1,5 +1,9 @@
 {
-  float ay=modelview.m10 * x + modelview.m11 * y + modelview.m12 * z + modelview.m13;
-  float aw=modelview.m30 * x + modelview.m31 * y + modelview.m32 * z + modelview.m33;
-  return (aw != 0) ? ay / aw : ay;
+  float ax=cameraInv.m00 * x + cameraInv.m01 * y + cameraInv.m02 * z + cameraInv.m03;
+  float ay=cameraInv.m10 * x + cameraInv.m11 * y + cameraInv.m12 * z + cameraInv.m13;
+  float az=cameraInv.m20 * x + cameraInv.m21 * y + cameraInv.m22 * z + cameraInv.m23;
+  float aw=cameraInv.m30 * x + cameraInv.m31 * y + cameraInv.m32 * z + cameraInv.m33;
+  float oy=modelview.m10 * ax + modelview.m11 * ay + modelview.m12 * az + modelview.m13 * aw;
+  float ow=modelview.m30 * ax + modelview.m31 * ay + modelview.m32 * az + modelview.m33 * aw;
+  return (ow != 0) ? oy / ow : oy;
 }
