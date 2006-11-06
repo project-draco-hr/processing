@@ -1,0 +1,25 @@
+{
+  message("Printing...");
+  if (printerJob == null) {
+    printerJob=PrinterJob.getPrinterJob();
+  }
+  if (pageFormat != null) {
+    printerJob.setPrintable(textarea.getPainter(),pageFormat);
+  }
+ else {
+    printerJob.setPrintable(textarea.getPainter());
+  }
+  if (printerJob.printDialog()) {
+    try {
+      printerJob.print();
+      message("Done printing.");
+    }
+ catch (    PrinterException pe) {
+      error("Error while printing.");
+      pe.printStackTrace();
+    }
+  }
+ else {
+    message("Printing canceled.");
+  }
+}
