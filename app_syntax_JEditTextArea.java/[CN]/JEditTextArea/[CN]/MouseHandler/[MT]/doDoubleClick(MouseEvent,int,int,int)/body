@@ -15,12 +15,13 @@
  catch (  BadLocationException bl) {
     bl.printStackTrace();
   }
-  String lineText=getLineText(line);
-  char ch=lineText.charAt(Math.max(0,offset - 1));
   String noWordSep=(String)document.getProperty("noWordSep");
   if (noWordSep == null)   noWordSep="";
-  boolean selectNoLetter=(!Character.isLetterOrDigit(ch) && noWordSep.indexOf(ch) == -1);
+  String lineText=getLineText(line);
   int wordStart=0;
+  int wordEnd=lineText.length();
+  char ch=lineText.charAt(Math.max(0,offset - 1));
+  boolean selectNoLetter=(!Character.isLetterOrDigit(ch) && noWordSep.indexOf(ch) == -1);
   for (int i=offset - 1; i >= 0; i--) {
     ch=lineText.charAt(i);
     if (selectNoLetter ^ (!Character.isLetterOrDigit(ch) && noWordSep.indexOf(ch) == -1)) {
@@ -28,7 +29,6 @@
       break;
     }
   }
-  int wordEnd=lineText.length();
   for (int i=offset; i < lineText.length(); i++) {
     ch=lineText.charAt(i);
     if (selectNoLetter ^ (!Character.isLetterOrDigit(ch) && noWordSep.indexOf(ch) == -1)) {
