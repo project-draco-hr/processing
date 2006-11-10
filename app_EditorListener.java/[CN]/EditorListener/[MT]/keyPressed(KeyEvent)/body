@@ -122,22 +122,30 @@ if (autoIndent) {
   char contents[]=textarea.getText().toCharArray();
   int origIndex=textarea.getCaretPosition() - 1;
   int spaceCount=calcSpaceCount(origIndex,contents);
+  int index2=origIndex;
+  while ((index2 >= 0) && Character.isWhitespace(contents[index2])) {
+    index2--;
+  }
+  if (index2 != -1) {
+    if (contents[index2] == '{') {
+      spaceCount+=tabSize;
+    }
+  }
   int index=origIndex + 1;
   int extraCount=0;
   while ((index < contents.length) && (contents[index] == ' ')) {
     extraCount++;
     index++;
   }
-  if (spaceCount - extraCount > 0) {
-    spaceCount-=extraCount;
+  spaceCount-=extraCount;
+  if (spaceCount < 0) {
+    textarea.setSelectionEnd(textarea.getSelectionEnd() - spaceCount);
+    textarea.setSelectedText("\n");
   }
-  if (origIndex != -1) {
-    if (contents[origIndex] == '{') {
-      spaceCount+=tabSize;
-    }
+ else {
+    String insertion="\n" + Editor.EMPTY.substring(0,spaceCount);
+    textarea.setSelectedText(insertion);
   }
-  String insertion="\n" + Editor.EMPTY.substring(0,spaceCount);
-  textarea.setSelectedText(insertion);
   event.consume();
   return true;
 }
