@@ -128,6 +128,7 @@ if (autoIndent) {
   }
   if (index2 != -1) {
     if (contents[index2] == '{') {
+      spaceCount=calcSpaceCount(index2,contents);
       spaceCount+=tabSize;
     }
   }
@@ -135,6 +136,13 @@ if (autoIndent) {
   int extraCount=0;
   while ((index < contents.length) && (contents[index] == ' ')) {
     extraCount++;
+    index++;
+  }
+  int braceCount=0;
+  while ((index < contents.length) && (contents[index] != '\n')) {
+    if (contents[index] == '}') {
+      braceCount++;
+    }
     index++;
   }
   spaceCount-=extraCount;
@@ -145,6 +153,17 @@ if (autoIndent) {
  else {
     String insertion="\n" + Editor.EMPTY.substring(0,spaceCount);
     textarea.setSelectedText(insertion);
+  }
+  if (braceCount > 0) {
+    int sel=textarea.getSelectionStart();
+    textarea.select(sel - tabSize,sel);
+    String s=Editor.EMPTY.substring(0,tabSize);
+    if (textarea.getSelectedText().equals(s)) {
+      textarea.setSelectedText("");
+    }
+ else {
+      textarea.select(sel,sel);
+    }
   }
   event.consume();
   return true;
