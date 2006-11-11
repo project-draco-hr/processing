@@ -1,0 +1,110 @@
+{
+  super(properties);
+  String pathDataBuffer="";
+  if (!properties.hasAttribute("d"))   return;
+  pathDataBuffer=properties.getAttribute("d");
+  StringBuffer pathChars=new StringBuffer();
+  boolean lastSeperate=false;
+  for (int i=0; i < pathDataBuffer.length(); i++) {
+    char c=pathDataBuffer.charAt(i);
+    boolean seperate=false;
+    if (c == 'M' || c == 'm' || c == 'L' || c == 'l' || c == 'H' || c == 'h' || c == 'V' || c == 'v' || c == 'C' || c == 'c' || c == 'S' || c == 's' || c == ',' || c == 'Z' || c == 'z') {
+      seperate=true;
+      if (i != 0)       pathChars.append("|");
+    }
+    if (c == 'Z' || c == 'z')     seperate=false;
+    if (c == '-' && !lastSeperate) {
+      pathChars.append("|");
+    }
+    if (c != ',')     pathChars.append("" + pathDataBuffer.charAt(i));
+    if (seperate && c != ',' && c != '-')     pathChars.append("|");
+    lastSeperate=seperate;
+  }
+  pathDataBuffer=pathChars.toString();
+  String pathDataKeys[]=PApplet.split(pathDataBuffer,'|');
+  float cp[]={0,0};
+  for (int i=0; i < pathDataKeys.length; i++) {
+    char c=pathDataKeys[i].charAt(0);
+switch (c) {
+case 'M':
+{
+        cp[0]=valueOf(pathDataKeys[i + 1]);
+        cp[1]=valueOf(pathDataKeys[i + 2]);
+        float s[]={cp[0],cp[1]};
+        i+=2;
+        points.add(s);
+      }
+    break;
+case 'm':
+{
+    cp[0]=cp[0] + valueOf(pathDataKeys[i + 1]);
+    cp[1]=cp[1] + valueOf(pathDataKeys[i + 2]);
+    float s[]={cp[0],cp[1]};
+    i+=2;
+    points.add(s);
+  }
+case 'C':
+{
+  float curvePA[]={valueOf(pathDataKeys[i + 1]),valueOf(pathDataKeys[i + 2])};
+  float curvePB[]={valueOf(pathDataKeys[i + 3]),valueOf(pathDataKeys[i + 4])};
+  float endP[]={valueOf(pathDataKeys[i + 5]),valueOf(pathDataKeys[i + 6])};
+  cp[0]=endP[0];
+  cp[1]=endP[1];
+  i+=6;
+  points.add(curvePA);
+  points.add(curvePB);
+  points.add(endP);
+}
+break;
+case 'c':
+{
+float curvePA[]={cp[0] + valueOf(pathDataKeys[i + 1]),cp[1] + valueOf(pathDataKeys[i + 2])};
+float curvePB[]={cp[0] + valueOf(pathDataKeys[i + 3]),cp[1] + valueOf(pathDataKeys[i + 4])};
+float endP[]={cp[0] + valueOf(pathDataKeys[i + 5]),cp[1] + valueOf(pathDataKeys[i + 6])};
+cp[0]=endP[0];
+cp[1]=endP[1];
+i+=6;
+points.add(curvePA);
+points.add(curvePB);
+points.add(endP);
+}
+break;
+case 'S':
+{
+float lastPoint[]=(float[])points.get(points.size() - 1);
+float lastLastPoint[]=(float[])points.get(points.size() - 2);
+float curvePA[]={cp[0] + (lastPoint[0] - lastLastPoint[0]),cp[1] + (lastPoint[1] - lastLastPoint[1])};
+float curvePB[]={valueOf(pathDataKeys[i + 1]),valueOf(pathDataKeys[i + 2])};
+float e[]={valueOf(pathDataKeys[i + 3]),valueOf(pathDataKeys[i + 4])};
+cp[0]=e[0];
+cp[1]=e[1];
+points.add(curvePA);
+points.add(curvePB);
+points.add(e);
+i+=4;
+}
+break;
+case 's':
+{
+float lastPoint[]=(float[])points.get(points.size() - 1);
+float lastLastPoint[]=(float[])points.get(points.size() - 2);
+float curvePA[]={cp[0] + (lastPoint[0] - lastLastPoint[0]),cp[1] + (lastPoint[1] - lastLastPoint[1])};
+float curvePB[]={cp[0] + valueOf(pathDataKeys[i + 1]),cp[1] + valueOf(pathDataKeys[i + 2])};
+float e[]={cp[0] + valueOf(pathDataKeys[i + 3]),cp[1] + valueOf(pathDataKeys[i + 4])};
+cp[0]=e[0];
+cp[1]=e[1];
+points.add(curvePA);
+points.add(curvePB);
+points.add(e);
+i+=4;
+}
+break;
+case 'Z':
+closed=true;
+break;
+case 'z':
+closed=true;
+break;
+}
+}
+}
