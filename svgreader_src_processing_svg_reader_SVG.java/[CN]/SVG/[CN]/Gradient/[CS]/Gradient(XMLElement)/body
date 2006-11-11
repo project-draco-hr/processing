@@ -1,0 +1,22 @@
+{
+  super(properties);
+  XMLElement elements[]=properties.getChildren();
+  offset=new float[elements.length];
+  color=new int[elements.length];
+  for (int i=0; i < elements.length; i++) {
+    XMLElement element=elements[i];
+    String name=element.getName();
+    if (name.equals("stop")) {
+      offset[count]=element.getFloatAttribute("offset");
+      String farbe=element.getStringAttribute("style");
+      int idx=farbe.indexOf("#");
+      if (idx != -1) {
+        color[count]=Integer.parseInt(farbe.substring(idx + 1),16);
+        count++;
+      }
+ else {
+        System.err.println("problem with gradient stop " + properties);
+      }
+    }
+  }
+}

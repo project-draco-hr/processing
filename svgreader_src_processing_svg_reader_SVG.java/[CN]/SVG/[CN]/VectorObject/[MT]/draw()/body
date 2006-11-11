@@ -1,0 +1,54 @@
+{
+  if (!styleOverride) {
+    parent.colorMode(PConstants.RGB,255);
+    if (stroke) {
+      parent.stroke(strokeColor);
+    }
+ else {
+      parent.noStroke();
+    }
+    if (fill) {
+      System.out.println("filling " + PApplet.hex(fillColor));
+      parent.fill(fillColor);
+    }
+ else {
+      parent.noFill();
+    }
+    if (parent.g instanceof PGraphicsJava2D) {
+      PGraphicsJava2D p2d=((PGraphicsJava2D)parent.g);
+      if (strokeGradient != null) {
+        p2d.strokeGradient=true;
+        p2d.strokeGradientObject=strokeGradientPaint;
+      }
+ else {
+      }
+      if (fillGradient != null) {
+        p2d.fillGradient=true;
+        p2d.fillGradientObject=fillGradientPaint;
+      }
+ else {
+      }
+    }
+    if (!Float.isNaN(strokeWeight)) {
+      parent.strokeWeight(strokeWeight);
+    }
+  }
+  if (hasTransform) {
+    parent.pushMatrix();
+    parent.translate(translateX,translateY);
+    parent.rotate(rotation);
+  }
+  drawShape();
+  if (hasTransform) {
+    parent.popMatrix();
+  }
+  if (parent.g instanceof PGraphicsJava2D) {
+    PGraphicsJava2D p2d=((PGraphicsJava2D)parent.g);
+    if (strokeGradient != null) {
+      p2d.strokeGradient=false;
+    }
+    if (fillGradient != null) {
+      p2d.fillGradient=false;
+    }
+  }
+}

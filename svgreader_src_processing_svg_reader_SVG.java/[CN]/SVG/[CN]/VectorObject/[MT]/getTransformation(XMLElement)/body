@@ -2,7 +2,7 @@
   String transform="";
   if (properties.hasAttribute("transform")) {
     this.hasTransform=true;
-    transform=properties.getAttribute("transform");
+    transform=properties.getStringAttribute("transform");
     transform=transform.substring(7,transform.length() - 2);
     String tf[]=PApplet.split(transform);
     this.transformation=new float[tf.length];
@@ -10,10 +10,10 @@
   }
   if (this.hasTransform) {
     float t[]=this.transformation;
-    if (t[0] < 0 && t[1] < 0 && t[2] > 0 && t[3] < 0)     this.rotation=-p.acos(this.transformation[3]);
-    if (t[0] > 0 && t[1] < 0 && t[2] > 0 && t[3] > 0)     this.rotation=p.asin(this.transformation[1]);
-    if (t[0] < 0 && t[1] > 0 && t[2] < 0 && t[3] < 0)     this.rotation=p.acos(this.transformation[0]);
-    if (t[0] > 0 && t[1] > 0 && t[2] < 0 && t[3] > 0)     this.rotation=p.acos(this.transformation[0]);
+    if (t[0] < 0 && t[1] < 0 && t[2] > 0 && t[3] < 0)     this.rotation=-parent.acos(this.transformation[3]);
+    if (t[0] > 0 && t[1] < 0 && t[2] > 0 && t[3] > 0)     this.rotation=parent.asin(this.transformation[1]);
+    if (t[0] < 0 && t[1] > 0 && t[2] < 0 && t[3] < 0)     this.rotation=parent.acos(this.transformation[0]);
+    if (t[0] > 0 && t[1] > 0 && t[2] < 0 && t[3] > 0)     this.rotation=parent.acos(this.transformation[0]);
     this.translateX=this.transformation[4];
     this.translateY=this.transformation[5];
   }

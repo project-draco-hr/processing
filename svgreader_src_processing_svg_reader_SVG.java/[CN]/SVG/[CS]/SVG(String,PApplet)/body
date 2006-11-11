@@ -1,34 +1,11 @@
 {
-  if (p == null) {
-    p=parent;
-    xmlio=new XMLInOut(p);
-  }
+  this.parent=parent;
   this.filename=filename;
-  XMLElement svgDocument;
-  try {
-    svgDocument=xmlio.loadElementFrom(filename);
+  document=new XMLElement(filename,parent);
+  if (!document.getName().equals("svg")) {
+    System.err.println("root isn't svg, it's " + document.getName());
   }
- catch (  InvalidDocumentException ide) {
-    PApplet.println("XML: File does not exist");
-    return;
-  }
-  XMLElement doc=svgDocument.getChild(0);
-  XMLElement entSVG=doc.getChild(0);
-  XMLElement svg=entSVG.getChild(1);
-  XMLElement graphics;
-  String nameOfFirstChild=svg.getChild(1).toString();
-  if (nameOfFirstChild.equals("<g>"))   graphics=svg.getChild(1);
- else   graphics=svg;
-  this.svgData=svg;
-  XMLElement elements[]=graphics.getChildren();
-  for (int i=0; i < elements.length; i++) {
-    String name=elements[i].getElement();
-    XMLElement element=elements[i];
-    if (name.equals("line"))     draw.add(new Line(element));
- else     if (name.equals("circle"))     draw.add(new Circle(element));
- else     if (name.equals("ellipse"))     draw.add(new Ellipse(element));
- else     if (name.equals("rect"))     draw.add(new Rectangle(element));
- else     if (name.equals("polygon"))     draw.add(new Polygon(element));
- else     if (name.equals("path"))     draw.add(new Path(element));
-  }
+  width=document.getFloatAttribute("width");
+  height=document.getFloatAttribute("height");
+  group=new Group(document);
 }
