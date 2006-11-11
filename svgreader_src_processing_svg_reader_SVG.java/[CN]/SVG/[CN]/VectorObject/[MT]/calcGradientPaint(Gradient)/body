@@ -6,6 +6,10 @@
     return new GradientPaint(grad.x1,grad.y1,c1,grad.x2,grad.y2,c2);
   }
  else   if (gradient instanceof RadialGradient) {
+    RadialGradient grad=(RadialGradient)gradient;
+    Color c1=new Color(0xFF000000 | grad.color[0]);
+    Color c2=new Color(0xFF000000 | grad.color[grad.count - 1]);
+    return new RoundGradientPaint(grad.cx,grad.cy,c1,new Point2D.Double(grad.r,grad.r),c2);
   }
   return null;
 }
