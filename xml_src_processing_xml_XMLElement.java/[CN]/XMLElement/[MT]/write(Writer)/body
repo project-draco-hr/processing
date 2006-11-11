@@ -1,0 +1,45 @@
+{
+  if (this.name == null) {
+    this.writeEncoded(writer,this.contents);
+    return;
+  }
+  writer.write('<');
+  writer.write(this.name);
+  if (!this.attributes.isEmpty()) {
+    Enumeration enum=this.attributes.keys();
+    while (enum.hasMoreElements()) {
+      writer.write(' ');
+      String key=(String)enum.nextElement();
+      String value=(String)this.attributes.get(key);
+      writer.write(key);
+      writer.write('=');
+      writer.write('"');
+      this.writeEncoded(writer,value);
+      writer.write('"');
+    }
+  }
+  if ((this.contents != null) && (this.contents.length() > 0)) {
+    writer.write('>');
+    this.writeEncoded(writer,this.contents);
+    writer.write('<');
+    writer.write('/');
+    writer.write(this.name);
+    writer.write('>');
+  }
+ else   if (this.children.isEmpty()) {
+    writer.write('/');
+    writer.write('>');
+  }
+ else {
+    writer.write('>');
+    Enumeration enum=this.enumerateChildren();
+    while (enum.hasMoreElements()) {
+      XMLElement child=(XMLElement)enum.nextElement();
+      child.write(writer);
+    }
+    writer.write('<');
+    writer.write('/');
+    writer.write(this.name);
+    writer.write('>');
+  }
+}

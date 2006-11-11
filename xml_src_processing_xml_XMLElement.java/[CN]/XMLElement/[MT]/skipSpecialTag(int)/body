@@ -1,0 +1,50 @@
+{
+  int tagLevel=1;
+  char stringDelimiter='\0';
+  if (bracketLevel == 0) {
+    char ch=this.readChar();
+    if (ch == '[') {
+      bracketLevel+=1;
+    }
+ else     if (ch == '-') {
+      ch=this.readChar();
+      if (ch == '[') {
+        bracketLevel+=1;
+      }
+ else       if (ch == ']') {
+        bracketLevel-=1;
+      }
+ else       if (ch == '-') {
+        this.skipComment();
+        return;
+      }
+    }
+  }
+  while (tagLevel > 0) {
+    char ch=this.readChar();
+    if (stringDelimiter == '\0') {
+      if ((ch == '"') || (ch == '\'')) {
+        stringDelimiter=ch;
+      }
+ else       if (bracketLevel <= 0) {
+        if (ch == '<') {
+          tagLevel+=1;
+        }
+ else         if (ch == '>') {
+          tagLevel-=1;
+        }
+      }
+      if (ch == '[') {
+        bracketLevel+=1;
+      }
+ else       if (ch == ']') {
+        bracketLevel-=1;
+      }
+    }
+ else {
+      if (ch == stringDelimiter) {
+        stringDelimiter='\0';
+      }
+    }
+  }
+}

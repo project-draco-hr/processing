@@ -1,0 +1,21 @@
+{
+  for (; ; ) {
+    char ch=this.readChar();
+    if (ch == '<') {
+      ch=this.readChar();
+      if (ch == '!') {
+        this.checkCDATA(data);
+      }
+ else {
+        this.unreadChar(ch);
+        return;
+      }
+    }
+ else     if (ch == '&') {
+      this.resolveEntity(data);
+    }
+ else {
+      data.append(ch);
+    }
+  }
+}

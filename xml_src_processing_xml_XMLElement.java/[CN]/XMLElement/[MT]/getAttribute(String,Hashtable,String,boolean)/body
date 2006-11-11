@@ -1,0 +1,20 @@
+{
+  if (this.ignoreCase) {
+    name=name.toUpperCase();
+  }
+  Object key=this.attributes.get(name);
+  Object result;
+  if (key == null) {
+    key=defaultKey;
+  }
+  result=valueSet.get(key);
+  if (result == null) {
+    if (allowLiterals) {
+      result=key;
+    }
+ else {
+      throw this.invalidValue(name,(String)key);
+    }
+  }
+  return result;
+}

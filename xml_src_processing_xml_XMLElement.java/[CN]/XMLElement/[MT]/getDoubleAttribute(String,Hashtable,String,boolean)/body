@@ -1,0 +1,28 @@
+{
+  if (this.ignoreCase) {
+    name=name.toUpperCase();
+  }
+  Object key=this.attributes.get(name);
+  Double result;
+  if (key == null) {
+    key=defaultKey;
+  }
+  try {
+    result=(Double)valueSet.get(key);
+  }
+ catch (  ClassCastException e) {
+    throw this.invalidValueSet(name);
+  }
+  if (result == null) {
+    if (!allowLiteralNumbers) {
+      throw this.invalidValue(name,(String)key);
+    }
+    try {
+      result=Double.valueOf((String)key);
+    }
+ catch (    NumberFormatException e) {
+      throw this.invalidValue(name,(String)key);
+    }
+  }
+  return result.doubleValue();
+}

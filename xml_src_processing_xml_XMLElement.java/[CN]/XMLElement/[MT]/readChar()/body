@@ -1,0 +1,20 @@
+{
+  if (this.charReadTooMuch != '\0') {
+    char ch=this.charReadTooMuch;
+    this.charReadTooMuch='\0';
+    return ch;
+  }
+ else {
+    int i=this.reader.read();
+    if (i < 0) {
+      throw this.unexpectedEndOfData();
+    }
+ else     if (i == 10) {
+      this.parserLineNr+=1;
+      return '\n';
+    }
+ else {
+      return (char)i;
+    }
+  }
+}

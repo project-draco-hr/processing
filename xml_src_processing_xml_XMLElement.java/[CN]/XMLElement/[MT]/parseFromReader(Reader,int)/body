@@ -1,0 +1,24 @@
+{
+  this.name=null;
+  this.contents="";
+  this.attributes=new Hashtable();
+  this.children=new Vector();
+  this.charReadTooMuch='\0';
+  this.reader=reader;
+  this.parserLineNr=startingLineNr;
+  for (; ; ) {
+    char ch=this.scanWhitespace();
+    if (ch != '<') {
+      throw this.expectedInput("<");
+    }
+    ch=this.readChar();
+    if ((ch == '!') || (ch == '?')) {
+      this.skipSpecialTag(0);
+    }
+ else {
+      this.unreadChar(ch);
+      this.scanElement(this);
+      return;
+    }
+  }
+}

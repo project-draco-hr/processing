@@ -1,0 +1,18 @@
+{
+  char delimiter=this.readChar();
+  if ((delimiter != '\'') && (delimiter != '"')) {
+    throw this.expectedInput("' or \"");
+  }
+  for (; ; ) {
+    char ch=this.readChar();
+    if (ch == delimiter) {
+      return;
+    }
+ else     if (ch == '&') {
+      this.resolveEntity(string);
+    }
+ else {
+      string.append(ch);
+    }
+  }
+}

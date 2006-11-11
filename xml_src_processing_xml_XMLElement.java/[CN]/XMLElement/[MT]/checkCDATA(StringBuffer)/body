@@ -1,0 +1,49 @@
+{
+  char ch=this.readChar();
+  if (ch != '[') {
+    this.unreadChar(ch);
+    this.skipSpecialTag(0);
+    return false;
+  }
+ else   if (!this.checkLiteral("CDATA[")) {
+    this.skipSpecialTag(1);
+    return false;
+  }
+ else {
+    int delimiterCharsSkipped=0;
+    while (delimiterCharsSkipped < 3) {
+      ch=this.readChar();
+switch (ch) {
+case ']':
+        if (delimiterCharsSkipped < 2) {
+          delimiterCharsSkipped+=1;
+        }
+ else {
+          buf.append(']');
+          buf.append(']');
+          delimiterCharsSkipped=0;
+        }
+      break;
+case '>':
+    if (delimiterCharsSkipped < 2) {
+      for (int i=0; i < delimiterCharsSkipped; i++) {
+        buf.append(']');
+      }
+      delimiterCharsSkipped=0;
+      buf.append('>');
+    }
+ else {
+      delimiterCharsSkipped=3;
+    }
+  break;
+default :
+for (int i=0; i < delimiterCharsSkipped; i+=1) {
+  buf.append(']');
+}
+buf.append(ch);
+delimiterCharsSkipped=0;
+}
+}
+return true;
+}
+}
