@@ -26,8 +26,12 @@
  else {
     char[] value=(char[])this.entities.get(key);
     if (value == null) {
-      throw this.unknownEntity(key);
+      if (!ignoreUnknownEntities) {
+        throw this.unknownEntity(key);
+      }
     }
-    buf.append(value);
+ else {
+      buf.append(value);
+    }
   }
 }
