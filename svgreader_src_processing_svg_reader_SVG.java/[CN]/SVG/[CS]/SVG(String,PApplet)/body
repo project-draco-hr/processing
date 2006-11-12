@@ -1,11 +1,10 @@
 {
   this.parent=parent;
-  this.filename=filename;
   svg=new XMLElement(filename,parent);
   if (!svg.getName().equals("svg")) {
     throw new RuntimeException("root isn't svg, it's " + svg.getName());
   }
-  width=svg.getFloatAttribute("width");
-  height=svg.getFloatAttribute("height");
+  width=parseUnitSize(svg.getStringAttribute("width"));
+  height=parseUnitSize(svg.getStringAttribute("height"));
   root=new Group(svg);
 }
