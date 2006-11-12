@@ -1,6 +1,13 @@
 {
   WritableRaster raster=getColorModel().createCompatibleWritableRaster(w,h);
-  int span=(int)radius * ACCURACY;
+  float nx=x2 - x1;
+  float ny=y2 - y1;
+  float len=(float)Math.sqrt(nx * nx + ny * ny);
+  if (len != 0) {
+    nx/=len;
+    ny/=len;
+  }
+  int span=(int)PApplet.dist(x1,y1,x2,y2) * ACCURACY;
   int[][] interp=new int[span][3];
   int prev=0;
   for (int i=1; i < count; i++) {
@@ -19,8 +26,11 @@
   int index=0;
   for (int j=0; j < h; j++) {
     for (int i=0; i < w; i++) {
-      float distance=PApplet.dist(cx,cy,x + i,y + j);
-      int which=PApplet.min((int)(distance * ACCURACY),interp.length - 1);
+      float px=(x + i) - x1;
+      float py=(y + j) - y1;
+      int which=(int)((px * nx + py * ny) * ACCURACY);
+      if (which < 0)       which=0;
+      if (which > interp.length - 1)       which=interp.length - 1;
       data[index++]=interp[which][0];
       data[index++]=interp[which][1];
       data[index++]=interp[which][2];
