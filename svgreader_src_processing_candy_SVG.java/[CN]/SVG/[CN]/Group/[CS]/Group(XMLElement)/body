@@ -1,0 +1,42 @@
+{
+  super(graphics);
+  XMLElement elements[]=graphics.getChildren();
+  objects=new BaseObject[elements.length];
+  for (int i=0; i < elements.length; i++) {
+    String name=elements[i].getName();
+    XMLElement element=elements[i];
+    if (name.equals("g")) {
+      objects[objectCount++]=new Group(element);
+    }
+ else     if (name.equals("line")) {
+      objects[objectCount++]=new Line(element);
+    }
+ else     if (name.equals("circle")) {
+      objects[objectCount++]=new Circle(element);
+    }
+ else     if (name.equals("ellipse")) {
+      objects[objectCount++]=new Ellipse(element);
+    }
+ else     if (name.equals("rect")) {
+      objects[objectCount++]=new Rect(element);
+    }
+ else     if (name.equals("polygon")) {
+      objects[objectCount++]=new Poly(element,true);
+    }
+ else     if (name.equals("polyline")) {
+      objects[objectCount++]=new Poly(element,false);
+    }
+ else     if (name.equals("path")) {
+      objects[objectCount++]=new Path(element);
+    }
+ else     if (name.equals("radialGradient")) {
+      objects[objectCount++]=new RadialGradient(element);
+    }
+ else     if (name.equals("linearGradient")) {
+      objects[objectCount++]=new LinearGradient(element);
+    }
+ else {
+      PApplet.println("not handled " + name);
+    }
+  }
+}
