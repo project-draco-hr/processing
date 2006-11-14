@@ -3,31 +3,49 @@
   this.scanIdentifier(buf);
   String bname=buf.toString();
   elt.setName(bname);
+  if (DEBUG)   System.out.println("got bname '" + bname + "'"+ "  "+ parserLineNumber);
   char ch=this.scanWhitespace();
   while ((ch != '>') && (ch != '/')) {
+    if (DEBUG)     System.out.println("up here then");
     buf.setLength(0);
     this.unreadChar(ch);
     this.scanIdentifier(buf);
     String key=buf.toString();
+    if (DEBUG)     System.out.println("  attr is " + key);
     ch=this.scanWhitespace();
     if (ch != '=') {
-      throw this.expectedInput("=");
+      if (ignoreMissingAttributes) {
+        if (DEBUG)         System.out.println("expected = got " + ch);
+        this.unreadChar(ch);
+        elt.setAttribute(key,"");
+        if (DEBUG)         System.out.println("    value is empty");
+      }
+ else {
+        throw this.expectedInput("=");
+      }
     }
-    this.unreadChar(this.scanWhitespace());
-    buf.setLength(0);
-    this.scanString(buf);
-    elt.setAttribute(key,buf);
+ else {
+      this.unreadChar(this.scanWhitespace());
+      buf.setLength(0);
+      this.scanString(buf);
+      elt.setAttribute(key,buf);
+      if (DEBUG)       System.out.println("    value is " + buf);
+    }
     ch=this.scanWhitespace();
+    if (DEBUG)     System.out.println("scan of white produced " + ch);
   }
+  if (DEBUG)   System.out.println("out here now?");
   if (ch == '/') {
     ch=this.readChar();
     if (ch != '>') {
       throw this.expectedInput(">");
     }
+    if (DEBUG)     System.out.println("leaving");
     return;
   }
   buf.setLength(0);
   ch=this.scanWhitespace(buf);
+  if (DEBUG)   System.out.println("not yet leaving " + ch);
   if (ch != '<') {
     this.unreadChar(ch);
     this.scanPCData(buf);

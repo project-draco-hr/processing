@@ -6,6 +6,12 @@
     if (ch == ';') {
       break;
     }
+    if (ch == delimiter) {
+      if (DEBUG)       System.out.println("found end of delim " + keyBuf);
+      buf.append(keyBuf);
+      unreadChar(ch);
+      return;
+    }
     keyBuf.append(ch);
   }
   String key=keyBuf.toString();
@@ -30,11 +36,10 @@
         throw this.unknownEntity(key);
       }
  else {
-        buf.append("&" + key + ";");
       }
     }
  else {
-      if (DEBUG)       System.out.println("appending entity " + new String(value));
+      if (DEBUG)       System.out.println("appending entity2 " + new String(value));
       buf.append(value);
     }
   }
