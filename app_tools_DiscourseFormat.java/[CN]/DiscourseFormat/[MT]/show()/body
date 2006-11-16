@@ -4,7 +4,12 @@
     cf.append(formatCode(i));
   }
   cf.append("\n [/quote]");
-  textarea.setText(cf.toString());
-  textarea.select(0,0);
-  frame.show();
+  StringSelection formatted=new StringSelection(cf.toString());
+  Clipboard clipboard=Toolkit.getDefaultToolkit().getSystemClipboard();
+  clipboard.setContents(formatted,new ClipboardOwner(){
+    public void lostOwnership(    Clipboard clipboard,    Transferable contents){
+    }
+  }
+);
+  editor.message("Discourse-formatted code has been " + "copied to the clipboard.");
 }
