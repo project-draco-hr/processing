@@ -1,6 +1,11 @@
 {
   parent.pushMatrix();
-  parent.translate(x,y);
-  draw();
+  if (drawMode == PConstants.CENTER) {
+    parent.translate(x - width / 2,y - height / 2);
+  }
+ else   if ((drawMode == PConstants.CORNER) || (drawMode == PConstants.CORNERS)) {
+    parent.translate(x,y);
+  }
+  drawImpl();
   parent.popMatrix();
 }

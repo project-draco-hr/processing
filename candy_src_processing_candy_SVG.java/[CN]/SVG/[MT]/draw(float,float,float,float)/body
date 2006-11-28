@@ -1,11 +1,19 @@
 {
-  System.err.println("Not yet implemented");
   parent.pushMatrix();
   if (drawMode == PConstants.CENTER) {
+    parent.translate(x - c / 2f,y - d / 2f);
+    parent.scale(c / width,d / height);
   }
  else   if (drawMode == PConstants.CORNER) {
+    parent.translate(x,y);
+    parent.scale(c / width,d / height);
   }
  else   if (drawMode == PConstants.CORNERS) {
+    c-=x;
+    d-=y;
+    parent.translate(x,y);
+    parent.scale(c / width,d / height);
   }
+  drawImpl();
   parent.popMatrix();
 }
