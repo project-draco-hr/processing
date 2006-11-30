@@ -8,10 +8,22 @@
   inputHandler.addKeyBinding(mod + "+BACK_SPACE",InputHandler.BACKSPACE_WORD);
   inputHandler.addKeyBinding(mod + "+DELETE",InputHandler.DELETE_WORD);
   inputHandler.addKeyBinding("INSERT",InputHandler.OVERWRITE);
-  inputHandler.addKeyBinding("HOME",InputHandler.DOCUMENT_HOME);
-  inputHandler.addKeyBinding("END",InputHandler.DOCUMENT_END);
-  inputHandler.addKeyBinding("S+HOME",InputHandler.SELECT_DOC_HOME);
-  inputHandler.addKeyBinding("S+END",InputHandler.SELECT_DOC_END);
+  if (Base.isMacOS()) {
+    inputHandler.addKeyBinding("HOME",InputHandler.DOCUMENT_HOME);
+    inputHandler.addKeyBinding("END",InputHandler.DOCUMENT_END);
+    inputHandler.addKeyBinding("S+HOME",InputHandler.SELECT_DOC_HOME);
+    inputHandler.addKeyBinding("S+END",InputHandler.SELECT_DOC_END);
+  }
+ else {
+    inputHandler.addKeyBinding("HOME",InputHandler.HOME);
+    inputHandler.addKeyBinding("END",InputHandler.END);
+    inputHandler.addKeyBinding("S+HOME",InputHandler.SELECT_HOME);
+    inputHandler.addKeyBinding("S+END",InputHandler.SELECT_END);
+    inputHandler.addKeyBinding("C+HOME",InputHandler.DOCUMENT_HOME);
+    inputHandler.addKeyBinding("C+END",InputHandler.DOCUMENT_END);
+    inputHandler.addKeyBinding("CS+HOME",InputHandler.SELECT_DOC_HOME);
+    inputHandler.addKeyBinding("CS+END",InputHandler.SELECT_DOC_END);
+  }
   if (Base.isMacOS()) {
     inputHandler.addKeyBinding("M+LEFT",InputHandler.HOME);
     inputHandler.addKeyBinding("M+RIGHT",InputHandler.END);
