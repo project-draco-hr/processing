@@ -1,0 +1,32 @@
+{
+  parent=p;
+  width=_w;
+  height=_h;
+  rate=_rate;
+  try {
+    QTSession.open();
+  }
+ catch (  QTException e1) {
+    e1.printStackTrace();
+  }
+  try {
+    ImageDescription imgD=null;
+    if (quicktime.util.EndianOrder.isNativeLittleEndian()) {
+      imgD=new ImageDescription(QDConstants.k32BGRAPixelFormat);
+    }
+ else {
+      imgD=new ImageDescription(QDGraphics.kDefaultPixelFormat);
+    }
+    imgD.setWidth(width);
+    imgD.setHeight(height);
+    gw=new QDGraphics(imgD,0);
+  }
+ catch (  QTException e) {
+    e.printStackTrace();
+  }
+  codecType=_codecType;
+  codecQuality=_codecQuality;
+  keyFrameRate=_keyFrameRate;
+  initMovie(_filename);
+  parent.registerDispose(this);
+}
