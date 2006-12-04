@@ -30,10 +30,12 @@
       }
       tinted=true;
       tintedColor=tintColor;
-      image.setRGB(0,0,source.width,source.height,tintedPixels,0,source.width);
+      WritableRaster raster=((BufferedImage)image).getRaster();
+      raster.setDataElements(0,0,source.width,source.height,tintedPixels);
     }
  else {
-      image.setRGB(0,0,source.width,source.height,source.pixels,0,source.width);
+      WritableRaster raster=((BufferedImage)image).getRaster();
+      raster.setDataElements(0,0,source.width,source.height,tintedPixels);
     }
   }
  else   if (source.format == ALPHA) {
@@ -54,6 +56,7 @@
     }
     tinted=true;
     tintedColor=tintColor;
-    image.setRGB(0,0,source.width,source.height,tintedPixels,0,source.width);
+    WritableRaster raster=((BufferedImage)image).getRaster();
+    raster.setDataElements(0,0,source.width,source.height,tintedPixels);
   }
 }
