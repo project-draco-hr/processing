@@ -2,6 +2,15 @@
   if ((textMode != SHAPE) || (textFontNative == null)) {
     return super.textWidthImpl(buffer,start,stop);
   }
-  int length=stop - start;
-  return textFontNativeMetrics.charsWidth(buffer,start,length);
+  Graphics2D graphics=(Graphics2D)canvas.getGraphics();
+  graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+  FontRenderContext frc=graphics.getFontRenderContext();
+  GlyphVector gv;
+  gv=textFontNative.createGlyphVector(frc,buffer);
+  float sum=0;
+  for (int i=start; i < stop; i++) {
+    GlyphMetrics gm=gv.getGlyphMetrics(i);
+    sum+=gm.getAdvance();
+  }
+  return sum;
 }
