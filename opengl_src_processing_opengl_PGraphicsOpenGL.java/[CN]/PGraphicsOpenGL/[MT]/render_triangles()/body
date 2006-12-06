@@ -58,12 +58,14 @@
             raw.vertex(c[VX] / c[VW],c[VY] / c[VW],c[VZ] / c[VW],c[U] * uscale,c[V] * vscale);
           }
  else {
-            raw.fill(ar,ag,ab,a[A]);
-            raw.vertex(a[X],a[Y],a[U] * uscale,a[V] * vscale);
-            raw.fill(br,bg,bb,b[A]);
-            raw.vertex(b[X],b[Y],b[U] * uscale,b[V] * vscale);
-            raw.fill(cr,cg,cb,c[A]);
-            raw.vertex(c[X],c[Y],c[U] * uscale,c[V] * vscale);
+            if (reasonablePoint(a[X],a[Y],a[Z]) && reasonablePoint(b[X],b[Y],b[Z]) && reasonablePoint(c[X],c[Y],c[Z])) {
+              raw.fill(ar,ag,ab,a[A]);
+              raw.vertex(a[X],a[Y],a[U] * uscale,a[V] * vscale);
+              raw.fill(br,bg,bb,b[A]);
+              raw.vertex(b[X],b[Y],b[U] * uscale,b[V] * vscale);
+              raw.fill(cr,cg,cb,c[A]);
+              raw.vertex(c[X],c[Y],c[U] * uscale,c[V] * vscale);
+            }
           }
         }
       }
@@ -91,12 +93,14 @@
           }
         }
  else {
-          raw.fill(ar,ag,ab,a[A]);
-          raw.vertex(a[X],a[Y]);
-          raw.fill(br,bg,bb,b[A]);
-          raw.vertex(b[X],b[Y]);
-          raw.fill(cr,cg,cb,c[A]);
-          raw.vertex(c[X],c[Y]);
+          if (reasonablePoint(a[X],a[Y],a[Z]) && reasonablePoint(b[X],b[Y],b[Z]) && reasonablePoint(c[X],c[Y],c[Z])) {
+            raw.fill(ar,ag,ab,a[A]);
+            raw.vertex(a[X],a[Y]);
+            raw.fill(br,bg,bb,b[A]);
+            raw.vertex(b[X],b[Y]);
+            raw.fill(cr,cg,cb,c[A]);
+            raw.vertex(c[X],c[Y]);
+          }
         }
       }
       gl.glEnd();
