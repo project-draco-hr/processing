@@ -1,0 +1,13 @@
+{
+  BaseObject obj=(BaseObject)table.get(name);
+  if (obj == null) {
+    obj=(BaseObject)table.get(name.replace(' ','_'));
+  }
+  if (obj != null) {
+    VectorObject vobj=(VectorObject)obj;
+    if (vobj.fillGradient != null) {
+      return vobj.calcGradientPaint(vobj.fillGradient,cx,cy,r);
+    }
+  }
+  throw new RuntimeException("No gradient found for shape " + name);
+}
