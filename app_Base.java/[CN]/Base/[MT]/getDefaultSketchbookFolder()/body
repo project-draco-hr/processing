@@ -8,7 +8,7 @@
       sketchbookFolder=new File(documentsFolder,"Processing");
     }
  catch (    Exception e) {
-      showError("sketch folder problem","Could not locate default sketch folder location.",e);
+      sketchbookFolder=promptSketchbookLocation();
     }
   }
  else   if (isWindows()) {
@@ -20,14 +20,11 @@
       sketchbookFolder=new File(personalPath,"Processing");
     }
  catch (    Exception e) {
-      showError("Problem getting documents folder","Error getting the Processing sketchbook folder.",e);
+      sketchbookFolder=promptSketchbookLocation();
     }
   }
  else {
-    sketchbookFolder=Base.selectFolder("Select the folder where " + "Processing sketches should be stored...",null,null);
-    if (sketchbookFolder == null) {
-      System.exit(0);
-    }
+    sketchbookFolder=promptSketchbookLocation();
   }
   boolean result=true;
   if (!sketchbookFolder.exists()) {

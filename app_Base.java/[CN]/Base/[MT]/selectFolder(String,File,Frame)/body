@@ -2,10 +2,15 @@
   if (Base.isMacOS()) {
     if (frame == null)     frame=new Frame();
     FileDialog fd=new FileDialog(frame,prompt,FileDialog.LOAD);
-    fd.setDirectory(folder.getParent());
+    if (folder != null) {
+      fd.setDirectory(folder.getParent());
+    }
     System.setProperty("apple.awt.fileDialogForDirectories","true");
     fd.show();
     System.setProperty("apple.awt.fileDialogForDirectories","false");
+    if (fd.getFile() == null) {
+      return null;
+    }
     return new File(fd.getDirectory(),fd.getFile());
   }
  else {
