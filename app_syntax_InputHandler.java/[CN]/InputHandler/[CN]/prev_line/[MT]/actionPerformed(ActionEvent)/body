@@ -3,7 +3,14 @@
   int caret=textArea.getCaretPosition();
   int line=textArea.getCaretLine();
   if (line == 0) {
-    textArea.getToolkit().beep();
+    if (select) {
+      if (textArea.getSelectionStart() != 0) {
+        textArea.select(textArea.getMarkPosition(),0);
+      }
+    }
+ else {
+      textArea.setCaretPosition(0);
+    }
     return;
   }
   int magic=textArea.getMagicCaretPosition();
