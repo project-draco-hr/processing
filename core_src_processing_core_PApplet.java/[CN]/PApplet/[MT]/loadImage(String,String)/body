@@ -1,0 +1,60 @@
+{
+  extension=extension.toLowerCase();
+  if (extension.equals("tga")) {
+    try {
+      return loadImageTGA(filename);
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+  if (extension.equals("tif") || extension.equals("tiff")) {
+    byte bytes[]=loadBytes(filename);
+    return (bytes == null) ? null : PImage.loadTIFF(bytes);
+  }
+  if (extension.equals("png") && PApplet.javaVersion < 1.3f) {
+    System.err.println("PNG images can only be loaded when " + "using Java 1.3 and later.");
+    return null;
+  }
+  try {
+    if (extension.equals("jpg") || extension.equals("jpeg") || extension.equals("gif")|| extension.equals("png")|| extension.equals("unknown")) {
+      byte bytes[]=loadBytes(filename);
+      if (bytes == null) {
+        return null;
+      }
+ else {
+        Image awtImage=Toolkit.getDefaultToolkit().createImage(bytes);
+        PImage image=loadImageSync(awtImage);
+        if (extension.equals("gif") || extension.equals("png")) {
+          image.checkAlpha();
+        }
+        return image;
+      }
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  if (PApplet.javaVersion >= 1.4f) {
+    if (loadImageFormats == null) {
+      try {
+        Class ioClass=Class.forName("javax.imageio.ImageIO");
+        Method getFormatNamesMethod=ioClass.getMethod("getReaderFormatNames",(Class[])null);
+        loadImageFormats=(String[])getFormatNamesMethod.invoke((Class[])null,(Object[])null);
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+    }
+    if (loadImageFormats != null) {
+      for (int i=0; i < loadImageFormats.length; i++) {
+        if (extension.equals(loadImageFormats[i])) {
+          return loadImageIO(filename);
+        }
+      }
+    }
+  }
+  System.err.println("Could not find a method to load " + filename);
+  return null;
+}
