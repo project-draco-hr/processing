@@ -28,11 +28,13 @@
  else {
     messageLineCount++;
     if (!foundMessageSource) {
-      int afterAt=s.indexOf("at") + 3;
-      if (afterAt == 2) {
+      int atIndex=s.indexOf("at ");
+      if (atIndex == -1) {
         return;
       }
-      s=s.substring(afterAt + 1);
+      s=s.substring(atIndex + 3);
+      if (s.startsWith("processing."))       return;
+      if (s.startsWith("java."))       return;
       int startParen=s.indexOf('(');
       String pkgClassFxn=null;
       int codeIndex=-1;
