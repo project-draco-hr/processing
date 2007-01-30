@@ -63,6 +63,10 @@
           description=description.substring(nextSentence,description.indexOf(':')) + " the code folder or in any libraries.";
         }
       }
+      if ((description.indexOf("\";\" inserted " + "to complete BlockStatement") != -1) || (description.indexOf("; expected instead of this token") != -1)) {
+        System.err.println(description);
+        description="Compiler error, maybe a missing semicolon?";
+      }
       exception=new RunnerException(description,fileIndex,lineNumber - 1,-1);
     }
  else {
