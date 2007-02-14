@@ -2,6 +2,16 @@
   if (externalEditor)   return false;
   char c=event.getKeyChar();
   int code=event.getKeyCode();
+  if ((event.getModifiers() & CTRL_ALT) == CTRL_ALT) {
+    if (code == KeyEvent.VK_LEFT) {
+      editor.sketch.prevCode();
+      return true;
+    }
+ else     if (code == KeyEvent.VK_RIGHT) {
+      editor.sketch.nextCode();
+      return true;
+    }
+  }
   if ((event.getModifiers() & KeyEvent.META_MASK) != 0) {
     return false;
   }
