@@ -187,7 +187,7 @@
   zos.close();
   File htmlOutputFile=new File(appletFolder,"index.html");
   FileOutputStream fos=new FileOutputStream(htmlOutputFile);
-  PrintStream ps=new PrintStream(fos);
+  PrintStream ps=new PrintStream(fos,false,"UTF-8");
   InputStream is=null;
   File customHtml=new File(folder,"applet.html");
   if (customHtml.exists()) {
@@ -201,7 +201,8 @@
       is=Base.getStream("export/applet.html");
     }
   }
-  BufferedReader reader=new BufferedReader(new InputStreamReader(is));
+  InputStreamReader isr=new InputStreamReader(is,"UTF-8");
+  BufferedReader reader=new BufferedReader(isr);
   String line=null;
   while ((line=reader.readLine()) != null) {
     if (line.indexOf("@@") != -1) {
