@@ -39,7 +39,7 @@ case BLEND:
       for (int y=0; y < destH; y++) {
         filter_new_scanline();
         for (int x=0; x < destW; x++) {
-          destPixels[destOffset + x]=blend_multiply(destPixels[destOffset + x],filter_bilinear());
+          destPixels[destOffset + x]=blend_blend(destPixels[destOffset + x],filter_bilinear());
           sX+=dx;
         }
         destOffset+=screenW;
@@ -101,6 +101,105 @@ destOffset+=screenW;
 srcYOffset+=dy;
 }
 break;
+case DIFFERENCE:
+for (int y=0; y < destH; y++) {
+filter_new_scanline();
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_difference(destPixels[destOffset + x],filter_bilinear());
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case EXCLUSION:
+for (int y=0; y < destH; y++) {
+filter_new_scanline();
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_exclusion(destPixels[destOffset + x],filter_bilinear());
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case MULTIPLY:
+for (int y=0; y < destH; y++) {
+filter_new_scanline();
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_multiply(destPixels[destOffset + x],filter_bilinear());
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case SCREEN:
+for (int y=0; y < destH; y++) {
+filter_new_scanline();
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_screen(destPixels[destOffset + x],filter_bilinear());
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case OVERLAY:
+for (int y=0; y < destH; y++) {
+filter_new_scanline();
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_overlay(destPixels[destOffset + x],filter_bilinear());
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case HARD_LIGHT:
+for (int y=0; y < destH; y++) {
+filter_new_scanline();
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_hard_light(destPixels[destOffset + x],filter_bilinear());
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case SOFT_LIGHT:
+for (int y=0; y < destH; y++) {
+filter_new_scanline();
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_soft_light(destPixels[destOffset + x],filter_bilinear());
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case DODGE:
+for (int y=0; y < destH; y++) {
+filter_new_scanline();
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_dodge(destPixels[destOffset + x],filter_bilinear());
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case BURN:
+for (int y=0; y < destH; y++) {
+filter_new_scanline();
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_burn(destPixels[destOffset + x],filter_bilinear());
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
 }
 }
  else {
@@ -110,7 +209,7 @@ for (int y=0; y < destH; y++) {
 sX=srcXOffset;
 sY=(srcYOffset >> PRECISIONB) * img.width;
 for (int x=0; x < destW; x++) {
-destPixels[destOffset + x]=blend_multiply(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
+destPixels[destOffset + x]=blend_blend(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
 }
 destOffset+=screenW;
@@ -171,6 +270,114 @@ sX=srcXOffset;
 sY=(srcYOffset >> PRECISIONB) * img.width;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=srcBuffer[sY + (sX >> PRECISIONB)];
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case DIFFERENCE:
+for (int y=0; y < destH; y++) {
+sX=srcXOffset;
+sY=(srcYOffset >> PRECISIONB) * img.width;
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_difference(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case EXCLUSION:
+for (int y=0; y < destH; y++) {
+sX=srcXOffset;
+sY=(srcYOffset >> PRECISIONB) * img.width;
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_exclusion(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case MULTIPLY:
+for (int y=0; y < destH; y++) {
+sX=srcXOffset;
+sY=(srcYOffset >> PRECISIONB) * img.width;
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_multiply(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case SCREEN:
+for (int y=0; y < destH; y++) {
+sX=srcXOffset;
+sY=(srcYOffset >> PRECISIONB) * img.width;
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_screen(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case OVERLAY:
+for (int y=0; y < destH; y++) {
+sX=srcXOffset;
+sY=(srcYOffset >> PRECISIONB) * img.width;
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_overlay(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case HARD_LIGHT:
+for (int y=0; y < destH; y++) {
+sX=srcXOffset;
+sY=(srcYOffset >> PRECISIONB) * img.width;
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_hard_light(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case SOFT_LIGHT:
+for (int y=0; y < destH; y++) {
+sX=srcXOffset;
+sY=(srcYOffset >> PRECISIONB) * img.width;
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_soft_light(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case DODGE:
+for (int y=0; y < destH; y++) {
+sX=srcXOffset;
+sY=(srcYOffset >> PRECISIONB) * img.width;
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_dodge(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
+sX+=dx;
+}
+destOffset+=screenW;
+srcYOffset+=dy;
+}
+break;
+case BURN:
+for (int y=0; y < destH; y++) {
+sX=srcXOffset;
+sY=(srcYOffset >> PRECISIONB) * img.width;
+for (int x=0; x < destW; x++) {
+destPixels[destOffset + x]=blend_burn(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
 }
 destOffset+=screenW;
