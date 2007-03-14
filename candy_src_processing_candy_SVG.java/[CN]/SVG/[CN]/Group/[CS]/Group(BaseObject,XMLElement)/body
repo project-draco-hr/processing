@@ -1,0 +1,54 @@
+{
+  super(parent,graphics);
+  XMLElement elements[]=graphics.getChildren();
+  objects=new BaseObject[elements.length];
+  for (int i=0; i < elements.length; i++) {
+    String name=elements[i].getName();
+    XMLElement elem=elements[i];
+    if (name.equals("g")) {
+      objects[objectCount++]=new Group(this,elem);
+    }
+ else     if (name.equals("defs")) {
+      objects[objectCount++]=new Group(this,elem);
+    }
+ else     if (name.equals("line")) {
+      objects[objectCount++]=new Line(this,elem);
+    }
+ else     if (name.equals("circle")) {
+      objects[objectCount++]=new Circle(this,elem);
+    }
+ else     if (name.equals("ellipse")) {
+      objects[objectCount++]=new Ellipse(this,elem);
+    }
+ else     if (name.equals("rect")) {
+      objects[objectCount++]=new Rect(this,elem);
+    }
+ else     if (name.equals("polygon")) {
+      objects[objectCount++]=new Poly(this,elem,true);
+    }
+ else     if (name.equals("polyline")) {
+      objects[objectCount++]=new Poly(this,elem,false);
+    }
+ else     if (name.equals("path")) {
+      objects[objectCount++]=new Path(this,elem);
+    }
+ else     if (name.equals("radialGradient")) {
+      objects[objectCount++]=new RadialGradient(this,elem);
+    }
+ else     if (name.equals("linearGradient")) {
+      objects[objectCount++]=new LinearGradient(this,elem);
+    }
+ else     if (name.equals("text")) {
+      PApplet.println("Text is not currently handled, " + "convert text to outlines instead.");
+    }
+ else     if (name.equals("filter")) {
+      PApplet.println("Filters are not supported.");
+    }
+ else     if (name.equals("mask")) {
+      PApplet.println("Masks are not supported.");
+    }
+ else {
+      System.err.println("Ignoring SVG tag " + name);
+    }
+  }
+}

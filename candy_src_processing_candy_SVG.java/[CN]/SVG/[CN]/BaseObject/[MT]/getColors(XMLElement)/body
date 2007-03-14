@@ -1,0 +1,60 @@
+{
+  if (properties.hasAttribute("opacity")) {
+    opacity=properties.getFloatAttribute("opacity");
+  }
+  int opacityMask=((int)(opacity * 255)) << 24;
+  if (properties.hasAttribute("stroke")) {
+    String strokeText=properties.getStringAttribute("stroke");
+    if (strokeText.equals("none")) {
+      stroke=false;
+    }
+ else     if (strokeText.startsWith("#")) {
+      stroke=true;
+      strokeColor=opacityMask | (Integer.parseInt(strokeText.substring(1),16)) & 0xFFFFFF;
+    }
+ else     if (strokeText.startsWith("rgb")) {
+      stroke=true;
+      strokeColor=opacityMask | parseRGB(strokeText);
+    }
+ else     if (strokeText.startsWith("url(#")) {
+      strokeName=strokeText.substring(5,strokeText.length() - 1);
+      Object strokeObject=table.get(strokeName);
+      if (strokeObject instanceof Gradient) {
+        strokeGradient=(Gradient)strokeObject;
+        strokeGradientPaint=calcGradientPaint(strokeGradient);
+      }
+ else {
+        System.err.println("url " + strokeName + " refers to unexpected data");
+      }
+    }
+  }
+  if (properties.hasAttribute("stroke-width")) {
+    strokeWeight=properties.getFloatAttribute("stroke-width");
+  }
+  if (properties.hasAttribute("fill")) {
+    String fillText=properties.getStringAttribute("fill");
+    if (fillText.equals("none")) {
+      fill=false;
+    }
+ else     if (fillText.startsWith("#")) {
+      fill=true;
+      fillColor=opacityMask | (Integer.parseInt(fillText.substring(1),16)) & 0xFFFFFF;
+    }
+ else     if (fillText.startsWith("rgb")) {
+      fill=true;
+      fillColor=opacityMask | parseRGB(fillText);
+    }
+ else     if (fillText.startsWith("url(#")) {
+      fillName=fillText.substring(5,fillText.length() - 1);
+      Object fillObject=table.get(fillName);
+      if (fillObject instanceof Gradient) {
+        fill=true;
+        fillGradient=(Gradient)fillObject;
+        fillGradientPaint=calcGradientPaint(fillGradient);
+      }
+ else {
+        System.err.println("url " + fillName + " refers to unexpected data");
+      }
+    }
+  }
+}
