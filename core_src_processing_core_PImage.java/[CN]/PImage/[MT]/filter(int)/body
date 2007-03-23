@@ -5,10 +5,18 @@ case BLUR:
     filter(BLUR,1);
   break;
 case GRAY:
-for (int i=0; i < pixels.length; i++) {
-  int col=pixels[i];
-  int lum=(77 * (col >> 16 & 0xff) + 151 * (col >> 8 & 0xff) + 28 * (col & 0xff)) >> 8;
-  pixels[i]=(col & ALPHA_MASK) | lum << 16 | lum << 8 | lum;
+if (format == ALPHA) {
+  for (int i=0; i < pixels.length; i++) {
+    int col=255 - pixels[i];
+    pixels[i]=0xff000000 | (col << 16) | (col << 8)| col;
+  }
+}
+ else {
+  for (int i=0; i < pixels.length; i++) {
+    int col=pixels[i];
+    int lum=(77 * (col >> 16 & 0xff) + 151 * (col >> 8 & 0xff) + 28 * (col & 0xff)) >> 8;
+    pixels[i]=(col & ALPHA_MASK) | lum << 16 | lum << 8 | lum;
+  }
 }
 break;
 case INVERT:
