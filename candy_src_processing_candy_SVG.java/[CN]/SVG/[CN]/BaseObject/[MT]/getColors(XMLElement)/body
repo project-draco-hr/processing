@@ -29,7 +29,35 @@
     }
   }
   if (properties.hasAttribute("stroke-width")) {
-    strokeWeight=properties.getFloatAttribute("stroke-width");
+    strokeWeight=properties.getFloatAttribute("stroke-width",strokeWeight);
+  }
+  if (properties.hasAttribute("stroke-linejoin")) {
+    String linejoin=properties.getStringAttribute("stroke-linejoin");
+    if (linejoin.equals("inherit")) {
+    }
+ else     if (linejoin.equals("miter")) {
+      strokeJoin=PConstants.MITER;
+    }
+ else     if (linejoin.equals("round")) {
+      strokeJoin=PConstants.ROUND;
+    }
+ else     if (linejoin.equals("bevel")) {
+      strokeJoin=PConstants.BEVEL;
+    }
+  }
+  if (properties.hasAttribute("stroke-linecap")) {
+    String linecap=properties.getStringAttribute("stroke-linecap");
+    if (linecap.equals("inherit")) {
+    }
+ else     if (linecap.equals("butt")) {
+      strokeCap=PConstants.SQUARE;
+    }
+ else     if (linecap.equals("round")) {
+      strokeCap=PConstants.ROUND;
+    }
+ else     if (linecap.equals("square")) {
+      strokeCap=PConstants.PROJECT;
+    }
   }
   if (properties.hasAttribute("fill")) {
     String fillText=properties.getStringAttribute("fill");
