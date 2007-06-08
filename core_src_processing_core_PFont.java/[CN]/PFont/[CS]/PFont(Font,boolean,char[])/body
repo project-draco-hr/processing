@@ -7,9 +7,11 @@
   name=font.getName();
   psname=font.getPSName();
   try {
-    Class arraysClass=Class.forName("java.util.Arrays");
-    Method sortMethod=arraysClass.getMethod("sort",new Class[]{charset.getClass()});
-    sortMethod.invoke(null,new Object[]{charset});
+    if (charset != null) {
+      Class arraysClass=Class.forName("java.util.Arrays");
+      Method sortMethod=arraysClass.getMethod("sort",new Class[]{charset.getClass()});
+      sortMethod.invoke(null,new Object[]{charset});
+    }
     this.charCount=(charset == null) ? 65536 : charset.length;
     this.size=font.getSize();
     fwidth=fheight=size;
