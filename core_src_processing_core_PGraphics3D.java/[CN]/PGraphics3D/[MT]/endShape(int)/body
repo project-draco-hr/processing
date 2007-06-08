@@ -11,12 +11,12 @@
     vertex[VY]=modelview.m10 * vertex[MX] + modelview.m11 * vertex[MY] + modelview.m12 * vertex[MZ] + modelview.m13;
     vertex[VZ]=modelview.m20 * vertex[MX] + modelview.m21 * vertex[MY] + modelview.m22 * vertex[MZ] + modelview.m23;
     vertex[VW]=modelview.m30 * vertex[MX] + modelview.m31 * vertex[MY] + modelview.m32 * vertex[MZ] + modelview.m33;
-    if (vertex[VW] != 0 && vertex[VW] != ONE) {
+    if (vertex[VW] != 0 && vertex[VW] != 1) {
       vertex[VX]/=vertex[VW];
       vertex[VY]/=vertex[VW];
       vertex[VZ]/=vertex[VW];
     }
-    vertex[VW]=ONE;
+    vertex[VW]=1;
   }
   int increment=1;
   int stop=0;
@@ -181,14 +181,14 @@ float ox=projection.m00 * vx[VX] + projection.m01 * vx[VY] + projection.m02 * vx
 float oy=projection.m10 * vx[VX] + projection.m11 * vx[VY] + projection.m12 * vx[VZ] + projection.m13 * vx[VW];
 float oz=projection.m20 * vx[VX] + projection.m21 * vx[VY] + projection.m22 * vx[VZ] + projection.m23 * vx[VW];
 float ow=projection.m30 * vx[VX] + projection.m31 * vx[VY] + projection.m32 * vx[VZ] + projection.m33 * vx[VW];
-if (ow != 0 && ow != ONE) {
+if (ow != 0 && ow != 1) {
 ox/=ow;
 oy/=ow;
 oz/=ow;
 }
-vx[X]=width * (ONE + ox) / 2.0f;
-vx[Y]=height * (ONE + oy) / 2.0f;
-vx[Z]=(oz + ONE) / 2.0f;
+vx[X]=width * (1 + ox) / 2.0f;
+vx[Y]=height * (1 + oy) / 2.0f;
+vx[Z]=(oz + 1) / 2.0f;
 }
 if (!hints[ENABLE_DEPTH_SORT]) {
 if (fill) render_triangles();
