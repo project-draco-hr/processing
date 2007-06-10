@@ -30,12 +30,14 @@
   JPanel buttons=new JPanel();
   buttons.setLayout(new FlowLayout());
   if (Base.isMacOS()) {
-    buttons.add(replaceButton=new JButton("Replace"));
     buttons.add(replaceAllButton=new JButton("Replace All"));
+    buttons.add(replaceButton=new JButton("Replace"));
+    buttons.add(replaceFindButton=new JButton("Replace & Find"));
     buttons.add(findButton=new JButton("Find"));
   }
  else {
     buttons.add(findButton=new JButton("Find"));
+    buttons.add(replaceFindButton=new JButton("Replace & Find"));
     buttons.add(replaceButton=new JButton("Replace"));
     buttons.add(replaceAllButton=new JButton("Replace All"));
   }
@@ -50,8 +52,10 @@
   ignoreCaseBox.setBounds(BIG + d1.width + SMALL,BIG + d2.height * 2 + SMALL * 2,d3.width,d2.height);
   replaceButton.addActionListener(this);
   replaceAllButton.addActionListener(this);
+  replaceFindButton.addActionListener(this);
   findButton.addActionListener(this);
   replaceButton.setEnabled(false);
+  replaceFindButton.setEnabled(false);
   getRootPane().setDefaultButton(findButton);
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   int wide=d3.width + BIG * 2;
