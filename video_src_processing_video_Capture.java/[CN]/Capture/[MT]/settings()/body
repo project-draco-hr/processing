@@ -3,13 +3,20 @@
     capture.stop();
     channel.setBounds(qdrect);
     channel.settingsDialog();
-    capture.startPreview();
   }
  catch (  StdQTException qte) {
     int errorCode=qte.errorCode();
-    if (errorCode != Errors.userCanceledErr) {
-      qte.printStackTrace();
-      throw new RuntimeException("error inside Capture.settings()");
+    if (errorCode == Errors.userCanceledErr) {
     }
+ else {
+      qte.printStackTrace();
+      throw new RuntimeException("Error inside Capture.settings()");
+    }
+  }
+  try {
+    capture.startPreview();
+  }
+ catch (  StdQTException qte) {
+    qte.printStackTrace();
   }
 }
