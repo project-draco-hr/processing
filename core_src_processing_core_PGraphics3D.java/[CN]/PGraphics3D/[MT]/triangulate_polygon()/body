@@ -9,13 +9,15 @@
     boolean foundValidX=false;
     boolean foundValidY=false;
     for (int i=vertex_start; i < vertex_end; i++) {
-      if (vertices[i][MX] != 0)       foundValidX=true;
-      if (vertices[i][MY] != 0)       foundValidY=true;
+      for (int j=i; j < vertex_end; j++) {
+        if (vertices[i][MX] != vertices[j][MX])         foundValidX=true;
+        if (vertices[i][MY] != vertices[j][MY])         foundValidY=true;
+      }
     }
-    if (foundValidX && !foundValidY) {
+    if (foundValidX) {
       d2=MZ;
     }
- else     if (!foundValidX && foundValidY) {
+ else     if (foundValidY) {
       d1=MY;
       d2=MZ;
     }

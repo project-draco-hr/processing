@@ -10,6 +10,23 @@
     float c[]=vertices[triangles[i][VERTEX3]];
     int tex=triangles[i][TEXTURE_INDEX];
     int index=triangles[i][INDEX];
+    float shift=0.49f;
+    boolean shifted=false;
+    if (drawing2D() && (a[MZ] == 0)) {
+      shifted=true;
+      a[X]+=shift;
+      a[Y]+=shift;
+      a[VX]+=shift * a[VW];
+      a[VY]+=shift * a[VW];
+      b[X]+=shift;
+      b[Y]+=shift;
+      b[VX]+=shift * b[VW];
+      b[VY]+=shift * b[VW];
+      c[X]+=shift;
+      c[Y]+=shift;
+      c[VX]+=shift * b[VW];
+      c[VY]+=shift * b[VW];
+    }
     triangle.reset();
     float ar=min(1,triangleColors[i][0][TRI_DIFFUSE_R] + triangleColors[i][0][TRI_SPECULAR_R]);
     float ag=min(1,triangleColors[i][0][TRI_DIFFUSE_G] + triangleColors[i][0][TRI_SPECULAR_G]);
@@ -26,6 +43,9 @@
     }
     triangle.setIntensities(ar,ag,ab,a[A],br,bg,bb,b[A],cr,cg,cb,c[A]);
     triangle.setVertices(a[X],a[Y],a[Z],b[X],b[Y],b[Z],c[X],c[Y],c[Z]);
+    if (hints[ENABLE_ACCURATE_TEXTURES]) {
+      triangle.setCamVertices(a[VX],a[VY],a[VZ],b[VX],b[VY],b[VZ],c[VX],c[VY],c[VZ]);
+    }
     triangle.setIndex(index);
     triangle.render();
     if (raw != null) {
@@ -47,6 +67,20 @@
         raw.fill(cr,cg,cb,c[A]);
         raw.vertex(c[X],c[Y]);
       }
+    }
+    if (drawing2D() && shifted) {
+      a[X]-=shift;
+      a[Y]-=shift;
+      a[VX]-=shift * a[VW];
+      a[VY]-=shift * a[VW];
+      b[X]-=shift;
+      b[Y]-=shift;
+      b[VX]-=shift * b[VW];
+      b[VY]-=shift * b[VW];
+      c[X]-=shift;
+      c[Y]-=shift;
+      c[VX]-=shift * b[VW];
+      c[VY]-=shift * b[VW];
     }
   }
   if (raw != null) {
