@@ -1,16 +1,7 @@
 {
-  if (codecType == 0) {
-    System.out.println("No code type specified, using default of RAW");
-    codecType=RAW;
-  }
-  if (codecQuality == 0) {
-    System.out.println("No code quality specified, using default of HIGH");
-    codecQuality=HIGH;
-  }
   try {
     String path=parent.savePath(filename);
-    System.out.println("Creating movie file: " + path);
-    movFile=new QTFile(new java.io.File(path));
+    movFile=new QTFile(new File(path));
     movie=Movie.createMovieFile(movFile,StdQTConstants.kMoviePlayer,StdQTConstants.createMovieFileDeleteCurFile);
     int timeScale=TIME_SCALE;
     videoTrack=movie.addTrack(width,height,0);
@@ -27,11 +18,16 @@
   }
  catch (  QTException e) {
     if (e.errorCode() == Errors.noCodecErr) {
-      temporalSupported=false;
-      readyForFrames=true;
+      if (imageHandle == null) {
+        System.err.println("The specified codec is not supported, " + "please ensure that the parameters are valid, " + "and in the correct order.");
+      }
+ else {
+        temporalSupported=false;
+        readyForFrames=true;
+      }
     }
  else     if (e.errorCode() == Errors.fBsyErr) {
-      System.err.println("Movie file already exists.  " + "Please delete it first. " + "(DS to solve this eventually.)");
+      System.err.println("The movie file already exists.  " + "Please delete it first.");
     }
  else {
       e.printStackTrace();
