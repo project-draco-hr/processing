@@ -27,15 +27,16 @@
   menu.add(item);
   menu.addSeparator();
   menu.add(sketchbook.getImportMenu());
-  if (Base.isWindows() || Base.isMacOS()) {
-    item=newJMenuItem("Show Sketch Folder",'K',false);
-    item.addActionListener(new ActionListener(){
-      public void actionPerformed(      ActionEvent e){
-        Base.openFolder(sketch.folder);
-      }
+  item=newJMenuItem("Show Sketch Folder",'K',false);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.openFolder(sketch.folder);
     }
+  }
 );
-    menu.add(item);
+  menu.add(item);
+  if (!Base.openFolderAvailable()) {
+    item.setEnabled(false);
   }
   item=new JMenuItem("Add File...");
   item.addActionListener(new ActionListener(){
