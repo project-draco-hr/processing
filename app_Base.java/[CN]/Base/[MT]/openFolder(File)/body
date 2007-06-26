@@ -7,6 +7,12 @@
  else     if (Base.isMacOS()) {
       openURL(folder);
     }
+ else     if (Base.isLinux()) {
+      String launcher=Preferences.get("launcher.linux");
+      if (launcher != null) {
+        Runtime.getRuntime().exec(new String[]{launcher,folder});
+      }
+    }
   }
  catch (  IOException e) {
     e.printStackTrace();

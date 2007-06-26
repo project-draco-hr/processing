@@ -28,11 +28,13 @@
       com.apple.mrj.MRJFileUtils.openURL(url);
     }
  else     if (Base.isLinux()) {
-      String browser=Preferences.get("browser");
-      Runtime.getRuntime().exec(new String[]{browser,url});
+      String launcher=Preferences.get("launcher.linux");
+      if (launcher != null) {
+        Runtime.getRuntime().exec(new String[]{launcher,url});
+      }
     }
  else {
-      System.err.println("unspecified platform");
+      System.err.println("Unspecified platform, no launcher available.");
     }
   }
  catch (  IOException e) {
