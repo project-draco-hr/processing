@@ -1,8 +1,6 @@
 {
   foundMain=false;
-  if ((program.length() > 0) && program.charAt(program.length() - 1) != '\n') {
-    program+="\n";
-  }
+  program+="\n";
   Sketch.scrubComments(program);
   if (Preferences.getBoolean("preproc.substitute_unicode")) {
     char p[]=program.toCharArray();
@@ -102,10 +100,10 @@
   PdeEmitter emitter=new PdeEmitter();
   File streamFile=new File(buildPath,name + ".java");
   PrintStream stream=new PrintStream(new FileOutputStream(streamFile));
-  writeHeader(stream,name);
+  writeHeader(stream,name,pretty);
   emitter.setOut(stream);
   emitter.print(rootNode);
-  writeFooter(stream,name);
+  writeFooter(stream,name,pretty);
   stream.close();
   if (Preferences.getBoolean("preproc.output_parse_tree")) {
     stream=new PrintStream(new FileOutputStream("parseTree.xml"));

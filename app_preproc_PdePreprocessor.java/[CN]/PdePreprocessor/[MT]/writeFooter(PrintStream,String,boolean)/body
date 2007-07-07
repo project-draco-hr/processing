@@ -1,0 +1,22 @@
+{
+  if (programType == STATIC) {
+    if (pretty)     out.print("  ");
+    out.print("noLoop(); ");
+    if (pretty)     out.println();
+    out.print("} ");
+    if (pretty)     out.println();
+  }
+  if ((programType == STATIC) || (programType < JAVA)) {
+    if (!PdePreprocessor.foundMain) {
+      out.print("  static public void main(String args[]) { ");
+      if (pretty)       out.println();
+      out.print("    PApplet.main(new String[] { \"" + className + "\" });");
+      if (pretty)       out.println();
+      out.print("  }");
+      if (pretty)       out.println();
+    }
+  }
+  if (programType < JAVA) {
+    out.print("}");
+  }
+}
