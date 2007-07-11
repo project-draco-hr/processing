@@ -10,7 +10,7 @@
     float c[]=vertices[triangles[i][VERTEX3]];
     int tex=triangles[i][TEXTURE_INDEX];
     int index=triangles[i][INDEX];
-    float shift=0.49f;
+    float shift=0.15f;
     boolean shifted=false;
     if (drawing2D() && (a[MZ] == 0)) {
       shifted=true;
@@ -24,8 +24,8 @@
       b[VY]+=shift * b[VW];
       c[X]+=shift;
       c[Y]+=shift;
-      c[VX]+=shift * b[VW];
-      c[VY]+=shift * b[VW];
+      c[VX]+=shift * c[VW];
+      c[VY]+=shift * c[VW];
     }
     triangle.reset();
     float ar=min(1,triangleColors[i][0][TRI_DIFFUSE_R] + triangleColors[i][0][TRI_SPECULAR_R]);
@@ -79,8 +79,8 @@
       b[VY]-=shift * b[VW];
       c[X]-=shift;
       c[Y]-=shift;
-      c[VX]-=shift * b[VW];
-      c[VY]-=shift * b[VW];
+      c[VX]-=shift * c[VW];
+      c[VY]-=shift * c[VW];
     }
   }
   if (raw != null) {
