@@ -1,6 +1,6 @@
 {
   super(WINDOW_TITLE);
-  this.base=base;
+  this.base=ibase;
   if (icon == null) {
     try {
       icon=Base.getImage("icon.gif",this);
@@ -20,7 +20,7 @@
   setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
   addWindowListener(new WindowAdapter(){
     public void windowActivated(    WindowEvent e){
-      base.setFrontEditor(this);
+      base.handleActivated(Editor.this);
     }
   }
 );
@@ -91,7 +91,7 @@
                 String name=filename.substring(0,filename.length() - 4);
                 File parent=file.getParentFile();
                 if (name.equals(parent.getName())) {
-                  Base.handleOpenFile(file);
+                  base.handleOpen(file);
                   return true;
                 }
               }
@@ -122,5 +122,5 @@
   pack();
   restorePreferences();
   handleOpen(path);
-  show();
+  setVisible(true);
 }

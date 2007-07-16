@@ -1,14 +1,19 @@
 {
   boolean prompt=Preferences.getBoolean("sketchbook.prompt");
   if (shiftDown)   prompt=!prompt;
-  String path=null;
-  if (prompt) {
-    path=sketchbook.handleNewPrompt();
-  }
+  try {
+    String path=null;
+    if (prompt) {
+      path=sketchbook.handleNewPrompt();
+    }
  else {
-    path=sketchbook.handleNewUntitled();
+      path=sketchbook.handleNewUntitled();
+    }
+    if (path != null) {
+      base.handleOpen(path);
+    }
   }
-  if (filename != null) {
-    base.handleOpen(path);
+ catch (  IOException e) {
+    e.printStackTrace();
   }
 }

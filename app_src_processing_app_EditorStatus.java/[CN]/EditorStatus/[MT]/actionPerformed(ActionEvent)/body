@@ -1,21 +1,13 @@
 {
-  if (e.getSource() == noButton) {
-    unprompt();
-    editor.checkModified2();
-  }
- else   if (e.getSource() == yesButton) {
-    unprompt();
-    editor.handleSave(true);
-    editor.checkModified2();
-  }
- else   if (e.getSource() == cancelButton) {
-    if (mode == PROMPT)     unprompt();
- else     if (mode == EDIT)     unedit();
+  if (e.getSource() == cancelButton) {
+    if (mode == EDIT)     unedit();
     editor.buttons.clear();
   }
  else   if (e.getSource() == okButton) {
-    String answer=editField.getText();
-    editor.sketch.nameCode(answer);
-    unedit();
+    if (mode == EDIT) {
+      String answer=editField.getText();
+      editor.sketch.nameCode(answer);
+      unedit();
+    }
   }
 }
