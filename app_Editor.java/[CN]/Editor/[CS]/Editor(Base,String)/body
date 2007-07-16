@@ -1,15 +1,15 @@
 {
   super(WINDOW_TITLE);
-  MRJApplicationUtils.registerAboutHandler(this);
-  MRJApplicationUtils.registerPrefsHandler(this);
-  MRJApplicationUtils.registerQuitHandler(this);
-  MRJApplicationUtils.registerOpenDocumentHandler(this);
-  Preferences.init();
-  try {
-    icon=Base.getImage("icon.gif",this);
-    setIconImage(icon);
+  this.base=base;
+  if (icon == null) {
+    try {
+      icon=Base.getImage("icon.gif",this);
+    }
+ catch (    Exception e) {
+    }
   }
- catch (  Exception e) {
+  if (icon != null) {
+    setIconImage(icon);
   }
   addWindowListener(new WindowAdapter(){
     public void windowClosing(    WindowEvent e){
@@ -18,6 +18,12 @@
   }
 );
   setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+  addWindowListener(new WindowAdapter(){
+    public void windowActivated(    WindowEvent e){
+      base.setFrontEditor(this);
+    }
+  }
+);
   PdeKeywords keywords=new PdeKeywords();
   sketchbook=new Sketchbook(this);
   JMenuBar menubar=new JMenuBar();
@@ -85,7 +91,7 @@
                 String name=filename.substring(0,filename.length() - 4);
                 File parent=file.getParentFile();
                 if (name.equals(parent.getName())) {
-                  handleOpenFile(file);
+                  Base.handleOpenFile(file);
                   return true;
                 }
               }
@@ -113,4 +119,8 @@
     }
   }
 );
+  pack();
+  restorePreferences();
+  handleOpen(path);
+  show();
 }

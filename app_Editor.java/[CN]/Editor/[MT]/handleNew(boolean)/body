@@ -1,12 +1,14 @@
 {
-  buttons.activate(EditorButtons.NEW);
-  SwingUtilities.invokeLater(new Runnable(){
-    public void run(){
-      doStop();
-      handleNewShift=shift;
-      handleNewLibrary=false;
-      checkModified(HANDLE_NEW);
-    }
+  boolean prompt=Preferences.getBoolean("sketchbook.prompt");
+  if (shiftDown)   prompt=!prompt;
+  String path=null;
+  if (prompt) {
+    path=sketchbook.handleNewPrompt();
   }
-);
+ else {
+    path=sketchbook.handleNewUntitled();
+  }
+  if (filename != null) {
+    base.handleOpen(path);
+  }
 }

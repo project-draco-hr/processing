@@ -1,0 +1,38 @@
+{
+  if (!modified)   return true;
+  String prompt="Save changes to " + file.getName() + "?  ";
+  if (PApplet.platform != PConstants.MACOSX || PApplet.javaVersion < 1.5f) {
+    int result=JOptionPane.showConfirmDialog(frame,prompt,"Close",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+    if (result == JOptionPane.YES_OPTION) {
+      return handleSave();
+    }
+ else     if (result == JOptionPane.NO_OPTION) {
+      return true;
+    }
+ else     if (result == JOptionPane.CANCEL_OPTION) {
+      return false;
+    }
+ else {
+      throw new IllegalStateException();
+    }
+  }
+ else {
+    JOptionPane pane=new JOptionPane("<html> " + "<head> <style type=\"text/css\">" + "b { font: 13pt \"Lucida Grande\" }"+ "p { font: 11pt \"Lucida Grande\"; margin-top: 8px }"+ "</style> </head>"+ "<b>Do you want to save changes to this text<BR>"+ " before closing?</b>"+ "<p>If you don't save, your changes will be lost.",JOptionPane.QUESTION_MESSAGE);
+    String[] options=new String[]{"Save","Cancel","Don't Save"};
+    pane.setOptions(options);
+    pane.setInitialValue(options[0]);
+    pane.putClientProperty("Quaqua.OptionPane.destructiveOption",new Integer(2));
+    JDialog dialog=pane.createDialog(frame,null);
+    dialog.setVisible(true);
+    Object result=pane.getValue();
+    if (result == options[0]) {
+      return handleSave();
+    }
+ else     if (result == options[2]) {
+      return true;
+    }
+ else {
+      return false;
+    }
+  }
+}

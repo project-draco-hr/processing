@@ -1,25 +1,35 @@
 {
-  try {
-    if (Base.isMacOS()) {
-      UIManager.setLookAndFeel("ch.randelshofer.quaqua.QuaquaLookAndFeel");
-      UIManager.put("Component.visualMargin",new Insets(1,1,1,1));
+  if (PApplet.platform == PConstants.MACOSX) {
+    MRJOpenDocumentHandler startupOpen=new MRJOpenDocumentHandler(){
+      public void handleOpenFile(      File file){
+        handleOpen(file.getAbsolutePath());
+      }
     }
- else     if (Base.isLinux()) {
-      UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+;
+    MRJApplicationUtils.registerOpenDocumentHandler(startupOpen);
+    MRJApplicationUtils.registerAboutHandler(new MRJAboutHandler(){
+      public void handleAbout(){
+        Editor.handleAbout();
+      }
     }
- else {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+);
+    MRJApplicationUtils.registerPrefsHandler(new MRJPrefsHandler(){
+      public void handlePrefs(){
+        Editor.handlePrefs();
+      }
     }
-  }
- catch (  Exception e) {
-    e.printStackTrace();
-  }
-  JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-  editor=new Editor();
-  editor.pack();
-  editor.restorePreferences();
-  editor.show();
-  if (Preferences.getBoolean("update.check")) {
-    new UpdateCheck(editor);
+);
+    MRJApplicationUtils.registerQuitHandler(new MRJQuitHandler(){
+      public void handleQuit(){
+        SwingUtilities.invokeLater(new Runnable(){
+          public void run(){
+            handleQuit();
+          }
+        }
+);
+        throw new IllegalStateException("Quit Pending User Confirmation");
+      }
+    }
+);
   }
 }

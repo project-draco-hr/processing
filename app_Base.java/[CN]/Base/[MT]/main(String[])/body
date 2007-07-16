@@ -2,17 +2,22 @@
   if (PApplet.javaVersion < 1.4f) {
     Base.showError("Need to install Java 1.4","This version of Processing requires    \n" + "Java 1.4 or later to run properly.\n" + "Please visit java.com to upgrade.",null);
   }
-  if (args.length == 1) {
-    Base.openedAtStartup=args[0];
-  }
-  MRJOpenDocumentHandler startupOpen=new MRJOpenDocumentHandler(){
-    public void handleOpenFile(    File file){
-      if (Base.openedAtStartup == null) {
-        Base.openedAtStartup=file.getAbsolutePath();
-      }
+  try {
+    if (Base.isMacOS()) {
+      UIManager.setLookAndFeel("ch.randelshofer.quaqua.QuaquaLookAndFeel");
+      UIManager.put("Component.visualMargin",new Insets(1,1,1,1));
+    }
+ else     if (Base.isLinux()) {
+      UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+    }
+ else {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     }
   }
-;
-  MRJApplicationUtils.registerOpenDocumentHandler(startupOpen);
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  JPopupMenu.setDefaultLightWeightPopupEnabled(false);
   Base app=new Base();
+  Preferences.init();
 }

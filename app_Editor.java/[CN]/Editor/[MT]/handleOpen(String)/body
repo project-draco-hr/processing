@@ -4,12 +4,11 @@
     public void run(){
       String path=ipath;
       if (path == null) {
-        path=sketchbook.handleOpen();
-        if (path == null)         return;
+        path=sketchbook.handleOpenPrompt();
       }
-      doClose();
-      handleOpenPath=path;
-      checkModified(HANDLE_OPEN);
+      if (path != null) {
+        base.handleOpen(path);
+      }
     }
   }
 );
