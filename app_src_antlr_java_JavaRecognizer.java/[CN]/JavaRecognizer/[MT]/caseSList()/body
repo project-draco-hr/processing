@@ -1,0 +1,26 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST caseSList_AST=null;
+{
+    _loop104:     do {
+      if ((_tokenSet_10.member(LA(1)))) {
+        statement();
+        astFactory.addASTChild(currentAST,returnAST);
+      }
+ else {
+        break _loop104;
+      }
+    }
+ while (true);
+  }
+  if (inputState.guessing == 0) {
+    caseSList_AST=(AST)currentAST.root;
+    caseSList_AST=(AST)astFactory.make((new ASTArray(2)).add(astFactory.create(SLIST,"SLIST")).add(caseSList_AST));
+    currentAST.root=caseSList_AST;
+    currentAST.child=caseSList_AST != null && caseSList_AST.getFirstChild() != null ? caseSList_AST.getFirstChild() : caseSList_AST;
+    currentAST.advanceChildToEnd();
+  }
+  caseSList_AST=(AST)currentAST.root;
+  returnAST=caseSList_AST;
+}

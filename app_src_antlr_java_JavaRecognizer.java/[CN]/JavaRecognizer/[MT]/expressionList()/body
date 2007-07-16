@@ -1,0 +1,29 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST expressionList_AST=null;
+  expression();
+  astFactory.addASTChild(currentAST,returnAST);
+{
+    _loop122:     do {
+      if ((LA(1) == COMMA)) {
+        match(COMMA);
+        expression();
+        astFactory.addASTChild(currentAST,returnAST);
+      }
+ else {
+        break _loop122;
+      }
+    }
+ while (true);
+  }
+  if (inputState.guessing == 0) {
+    expressionList_AST=(AST)currentAST.root;
+    expressionList_AST=(AST)astFactory.make((new ASTArray(2)).add(astFactory.create(ELIST,"ELIST")).add(expressionList_AST));
+    currentAST.root=expressionList_AST;
+    currentAST.child=expressionList_AST != null && expressionList_AST.getFirstChild() != null ? expressionList_AST.getFirstChild() : expressionList_AST;
+    currentAST.advanceChildToEnd();
+  }
+  expressionList_AST=(AST)currentAST.root;
+  returnAST=expressionList_AST;
+}

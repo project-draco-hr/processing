@@ -1,0 +1,53 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST identifierStar_AST=null;
+  AST tmp8_AST=null;
+  tmp8_AST=astFactory.create(LT(1));
+  astFactory.addASTChild(currentAST,tmp8_AST);
+  match(IDENT);
+{
+    _loop26:     do {
+      if ((LA(1) == DOT) && (LA(2) == IDENT)) {
+        AST tmp9_AST=null;
+        tmp9_AST=astFactory.create(LT(1));
+        astFactory.makeASTRoot(currentAST,tmp9_AST);
+        match(DOT);
+        AST tmp10_AST=null;
+        tmp10_AST=astFactory.create(LT(1));
+        astFactory.addASTChild(currentAST,tmp10_AST);
+        match(IDENT);
+      }
+ else {
+        break _loop26;
+      }
+    }
+ while (true);
+  }
+{
+switch (LA(1)) {
+case DOT:
+{
+        AST tmp11_AST=null;
+        tmp11_AST=astFactory.create(LT(1));
+        astFactory.makeASTRoot(currentAST,tmp11_AST);
+        match(DOT);
+        AST tmp12_AST=null;
+        tmp12_AST=astFactory.create(LT(1));
+        astFactory.addASTChild(currentAST,tmp12_AST);
+        match(STAR);
+        break;
+      }
+case SEMI:
+{
+      break;
+    }
+default :
+{
+    throw new NoViableAltException(LT(1),getFilename());
+  }
+}
+}
+identifierStar_AST=(AST)currentAST.root;
+returnAST=identifierStar_AST;
+}

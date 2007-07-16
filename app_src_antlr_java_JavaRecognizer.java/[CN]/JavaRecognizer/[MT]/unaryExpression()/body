@@ -1,0 +1,93 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST unaryExpression_AST=null;
+switch (LA(1)) {
+case INC:
+{
+      AST tmp156_AST=null;
+      tmp156_AST=astFactory.create(LT(1));
+      astFactory.makeASTRoot(currentAST,tmp156_AST);
+      match(INC);
+      unaryExpression();
+      astFactory.addASTChild(currentAST,returnAST);
+      unaryExpression_AST=(AST)currentAST.root;
+      break;
+    }
+case DEC:
+{
+    AST tmp157_AST=null;
+    tmp157_AST=astFactory.create(LT(1));
+    astFactory.makeASTRoot(currentAST,tmp157_AST);
+    match(DEC);
+    unaryExpression();
+    astFactory.addASTChild(currentAST,returnAST);
+    unaryExpression_AST=(AST)currentAST.root;
+    break;
+  }
+case MINUS:
+{
+  AST tmp158_AST=null;
+  tmp158_AST=astFactory.create(LT(1));
+  astFactory.makeASTRoot(currentAST,tmp158_AST);
+  match(MINUS);
+  if (inputState.guessing == 0) {
+    tmp158_AST.setType(UNARY_MINUS);
+  }
+  unaryExpression();
+  astFactory.addASTChild(currentAST,returnAST);
+  unaryExpression_AST=(AST)currentAST.root;
+  break;
+}
+case PLUS:
+{
+AST tmp159_AST=null;
+tmp159_AST=astFactory.create(LT(1));
+astFactory.makeASTRoot(currentAST,tmp159_AST);
+match(PLUS);
+if (inputState.guessing == 0) {
+  tmp159_AST.setType(UNARY_PLUS);
+}
+unaryExpression();
+astFactory.addASTChild(currentAST,returnAST);
+unaryExpression_AST=(AST)currentAST.root;
+break;
+}
+case LITERAL_void:
+case LITERAL_boolean:
+case LITERAL_byte:
+case LITERAL_char:
+case LITERAL_short:
+case LITERAL_int:
+case LITERAL_float:
+case LITERAL_long:
+case LITERAL_double:
+case IDENT:
+case LPAREN:
+case LITERAL_this:
+case LITERAL_super:
+case BNOT:
+case LNOT:
+case LITERAL_true:
+case LITERAL_false:
+case LITERAL_null:
+case LITERAL_new:
+case NUM_INT:
+case CHAR_LITERAL:
+case STRING_LITERAL:
+case NUM_FLOAT:
+case NUM_LONG:
+case NUM_DOUBLE:
+{
+unaryExpressionNotPlusMinus();
+astFactory.addASTChild(currentAST,returnAST);
+unaryExpression_AST=(AST)currentAST.root;
+break;
+}
+default :
+{
+throw new NoViableAltException(LT(1),getFilename());
+}
+}
+returnAST=unaryExpression_AST;
+}

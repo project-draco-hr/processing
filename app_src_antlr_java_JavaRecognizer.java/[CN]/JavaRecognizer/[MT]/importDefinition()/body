@@ -1,0 +1,30 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST importDefinition_AST=null;
+  Token i=null;
+  AST i_AST=null;
+  try {
+    i=LT(1);
+    i_AST=astFactory.create(i);
+    astFactory.makeASTRoot(currentAST,i_AST);
+    match(LITERAL_import);
+    if (inputState.guessing == 0) {
+      i_AST.setType(IMPORT);
+    }
+    identifierStar();
+    astFactory.addASTChild(currentAST,returnAST);
+    match(SEMI);
+    importDefinition_AST=(AST)currentAST.root;
+  }
+ catch (  RecognitionException ex) {
+    if (inputState.guessing == 0) {
+      reportError(ex);
+      recover(ex,_tokenSet_1);
+    }
+ else {
+      throw ex;
+    }
+  }
+  returnAST=importDefinition_AST;
+}

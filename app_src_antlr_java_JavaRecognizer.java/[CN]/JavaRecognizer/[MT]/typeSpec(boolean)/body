@@ -1,0 +1,34 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST typeSpec_AST=null;
+switch (LA(1)) {
+case IDENT:
+{
+      classTypeSpec(addImagNode);
+      astFactory.addASTChild(currentAST,returnAST);
+      typeSpec_AST=(AST)currentAST.root;
+      break;
+    }
+case LITERAL_void:
+case LITERAL_boolean:
+case LITERAL_byte:
+case LITERAL_char:
+case LITERAL_short:
+case LITERAL_int:
+case LITERAL_float:
+case LITERAL_long:
+case LITERAL_double:
+{
+    builtInTypeSpec(addImagNode);
+    astFactory.addASTChild(currentAST,returnAST);
+    typeSpec_AST=(AST)currentAST.root;
+    break;
+  }
+default :
+{
+  throw new NoViableAltException(LT(1),getFilename());
+}
+}
+returnAST=typeSpec_AST;
+}

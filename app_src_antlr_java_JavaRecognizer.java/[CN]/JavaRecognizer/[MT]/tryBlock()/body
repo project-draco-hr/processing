@@ -1,0 +1,101 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST tryBlock_AST=null;
+  AST tmp113_AST=null;
+  tmp113_AST=astFactory.create(LT(1));
+  astFactory.makeASTRoot(currentAST,tmp113_AST);
+  match(LITERAL_try);
+  compoundStatement();
+  astFactory.addASTChild(currentAST,returnAST);
+{
+    _loop115:     do {
+      if ((LA(1) == LITERAL_catch)) {
+        handler();
+        astFactory.addASTChild(currentAST,returnAST);
+      }
+ else {
+        break _loop115;
+      }
+    }
+ while (true);
+  }
+{
+switch (LA(1)) {
+case LITERAL_finally:
+{
+        finallyClause();
+        astFactory.addASTChild(currentAST,returnAST);
+        break;
+      }
+case FINAL:
+case ABSTRACT:
+case STRICTFP:
+case SEMI:
+case LITERAL_void:
+case LITERAL_boolean:
+case LITERAL_byte:
+case LITERAL_char:
+case LITERAL_short:
+case LITERAL_int:
+case LITERAL_float:
+case LITERAL_long:
+case LITERAL_double:
+case IDENT:
+case LITERAL_private:
+case LITERAL_public:
+case LITERAL_protected:
+case LITERAL_static:
+case LITERAL_transient:
+case LITERAL_native:
+case LITERAL_threadsafe:
+case LITERAL_synchronized:
+case LITERAL_volatile:
+case LITERAL_class:
+case LCURLY:
+case RCURLY:
+case LPAREN:
+case LITERAL_this:
+case LITERAL_super:
+case LITERAL_if:
+case LITERAL_else:
+case LITERAL_for:
+case LITERAL_while:
+case LITERAL_do:
+case LITERAL_break:
+case LITERAL_continue:
+case LITERAL_return:
+case LITERAL_switch:
+case LITERAL_throw:
+case LITERAL_assert:
+case LITERAL_case:
+case LITERAL_default:
+case LITERAL_try:
+case PLUS:
+case MINUS:
+case INC:
+case DEC:
+case BNOT:
+case LNOT:
+case LITERAL_true:
+case LITERAL_false:
+case LITERAL_null:
+case LITERAL_new:
+case NUM_INT:
+case CHAR_LITERAL:
+case STRING_LITERAL:
+case NUM_FLOAT:
+case NUM_LONG:
+case NUM_DOUBLE:
+{
+      break;
+    }
+default :
+{
+    throw new NoViableAltException(LT(1),getFilename());
+  }
+}
+}
+tryBlock_AST=(AST)currentAST.root;
+returnAST=tryBlock_AST;
+}

@@ -1,0 +1,29 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST compoundStatement_AST=null;
+  Token lc=null;
+  AST lc_AST=null;
+  lc=LT(1);
+  lc_AST=astFactory.create(lc);
+  astFactory.makeASTRoot(currentAST,lc_AST);
+  match(LCURLY);
+  if (inputState.guessing == 0) {
+    lc_AST.setType(SLIST);
+  }
+{
+    _loop86:     do {
+      if ((_tokenSet_10.member(LA(1)))) {
+        statement();
+        astFactory.addASTChild(currentAST,returnAST);
+      }
+ else {
+        break _loop86;
+      }
+    }
+ while (true);
+  }
+  match(RCURLY);
+  compoundStatement_AST=(AST)currentAST.root;
+  returnAST=compoundStatement_AST;
+}

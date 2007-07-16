@@ -1,0 +1,50 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST explicitConstructorInvocation_AST=null;
+  Token lp1=null;
+  AST lp1_AST=null;
+  Token lp2=null;
+  AST lp2_AST=null;
+switch (LA(1)) {
+case LITERAL_this:
+{
+      match(LITERAL_this);
+      lp1=LT(1);
+      lp1_AST=astFactory.create(lp1);
+      astFactory.makeASTRoot(currentAST,lp1_AST);
+      match(LPAREN);
+      argList();
+      astFactory.addASTChild(currentAST,returnAST);
+      match(RPAREN);
+      match(SEMI);
+      if (inputState.guessing == 0) {
+        lp1_AST.setType(CTOR_CALL);
+      }
+      explicitConstructorInvocation_AST=(AST)currentAST.root;
+      break;
+    }
+case LITERAL_super:
+{
+    match(LITERAL_super);
+    lp2=LT(1);
+    lp2_AST=astFactory.create(lp2);
+    astFactory.makeASTRoot(currentAST,lp2_AST);
+    match(LPAREN);
+    argList();
+    astFactory.addASTChild(currentAST,returnAST);
+    match(RPAREN);
+    match(SEMI);
+    if (inputState.guessing == 0) {
+      lp2_AST.setType(SUPER_CTOR_CALL);
+    }
+    explicitConstructorInvocation_AST=(AST)currentAST.root;
+    break;
+  }
+default :
+{
+  throw new NoViableAltException(LT(1),getFilename());
+}
+}
+returnAST=explicitConstructorInvocation_AST;
+}

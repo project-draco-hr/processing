@@ -1,0 +1,35 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST casesGroup_AST=null;
+{
+    int _cnt99=0;
+    _loop99:     do {
+      if ((LA(1) == LITERAL_case || LA(1) == LITERAL_default) && (_tokenSet_21.member(LA(2)))) {
+        aCase();
+        astFactory.addASTChild(currentAST,returnAST);
+      }
+ else {
+        if (_cnt99 >= 1) {
+          break _loop99;
+        }
+ else {
+          throw new NoViableAltException(LT(1),getFilename());
+        }
+      }
+      _cnt99++;
+    }
+ while (true);
+  }
+  caseSList();
+  astFactory.addASTChild(currentAST,returnAST);
+  if (inputState.guessing == 0) {
+    casesGroup_AST=(AST)currentAST.root;
+    casesGroup_AST=(AST)astFactory.make((new ASTArray(2)).add(astFactory.create(CASE_GROUP,"CASE_GROUP")).add(casesGroup_AST));
+    currentAST.root=casesGroup_AST;
+    currentAST.child=casesGroup_AST != null && casesGroup_AST.getFirstChild() != null ? casesGroup_AST.getFirstChild() : casesGroup_AST;
+    currentAST.advanceChildToEnd();
+  }
+  casesGroup_AST=(AST)currentAST.root;
+  returnAST=casesGroup_AST;
+}

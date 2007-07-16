@@ -1,0 +1,50 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST implementsClause_AST=null;
+  Token i=null;
+  AST i_AST=null;
+{
+switch (LA(1)) {
+case LITERAL_implements:
+{
+        i=LT(1);
+        i_AST=astFactory.create(i);
+        match(LITERAL_implements);
+        identifier();
+        astFactory.addASTChild(currentAST,returnAST);
+{
+          _loop46:           do {
+            if ((LA(1) == COMMA)) {
+              match(COMMA);
+              identifier();
+              astFactory.addASTChild(currentAST,returnAST);
+            }
+ else {
+              break _loop46;
+            }
+          }
+ while (true);
+        }
+        break;
+      }
+case LCURLY:
+{
+      break;
+    }
+default :
+{
+    throw new NoViableAltException(LT(1),getFilename());
+  }
+}
+}
+if (inputState.guessing == 0) {
+implementsClause_AST=(AST)currentAST.root;
+implementsClause_AST=(AST)astFactory.make((new ASTArray(2)).add(astFactory.create(IMPLEMENTS_CLAUSE,"IMPLEMENTS_CLAUSE")).add(implementsClause_AST));
+currentAST.root=implementsClause_AST;
+currentAST.child=implementsClause_AST != null && implementsClause_AST.getFirstChild() != null ? implementsClause_AST.getFirstChild() : implementsClause_AST;
+currentAST.advanceChildToEnd();
+}
+implementsClause_AST=(AST)currentAST.root;
+returnAST=implementsClause_AST;
+}

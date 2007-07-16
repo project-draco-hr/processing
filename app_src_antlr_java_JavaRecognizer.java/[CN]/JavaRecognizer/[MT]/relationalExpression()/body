@@ -1,0 +1,112 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST relationalExpression_AST=null;
+  shiftExpression();
+  astFactory.addASTChild(currentAST,returnAST);
+{
+switch (LA(1)) {
+case SEMI:
+case RBRACK:
+case RCURLY:
+case COMMA:
+case RPAREN:
+case ASSIGN:
+case COLON:
+case PLUS_ASSIGN:
+case MINUS_ASSIGN:
+case STAR_ASSIGN:
+case DIV_ASSIGN:
+case MOD_ASSIGN:
+case SR_ASSIGN:
+case BSR_ASSIGN:
+case SL_ASSIGN:
+case BAND_ASSIGN:
+case BXOR_ASSIGN:
+case BOR_ASSIGN:
+case QUESTION:
+case LOR:
+case LAND:
+case BOR:
+case BXOR:
+case BAND:
+case NOT_EQUAL:
+case EQUAL:
+case LT:
+case GT:
+case LE:
+case GE:
+{
+{
+          _loop151:           do {
+            if (((LA(1) >= LT && LA(1) <= GE))) {
+{
+switch (LA(1)) {
+case LT:
+{
+                    AST tmp143_AST=null;
+                    tmp143_AST=astFactory.create(LT(1));
+                    astFactory.makeASTRoot(currentAST,tmp143_AST);
+                    match(LT);
+                    break;
+                  }
+case GT:
+{
+                  AST tmp144_AST=null;
+                  tmp144_AST=astFactory.create(LT(1));
+                  astFactory.makeASTRoot(currentAST,tmp144_AST);
+                  match(GT);
+                  break;
+                }
+case LE:
+{
+                AST tmp145_AST=null;
+                tmp145_AST=astFactory.create(LT(1));
+                astFactory.makeASTRoot(currentAST,tmp145_AST);
+                match(LE);
+                break;
+              }
+case GE:
+{
+              AST tmp146_AST=null;
+              tmp146_AST=astFactory.create(LT(1));
+              astFactory.makeASTRoot(currentAST,tmp146_AST);
+              match(GE);
+              break;
+            }
+default :
+{
+            throw new NoViableAltException(LT(1),getFilename());
+          }
+      }
+    }
+    shiftExpression();
+    astFactory.addASTChild(currentAST,returnAST);
+  }
+ else {
+    break _loop151;
+  }
+}
+ while (true);
+}
+break;
+}
+case LITERAL_instanceof:
+{
+AST tmp147_AST=null;
+tmp147_AST=astFactory.create(LT(1));
+astFactory.makeASTRoot(currentAST,tmp147_AST);
+match(LITERAL_instanceof);
+typeSpec(true);
+astFactory.addASTChild(currentAST,returnAST);
+break;
+}
+default :
+{
+throw new NoViableAltException(LT(1),getFilename());
+}
+}
+}
+relationalExpression_AST=(AST)currentAST.root;
+returnAST=relationalExpression_AST;
+}

@@ -1,0 +1,80 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST newArrayDeclarator_AST=null;
+  Token lb=null;
+  AST lb_AST=null;
+{
+    int _cnt196=0;
+    _loop196:     do {
+      if ((LA(1) == LBRACK) && (_tokenSet_27.member(LA(2)))) {
+        lb=LT(1);
+        lb_AST=astFactory.create(lb);
+        astFactory.makeASTRoot(currentAST,lb_AST);
+        match(LBRACK);
+        if (inputState.guessing == 0) {
+          lb_AST.setType(ARRAY_DECLARATOR);
+        }
+{
+switch (LA(1)) {
+case LITERAL_void:
+case LITERAL_boolean:
+case LITERAL_byte:
+case LITERAL_char:
+case LITERAL_short:
+case LITERAL_int:
+case LITERAL_float:
+case LITERAL_long:
+case LITERAL_double:
+case IDENT:
+case LPAREN:
+case LITERAL_this:
+case LITERAL_super:
+case PLUS:
+case MINUS:
+case INC:
+case DEC:
+case BNOT:
+case LNOT:
+case LITERAL_true:
+case LITERAL_false:
+case LITERAL_null:
+case LITERAL_new:
+case NUM_INT:
+case CHAR_LITERAL:
+case STRING_LITERAL:
+case NUM_FLOAT:
+case NUM_LONG:
+case NUM_DOUBLE:
+{
+              expression();
+              astFactory.addASTChild(currentAST,returnAST);
+              break;
+            }
+case RBRACK:
+{
+            break;
+          }
+default :
+{
+          throw new NoViableAltException(LT(1),getFilename());
+        }
+    }
+  }
+  match(RBRACK);
+}
+ else {
+  if (_cnt196 >= 1) {
+    break _loop196;
+  }
+ else {
+    throw new NoViableAltException(LT(1),getFilename());
+  }
+}
+_cnt196++;
+}
+ while (true);
+}
+newArrayDeclarator_AST=(AST)currentAST.root;
+returnAST=newArrayDeclarator_AST;
+}

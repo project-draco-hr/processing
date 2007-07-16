@@ -1,0 +1,50 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST interfaceExtends_AST=null;
+  Token e=null;
+  AST e_AST=null;
+{
+switch (LA(1)) {
+case LITERAL_extends:
+{
+        e=LT(1);
+        e_AST=astFactory.create(e);
+        match(LITERAL_extends);
+        identifier();
+        astFactory.addASTChild(currentAST,returnAST);
+{
+          _loop42:           do {
+            if ((LA(1) == COMMA)) {
+              match(COMMA);
+              identifier();
+              astFactory.addASTChild(currentAST,returnAST);
+            }
+ else {
+              break _loop42;
+            }
+          }
+ while (true);
+        }
+        break;
+      }
+case LCURLY:
+{
+      break;
+    }
+default :
+{
+    throw new NoViableAltException(LT(1),getFilename());
+  }
+}
+}
+if (inputState.guessing == 0) {
+interfaceExtends_AST=(AST)currentAST.root;
+interfaceExtends_AST=(AST)astFactory.make((new ASTArray(2)).add(astFactory.create(EXTENDS_CLAUSE,"EXTENDS_CLAUSE")).add(interfaceExtends_AST));
+currentAST.root=interfaceExtends_AST;
+currentAST.child=interfaceExtends_AST != null && interfaceExtends_AST.getFirstChild() != null ? interfaceExtends_AST.getFirstChild() : interfaceExtends_AST;
+currentAST.advanceChildToEnd();
+}
+interfaceExtends_AST=(AST)currentAST.root;
+returnAST=interfaceExtends_AST;
+}

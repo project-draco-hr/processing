@@ -1,0 +1,60 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST forIter_AST=null;
+{
+switch (LA(1)) {
+case LITERAL_void:
+case LITERAL_boolean:
+case LITERAL_byte:
+case LITERAL_char:
+case LITERAL_short:
+case LITERAL_int:
+case LITERAL_float:
+case LITERAL_long:
+case LITERAL_double:
+case IDENT:
+case LPAREN:
+case LITERAL_this:
+case LITERAL_super:
+case PLUS:
+case MINUS:
+case INC:
+case DEC:
+case BNOT:
+case LNOT:
+case LITERAL_true:
+case LITERAL_false:
+case LITERAL_null:
+case LITERAL_new:
+case NUM_INT:
+case CHAR_LITERAL:
+case STRING_LITERAL:
+case NUM_FLOAT:
+case NUM_LONG:
+case NUM_DOUBLE:
+{
+        expressionList();
+        astFactory.addASTChild(currentAST,returnAST);
+        break;
+      }
+case RPAREN:
+{
+      break;
+    }
+default :
+{
+    throw new NoViableAltException(LT(1),getFilename());
+  }
+}
+}
+if (inputState.guessing == 0) {
+forIter_AST=(AST)currentAST.root;
+forIter_AST=(AST)astFactory.make((new ASTArray(2)).add(astFactory.create(FOR_ITERATOR,"FOR_ITERATOR")).add(forIter_AST));
+currentAST.root=forIter_AST;
+currentAST.child=forIter_AST != null && forIter_AST.getFirstChild() != null ? forIter_AST.getFirstChild() : forIter_AST;
+currentAST.advanceChildToEnd();
+}
+forIter_AST=(AST)currentAST.root;
+returnAST=forIter_AST;
+}

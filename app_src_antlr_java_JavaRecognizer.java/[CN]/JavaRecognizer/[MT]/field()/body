@@ -1,0 +1,177 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST field_AST=null;
+  AST mods_AST=null;
+  AST h_AST=null;
+  AST s_AST=null;
+  AST cd_AST=null;
+  AST id_AST=null;
+  AST t_AST=null;
+  AST param_AST=null;
+  AST rt_AST=null;
+  AST tc_AST=null;
+  AST s2_AST=null;
+  AST v_AST=null;
+  AST s3_AST=null;
+  AST s4_AST=null;
+  if ((_tokenSet_4.member(LA(1))) && (_tokenSet_5.member(LA(2)))) {
+    modifiers();
+    mods_AST=(AST)returnAST;
+{
+switch (LA(1)) {
+case LITERAL_class:
+{
+          classDefinition(mods_AST);
+          cd_AST=(AST)returnAST;
+          if (inputState.guessing == 0) {
+            field_AST=(AST)currentAST.root;
+            field_AST=cd_AST;
+            currentAST.root=field_AST;
+            currentAST.child=field_AST != null && field_AST.getFirstChild() != null ? field_AST.getFirstChild() : field_AST;
+            currentAST.advanceChildToEnd();
+          }
+          break;
+        }
+case LITERAL_interface:
+{
+        interfaceDefinition(mods_AST);
+        id_AST=(AST)returnAST;
+        if (inputState.guessing == 0) {
+          field_AST=(AST)currentAST.root;
+          field_AST=id_AST;
+          currentAST.root=field_AST;
+          currentAST.child=field_AST != null && field_AST.getFirstChild() != null ? field_AST.getFirstChild() : field_AST;
+          currentAST.advanceChildToEnd();
+        }
+        break;
+      }
+default :
+    if ((LA(1) == IDENT) && (LA(2) == LPAREN)) {
+      ctorHead();
+      h_AST=(AST)returnAST;
+      constructorBody();
+      s_AST=(AST)returnAST;
+      if (inputState.guessing == 0) {
+        field_AST=(AST)currentAST.root;
+        field_AST=(AST)astFactory.make((new ASTArray(4)).add(astFactory.create(CTOR_DEF,"CTOR_DEF")).add(mods_AST).add(h_AST).add(s_AST));
+        currentAST.root=field_AST;
+        currentAST.child=field_AST != null && field_AST.getFirstChild() != null ? field_AST.getFirstChild() : field_AST;
+        currentAST.advanceChildToEnd();
+      }
+    }
+ else     if (((LA(1) >= LITERAL_void && LA(1) <= IDENT)) && (_tokenSet_6.member(LA(2)))) {
+      typeSpec(false);
+      t_AST=(AST)returnAST;
+{
+        if ((LA(1) == IDENT) && (LA(2) == LPAREN)) {
+          AST tmp47_AST=null;
+          tmp47_AST=astFactory.create(LT(1));
+          match(IDENT);
+          match(LPAREN);
+          parameterDeclarationList();
+          param_AST=(AST)returnAST;
+          match(RPAREN);
+          declaratorBrackets(t_AST);
+          rt_AST=(AST)returnAST;
+{
+switch (LA(1)) {
+case LITERAL_throws:
+{
+                throwsClause();
+                tc_AST=(AST)returnAST;
+                break;
+              }
+case SEMI:
+case LCURLY:
+{
+              break;
+            }
+default :
+{
+            throw new NoViableAltException(LT(1),getFilename());
+          }
+      }
+    }
+{
+switch (LA(1)) {
+case LCURLY:
+{
+          compoundStatement();
+          s2_AST=(AST)returnAST;
+          break;
+        }
+case SEMI:
+{
+        AST tmp50_AST=null;
+        tmp50_AST=astFactory.create(LT(1));
+        match(SEMI);
+        break;
+      }
+default :
+{
+      throw new NoViableAltException(LT(1),getFilename());
+    }
+}
+}
+if (inputState.guessing == 0) {
+field_AST=(AST)currentAST.root;
+field_AST=(AST)astFactory.make((new ASTArray(7)).add(astFactory.create(METHOD_DEF,"METHOD_DEF")).add(mods_AST).add((AST)astFactory.make((new ASTArray(2)).add(astFactory.create(TYPE,"TYPE")).add(rt_AST))).add(tmp47_AST).add(param_AST).add(tc_AST).add(s2_AST));
+currentAST.root=field_AST;
+currentAST.child=field_AST != null && field_AST.getFirstChild() != null ? field_AST.getFirstChild() : field_AST;
+currentAST.advanceChildToEnd();
+}
+}
+ else if ((LA(1) == IDENT) && (_tokenSet_7.member(LA(2)))) {
+variableDefinitions(mods_AST,t_AST);
+v_AST=(AST)returnAST;
+AST tmp51_AST=null;
+tmp51_AST=astFactory.create(LT(1));
+match(SEMI);
+if (inputState.guessing == 0) {
+field_AST=(AST)currentAST.root;
+field_AST=v_AST;
+currentAST.root=field_AST;
+currentAST.child=field_AST != null && field_AST.getFirstChild() != null ? field_AST.getFirstChild() : field_AST;
+currentAST.advanceChildToEnd();
+}
+}
+ else {
+throw new NoViableAltException(LT(1),getFilename());
+}
+}
+}
+ else {
+throw new NoViableAltException(LT(1),getFilename());
+}
+}
+}
+}
+ else if ((LA(1) == LITERAL_static) && (LA(2) == LCURLY)) {
+match(LITERAL_static);
+compoundStatement();
+s3_AST=(AST)returnAST;
+if (inputState.guessing == 0) {
+field_AST=(AST)currentAST.root;
+field_AST=(AST)astFactory.make((new ASTArray(2)).add(astFactory.create(STATIC_INIT,"STATIC_INIT")).add(s3_AST));
+currentAST.root=field_AST;
+currentAST.child=field_AST != null && field_AST.getFirstChild() != null ? field_AST.getFirstChild() : field_AST;
+currentAST.advanceChildToEnd();
+}
+}
+ else if ((LA(1) == LCURLY)) {
+compoundStatement();
+s4_AST=(AST)returnAST;
+if (inputState.guessing == 0) {
+field_AST=(AST)currentAST.root;
+field_AST=(AST)astFactory.make((new ASTArray(2)).add(astFactory.create(INSTANCE_INIT,"INSTANCE_INIT")).add(s4_AST));
+currentAST.root=field_AST;
+currentAST.child=field_AST != null && field_AST.getFirstChild() != null ? field_AST.getFirstChild() : field_AST;
+currentAST.advanceChildToEnd();
+}
+}
+ else {
+throw new NoViableAltException(LT(1),getFilename());
+}
+returnAST=field_AST;
+}

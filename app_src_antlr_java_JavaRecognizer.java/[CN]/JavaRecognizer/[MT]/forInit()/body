@@ -1,0 +1,45 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST forInit_AST=null;
+{
+    boolean synPredMatched108=false;
+    if (((_tokenSet_13.member(LA(1))) && (_tokenSet_14.member(LA(2))))) {
+      int _m108=mark();
+      synPredMatched108=true;
+      inputState.guessing++;
+      try {
+{
+          declaration();
+        }
+      }
+ catch (      RecognitionException pe) {
+        synPredMatched108=false;
+      }
+      rewind(_m108);
+      inputState.guessing--;
+    }
+    if (synPredMatched108) {
+      declaration();
+      astFactory.addASTChild(currentAST,returnAST);
+    }
+ else     if ((_tokenSet_15.member(LA(1))) && (_tokenSet_20.member(LA(2)))) {
+      expressionList();
+      astFactory.addASTChild(currentAST,returnAST);
+    }
+ else     if ((LA(1) == SEMI)) {
+    }
+ else {
+      throw new NoViableAltException(LT(1),getFilename());
+    }
+  }
+  if (inputState.guessing == 0) {
+    forInit_AST=(AST)currentAST.root;
+    forInit_AST=(AST)astFactory.make((new ASTArray(2)).add(astFactory.create(FOR_INIT,"FOR_INIT")).add(forInit_AST));
+    currentAST.root=forInit_AST;
+    currentAST.child=forInit_AST != null && forInit_AST.getFirstChild() != null ? forInit_AST.getFirstChild() : forInit_AST;
+    currentAST.advanceChildToEnd();
+  }
+  forInit_AST=(AST)currentAST.root;
+  returnAST=forInit_AST;
+}

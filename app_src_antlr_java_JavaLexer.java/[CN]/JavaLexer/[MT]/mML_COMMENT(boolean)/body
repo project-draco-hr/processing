@@ -1,0 +1,44 @@
+{
+  int _ttype;
+  Token _token=null;
+  int _begin=text.length();
+  _ttype=ML_COMMENT;
+  int _saveIndex;
+  match("/*");
+{
+    _loop256:     do {
+      if ((LA(1) == '\r') && (LA(2) == '\n') && ((LA(3) >= '\u0003' && LA(3) <= '\uffff'))&& ((LA(4) >= '\u0003' && LA(4) <= '\uffff'))) {
+        match('\r');
+        match('\n');
+        newline();
+      }
+ else       if (((LA(1) == '*') && ((LA(2) >= '\u0003' && LA(2) <= '\uffff')) && ((LA(3) >= '\u0003' && LA(3) <= '\uffff'))) && (LA(2) != '/')) {
+        match('*');
+      }
+ else       if ((LA(1) == '\r') && ((LA(2) >= '\u0003' && LA(2) <= '\uffff')) && ((LA(3) >= '\u0003' && LA(3) <= '\uffff'))&& (true)) {
+        match('\r');
+        newline();
+      }
+ else       if ((LA(1) == '\n')) {
+        match('\n');
+        newline();
+      }
+ else       if ((_tokenSet_1.member(LA(1)))) {
+{
+          match(_tokenSet_1);
+        }
+      }
+ else {
+        break _loop256;
+      }
+    }
+ while (true);
+  }
+  match("*/");
+  _ttype=Token.SKIP;
+  if (_createToken && _token == null && _ttype != Token.SKIP) {
+    _token=makeToken(_ttype);
+    _token.setText(new String(text.getBuffer(),_begin,text.length() - _begin));
+  }
+  _returnToken=_token;
+}

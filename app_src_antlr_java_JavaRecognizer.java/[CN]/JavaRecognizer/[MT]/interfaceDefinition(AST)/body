@@ -1,0 +1,23 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST interfaceDefinition_AST=null;
+  AST ie_AST=null;
+  AST cb_AST=null;
+  match(LITERAL_interface);
+  AST tmp16_AST=null;
+  tmp16_AST=astFactory.create(LT(1));
+  match(IDENT);
+  interfaceExtends();
+  ie_AST=(AST)returnAST;
+  classBlock();
+  cb_AST=(AST)returnAST;
+  if (inputState.guessing == 0) {
+    interfaceDefinition_AST=(AST)currentAST.root;
+    interfaceDefinition_AST=(AST)astFactory.make((new ASTArray(5)).add(astFactory.create(INTERFACE_DEF,"INTERFACE_DEF")).add(modifiers).add(tmp16_AST).add(ie_AST).add(cb_AST));
+    currentAST.root=interfaceDefinition_AST;
+    currentAST.child=interfaceDefinition_AST != null && interfaceDefinition_AST.getFirstChild() != null ? interfaceDefinition_AST.getFirstChild() : interfaceDefinition_AST;
+    currentAST.advanceChildToEnd();
+  }
+  returnAST=interfaceDefinition_AST;
+}

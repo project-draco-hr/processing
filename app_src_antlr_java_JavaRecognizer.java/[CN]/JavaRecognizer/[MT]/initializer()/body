@@ -1,0 +1,54 @@
+{
+  returnAST=null;
+  ASTPair currentAST=new ASTPair();
+  AST initializer_AST=null;
+switch (LA(1)) {
+case LITERAL_void:
+case LITERAL_boolean:
+case LITERAL_byte:
+case LITERAL_char:
+case LITERAL_short:
+case LITERAL_int:
+case LITERAL_float:
+case LITERAL_long:
+case LITERAL_double:
+case IDENT:
+case LPAREN:
+case LITERAL_this:
+case LITERAL_super:
+case PLUS:
+case MINUS:
+case INC:
+case DEC:
+case BNOT:
+case LNOT:
+case LITERAL_true:
+case LITERAL_false:
+case LITERAL_null:
+case LITERAL_new:
+case NUM_INT:
+case CHAR_LITERAL:
+case STRING_LITERAL:
+case NUM_FLOAT:
+case NUM_LONG:
+case NUM_DOUBLE:
+{
+      expression();
+      astFactory.addASTChild(currentAST,returnAST);
+      initializer_AST=(AST)currentAST.root;
+      break;
+    }
+case LCURLY:
+{
+    arrayInitializer();
+    astFactory.addASTChild(currentAST,returnAST);
+    initializer_AST=(AST)currentAST.root;
+    break;
+  }
+default :
+{
+  throw new NoViableAltException(LT(1),getFilename());
+}
+}
+returnAST=initializer_AST;
+}
