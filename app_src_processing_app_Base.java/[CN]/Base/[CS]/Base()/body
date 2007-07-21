@@ -1,36 +1,12 @@
 {
   if (PApplet.platform == PConstants.MACOSX) {
-    MRJOpenDocumentHandler startupOpen=new MRJOpenDocumentHandler(){
-      public void handleOpenFile(      File file){
-        handleOpen(file);
-      }
-    }
-;
-    MRJApplicationUtils.registerOpenDocumentHandler(startupOpen);
-    MRJApplicationUtils.registerAboutHandler(new MRJAboutHandler(){
-      public void handleAbout(){
-        activeEditor.handleAbout();
-      }
-    }
-);
-    MRJApplicationUtils.registerPrefsHandler(new MRJPrefsHandler(){
-      public void handlePrefs(){
-        activeEditor.handlePrefs();
-      }
-    }
-);
-    MRJApplicationUtils.registerQuitHandler(new MRJQuitHandler(){
-      public void handleQuit(){
-        SwingUtilities.invokeLater(new Runnable(){
-          public void run(){
-            handleQuit();
-          }
-        }
-);
-        throw new IllegalStateException("Quit Pending User Confirmation");
-      }
-    }
-);
+    registerMacOS();
   }
-  new Editor(this,null);
+  try {
+    String path=Sketchbook.handleNewUntitled();
+    handleOpen(path);
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
 }

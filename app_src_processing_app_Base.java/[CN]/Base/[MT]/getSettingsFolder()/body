@@ -4,11 +4,9 @@
   if (pref != null) {
     dataFolder=new File(pref);
   }
- else   if (Base.isMacOS()) {
+ else   if (PApplet.platform == PConstants.MACOSX) {
     try {
-      MRJOSType domainLibrary=new MRJOSType("dlib");
-      Method findFolderMethod=MRJFileUtils.class.getMethod("findFolder",new Class[]{Short.TYPE,MRJOSType.class});
-      File libraryFolder=(File)findFolderMethod.invoke(null,new Object[]{new Short(kUserDomain),domainLibrary});
+      File libraryFolder=new File(BaseMacOS.getLibraryFolder());
       dataFolder=new File(libraryFolder,"Processing");
     }
  catch (    Exception e) {

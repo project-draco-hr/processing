@@ -1,0 +1,22 @@
+{
+  this.base=base;
+  examplesFolder=new File(System.getProperty("user.dir"),"examples");
+  examplesPath=examplesFolder.getAbsolutePath();
+  librariesFolder=new File(System.getProperty("user.dir"),"libraries");
+  librariesPath=librariesFolder.getAbsolutePath();
+  String sketchbookPath=Preferences.get("sketchbook.path");
+  if (sketchbookPath != null) {
+    File skechbookFolder=new File(sketchbookPath);
+    if (!skechbookFolder.exists()) {
+      Base.showWarning("Sketchbook folder disappeared","The sketchbook folder no longer exists,\n" + "so a new sketchbook will be created in the\n" + "default location.",null);
+      sketchbookPath=null;
+    }
+  }
+  if (sketchbookPath == null) {
+    File defaultFolder=Base.getDefaultSketchbookFolder();
+    Preferences.set("sketchbook.path",defaultFolder.getAbsolutePath());
+    if (!defaultFolder.exists()) {
+      defaultFolder.mkdirs();
+    }
+  }
+}

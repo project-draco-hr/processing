@@ -24,7 +24,6 @@
     }
   }
 );
-  sketchbook=new Sketchbook(this);
   JMenuBar menubar=new JMenuBar();
   menubar.add(buildFileMenu());
   menubar.add(buildEditMenu());
@@ -39,7 +38,8 @@
   contentPain.add(pain,BorderLayout.CENTER);
   Box box=Box.createVerticalBox();
   Box upper=Box.createVerticalBox();
-  buttons=new EditorButtons(this);
+  buttonsMenu=base.sketchbook.createButtonsMenu();
+  buttons=new EditorButtons(this,buttonsMenu);
   upper.add(buttons);
   header=new EditorHeader(this);
   upper.add(header);
@@ -120,14 +120,6 @@
 );
   pack();
   restorePreferences();
-  if (path == null) {
-    try {
-      path=sketchbook.handleNewUntitled();
-    }
- catch (    IOException e) {
-      e.printStackTrace();
-    }
-  }
   handleOpen2(path);
   setVisible(true);
 }

@@ -1,0 +1,20 @@
+{
+  boolean prompt=Preferences.getBoolean("sketchbook.prompt");
+  if (shiftDown)   prompt=!prompt;
+  try {
+    String path=null;
+    if (prompt) {
+      path=Sketchbook.handleNewPrompt(activeEditor);
+    }
+ else {
+      path=Sketchbook.handleNewUntitled();
+    }
+    if (path != null) {
+      rebuildMenusAsync();
+      handleOpen(path);
+    }
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+}
