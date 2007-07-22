@@ -12,11 +12,11 @@
         editors[editorCount]=null;
       }
     }
-    if (editorCount == 0) {
-      handleQuit();
-      if (PApplet.platform == PConstants.MACOSX) {
-        System.exit(0);
-      }
+    if (!quitting && (editorCount == 0)) {
+      storeSketches();
+      Preferences.save();
+      Base.cleanSketchbook();
+      System.exit(0);
     }
     return true;
   }

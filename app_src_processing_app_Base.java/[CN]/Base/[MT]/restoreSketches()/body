@@ -12,11 +12,20 @@
     windowPositionValid=false;
   }
   int count=Preferences.getInteger("last.sketch.count");
-  for (int i=0; i < editorCount; i++) {
-    String path=editors[i].sketch.getMainFilePath();
-    Preferences.set("last.sketch" + i + ".path",path);
-    int[] location=editors[i].getPlacement();
-    String locationStr=PApplet.join(PApplet.str(location),",");
-    Preferences.set("last.sketch" + i + ".location",locationStr);
+  int opened=0;
+  for (int i=0; i < count; i++) {
+    String path=Preferences.get("last.sketch" + i + ".path");
+    int[] location;
+    if (windowPositionValid) {
+      String locationStr=Preferences.get("last.sketch" + i + ".location");
+      location=PApplet.parseInt(PApplet.split(locationStr,','));
+    }
+ else {
+      location=nextEditorLocation();
+    }
+    if (handleOpen(path,location) != null) {
+      opened++;
+    }
   }
+  return (opened > 0);
 }

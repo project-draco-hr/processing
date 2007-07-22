@@ -21,11 +21,19 @@
       defaultFolder.mkdirs();
     }
   }
-  try {
-    String path=handleNewUntitled();
-    handleOpen(path);
+  boolean opened=restoreSketches();
+  for (int i=0; i < args.length; i++) {
+    if (handleOpen(args[i]) != null) {
+      opened=true;
+    }
   }
- catch (  IOException e) {
-    e.printStackTrace();
+  if (!opened) {
+    try {
+      String path=handleNewUntitled();
+      handleOpen(path);
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
   }
 }

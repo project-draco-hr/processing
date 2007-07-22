@@ -1,13 +1,15 @@
 {
+  storeSketches();
   boolean canceled=false;
   for (int i=0; i < editorCount; i++) {
-    if (!handleClose(editors[i])) {
+    if (!handleClose(editors[i],true)) {
       canceled=true;
       break;
     }
   }
   if (!canceled) {
     Base.cleanSketchbook();
+    Preferences.save();
     if (PApplet.platform != PConstants.MACOSX) {
       System.exit(0);
     }
