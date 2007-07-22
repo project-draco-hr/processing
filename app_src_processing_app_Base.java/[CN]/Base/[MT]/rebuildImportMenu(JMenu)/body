@@ -1,6 +1,16 @@
 {
   importMenu.removeAll();
-  boolean found=addLibraries(importMenu,new File(getSketchbookPath()));
-  if (found)   importMenu.addSeparator();
-  addLibraries(importMenu,librariesFolder);
+  try {
+    boolean found=addLibraries(importMenu,new File(getSketchbookPath()));
+    if (found)     importMenu.addSeparator();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+  try {
+    addLibraries(importMenu,librariesFolder);
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
 }
