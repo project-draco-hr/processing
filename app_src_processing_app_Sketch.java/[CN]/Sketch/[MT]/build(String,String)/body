@@ -5,7 +5,7 @@
   if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\"")) {
     javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
   }
-  classPath=buildPath + File.pathSeparator + Sketchbook.librariesClassPath+ File.pathSeparator+ javaClassPath;
+  classPath=buildPath + File.pathSeparator + Base.librariesClassPath+ File.pathSeparator+ javaClassPath;
   if (codeFolder.exists()) {
     externalRuntime=true;
     classPath=Compiler.contentsToClassPath(codeFolder) + File.pathSeparator + classPath;
@@ -126,7 +126,7 @@ catch (  Exception ex) {
   String imports[]=preprocessor.extraImports;
   for (int i=0; i < imports.length; i++) {
     String entry=imports[i].substring(0,imports[i].lastIndexOf('.'));
-    File libFolder=(File)Sketchbook.importToLibraryTable.get(entry);
+    File libFolder=(File)Base.importToLibraryTable.get(entry);
     if (libFolder == null) {
       continue;
     }

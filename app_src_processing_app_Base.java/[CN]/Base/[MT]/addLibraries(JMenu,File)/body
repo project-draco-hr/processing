@@ -5,7 +5,7 @@
   Arrays.sort(list,String.CASE_INSENSITIVE_ORDER);
   ActionListener listener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      base.activeEditor.sketch.importLibrary(e.getActionCommand());
+      activeEditor.sketch.importLibrary(e.getActionCommand());
     }
   }
 ;
@@ -17,7 +17,7 @@
     File exported=new File(subfolder,"library");
     File entry=new File(exported,list[i] + ".jar");
     if (entry.exists()) {
-      String sanityCheck=sanitizedName(list[i]);
+      String sanityCheck=Sketch.sanitizedName(list[i]);
       if (!sanityCheck.equals(list[i])) {
         String mess="The library \"" + list[i] + "\" cannot be used.\n"+ "Library names must contain only basic letters and numbers.\n"+ "(ascii only and no spaces, and it cannot start with a number)";
         Base.showMessage("Ignoring bad sketch name",mess);
