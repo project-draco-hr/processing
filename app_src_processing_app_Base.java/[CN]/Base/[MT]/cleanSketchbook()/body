@@ -1,4 +1,5 @@
 {
+  if (!Preferences.getBoolean("sketchbook.auto_clean"))   return;
   File sketchbookFolder=new File(getSketchbookPath());
   if (!sketchbookFolder.exists())   return;
   String entries[]=sketchbookFolder.list();
@@ -8,9 +9,7 @@
       File prey=new File(sketchbookFolder,entries[j]);
       File pde=new File(prey,entries[j] + ".pde");
       if (pde.exists() && (Base.calcFolderSize(prey) == 0)) {
-        if (Preferences.getBoolean("sketchbook.auto_clean")) {
-          Base.removeDir(prey);
-        }
+        Base.removeDir(prey);
       }
     }
   }

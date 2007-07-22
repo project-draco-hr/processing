@@ -13,7 +13,7 @@
   }
   addWindowListener(new WindowAdapter(){
     public void windowClosing(    WindowEvent e){
-      handleQuitInternal();
+      base.handleClose(Editor.this);
     }
   }
 );
@@ -21,6 +21,11 @@
   addWindowListener(new WindowAdapter(){
     public void windowActivated(    WindowEvent e){
       base.handleActivated(Editor.this);
+      if (sketchbookUpdated) {
+        base.rebuildSketchbookMenu(sketchbookMenu);
+        base.rebuildToolbarMenu(toolbarMenu);
+        sketchbookUpdated=false;
+      }
     }
   }
 );

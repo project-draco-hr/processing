@@ -1,22 +1,19 @@
 {
   doStop();
   toolbar.activate(EditorToolbar.SAVE);
-  SwingUtilities.invokeLater(new Runnable(){
-    public void run(){
-      message("Saving...");
-      try {
-        if (sketch.saveAs()) {
-          message("Done Saving.");
-        }
+  message("Saving...");
+  try {
+    if (sketch.saveAs()) {
+      message("Done Saving.");
+    }
  else {
-          message("Save Cancelled.");
-        }
-      }
- catch (      Exception e) {
-        error(e);
-      }
-      toolbar.clear();
+      message("Save Canceled.");
+      return false;
     }
   }
-);
+ catch (  Exception e) {
+    error(e);
+  }
+  toolbar.clear();
+  return true;
 }

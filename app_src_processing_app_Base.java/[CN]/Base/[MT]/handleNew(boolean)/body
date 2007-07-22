@@ -3,15 +3,18 @@
   if (shiftDown)   prompt=!prompt;
   try {
     String path=null;
+    boolean untitled=false;
     if (prompt) {
       path=handleNewPrompt(activeEditor);
     }
  else {
       path=handleNewUntitled();
+      untitled=true;
     }
     if (path != null) {
       rebuildMenusAsync();
-      handleOpen(path);
+      Editor editor=handleOpen(path);
+      editor.untitled=true;
     }
   }
  catch (  IOException e) {
