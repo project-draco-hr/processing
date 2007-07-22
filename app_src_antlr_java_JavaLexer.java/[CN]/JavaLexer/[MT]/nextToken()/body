@@ -1,5 +1,7 @@
 {
+  Token theRetToken=null;
   tryAgain:   for (; ; ) {
+    Token _token=null;
     int _ttype=Token.INVALID_TYPE;
     resetText();
     try {
@@ -8,56 +10,67 @@ switch (LA(1)) {
 case '?':
 {
             mQUESTION(true);
+            theRetToken=_returnToken;
             break;
           }
 case '(':
 {
           mLPAREN(true);
+          theRetToken=_returnToken;
           break;
         }
 case ')':
 {
         mRPAREN(true);
+        theRetToken=_returnToken;
         break;
       }
 case '[':
 {
       mLBRACK(true);
+      theRetToken=_returnToken;
       break;
     }
 case ']':
 {
     mRBRACK(true);
+    theRetToken=_returnToken;
     break;
   }
 case '{':
 {
   mLCURLY(true);
+  theRetToken=_returnToken;
   break;
 }
 case '}':
 {
 mRCURLY(true);
+theRetToken=_returnToken;
 break;
 }
 case ':':
 {
 mCOLON(true);
+theRetToken=_returnToken;
 break;
 }
 case ',':
 {
 mCOMMA(true);
+theRetToken=_returnToken;
 break;
 }
 case '~':
 {
 mBNOT(true);
+theRetToken=_returnToken;
 break;
 }
 case ';':
 {
 mSEMI(true);
+theRetToken=_returnToken;
 break;
 }
 case '\t':
@@ -67,16 +80,19 @@ case '\r':
 case ' ':
 {
 mWS(true);
+theRetToken=_returnToken;
 break;
 }
 case '\'':
 {
 mCHAR_LITERAL(true);
+theRetToken=_returnToken;
 break;
 }
 case '"':
 {
 mSTRING_LITERAL(true);
+theRetToken=_returnToken;
 break;
 }
 case '$':
@@ -135,6 +151,7 @@ case 'y':
 case 'z':
 {
 mIDENT(true);
+theRetToken=_returnToken;
 break;
 }
 case '.':
@@ -150,116 +167,153 @@ case '8':
 case '9':
 {
 mNUM_INT(true);
+theRetToken=_returnToken;
 break;
 }
 default :
 if ((LA(1) == '>') && (LA(2) == '>') && (LA(3) == '>')&& (LA(4) == '=')) {
 mBSR_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '>') && (LA(2) == '>') && (LA(3) == '=')) {
 mSR_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '>') && (LA(2) == '>') && (LA(3) == '>')&& (true)) {
 mBSR(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '<') && (LA(2) == '<') && (LA(3) == '=')) {
 mSL_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '=') && (LA(2) == '=')) {
 mEQUAL(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '!') && (LA(2) == '=')) {
 mNOT_EQUAL(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '/') && (LA(2) == '=')) {
 mDIV_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '+') && (LA(2) == '=')) {
 mPLUS_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '+') && (LA(2) == '+')) {
 mINC(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '-') && (LA(2) == '=')) {
 mMINUS_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '-') && (LA(2) == '-')) {
 mDEC(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '*') && (LA(2) == '=')) {
 mSTAR_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '%') && (LA(2) == '=')) {
 mMOD_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '>') && (LA(2) == '>') && (true)) {
 mSR(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '>') && (LA(2) == '=')) {
 mGE(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '<') && (LA(2) == '<') && (true)) {
 mSL(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '<') && (LA(2) == '=')) {
 mLE(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '^') && (LA(2) == '=')) {
 mBXOR_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '|') && (LA(2) == '=')) {
 mBOR_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '|') && (LA(2) == '|')) {
 mLOR(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '&') && (LA(2) == '=')) {
 mBAND_ASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '&') && (LA(2) == '&')) {
 mLAND(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '/') && (LA(2) == '/')) {
 mSL_COMMENT(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '/') && (LA(2) == '*')) {
 mML_COMMENT(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '=') && (true)) {
 mASSIGN(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '!') && (true)) {
 mLNOT(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '/') && (true)) {
 mDIV(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '+') && (true)) {
 mPLUS(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '-') && (true)) {
 mMINUS(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '*') && (true)) {
 mSTAR(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '%') && (true)) {
 mMOD(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '>') && (true)) {
 mGT(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '<') && (true)) {
 mLT(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '^') && (true)) {
 mBXOR(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '|') && (true)) {
 mBOR(true);
+theRetToken=_returnToken;
 }
  else if ((LA(1) == '&') && (true)) {
 mBAND(true);
+theRetToken=_returnToken;
 }
  else {
 if (LA(1) == EOF_CHAR) {
