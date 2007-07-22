@@ -1,6 +1,6 @@
 {
   FileDialog fd=new FileDialog(editor,"Save sketch folder as...",FileDialog.SAVE);
-  if (isReadOnly()) {
+  if (isReadOnly() || isUntitled()) {
     fd.setDirectory(Preferences.get("sketchbook.path"));
   }
  else {
@@ -69,5 +69,6 @@
   code[0].saveAs(newFile);
   editor.handleOpenUnchecked(newFile.getPath(),currentIndex,editor.textarea.getSelectionStart(),editor.textarea.getSelectionEnd(),editor.textarea.getScrollPosition());
   editor.base.rebuildMenusAsync();
+  setUntitled(false);
   return true;
 }
