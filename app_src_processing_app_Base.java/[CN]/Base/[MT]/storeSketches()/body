@@ -2,9 +2,13 @@
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   Preferences.setInteger("last.screen.width",screen.width);
   Preferences.setInteger("last.screen.height",screen.height);
+  String untitledPath=untitledFolder.getAbsolutePath();
   Preferences.setInteger("last.sketch.count",editorCount);
   for (int i=0; i < editorCount; i++) {
     String path=editors[i].sketch.getMainFilePath();
+    if (path.startsWith(untitledPath)) {
+      path="";
+    }
     Preferences.set("last.sketch" + i + ".path",path);
     int[] location=editors[i].getPlacement();
     String locationStr=PApplet.join(PApplet.str(location),",");
