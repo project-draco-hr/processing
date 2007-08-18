@@ -1,6 +1,10 @@
 {
   try {
-    return createReader(new FileInputStream(file));
+    InputStream is=new FileInputStream(file);
+    if (file.getName().endsWith(".gz")) {
+      is=new GZIPInputStream(is);
+    }
+    return createReader(is);
   }
  catch (  Exception e) {
     if (file == null) {
