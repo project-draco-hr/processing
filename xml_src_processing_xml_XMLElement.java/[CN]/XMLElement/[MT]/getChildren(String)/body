@@ -1,0 +1,15 @@
+{
+  if (name.indexOf('/') != -1) {
+    return getChildren(PApplet.split(name,'/'),0);
+  }
+  int childCount=getChildCount();
+  XMLElement[] matches=new XMLElement[childCount];
+  int matchCount=0;
+  for (int i=0; i < childCount; i++) {
+    XMLElement kid=getChild(i);
+    if (kid.getName().equals(name)) {
+      matches[matchCount++]=kid;
+    }
+  }
+  return (XMLElement[])PApplet.subset(matches,0,matchCount);
+}
