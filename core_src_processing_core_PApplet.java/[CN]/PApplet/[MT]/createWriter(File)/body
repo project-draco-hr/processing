@@ -1,10 +1,14 @@
 {
   try {
-    return createWriter(new FileOutputStream(file));
+    OutputStream output=new FileOutputStream(file);
+    if (file.getName().toLowerCase().endsWith(".gz")) {
+      output=new GZIPOutputStream(output);
+    }
+    return createWriter(output);
   }
  catch (  Exception e) {
     if (file == null) {
-      throw new RuntimeException("File passed to writer() was null");
+      throw new RuntimeException("File passed to createWriter() was null");
     }
  else {
       e.printStackTrace();

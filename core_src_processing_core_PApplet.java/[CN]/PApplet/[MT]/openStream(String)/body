@@ -1,5 +1,6 @@
 {
   InputStream stream=null;
+  boolean gz=filename.toLowerCase().endsWith(".gz");
   if (filename == null)   return null;
   if (filename.length() == 0) {
     return null;
@@ -7,7 +8,7 @@
   try {
     URL url=new URL(filename);
     stream=url.openStream();
-    return stream;
+    return gz ? new GZIPInputStream(stream) : stream;
   }
  catch (  MalformedURLException mfue) {
   }
@@ -22,14 +23,26 @@ catch (  IOException e) {
   if (stream != null) {
     String cn=stream.getClass().getName();
     if (!cn.equals("sun.plugin.cache.EmptyInputStream")) {
-      return stream;
+      try {
+        return gz ? new GZIPInputStream(stream) : stream;
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+        return null;
+      }
     }
   }
   stream=cl.getResourceAsStream(filename);
   if (stream != null) {
     String cn=stream.getClass().getName();
     if (!cn.equals("sun.plugin.cache.EmptyInputStream")) {
-      return stream;
+      try {
+        return gz ? new GZIPInputStream(stream) : stream;
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+        return null;
+      }
     }
   }
   if (!online) {
@@ -51,7 +64,9 @@ catch (  IOException e) {
         }
       }
       stream=new FileInputStream(file);
-      if (stream != null)       return stream;
+      if (stream != null) {
+        return gz ? new GZIPInputStream(stream) : stream;
+      }
     }
  catch (    IOException ioe) {
     }
@@ -62,19 +77,25 @@ catch (    SecurityException se) {
     try {
       try {
         stream=new FileInputStream(dataPath(filename));
-        if (stream != null)         return stream;
+        if (stream != null) {
+          return gz ? new GZIPInputStream(stream) : stream;
+        }
       }
  catch (      IOException e2) {
       }
       try {
         stream=new FileInputStream(sketchPath(filename));
-        if (stream != null)         return stream;
+        if (stream != null) {
+          return gz ? new GZIPInputStream(stream) : stream;
+        }
       }
  catch (      Exception e) {
       }
       try {
         stream=new FileInputStream(filename);
-        if (stream != null)         return stream;
+        if (stream != null) {
+          return gz ? new GZIPInputStream(stream) : stream;
+        }
       }
  catch (      IOException e1) {
       }

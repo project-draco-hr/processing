@@ -1,14 +1,14 @@
 {
   try {
     InputStream is=new FileInputStream(file);
-    if (file.getName().endsWith(".gz")) {
+    if (file.getName().toLowerCase().endsWith(".gz")) {
       is=new GZIPInputStream(is);
     }
     return createReader(is);
   }
  catch (  Exception e) {
     if (file == null) {
-      throw new RuntimeException("File passed to reader() was null");
+      throw new RuntimeException("File passed to createReader() was null");
     }
  else {
       e.printStackTrace();
