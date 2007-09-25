@@ -71,36 +71,33 @@
       return true;
     }
     public boolean importData(    JComponent src,    Transferable transferable){
-      DataFlavor[] flavors=transferable.getTransferDataFlavors();
       int successful=0;
-      for (int i=0; i < flavors.length; i++) {
-        try {
-          Object stuff=transferable.getTransferData(flavors[i]);
-          if (!(stuff instanceof java.util.List))           continue;
-          java.util.List list=(java.util.List)stuff;
-          for (int j=0; j < list.size(); j++) {
-            Object item=list.get(j);
-            if (item instanceof File) {
-              File file=(File)item;
-              String filename=file.getName();
-              if (filename.endsWith(".pde")) {
-                String name=filename.substring(0,filename.length() - 4);
-                File parent=file.getParentFile();
-                if (name.equals(parent.getName())) {
-                  base.handleOpen(file.getAbsolutePath());
-                  return true;
-                }
-              }
-              if (sketch.addFile(file)) {
+      try {
+        DataFlavor uriListFlavor=new DataFlavor("text/uri-list;class=java.lang.String");
+        if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+          java.util.List list=(java.util.List)transferable.getTransferData(DataFlavor.javaFileListFlavor);
+          for (int i=0; i < list.size(); i++) {
+            File file=(File)list.get(i);
+            if (sketch.addFile(file)) {
+              successful++;
+            }
+          }
+        }
+ else         if (transferable.isDataFlavorSupported(uriListFlavor)) {
+          String data=(String)transferable.getTransferData(uriListFlavor);
+          String[] pieces=PApplet.splitTokens(data,"\r\n");
+          for (int i=0; i < pieces.length; i++) {
+            if (!pieces[i].startsWith("#")) {
+              if (sketch.addFile(new File(pieces[i]))) {
                 successful++;
               }
             }
           }
         }
- catch (        Exception e) {
-          e.printStackTrace();
-          return false;
-        }
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+        return false;
       }
       if (successful == 0) {
         error("No files were added to the sketch.");
