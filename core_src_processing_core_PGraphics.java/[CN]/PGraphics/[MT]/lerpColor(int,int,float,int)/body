@@ -20,17 +20,7 @@
     int alfa=((int)(a1 + (a2 - a1) * amt)) << 24;
     Color.RGBtoHSB((c1 >> 16) & 0xff,(c1 >> 8) & 0xff,c1 & 0xff,lerpColorHSB1);
     Color.RGBtoHSB((c2 >> 16) & 0xff,(c2 >> 8) & 0xff,c2 & 0xff,lerpColorHSB2);
-    float h1=lerpColorHSB1[0];
-    float h2=lerpColorHSB2[0];
-    if (Math.abs(h1 - h2) > 0.5f) {
-      if (h1 > h2) {
-        h2+=1;
-      }
- else {
-        h1+=1;
-      }
-    }
-    float ho=(PApplet.lerp(lerpColorHSB1[0],lerpColorHSB2[0],amt)) % 1.0f;
+    float ho=PApplet.lerp(lerpColorHSB1[0],lerpColorHSB2[0],amt);
     float so=PApplet.lerp(lerpColorHSB1[1],lerpColorHSB2[1],amt);
     float bo=PApplet.lerp(lerpColorHSB1[2],lerpColorHSB2[2],amt);
     return alfa | (Color.HSBtoRGB(ho,so,bo) & 0xFFFFFF);
