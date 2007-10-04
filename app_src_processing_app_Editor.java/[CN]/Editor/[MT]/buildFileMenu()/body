@@ -1,6 +1,6 @@
 {
   JMenuItem item;
-  JMenu menu=new JMenu("File");
+  fileMenu=new JMenu("File");
   item=newJMenuItem("New",'N');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -8,7 +8,7 @@
     }
   }
 );
-  menu.add(item);
+  fileMenu.add(item);
   item=Editor.newJMenuItem("Open...",'O',false);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -16,7 +16,17 @@
     }
   }
 );
-  menu.add(item);
+  fileMenu.add(item);
+  if (sketchbookMenu == null) {
+    sketchbookMenu=new JMenu("Sketchbook");
+    base.rebuildSketchbookMenu(sketchbookMenu);
+  }
+  fileMenu.add(sketchbookMenu);
+  if (examplesMenu == null) {
+    examplesMenu=new JMenu("Examples");
+    base.rebuildExamplesMenu(examplesMenu);
+  }
+  fileMenu.add(examplesMenu);
   item=Editor.newJMenuItem("Close",'W',false);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -24,13 +34,7 @@
     }
   }
 );
-  menu.add(item);
-  sketchbookMenu=new JMenu("Sketchbook");
-  base.rebuildSketchbookMenu(sketchbookMenu);
-  menu.add(sketchbookMenu);
-  JMenu examplesMenu=new JMenu("Examples");
-  base.rebuildExamplesMenu(examplesMenu);
-  menu.add(examplesMenu);
+  fileMenu.add(item);
   saveMenuItem=newJMenuItem("Save",'S');
   saveMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -38,7 +42,7 @@
     }
   }
 );
-  menu.add(saveMenuItem);
+  fileMenu.add(saveMenuItem);
   saveAsMenuItem=newJMenuItem("Save As...",'S',true);
   saveAsMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -46,7 +50,7 @@
     }
   }
 );
-  menu.add(saveAsMenuItem);
+  fileMenu.add(saveAsMenuItem);
   item=newJMenuItem("Export",'E');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -54,7 +58,7 @@
     }
   }
 );
-  menu.add(item);
+  fileMenu.add(item);
   exportAppItem=newJMenuItem("Export Application",'E',true);
   exportAppItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -62,8 +66,8 @@
     }
   }
 );
-  menu.add(exportAppItem);
-  menu.addSeparator();
+  fileMenu.add(exportAppItem);
+  fileMenu.addSeparator();
   item=newJMenuItem("Page Setup",'P',true);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -71,7 +75,7 @@
     }
   }
 );
-  menu.add(item);
+  fileMenu.add(item);
   item=newJMenuItem("Print",'P');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -79,9 +83,9 @@
     }
   }
 );
-  menu.add(item);
+  fileMenu.add(item);
   if (!Base.isMacOS()) {
-    menu.addSeparator();
+    fileMenu.addSeparator();
     item=newJMenuItem("Preferences",',');
     item.addActionListener(new ActionListener(){
       public void actionPerformed(      ActionEvent e){
@@ -89,8 +93,8 @@
       }
     }
 );
-    menu.add(item);
-    menu.addSeparator();
+    fileMenu.add(item);
+    fileMenu.addSeparator();
     item=newJMenuItem("Quit",'Q');
     item.addActionListener(new ActionListener(){
       public void actionPerformed(      ActionEvent e){
@@ -98,7 +102,7 @@
       }
     }
 );
-    menu.add(item);
+    fileMenu.add(item);
   }
-  return menu;
+  return fileMenu;
 }

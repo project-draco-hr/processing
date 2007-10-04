@@ -12,21 +12,13 @@
   addWindowListener(new WindowAdapter(){
     public void windowActivated(    WindowEvent e){
       base.handleActivated(Editor.this);
-      if (sketchbookUpdated) {
-        base.rebuildSketchbookMenu(sketchbookMenu);
-        base.rebuildToolbarMenu(toolbarMenu);
-        sketchbookUpdated=false;
-      }
+      fileMenu.insert(sketchbookMenu,2);
+      fileMenu.insert(examplesMenu,3);
+      sketchMenu.insert(importMenu,4);
     }
   }
 );
-  JMenuBar menubar=new JMenuBar();
-  menubar.add(buildFileMenu());
-  menubar.add(buildEditMenu());
-  menubar.add(buildSketchMenu());
-  menubar.add(buildToolsMenu());
-  menubar.add(buildHelpMenu());
-  setJMenuBar(menubar);
+  buildMenuBar();
   Container contentPain=getContentPane();
   contentPain.setLayout(new BorderLayout());
   JPanel pain=new JPanel();
@@ -34,8 +26,10 @@
   contentPain.add(pain,BorderLayout.CENTER);
   Box box=Box.createVerticalBox();
   Box upper=Box.createVerticalBox();
-  toolbarMenu=new JMenu();
-  base.rebuildToolbarMenu(toolbarMenu);
+  if (toolbarMenu == null) {
+    toolbarMenu=new JMenu();
+    base.rebuildToolbarMenu(toolbarMenu);
+  }
   toolbar=new EditorToolbar(this,toolbarMenu);
   upper.add(toolbar);
   header=new EditorHeader(this);
@@ -122,5 +116,4 @@
   setPlacement(location);
   applyPreferences();
   handleOpen2(path);
-  setVisible(true);
 }

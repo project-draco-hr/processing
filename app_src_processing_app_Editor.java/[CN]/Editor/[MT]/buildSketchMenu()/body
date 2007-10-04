@@ -1,6 +1,6 @@
 {
   JMenuItem item;
-  JMenu menu=new JMenu("Sketch");
+  sketchMenu=new JMenu("Sketch");
   item=newJMenuItem("Run",'R');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -8,7 +8,7 @@
     }
   }
 );
-  menu.add(item);
+  sketchMenu.add(item);
   item=newJMenuItem("Present",'R',true);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -16,7 +16,7 @@
     }
   }
 );
-  menu.add(item);
+  sketchMenu.add(item);
   item=new JMenuItem("Stop");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -24,11 +24,13 @@
     }
   }
 );
-  menu.add(item);
-  menu.addSeparator();
-  JMenu importMenu=new JMenu("Import Library...");
-  base.rebuildImportMenu(importMenu);
-  menu.add(importMenu);
+  sketchMenu.add(item);
+  sketchMenu.addSeparator();
+  if (importMenu == null) {
+    importMenu=new JMenu("Import Library...");
+    base.rebuildImportMenu(importMenu);
+  }
+  sketchMenu.add(importMenu);
   item=newJMenuItem("Show Sketch Folder",'K',false);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -36,7 +38,7 @@
     }
   }
 );
-  menu.add(item);
+  sketchMenu.add(item);
   if (!Base.openFolderAvailable()) {
     item.setEnabled(false);
   }
@@ -47,6 +49,6 @@
     }
   }
 );
-  menu.add(item);
-  return menu;
+  sketchMenu.add(item);
+  return sketchMenu;
 }
