@@ -1,3 +1,448 @@
 {
-  draw();
+  float x0, x1, x2;
+  float z0, z1, z2;
+  float y0=y_array[0];
+  float y1=y_array[1];
+  float y2=y_array[2];
+  firstSegment=true;
+  if (m_culling) {
+    x0=x_array[0];
+    if ((x_array[2] - x0) * (y1 - y0) < (x_array[1] - x0) * (y2 - y0))     return;
+  }
+  if (y0 < y1) {
+    if (y2 < y1) {
+      if (y2 < y0) {
+        o0=2;
+        o1=0;
+        o2=1;
+      }
+ else {
+        o0=0;
+        o1=2;
+        o2=1;
+      }
+    }
+ else {
+      o0=0;
+      o1=1;
+      o2=2;
+    }
+  }
+ else {
+    if (y2 > y1) {
+      if (y2 < y0) {
+        o0=1;
+        o1=2;
+        o2=0;
+      }
+ else {
+        o0=1;
+        o1=0;
+        o2=2;
+      }
+    }
+ else {
+      o0=2;
+      o1=1;
+      o2=0;
+    }
+  }
+  y0=y_array[o0];
+  int yi0=(int)(y0 + PIXEL_CENTER);
+  if (yi0 > SCREEN_HEIGHT) {
+    return;
+  }
+ else   if (yi0 < 0) {
+    yi0=0;
+  }
+  y2=y_array[o2];
+  int yi2=(int)(y2 + PIXEL_CENTER);
+  if (yi2 < 0) {
+    return;
+  }
+ else   if (yi2 > SCREEN_HEIGHT) {
+    yi2=SCREEN_HEIGHT;
+  }
+  if (yi2 > yi0) {
+    x0=x_array[o0];
+    x1=x_array[o1];
+    x2=x_array[o2];
+    y1=y_array[o1];
+    int yi1=(int)(y1 + PIXEL_CENTER);
+    if (yi1 < 0)     yi1=0;
+    if (yi1 > SCREEN_HEIGHT)     yi1=SCREEN_HEIGHT;
+    dx2=x2 - x0;
+    dy0=y1 - y0;
+    dy2=y2 - y0;
+    xadd2=dx2 / dy2;
+    temp=dy0 / dy2;
+    width=temp * dx2 + x0 - x1;
+    if (INTERPOLATE_ALPHA) {
+      a0=a_array[o0];
+      a1=a_array[o1];
+      a2=a_array[o2];
+      da0=a1 - a0;
+      da2=a2 - a0;
+      iaadd=(int)((temp * da2 - da0) / width);
+    }
+    if (INTERPOLATE_RGB) {
+      r0=r_array[o0];
+      r1=r_array[o1];
+      r2=r_array[o2];
+      g0=g_array[o0];
+      g1=g_array[o1];
+      g2=g_array[o2];
+      b0=b_array[o0];
+      b1=b_array[o1];
+      b2=b_array[o2];
+      dr0=r1 - r0;
+      dg0=g1 - g0;
+      db0=b1 - b0;
+      dr2=r2 - r0;
+      dg2=g2 - g0;
+      db2=b2 - b0;
+      iradd=(int)((temp * dr2 - dr0) / width);
+      igadd=(int)((temp * dg2 - dg0) / width);
+      ibadd=(int)((temp * db2 - db0) / width);
+    }
+    if (INTERPOLATE_UV) {
+      u0=u_array[o0];
+      u1=u_array[o1];
+      u2=u_array[o2];
+      v0=v_array[o0];
+      v1=v_array[o1];
+      v2=v_array[o2];
+      du0=u1 - u0;
+      dv0=v1 - v0;
+      du2=u2 - u0;
+      dv2=v2 - v0;
+      iuadd=(int)((temp * du2 - du0) / width);
+      ivadd=(int)((temp * dv2 - dv0) / width);
+    }
+    z0=z_array[o0];
+    z1=z_array[o1];
+    z2=z_array[o2];
+    dz0=z1 - z0;
+    dz2=z2 - z0;
+    izadd=(temp * dz2 - dz0) / width;
+    if (yi1 > yi0) {
+      dta=(yi0 + PIXEL_CENTER) - y0;
+      xadd1=(x1 - x0) / dy0;
+      if (xadd2 > xadd1) {
+        xleft=x0 + dta * xadd1;
+        xrght=x0 + dta * xadd2;
+        zleftadd=dz0 / dy0;
+        zleft=dta * zleftadd + z0;
+        if (INTERPOLATE_UV) {
+          uleftadd=du0 / dy0;
+          vleftadd=dv0 / dy0;
+          uleft=dta * uleftadd + u0;
+          vleft=dta * vleftadd + v0;
+        }
+        if (INTERPOLATE_RGB) {
+          rleftadd=dr0 / dy0;
+          gleftadd=dg0 / dy0;
+          bleftadd=db0 / dy0;
+          rleft=dta * rleftadd + r0;
+          gleft=dta * gleftadd + g0;
+          bleft=dta * bleftadd + b0;
+        }
+        if (INTERPOLATE_ALPHA) {
+          aleftadd=da0 / dy0;
+          aleft=dta * aleftadd + a0;
+          if (m_drawFlags == R_ALPHA) {
+            drawsegment_plain_alpha(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_ALPHA)) {
+            drawsegment_gouraud_alpha(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_TEXTURE8 + R_ALPHA)) {
+            drawsegment_texture8_alpha(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_TEXTURE24 + R_ALPHA)) {
+            drawsegment_texture24_alpha(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_TEXTURE32 + R_ALPHA)) {
+            drawsegment_texture32_alpha(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE8 + R_ALPHA)) {
+            drawsegment_gouraud_texture8_alpha(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE24 + R_ALPHA)) {
+            drawsegment_gouraud_texture24_alpha(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE32 + R_ALPHA)) {
+            drawsegment_gouraud_texture32_alpha(xadd1,xadd2,yi0,yi1);
+          }
+        }
+ else {
+          if (m_drawFlags == 0) {
+            drawsegment_plain(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == R_GOURAUD) {
+            drawsegment_gouraud(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == R_TEXTURE8) {
+            drawsegment_texture8(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == R_TEXTURE24) {
+            drawsegment_texture24(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == R_TEXTURE32) {
+            drawsegment_texture32(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE8)) {
+            drawsegment_gouraud_texture8(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE24)) {
+            drawsegment_gouraud_texture24(xadd1,xadd2,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE32)) {
+            drawsegment_gouraud_texture32(xadd1,xadd2,yi0,yi1);
+          }
+        }
+        m_singleRight=true;
+      }
+ else {
+        xleft=x0 + dta * xadd2;
+        xrght=x0 + dta * xadd1;
+        zleftadd=dz2 / dy2;
+        zleft=dta * zleftadd + z0;
+        if (INTERPOLATE_UV) {
+          uleftadd=du2 / dy2;
+          vleftadd=dv2 / dy2;
+          uleft=dta * uleftadd + u0;
+          vleft=dta * vleftadd + v0;
+        }
+        if (INTERPOLATE_RGB) {
+          rleftadd=dr2 / dy2;
+          gleftadd=dg2 / dy2;
+          bleftadd=db2 / dy2;
+          rleft=dta * rleftadd + r0;
+          gleft=dta * gleftadd + g0;
+          bleft=dta * bleftadd + b0;
+        }
+        if (INTERPOLATE_ALPHA) {
+          aleftadd=da2 / dy2;
+          aleft=dta * aleftadd + a0;
+          if (m_drawFlags == R_ALPHA) {
+            drawsegment_plain_alpha(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_ALPHA)) {
+            drawsegment_gouraud_alpha(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_TEXTURE8 + R_ALPHA)) {
+            drawsegment_texture8_alpha(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_TEXTURE24 + R_ALPHA)) {
+            drawsegment_texture24_alpha(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_TEXTURE32 + R_ALPHA)) {
+            drawsegment_texture32_alpha(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE8 + R_ALPHA)) {
+            drawsegment_gouraud_texture8_alpha(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE24 + R_ALPHA)) {
+            drawsegment_gouraud_texture24_alpha(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE32 + R_ALPHA)) {
+            drawsegment_gouraud_texture32_alpha(xadd2,xadd1,yi0,yi1);
+          }
+        }
+ else {
+          if (m_drawFlags == 0) {
+            drawsegment_plain(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == R_GOURAUD) {
+            drawsegment_gouraud(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == R_TEXTURE8) {
+            drawsegment_texture8(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == R_TEXTURE24) {
+            drawsegment_texture24(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == R_TEXTURE32) {
+            drawsegment_texture32(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE8)) {
+            drawsegment_gouraud_texture8(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE24)) {
+            drawsegment_gouraud_texture24(xadd2,xadd1,yi0,yi1);
+          }
+ else           if (m_drawFlags == (R_GOURAUD + R_TEXTURE32)) {
+            drawsegment_gouraud_texture32(xadd2,xadd1,yi0,yi1);
+          }
+        }
+        m_singleRight=false;
+      }
+      if (yi2 == yi1)       return;
+      dy1=y2 - y1;
+      xadd1=(x2 - x1) / dy1;
+    }
+ else {
+      dy1=y2 - y1;
+      xadd1=(x2 - x1) / dy1;
+      if (xadd2 < xadd1) {
+        xrght=((yi1 + PIXEL_CENTER) - y0) * xadd2 + x0;
+        m_singleRight=true;
+      }
+ else {
+        dta=(yi1 + PIXEL_CENTER) - y0;
+        xleft=dta * xadd2 + x0;
+        zleftadd=dz2 / dy2;
+        zleft=dta * zleftadd + z0;
+        if (INTERPOLATE_UV) {
+          uleftadd=du2 / dy2;
+          vleftadd=dv2 / dy2;
+          uleft=dta * uleftadd + u0;
+          vleft=dta * vleftadd + v0;
+        }
+        if (INTERPOLATE_RGB) {
+          rleftadd=dr2 / dy2;
+          gleftadd=dg2 / dy2;
+          bleftadd=db2 / dy2;
+          rleft=dta * rleftadd + r0;
+          gleft=dta * gleftadd + g0;
+          bleft=dta * bleftadd + b0;
+        }
+        if (INTERPOLATE_ALPHA) {
+          aleftadd=da2 / dy2;
+          aleft=dta * aleftadd + a0;
+        }
+        m_singleRight=false;
+      }
+    }
+    if (m_singleRight) {
+      dta=(yi1 + PIXEL_CENTER) - y1;
+      xleft=dta * xadd1 + x1;
+      zleftadd=(z2 - z1) / dy1;
+      zleft=dta * zleftadd + z1;
+      if (INTERPOLATE_UV) {
+        uleftadd=(u2 - u1) / dy1;
+        vleftadd=(v2 - v1) / dy1;
+        uleft=dta * uleftadd + u1;
+        vleft=dta * vleftadd + v1;
+      }
+      if (INTERPOLATE_RGB) {
+        rleftadd=(r2 - r1) / dy1;
+        gleftadd=(g2 - g1) / dy1;
+        bleftadd=(b2 - b1) / dy1;
+        rleft=dta * rleftadd + r1;
+        gleft=dta * gleftadd + g1;
+        bleft=dta * bleftadd + b1;
+      }
+      if (INTERPOLATE_ALPHA) {
+        aleftadd=(a2 - a1) / dy1;
+        aleft=dta * aleftadd + a1;
+        if (m_drawFlags == R_ALPHA) {
+          drawsegment_plain_alpha(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_ALPHA)) {
+          drawsegment_gouraud_alpha(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_TEXTURE8 + R_ALPHA)) {
+          drawsegment_texture8_alpha(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_TEXTURE24 + R_ALPHA)) {
+          drawsegment_texture24_alpha(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_TEXTURE32 + R_ALPHA)) {
+          drawsegment_texture32_alpha(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE8 + R_ALPHA)) {
+          drawsegment_gouraud_texture8_alpha(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE24 + R_ALPHA)) {
+          drawsegment_gouraud_texture24_alpha(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE32 + R_ALPHA)) {
+          drawsegment_gouraud_texture32_alpha(xadd1,xadd2,yi1,yi2);
+        }
+      }
+ else {
+        if (m_drawFlags == 0) {
+          drawsegment_plain(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == R_GOURAUD) {
+          drawsegment_gouraud(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == R_TEXTURE8) {
+          drawsegment_texture8(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == R_TEXTURE24) {
+          drawsegment_texture24(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == R_TEXTURE32) {
+          drawsegment_texture32(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE8)) {
+          drawsegment_gouraud_texture8(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE24)) {
+          drawsegment_gouraud_texture24(xadd1,xadd2,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE32)) {
+          drawsegment_gouraud_texture32(xadd1,xadd2,yi1,yi2);
+        }
+      }
+    }
+ else {
+      xrght=((yi1 + PIXEL_CENTER) - y1) * xadd1 + x1;
+      if (INTERPOLATE_ALPHA) {
+        if (m_drawFlags == R_ALPHA) {
+          drawsegment_plain_alpha(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_ALPHA)) {
+          drawsegment_gouraud_alpha(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_TEXTURE8 + R_ALPHA)) {
+          drawsegment_texture8_alpha(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_TEXTURE24 + R_ALPHA)) {
+          drawsegment_texture24_alpha(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_TEXTURE32 + R_ALPHA)) {
+          drawsegment_texture32_alpha(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE8 + R_ALPHA)) {
+          drawsegment_gouraud_texture8_alpha(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE24 + R_ALPHA)) {
+          drawsegment_gouraud_texture24_alpha(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE32 + R_ALPHA)) {
+          drawsegment_gouraud_texture32_alpha(xadd2,xadd1,yi1,yi2);
+        }
+      }
+ else {
+        if (m_drawFlags == 0) {
+          drawsegment_plain(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == R_GOURAUD) {
+          drawsegment_gouraud(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == R_TEXTURE8) {
+          drawsegment_texture8(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == R_TEXTURE24) {
+          drawsegment_texture24(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == R_TEXTURE32) {
+          drawsegment_texture32(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE8)) {
+          drawsegment_gouraud_texture8(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE24)) {
+          drawsegment_gouraud_texture24(xadd2,xadd1,yi1,yi2);
+        }
+ else         if (m_drawFlags == (R_GOURAUD + R_TEXTURE32)) {
+          drawsegment_gouraud_texture32(xadd2,xadd1,yi1,yi2);
+        }
+      }
+    }
+  }
 }
