@@ -1,12 +1,18 @@
 {
   File file=new File(path);
   if (!file.exists())   return null;
-  Editor markedForClose=null;
+  for (int i=0; i < editorCount; i++) {
+    if (editors[i].sketch.path.equals(path)) {
+      editors[i].toFront();
+      return editors[i];
+    }
+  }
   if (activeEditor != null) {
-    Sketch sketch=activeEditor.sketch;
-    if (sketch.isUntitled() && !sketch.isModified()) {
+    Sketch activeSketch=activeEditor.sketch;
+    if (activeSketch.isUntitled() && !activeSketch.isModified()) {
       if (!path.startsWith(untitledFolder.getAbsolutePath())) {
-        markedForClose=activeEditor;
+        activeEditor.handleOpenUnchecked(path,0,0,0,0);
+        return activeEditor;
       }
     }
   }
@@ -18,11 +24,6 @@
     editors=(Editor[])PApplet.expand(editors);
   }
   editors[editorCount++]=editor;
-  if (markedForClose != null) {
-    Point p=markedForClose.getLocation();
-    handleClose(markedForClose,false);
-    editor.setLocation(p);
-  }
   editor.setVisible(true);
   return editor;
 }
