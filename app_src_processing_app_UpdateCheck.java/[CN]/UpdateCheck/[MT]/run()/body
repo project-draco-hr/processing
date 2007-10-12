@@ -22,11 +22,13 @@
     }
     Preferences.set("update.last",String.valueOf(now));
     String prompt="A new version of Processing is available,\n" + "would you like to visit the Processing download page?";
-    if (latest > Base.VERSION) {
-      Object[] options={"Yes","No"};
-      int result=JOptionPane.showOptionDialog(editor,prompt,"Update",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
-      if (result == JOptionPane.YES_OPTION) {
-        Base.openURL("http://processing.org/download/");
+    if (base.activeEditor != null) {
+      if (latest > Base.VERSION) {
+        Object[] options={"Yes","No"};
+        int result=JOptionPane.showOptionDialog(base.activeEditor,prompt,"Update",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+        if (result == JOptionPane.YES_OPTION) {
+          Base.openURL("http://processing.org/download/");
+        }
       }
     }
   }
