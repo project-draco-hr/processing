@@ -1,6 +1,31 @@
 {
-  boolean success=editor.checkModified(false);
-  if (success) {
+  if (!editor.checkModified(quitting)) {
+    return false;
+  }
+  if (quitting) {
+    return true;
+  }
+  if (editorCount == 1) {
+    if (Preferences.getBoolean("sketchbook.closing_last_window_quits")) {
+      editorCount=0;
+      storeSketches();
+      Preferences.save();
+      Base.cleanSketchbook();
+      System.exit(0);
+    }
+ else {
+      try {
+        String path=createNewUntitled();
+        activeEditor.handleOpenInternal(path);
+        return true;
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+        return false;
+      }
+    }
+  }
+ else {
     editor.setVisible(false);
     editor.dispose();
     for (int i=0; i < editorCount; i++) {
@@ -12,13 +37,6 @@
         editors[editorCount]=null;
       }
     }
-    if (!quitting && (editorCount == 0)) {
-      storeSketches();
-      Preferences.save();
-      Base.cleanSketchbook();
-      System.exit(0);
-    }
-    return true;
   }
-  return false;
+  return true;
 }

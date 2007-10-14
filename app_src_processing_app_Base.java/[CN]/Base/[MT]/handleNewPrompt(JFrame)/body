@@ -8,6 +8,9 @@
   if (newbieName != null) {
     newbieName=Sketch.sanitizeName(newbieName);
     newbieDir=new File(newbieParentDir,newbieName);
-    handleNewInternal(newbieDir,newbieName);
+    newbieDir.mkdirs();
+    File newbieFile=new File(newbieDir,newbieName + ".pde");
+    new FileOutputStream(newbieFile);
+    handleOpen(newbieFile.getAbsolutePath());
   }
 }
