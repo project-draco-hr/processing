@@ -1,13 +1,6 @@
 {
   Dimension initialSize=getSize();
-  try {
-    if (javaVersion >= 1.4f) {
-      Method defocus=Component.class.getMethod("setFocusTraversalKeysEnabled",new Class[]{Boolean.TYPE});
-      defocus.invoke(this,new Object[]{Boolean.FALSE});
-    }
-  }
- catch (  Exception e) {
-  }
+  setFocusTraversalKeysEnabled(false);
   millisOffset=System.currentTimeMillis();
   finished=false;
   looping=true;
@@ -26,15 +19,6 @@
   }
  catch (  NullPointerException e) {
     online=false;
-  }
-  if (javaVersion < 1.3f) {
-    addMouseListener(new MouseAdapter(){
-      public void mousePressed(      MouseEvent e){
-        link("http://java.com/");
-      }
-    }
-);
-    return;
   }
   try {
     if (sketchPath == null) {

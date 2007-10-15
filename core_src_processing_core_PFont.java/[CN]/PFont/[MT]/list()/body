@@ -1,29 +1,9 @@
 {
-  if (PApplet.javaVersion < 1.3f) {
-    try {
-      Toolkit tk=Toolkit.getDefaultToolkit();
-      Method getFontListMethod=tk.getClass().getMethod("getFontList",(Class[])null);
-      return (String[])getFontListMethod.invoke(tk,(Object[])null);
-    }
- catch (    Exception e) {
-      e.printStackTrace();
-      return new String[]{};
-    }
+  GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+  Font fonts[]=ge.getAllFonts();
+  String list[]=new String[fonts.length];
+  for (int i=0; i < list.length; i++) {
+    list[i]=fonts[i].getName();
   }
-  try {
-    Class geClass=Class.forName("java.awt.GraphicsEnvironment");
-    Method glgeMethod=geClass.getMethod("getLocalGraphicsEnvironment",(Class[])null);
-    Object ge=glgeMethod.invoke((Class[])null,(Object[])null);
-    Method gafMethod=geClass.getMethod("getAllFonts",(Class[])null);
-    Font fonts[]=(Font[])gafMethod.invoke(ge,(Object[])null);
-    String list[]=new String[fonts.length];
-    for (int i=0; i < list.length; i++) {
-      list[i]=fonts[i].getName();
-    }
-    return list;
-  }
- catch (  Exception e) {
-    e.printStackTrace();
-    throw new RuntimeException("Error inside PFont.list()");
-  }
+  return list;
 }

@@ -1,24 +1,8 @@
 {
-  if (javaVersion < 1.2f) {
-    System.err.println("Java 1.2 or higher is required to use cursor()");
-    System.err.println("(You're using version " + javaVersionName + ")");
-    return;
-  }
   Image jimage=createImage(new MemoryImageSource(image.width,image.height,image.pixels,0,image.width));
   Point hotspot=new Point(hotspotX,hotspotY);
-  try {
-    Method mCustomCursor=Toolkit.class.getMethod("createCustomCursor",new Class[]{Image.class,Point.class,String.class});
-    Cursor cursor=(Cursor)mCustomCursor.invoke(Toolkit.getDefaultToolkit(),new Object[]{jimage,hotspot,"no cursor"});
-    setCursor(cursor);
-    cursorVisible=true;
-  }
- catch (  NoSuchMethodError e) {
-    System.err.println("cursor() is not available " + "when using Java " + javaVersionName);
-  }
-catch (  IndexOutOfBoundsException e) {
-    System.err.println("cursor() error: the hotspot " + hotspot + " is out of bounds for the given image.");
-  }
-catch (  Exception e) {
-    System.err.println(e);
-  }
+  Toolkit tk=Toolkit.getDefaultToolkit();
+  Cursor cursor=tk.createCustomCursor(jimage,hotspot,"Custom Cursor");
+  setCursor(cursor);
+  cursorVisible=true;
 }
