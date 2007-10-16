@@ -1,27 +1,23 @@
 {
-  String currentRenderer=(g == null) ? null : g.getClass().getName();
-  if (ipath != null)   ipath=savePath(ipath);
-  if (currentRenderer != null) {
-    if (currentRenderer.equals(irenderer)) {
-      if ((iwidth == g.width) && (iheight == g.height)) {
-      }
+  if (g == null) {
+    g=PApplet.createGraphics(iwidth,iheight,irenderer,ipath,this);
+    setSize(iwidth,iheight);
+  }
  else {
-        g.resize(iwidth,iheight);
-        updateSize(iwidth,iheight);
-        redraw();
-      }
+    if (ipath != null)     ipath=savePath(ipath);
+    String currentRenderer=g.getClass().getName();
+    if (currentRenderer.equals(irenderer)) {
+      setRendererSize(iwidth,iheight);
+      setSize(iwidth,iheight);
     }
  else {
       if (frameCount > 0) {
         throw new RuntimeException("size() cannot be called to change " + "the renderer outside of setup()");
       }
       g=PApplet.createGraphics(iwidth,iheight,irenderer,ipath,this);
-      updateSize(iwidth,iheight);
+      setSize(iwidth,iheight);
+      defaultSize=false;
       throw new RuntimeException(NEW_RENDERER);
     }
-  }
- else {
-    g=PApplet.createGraphics(iwidth,iheight,irenderer,ipath,this);
-    updateSize(iwidth,iheight);
   }
 }

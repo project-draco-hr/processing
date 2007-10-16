@@ -1,7 +1,12 @@
 {
   try {
     while ((Thread.currentThread() == thread) && !finished) {
-      g.requestDisplay(this);
+      if (g != null) {
+        g.requestDisplay(this);
+      }
+ else {
+        println("no renderer");
+      }
       try {
         int nap=(looping || finished) ? 1 : 10000;
         if (frameCount == 1) {
