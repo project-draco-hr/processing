@@ -1,7 +1,12 @@
 {
-  Enumeration en=clients.elements();
-  while (en.hasMoreElements()) {
-    Client client=(Client)en.nextElement();
-    client.write(bytes);
+  int index=0;
+  while (index < clientCount) {
+    clients[index].write(what);
+    if (clients[index].active()) {
+      index++;
+    }
+ else {
+      removeIndex(index);
+    }
   }
 }

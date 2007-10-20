@@ -3,7 +3,7 @@
   this.port=port;
   try {
     server=new ServerSocket(this.port);
-    clients=new Vector();
+    clients=new Client[10];
     thread=new Thread(this);
     thread.start();
     parent.registerDispose(this);
@@ -14,6 +14,7 @@
     }
   }
  catch (  IOException e) {
-    errorMessage("<init>",e);
+    e.printStackTrace();
+    thread=null;
   }
 }
