@@ -1,6 +1,15 @@
 {
   if (canvas == null) {
-    canvas=new GLCanvas();
+    GLCapabilities capabilities=new GLCapabilities();
+    if (hints[ENABLE_OPENGL_2X_SMOOTH]) {
+      capabilities.setSampleBuffers(true);
+      capabilities.setNumSamples(2);
+    }
+ else     if (hints[ENABLE_OPENGL_4X_SMOOTH]) {
+      capabilities.setSampleBuffers(true);
+      capabilities.setNumSamples(4);
+    }
+    canvas=new GLCanvas(capabilities);
     canvas.addGLEventListener(new GLEventListener(){
       public void display(      GLAutoDrawable drawable){
         gl=drawable.getGL();
