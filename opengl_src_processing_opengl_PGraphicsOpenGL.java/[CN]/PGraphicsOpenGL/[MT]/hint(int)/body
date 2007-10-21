@@ -1,6 +1,24 @@
 {
+  boolean opengl2X=hints[ENABLE_OPENGL_2X_SMOOTH];
+  boolean opengl4X=hints[ENABLE_OPENGL_4X_SMOOTH];
   super.hint(which);
   if (which == DISABLE_DEPTH_TEST) {
     gl.glDisable(GL.GL_DEPTH_TEST);
+  }
+ else   if (which == ENABLE_OPENGL_2X_SMOOTH) {
+    if (!opengl2X) {
+      parent.remove(canvas);
+      canvas=null;
+      allocate();
+      throw new RuntimeException(PApplet.NEW_RENDERER);
+    }
+  }
+ else   if (which == ENABLE_OPENGL_4X_SMOOTH) {
+    if (!opengl4X) {
+      parent.remove(canvas);
+      canvas=null;
+      allocate();
+      throw new RuntimeException(PApplet.NEW_RENDERER);
+    }
   }
 }
