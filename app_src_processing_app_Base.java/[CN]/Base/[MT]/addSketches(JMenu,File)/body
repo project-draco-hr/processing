@@ -5,7 +5,14 @@
   Arrays.sort(list,String.CASE_INSENSITIVE_ORDER);
   ActionListener listener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      handleOpen(e.getActionCommand());
+      Component source=(Component)e.getSource();
+      Component parent=source.getParent();
+      if (parent.isValid()) {
+        handleOpenReplace(e.getActionCommand());
+      }
+ else {
+        handleOpen(e.getActionCommand());
+      }
     }
   }
 ;
