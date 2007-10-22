@@ -5,9 +5,7 @@
   Arrays.sort(list,String.CASE_INSENSITIVE_ORDER);
   ActionListener listener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Component source=(Component)e.getSource();
-      Component parent=source.getParent();
-      if (parent.isValid()) {
+      if (openReplaces) {
         handleOpenReplace(e.getActionCommand());
       }
  else {
@@ -38,7 +36,7 @@
     }
  else {
       JMenu submenu=new JMenu(list[i]);
-      boolean found=addSketches(submenu,subfolder);
+      boolean found=addSketches(submenu,subfolder,openReplaces);
       if (found) {
         menu.add(submenu);
         ifound=true;
