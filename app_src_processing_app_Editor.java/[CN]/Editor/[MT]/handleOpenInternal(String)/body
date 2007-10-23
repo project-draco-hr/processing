@@ -12,7 +12,7 @@
     }
  else     if (!path.endsWith(".pde")) {
       Base.showWarning("Bad file selected","Processing can only open its own sketches\n" + "and other files ending in .pde",null);
-      return;
+      return false;
     }
  else {
       String properParent=file.getName().substring(0,file.getName().length() - 4);
@@ -23,7 +23,7 @@
         File properFolder=new File(file.getParent(),properParent);
         if (properFolder.exists()) {
           Base.showWarning("Error","A folder named \"" + properParent + "\" "+ "already exists. Can't open sketch.",null);
-          return;
+          return false;
         }
         if (!properFolder.mkdirs()) {
           throw new IOException("Couldn't create sketch folder");
@@ -35,7 +35,7 @@
         path=properPdeFile.getAbsolutePath();
       }
  else       if (result == JOptionPane.NO_OPTION) {
-        return;
+        return false;
       }
     }
     sketch=new Sketch(this,path);
@@ -45,8 +45,10 @@
     }
     setTitle(sketch.name + " | " + WINDOW_TITLE);
     untitled=false;
+    return true;
   }
  catch (  Exception e) {
     error(e);
+    return false;
   }
 }
