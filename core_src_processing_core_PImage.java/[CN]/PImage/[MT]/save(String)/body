@@ -14,14 +14,7 @@
     OutputStream os=null;
     if (PApplet.javaVersion >= 1.4f) {
       if (saveImageFormats == null) {
-        try {
-          Class ioClass=Class.forName("javax.imageio.ImageIO");
-          Method getFormatNamesMethod=ioClass.getMethod("getWriterFormatNames",(Class[])null);
-          saveImageFormats=(String[])getFormatNamesMethod.invoke((Class[])null,(Object[])null);
-        }
- catch (        Exception e) {
-          e.printStackTrace();
-        }
+        saveImageFormats=javax.imageio.ImageIO.getWriterFormatNames();
       }
       if (saveImageFormats != null) {
         for (int i=0; i < saveImageFormats.length; i++) {
