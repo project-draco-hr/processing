@@ -32,6 +32,13 @@
     okButton.setVisible(false);
     editField=new JTextField();
     editField.addKeyListener(new KeyAdapter(){
+      public void keyPressed(      KeyEvent event){
+        if (event.getKeyChar() == KeyEvent.VK_ESCAPE) {
+          unedit();
+          editor.toolbar.clear();
+          event.consume();
+        }
+      }
       public void keyTyped(      KeyEvent event){
         int c=event.getKeyChar();
         if (c == KeyEvent.VK_ENTER) {
@@ -41,11 +48,6 @@
           event.consume();
         }
  else         if ((c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_RIGHT)|| (c == KeyEvent.VK_LEFT)|| (c == KeyEvent.VK_UP)|| (c == KeyEvent.VK_DOWN)|| (c == KeyEvent.VK_HOME)|| (c == KeyEvent.VK_END)|| (c == KeyEvent.VK_SHIFT)) {
-        }
- else         if (c == KeyEvent.VK_ESCAPE) {
-          unedit();
-          editor.toolbar.clear();
-          event.consume();
         }
  else         if (c == KeyEvent.VK_SPACE) {
           String t=editField.getText();
