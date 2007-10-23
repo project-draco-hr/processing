@@ -22,6 +22,10 @@
       accurateMode=false;
     }
   }
+  boolean tint=(m_fill & 0xFFFFFF) != 0xFFFFFF;
+  int rtint=(m_fill >> 16) & 0xff;
+  int gtint=(m_fill >> 8) & 0xff;
+  int btint=m_fill & 0xFF;
   ytop*=SCREEN_WIDTH;
   ybottom*=SCREEN_WIDTH;
   int p=m_index;
@@ -124,16 +128,19 @@
             int up=red0 + ((((pix1 & 0xFF0000) - red0) * iui) >> 7);
             int dn=red2 + ((((pix3 & 0xFF0000) - red2) * iui) >> 7);
             int red=up + (((dn - up) * ivi) >> 7);
+            if (tint)             red=((red * rtint) >> 8) & 0xFF0000;
             red0=(pix0 & 0xFF00);
             red2=(pix2 & 0xFF00);
             up=red0 + ((((pix1 & 0xFF00) - red0) * iui) >> 7);
             dn=red2 + ((((pix3 & 0xFF00) - red2) * iui) >> 7);
             int grn=up + (((dn - up) * ivi) >> 7);
+            if (tint)             grn=((grn * gtint) >> 8) & 0xFF00;
             red0=(pix0 & 0xFF);
             red2=(pix2 & 0xFF);
             up=red0 + ((((pix1 & 0xFF) - red0) * iui) >> 7);
             dn=red2 + ((((pix3 & 0xFF) - red2) * iui) >> 7);
             int blu=up + (((dn - up) * ivi) >> 7);
+            if (tint)             blu=((blu * btint) >> 8) & 0xFF;
             int bb=m_pixels[xstart];
             int br=(bb & 0xFF0000);
             int bg=(bb & 0xFF00);
