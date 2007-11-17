@@ -5,16 +5,16 @@
     JFileChooser fc=new JFileChooser();
     fc.setDialogTitle("Save sketch folder as...");
     if (isReadOnly() || isUntitled()) {
-      fc.setCurrentDirectory(Preferences.get("sketchbook.path"));
+      fc.setCurrentDirectory(new File(Preferences.get("sketchbook.path")));
     }
  else {
-      fc.setCurrentDirectory(folder.getParent());
+      fc.setCurrentDirectory(folder.getParentFile());
     }
-    fc.setSelectedFile(folder.getName());
     int result=fc.showSaveDialog(editor);
     if (result == JFileChooser.APPROVE_OPTION) {
-      newParentDir=folder.getDirectory();
-      newName=folder.getName();
+      File selection=fc.getSelectedFile();
+      newParentDir=selection.getParent();
+      newName=selection.getName();
     }
   }
  else {
