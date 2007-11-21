@@ -1,29 +1,22 @@
 {
   String lowerName=name.toLowerCase();
-  Font font=null;
+  Font baseFont=null;
   try {
-    Method deriveFontMethod=Font.class.getMethod("deriveFont",new Class[]{Float.TYPE});
-    Float floatSize=new Float(size);
     if (lowerName.endsWith(".otf") || lowerName.endsWith(".ttf")) {
       InputStream stream=openStream(name);
       if (stream == null) {
         System.err.println("The font \"" + name + "\" "+ "is missing or inaccessible, make sure "+ "the URL is valid or that the file has been "+ "added to your sketch and is readable.");
         return null;
       }
-      Method createFontMethod=Font.class.getMethod("createFont",new Class[]{Integer.TYPE,InputStream.class});
-      Field ttf=Font.class.getField("TRUETYPE_FONT");
-      Integer ttfInteger=new Integer(ttf.getInt(ttf));
-      Font baseFont=(Font)createFontMethod.invoke(name,new Object[]{ttfInteger,openStream(name)});
-      font=(Font)deriveFontMethod.invoke(baseFont,new Object[]{floatSize});
+      baseFont=Font.createFont(Font.TRUETYPE_FONT,openStream(name));
     }
  else {
-      Font baseFont=new Font(name,Font.PLAIN,1);
-      font=(Font)deriveFontMethod.invoke(baseFont,new Object[]{floatSize});
+      baseFont=new Font(name,Font.PLAIN,1);
     }
   }
  catch (  Exception e) {
+    System.err.println("Problem using createFont() with " + name);
     e.printStackTrace();
-    throw new RuntimeException("Problem using createFont() " + "with the file " + name);
   }
-  return new PFont(font,smooth,charset);
+  return new PFont(baseFont.deriveFont(size),smooth,charset);
 }

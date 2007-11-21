@@ -33,14 +33,7 @@
     e.printStackTrace();
   }
   if (loadImageFormats == null) {
-    try {
-      Class ioClass=Class.forName("javax.imageio.ImageIO");
-      Method getFormatNamesMethod=ioClass.getMethod("getReaderFormatNames",(Class[])null);
-      loadImageFormats=(String[])getFormatNamesMethod.invoke((Class[])null,(Object[])null);
-    }
- catch (    Exception e) {
-      e.printStackTrace();
-    }
+    loadImageFormats=ImageIO.getReaderFormatNames();
   }
   if (loadImageFormats != null) {
     for (int i=0; i < loadImageFormats.length; i++) {
