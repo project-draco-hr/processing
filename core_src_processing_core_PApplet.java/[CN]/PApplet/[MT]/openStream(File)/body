@@ -1,6 +1,10 @@
 {
   try {
-    return new FileInputStream(file);
+    InputStream input=new FileInputStream(file);
+    if (file.getName().toLowerCase().endsWith(".gz")) {
+      return new GZIPInputStream(input);
+    }
+    return input;
   }
  catch (  IOException e) {
     if (file == null) {
