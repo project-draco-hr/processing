@@ -1,0 +1,18 @@
+{
+  parent.pushMatrix();
+  float s=size / (float)face.unitsPerEm;
+  parent.translate(x,y);
+  parent.scale(s,-s);
+  char[] c=str.toCharArray();
+  for (int i=0; i < c.length; i++) {
+    FontGlyph fg=(FontGlyph)unicodeGlyphs.get(new Character(c[i]));
+    if (fg != null) {
+      fg.draw();
+      parent.translate(fg.horizAdvX,0);
+    }
+ else {
+      System.err.println("'" + c[i] + "' not available.");
+    }
+  }
+  parent.popMatrix();
+}
