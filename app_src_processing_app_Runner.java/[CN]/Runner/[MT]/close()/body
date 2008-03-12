@@ -1,14 +1,11 @@
 {
-  if (window != null) {
-    window.dispose();
-    window=null;
-  }
-  if (process != null) {
+  if (vm != null) {
     try {
-      process.destroy();
+      vm.exit(0);
     }
- catch (    Exception e) {
+ catch (    com.sun.jdi.VMDisconnectedException vmde) {
+      System.out.println("harmless disconnect " + vmde.getMessage());
     }
-    process=null;
+    vm=null;
   }
 }

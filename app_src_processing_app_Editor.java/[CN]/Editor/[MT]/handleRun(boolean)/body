@@ -14,15 +14,22 @@
     }
   }
   try {
-    if (!sketch.handleRun())     return;
-    runtime=new Runner(sketch,Editor.this);
-    runtime.start(appletLocation);
-    watcher=new RunButtonWatcher();
+    if (!sketch.handleCompile())     return;
+    Thread t=new Thread(new Runnable(){
+      public void run(){
+        try {
+          runtime=new Runner(Editor.this,presenting);
+        }
+ catch (        RunnerException e) {
+          error(e);
+        }
+      }
+    }
+);
+    t.start();
   }
- catch (  RunnerException e) {
-    error(e);
-  }
-catch (  Exception e) {
+ catch (  Exception e) {
+    System.err.println("exception reached editor");
     e.printStackTrace();
   }
 }

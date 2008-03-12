@@ -1,5 +1,5 @@
 {
-  if (s.indexOf(PApplet.EXTERNAL_QUIT) == 0) {
+  if (s.indexOf(PApplet.EXTERNAL_STOP) == 0) {
     editor.closeRunner();
     return;
   }
@@ -8,7 +8,7 @@
     int space=nums.indexOf(' ');
     int left=Integer.parseInt(nums.substring(0,space));
     int top=Integer.parseInt(nums.substring(space + 1));
-    editor.appletLocation=new Point(left,top);
+    editor.setSketchLocation(new Point(left,top));
     return;
   }
   if (s.indexOf(PApplet.LEECH_WAKEUP) == 0) {
@@ -48,14 +48,14 @@
         if (colonIndex != -1) {
           String filename=fileAndLine.substring(0,colonIndex);
           lineNumber=Integer.parseInt(fileAndLine.substring(colonIndex + 1)) - 1;
-          for (int i=0; i < sketch.codeCount; i++) {
-            SketchCode code=sketch.code[i];
+          for (int i=0; i < sketch.getCodeCount(); i++) {
+            SketchCode code=sketch.getCode(i);
             if (((code.preprocName == null) && (lineNumber >= code.preprocOffset)) || ((code.preprocName != null) && code.preprocName.equals(filename))) {
               codeIndex=i;
             }
           }
           if (codeIndex != -1) {
-            lineNumber-=sketch.code[codeIndex].preprocOffset;
+            lineNumber-=sketch.getCode(codeIndex).preprocOffset;
             exception=new RunnerException(exception.getMessage(),codeIndex,lineNumber,-1);
             exception.hideStackTrace=true;
             foundMessageSource=true;

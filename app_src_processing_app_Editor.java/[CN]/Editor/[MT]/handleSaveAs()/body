@@ -1,5 +1,5 @@
 {
-  stopRunner();
+  handleStop();
   toolbar.activate(EditorToolbar.SAVE);
   message("Saving...");
   try {
@@ -14,6 +14,8 @@
  catch (  Exception e) {
     error(e);
   }
-  toolbar.clear();
+ finally {
+    toolbar.deactivate(EditorToolbar.SAVE);
+  }
   return true;
 }
