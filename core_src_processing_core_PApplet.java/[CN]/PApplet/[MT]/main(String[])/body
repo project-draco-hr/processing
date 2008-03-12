@@ -79,7 +79,6 @@
       displayDevice=environment.getDefaultScreenDevice();
     }
     Frame frame=new Frame(displayDevice.getDefaultConfiguration());
-    Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
     frame.setResizable(false);
     Class c=Class.forName(name);
     PApplet applet=(PApplet)c.newInstance();
@@ -139,15 +138,15 @@
  else {
           locationX=editorLocation[0] + 66;
           locationY=editorLocation[1] + 66;
-          if ((locationX + windowW > screen.width - 33) || (locationY + windowH > screen.height - 33)) {
-            locationX=(screen.width - windowW) / 2;
-            locationY=(screen.height - windowH) / 2;
+          if ((locationX + windowW > applet.screen.width - 33) || (locationY + windowH > applet.screen.height - 33)) {
+            locationX=(applet.screen.width - windowW) / 2;
+            locationY=(applet.screen.height - windowH) / 2;
           }
           frame.setLocation(locationX,locationY);
         }
       }
  else {
-        frame.setLocation((screen.width - applet.width) / 2,(screen.height - applet.height) / 2);
+        frame.setLocation((applet.screen.width - applet.width) / 2,(applet.screen.height - applet.height) / 2);
       }
       frame.setLayout(null);
       frame.add(applet);

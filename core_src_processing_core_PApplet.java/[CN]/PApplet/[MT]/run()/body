@@ -4,9 +4,6 @@
       if (g != null) {
         g.requestDisplay(this);
       }
- else {
-        println("no renderer");
-      }
       if (frameCount == 1) {
         requestFocus();
       }
@@ -58,22 +55,12 @@ synchronized (blocker) {
       e=(Exception)(((InvocationTargetException)e).getTargetException());
     }
     exception=e;
-    if (leechErr != null) {
-      leechErr.println(LEECH_WAKEUP);
-      e.printStackTrace(leechErr);
-      e.printStackTrace(System.out);
-    }
- else {
-      System.err.println(LEECH_WAKEUP);
-      e.printStackTrace();
-      e.printStackTrace(System.out);
-    }
+    System.err.println(LEECH_WAKEUP);
+    e.printStackTrace();
   }
   if (THREAD_DEBUG)   println(Thread.currentThread().getName() + " thread finished");
   stop();
-  if (exit) {
-    if ((leechErr == null) && !online) {
-      System.exit(0);
-    }
+  if (exitCalled) {
+    exit2();
   }
 }
