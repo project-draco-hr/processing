@@ -1,16 +1,19 @@
 {
   vm.setDebugTraceMode(debugTraceMode);
-  EventThread eventThread=new EventThread(vm,excludes,writer);
-  eventThread.setEventRequests(watchFields);
-  eventThread.start();
+  EventThread eventThread=null;
+  if (writer != null) {
+    eventThread=new EventThread(vm,excludes,writer);
+    eventThread.setEventRequests(watchFields);
+    eventThread.start();
+  }
   redirectOutput();
   vm.resume();
   try {
-    eventThread.join();
+    if (eventThread != null)     eventThread.join();
     errThread.join();
     outThread.join();
   }
  catch (  InterruptedException exc) {
   }
-  writer.close();
+  if (writer != null)   writer.close();
 }
