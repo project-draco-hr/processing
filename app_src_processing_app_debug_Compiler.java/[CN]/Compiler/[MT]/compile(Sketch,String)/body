@@ -19,8 +19,10 @@
   int result=0;
   try {
     Process process=Runtime.getRuntime().exec(command);
-    new MessageSiphon(process.getInputStream(),this);
-    new MessageSiphon(process.getErrorStream(),this);
+    MessageSiphon msi=new MessageSiphon(process.getInputStream(),this);
+    MessageSiphon mse=new MessageSiphon(process.getErrorStream(),this);
+    msi.thread.start();
+    mse.thread.start();
     boolean compiling=true;
     while (compiling) {
       try {
