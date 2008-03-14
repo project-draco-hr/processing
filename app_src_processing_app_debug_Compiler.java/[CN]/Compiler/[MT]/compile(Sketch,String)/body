@@ -1,7 +1,6 @@
 {
   this.sketch=sketch;
   this.buildPath=buildPath;
-  new MessageStream(this);
   String baseCommand[]=new String[]{((!Base.isMacOS()) ? "jikes" : System.getProperty("user.dir") + File.separator + "jikes"),"-target",Preferences.get("preproc.jdk_version"),"-bootclasspath",calcBootClassPath(),"-classpath",sketch.getClassPath(),"-nowarn","+E","-d",buildPath};
   String preprocNames[]=new String[sketch.getCodeCount()];
   int preprocCount=0;
@@ -35,7 +34,7 @@
  catch (  Exception e) {
     String msg=e.getMessage();
     if ((msg != null) && (msg.indexOf("jikes: not found") != -1)) {
-      Base.showWarning("Compiler error","Could not find the compiler.\n" + "jikes is missing from your PATH,\n" + "see readme.txt for help.",null);
+      Base.showWarning("Compiler error","Could not find the compiler.\n" + "jikes is missing from your PATH,\n" + "see the troubleshooting page for help.",null);
       return false;
     }
  else {
