@@ -3,12 +3,12 @@
   Font baseFont=null;
   try {
     if (lowerName.endsWith(".otf") || lowerName.endsWith(".ttf")) {
-      InputStream stream=openStream(name);
+      InputStream stream=createInput(name);
       if (stream == null) {
         System.err.println("The font \"" + name + "\" "+ "is missing or inaccessible, make sure "+ "the URL is valid or that the file has been "+ "added to your sketch and is readable.");
         return null;
       }
-      baseFont=Font.createFont(Font.TRUETYPE_FONT,openStream(name));
+      baseFont=Font.createFont(Font.TRUETYPE_FONT,createInput(name));
     }
  else {
       baseFont=new Font(name,Font.PLAIN,1);
