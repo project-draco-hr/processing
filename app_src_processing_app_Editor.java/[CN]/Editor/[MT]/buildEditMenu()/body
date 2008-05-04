@@ -43,6 +43,37 @@
 );
   menu.add(item);
   menu.addSeparator();
+  item=newJMenuItem("Comment/Uncomment",'/');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      beginCompoundEdit();
+      int startLine=textarea.getSelectionStartLine();
+      int stopLine=textarea.getSelectionEndLine();
+      int length=textarea.getDocumentLength();
+      int pos=textarea.getLineStartOffset(startLine);
+      if (pos + 2 > length)       return;
+      String begin=textarea.getText(pos,2);
+      boolean commented=begin.equals("//");
+      for (int line=startLine; line <= stopLine; line++) {
+        int location=textarea.getLineStartOffset(line);
+        if (commented) {
+          textarea.select(location,location + 2);
+          if (textarea.getSelectedText().equals("//")) {
+            textarea.setSelectedText("");
+          }
+        }
+ else {
+          textarea.select(location,location);
+          textarea.setSelectedText("//");
+        }
+      }
+      textarea.select(textarea.getLineStartOffset(startLine),textarea.getLineEndOffset(stopLine) - 1);
+      endCompoundEdit();
+    }
+  }
+);
+  menu.add(item);
+  menu.addSeparator();
   item=newJMenuItem("Find...",'F');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){

@@ -8,9 +8,9 @@
   classPath=buildPath + File.pathSeparator + javaClassPath;
   if (codeFolder.exists()) {
     externalRuntime=true;
-    classPath=Compiler.contentsToClassPath(codeFolder) + File.pathSeparator + classPath;
     libraryPath=codeFolder.getAbsolutePath();
     String codeFolderClassPath=Compiler.contentsToClassPath(codeFolder);
+    classPath=codeFolderClassPath + File.pathSeparator + classPath;
     codeFolderPackages=Compiler.packageListFromClassPath(codeFolderClassPath);
   }
  else {
@@ -131,7 +131,7 @@ catch (  Exception ex) {
       continue;
     }
     importedLibraries.add(libFolder);
-    libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
+    classPath+=Compiler.contentsToClassPath(libFolder);
   }
   for (int i=0; i < codeCount; i++) {
     if (code[i].flavor == JAVA) {
