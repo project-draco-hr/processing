@@ -1,0 +1,34 @@
+{
+  for (int i=0; i < str.length(); i++) {
+    char c=str.charAt(i);
+switch (c) {
+case 0x0A:
+      this.writer.print(c);
+    break;
+case '<':
+  this.writer.print("&lt;");
+break;
+case '>':
+this.writer.print("&gt;");
+break;
+case '&':
+this.writer.print("&amp;");
+break;
+case '\'':
+this.writer.print("&apos;");
+break;
+case '"':
+this.writer.print("&quot;");
+break;
+default :
+if ((c < ' ') || (c > 0x7E)) {
+this.writer.print("&#x");
+this.writer.print(Integer.toString(c,16));
+this.writer.print(';');
+}
+ else {
+this.writer.print(c);
+}
+}
+}
+}

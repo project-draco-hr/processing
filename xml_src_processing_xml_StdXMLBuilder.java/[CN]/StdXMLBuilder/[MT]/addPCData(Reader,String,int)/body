@@ -1,0 +1,30 @@
+{
+  int bufSize=2048;
+  int sizeRead=0;
+  StringBuffer str=new StringBuffer(bufSize);
+  char[] buf=new char[bufSize];
+  for (; ; ) {
+    if (sizeRead >= bufSize) {
+      bufSize*=2;
+      str.ensureCapacity(bufSize);
+    }
+    int size;
+    try {
+      size=reader.read(buf);
+    }
+ catch (    IOException e) {
+      break;
+    }
+    if (size < 0) {
+      break;
+    }
+    str.append(buf,0,size);
+    sizeRead+=size;
+  }
+  XMLElement elt=new XMLElement(null,null,systemID,lineNr);
+  elt.setContent(str.toString());
+  if (!this.stack.empty()) {
+    XMLElement top=(XMLElement)this.stack.peek();
+    top.addChild(elt);
+  }
+}

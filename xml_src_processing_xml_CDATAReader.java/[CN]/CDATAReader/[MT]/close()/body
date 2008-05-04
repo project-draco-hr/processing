@@ -1,0 +1,26 @@
+{
+  while (!this.atEndOfData) {
+    char ch=this.savedChar;
+    if (ch == 0) {
+      ch=this.reader.read();
+    }
+ else {
+      this.savedChar=0;
+    }
+    if (ch == ']') {
+      char ch2=this.reader.read();
+      if (ch2 == ']') {
+        char ch3=this.reader.read();
+        if (ch3 == '>') {
+          break;
+        }
+        this.savedChar=ch2;
+        this.reader.unread(ch3);
+      }
+ else {
+        this.reader.unread(ch2);
+      }
+    }
+  }
+  this.atEndOfData=true;
+}

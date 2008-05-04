@@ -1,0 +1,24 @@
+{
+  if (Character.isDigit(items[offset].charAt(0))) {
+    XMLElement kid=getChild(Integer.parseInt(items[offset]));
+    if (offset == items.length - 1) {
+      return kid;
+    }
+ else {
+      return kid.getChildRecursive(items,offset + 1);
+    }
+  }
+  int childCount=getChildCount();
+  for (int i=0; i < childCount; i++) {
+    XMLElement kid=getChild(i);
+    if (kid.getName().equals(items[offset])) {
+      if (offset == items.length - 1) {
+        return kid;
+      }
+ else {
+        return kid.getChildRecursive(items,offset + 1);
+      }
+    }
+  }
+  return null;
+}

@@ -1,0 +1,9 @@
+{
+  if (!XMLUtil.checkLiteral(this.reader,"CDATA[")) {
+    XMLUtil.errorExpectedInput(reader.getSystemID(),reader.getLineNr(),"<![[CDATA[");
+  }
+  this.validator.PCDataAdded(this.reader.getSystemID(),this.reader.getLineNr());
+  Reader reader=new CDATAReader(this.reader);
+  this.builder.addPCData(reader,this.reader.getSystemID(),this.reader.getLineNr());
+  reader.close();
+}

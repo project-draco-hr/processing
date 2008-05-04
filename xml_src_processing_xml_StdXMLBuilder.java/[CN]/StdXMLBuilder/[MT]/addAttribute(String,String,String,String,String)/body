@@ -1,0 +1,16 @@
+{
+  String fullName=key;
+  if (nsPrefix != null) {
+    fullName=nsPrefix + ':' + key;
+  }
+  XMLElement top=(XMLElement)this.stack.peek();
+  if (top.hasAttribute(fullName)) {
+    throw new XMLParseException(top.getSystemID(),top.getLineNr(),"Duplicate attribute: " + key);
+  }
+  if (nsPrefix != null) {
+    top.setAttribute(fullName,nsURI,value);
+  }
+ else {
+    top.setAttribute(fullName,value);
+  }
+}

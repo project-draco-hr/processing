@@ -1,0 +1,43 @@
+{
+  XMLUtil.skipWhitespace(reader,null);
+  String str=XMLUtil.read(reader,'%');
+  char ch=str.charAt(0);
+  if (ch != 'I') {
+    XMLUtil.skipTag(reader);
+    return;
+  }
+  str=XMLUtil.read(reader,'%');
+  ch=str.charAt(0);
+switch (ch) {
+case 'G':
+    this.processIgnoreSection(reader,entityResolver);
+  return;
+case 'N':
+break;
+default :
+XMLUtil.skipTag(reader);
+return;
+}
+if (!XMLUtil.checkLiteral(reader,"CLUDE")) {
+XMLUtil.skipTag(reader);
+return;
+}
+XMLUtil.skipWhitespace(reader,null);
+str=XMLUtil.read(reader,'%');
+ch=str.charAt(0);
+if (ch != '[') {
+XMLUtil.skipTag(reader);
+return;
+}
+Reader subreader=new CDATAReader(reader);
+StringBuffer buf=new StringBuffer(1024);
+for (; ; ) {
+int ch2=subreader.read();
+if (ch2 < 0) {
+break;
+}
+buf.append((char)ch2);
+}
+subreader.close();
+reader.startNewStream(new StringReader(buf.toString()));
+}

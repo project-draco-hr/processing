@@ -1,0 +1,26 @@
+{
+  if (this.atEndOfData) {
+    return -1;
+  }
+  int charsRead=0;
+  if ((offset + size) > buffer.length) {
+    size=buffer.length - offset;
+  }
+  while (charsRead < size) {
+    char ch=this.reader.read();
+    if (ch == '?') {
+      char ch2=this.reader.read();
+      if (ch2 == '>') {
+        this.atEndOfData=true;
+        break;
+      }
+      this.reader.unread(ch2);
+    }
+    buffer[charsRead]=ch;
+    charsRead++;
+  }
+  if (charsRead == 0) {
+    charsRead=-1;
+  }
+  return charsRead;
+}

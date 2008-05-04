@@ -1,12 +1,12 @@
 {
+  ByteArrayOutputStream baos=new ByteArrayOutputStream();
+  OutputStreamWriter osw=new OutputStreamWriter(baos);
+  XMLWriter writer=new XMLWriter(osw);
   try {
-    ByteArrayOutputStream out=new ByteArrayOutputStream();
-    OutputStreamWriter writer=new OutputStreamWriter(out);
-    this.write(writer);
-    writer.flush();
-    return new String(out.toByteArray());
+    writer.write(this,true,2,true);
   }
  catch (  IOException e) {
-    return super.toString();
+    e.printStackTrace();
   }
+  return baos.toString();
 }

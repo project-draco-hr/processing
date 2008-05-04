@@ -1,0 +1,39 @@
+{
+  if (!XMLUtil.checkLiteral(this.reader,"OCTYPE")) {
+    XMLUtil.errorExpectedInput(reader.getSystemID(),reader.getLineNr(),"<!DOCTYPE");
+    return;
+  }
+  XMLUtil.skipWhitespace(this.reader,null);
+  String systemID=null;
+  StringBuffer publicID=new StringBuffer();
+  XMLUtil.scanIdentifier(this.reader);
+  XMLUtil.skipWhitespace(this.reader,null);
+  char ch=this.reader.read();
+  if (ch == 'P') {
+    systemID=XMLUtil.scanPublicID(publicID,reader);
+    XMLUtil.skipWhitespace(this.reader,null);
+    ch=this.reader.read();
+  }
+ else   if (ch == 'S') {
+    systemID=XMLUtil.scanSystemID(reader);
+    XMLUtil.skipWhitespace(this.reader,null);
+    ch=this.reader.read();
+  }
+  if (ch == '[') {
+    this.validator.parseDTD(publicID.toString(),this.reader,this.entityResolver,false);
+    XMLUtil.skipWhitespace(this.reader,null);
+    ch=this.reader.read();
+  }
+  if (ch != '>') {
+    XMLUtil.errorExpectedInput(reader.getSystemID(),reader.getLineNr(),"`>'");
+  }
+  if (false) {
+    if (systemID != null) {
+      Reader reader=this.reader.openStream(publicID.toString(),systemID);
+      this.reader.startNewStream(reader);
+      this.reader.setSystemID(systemID);
+      this.reader.setPublicID(publicID.toString());
+      this.validator.parseDTD(publicID.toString(),this.reader,this.entityResolver,true);
+    }
+  }
+}

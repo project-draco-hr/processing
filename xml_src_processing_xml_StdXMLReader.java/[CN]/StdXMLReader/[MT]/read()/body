@@ -1,0 +1,12 @@
+{
+  int ch=this.currentReader.pbReader.read();
+  while (ch < 0) {
+    if (this.readers.empty()) {
+      throw new IOException("Unexpected EOF");
+    }
+    this.currentReader.pbReader.close();
+    this.currentReader=(StackedReader)this.readers.pop();
+    ch=this.currentReader.pbReader.read();
+  }
+  return (char)ch;
+}

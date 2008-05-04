@@ -1,0 +1,30 @@
+{
+  XMLUtil.skipWhitespace(reader,null);
+  int origLevel=reader.getStreamLevel();
+  for (; ; ) {
+    String str=XMLUtil.read(reader,'%');
+    char ch=str.charAt(0);
+    if (ch == '%') {
+      XMLUtil.processEntity(str,reader,this.parameterEntityResolver);
+      continue;
+    }
+ else     if (ch == '<') {
+      this.processElement(reader,entityResolver);
+    }
+ else     if (ch == ']') {
+      return;
+    }
+ else {
+      XMLUtil.errorInvalidInput(reader.getSystemID(),reader.getLineNr(),str);
+    }
+    do {
+      ch=reader.read();
+      if (external && (reader.getStreamLevel() < origLevel)) {
+        reader.unread(ch);
+        return;
+      }
+    }
+ while ((ch == ' ') || (ch == '\t') || (ch == '\n')|| (ch == '\r'));
+    reader.unread(ch);
+  }
+}

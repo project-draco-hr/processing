@@ -1,0 +1,18 @@
+{
+  Properties result=new Properties();
+  Enumeration en=this.attributes.elements();
+  while (en.hasMoreElements()) {
+    XMLAttribute attr=(XMLAttribute)en.nextElement();
+    if (namespace == null) {
+      if (attr.getNamespace() == null) {
+        result.put(attr.getName(),attr.getValue());
+      }
+    }
+ else {
+      if (namespace.equals(attr.getNamespace())) {
+        result.put(attr.getName(),attr.getValue());
+      }
+    }
+  }
+  return result;
+}

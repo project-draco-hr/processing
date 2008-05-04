@@ -1,0 +1,9 @@
+{
+  entity=entity.substring(1,entity.length() - 1);
+  Reader entityReader=entityResolver.getEntity(reader,entity);
+  if (entityReader == null) {
+    XMLUtil.errorInvalidEntity(reader.getSystemID(),reader.getLineNr(),entity);
+  }
+  boolean externalEntity=entityResolver.isExternalEntity(entity);
+  reader.startNewStream(entityReader,!externalEntity);
+}

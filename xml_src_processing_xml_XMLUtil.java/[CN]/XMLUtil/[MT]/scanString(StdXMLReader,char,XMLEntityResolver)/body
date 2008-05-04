@@ -1,0 +1,45 @@
+{
+  StringBuffer result=new StringBuffer();
+  int startingLevel=reader.getStreamLevel();
+  char delim=reader.read();
+  if ((delim != '\'') && (delim != '"')) {
+    XMLUtil.errorExpectedInput(reader.getSystemID(),reader.getLineNr(),"delimited string");
+  }
+  for (; ; ) {
+    String str=XMLUtil.read(reader,entityChar);
+    char ch=str.charAt(0);
+    if (ch == entityChar) {
+      if (str.charAt(1) == '#') {
+        result.append(XMLUtil.processCharLiteral(str));
+      }
+ else {
+        XMLUtil.processEntity(str,reader,entityResolver);
+      }
+    }
+ else     if (ch == '&') {
+      reader.unread(ch);
+      str=XMLUtil.read(reader,'&');
+      if (str.charAt(1) == '#') {
+        result.append(XMLUtil.processCharLiteral(str));
+      }
+ else {
+        result.append(str);
+      }
+    }
+ else     if (reader.getStreamLevel() == startingLevel) {
+      if (ch == delim) {
+        break;
+      }
+ else       if ((ch == 9) || (ch == 10) || (ch == 13)) {
+        result.append(' ');
+      }
+ else {
+        result.append(ch);
+      }
+    }
+ else {
+      result.append(ch);
+    }
+  }
+  return result.toString();
+}

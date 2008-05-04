@@ -1,0 +1,46 @@
+{
+  try {
+    int charsRead=0;
+    int bufferLength=this.buffer.length();
+    if ((offset + size) > outputBuffer.length) {
+      size=outputBuffer.length - offset;
+    }
+    while (charsRead < size) {
+      String str="";
+      char ch;
+      if (this.bufferIndex >= bufferLength) {
+        str=XMLUtil.read(this.reader,'&');
+        ch=str.charAt(0);
+      }
+ else {
+        ch=this.buffer.charAt(this.bufferIndex);
+        this.bufferIndex++;
+        outputBuffer[charsRead]=ch;
+        charsRead++;
+        continue;
+      }
+      if (ch == '<') {
+        this.reader.unread(ch);
+        break;
+      }
+      if ((ch == '&') && (str.length() > 1)) {
+        if (str.charAt(1) == '#') {
+          ch=XMLUtil.processCharLiteral(str);
+        }
+ else {
+          XMLUtil.processEntity(str,this.reader,this.resolver);
+          continue;
+        }
+      }
+      outputBuffer[charsRead]=ch;
+      charsRead++;
+    }
+    if (charsRead == 0) {
+      charsRead=-1;
+    }
+    return charsRead;
+  }
+ catch (  XMLParseException e) {
+    throw new IOException(e.getMessage());
+  }
+}

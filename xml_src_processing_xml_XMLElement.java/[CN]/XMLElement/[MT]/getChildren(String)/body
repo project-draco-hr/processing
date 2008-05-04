@@ -1,6 +1,9 @@
 {
   if (name.indexOf('/') != -1) {
-    return getChildren(PApplet.split(name,'/'),0);
+    return getChildrenRecursive(PApplet.split(name,'/'),0);
+  }
+  if (Character.isDigit(name.charAt(0))) {
+    return new XMLElement[]{getChild(Integer.parseInt(name))};
   }
   int childCount=getChildCount();
   XMLElement[] matches=new XMLElement[childCount];

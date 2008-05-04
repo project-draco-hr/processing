@@ -1,0 +1,91 @@
+{
+  if (!XMLUtil.checkLiteral(reader,"TTLIST")) {
+    XMLUtil.skipTag(reader);
+    return;
+  }
+  XMLUtil.skipWhitespace(reader,null);
+  String str=XMLUtil.read(reader,'%');
+  char ch=str.charAt(0);
+  while (ch == '%') {
+    XMLUtil.processEntity(str,reader,this.parameterEntityResolver);
+    str=XMLUtil.read(reader,'%');
+    ch=str.charAt(0);
+  }
+  reader.unread(ch);
+  String elementName=XMLUtil.scanIdentifier(reader);
+  XMLUtil.skipWhitespace(reader,null);
+  str=XMLUtil.read(reader,'%');
+  ch=str.charAt(0);
+  while (ch == '%') {
+    XMLUtil.processEntity(str,reader,this.parameterEntityResolver);
+    str=XMLUtil.read(reader,'%');
+    ch=str.charAt(0);
+  }
+  Properties props=new Properties();
+  while (ch != '>') {
+    reader.unread(ch);
+    String attName=XMLUtil.scanIdentifier(reader);
+    XMLUtil.skipWhitespace(reader,null);
+    str=XMLUtil.read(reader,'%');
+    ch=str.charAt(0);
+    while (ch == '%') {
+      XMLUtil.processEntity(str,reader,this.parameterEntityResolver);
+      str=XMLUtil.read(reader,'%');
+      ch=str.charAt(0);
+    }
+    if (ch == '(') {
+      while (ch != ')') {
+        str=XMLUtil.read(reader,'%');
+        ch=str.charAt(0);
+        while (ch == '%') {
+          XMLUtil.processEntity(str,reader,this.parameterEntityResolver);
+          str=XMLUtil.read(reader,'%');
+          ch=str.charAt(0);
+        }
+      }
+    }
+ else {
+      reader.unread(ch);
+      XMLUtil.scanIdentifier(reader);
+    }
+    XMLUtil.skipWhitespace(reader,null);
+    str=XMLUtil.read(reader,'%');
+    ch=str.charAt(0);
+    while (ch == '%') {
+      XMLUtil.processEntity(str,reader,this.parameterEntityResolver);
+      str=XMLUtil.read(reader,'%');
+      ch=str.charAt(0);
+    }
+    if (ch == '#') {
+      str=XMLUtil.scanIdentifier(reader);
+      XMLUtil.skipWhitespace(reader,null);
+      if (!str.equals("FIXED")) {
+        XMLUtil.skipWhitespace(reader,null);
+        str=XMLUtil.read(reader,'%');
+        ch=str.charAt(0);
+        while (ch == '%') {
+          XMLUtil.processEntity(str,reader,this.parameterEntityResolver);
+          str=XMLUtil.read(reader,'%');
+          ch=str.charAt(0);
+        }
+        continue;
+      }
+    }
+ else {
+      reader.unread(ch);
+    }
+    String value=XMLUtil.scanString(reader,'%',this.parameterEntityResolver);
+    props.put(attName,value);
+    XMLUtil.skipWhitespace(reader,null);
+    str=XMLUtil.read(reader,'%');
+    ch=str.charAt(0);
+    while (ch == '%') {
+      XMLUtil.processEntity(str,reader,this.parameterEntityResolver);
+      str=XMLUtil.read(reader,'%');
+      ch=str.charAt(0);
+    }
+  }
+  if (!props.isEmpty()) {
+    this.attributeDefaultValues.put(elementName,props);
+  }
+}

@@ -1,0 +1,40 @@
+{
+  PushbackInputStream pbstream=new PushbackInputStream(stream);
+  int b=pbstream.read();
+switch (b) {
+case 0x00:
+case 0xFE:
+case 0xFF:
+    pbstream.unread(b);
+  return new InputStreamReader(pbstream,"UTF-16");
+case 0xEF:
+for (int i=0; i < 2; i++) {
+  pbstream.read();
+}
+return new InputStreamReader(pbstream,"UTF-8");
+case 0x3C:
+b=pbstream.read();
+charsRead.append('<');
+while ((b > 0) && (b != 0x3E)) {
+charsRead.append((char)b);
+b=pbstream.read();
+}
+if (b > 0) {
+charsRead.append((char)b);
+}
+String encoding=this.getEncoding(charsRead.toString());
+if (encoding == null) {
+return new InputStreamReader(pbstream,"UTF-8");
+}
+charsRead.setLength(0);
+try {
+return new InputStreamReader(pbstream,encoding);
+}
+ catch (UnsupportedEncodingException e) {
+return new InputStreamReader(pbstream,"UTF-8");
+}
+default :
+charsRead.append((char)b);
+return new InputStreamReader(pbstream,"UTF-8");
+}
+}

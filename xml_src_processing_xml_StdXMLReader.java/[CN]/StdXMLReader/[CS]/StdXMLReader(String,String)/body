@@ -1,0 +1,20 @@
+{
+  URL systemIDasURL=null;
+  try {
+    systemIDasURL=new URL(systemID);
+  }
+ catch (  MalformedURLException e) {
+    systemID="file:" + systemID;
+    try {
+      systemIDasURL=new URL(systemID);
+    }
+ catch (    MalformedURLException e2) {
+      throw e;
+    }
+  }
+  this.currentReader=new StackedReader();
+  this.readers=new Stack();
+  Reader reader=this.openStream(publicID,systemIDasURL.toString());
+  this.currentReader.lineReader=new LineNumberReader(reader);
+  this.currentReader.pbReader=new PushbackReader(this.currentReader.lineReader,2);
+}

@@ -1,0 +1,13 @@
+{
+  String key=XMLUtil.scanIdentifier(this.reader);
+  XMLUtil.skipWhitespace(this.reader,null);
+  if (!XMLUtil.read(this.reader,'&').equals("=")) {
+    XMLUtil.errorExpectedInput(reader.getSystemID(),reader.getLineNr(),"`='");
+  }
+  XMLUtil.skipWhitespace(this.reader,null);
+  String value=XMLUtil.scanString(this.reader,'&',this.entityResolver);
+  attrNames.addElement(key);
+  attrValues.addElement(value);
+  attrTypes.addElement("CDATA");
+  this.validator.attributeAdded(key,value,this.reader.getSystemID(),this.reader.getLineNr());
+}

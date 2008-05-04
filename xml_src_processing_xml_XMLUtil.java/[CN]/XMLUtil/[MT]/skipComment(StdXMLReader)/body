@@ -1,0 +1,20 @@
+{
+  if (reader.read() != '-') {
+    XMLUtil.errorExpectedInput(reader.getSystemID(),reader.getLineNr(),"<!--");
+  }
+  int dashesRead=0;
+  for (; ; ) {
+    char ch=reader.read();
+switch (ch) {
+case '-':
+      dashesRead++;
+    break;
+case '>':
+  if (dashesRead == 2) {
+    return;
+  }
+default :
+dashesRead=0;
+}
+}
+}

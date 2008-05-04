@@ -1,3 +1,14 @@
 {
+  if (child == null) {
+    throw new IllegalArgumentException("child must not be null");
+  }
+  if ((child.getName() == null) && (!this.children.isEmpty())) {
+    XMLElement lastChild=(XMLElement)this.children.lastElement();
+    if (lastChild.getName() == null) {
+      lastChild.setContent(lastChild.getContent() + child.getContent());
+      return;
+    }
+  }
+  ((XMLElement)child).parent=this;
   this.children.addElement(child);
 }
