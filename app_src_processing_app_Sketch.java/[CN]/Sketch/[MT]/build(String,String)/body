@@ -1,27 +1,23 @@
 {
   ensureExistence();
   String codeFolderPackages[]=null;
-  String javaClassPath=System.getProperty("java.class.path");
-  if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\"")) {
-    javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
-  }
-  classPath=buildPath + File.pathSeparator + javaClassPath;
+  classPath=buildPath;
   if (codeFolder.exists()) {
     externalRuntime=true;
     libraryPath=codeFolder.getAbsolutePath();
     String codeFolderClassPath=Compiler.contentsToClassPath(codeFolder);
-    classPath=codeFolderClassPath + File.pathSeparator + classPath;
+    classPath+=File.pathSeparator + codeFolderClassPath;
     codeFolderPackages=Compiler.packageListFromClassPath(codeFolderClassPath);
   }
  else {
     externalRuntime=false;
+    libraryPath="";
     for (int i=0; i < codeCount; i++) {
       if (code[i].flavor == JAVA) {
         externalRuntime=true;
         break;
       }
     }
-    libraryPath="";
   }
   if (Preferences.getBoolean("run.options.memory")) {
     externalRuntime=true;
@@ -132,7 +128,13 @@ catch (  Exception ex) {
     }
     importedLibraries.add(libFolder);
     classPath+=Compiler.contentsToClassPath(libFolder);
+    libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
   }
+  String javaClassPath=System.getProperty("java.class.path");
+  if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\"")) {
+    javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
+  }
+  classPath+=File.pathSeparator + javaClassPath;
   for (int i=0; i < codeCount; i++) {
     if (code[i].flavor == JAVA) {
       String filename=code[i].name + ".java";
