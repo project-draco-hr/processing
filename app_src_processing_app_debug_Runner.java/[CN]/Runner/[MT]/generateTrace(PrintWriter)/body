@@ -6,12 +6,18 @@
     eventThread.setEventRequests(watchFields);
     eventThread.start();
   }
-  redirectOutput();
+  Process process=vm.process();
+  MessageSiphon ms=new MessageSiphon(process.getErrorStream(),this);
+  errThread=ms.thread;
+  outThread=new StreamRedirectThread("output reader",process.getInputStream(),System.out);
+  errThread.start();
+  outThread.start();
   vm.resume();
   try {
     if (eventThread != null)     eventThread.join();
     errThread.join();
     outThread.join();
+    editor.handleStopped();
   }
  catch (  InterruptedException exc) {
   }
