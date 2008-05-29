@@ -3,10 +3,10 @@
   if (Preferences.getBoolean("editor.external")) {
     load();
   }
-  zipFileContents=new Hashtable();
   File appletFolder=new File(folder,"applet");
   Base.removeDir(appletFolder);
   appletFolder.mkdirs();
+  zipFileContents=new Hashtable();
   String foundName=build(appletFolder.getPath(),name);
   if (foundName == null)   return false;
   if (!name.equals(foundName)) {
@@ -16,17 +16,14 @@
   int wide=PApplet.DEFAULT_WIDTH;
   int high=PApplet.DEFAULT_HEIGHT;
   String renderer="";
-  PatternMatcher matcher=new Perl5Matcher();
-  PatternCompiler compiler=new Perl5Compiler();
-  String sizing="[\\s\\;]size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\d+),?\\s*([^\\)]*)\\s*\\)";
-  Pattern pattern=compiler.compile(sizing);
-  PatternMatcherInput input=new PatternMatcherInput(" " + scrubComments(code[0].program));
-  if (matcher.contains(input,pattern)) {
-    MatchResult result=matcher.getMatch();
+  String sizeRegex="[\\s\\;^]size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\d+),?\\s*([^\\)]*)\\s*\\)";
+  String scrubbed=scrubComments(code[0].program);
+  String[] matches=PApplet.match(scrubbed,sizeRegex);
+  if (matches != null) {
     try {
-      wide=Integer.parseInt(result.group(1).toString());
-      high=Integer.parseInt(result.group(2).toString());
-      renderer=result.group(3).toString().trim();
+      wide=Integer.parseInt(matches[0]);
+      high=Integer.parseInt(matches[1]);
+      if (matches.length == 3)       renderer=matches[2].trim();
     }
  catch (    NumberFormatException e) {
       final String message="The size of this applet could not automatically be\n" + "determined from your code. You'll have to edit the\n" + "HTML file to set the size of the applet.";
@@ -54,49 +51,47 @@
   for (int i=0; i < codeCount; i++) {
     sources.append("<a href=\"" + code[i].file.getName() + "\">"+ code[i].name+ "</a> ");
   }
-  StringBuffer archives=new StringBuffer();
-  boolean separateJar=Preferences.getBoolean("export.applet.separate_jar_files");
-  if (renderer.equals("OPENGL")) {
-    separateJar=true;
+  for (int i=0; i < codeCount; i++) {
+    try {
+      File exportedSource=new File(appletFolder,code[i].file.getName());
+      Base.copyFile(code[i].file,exportedSource);
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
   }
+  boolean separateJar=Preferences.getBoolean("export.applet.separate_jar_files") || codeFolder.exists() || (libraryPath.length() != 0);
   String LOADING_IMAGE="loading.gif";
   File loadingImage=new File(folder,LOADING_IMAGE);
   if (!loadingImage.exists()) {
     loadingImage=new File("lib",LOADING_IMAGE);
   }
   Base.copyFile(loadingImage,new File(appletFolder,LOADING_IMAGE));
-  for (int i=0; i < codeCount; i++) {
-    try {
-      Base.copyFile(code[i].file,new File(appletFolder,code[i].file.getName()));
-    }
- catch (    IOException e) {
-      e.printStackTrace();
-    }
-  }
   FileOutputStream zipOutputFile=new FileOutputStream(new File(appletFolder,name + ".jar"));
   ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
   ZipEntry entry;
+  StringBuffer archives=new StringBuffer();
   archives.append(name + ".jar");
   addManifest(zos);
   if (codeFolder.exists()) {
     String includes=Compiler.contentsToClassPath(codeFolder);
-    if (separateJar) {
-      String codeList[]=PApplet.split(includes,File.separatorChar);
-      String cp="";
-      for (int i=0; i < codeList.length; i++) {
-        if (codeList[i].toLowerCase().endsWith(".jar") || codeList[i].toLowerCase().endsWith(".zip")) {
+    System.out.println(includes);
+    String codeList[]=PApplet.split(includes,File.separatorChar);
+    String cp="";
+    for (int i=0; i < codeList.length; i++) {
+      if (codeList[i].toLowerCase().endsWith(".jar") || codeList[i].toLowerCase().endsWith(".zip")) {
+        if (separateJar) {
           File exportFile=new File(codeFolder,codeList[i]);
           String exportFilename=exportFile.getName();
           Base.copyFile(exportFile,new File(appletFolder,exportFilename));
         }
  else {
-          cp+=codeList[i] + File.separatorChar;
-          packClassPathIntoZipFile(cp,zos);
+          cp+=codeList[i] + File.pathSeparatorChar;
         }
       }
     }
- else {
-      packClassPathIntoZipFile(includes,zos);
+    if (!separateJar) {
+      packClassPathIntoZipFile(cp,zos);
     }
   }
   Enumeration en=importedLibraries.elements();

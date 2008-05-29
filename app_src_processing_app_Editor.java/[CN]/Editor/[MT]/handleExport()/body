@@ -1,7 +1,7 @@
 {
   if (!handleExportCheckModified())   return;
   toolbar.activate(EditorToolbar.EXPORT);
-  SwingUtilities.invokeLater(new Runnable(){
+  Thread t=new Thread(new Runnable(){
     public void run(){
       try {
         boolean success=sketch.exportApplet();
@@ -20,4 +20,5 @@
     }
   }
 );
+  t.start();
 }

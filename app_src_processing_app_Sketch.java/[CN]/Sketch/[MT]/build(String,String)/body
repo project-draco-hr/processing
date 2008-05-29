@@ -82,21 +82,11 @@
     throw new RunnerException(msg,errorFile,errorLine,re.getColumn());
   }
 catch (  antlr.TokenStreamRecognitionException tsre) {
-    PatternMatcher matcher=new Perl5Matcher();
-    PatternCompiler compiler=new Perl5Compiler();
     String mess="^line (\\d+):(\\d+):\\s";
-    Pattern pattern=null;
-    try {
-      pattern=compiler.compile(mess);
-    }
- catch (    MalformedPatternException e) {
-      Base.showWarning("Internal Problem","An internal error occurred while trying\n" + "to compile the sketch. Please report\n" + "this online at http://processing.org/bugs",e);
-    }
-    PatternMatcherInput input=new PatternMatcherInput(tsre.toString());
-    if (matcher.contains(input,pattern)) {
-      MatchResult result=matcher.getMatch();
-      int errorLine=Integer.parseInt(result.group(1).toString()) - 1;
-      int errorColumn=Integer.parseInt(result.group(2).toString());
+    String[] matches=PApplet.match(tsre.toString(),mess);
+    if (matches != null) {
+      int errorLine=Integer.parseInt(matches[0]) - 1;
+      int errorColumn=Integer.parseInt(matches[1]);
       int errorFile=0;
       for (int i=1; i < codeCount; i++) {
         if ((code[i].flavor == PDE) && (code[i].preprocOffset < errorLine)) {

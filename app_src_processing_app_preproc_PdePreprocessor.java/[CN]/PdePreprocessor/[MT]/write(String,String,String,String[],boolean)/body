@@ -31,28 +31,14 @@
       program=new String(p2,0,index);
     }
   }
-  PatternMatcher matcher=new Perl5Matcher();
-  PatternCompiler compiler=new Perl5Compiler();
-  String mess="^\\s*(import\\s+)(\\S+)(\\s*;)";
+  String importRegexp="[\\s^](import\\s+)(\\S+)(\\s*;)";
   java.util.Vector imports=new java.util.Vector();
-  Pattern pattern=null;
-  try {
-    pattern=compiler.compile(mess);
-  }
- catch (  MalformedPatternException e) {
-    e.printStackTrace();
-    return null;
-  }
   do {
-    PatternMatcherInput input=new PatternMatcherInput(program);
-    if (!matcher.contains(input,pattern))     break;
-    MatchResult result=matcher.getMatch();
-    String piece1=result.group(1).toString();
-    String piece2=result.group(2).toString();
-    String piece3=result.group(3).toString();
-    String piece=piece1 + piece2 + piece3;
+    String[] pieces=PApplet.match(program,importRegexp);
+    if (pieces == null)     break;
+    String piece=pieces[0] + pieces[1] + pieces[2];
     int len=piece.length();
-    imports.add(piece2);
+    imports.add(pieces[1]);
     int idx=program.indexOf(piece);
     program=program.substring(0,idx) + program.substring(idx + len);
   }
