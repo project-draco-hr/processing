@@ -1,6 +1,10 @@
 {
   try {
-    return new FileOutputStream(file);
+    FileOutputStream fos=new FileOutputStream(file);
+    if (file.getName().toLowerCase().endsWith(".gz")) {
+      return new GZIPOutputStream(fos);
+    }
+    return fos;
   }
  catch (  IOException e) {
     e.printStackTrace();
