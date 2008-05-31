@@ -1,0 +1,37 @@
+{
+  this.sketch=sketch;
+  this.buildPath=buildPath;
+  String baseCommand[]=new String[]{"-classpath",sketch.getClassPath(),"-nowarn","-d",buildPath};
+  String[] preprocNames=new String[sketch.getCodeCount()];
+  int preprocCount=0;
+  for (int i=0; i < sketch.getCodeCount(); i++) {
+    if (sketch.getCode(i).preprocName != null) {
+      preprocNames[preprocCount++]=sketch.getCode(i).preprocName;
+    }
+  }
+  String[] command=new String[baseCommand.length + preprocCount];
+  System.arraycopy(baseCommand,0,command,0,baseCommand.length);
+  for (int i=0; i < preprocCount; i++) {
+    command[baseCommand.length + i]=buildPath + File.separator + preprocNames[i];
+  }
+  firstErrorFound=false;
+  secondErrorFound=false;
+  PipedWriter pipedWriter=new PipedWriter();
+  PrintWriter writer=new PrintWriter(pipedWriter);
+  PipedReader pipedReader=new PipedReader();
+  BufferedReader reader=new BufferedReader(pipedReader);
+  int result=0;
+  try {
+    pipedWriter.connect(pipedReader);
+    result=com.sun.tools.javac.Main.compile(command,writer);
+    while (pipedReader.ready()) {
+      System.out.println("got line " + reader.readLine());
+    }
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+    return false;
+  }
+  if (exception != null)   throw exception;
+  return (result == 0);
+}
