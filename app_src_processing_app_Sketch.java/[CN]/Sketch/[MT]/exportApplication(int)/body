@@ -178,6 +178,11 @@
       exportClassPath.append("$APPDIR/lib/" + jarList[i]);
     }
   }
+  String runOptions=Preferences.get("run.options");
+  if (Preferences.getBoolean("run.options.memory")) {
+    runOptions+=" -Xms" + Preferences.get("run.options.memory.initial") + "m";
+    runOptions+=" -Xmx" + Preferences.get("run.options.memory.maximum") + "m";
+  }
   if (exportPlatform == PConstants.MACOSX) {
     String PLIST_TEMPLATE="template.plist";
     File plistTemplate=new File(folder,PLIST_TEMPLATE);
@@ -191,6 +196,9 @@
       if (lines[i].indexOf("@@") != -1) {
         StringBuffer sb=new StringBuffer(lines[i]);
         int index=0;
+        while ((index=sb.indexOf("@@vmoptions@@")) != -1) {
+          sb.replace(index,index + "@@vmoptions@@".length(),runOptions);
+        }
         while ((index=sb.indexOf("@@sketch@@")) != -1) {
           sb.replace(index,index + "@@sketch@@".length(),name);
         }
@@ -207,12 +215,7 @@
  else   if (exportPlatform == PConstants.WINDOWS) {
     File argsFile=new File(destFolder + "/lib/args.txt");
     PrintStream ps=new PrintStream(new FileOutputStream(argsFile));
-    ps.print(Preferences.get("run.options") + " ");
-    if (Preferences.getBoolean("run.options.memory")) {
-      ps.print("-Xms" + Preferences.get("run.options.memory.initial") + "m ");
-      ps.print("-Xmx" + Preferences.get("run.options.memory.maximum") + "m ");
-    }
-    ps.println();
+    ps.println(runOptions);
     ps.println(this.name);
     ps.println(exportClassPath);
     ps.flush();
