@@ -3,6 +3,11 @@
     System.err.println("Editor.error() was passed a null exception.");
     return;
   }
+  if (e instanceof RunnerException) {
+    RunnerException re=(RunnerException)e;
+    if (re.file >= 0)     sketch.setCurrent(re.file);
+    if (re.line >= 0)     highlightLine(re.line);
+  }
   String mess=e.getMessage();
   if (mess != null) {
     String rxString="RuntimeException: ";
