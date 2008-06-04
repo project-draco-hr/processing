@@ -6,7 +6,10 @@
   }
  else   if (PApplet.platform == PConstants.MACOSX) {
     try {
-      File libraryFolder=new File(BaseMacOS.getLibraryFolder());
+      Class clazz=Class.forName("processing.app.BaseMacOS");
+      Method m=clazz.getMethod("getLibraryFolder",new Class[]{});
+      String libraryPath=(String)m.invoke(null,new Object[]{});
+      File libraryFolder=new File(libraryPath);
       dataFolder=new File(libraryFolder,"Processing");
     }
  catch (    Exception e) {

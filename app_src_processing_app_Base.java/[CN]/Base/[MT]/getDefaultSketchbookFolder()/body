@@ -2,8 +2,10 @@
   File sketchbookFolder=null;
   if (Base.isMacOS()) {
     try {
-      File documentsFolder=new File(BaseMacOS.getDocumentsFolder());
-      sketchbookFolder=new File(documentsFolder,"Processing");
+      Class clazz=Class.forName("processing.app.BaseMacOS");
+      Method m=clazz.getMethod("getDocumentsFolder",new Class[]{});
+      String documentsPath=(String)m.invoke(null,new Object[]{});
+      sketchbookFolder=new File(documentsPath,"Processing");
     }
  catch (    Exception e) {
       sketchbookFolder=promptSketchbookLocation();
