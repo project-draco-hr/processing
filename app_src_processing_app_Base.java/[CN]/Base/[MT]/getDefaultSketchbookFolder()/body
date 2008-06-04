@@ -13,10 +13,8 @@
   }
  else   if (isWindows()) {
     try {
-      RegistryKey topKey=Registry.HKEY_CURRENT_USER;
-      String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
-      RegistryKey localKey=topKey.openSubKey(localKeyPath);
-      String personalPath=cleanKey(localKey.getStringValue("Personal"));
+      String keyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
+      String personalPath=Registry.getStringValue(REGISTRY_ROOT_KEY.CURRENT_USER,keyPath,"Personal");
       sketchbookFolder=new File(personalPath,"Processing");
     }
  catch (    Exception e) {

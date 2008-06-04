@@ -6,7 +6,7 @@
   }
  else   if (PApplet.platform == PConstants.MACOSX) {
     try {
-      Class clazz=Class.forName("processing.app.BaseMacOS");
+      Class clazz=Class.forName("processing.app.macosx.ThinkDifferent");
       Method m=clazz.getMethod("getLibraryFolder",new Class[]{});
       String libraryPath=(String)m.invoke(null,new Object[]{});
       File libraryFolder=new File(libraryPath);
@@ -18,10 +18,8 @@
   }
  else   if (Base.isWindows()) {
     try {
-      RegistryKey topKey=Registry.HKEY_CURRENT_USER;
-      String localKeyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
-      RegistryKey localKey=topKey.openSubKey(localKeyPath);
-      String appDataPath=cleanKey(localKey.getStringValue("AppData"));
+      String keyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
+      String appDataPath=Registry.getStringValue(REGISTRY_ROOT_KEY.CURRENT_USER,keyPath,"AppData");
       dataFolder=new File(appDataPath,"Processing");
     }
  catch (    Exception e) {

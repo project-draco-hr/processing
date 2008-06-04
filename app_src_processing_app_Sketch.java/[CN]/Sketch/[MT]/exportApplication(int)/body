@@ -73,7 +73,7 @@
     if (classfiles[i].endsWith(".class")) {
       entry=new ZipEntry(classfiles[i]);
       zos.putNextEntry(entry);
-      zos.write(Base.grabFile(new File(destFolder,classfiles[i])));
+      zos.write(Base.loadBytesRaw(new File(destFolder,classfiles[i])));
       zos.closeEntry();
     }
   }
@@ -89,7 +89,7 @@
       if (dataFile.getName().charAt(0) == '.')       continue;
       entry=new ZipEntry(dataFiles[i].substring(offset));
       zos.putNextEntry(entry);
-      zos.write(Base.grabFile(dataFile));
+      zos.write(Base.loadBytesRaw(dataFile));
       zos.closeEntry();
     }
   }
