@@ -1,0 +1,45 @@
+{
+  Advapi32 advapi32;
+  int handle=0, dwIndex, result=0;
+  char[] lpValueName;
+  byte[] lpData;
+  IntByReference lpcchValueName, lpType, lpcbData;
+  String name;
+  TreeMap<String,Object> values=new TreeMap<String,Object>(String.CASE_INSENSITIVE_ORDER);
+  advapi32=Advapi32.INSTANCE;
+  handle=openKey(rootKey,key,WINNT.KEY_READ);
+  lpValueName=new char[16384];
+  lpcchValueName=new IntByReference(16384);
+  lpType=new IntByReference();
+  lpData=new byte[1];
+  lpcbData=new IntByReference();
+  if (handle != 0) {
+    dwIndex=0;
+    do {
+      lpcbData.setValue(0);
+      result=advapi32.RegEnumValue(handle,dwIndex,lpValueName,lpcchValueName,null,lpType,lpData,lpcbData);
+      if (result == WINERROR.ERROR_MORE_DATA) {
+        lpData=new byte[lpcbData.getValue()];
+        lpcchValueName=new IntByReference(16384);
+        result=advapi32.RegEnumValue(handle,dwIndex,lpValueName,lpcchValueName,null,lpType,lpData,lpcbData);
+        if (result == WINERROR.ERROR_SUCCESS) {
+          name=new String(lpValueName,0,lpcchValueName.getValue());
+switch (lpType.getValue()) {
+case WINNT.REG_SZ:
+            values.put(name,convertBufferToString(lpData));
+          break;
+case WINNT.REG_DWORD:
+        values.put(name,convertBufferToInt(lpData));
+      break;
+default :
+    break;
+}
+}
+}
+dwIndex++;
+}
+ while (result == WINERROR.ERROR_SUCCESS);
+advapi32.RegCloseKey(handle);
+}
+return (values);
+}

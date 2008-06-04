@@ -1,0 +1,14 @@
+{
+  Advapi32 advapi32;
+  IntByReference pHandle;
+  int rootKeyHandle;
+  advapi32=Advapi32.INSTANCE;
+  rootKeyHandle=getRegistryRootKey(rootKey);
+  pHandle=new IntByReference();
+  if (advapi32.RegOpenKeyEx(rootKeyHandle,subKeyName,0,access,pHandle) == WINERROR.ERROR_SUCCESS) {
+    return (pHandle.getValue());
+  }
+ else {
+    return (0);
+  }
+}

@@ -1,0 +1,14 @@
+{
+  Advapi32 advapi32;
+  int handle;
+  boolean ret=true;
+  advapi32=Advapi32.INSTANCE;
+  handle=openKey(rootKey,subKeyName,WINNT.KEY_READ | WINNT.KEY_WRITE);
+  if (handle != 0) {
+    if (advapi32.RegDeleteValue(handle,name) == WINERROR.ERROR_SUCCESS) {
+      ret=true;
+    }
+    advapi32.RegCloseKey(handle);
+  }
+  return (ret);
+}

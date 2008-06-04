@@ -1,0 +1,16 @@
+{
+  Advapi32 advapi32;
+  int handle;
+  byte[] data;
+  boolean ret=false;
+  data=Arrays.copyOf(value.getBytes("UTF-16LE"),value.length() * 2 + 2);
+  advapi32=Advapi32.INSTANCE;
+  handle=openKey(rootKey,subKeyName,WINNT.KEY_READ | WINNT.KEY_WRITE);
+  if (handle != 0) {
+    if (advapi32.RegSetValueEx(handle,name,0,WINNT.REG_SZ,data,data.length) == WINERROR.ERROR_SUCCESS) {
+      ret=true;
+    }
+    advapi32.RegCloseKey(handle);
+  }
+  return (ret);
+}
