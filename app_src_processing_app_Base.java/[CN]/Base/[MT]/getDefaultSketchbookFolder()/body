@@ -1,27 +1,11 @@
 {
   File sketchbookFolder=null;
-  if (Base.isMacOS()) {
-    try {
-      Class clazz=Class.forName("processing.app.BaseMacOS");
-      Method m=clazz.getMethod("getDocumentsFolder",new Class[]{});
-      String documentsPath=(String)m.invoke(null,new Object[]{});
-      sketchbookFolder=new File(documentsPath,"Processing");
-    }
- catch (    Exception e) {
-      sketchbookFolder=promptSketchbookLocation();
-    }
+  try {
+    platform.getDefaultSketchbookFolder();
   }
- else   if (isWindows()) {
-    try {
-      String keyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
-      String personalPath=Registry.getStringValue(REGISTRY_ROOT_KEY.CURRENT_USER,keyPath,"Personal");
-      sketchbookFolder=new File(personalPath,"Processing");
-    }
- catch (    Exception e) {
-      sketchbookFolder=promptSketchbookLocation();
-    }
+ catch (  Exception e) {
   }
- else {
+  if (sketchbookFolder == null) {
     sketchbookFolder=promptSketchbookLocation();
   }
   boolean result=true;
@@ -29,15 +13,7 @@
     result=sketchbookFolder.mkdirs();
   }
   if (!result) {
-    System.out.println("Using fallback path for sketchbook.");
-    String fallback=Preferences.get("sketchbook.path.fallback");
-    sketchbookFolder=new File(fallback);
-    if (!sketchbookFolder.exists()) {
-      result=sketchbookFolder.mkdirs();
-    }
-  }
-  if (!result) {
-    showError("error","Processing cannot run because it could not\n" + "create a folder to store your sketchbook.",null);
+    showError("You forgot your sketchbook","Processing cannot run because it could not\n" + "create a folder to store your sketchbook.",null);
   }
   return sketchbookFolder;
 }

@@ -1,49 +1,21 @@
 {
-  File dataFolder=null;
-  String pref=Preferences.get("settings.path");
-  if (pref != null) {
-    dataFolder=new File(pref);
-  }
- else   if (PApplet.platform == PConstants.MACOSX) {
-    try {
-      Class clazz=Class.forName("processing.app.macosx.ThinkDifferent");
-      Method m=clazz.getMethod("getLibraryFolder",new Class[]{});
-      String libraryPath=(String)m.invoke(null,new Object[]{});
-      File libraryFolder=new File(libraryPath);
-      dataFolder=new File(libraryFolder,"Processing");
-    }
- catch (    Exception e) {
-      showError("Problem getting data folder","Error getting the Processing data folder.",e);
-    }
-  }
- else   if (Base.isWindows()) {
-    try {
-      String keyPath="Software\\Microsoft\\Windows\\CurrentVersion" + "\\Explorer\\Shell Folders";
-      String appDataPath=Registry.getStringValue(REGISTRY_ROOT_KEY.CURRENT_USER,keyPath,"AppData");
-      dataFolder=new File(appDataPath,"Processing");
-    }
- catch (    Exception e) {
-      showError("Problem getting data folder","Error getting the Processing data folder.",e);
-    }
+  File settingsFolder=null;
+  String preferencesPath=Preferences.get("settings.path");
+  if (preferencesPath != null) {
+    settingsFolder=new File(preferencesPath);
   }
  else {
-    File home=new File(System.getProperty("user.home"));
-    dataFolder=new File(home,".processing");
-  }
-  boolean result=true;
-  if (!dataFolder.exists()) {
-    result=dataFolder.mkdirs();
-  }
-  if (!result) {
-    System.out.println("Using fallback path for settings.");
-    String fallback=Preferences.get("settings.path.fallback");
-    dataFolder=new File(fallback);
-    if (!dataFolder.exists()) {
-      result=dataFolder.mkdirs();
+    try {
+      settingsFolder=platform.getSettingsFolder();
+    }
+ catch (    Exception e) {
+      showError("Problem getting data folder","Error getting the Processing data folder.",e);
     }
   }
-  if (!result) {
-    showError("Settings issues","Processing cannot run because it could not\n" + "create a folder to store your settings.",null);
+  if (!settingsFolder.exists()) {
+    if (!settingsFolder.mkdirs()) {
+      showError("Settings issues","Processing cannot run because it could not\n" + "create a folder to store your settings.",null);
+    }
   }
-  return dataFolder;
+  return settingsFolder;
 }

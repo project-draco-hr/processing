@@ -3,16 +3,21 @@
     Base.showError("Need to install Java 1.5","This version of Processing requires    \n" + "Java 1.5 or later to run properly.\n" + "Please visit java.com to upgrade.",null);
   }
   try {
+    Class platformClass=Class.forName("processing.app.Platform");
     if (Base.isMacOS()) {
-      UIManager.setLookAndFeel("ch.randelshofer.quaqua.QuaquaLookAndFeel");
-      UIManager.put("Component.visualMargin",new Insets(1,1,1,1));
+      platformClass=Class.forName("processing.app.macosx.Platform");
     }
- else     if (Base.isLinux()) {
-      UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+ else     if (Base.isWindows()) {
+      platformClass=Class.forName("processing.app.windows.Platform");
     }
- else {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    }
+    platform=(Platform)platformClass.newInstance();
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    System.exit(1);
+  }
+  try {
+    platform.setLookAndFeel();
   }
  catch (  Exception e) {
     System.err.println("Non-fatal error while setting the Look & Feel.");
