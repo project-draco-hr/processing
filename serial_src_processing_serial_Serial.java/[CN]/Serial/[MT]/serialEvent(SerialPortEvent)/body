@@ -10,7 +10,7 @@ synchronized (buffer) {
           }
           buffer[bufferLast++]=(byte)input.read();
           if (serialEventMethod != null) {
-            if ((bufferUntil && (buffer[bufferLast - 1] == bufferUntilByte)) || ((bufferLast - bufferIndex) >= bufferSize)) {
+            if ((bufferUntil && (buffer[bufferLast - 1] == bufferUntilByte)) || (!bufferUntil && ((bufferLast - bufferIndex) >= bufferSize))) {
               try {
                 serialEventMethod.invoke(parent,new Object[]{this});
               }
