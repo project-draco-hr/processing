@@ -16,22 +16,69 @@
   }
   firstErrorFound=false;
   secondErrorFound=false;
-  PipedWriter pipedWriter=new PipedWriter();
-  PrintWriter writer=new PrintWriter(pipedWriter);
-  PipedReader pipedReader=new PipedReader();
-  BufferedReader reader=new BufferedReader(pipedReader);
-  int result=0;
+  int result=-1;
   try {
+    PipedWriter pipedWriter=new PipedWriter();
+    PipedReader pipedReader=new PipedReader();
     pipedWriter.connect(pipedReader);
+    PrintWriter writer=new PrintWriter(pipedWriter);
+    BufferedReader reader=new BufferedReader(pipedReader);
     result=com.sun.tools.javac.Main.compile(command,writer);
-    while (pipedReader.ready()) {
-      System.out.println("got line " + reader.readLine());
+    writer.flush();
+    writer.close();
+    String line=null;
+    while ((line=reader.readLine()) != null) {
+      String[] pieces=PApplet.match(line,"([\\w\\d_]+.java):(\\d+):\\s*(.*)\\s*");
+      if (pieces == null) {
+        exception=new RunnerException("Cannot parse error text: " + line);
+        exception.hideStackTrace();
+        System.err.println(line);
+        while ((line=reader.readLine()) != null) {
+          System.err.println(line);
+        }
+        break;
+      }
+      String dotJavaFilename=pieces[0];
+      int dotJavaLineIndex=PApplet.parseInt(pieces[1]) - 1;
+      String errorMessage=pieces[2];
+      int codeIndex=-1;
+      int codeLine=-1;
+      for (int i=0; i < sketch.getCodeCount(); i++) {
+        String name=sketch.getCode(i).preprocName;
+        if ((name != null) && dotJavaFilename.equals(name)) {
+          codeIndex=i;
+        }
+      }
+      if (codeIndex == 0) {
+        for (int i=1; i < sketch.getCodeCount(); i++) {
+          SketchCode code=sketch.getCode(i);
+          if (code.flavor == Sketch.PDE) {
+            if (code.preprocOffset <= dotJavaLineIndex) {
+              codeIndex=i;
+            }
+          }
+        }
+      }
+      codeLine=dotJavaLineIndex - sketch.getCode(codeIndex).preprocOffset;
+      exception=new RunnerException(errorMessage,codeIndex,codeLine,-1);
+      exception.hideStackTrace();
+      if (errorMessage.equals("cannot find symbol")) {
+        handleCannotFindSymbol(reader,exception);
+      }
+ else       if (errorMessage.startsWith("package") && errorMessage.endsWith("does not exist")) {
+        exception=new RunnerException("P" + errorMessage.substring(1) + ". You might be missing a library.");
+        exception.hideStackTrace();
+      }
+ else {
+        exception=new RunnerException(errorMessage);
+      }
+      if (exception != null)       throw exception;
     }
   }
  catch (  IOException e) {
+    String bigSigh="Error while compiling. (" + e.getMessage() + ")";
+    exception=new RunnerException(bigSigh);
     e.printStackTrace();
-    return false;
   }
-  if (exception != null)   throw exception;
   return (result == 0);
 }
