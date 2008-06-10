@@ -1,7 +1,6 @@
 {
-  this.sketch=sketch;
-  this.buildPath=buildPath;
-  String baseCommand[]=new String[]{"-classpath",sketch.getClassPath(),"-nowarn","-d",buildPath};
+  RunnerException exception=null;
+  String baseCommand[]=new String[]{"-source","1.5","-target","1.5","-classpath",sketch.getClassPath(),"-nowarn","-d",buildPath};
   String[] preprocNames=new String[sketch.getCodeCount()];
   int preprocCount=0;
   for (int i=0; i < sketch.getCodeCount(); i++) {
@@ -14,8 +13,6 @@
   for (int i=0; i < preprocCount; i++) {
     command[baseCommand.length + i]=buildPath + File.separator + preprocNames[i];
   }
-  firstErrorFound=false;
-  secondErrorFound=false;
   int result=-1;
   try {
     final StringBuffer errorBuffer=new StringBuffer();
@@ -81,13 +78,14 @@
  else {
         exception=new RunnerException(errorMessage);
       }
-      if (exception != null)       throw exception;
     }
   }
  catch (  IOException e) {
     String bigSigh="Error while compiling. (" + e.getMessage() + ")";
     exception=new RunnerException(bigSigh);
     e.printStackTrace();
+    result=1;
   }
+  if (exception != null)   throw exception;
   return (result == 0);
 }
