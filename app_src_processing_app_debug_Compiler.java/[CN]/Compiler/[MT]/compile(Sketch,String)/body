@@ -18,17 +18,26 @@
   secondErrorFound=false;
   int result=-1;
   try {
-    PipedWriter pipedWriter=new PipedWriter();
-    PipedReader pipedReader=new PipedReader();
-    pipedWriter.connect(pipedReader);
-    PrintWriter writer=new PrintWriter(pipedWriter);
-    BufferedReader reader=new BufferedReader(pipedReader);
+    final StringBuffer errorBuffer=new StringBuffer();
+    Writer internalWriter=new Writer(){
+      public void write(      char[] buf,      int off,      int len){
+        errorBuffer.append(buf,off,len);
+      }
+      public void flush(){
+      }
+      public void close(){
+      }
+    }
+;
+    PrintWriter writer=new PrintWriter(internalWriter);
     result=com.sun.tools.javac.Main.compile(command,writer);
     writer.flush();
     writer.close();
+    BufferedReader reader=new BufferedReader(new StringReader(errorBuffer.toString()));
     String line=null;
     while ((line=reader.readLine()) != null) {
-      String[] pieces=PApplet.match(line,"([\\w\\d_]+.java):(\\d+):\\s*(.*)\\s*");
+      String errorFormat="([\\w\\d_]+.java):(\\d+):\\s*(.*)\\s*";
+      String[] pieces=PApplet.match(line,errorFormat);
       if (pieces == null) {
         exception=new RunnerException("Cannot parse error text: " + line);
         exception.hideStackTrace();

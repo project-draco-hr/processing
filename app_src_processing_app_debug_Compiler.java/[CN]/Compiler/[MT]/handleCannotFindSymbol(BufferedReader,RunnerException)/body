@@ -19,8 +19,15 @@
       String methodParams=pieces[1].substring(leftParen + 1,rightParen);
       String message="Cannot find a function named \u201C" + methodName + "\u201D";
       if (methodParams.length() > 0) {
-        message+="with parameters " + methodParams + ".";
+        if (methodParams.indexOf(',') != -1) {
+          message+=" with parameters ";
+        }
+ else {
+          message+=" with parameter ";
+        }
+        message+=methodParams;
       }
+      message+=".";
       rex.setMessage(message);
       if (crusties.get(methodName) != null) {
         handleCrustyCode(rex);
