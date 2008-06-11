@@ -33,11 +33,14 @@
     BufferedReader reader=new BufferedReader(new StringReader(errorBuffer.toString()));
     String line=null;
     while ((line=reader.readLine()) != null) {
-      String lastFormat="\\d+ error[s]?";
-      if (PApplet.match(line,lastFormat) != null) {
+      if ((PApplet.match(line,"\\d+ error[s]?") != null) || (PApplet.match(line,"\\d+ warning[s]?") != null)) {
         break;
       }
       if (line.startsWith("Note: ")) {
+        if (line.indexOf("serialVersionUID") != -1)         continue;
+        if (line.indexOf("or unsafe operations") != -1)         continue;
+        if (line.indexOf("or override") != -1)         continue;
+        if (line.indexOf("Recompile with -Xlint:") != -1)         continue;
         System.err.println(line);
         continue;
       }
