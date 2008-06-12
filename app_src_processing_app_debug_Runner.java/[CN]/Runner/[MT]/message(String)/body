@@ -20,7 +20,7 @@
   if (s.trim().length() == 0)   return;
   if (newMessage) {
     exception=new RunnerException(s);
-    exception.hideStackTrace=true;
+    exception.hideStackTrace();
     newMessage=false;
     foundMessageSource=false;
     messageLineCount=0;
@@ -57,7 +57,7 @@
           if (codeIndex != -1) {
             lineNumber-=sketch.getCode(codeIndex).preprocOffset;
             exception=new RunnerException(exception.getMessage(),codeIndex,lineNumber,-1);
-            exception.hideStackTrace=true;
+            exception.hideStackTrace();
             foundMessageSource=true;
           }
         }
@@ -67,7 +67,7 @@
  else     if (messageLineCount > 10) {
       messageLineCount=-100;
       exception=new RunnerException(exception.getMessage());
-      exception.hideStackTrace=true;
+      exception.hideStackTrace();
       editor.error(exception);
     }
  else {

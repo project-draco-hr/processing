@@ -5,8 +5,12 @@
   }
   if (e instanceof RunnerException) {
     RunnerException re=(RunnerException)e;
-    if (re.file >= 0)     sketch.setCurrent(re.file);
-    if (re.line >= 0)     highlightLine(re.line);
+    if (re.hasCodeIndex()) {
+      sketch.setCurrent(re.getCodeIndex());
+    }
+    if (re.hasCodeLine()) {
+      highlightLine(re.getCodeLine());
+    }
   }
   String mess=e.getMessage();
   if (mess != null) {
