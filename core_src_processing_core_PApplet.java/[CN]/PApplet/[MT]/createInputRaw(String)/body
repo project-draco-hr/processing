@@ -17,6 +17,35 @@ catch (  IOException e) {
     e.printStackTrace();
     return null;
   }
+  if (!online) {
+    try {
+      File file=new File(dataPath(filename));
+      if (!file.exists()) {
+        file=new File(sketchPath,filename);
+      }
+      if (file.isDirectory()) {
+        return null;
+      }
+      if (file.exists()) {
+        try {
+          String filePath=file.getCanonicalPath();
+          String filenameActual=new File(filePath).getName();
+          String filenameShort=new File(filename).getName();
+          if (!filenameActual.equals(filenameShort)) {
+            throw new RuntimeException("This file is named " + filenameActual + " not "+ filename+ ". Rename the file "+ "or change your code.");
+          }
+        }
+ catch (        IOException e) {
+        }
+      }
+      stream=new FileInputStream(file);
+      if (stream != null)       return stream;
+    }
+ catch (    IOException ioe) {
+    }
+catch (    SecurityException se) {
+    }
+  }
   ClassLoader cl=getClass().getClassLoader();
   stream=cl.getResourceAsStream("data/" + filename);
   if (stream != null) {
@@ -30,32 +59,6 @@ catch (  IOException e) {
     String cn=stream.getClass().getName();
     if (!cn.equals("sun.plugin.cache.EmptyInputStream")) {
       return stream;
-    }
-  }
-  if (!online) {
-    try {
-      File file=new File(dataPath(filename));
-      if (!file.exists()) {
-        file=new File(sketchPath,filename);
-      }
-      if (file.exists()) {
-        try {
-          String filePath=file.getCanonicalPath();
-          String filenameActual=new File(filePath).getName();
-          String filenameShort=new File(filename).getName();
-          if (!filenameActual.equals(filenameShort)) {
-            throw new RuntimeException("This file is named " + filenameActual + " not "+ filename+ ". Re-name it "+ "or change your code.");
-          }
-        }
- catch (        IOException e) {
-        }
-      }
-      stream=new FileInputStream(file);
-      if (stream != null)       return stream;
-    }
- catch (    IOException ioe) {
-    }
-catch (    SecurityException se) {
     }
   }
   try {
