@@ -1,6 +1,6 @@
 {
   String symbolLine=reader.readLine();
-  reader.readLine();
+  String locationLine=reader.readLine();
   reader.readLine();
   String caretLine=reader.readLine();
   rex.setCodeColumn(caretColumn(caretLine));
@@ -26,6 +26,19 @@
           message+=" with parameter ";
         }
         message+=methodParams;
+      }
+      String locationClass="location: class ";
+      if (locationLine.startsWith(locationClass) && locationLine.indexOf("Temporary_") == -1) {
+        String className=locationLine.substring(locationClass.length());
+        className=className.substring(className.lastIndexOf('.') + 1);
+        int bracket=className.indexOf('[');
+        if (bracket == -1) {
+          message+=" in class " + className;
+        }
+ else {
+          className=className.substring(0,bracket);
+          message+=" for an array of " + className + " objects";
+        }
       }
       message+=".";
       rex.setMessage(message);
