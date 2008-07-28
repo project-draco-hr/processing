@@ -2,8 +2,8 @@
   LaunchingConnector connector=findLaunchingConnector("com.sun.jdi.RawCommandLineLaunch");
   Map arguments=connector.defaultArguments();
   Connector.Argument commandArg=(Connector.Argument)arguments.get("command");
-  String addr="127.0.0.1:" + (8000 + (int)(Math.random() * 1000));
-  String commandArgs="java -Xrunjdwp:transport=dt_socket,address=" + addr + ",suspend=y ";
+  String addr="localhost:" + (8000 + (int)(Math.random() * 1000));
+  String commandArgs=(PApplet.platform == PConstants.WINDOWS) ? "java -Xrunjdwp:transport=dt_shmem,address=" + addr + ",suspend=y " : "java -Xrunjdwp:transport=dt_socket,address=" + addr + ",suspend=y ";
   for (int i=0; i < vmParams.length; i++) {
     commandArgs=addArgument(commandArgs,vmParams[i],' ');
   }
@@ -28,10 +28,7 @@ catch (  VMStartException exc) {
     Process p=exc.process();
     String[] errorStrings=PApplet.loadStrings(p.getErrorStream());
     String[] inputStrings=PApplet.loadStrings(p.getInputStream());
-    System.out.println("error:");
     PApplet.println(errorStrings);
-    System.out.println("input:");
-    PApplet.println(inputStrings);
     exc.printStackTrace();
     System.err.println("Could not run the sketch (Target VM failed to initialize).");
     System.err.println("Make sure that you haven't set the maximum available memory too high.");
