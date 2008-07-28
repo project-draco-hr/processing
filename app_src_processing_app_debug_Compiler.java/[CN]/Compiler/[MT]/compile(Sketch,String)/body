@@ -1,6 +1,7 @@
 {
   RunnerException exception=null;
-  String baseCommand[]=new String[]{"-source","1.5","-target","1.5","-classpath",sketch.getClassPath(),"-nowarn","-d",buildPath};
+  boolean success=false;
+  String baseCommand[]=new String[]{"-Xemacs","-source","1.5","-target","1.5","-classpath",sketch.getClassPath(),"-nowarn","-d",buildPath};
   String[] preprocNames=new String[sketch.getCodeCount()];
   int preprocCount=0;
   for (int i=0; i < sketch.getCodeCount(); i++) {
@@ -13,7 +14,6 @@
   for (int i=0; i < preprocCount; i++) {
     command[baseCommand.length + i]=buildPath + File.separator + preprocNames[i];
   }
-  int result=-1;
   try {
     final StringBuffer errorBuffer=new StringBuffer();
     Writer internalWriter=new Writer(){
@@ -27,25 +27,15 @@
     }
 ;
     PrintWriter writer=new PrintWriter(internalWriter);
-    result=com.sun.tools.javac.Main.compile(command,writer);
+    CompilationProgress progress=null;
+    PrintWriter outWriter=new PrintWriter(System.out);
+    success=org.eclipse.jdt.core.compiler.batch.BatchCompiler.compile(command,outWriter,writer,progress);
     writer.flush();
     writer.close();
     BufferedReader reader=new BufferedReader(new StringReader(errorBuffer.toString()));
     String line=null;
     while ((line=reader.readLine()) != null) {
-      if ((PApplet.match(line,"\\d+ error[s]?") != null) || (PApplet.match(line,"\\d+ warning[s]?") != null)) {
-        break;
-      }
-      String compilerNote=compilerResources.getString("compiler.note.note");
-      if (line.startsWith(compilerNote)) {
-        if (line.indexOf("serialVersionUID") != -1)         continue;
-        if (line.indexOf("or unsafe operations") != -1)         continue;
-        if (line.indexOf("or override") != -1)         continue;
-        if (line.indexOf("Recompile with -Xlint:") != -1)         continue;
-        System.err.println(line);
-        continue;
-      }
-      String errorFormat="([\\w\\d_]+.java):(\\d+):\\s*(.*)\\s*";
+      String errorFormat="([\\w\\d_]+.java):(\\d+):\\s*(.*):\\s*(.*)\\s*";
       String[] pieces=PApplet.match(line,errorFormat);
       if (pieces == null) {
         exception=new RunnerException("Cannot parse error text: " + line);
@@ -56,9 +46,13 @@
         }
         break;
       }
+      if (pieces[2].equals("warning")) {
+        System.out.println("nah, nevermind: " + pieces[3]);
+        continue;
+      }
       String dotJavaFilename=pieces[0];
       int dotJavaLineIndex=PApplet.parseInt(pieces[1]) - 1;
-      String errorMessage=pieces[2];
+      String errorMessage=pieces[3];
       int codeIndex=-1;
       int codeLine=-1;
       for (int i=0; i < sketch.getCodeCount(); i++) {
@@ -79,19 +73,45 @@
       }
       codeLine=dotJavaLineIndex - sketch.getCode(codeIndex).preprocOffset;
       exception=new RunnerException(errorMessage,codeIndex,codeLine,-1,false);
-      if (errorMessage.equals("cannot find symbol")) {
-        handleCannotFindSymbol(reader,exception);
+      if (errorMessage.startsWith("The import ") && errorMessage.endsWith("cannot be resolved")) {
+        String what=errorMessage.substring("The import ".length());
+        what=what.substring(0,what.indexOf(' '));
+        exception.setMessage("The package " + "\u201C" + what + "\u201D"+ " does not exist. "+ "You might be missing a library.");
       }
- else       if (errorMessage.indexOf("is already defined") != -1) {
-        reader.readLine();
-        int codeColumn=caretColumn(reader.readLine());
-        exception=new RunnerException(errorMessage,codeIndex,codeLine,codeColumn);
+ else       if (errorMessage.endsWith("cannot be resolved to a type")) {
+        String what=errorMessage.substring(0,errorMessage.indexOf(' '));
+        if (what.equals("BFont") || what.equals("BGraphics") || what.equals("BImage")) {
+          handleCrustyCode(exception);
+        }
+ else {
+          exception.setMessage("Cannot find a class or type " + "named \u201C" + what + "\u201D");
+        }
       }
- else       if (errorMessage.startsWith("package") && errorMessage.endsWith("does not exist")) {
-        exception=new RunnerException("P" + errorMessage.substring(1) + ". You might be missing a library.");
+ else       if (errorMessage.endsWith("cannot be resolved")) {
+        String what=errorMessage.substring(0,errorMessage.indexOf(' '));
+        if (what.equals("LINE_LOOP") || what.equals("LINE_STRIP") || what.equals("framerate")) {
+          handleCrustyCode(exception);
+        }
+ else {
+          exception.setMessage("Cannot find anything " + "named \u201C" + what + "\u201D");
+        }
+      }
+ else       if (errorMessage.startsWith("Duplicate")) {
       }
  else {
-        exception=new RunnerException(errorMessage);
+        String[] parts=null;
+        String undefined="The method (\\S+\\(.*\\)) is undefined for the type (.*)";
+        parts=PApplet.match(errorMessage,undefined);
+        if (parts != null) {
+          if (parts[0].equals("framerate(int)") || parts[0].equals("push()")) {
+            handleCrustyCode(exception);
+          }
+ else {
+            String mess="The function " + parts[0] + " does not exist.";
+            exception.setMessage(mess);
+          }
+          break;
+        }
       }
       if (exception != null) {
         exception.hideStackTrace();
@@ -103,8 +123,8 @@
     String bigSigh="Error while compiling. (" + e.getMessage() + ")";
     exception=new RunnerException(bigSigh);
     e.printStackTrace();
-    result=1;
+    success=false;
   }
   if (exception != null)   throw exception;
-  return (result == 0);
+  return success;
 }
