@@ -1,13 +1,13 @@
 {
   JEditTextArea textArea=getTextArea(evt);
   int caret=textArea.getCaretPosition();
-  int lastOfLine=textArea.getLineEndOffset(textArea.getCaretLine()) - 1;
+  int lastOfLine=textArea.getLineStopOffset(textArea.getCaretLine()) - 1;
   int lastVisibleLine=textArea.getFirstLine() + textArea.getVisibleLines();
   if (lastVisibleLine >= textArea.getLineCount()) {
     lastVisibleLine=Math.min(textArea.getLineCount() - 1,lastVisibleLine);
   }
  else   lastVisibleLine-=(textArea.getElectricScroll() + 1);
-  int lastVisible=textArea.getLineEndOffset(lastVisibleLine) - 1;
+  int lastVisible=textArea.getLineStopOffset(lastVisibleLine) - 1;
   int lastDocument=textArea.getDocumentLength();
   if (caret == lastDocument) {
     textArea.getToolkit().beep();

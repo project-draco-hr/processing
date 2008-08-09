@@ -61,7 +61,12 @@
     public void actionPerformed(    ActionEvent e){
       beginCompoundEdit();
       int startLine=textarea.getSelectionStartLine();
-      int stopLine=textarea.getSelectionEndLine();
+      int stopLine=textarea.getSelectionStopLine();
+      int lastLineStart=textarea.getLineStartOffset(stopLine);
+      int selectionStop=textarea.getSelectionStop();
+      if (selectionStop == lastLineStart) {
+        stopLine--;
+      }
       int length=textarea.getDocumentLength();
       int pos=textarea.getLineStartOffset(startLine);
       if (pos + 2 > length)       return;
@@ -80,7 +85,7 @@
           textarea.setSelectedText("//");
         }
       }
-      textarea.select(textarea.getLineStartOffset(startLine),textarea.getLineEndOffset(stopLine) - 1);
+      textarea.select(textarea.getLineStartOffset(startLine),textarea.getLineStopOffset(stopLine) - 1);
       endCompoundEdit();
     }
   }
