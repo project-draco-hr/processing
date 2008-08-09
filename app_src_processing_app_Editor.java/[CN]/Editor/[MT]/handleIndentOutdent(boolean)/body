@@ -1,0 +1,27 @@
+{
+  int tabSize=Preferences.getInteger("editor.tabs.size");
+  String tabString=Editor.EMPTY.substring(0,tabSize);
+  beginCompoundEdit();
+  int startLine=textarea.getSelectionStartLine();
+  int stopLine=textarea.getSelectionStopLine();
+  int lastLineStart=textarea.getLineStartOffset(stopLine);
+  int selectionStop=textarea.getSelectionStop();
+  if (selectionStop == lastLineStart) {
+    stopLine--;
+  }
+  for (int line=startLine; line <= stopLine; line++) {
+    int location=textarea.getLineStartOffset(line);
+    if (indent) {
+      textarea.select(location,location);
+      textarea.setSelectedText(tabString);
+    }
+ else {
+      textarea.select(location,location + tabSize);
+      if (textarea.getSelectedText().equals(tabString)) {
+        textarea.setSelectedText("");
+      }
+    }
+  }
+  textarea.select(textarea.getLineStartOffset(startLine),textarea.getLineStopOffset(stopLine) - 1);
+  endCompoundEdit();
+}

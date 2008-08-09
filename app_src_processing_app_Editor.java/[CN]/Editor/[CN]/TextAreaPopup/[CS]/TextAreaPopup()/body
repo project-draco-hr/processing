@@ -3,8 +3,7 @@
   cutItem=new JMenuItem("Cut");
   cutItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      textarea.cut();
-      sketch.setModified(true);
+      handleCut();
     }
   }
 );
@@ -12,16 +11,23 @@
   copyItem=new JMenuItem("Copy");
   copyItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      textarea.copy();
+      handleCopy();
     }
   }
 );
   this.add(copyItem);
+  discourseItem=new JMenuItem("Copy for Discourse");
+  discourseItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleDiscourseCopy();
+    }
+  }
+);
+  this.add(discourseItem);
   item=new JMenuItem("Paste");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      textarea.paste();
-      sketch.setModified(true);
+      handlePaste();
     }
   }
 );
@@ -29,7 +35,32 @@
   item=new JMenuItem("Select All");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      textarea.selectAll();
+      handleSelectAll();
+    }
+  }
+);
+  this.add(item);
+  this.addSeparator();
+  item=new JMenuItem("Comment/Uncomment");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleCommentUncomment();
+    }
+  }
+);
+  this.add(item);
+  item=new JMenuItem("Increase Indent");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleIndentOutdent(true);
+    }
+  }
+);
+  this.add(item);
+  item=new JMenuItem("Decrease Indent");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleIndentOutdent(false);
     }
   }
 );
@@ -38,7 +69,7 @@
   referenceItem=new JMenuItem("Find in Reference");
   referenceItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      handleReference();
+      handleFindReference();
     }
   }
 );
