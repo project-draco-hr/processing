@@ -1,14 +1,13 @@
 {
-  StringBuffer cf=new StringBuffer();
-  Segment lineSegment=new Segment();
+  Segment segment=new Segment();
   TextAreaPainter painter=parent.getPainter();
   TokenMarker tokenMarker=parent.getTokenMarker();
   FontMetrics fm=painter.getFontMetrics();
-  parent.getLineText(line,lineSegment);
-  char[] segmentArray=lineSegment.array;
-  int limit=lineSegment.getEndIndex();
-  int segmentOffset=lineSegment.offset;
-  int segmentCount=lineSegment.count;
+  parent.getLineText(line,segment);
+  char[] segmentArray=segment.array;
+  int limit=segment.getEndIndex();
+  int segmentOffset=segment.offset;
+  int segmentCount=segment.count;
   int width=0;
   if (tokenMarker == null) {
     for (int j=0; j < segmentCount; j++) {
@@ -31,7 +30,7 @@
     }
  else {
       painter.setCurrentLineIndex(line);
-      painter.setCurrentLineTokens(tokenMarker.markTokens(lineSegment,line));
+      painter.setCurrentLineTokens(tokenMarker.markTokens(segment,line));
       tokens=painter.getCurrentLineTokens();
     }
     int offset=0;
@@ -47,7 +46,7 @@
  else {
           cf.append('\n');
         }
-        return cf.toString();
+        return;
       }
       if (id == Token.NULL) {
         fm=painter.getFontMetrics();
@@ -78,5 +77,4 @@
       tokens=tokens.next;
     }
   }
-  return cf.toString();
 }

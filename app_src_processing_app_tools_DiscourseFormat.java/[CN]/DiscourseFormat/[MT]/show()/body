@@ -1,9 +1,22 @@
 {
-  StringBuffer cf=new StringBuffer("[quote] \n \n");
-  for (int i=0; i < parent.getLineCount(); i++) {
-    cf.append(formatCode(i));
+  StringBuffer cf=new StringBuffer("[quote]");
+  int selStart=parent.getSelectionStart();
+  int selStop=parent.getSelectionEnd();
+  int startLine=parent.getSelectionStartLine();
+  int stopLine=parent.getSelectionEndLine();
+  if (selStart == selStop) {
+    startLine=0;
+    stopLine=parent.getLineCount() - 1;
   }
-  cf.append("\n [/quote]");
+ else {
+    if (parent.getLineStartOffset(stopLine) == selStop) {
+      stopLine--;
+    }
+  }
+  for (int i=startLine; i <= stopLine; i++) {
+    appendFormattedLine(cf,i);
+  }
+  cf.append("[/quote]");
   StringSelection formatted=new StringSelection(cf.toString());
   Clipboard clipboard=Toolkit.getDefaultToolkit().getSystemClipboard();
   clipboard.setContents(formatted,new ClipboardOwner(){
@@ -11,5 +24,5 @@
     }
   }
 );
-  editor.message("Discourse-formatted code has been " + "copied to the clipboard.");
+  editor.message("Code formatted for processing.org/discourse " + "has been copied to the clipboard.");
 }
