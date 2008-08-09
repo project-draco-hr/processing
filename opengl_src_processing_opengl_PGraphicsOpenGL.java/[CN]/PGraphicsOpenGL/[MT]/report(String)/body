@@ -1,7 +1,9 @@
 {
   if (!hints[DISABLE_ERROR_REPORT]) {
     int err=gl.glGetError();
-    String errString=glu.gluErrorString(err);
-    System.err.println("OpenGL error: " + errString);
+    if (err != 0) {
+      String errString=glu.gluErrorString(err);
+      System.err.println("OpenGL error: " + errString + " "+ err);
+    }
   }
 }
