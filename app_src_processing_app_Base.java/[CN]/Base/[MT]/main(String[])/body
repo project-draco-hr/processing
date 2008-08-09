@@ -3,13 +3,6 @@
     Base.showError("Need to install Java 1.5","This version of Processing requires    \n" + "Java 1.5 or later to run properly.\n" + "Please visit java.com to upgrade.",null);
   }
   try {
-    Class.forName("com.sun.jdi.VirtualMachine");
-  }
- catch (  ClassNotFoundException cnfe) {
-    Base.showPlatforms();
-    Base.showError("Please install JDK 1.5 or later","Processing requires a full JDK (not just a JRE)\n" + "to run. Please install JDK 1.5 or later.\n" + "More information can be found in the reference.",cnfe);
-  }
-  try {
     Class platformClass=Class.forName("processing.app.Platform");
     if (Base.isMacOS()) {
       platformClass=Class.forName("processing.app.macosx.Platform");
@@ -31,6 +24,13 @@
     System.err.println(e.getMessage());
   }
   JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+  try {
+    Class.forName("com.sun.jdi.VirtualMachine");
+  }
+ catch (  ClassNotFoundException cnfe) {
+    Base.showPlatforms();
+    Base.showError("Please install JDK 1.5 or later","Processing requires a full JDK (not just a JRE)\n" + "to run. Please install JDK 1.5 or later.\n" + "More information can be found in the reference.",cnfe);
+  }
   untitledFolder=createTempFolder("untitled");
   untitledFolder.deleteOnExit();
   try {
