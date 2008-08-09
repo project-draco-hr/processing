@@ -1,4 +1,16 @@
 {
+  if (extension == null) {
+    String lower=filename.toLowerCase();
+    int dot=filename.lastIndexOf('.');
+    if (dot == -1) {
+      extension="unknown";
+    }
+    extension=lower.substring(dot + 1);
+    int question=extension.indexOf('?');
+    if (question != -1) {
+      extension=extension.substring(0,question);
+    }
+  }
   extension=extension.toLowerCase();
   if (extension.equals("tga")) {
     try {
@@ -21,7 +33,10 @@
       }
  else {
         Image awtImage=Toolkit.getDefaultToolkit().createImage(bytes);
-        PImage image=loadImageSync(awtImage);
+        PImage image=loadImageMT(awtImage);
+        if (image.width == -1) {
+          System.err.println("The file " + filename + " contains bad image data, or may not be an image.");
+        }
         if (extension.equals("gif") || extension.equals("png")) {
           image.checkAlpha();
         }
