@@ -2,7 +2,7 @@
   float x=0;
   float y=0;
   float z=0;
-  if (sphereDetail == 0) {
+  if ((sphereDetailU < 3) || (sphereDetailV < 2)) {
     sphereDetail(30);
   }
   int v1, v11, v2;
@@ -13,7 +13,7 @@
     triangle.setCulling(true);
   }
   beginShape(TRIANGLE_STRIP);
-  for (int i=0; i < sphereDetail; i++) {
+  for (int i=0; i < sphereDetailU; i++) {
     normal(0,-1,0);
     vertex(0,-1,0);
     normal(sphereX[i],sphereY[i],sphereZ[i]);
@@ -24,12 +24,12 @@
   vertex(sphereX[0],sphereY[0],sphereZ[0]);
   endShape();
   int voff=0;
-  for (int i=2; i < sphereDetail; i++) {
+  for (int i=2; i < sphereDetailV; i++) {
     v1=v11=voff;
-    voff+=sphereDetail;
+    voff+=sphereDetailU;
     v2=voff;
     beginShape(TRIANGLE_STRIP);
-    for (int j=0; j < sphereDetail; j++) {
+    for (int j=0; j < sphereDetailU; j++) {
       normal(sphereX[v1],sphereY[v1],sphereZ[v1]);
       vertex(sphereX[v1],sphereY[v1],sphereZ[v1++]);
       normal(sphereX[v2],sphereY[v2],sphereZ[v2]);
@@ -44,7 +44,7 @@
     endShape();
   }
   beginShape(TRIANGLE_STRIP);
-  for (int i=0; i < sphereDetail; i++) {
+  for (int i=0; i < sphereDetailU; i++) {
     v2=voff + i;
     normal(sphereX[v2],sphereY[v2],sphereZ[v2]);
     vertex(sphereX[v2],sphereY[v2],sphereZ[v2]);
