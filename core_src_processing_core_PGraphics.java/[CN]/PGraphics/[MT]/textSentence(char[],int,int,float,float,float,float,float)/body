@@ -1,0 +1,49 @@
+{
+  float runningX=0;
+  int lineStart=start;
+  int wordStart=start;
+  int index=start;
+  while (index <= stop) {
+    if ((buffer[index] == ' ') || (index == stop)) {
+      float wordWidth=textWidthImpl(buffer,wordStart,index);
+      if (runningX + wordWidth > boxWidth) {
+        if (runningX != 0) {
+          textLineImpl(buffer,lineStart,index,x,y);
+          while ((index < stop) && (buffer[index] == ' ')) {
+            index++;
+          }
+        }
+ else {
+          do {
+            index--;
+            if (index == wordStart) {
+              return Float.NaN;
+            }
+            wordWidth=textWidthImpl(buffer,wordStart,index);
+          }
+ while (wordWidth > boxWidth);
+          textLineImpl(buffer,lineStart,index,x,y);
+        }
+        lineStart=index;
+        wordStart=index;
+        runningX=0;
+        y+=textLeading;
+        if (y > y2)         return y;
+      }
+ else       if (index == stop) {
+        textLineImpl(buffer,lineStart,index,x,y);
+        y+=textLeading;
+        index++;
+      }
+ else {
+        runningX+=wordWidth + spaceWidth;
+        wordStart=index + 1;
+        index++;
+      }
+    }
+ else {
+      index++;
+    }
+  }
+  return y;
+}
