@@ -35,8 +35,27 @@ float temp=y1;
 y1=y2;
 y2=temp;
 }
-float currentY=y1;
 float boxWidth=x2 - x1;
+float spaceWidth=textWidth(' ');
+if (textBreakStart == null) {
+textBreakStart=new int[20];
+textBreakStop=new int[20];
+}
+textBreakCount=0;
+int length=str.length();
+if (length + 1 > textBuffer.length) {
+textBuffer=new char[length + 1];
+}
+str.getChars(0,length,textBuffer,0);
+textBuffer[length++]='\n';
+int sentenceStart=0;
+for (int i=0; i < length; i++) {
+if (textBuffer[i] == '\n') {
+boolean legit=textSentence(textBuffer,sentenceStart,i,boxWidth,spaceWidth);
+if (!legit) break;
+sentenceStart=i + 1;
+}
+}
 float lineX=x1;
 if (textAlign == CENTER) {
 lineX=lineX + boxWidth / 2f;
@@ -44,23 +63,30 @@ lineX=lineX + boxWidth / 2f;
  else if (textAlign == RIGHT) {
 lineX=x2;
 }
-currentY+=textAscent();
-if (currentY > y2) return;
-float spaceWidth=textWidth(' ');
-int length=str.length();
-if (length + 1 > textBuffer.length) {
-textBuffer=new char[length + 1];
-textBreakBuffer=new int[length + 1];
+float boxHeight=y2 - y1;
+int lineFitCount=1 + PApplet.floor((boxHeight - textAscent()) / textLeading);
+if (textAlignY == CENTER) {
+int lineCount=Math.min(textBreakCount,lineFitCount);
+float lineHigh=textAscent() + textLeading * (lineCount - 1);
+float y=y1 + textAscent() + (boxHeight - lineHigh) / 2;
+for (int i=0; i < lineCount; i++) {
+textLineImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
+y+=textLeading;
 }
-str.getChars(0,length,textBuffer,0);
-textBuffer[length++]='\n';
-int sentenceStart=0;
-for (int i=0; i < length; i++) {
-if (textBuffer[i] == '\n') {
-currentY=textSentence(textBuffer,sentenceStart,i,lineX,boxWidth,currentY,y2,spaceWidth);
-if (Float.isNaN(currentY)) break;
-if (currentY > y2) break;
-sentenceStart=i + 1;
+}
+ else if (textAlignY == BOTTOM) {
+int lineCount=Math.min(textBreakCount,lineFitCount);
+float y=y2 - textDescent() - textLeading * (lineCount - 1);
+for (int i=0; i < lineCount; i++) {
+textLineImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
+y+=textLeading;
+}
+}
+ else {
+float y=y1 + textAscent();
+for (int i=0; i < lineFitCount; i++) {
+textLineImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
+y+=textLeading;
 }
 }
 if (textMode == SCREEN) updatePixels();

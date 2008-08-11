@@ -8,7 +8,7 @@
       float wordWidth=textWidthImpl(buffer,wordStart,index);
       if (runningX + wordWidth > boxWidth) {
         if (runningX != 0) {
-          textLineImpl(buffer,lineStart,index,x,y);
+          textSentenceBreak(lineStart,index);
           while ((index < stop) && (buffer[index] == ' ')) {
             index++;
           }
@@ -17,22 +17,19 @@
           do {
             index--;
             if (index == wordStart) {
-              return Float.NaN;
+              return false;
             }
             wordWidth=textWidthImpl(buffer,wordStart,index);
           }
  while (wordWidth > boxWidth);
-          textLineImpl(buffer,lineStart,index,x,y);
+          textSentenceBreak(lineStart,index);
         }
         lineStart=index;
         wordStart=index;
         runningX=0;
-        y+=textLeading;
-        if (y > y2)         return y;
       }
  else       if (index == stop) {
-        textLineImpl(buffer,lineStart,index,x,y);
-        y+=textLeading;
+        textSentenceBreak(lineStart,index);
         index++;
       }
  else {
@@ -45,5 +42,5 @@
       index++;
     }
   }
-  return y;
+  return true;
 }
