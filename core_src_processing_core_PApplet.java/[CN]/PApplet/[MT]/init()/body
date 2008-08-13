@@ -1,5 +1,5 @@
 {
-  Dimension initialSize=getSize();
+  println("Calling init()");
   setFocusTraversalKeysEnabled(false);
   millisOffset=System.currentTimeMillis();
   finished=false;
@@ -27,13 +27,17 @@
   }
  catch (  Exception e) {
   }
-  if ((initialSize.width != 0) && (initialSize.height != 0)) {
-    setRendererSize(initialSize.width,initialSize.height);
+  Dimension size=getSize();
+  if ((size.width != 0) && (size.height != 0)) {
+    g=PApplet.makeGraphics(size.width,size.height,JAVA2D,null,this);
   }
  else {
     this.defaultSize=true;
-    setRendererSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
+    g=PApplet.makeGraphics(DEFAULT_WIDTH,DEFAULT_HEIGHT,JAVA2D,null,this);
     setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
+    setPreferredSize(new Dimension(DEFAULT_WIDTH,DEFAULT_HEIGHT));
   }
+  width=g.width;
+  height=g.height;
   start();
 }

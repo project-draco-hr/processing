@@ -1,64 +1,38 @@
 {
-  try {
-    while ((Thread.currentThread() == thread) && !finished) {
-      if (g != null) {
-        g.requestDisplay(this);
-      }
-      if (frameCount == 1) {
-        requestFocus();
-      }
+  long beforeTime=System.nanoTime();
+  long overSleepTime=0L;
+  int noDelays=0;
+  final int NO_DELAYS_PER_YIELD=15;
+  while ((Thread.currentThread() == thread) && !finished) {
+    if (resizeRequest) {
+      resizeRenderer(resizeWidth,resizeHeight);
+      resizeRequest=false;
+    }
+    handleDraw();
+    if (frameCount == 1) {
+      requestFocus();
+    }
+    long afterTime=System.nanoTime();
+    long timeDiff=afterTime - beforeTime;
+    long sleepTime=(frameRatePeriod - timeDiff) - overSleepTime;
+    if (sleepTime > 0) {
       try {
-        int nap=(looping || finished) ? 1 : 10000;
-        if (frameCount == 1) {
-          nap=1;
-        }
- else         if (finished) {
-          nap=0;
-        }
- else         if (looping) {
-          if (frameRateTarget != 0) {
-            if (frameRateLastDelayTime == 0) {
-              frameRateLastDelayTime=System.currentTimeMillis();
-            }
- else {
-              long timeToLeave=frameRateLastDelayTime + (long)(1000.0f / frameRateTarget);
-              long now=System.currentTimeMillis();
-              nap=(int)(timeToLeave - now);
-              if (nap > 0) {
-                frameRateLastDelayTime=timeToLeave;
-              }
- else {
-                frameRateLastDelayTime=now;
-              }
-            }
-          }
- else {
-            nap=1;
-          }
-        }
-        if (CRUSTY_THREADS) {
-          Thread.sleep(nap);
-        }
- else {
-synchronized (blocker) {
-            if (nap > 0)             blocker.wait(nap);
-          }
-        }
+        Thread.sleep(sleepTime / 1000000L,(int)(sleepTime % 1000000L));
+        noDelays=0;
       }
- catch (      InterruptedException e) {
+ catch (      InterruptedException ex) {
+      }
+      overSleepTime=(System.nanoTime() - afterTime) - sleepTime;
+    }
+ else {
+      overSleepTime=0L;
+      if (noDelays > NO_DELAYS_PER_YIELD) {
+        Thread.yield();
+        noDelays=0;
       }
     }
+    beforeTime=System.nanoTime();
   }
- catch (  Exception e) {
-    finished=true;
-    if (e instanceof InvocationTargetException) {
-      e=(Exception)(((InvocationTargetException)e).getTargetException());
-    }
-    exception=e;
-    System.err.println(LEECH_WAKEUP);
-    e.printStackTrace();
-  }
-  if (THREAD_DEBUG)   println(Thread.currentThread().getName() + " thread finished");
   stop();
   if (exitCalled) {
     exit2();
