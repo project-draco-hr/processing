@@ -1,5 +1,13 @@
 {
-  drawable.setRealized(true);
+  drawable.setRealized(parent.isDisplayable());
+  System.out.println("OpenGL beginDraw() setting realized " + parent.isDisplayable());
+  if (parent.isDisplayable()) {
+    System.out.println("  we'll realize it alright");
+    drawable.setRealized(true);
+  }
+ else {
+    System.out.println("  not yet ready to be realized");
+  }
   detainContext();
   super.beginDraw();
   report("top beginDraw()");
