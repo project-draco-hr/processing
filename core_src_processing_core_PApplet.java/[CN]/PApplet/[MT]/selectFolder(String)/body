@@ -1,0 +1,33 @@
+{
+  checkParentFrame();
+  try {
+    SwingUtilities.invokeAndWait(new Runnable(){
+      public void run(){
+        if (platform == MACOSX) {
+          FileDialog fileDialog=new FileDialog(parentFrame,prompt,FileDialog.LOAD);
+          System.setProperty("apple.awt.fileDialogForDirectories","true");
+          fileDialog.setVisible(true);
+          System.setProperty("apple.awt.fileDialogForDirectories","false");
+        }
+ else {
+          JFileChooser fileChooser=new JFileChooser();
+          fileChooser.setDialogTitle(prompt);
+          fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+          int returned=fileChooser.showOpenDialog(parentFrame);
+          if (returned == JFileChooser.APPROVE_OPTION) {
+            selectedFile=fileChooser.getSelectedFile();
+          }
+ else {
+            selectedFile=null;
+          }
+        }
+      }
+    }
+);
+    return selectedFile;
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    return null;
+  }
+}

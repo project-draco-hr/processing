@@ -1,12 +1,12 @@
 {
-  while (asyncLoaderCount == asyncLoaderMax) {
+  while (requestImageCount == requestImageMax) {
     try {
       Thread.sleep(10);
     }
  catch (    InterruptedException e) {
     }
   }
-  asyncLoaderCount++;
+  requestImageCount++;
   PImage actual=loadImage(filename,extension);
   if (actual == null) {
     vessel.width=-1;
@@ -18,5 +18,5 @@
     vessel.format=actual.format;
     vessel.pixels=actual.pixels;
   }
-  asyncLoaderCount--;
+  requestImageCount--;
 }
