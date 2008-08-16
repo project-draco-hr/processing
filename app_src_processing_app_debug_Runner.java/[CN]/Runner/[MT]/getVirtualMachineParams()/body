@@ -14,6 +14,9 @@
     params.add("-Xms" + Preferences.get("run.options.memory.initial") + "m");
     params.add("-Xmx" + Preferences.get("run.options.memory.maximum") + "m");
   }
+  if (Base.isMacOS()) {
+    params.add("-Xdock:name=" + sketch.getMainClassName());
+  }
   params.add("-Djava.library.path=" + sketch.getLibraryPath() + File.pathSeparator+ System.getProperty("java.library.path"));
   params.add("-cp");
   params.add(sketch.getClassPath());
