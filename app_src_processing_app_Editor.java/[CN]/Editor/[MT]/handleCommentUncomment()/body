@@ -10,10 +10,17 @@
     }
   }
   int length=textarea.getDocumentLength();
-  int pos=textarea.getLineStartOffset(startLine);
-  if (pos + 2 > length)   return;
-  String begin=textarea.getText(pos,2);
-  boolean commented=begin.equals("//");
+  boolean commented=true;
+  for (int i=startLine; commented && (i <= stopLine); i++) {
+    int pos=textarea.getLineStartOffset(i);
+    if (pos + 2 > length) {
+      commented=false;
+    }
+ else {
+      String begin=textarea.getText(pos,2);
+      commented=begin.equals("//");
+    }
+  }
   for (int line=startLine; line <= stopLine; line++) {
     int location=textarea.getLineStartOffset(line);
     if (commented) {
