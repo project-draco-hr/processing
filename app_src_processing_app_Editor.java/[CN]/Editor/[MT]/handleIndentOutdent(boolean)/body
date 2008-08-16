@@ -7,7 +7,9 @@
   int lastLineStart=textarea.getLineStartOffset(stopLine);
   int selectionStop=textarea.getSelectionStop();
   if (selectionStop == lastLineStart) {
-    stopLine--;
+    if (textarea.isSelectionActive()) {
+      stopLine--;
+    }
   }
   for (int line=startLine; line <= stopLine; line++) {
     int location=textarea.getLineStartOffset(line);
