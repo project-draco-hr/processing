@@ -31,7 +31,7 @@
     newName=fd.getFile();
   }
   if (newName == null)   return false;
-  newName=Sketch.sanitizeName(newName);
+  newName=Sketch.checkName(newName);
   File codeAlready=new File(folder,newName + ".pde");
   if (codeAlready.exists() && (!newName.equals(name))) {
     Base.showMessage("Nope","You can't save the sketch as \"" + newName + "\"\n"+ "because the sketch already has a tab with that name.");
@@ -65,11 +65,11 @@
     current.program=editor.getText();
   }
   for (int i=1; i < codeCount; i++) {
-    File newFile=new File(newFolder,code[i].file.getName());
+    File newFile=new File(newFolder,code[i].getFileName());
     code[i].saveAs(newFile);
   }
   for (int i=0; i < hiddenCount; i++) {
-    File newFile=new File(newFolder,hidden[i].file.getName());
+    File newFile=new File(newFolder,hidden[i].getFileName());
     hidden[i].saveAs(newFile);
   }
   if (dataFolder.exists()) {

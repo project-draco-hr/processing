@@ -63,7 +63,7 @@
     Base.copyFile(new File("lib/export/application.exe"),new File(destFolder,this.name + ".exe"));
   }
   Vector jarListVector=new Vector();
-  zipFileContents=new Hashtable();
+  Hashtable zipFileContents=new Hashtable();
   FileOutputStream zipOutputFile=new FileOutputStream(new File(jarFolder,name + ".jar"));
   ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
   ZipEntry entry;
@@ -108,7 +108,7 @@
         cp+=codeList[i] + File.separatorChar;
       }
     }
-    packClassPathIntoZipFile(cp,zos);
+    packClassPathIntoZipFile(cp,zos,zipFileContents);
   }
   zos.flush();
   zos.close();
@@ -238,7 +238,7 @@
   sourceFolder.mkdirs();
   for (int i=0; i < codeCount; i++) {
     try {
-      Base.copyFile(code[i].file,new File(sourceFolder,code[i].file.getName()));
+      code[i].copyTo(new File(sourceFolder,code[i].getFileName()));
     }
  catch (    IOException e) {
       e.printStackTrace();

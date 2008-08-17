@@ -21,8 +21,8 @@
     Font instance=(Font)table.get(list[selection]);
     font=instance.deriveFont(Font.PLAIN,fontsize);
     PFont f=new PFont(font,smooth,all ? null : PFont.DEFAULT_CHARSET);
-    if (!targetFolder.exists())     targetFolder.mkdirs();
-    f.save(new FileOutputStream(new File(targetFolder,filename)));
+    File folder=sketch.prepareDataFolder();
+    f.save(new FileOutputStream(new File(folder,filename)));
   }
  catch (  IOException e) {
     JOptionPane.showMessageDialog(this,"An error occurred while creating font.","No font for you",JOptionPane.WARNING_MESSAGE);

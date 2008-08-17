@@ -1,19 +1,30 @@
 {
   String filename=sourceFile.getName();
   File destFile=null;
-  boolean addingCode=false;
+  String addingCodeExt=null;
+  String addingHiddenExt=null;
   boolean replacement=false;
   if (filename.toLowerCase().endsWith(".class") || filename.toLowerCase().endsWith(".jar") || filename.toLowerCase().endsWith(".dll")|| filename.toLowerCase().endsWith(".jnilib")|| filename.toLowerCase().endsWith(".so")) {
-    if (!codeFolder.exists())     codeFolder.mkdirs();
+    prepareCodeFolder();
     destFile=new File(codeFolder,filename);
   }
- else   if (filename.toLowerCase().endsWith(".pde") || filename.toLowerCase().endsWith(".java")) {
-    destFile=new File(this.folder,filename);
-    addingCode=true;
-  }
  else {
-    if (!dataFolder.exists())     dataFolder.mkdirs();
-    destFile=new File(dataFolder,filename);
+    String[] ext=getExtensions();
+    for (int i=0; i < ext.length; i++) {
+      String lower=filename.toLowerCase();
+      if (lower.endsWith("." + ext[i])) {
+        destFile=new File(this.folder,filename);
+        addingCodeExt=ext[i];
+      }
+ else       if (lower.endsWith("." + ext[i] + ".x")) {
+        destFile=new File(this.folder,filename);
+        addingHiddenExt=ext[i];
+      }
+    }
+    if (addingCodeExt == null && addingHiddenExt == null) {
+      prepareDataFolder();
+      destFile=new File(dataFolder,filename);
+    }
   }
   if (destFile.exists()) {
     Object[] options={"OK","Cancel"};
@@ -26,7 +37,7 @@
       return false;
     }
   }
-  if (!addingCode && sourceFile.equals(destFile)) {
+  if ((addingCodeExt == null) && (addingHiddenExt == null) && sourceFile.equals(destFile)) {
     Base.showWarning("You can't fool me","This file has already been copied to the\n" + "location from which where you're trying to add it.\n" + "I ain't not doin nuthin'.",null);
     return false;
   }
@@ -39,18 +50,8 @@
       return false;
     }
   }
-  if (addingCode) {
-    String newName=destFile.getName();
-    int newFlavor=-1;
-    if (newName.toLowerCase().endsWith(".pde")) {
-      newName=newName.substring(0,newName.length() - 4);
-      newFlavor=PDE;
-    }
- else {
-      newName=newName.substring(0,newName.length() - 5);
-      newFlavor=JAVA;
-    }
-    SketchCode newCode=new SketchCode(newName,destFile,newFlavor);
+  if (addingCodeExt != null) {
+    SketchCode newCode=new SketchCode(destFile,addingCodeExt);
     if (replacement) {
       replaceCode(newCode);
     }
@@ -58,10 +59,16 @@
       insertCode(newCode);
       sortCode();
     }
-    setCurrent(newName);
+    setCurrent(filename);
     editor.header.repaint();
     if (editor.untitled) {
       current.modified=true;
+    }
+  }
+ else   if (addingHiddenExt != null) {
+    SketchCode newHidden=new SketchCode(destFile,addingHiddenExt);
+    if (!replacement) {
+      insertHidden(newHidden);
     }
   }
  else {

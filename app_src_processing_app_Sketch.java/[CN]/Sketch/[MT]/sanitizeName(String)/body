@@ -1,7 +1,19 @@
 {
-  String newName=sanitizedName(origName);
-  if (!newName.equals(origName)) {
-    Base.showMessage("Naming issue","The sketch name had to be modified.\n" + "You can only use basic letters and numbers\n" + "to name a sketch (ascii only and no spaces,\n"+ "it can't start with a number, and should be\n"+ "less than 64 characters long)");
+  char c[]=origName.toCharArray();
+  StringBuffer buffer=new StringBuffer();
+  if ((c[0] >= '0') && (c[0] <= '9')) {
+    buffer.append('_');
   }
-  return newName;
+  for (int i=0; i < c.length; i++) {
+    if (((c[i] >= '0') && (c[i] <= '9')) || ((c[i] >= 'a') && (c[i] <= 'z')) || ((c[i] >= 'A') && (c[i] <= 'Z'))) {
+      buffer.append(c[i]);
+    }
+ else {
+      buffer.append('_');
+    }
+  }
+  if (buffer.length() > 63) {
+    buffer.setLength(63);
+  }
+  return buffer.toString();
 }

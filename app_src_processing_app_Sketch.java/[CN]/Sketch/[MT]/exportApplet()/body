@@ -6,7 +6,7 @@
   File appletFolder=new File(folder,"applet");
   Base.removeDir(appletFolder);
   appletFolder.mkdirs();
-  zipFileContents=new Hashtable();
+  Hashtable zipFileContents=new Hashtable();
   String foundName=build(appletFolder.getPath(),name);
   if (foundName == null)   return false;
   if (!name.equals(foundName)) {
@@ -49,12 +49,12 @@
   String description=dbuffer.toString();
   StringBuffer sources=new StringBuffer();
   for (int i=0; i < codeCount; i++) {
-    sources.append("<a href=\"" + code[i].file.getName() + "\">"+ code[i].name+ "</a> ");
+    sources.append("<a href=\"" + code[i].getFileName() + "\">"+ code[i].getPrettyName()+ "</a> ");
   }
   for (int i=0; i < codeCount; i++) {
     try {
-      File exportedSource=new File(appletFolder,code[i].file.getName());
-      Base.copyFile(code[i].file,exportedSource);
+      File exportedSource=new File(appletFolder,code[i].getFileName());
+      code[i].copyTo(exportedSource);
     }
  catch (    IOException e) {
       e.printStackTrace();
@@ -91,7 +91,7 @@
       }
     }
     if (!separateJar) {
-      packClassPathIntoZipFile(cp,zos);
+      packClassPathIntoZipFile(cp,zos,zipFileContents);
     }
   }
   Enumeration en=importedLibraries.elements();
@@ -129,7 +129,8 @@
           }
         }
  else {
-          packClassPathIntoZipFile(exportFile.getAbsolutePath(),zos);
+          String path=exportFile.getAbsolutePath();
+          packClassPathIntoZipFile(path,zos,zipFileContents);
         }
       }
  else {
@@ -143,7 +144,7 @@
     archives.append(",core.jar");
   }
  else {
-    packClassPathIntoZipFile(bagelJar,zos);
+    packClassPathIntoZipFile(bagelJar,zos,zipFileContents);
   }
   if (dataFolder.exists()) {
     String dataFiles[]=Base.listFiles(dataFolder,false);

@@ -3,41 +3,24 @@
   String codeFolderPackages[]=null;
   classPath=buildPath;
   if (codeFolder.exists()) {
-    externalRuntime=true;
     libraryPath=codeFolder.getAbsolutePath();
     String codeFolderClassPath=Compiler.contentsToClassPath(codeFolder);
     classPath+=File.pathSeparator + codeFolderClassPath;
     codeFolderPackages=Compiler.packageListFromClassPath(codeFolderClassPath);
   }
  else {
-    externalRuntime=false;
     libraryPath="";
-    for (int i=0; i < codeCount; i++) {
-      if (code[i].flavor == JAVA) {
-        externalRuntime=true;
-        break;
-      }
-    }
-  }
-  if (Preferences.getBoolean("run.options.memory")) {
-    externalRuntime=true;
-  }
-  if (dataFolder.exists() && Base.calcFolderSize(dataFolder) > 768 * 1024) {
-    externalRuntime=true;
   }
   StringBuffer bigCode=new StringBuffer(code[0].program);
   int bigCount=countLines(code[0].program);
   for (int i=1; i < codeCount; i++) {
-    if (code[i].flavor == PDE) {
+    if (code[i].isExtension("pde")) {
       code[i].preprocOffset=++bigCount;
       bigCode.append('\n');
       bigCode.append(code[i].program);
       bigCount+=countLines(code[i].program);
       code[i].preprocName=null;
     }
-  }
-  if ((bigCode.indexOf(" class ") != -1) || (bigCode.indexOf("\nclass ") != -1)) {
-    externalRuntime=true;
   }
   String primaryClassName=null;
   PdePreprocessor preprocessor=new PdePreprocessor();
@@ -50,15 +33,12 @@
       code[0].preprocName=className + ".java";
     }
     primaryClassName=className;
-    if ((PdePreprocessor.programType == PdePreprocessor.JAVA) || (preprocessor.extraImports.length != 0)) {
-      externalRuntime=true;
-    }
   }
  catch (  antlr.RecognitionException re) {
     int errorFile=0;
     int errorLine=re.getLine() - 1;
     for (int i=1; i < codeCount; i++) {
-      if ((code[i].flavor == PDE) && (code[i].preprocOffset < errorLine)) {
+      if (code[i].isExtension("pde") && (code[i].preprocOffset < errorLine)) {
         errorFile=i;
       }
     }
@@ -92,7 +72,7 @@ catch (  antlr.TokenStreamRecognitionException tsre) {
       int errorColumn=Integer.parseInt(matches[1]);
       int errorFile=0;
       for (int i=1; i < codeCount; i++) {
-        if ((code[i].flavor == PDE) && (code[i].preprocOffset < errorLine)) {
+        if (code[i].isExtension("pde") && (code[i].preprocOffset < errorLine)) {
           errorFile=i;
         }
       }
@@ -130,8 +110,8 @@ catch (  Exception ex) {
   }
   classPath+=File.pathSeparator + javaClassPath;
   for (int i=0; i < codeCount; i++) {
-    if (code[i].flavor == JAVA) {
-      String filename=code[i].name + ".java";
+    if (code[i].isExtension("java")) {
+      String filename=code[i].getFileName();
       try {
         Base.saveFile(code[i].program,new File(buildPath,filename));
       }

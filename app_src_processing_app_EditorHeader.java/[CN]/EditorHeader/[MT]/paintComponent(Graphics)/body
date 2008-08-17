@@ -36,7 +36,7 @@
   int x=6;
   for (int i=0; i < sketch.codeCount; i++) {
     SketchCode code=sketch.code[i];
-    String codeName=(code.flavor == Sketch.PDE) ? code.name : code.file.getName();
+    String codeName=sketch.hideExtension(code.getExtension()) ? code.getPrettyName() : code.getFileName();
     String text="  " + codeName + (code.modified ? " \u00A7" : "  ");
     Graphics2D g2=(Graphics2D)g;
     int textWidth=(int)font.getStringBounds(text,g2.getFontRenderContext()).getWidth();

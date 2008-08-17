@@ -1,44 +1,44 @@
 {
   ensureExistence();
-  if (renamingCode && newName.equalsIgnoreCase(current.name)) {
-    return;
+  if (newName.indexOf('.') == -1) {
+    newName+="." + getDefaultExtension();
   }
-  if (newName.trim().equals("")) {
-    return;
-  }
-  if (newName.trim().equals(".java") || newName.trim().equals(".pde")) {
-    return;
-  }
-  String newFilename=null;
-  int newFlavor=0;
-  if (newName.endsWith(".pde")) {
-    newFilename=newName;
-    newName=newName.substring(0,newName.length() - 4);
-    newFlavor=PDE;
-  }
- else   if (newName.endsWith(".java")) {
-    if (renamingCode && (code[0] == current)) {
-      Base.showWarning("Problem with rename","The main .pde file cannot be .java file.\n" + "(It may be time for your to graduate to a\n" + "\"real\" programming environment)",null);
+  if (renamingCode) {
+    if (newName.equalsIgnoreCase(current.getFileName())) {
       return;
     }
-    newFilename=newName;
-    newName=newName.substring(0,newName.length() - 5);
-    newFlavor=JAVA;
   }
- else {
-    newFilename=newName + ".pde";
-    newFlavor=PDE;
+  newName=newName.trim();
+  if (newName.equals(""))   return;
+  int dot=newName.indexOf('.');
+  if (dot == 0) {
+    Base.showWarning("Problem with rename","The name cannot start with a period.",null);
+    return;
   }
-  if (newName.indexOf('.') != -1) {
-    newName=Sketch.sanitizedName(newName);
-    newFilename=newName + ((newFlavor == PDE) ? ".pde" : ".java");
+  String newExtension=newName.substring(dot + 1).toLowerCase();
+  if (!validExtension(newExtension)) {
+    Base.showWarning("Problem with rename","\"." + newExtension + "\""+ "is not a valid extension.",null);
+    return;
   }
-  File newFile=new File(folder,newFilename);
+  if (!isDefaultExtension(newExtension)) {
+    if (renamingCode) {
+      if (current == code[0]) {
+        Base.showWarning("Problem with rename","The main .pde file cannot be .java file.\n" + "(It may be time for your to graduate to a\n" + "\"real\" programming environment)",null);
+        return;
+      }
+    }
+  }
+  String shortName=newName.substring(0,dot);
+  String sanitaryName=Sketch.sanitizeName(shortName);
+  if (!shortName.equals(sanitaryName)) {
+    newName=sanitaryName + "." + newExtension;
+  }
+  File newFile=new File(folder,newName);
   if (newFile.exists()) {
     Base.showMessage("Nope","A file named \"" + newFile + "\" already exists\n"+ "in \""+ folder.getAbsolutePath()+ "\"");
     return;
   }
-  File newFileHidden=new File(folder,newFilename + ".x");
+  File newFileHidden=new File(folder,newName + ".x");
   if (newFileHidden.exists()) {
     Base.showMessage("No Way","A hidden tab with the same name already exists.\n" + "Use \"Unhide\" to bring it back.");
     return;
@@ -60,8 +60,8 @@
           return;
         }
       }
-      if (!current.file.renameTo(newFile)) {
-        Base.showWarning("Error","Could not rename \"" + current.file.getName() + "\" to \""+ newFile.getName()+ "\"",null);
+      if (!current.renameTo(newFile,newExtension)) {
+        Base.showWarning("Error","Could not rename \"" + current.getFileName() + "\" to \""+ newFile.getName()+ "\"",null);
         return;
       }
       try {
@@ -78,30 +78,29 @@
         Base.showWarning("Error","Could not rename the sketch. (2)",null);
         return;
       }
-      File mainFile=new File(newFolder,newName + ".pde");
-      mainFilename=mainFile.getAbsolutePath();
-      editor.handleOpenUnchecked(mainFilename,currentIndex,editor.textarea.getSelectionStart(),editor.textarea.getSelectionStop(),editor.textarea.getScrollPosition());
+      File newMainFile=new File(newFolder,newName + ".pde");
+      String newMainFilePath=newMainFile.getAbsolutePath();
+      editor.handleOpenUnchecked(newMainFilePath,currentIndex,editor.textarea.getSelectionStart(),editor.textarea.getSelectionStop(),editor.textarea.getScrollPosition());
       editor.base.rebuildSketchbookMenu();
     }
  else {
-      if (!current.file.renameTo(newFile)) {
-        Base.showWarning("Error","Could not rename \"" + current.file.getName() + "\" to \""+ newFile.getName()+ "\"",null);
+      if (!current.renameTo(newFile,newExtension)) {
+        Base.showWarning("Error","Could not rename \"" + current.getFileName() + "\" to \""+ newFile.getName()+ "\"",null);
         return;
       }
-      current.name=newName;
-      current.file=newFile;
-      current.flavor=newFlavor;
     }
   }
  else {
     try {
-      newFile.createNewFile();
+      if (!newFile.createNewFile()) {
+        throw new IOException("createNewFile() returned false");
+      }
     }
  catch (    IOException e) {
       Base.showWarning("Error","Could not create the file \"" + newFile + "\"\n"+ "in \""+ folder.getAbsolutePath()+ "\"",e);
       return;
     }
-    SketchCode newCode=new SketchCode(newName,newFile,newFlavor);
+    SketchCode newCode=new SketchCode(newFile,newExtension);
     insertCode(newCode);
   }
   sortCode();
