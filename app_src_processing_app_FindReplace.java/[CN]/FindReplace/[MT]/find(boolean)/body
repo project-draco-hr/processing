@@ -2,12 +2,12 @@
   found=false;
   String search=findField.getText();
   if (search.length() == 0)   return;
-  String text=editor.textarea.getText();
+  String text=editor.getText();
   if (ignoreCase) {
     search=search.toLowerCase();
     text=text.toLowerCase();
   }
-  int selectionEnd=editor.textarea.getSelectionStop();
+  int selectionEnd=editor.getSelectionStop();
   int nextIndex=text.indexOf(search,selectionEnd);
   if (nextIndex == -1) {
     if (wrap) {
@@ -23,5 +23,5 @@
   found=true;
   replaceButton.setEnabled(true);
   replaceFindButton.setEnabled(true);
-  editor.textarea.select(nextIndex,nextIndex + search.length());
+  editor.setSelection(nextIndex,nextIndex + search.length());
 }

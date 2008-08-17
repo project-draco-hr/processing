@@ -12,7 +12,7 @@
   item=Editor.newJMenuItemShift("New Tab",'N');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      editor.sketch.handleNewCode();
+      editor.getSketch().handleNewCode();
     }
   }
 );
@@ -20,7 +20,7 @@
   item=new JMenuItem("Rename");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      editor.sketch.handleRenameCode();
+      editor.getSketch().handleRenameCode();
     }
   }
 );
@@ -28,7 +28,7 @@
   item=new JMenuItem("Delete");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      editor.sketch.handleDeleteCode();
+      editor.getSketch().handleDeleteCode();
     }
   }
 );
@@ -36,7 +36,7 @@
   item=new JMenuItem("Hide");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      editor.sketch.handleHideCode();
+      editor.getSketch().handleHideCode();
     }
   }
 );
@@ -46,12 +46,12 @@
   ActionListener unhideListener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       String which=(String)e.getActionCommand();
-      editor.sketch.handleUnhideCode(which);
+      editor.getSketch().handleUnhideCode(which);
       rebuildMenu();
     }
   }
 ;
-  Sketch sketch=editor.sketch;
+  Sketch sketch=editor.getSketch();
   if (sketch != null) {
     for (int i=0; i < sketch.hiddenCount; i++) {
       item=new JMenuItem(sketch.hidden[i].getPrettyName());
@@ -77,7 +77,7 @@
     menu.addSeparator();
     ActionListener jumpListener=new ActionListener(){
       public void actionPerformed(      ActionEvent e){
-        editor.sketch.setCurrent(e.getActionCommand());
+        editor.getSketch().setCurrent(e.getActionCommand());
       }
     }
 ;
