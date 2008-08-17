@@ -1,7 +1,7 @@
 {
   e.printStackTrace();
   if (e == null) {
-    System.err.println("Editor.error() was passed a null exception.");
+    System.err.println("Editor.statusError() was passed a null exception.");
     return;
   }
   if (e instanceof RunnerException) {
@@ -10,7 +10,14 @@
       sketch.setCurrent(re.getCodeIndex());
     }
     if (re.hasCodeLine()) {
-      highlightLine(re.getCodeLine());
+      int line=re.getCodeLine();
+      if (line >= textarea.getLineCount()) {
+        line=textarea.getLineCount() - 1;
+        if (textarea.getLineText(line).length() == 0) {
+          line--;
+        }
+      }
+      textarea.select(textarea.getLineStartOffset(line),textarea.getLineStopOffset(line) - 1);
     }
   }
   String mess=e.getMessage();
@@ -23,7 +30,7 @@
     if (mess.indexOf(rxString) == 0) {
       mess=mess.substring(rxString.length());
     }
-    error(mess);
+    statusError(mess);
   }
   e.printStackTrace();
 }

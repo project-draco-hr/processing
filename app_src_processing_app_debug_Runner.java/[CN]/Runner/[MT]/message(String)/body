@@ -1,6 +1,6 @@
 {
   if (s.indexOf(PApplet.EXTERNAL_STOP) == 0) {
-    editor.closeRunner();
+    editor.internalCloseRunner();
     return;
   }
   if (s.indexOf(PApplet.EXTERNAL_MOVE) == 0) {
@@ -13,60 +13,4 @@
   }
   System.err.print(s);
   System.err.flush();
-  if (s.trim().length() == 0)   return;
-  if (newMessage) {
-    exception=new RunnerException(s);
-    exception.hideStackTrace();
-    newMessage=false;
-    foundMessageSource=false;
-    messageLineCount=0;
-  }
- else {
-    messageLineCount++;
-    if (!foundMessageSource) {
-      int atIndex=s.indexOf("at ");
-      if (atIndex == -1) {
-        return;
-      }
-      s=s.substring(atIndex + 3);
-      if (s.startsWith("processing."))       return;
-      if (s.startsWith("java."))       return;
-      int startParen=s.indexOf('(');
-      int codeIndex=-1;
-      int lineNumber=-1;
-      if (startParen == -1) {
-      }
- else {
-        String fileAndLine=s.substring(startParen + 1);
-        int stopParen=fileAndLine.indexOf(')');
-        fileAndLine=fileAndLine.substring(0,stopParen);
-        int colonIndex=fileAndLine.indexOf(':');
-        if (colonIndex != -1) {
-          String filename=fileAndLine.substring(0,colonIndex);
-          lineNumber=Integer.parseInt(fileAndLine.substring(colonIndex + 1)) - 1;
-          for (int i=0; i < sketch.getCodeCount(); i++) {
-            SketchCode code=sketch.getCode(i);
-            if (((code.preprocName == null) && (lineNumber >= code.preprocOffset)) || ((code.preprocName != null) && code.preprocName.equals(filename))) {
-              codeIndex=i;
-            }
-          }
-          if (codeIndex != -1) {
-            lineNumber-=sketch.getCode(codeIndex).preprocOffset;
-            exception=new RunnerException(exception.getMessage(),codeIndex,lineNumber,-1);
-            exception.hideStackTrace();
-            foundMessageSource=true;
-          }
-        }
-      }
-      editor.error(exception);
-    }
- else     if (messageLineCount > 10) {
-      messageLineCount=-100;
-      exception=new RunnerException(exception.getMessage());
-      exception.hideStackTrace();
-      editor.error(exception);
-    }
- else {
-    }
-  }
 }

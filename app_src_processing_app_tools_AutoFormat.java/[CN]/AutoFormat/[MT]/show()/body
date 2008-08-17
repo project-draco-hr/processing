@@ -347,21 +347,21 @@ selectionEnd=strOut.length() - 1;
 bin.close();
 String formattedText=strOut.toString();
 if (formattedText.equals(originalText)) {
-editor.message("No changes necessary for Auto Format.");
+editor.statusNotice("No changes necessary for Auto Format.");
 }
  else if (paren != 0) {
-editor.error("Auto Format Canceled: Too many " + ((paren < 0) ? "right" : "left") + " parentheses.");
+editor.statusError("Auto Format Canceled: Too many " + ((paren < 0) ? "right" : "left") + " parentheses.");
 }
  else if (c_level != 0) {
-editor.error("Auto Format Canceled: Too many " + ((c_level < 0) ? "right" : "left") + " curly braces.");
+editor.statusError("Auto Format Canceled: Too many " + ((c_level < 0) ? "right" : "left") + " curly braces.");
 }
  else {
 editor.setText(formattedText,selectionEnd,selectionEnd);
 editor.getSketch().setModified(true);
-editor.message("Auto Format finished.");
+editor.statusNotice("Auto Format finished.");
 }
 }
  catch (Exception e) {
-editor.error(e);
+editor.statusError(e);
 }
 }
