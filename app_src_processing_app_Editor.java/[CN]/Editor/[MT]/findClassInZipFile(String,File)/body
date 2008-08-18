@@ -1,0 +1,21 @@
+{
+  String classFileName="/" + base + ".class";
+  try {
+    ZipFile zipFile=new ZipFile(file);
+    Enumeration entries=zipFile.entries();
+    while (entries.hasMoreElements()) {
+      ZipEntry entry=(ZipEntry)entries.nextElement();
+      if (!entry.isDirectory()) {
+        String name=entry.getName();
+        System.out.println("entry: " + name);
+        if (name.endsWith(classFileName)) {
+          return name.substring(0,name.length() - 6).replace('/','.');
+        }
+      }
+    }
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+  return null;
+}

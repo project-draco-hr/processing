@@ -27,19 +27,12 @@
         urlList[j]=archives[j].toURL();
       }
       URLClassLoader loader=new URLClassLoader(urlList);
-      File infoFile=new File(toolDirectory,"tool.txt");
-      if (!infoFile.exists())       continue;
-      String[] info=PApplet.loadStrings(infoFile);
       String className=null;
-      for (int k=0; k < info.length; k++) {
-        if (info[k].startsWith(";"))         continue;
-        String[] pieces=PApplet.splitTokens(info[k],": ");
-        if (pieces.length == 2) {
-          if (pieces[0].equals("Main-Class")) {
-            className=pieces[1];
-          }
-        }
+      for (int j=0; j < archives.length; j++) {
+        className=findClassInZipFile(folders[i].getName(),archives[j]);
+        if (className != null)         break;
       }
+      if (className == null)       return;
       if (className == null)       continue;
       Class toolClass=Class.forName(className,true,loader);
       final Tool tool=(Tool)toolClass.newInstance();
