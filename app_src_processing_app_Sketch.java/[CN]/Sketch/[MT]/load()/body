@@ -6,8 +6,6 @@
   hiddenCount=0;
   code=new SketchCode[list.length];
   hidden=new SketchCode[list.length];
-  int codeCounter=0;
-  int hiddenCounter=0;
   String[] extensions=getExtensions();
   for (int i=0; i < list.length; i++) {
     String filename=list[i];
@@ -25,19 +23,17 @@
         extension=extensions[j];
         if (Sketch.isSanitaryName(base)) {
           if (hiddenX) {
-            hidden[hiddenCounter++]=new SketchCode(new File(folder,filename),extension);
+            hidden[hiddenCount++]=new SketchCode(new File(folder,filename),extension);
           }
  else {
-            code[codeCounter++]=new SketchCode(new File(folder,filename),extension);
+            code[codeCount++]=new SketchCode(new File(folder,filename),extension);
           }
         }
       }
     }
   }
-  codeCount=codeCounter;
-  hiddenCount=hiddenCounter;
-  code=(SketchCode[])PApplet.subset(0,codeCount);
-  hidden=(SketchCode[])PApplet.subset(0,hiddenCount);
+  code=(SketchCode[])PApplet.subset(code,0,codeCount);
+  hidden=(SketchCode[])PApplet.subset(hidden,0,hiddenCount);
   for (int i=1; i < codeCount; i++) {
     if (code[i].getFile().equals(mainFile)) {
       SketchCode temp=code[0];
