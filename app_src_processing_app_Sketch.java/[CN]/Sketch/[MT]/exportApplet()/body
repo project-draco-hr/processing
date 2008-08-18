@@ -17,7 +17,7 @@
   int high=PApplet.DEFAULT_HEIGHT;
   String renderer="";
   String sizeRegex="[\\s\\;^]size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\d+),?\\s*([^\\)]*)\\s*\\)";
-  String scrubbed=scrubComments(code[0].program);
+  String scrubbed=scrubComments(code[0].getProgram());
   String[] matches=PApplet.match(scrubbed,sizeRegex);
   if (matches != null) {
     try {
@@ -31,7 +31,7 @@
     }
   }
   StringBuffer dbuffer=new StringBuffer();
-  String lines[]=PApplet.split(code[0].program,'\n');
+  String lines[]=PApplet.split(code[0].getProgram(),'\n');
   for (int i=0; i < lines.length; i++) {
     if (lines[i].trim().startsWith("/**")) {
       for (int j=i + 1; j < lines.length; j++) {

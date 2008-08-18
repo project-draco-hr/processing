@@ -51,7 +51,7 @@
           lineNumber=location.lineNumber();
           for (int i=0; i < sketch.getCodeCount(); i++) {
             SketchCode code=sketch.getCode(i);
-            if (((code.preprocName == null) && (lineNumber >= code.preprocOffset)) || ((code.preprocName != null) && code.preprocName.equals(filename))) {
+            if (((code.getPreprocName() == null) && (lineNumber >= code.getPreprocOffset())) || ((code.getPreprocName() != null) && code.getPreprocName().equals(filename))) {
               codeIndex=i;
               break;
             }
@@ -62,7 +62,7 @@
         }
       }
       if (codeIndex != -1) {
-        lineNumber-=sketch.getCode(codeIndex).preprocOffset;
+        lineNumber-=sketch.getCode(codeIndex).getPreprocOffset();
       }
       exception=new RunnerException(message,codeIndex,lineNumber,-1);
       exception.hideStackTrace();

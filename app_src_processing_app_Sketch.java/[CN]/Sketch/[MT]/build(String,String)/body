@@ -11,15 +11,16 @@
  else {
     libraryPath="";
   }
-  StringBuffer bigCode=new StringBuffer(code[0].program);
-  int bigCount=countLines(code[0].program);
+  String program=code[0].getProgram();
+  StringBuffer bigCode=new StringBuffer(program);
+  int bigCount=countLines(program);
   for (int i=1; i < codeCount; i++) {
     if (code[i].isExtension("pde")) {
-      code[i].preprocOffset=++bigCount;
+      code[i].setPreprocOffset(++bigCount);
       bigCode.append('\n');
-      bigCode.append(code[i].program);
-      bigCount+=countLines(code[i].program);
-      code[i].preprocName=null;
+      bigCode.append(code[i].getProgram());
+      bigCount+=countLines(code[i].getProgram());
+      code[i].setPreprocName(null);
     }
   }
   String primaryClassName=null;
@@ -30,7 +31,7 @@
       throw new RunnerException("Could not find main class");
     }
  else {
-      code[0].preprocName=className + ".java";
+      code[0].setPreprocName(className + ".java");
     }
     primaryClassName=className;
   }
@@ -38,11 +39,11 @@
     int errorFile=0;
     int errorLine=re.getLine() - 1;
     for (int i=1; i < codeCount; i++) {
-      if (code[i].isExtension("pde") && (code[i].preprocOffset < errorLine)) {
+      if (code[i].isExtension("pde") && (code[i].getPreprocOffset() < errorLine)) {
         errorFile=i;
       }
     }
-    errorLine-=code[errorFile].preprocOffset;
+    errorLine-=code[errorFile].getPreprocOffset();
     String msg=re.getMessage();
     if (msg.equals("expecting RCURLY, found 'null'")) {
       throw new RunnerException("Found one too many { characters " + "without a } to match it.",errorFile,errorLine,re.getColumn());
@@ -72,11 +73,11 @@ catch (  antlr.TokenStreamRecognitionException tsre) {
       int errorColumn=Integer.parseInt(matches[1]);
       int errorFile=0;
       for (int i=1; i < codeCount; i++) {
-        if (code[i].isExtension("pde") && (code[i].preprocOffset < errorLine)) {
+        if (code[i].isExtension("pde") && (code[i].getPreprocOffset() < errorLine)) {
           errorFile=i;
         }
       }
-      errorLine-=code[errorFile].preprocOffset;
+      errorLine-=code[errorFile].getPreprocOffset();
       throw new RunnerException(tsre.getMessage(),errorFile,errorLine,errorColumn);
     }
  else {
@@ -113,13 +114,13 @@ catch (  Exception ex) {
     if (code[i].isExtension("java")) {
       String filename=code[i].getFileName();
       try {
-        Base.saveFile(code[i].program,new File(buildPath,filename));
+        Base.saveFile(code[i].getProgram(),new File(buildPath,filename));
       }
  catch (      IOException e) {
         e.printStackTrace();
         throw new RunnerException("Problem moving " + filename + " to the build folder");
       }
-      code[i].preprocName=filename;
+      code[i].setPreprocName(filename);
     }
   }
   Compiler compiler=new Compiler();

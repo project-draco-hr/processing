@@ -1,15 +1,16 @@
 {
-  if (code.document == null) {
-    code.document=new SyntaxDocument();
-    code.document.setTokenMarker(new PdeKeywords());
+  SyntaxDocument document=(SyntaxDocument)code.getDocument();
+  if (document == null) {
+    document=new SyntaxDocument();
+    code.setDocument(document);
+    document.setTokenMarker(new PdeKeywords());
     try {
-      code.document.insertString(0,code.program,null);
+      document.insertString(0,code.getProgram(),null);
     }
  catch (    BadLocationException bl) {
       bl.printStackTrace();
     }
-    code.undo=new UndoManager();
-    code.document.addUndoableEditListener(new UndoableEditListener(){
+    document.addUndoableEditListener(new UndoableEditListener(){
       public void undoableEditHappened(      UndoableEditEvent e){
         if (compoundEdit != null) {
           compoundEdit.addEdit(e.getEdit());
@@ -23,9 +24,9 @@
     }
 );
   }
-  textarea.setDocument(code.document,code.selectionStart,code.selectionStop,code.scrollPosition);
+  textarea.setDocument(document,code.getSelectionStart(),code.getSelectionStop(),code.getScrollPosition());
   textarea.requestFocus();
-  this.undo=code.undo;
+  this.undo=code.getUndo();
   undoAction.updateUndoState();
   redoAction.updateRedoState();
 }
