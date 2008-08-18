@@ -28,21 +28,22 @@
   fontAscent=metrics.getAscent();
   g.setColor(backgroundColor);
   g.fillRect(0,0,imageW,imageH);
-  if ((tabLeft == null) || (tabLeft.length < sketch.codeCount)) {
-    tabLeft=new int[sketch.codeCount];
-    tabRight=new int[sketch.codeCount];
+  int codeCount=sketch.getCodeCount();
+  if ((tabLeft == null) || (tabLeft.length < codeCount)) {
+    tabLeft=new int[codeCount];
+    tabRight=new int[codeCount];
   }
-  hideItem.setEnabled(sketch.current != sketch.code[0]);
+  hideItem.setEnabled(sketch.getCurrentCode() != sketch.getCode(0));
   int x=6;
-  for (int i=0; i < sketch.codeCount; i++) {
-    SketchCode code=sketch.code[i];
+  for (int i=0; i < sketch.getCodeCount(); i++) {
+    SketchCode code=sketch.getCode(i);
     String codeName=sketch.hideExtension(code.getExtension()) ? code.getPrettyName() : code.getFileName();
     String text="  " + codeName + (code.modified ? " \u00A7" : "  ");
     Graphics2D g2=(Graphics2D)g;
     int textWidth=(int)font.getStringBounds(text,g2.getFontRenderContext()).getWidth();
     int pieceCount=2 + (textWidth / PIECE_WIDTH);
     int pieceWidth=pieceCount * PIECE_WIDTH;
-    int state=(code == sketch.current) ? SELECTED : UNSELECTED;
+    int state=(code == sketch.getCurrentCode()) ? SELECTED : UNSELECTED;
     g.drawImage(pieces[state][LEFT],x,0,null);
     x+=PIECE_WIDTH;
     int contentLeft=x;
