@@ -1,27 +1,21 @@
 {
   String filename=sourceFile.getName();
   File destFile=null;
-  String addingCodeExt=null;
-  String addingHiddenExt=null;
+  String codeExtension=null;
   boolean replacement=false;
   if (filename.toLowerCase().endsWith(".class") || filename.toLowerCase().endsWith(".jar") || filename.toLowerCase().endsWith(".dll")|| filename.toLowerCase().endsWith(".jnilib")|| filename.toLowerCase().endsWith(".so")) {
     prepareCodeFolder();
     destFile=new File(codeFolder,filename);
   }
  else {
-    String[] ext=getExtensions();
-    for (int i=0; i < ext.length; i++) {
+    for (    String extension : getExtensions()) {
       String lower=filename.toLowerCase();
-      if (lower.endsWith("." + ext[i])) {
+      if (lower.endsWith("." + extension)) {
         destFile=new File(this.folder,filename);
-        addingCodeExt=ext[i];
-      }
- else       if (lower.endsWith("." + ext[i] + ".x")) {
-        destFile=new File(this.folder,filename);
-        addingHiddenExt=ext[i];
+        codeExtension=extension;
       }
     }
-    if (addingCodeExt == null && addingHiddenExt == null) {
+    if (codeExtension == null) {
       prepareDataFolder();
       destFile=new File(dataFolder,filename);
     }
@@ -37,7 +31,7 @@
       return false;
     }
   }
-  if ((addingCodeExt == null) && (addingHiddenExt == null) && sourceFile.equals(destFile)) {
+  if ((codeExtension == null) && sourceFile.equals(destFile)) {
     Base.showWarning("You can't fool me","This file has already been copied to the\n" + "location from which where you're trying to add it.\n" + "I ain't not doin nuthin'.",null);
     return false;
   }
@@ -50,8 +44,8 @@
       return false;
     }
   }
-  if (addingCodeExt != null) {
-    SketchCode newCode=new SketchCode(destFile,addingCodeExt);
+  if (codeExtension != null) {
+    SketchCode newCode=new SketchCode(destFile,codeExtension);
     if (replacement) {
       replaceCode(newCode);
     }
@@ -63,12 +57,6 @@
     editor.header.repaint();
     if (editor.untitled) {
       current.modified=true;
-    }
-  }
- else   if (addingHiddenExt != null) {
-    SketchCode newHidden=new SketchCode(destFile,addingHiddenExt);
-    if (!replacement) {
-      insertHidden(newHidden);
     }
   }
  else {
