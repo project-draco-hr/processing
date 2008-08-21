@@ -3,7 +3,7 @@
   if (Preferences.getBoolean("editor.external")) {
     load();
   }
-  File appletFolder=new File(parentFolder,"applet");
+  File appletFolder=new File(appletPath);
   Base.removeDir(appletFolder);
   appletFolder.mkdirs();
   Hashtable zipFileContents=new Hashtable();
@@ -62,7 +62,7 @@
   }
   boolean separateJar=Preferences.getBoolean("export.applet.separate_jar_files") || codeFolder.exists() || (libraryPath.length() != 0);
   String LOADING_IMAGE="loading.gif";
-  File loadingImage=new File(parentFolder,LOADING_IMAGE);
+  File loadingImage=new File(folder,LOADING_IMAGE);
   if (!loadingImage.exists()) {
     loadingImage=new File("lib",LOADING_IMAGE);
   }
@@ -146,7 +146,7 @@
   }
   if (dataFolder.exists()) {
     String dataFiles[]=Base.listFiles(dataFolder,false);
-    int offset=parentFolder.length() + 1;
+    int offset=folder.getAbsolutePath().length() + 1;
     for (int i=0; i < dataFiles.length; i++) {
       if (PApplet.platform == PApplet.WINDOWS) {
         dataFiles[i]=dataFiles[i].replace('\\','/');
@@ -182,7 +182,7 @@
   File htmlOutputFile=new File(appletFolder,"index.html");
   PrintWriter htmlWriter=PApplet.createWriter(htmlOutputFile);
   InputStream is=null;
-  File customHtml=new File(parentFolder,"applet.html");
+  File customHtml=new File(folder,"applet.html");
   if (customHtml.exists()) {
     is=new FileInputStream(customHtml);
   }
