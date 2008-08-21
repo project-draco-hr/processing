@@ -1,26 +1,11 @@
 {
   ensureExistence();
   if (Preferences.getBoolean("editor.external")) {
-    load();
+    if (editor != null) {
+      load();
+    }
   }
-  String exportPlatformStr=null;
-  if (exportPlatform == PConstants.WINDOWS) {
-    exportPlatformStr="windows";
-  }
- else   if (exportPlatform == PConstants.MACOSX) {
-    exportPlatformStr="macosx";
-  }
- else   if (exportPlatform == PConstants.LINUX) {
-    exportPlatformStr="linux";
-  }
- else {
-    exportPlatform=-1;
-  }
-  String folderName="application";
-  if (exportPlatform != -1) {
-    folderName+="." + exportPlatformStr;
-  }
-  File destFolder=new File(folder,folderName);
+  File destFolder=new File(destPath);
   Base.removeDir(destFolder);
   destFolder.mkdirs();
   String foundName=build(destFolder.getPath());
@@ -120,10 +105,16 @@
     Hashtable exportTable=readSettings(exportSettings);
     String commaList=null;
     String exportList[]=null;
-    if (exportPlatform != -1) {
-      commaList=(String)exportTable.get("application." + exportPlatformStr);
+    if (exportPlatform == PConstants.MACOSX) {
+      commaList=(String)exportTable.get("application.macosx");
     }
-    if (commaList == null) {
+ else     if (exportPlatform == PConstants.WINDOWS) {
+      commaList=(String)exportTable.get("application.windows");
+    }
+ else     if (exportPlatform == PConstants.LINUX) {
+      commaList=(String)exportTable.get("application.linux");
+    }
+ else {
       commaList=(String)exportTable.get("application");
     }
     if (commaList == null) {
