@@ -8,18 +8,17 @@
   }
   presenting=present;
   try {
-    if (!sketch.compile()) {
-      System.out.println("Compile failed.");
-      return;
-    }
-    runtime=new Runner(Editor.this,presenting);
-    Thread t=new Thread(new Runnable(){
-      public void run(){
-        runtime.launch();
+    String appletClassName=sketch.compile();
+    if (appletClassName != null) {
+      runtime=new Runner(Editor.this,appletClassName,presenting);
+      Thread t=new Thread(new Runnable(){
+        public void run(){
+          runtime.launch();
+        }
       }
-    }
 );
-    t.start();
+      t.start();
+    }
   }
  catch (  Exception e) {
     statusError(e);

@@ -1,0 +1,14 @@
+{
+  if (programType == STATIC) {
+    out.println(indent + "noLoop();");
+    out.println("} ");
+  }
+  if ((programType == STATIC) || (programType == ACTIVE)) {
+    if (!PdePreprocessor.foundMain) {
+      out.println(indent + "static public void main(String args[]) {");
+      out.println(indent + indent + "PApplet.main(new String[] { \""+ className+ "\" });");
+      out.println(indent + "}");
+    }
+    out.println("}");
+  }
+}

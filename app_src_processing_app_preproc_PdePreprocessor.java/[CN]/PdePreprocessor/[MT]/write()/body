@@ -1,0 +1,39 @@
+{
+  PdeLexer lexer=new PdeLexer(programReader);
+  lexer.setTokenObjectClass("antlr.CommonHiddenStreamToken");
+  filter=new TokenStreamCopyingHiddenTokenFilter(lexer);
+  filter.hide(PdeRecognizer.SL_COMMENT);
+  filter.hide(PdeRecognizer.ML_COMMENT);
+  filter.hide(PdeRecognizer.WS);
+  filter.copy(PdeRecognizer.SEMI);
+  filter.copy(PdeRecognizer.LPAREN);
+  filter.copy(PdeRecognizer.RPAREN);
+  filter.copy(PdeRecognizer.LCURLY);
+  filter.copy(PdeRecognizer.RCURLY);
+  filter.copy(PdeRecognizer.COMMA);
+  filter.copy(PdeRecognizer.RBRACK);
+  filter.copy(PdeRecognizer.LBRACK);
+  filter.copy(PdeRecognizer.COLON);
+  PdeRecognizer parser=new PdeRecognizer(filter);
+  parser.setASTNodeClass("antlr.ExtendedCommonASTWithHiddenTokens");
+  parser.pdeProgram();
+  ASTFactory factory=new ASTFactory();
+  AST parserAST=parser.getAST();
+  AST rootNode=factory.create(ROOT_ID,"AST ROOT");
+  rootNode.setFirstChild(parserAST);
+  CommonAST.setVerboseStringConversion(true,parser.getTokenNames());
+  if (programType == JAVA) {
+    name=getFirstClassName(parserAST);
+  }
+  if (name == null)   return null;
+  PdeEmitter emitter=new PdeEmitter();
+  writeDeclaration(stream,name);
+  emitter.setOut(stream);
+  emitter.print(rootNode);
+  writeFooter(stream,name);
+  stream.close();
+  if (Preferences.getBoolean("preproc.output_parse_tree")) {
+    writeParseTree("parseTree.xml",parserAST);
+  }
+  return name;
+}

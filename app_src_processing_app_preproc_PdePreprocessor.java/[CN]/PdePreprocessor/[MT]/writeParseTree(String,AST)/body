@@ -1,0 +1,16 @@
+{
+  try {
+    PrintStream stream=new PrintStream(new FileOutputStream(filename));
+    stream.println("<?xml version=\"1.0\"?>");
+    stream.println("<document>");
+    OutputStreamWriter writer=new OutputStreamWriter(stream);
+    if (ast != null) {
+      ((CommonAST)ast).xmlSerialize(writer);
+    }
+    writer.flush();
+    stream.println("</document>");
+    writer.close();
+  }
+ catch (  IOException e) {
+  }
+}

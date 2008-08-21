@@ -1,4 +1,10 @@
 {
+  commandLine=false;
+  if (args.length >= 2) {
+    if (args[0].startsWith("--")) {
+      commandLine=true;
+    }
+  }
   if (PApplet.javaVersion < 1.5f) {
     Base.showError("Need to install Java 1.5","This version of Processing requires    \n" + "Java 1.5 or later to run properly.\n" + "Please visit java.com to upgrade.",null);
   }
@@ -15,15 +21,17 @@
  catch (  Exception e) {
     Base.showError("Problem Setting the Platform","An unknown error occurred while trying to load\n" + "platform-specific code for your machine.",e);
   }
-  try {
-    platform.setLookAndFeel();
+  if (!commandLine) {
+    try {
+      platform.setLookAndFeel();
+    }
+ catch (    Exception e) {
+      System.err.println("Non-fatal error while setting the Look & Feel.");
+      System.err.println("The error message follows, however Processing should run fine.");
+      System.err.println(e.getMessage());
+    }
+    JPopupMenu.setDefaultLightWeightPopupEnabled(false);
   }
- catch (  Exception e) {
-    System.err.println("Non-fatal error while setting the Look & Feel.");
-    System.err.println("The error message follows, however Processing should run fine.");
-    System.err.println(e.getMessage());
-  }
-  JPopupMenu.setDefaultLightWeightPopupEnabled(false);
   try {
     Class.forName("com.sun.jdi.VirtualMachine");
   }
@@ -31,13 +39,18 @@
     Base.showPlatforms();
     Base.showError("Please install JDK 1.5 or later","Processing requires a full JDK (not just a JRE)\n" + "to run. Please install JDK 1.5 or later.\n" + "More information can be found in the reference.",cnfe);
   }
-  untitledFolder=createTempFolder("untitled");
-  untitledFolder.deleteOnExit();
   try {
     Preferences.init();
   }
  catch (  Exception e) {
     e.printStackTrace();
   }
-  new Base(args);
+  if (commandLine) {
+    new Commander(args);
+  }
+ else {
+    untitledFolder=createTempFolder("untitled");
+    untitledFolder.deleteOnExit();
+    new Base(args);
+  }
 }

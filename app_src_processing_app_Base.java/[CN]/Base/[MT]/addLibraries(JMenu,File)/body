@@ -1,6 +1,13 @@
 {
   if (!folder.isDirectory())   return false;
-  String list[]=folder.list();
+  String list[]=folder.list(new FilenameFilter(){
+    public boolean accept(    File dir,    String name){
+      if (name.charAt(0) == '.')       return false;
+      if (name.equals("CVS"))       return false;
+      return (new File(dir,name).isDirectory());
+    }
+  }
+);
   if (list == null)   return false;
   Arrays.sort(list,String.CASE_INSENSITIVE_ORDER);
   ActionListener listener=new ActionListener(){
@@ -10,33 +17,31 @@
   }
 ;
   boolean ifound=false;
-  for (int i=0; i < list.length; i++) {
-    if ((list[i].charAt(0) == '.') || list[i].equals("CVS"))     continue;
-    File subfolder=new File(folder,list[i]);
-    if (!subfolder.isDirectory())     continue;
-    File exported=new File(subfolder,"library");
-    File entry=new File(exported,list[i] + ".jar");
-    if (entry.exists()) {
-      String sanityCheck=Sketch.sanitizeName(list[i]);
-      if (!sanityCheck.equals(list[i])) {
-        String mess="The library \"" + list[i] + "\" cannot be used.\n"+ "Library names must contain only basic letters and numbers.\n"+ "(ascii only and no spaces, and it cannot start with a number)";
+  for (  String libraryName : list) {
+    File subfolder=new File(folder,libraryName);
+    File libraryFolder=new File(subfolder,"library");
+    File libraryJar=new File(libraryFolder,libraryName + ".jar");
+    if (libraryJar.exists()) {
+      String sanityCheck=Sketch.sanitizeName(libraryName);
+      if (!sanityCheck.equals(libraryName)) {
+        String mess="The library \"" + libraryName + "\" cannot be used.\n"+ "Library names must contain only basic letters and numbers.\n"+ "(ascii only and no spaces, and it cannot start with a number)";
         Base.showMessage("Ignoring bad library name",mess);
         continue;
       }
-      String libraryClassPath=Compiler.contentsToClassPath(exported);
+      String libraryClassPath=Compiler.contentsToClassPath(libraryFolder);
       librariesClassPath+=File.pathSeparatorChar + libraryClassPath;
       String packages[]=Compiler.packageListFromClassPath(libraryClassPath);
-      for (int k=0; k < packages.length; k++) {
-        importToLibraryTable.put(packages[k],exported);
+      for (      String pkg : packages) {
+        importToLibraryTable.put(pkg,libraryFolder);
       }
-      JMenuItem item=new JMenuItem(list[i]);
+      JMenuItem item=new JMenuItem(libraryName);
       item.addActionListener(listener);
-      item.setActionCommand(entry.getAbsolutePath());
+      item.setActionCommand(libraryJar.getAbsolutePath());
       menu.add(item);
       ifound=true;
     }
  else {
-      JMenu submenu=new JMenu(list[i]);
+      JMenu submenu=new JMenu(libraryName);
       boolean found=addLibraries(submenu,subfolder);
       if (found) {
         menu.add(submenu);
