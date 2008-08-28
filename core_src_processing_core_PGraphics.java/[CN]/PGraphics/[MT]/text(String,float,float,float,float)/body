@@ -65,8 +65,8 @@ lineX=x2;
 }
 float boxHeight=y2 - y1;
 int lineFitCount=1 + PApplet.floor((boxHeight - textAscent()) / textLeading);
-if (textAlignY == CENTER) {
 int lineCount=Math.min(textBreakCount,lineFitCount);
+if (textAlignY == CENTER) {
 float lineHigh=textAscent() + textLeading * (lineCount - 1);
 float y=y1 + textAscent() + (boxHeight - lineHigh) / 2;
 for (int i=0; i < lineCount; i++) {
@@ -75,7 +75,6 @@ y+=textLeading;
 }
 }
  else if (textAlignY == BOTTOM) {
-int lineCount=Math.min(textBreakCount,lineFitCount);
 float y=y2 - textDescent() - textLeading * (lineCount - 1);
 for (int i=0; i < lineCount; i++) {
 textLineImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
@@ -84,7 +83,7 @@ y+=textLeading;
 }
  else {
 float y=y1 + textAscent();
-for (int i=0; i < lineFitCount; i++) {
+for (int i=0; i < lineCount; i++) {
 textLineImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
 y+=textLeading;
 }
