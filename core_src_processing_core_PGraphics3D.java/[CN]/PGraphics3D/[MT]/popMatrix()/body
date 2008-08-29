@@ -1,6 +1,8 @@
 {
-  if (!modelview.pop()) {
-    throw new RuntimeException("Too many calls to popMatrix() " + "(and not enough to pushMatrix)");
+  if (matrixStackDepth == 0) {
+    throw new RuntimeException(ERROR_PUSHMATRIX_UNDERFLOW);
   }
-  modelviewInv.pop();
+  matrixStackDepth--;
+  modelview.set(modelviewStack[modelviewStackPointer]);
+  modelviewInv.set(modelviewInvStack[modelviewStackPointer]);
 }

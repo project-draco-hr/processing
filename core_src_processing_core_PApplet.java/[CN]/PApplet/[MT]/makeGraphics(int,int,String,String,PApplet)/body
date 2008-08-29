@@ -13,8 +13,8 @@
   }
   String openglError="Before using OpenGL, first select " + "Import Library > opengl from the Sketch menu.";
   try {
-    Class rendererClass=Class.forName(irenderer);
-    Class constructorParams[]=null;
+    Class<?> rendererClass=Class.forName(irenderer);
+    Class<?> constructorParams[]=null;
     Object constructorValues[]=null;
     if (ipath == null) {
       constructorParams=new Class[]{Integer.TYPE,Integer.TYPE,PApplet.class};
@@ -24,7 +24,7 @@
       constructorParams=new Class[]{Integer.TYPE,Integer.TYPE,PApplet.class,String.class};
       constructorValues=new Object[]{new Integer(iwidth),new Integer(iheight),applet,ipath};
     }
-    Constructor constructor=rendererClass.getConstructor(constructorParams);
+    Constructor<?> constructor=rendererClass.getConstructor(constructorParams);
     PGraphics pg=(PGraphics)constructor.newInstance(constructorValues);
     return pg;
   }

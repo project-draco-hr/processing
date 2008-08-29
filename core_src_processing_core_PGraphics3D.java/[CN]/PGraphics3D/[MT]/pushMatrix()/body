@@ -1,6 +1,8 @@
 {
-  if (!modelview.push()) {
-    throw new RuntimeException("Too many calls to pushMatrix()");
+  if (matrixStackDepth == MATRIX_STACK_DEPTH) {
+    throw new RuntimeException(ERROR_PUSHMATRIX_OVERFLOW);
   }
-  modelviewInv.push();
+  modelview.get(modelviewStack[modelviewStackPointer]);
+  modelviewInv.get(modelviewInvStack[modelviewStackPointer]);
+  matrixStackDepth++;
 }
