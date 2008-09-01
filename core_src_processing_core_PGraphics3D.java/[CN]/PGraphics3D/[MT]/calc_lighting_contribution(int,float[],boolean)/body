@@ -82,7 +82,7 @@
           if (lightDir_dot_li <= lightSpotAngleCos[i]) {
             continue;
           }
-          spotTerm=pow(lightDir_dot_li,lightSpotConcentration[i]);
+          spotTerm=(float)Math.pow(lightDir_dot_li,lightSpotConcentration[i]);
         }
         if (lightFalloffQuadratic[i] != 0 || lightFalloffLinear[i] != 0) {
           denom+=lightFalloffQuadratic[i] * distSq + lightFalloffLinear[i] * (float)sqrt(distSq);
@@ -111,7 +111,7 @@
         }
         float s_dot_n=(sx * nx + sy * ny + sz * nz);
         if (s_dot_n > 0) {
-          s_dot_n=pow(s_dot_n,shine);
+          s_dot_n=(float)Math.pow(s_dot_n,shine);
           mul=s_dot_n * spotTerm / denom;
           contribution[LIGHT_SPECULAR_R]+=lightSpecular[i][0] * mul;
           contribution[LIGHT_SPECULAR_G]+=lightSpecular[i][1] * mul;

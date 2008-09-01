@@ -1,12 +1,11 @@
 {
   float[] v=vertices[vIndex];
-  v[R]=min(1,v[ER] + v[AR] * contribution[LIGHT_AMBIENT_R] + v[DR] * contribution[LIGHT_DIFFUSE_R]);
-  v[G]=min(1,v[EG] + v[AG] * contribution[LIGHT_AMBIENT_G] + v[DG] * contribution[LIGHT_DIFFUSE_G]);
-  v[B]=min(1,v[EB] + v[AB] * contribution[LIGHT_AMBIENT_B] + v[DB] * contribution[LIGHT_DIFFUSE_B]);
-  v[A]=min(1,v[DA]);
-  v[SPR]=min(1,v[SPR] * contribution[LIGHT_SPECULAR_R]);
-  v[SPG]=min(1,v[SPG] * contribution[LIGHT_SPECULAR_G]);
-  v[SPB]=min(1,v[SPB] * contribution[LIGHT_SPECULAR_B]);
-  v[SPA]=min(1,v[SPA]);
+  v[R]=clamp(v[ER] + v[AR] * contribution[LIGHT_AMBIENT_R] + v[DR] * contribution[LIGHT_DIFFUSE_R]);
+  v[G]=clamp(v[EG] + v[AG] * contribution[LIGHT_AMBIENT_G] + v[DG] * contribution[LIGHT_DIFFUSE_G]);
+  v[B]=clamp(v[EB] + v[AB] * contribution[LIGHT_AMBIENT_B] + v[DB] * contribution[LIGHT_DIFFUSE_B]);
+  v[A]=clamp(v[DA]);
+  v[SPR]=clamp(v[SPR] * contribution[LIGHT_SPECULAR_R]);
+  v[SPG]=clamp(v[SPG] * contribution[LIGHT_SPECULAR_G]);
+  v[SPB]=clamp(v[SPB] * contribution[LIGHT_SPECULAR_B]);
   v[BEEN_LIT]=1;
 }
