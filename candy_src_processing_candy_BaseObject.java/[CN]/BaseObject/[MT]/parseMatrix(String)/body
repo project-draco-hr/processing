@@ -1,0 +1,42 @@
+{
+  String[] pieces=PApplet.match(matrixStr,"\\s*(\\w+)\\((.*)\\)");
+  if (pieces.length != 2) {
+    System.err.println("Could not parse transform " + matrixStr);
+    return null;
+  }
+  float[] m=PApplet.parseFloat(PApplet.splitTokens(pieces[1]));
+  if (pieces[0].equals("matrix")) {
+    return m;
+  }
+ else   if (pieces[0].equals("translate")) {
+    float tx=m[0];
+    float ty=(m.length == 2) ? m[1] : m[0];
+    return new float[]{1,0,tx,0,1,ty};
+  }
+ else   if (pieces[0].equals("scale")) {
+    float sx=m[0];
+    float sy=(m.length == 2) ? m[1] : m[0];
+    return new float[]{sx,0,0,0,sy,0};
+  }
+ else   if (pieces[0].equals("rotate")) {
+    float angle=m[0];
+    if (m.length == 1) {
+      float c=PApplet.cos(angle);
+      float s=PApplet.sin(angle);
+      return new float[]{c,-s,0,s,c,0};
+    }
+ else     if (m.length == 3) {
+      PMatrix2D mat=new PMatrix2D(0,1,m[1],1,0,m[2]);
+      mat.rotate(m[0]);
+      mat.translate(-m[1],-m[2]);
+      return mat.get(null);
+    }
+  }
+ else   if (pieces[0].equals("skewX")) {
+    return new float[]{1,PApplet.tan(m[0]),0,0,1,0};
+  }
+ else   if (pieces[0].equals("skewY")) {
+    return new float[]{1,0,0,PApplet.tan(m[0]),1,0};
+  }
+  return null;
+}

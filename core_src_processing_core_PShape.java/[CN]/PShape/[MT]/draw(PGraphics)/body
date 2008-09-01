@@ -1,29 +1,13 @@
 {
-  boolean flat=g instanceof PGraphics3D;
-  if (matrix != null) {
+  if (!visible)   return;
+  if (drawMode == PConstants.CENTER) {
     g.pushMatrix();
-    if (flat) {
-      g.applyMatrix(matrix.m00,matrix.m01,matrix.m02,matrix.m10,matrix.m11,matrix.m12);
-    }
- else {
-      g.applyMatrix(matrix.m00,matrix.m01,matrix.m02,matrix.m03,matrix.m10,matrix.m11,matrix.m12,matrix.m13,matrix.m20,matrix.m21,matrix.m22,matrix.m23,matrix.m30,matrix.m31,matrix.m32,matrix.m33);
-    }
+    g.translate(-width / 2,-height / 2);
   }
-switch (kind) {
-case PATH:
-    for (int i=0; i < opcodeCount; i++) {
-switch (opcode[i]) {
-case VERTEX:
-        break;
-    }
+  pre(g);
+  drawImpl(g);
+  post(g);
+  if (drawMode == PConstants.CENTER) {
+    g.popMatrix();
   }
-break;
-case GROUP:
-break;
-case RECT:
-break;
-}
-if (matrix != null) {
-g.popMatrix();
-}
 }
