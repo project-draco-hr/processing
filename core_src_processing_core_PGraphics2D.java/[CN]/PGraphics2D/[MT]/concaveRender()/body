@@ -15,15 +15,14 @@
   boolean ccw=false;
   int n=polygon.vertexCount;
   int mm;
-  float min[]=new float[2];
-  min[X]=polyVertices[0][X];
-  min[Y]=polyVertices[0][Y];
+  float minX=polyVertices[0][TX];
+  float minY=polyVertices[0][TY];
   mm=0;
   for (int i=0; i < n; i++) {
-    if ((polyVertices[i][Y] < min[Y]) || ((polyVertices[i][Y] == min[Y]) && (polyVertices[i][X] > min[X]))) {
+    if ((polyVertices[i][TY] < minY) || ((polyVertices[i][TY] == minY) && (polyVertices[i][TX] > minX))) {
       mm=i;
-      min[X]=polyVertices[mm][X];
-      min[Y]=polyVertices[mm][Y];
+      minX=polyVertices[mm][TX];
+      minY=polyVertices[mm][TY];
     }
   }
   float cp;
@@ -64,12 +63,12 @@
     int w=v + 1;
     if (vc <= w)     w=0;
     float Ax, Ay, Bx, By, Cx, Cy, Px, Py;
-    Ax=-polyVertices[tpolygon_vertex_order[u]][X];
-    Ay=polyVertices[tpolygon_vertex_order[u]][Y];
-    Bx=-polyVertices[tpolygon_vertex_order[v]][X];
-    By=polyVertices[tpolygon_vertex_order[v]][Y];
-    Cx=-polyVertices[tpolygon_vertex_order[w]][X];
-    Cy=polyVertices[tpolygon_vertex_order[w]][Y];
+    Ax=-polyVertices[tpolygon_vertex_order[u]][TX];
+    Ay=polyVertices[tpolygon_vertex_order[u]][TY];
+    Bx=-polyVertices[tpolygon_vertex_order[v]][TX];
+    By=polyVertices[tpolygon_vertex_order[v]][TY];
+    Cx=-polyVertices[tpolygon_vertex_order[w]][TX];
+    Cy=polyVertices[tpolygon_vertex_order[w]][TY];
     if (EPSILON > (((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax)))) {
       continue;
     }
@@ -79,8 +78,8 @@
       if ((p == u) || (p == v) || (p == w)) {
         continue;
       }
-      Px=-polyVertices[tpolygon_vertex_order[p]][X];
-      Py=polyVertices[tpolygon_vertex_order[p]][Y];
+      Px=-polyVertices[tpolygon_vertex_order[p]][TX];
+      Py=polyVertices[tpolygon_vertex_order[p]][TY];
       ax=Cx - Bx;
       ay=Cy - By;
       bx=Ax - Cx;

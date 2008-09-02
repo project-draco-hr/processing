@@ -1,6 +1,6 @@
 {
-  int d1=MX;
-  int d2=MY;
+  int d1=X;
+  int d2=Y;
   float area=0;
   for (int p=vertex_end - 1, q=vertex_start; q < vertex_end; p=q++) {
     area+=(vertices[q][d1] * vertices[p][d2] - vertices[p][d1] * vertices[q][d2]);
@@ -10,16 +10,16 @@
     boolean foundValidY=false;
     for (int i=vertex_start; i < vertex_end; i++) {
       for (int j=i; j < vertex_end; j++) {
-        if (vertices[i][MX] != vertices[j][MX])         foundValidX=true;
-        if (vertices[i][MY] != vertices[j][MY])         foundValidY=true;
+        if (vertices[i][X] != vertices[j][X])         foundValidX=true;
+        if (vertices[i][Y] != vertices[j][Y])         foundValidY=true;
       }
     }
     if (foundValidX) {
-      d2=MZ;
+      d2=Z;
     }
  else     if (foundValidY) {
-      d1=MY;
-      d2=MZ;
+      d1=Y;
+      d2=Z;
     }
  else {
       return;
@@ -30,7 +30,7 @@
   }
   float vfirst[]=vertices[vertex_start];
   float vlast[]=vertices[vertex_end - 1];
-  if ((abs(vfirst[MX] - vlast[MX]) < EPSILON) && (abs(vfirst[MY] - vlast[MY]) < EPSILON) && (abs(vfirst[MZ] - vlast[MZ]) < EPSILON)) {
+  if ((abs(vfirst[X] - vlast[X]) < EPSILON) && (abs(vfirst[Y] - vlast[Y]) < EPSILON) && (abs(vfirst[Z] - vlast[Z]) < EPSILON)) {
     vertex_end--;
   }
   int j=0;

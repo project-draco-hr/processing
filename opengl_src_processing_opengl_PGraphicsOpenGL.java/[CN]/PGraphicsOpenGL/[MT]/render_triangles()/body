@@ -4,15 +4,15 @@
     float a[]=vertices[triangles[i][VERTEX1]];
     float b[]=vertices[triangles[i][VERTEX2]];
     float c[]=vertices[triangles[i][VERTEX3]];
-    float ar=min(1,triangleColors[i][0][TRI_DIFFUSE_R] + triangleColors[i][0][TRI_SPECULAR_R]);
-    float ag=min(1,triangleColors[i][0][TRI_DIFFUSE_G] + triangleColors[i][0][TRI_SPECULAR_G]);
-    float ab=min(1,triangleColors[i][0][TRI_DIFFUSE_B] + triangleColors[i][0][TRI_SPECULAR_B]);
-    float br=min(1,triangleColors[i][1][TRI_DIFFUSE_R] + triangleColors[i][1][TRI_SPECULAR_R]);
-    float bg=min(1,triangleColors[i][1][TRI_DIFFUSE_G] + triangleColors[i][1][TRI_SPECULAR_G]);
-    float bb=min(1,triangleColors[i][1][TRI_DIFFUSE_B] + triangleColors[i][1][TRI_SPECULAR_B]);
-    float cr=min(1,triangleColors[i][2][TRI_DIFFUSE_R] + triangleColors[i][2][TRI_SPECULAR_R]);
-    float cg=min(1,triangleColors[i][2][TRI_DIFFUSE_G] + triangleColors[i][2][TRI_SPECULAR_G]);
-    float cb=min(1,triangleColors[i][2][TRI_DIFFUSE_B] + triangleColors[i][2][TRI_SPECULAR_B]);
+    float ar=clamp(triangleColors[i][0][TRI_DIFFUSE_R] + triangleColors[i][0][TRI_SPECULAR_R]);
+    float ag=clamp(triangleColors[i][0][TRI_DIFFUSE_G] + triangleColors[i][0][TRI_SPECULAR_G]);
+    float ab=clamp(triangleColors[i][0][TRI_DIFFUSE_B] + triangleColors[i][0][TRI_SPECULAR_B]);
+    float br=clamp(triangleColors[i][1][TRI_DIFFUSE_R] + triangleColors[i][1][TRI_SPECULAR_R]);
+    float bg=clamp(triangleColors[i][1][TRI_DIFFUSE_G] + triangleColors[i][1][TRI_SPECULAR_G]);
+    float bb=clamp(triangleColors[i][1][TRI_DIFFUSE_B] + triangleColors[i][1][TRI_SPECULAR_B]);
+    float cr=clamp(triangleColors[i][2][TRI_DIFFUSE_R] + triangleColors[i][2][TRI_SPECULAR_R]);
+    float cg=clamp(triangleColors[i][2][TRI_DIFFUSE_G] + triangleColors[i][2][TRI_SPECULAR_G]);
+    float cb=clamp(triangleColors[i][2][TRI_DIFFUSE_B] + triangleColors[i][2][TRI_SPECULAR_B]);
     if (raw != null) {
       raw.colorMode(RGB,1);
       raw.noStroke();
@@ -58,13 +58,13 @@
             raw.vertex(c[VX] / c[VW],c[VY] / c[VW],c[VZ] / c[VW],c[U] * uscale,c[V] * vscale);
           }
  else {
-            if (reasonablePoint(a[X],a[Y],a[Z]) && reasonablePoint(b[X],b[Y],b[Z]) && reasonablePoint(c[X],c[Y],c[Z])) {
+            if (reasonablePoint(a[TX],a[TY],a[TZ]) && reasonablePoint(b[TX],b[TY],b[TZ]) && reasonablePoint(c[TX],c[TY],c[TZ])) {
               raw.fill(ar,ag,ab,a[A]);
-              raw.vertex(a[X],a[Y],a[U] * uscale,a[V] * vscale);
+              raw.vertex(a[TX],a[TY],a[U] * uscale,a[V] * vscale);
               raw.fill(br,bg,bb,b[A]);
-              raw.vertex(b[X],b[Y],b[U] * uscale,b[V] * vscale);
+              raw.vertex(b[TX],b[TY],b[U] * uscale,b[V] * vscale);
               raw.fill(cr,cg,cb,c[A]);
-              raw.vertex(c[X],c[Y],c[U] * uscale,c[V] * vscale);
+              raw.vertex(c[TX],c[TY],c[U] * uscale,c[V] * vscale);
             }
           }
         }
@@ -93,13 +93,13 @@
           }
         }
  else {
-          if (reasonablePoint(a[X],a[Y],a[Z]) && reasonablePoint(b[X],b[Y],b[Z]) && reasonablePoint(c[X],c[Y],c[Z])) {
+          if (reasonablePoint(a[TX],a[TY],a[TZ]) && reasonablePoint(b[TX],b[TY],b[TZ]) && reasonablePoint(c[TX],c[TY],c[TZ])) {
             raw.fill(ar,ag,ab,a[A]);
-            raw.vertex(a[X],a[Y]);
+            raw.vertex(a[TX],a[TY]);
             raw.fill(br,bg,bb,b[A]);
-            raw.vertex(b[X],b[Y]);
+            raw.vertex(b[TX],b[TY]);
             raw.fill(cr,cg,cb,c[A]);
-            raw.vertex(c[X],c[Y]);
+            raw.vertex(c[TX],c[TY]);
           }
         }
       }

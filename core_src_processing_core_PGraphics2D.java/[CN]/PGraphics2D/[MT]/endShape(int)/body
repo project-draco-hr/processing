@@ -3,14 +3,14 @@
   float polyVertices[][]=polygon.vertices;
   if (untransformed()) {
     for (int i=0; i < polyVertexCount; i++) {
-      polyVertices[i][X]=polyVertices[i][MX];
-      polyVertices[i][Y]=polyVertices[i][MY];
+      polyVertices[i][TX]=polyVertices[i][X];
+      polyVertices[i][TY]=polyVertices[i][Y];
     }
   }
  else {
     for (int i=0; i < polyVertexCount; i++) {
-      polyVertices[i][X]=m00 * polyVertices[i][MX] + m01 * polyVertices[i][MY] + m03;
-      polyVertices[i][Y]=m10 * polyVertices[i][MX] + m11 * polyVertices[i][MY] + m13;
+      polyVertices[i][TX]=m00 * polyVertices[i][X] + m01 * polyVertices[i][Y] + m03;
+      polyVertices[i][TY]=m10 * polyVertices[i][X] + m11 * polyVertices[i][Y] + m13;
     }
   }
   if (polygon.interpUV) {
@@ -24,12 +24,12 @@ case POINTS:
     if (untransformed() && (strokeWeight == 1)) {
       if (!strokeChanged) {
         for (int i=0; i < polyVertexCount; i++) {
-          thin_point((int)polyVertices[i][X],(int)polyVertices[i][Y],0,strokeColor);
+          thin_point((int)polyVertices[i][TX],(int)polyVertices[i][TY],0,strokeColor);
         }
       }
  else {
         for (int i=0; i < polyVertexCount; i++) {
-          thin_point((int)polyVertices[i][X],(int)polyVertices[i][Y],0,float_color(polyVertices[i][SR],polyVertices[i][SG],polyVertices[i][SB]));
+          thin_point((int)polyVertices[i][TX],(int)polyVertices[i][TY],0,float_color(polyVertices[i][SR],polyVertices[i][SG],polyVertices[i][SB]));
         }
       }
     }
@@ -38,9 +38,9 @@ case POINTS:
       for (int i=0; i < polyVertexCount; i++) {
         float v[]=polyVertices[i];
         if ((i == 0) || strokeChanged) {
-          calc_lighting(v[SR],v[SG],v[SB],v[X],v[Y],v[Z],v[NX],v[NY],v[NZ],f,R);
+          calc_lighting(v[SR],v[SG],v[SB],v[TX],v[TY],v[TZ],v[NX],v[NY],v[NZ],f,R);
         }
-        thick_point(v[X],v[Y],v[Z],f[R],f[G],f[B],f[SA]);
+        thick_point(v[TX],v[TY],v[TZ],f[R],f[G],f[B],f[SA]);
       }
     }
   break;
@@ -50,9 +50,9 @@ if (mode == CLOSE) {
 float v0[]=polygon.vertices[0];
 float v1[]=polygon.nextVertex();
 polyVertexCount++;
-v1[X]=v0[X];
-v1[Y]=v0[Y];
-v1[Z]=v0[Z];
+v1[TX]=v0[TX];
+v1[TY]=v0[TY];
+v1[TZ]=v0[TZ];
 v1[SR]=v0[SR];
 v1[SG]=v0[SG];
 v1[SB]=v0[SB];
@@ -71,9 +71,9 @@ fpolygon.vertices[j][R]=polyVertices[i + j][R];
 fpolygon.vertices[j][G]=polyVertices[i + j][G];
 fpolygon.vertices[j][B]=polyVertices[i + j][B];
 fpolygon.vertices[j][A]=polyVertices[i + j][A];
-fpolygon.vertices[j][X]=polyVertices[i + j][X];
-fpolygon.vertices[j][Y]=polyVertices[i + j][Y];
-fpolygon.vertices[j][Z]=polyVertices[i + j][Z];
+fpolygon.vertices[j][TX]=polyVertices[i + j][TX];
+fpolygon.vertices[j][TY]=polyVertices[i + j][TY];
+fpolygon.vertices[j][TZ]=polyVertices[i + j][TZ];
 if (polygon.interpUV) {
 fpolygon.vertices[j][U]=polyVertices[i + j][U];
 fpolygon.vertices[j][V]=polyVertices[i + j][V];
@@ -103,9 +103,9 @@ fpolygon.vertices[j][R]=polyVertices[i + j][R];
 fpolygon.vertices[j][G]=polyVertices[i + j][G];
 fpolygon.vertices[j][B]=polyVertices[i + j][B];
 fpolygon.vertices[j][A]=polyVertices[i + j][A];
-fpolygon.vertices[j][X]=polyVertices[i + j][X];
-fpolygon.vertices[j][Y]=polyVertices[i + j][Y];
-fpolygon.vertices[j][Z]=polyVertices[i + j][Z];
+fpolygon.vertices[j][TX]=polyVertices[i + j][TX];
+fpolygon.vertices[j][TY]=polyVertices[i + j][TY];
+fpolygon.vertices[j][TZ]=polyVertices[i + j][TZ];
 if (polygon.interpUV) {
 fpolygon.vertices[j][U]=polyVertices[i + j][U];
 fpolygon.vertices[j][V]=polyVertices[i + j][V];
