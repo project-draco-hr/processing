@@ -14,7 +14,7 @@
   String openglError="Before using OpenGL, first select " + "Import Library > opengl from the Sketch menu.";
   try {
     Class<?> rendererClass=Thread.currentThread().getContextClassLoader().loadClass(irenderer);
-    Constructor<?> constructor=rendererClass.getConstructor();
+    Constructor<?> constructor=rendererClass.getConstructor(new Class[]{});
     PGraphics pg=(PGraphics)constructor.newInstance();
     pg.setParent(this);
     pg.setPrimary(iprimary);
@@ -44,7 +44,8 @@ catch (  ClassNotFoundException cnfe) {
   }
 catch (  Exception e) {
     if ((e instanceof IllegalArgumentException) || (e instanceof NoSuchMethodException) || (e instanceof IllegalAccessException)) {
-      String msg="This renderer needs to be updated " + "for the current release of Processing.";
+      e.printStackTrace();
+      String msg=irenderer + " needs to be updated " + "for the current release of Processing.";
       throw new RuntimeException(msg);
     }
  else {
