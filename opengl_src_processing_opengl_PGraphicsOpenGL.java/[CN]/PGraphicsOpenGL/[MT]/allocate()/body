@@ -10,11 +10,13 @@
       capabilities.setNumSamples(4);
     }
     GLDrawableFactory factory=GLDrawableFactory.getFactory();
-    GraphicsConfiguration pconfig=parent.getGraphicsConfiguration();
-    System.out.println("parent config is " + pconfig);
-    AWTGraphicsConfiguration agc=(AWTGraphicsConfiguration)factory.chooseGraphicsConfiguration(capabilities,null,null);
-    GraphicsConfiguration config=agc.getGraphicsConfiguration();
-    System.out.println("agc config is " + config);
+    if (PApplet.platform == PConstants.LINUX) {
+      GraphicsConfiguration pconfig=parent.getGraphicsConfiguration();
+      System.out.println("parent config is " + pconfig);
+      AWTGraphicsConfiguration agc=(AWTGraphicsConfiguration)factory.chooseGraphicsConfiguration(capabilities,null,null);
+      GraphicsConfiguration config=agc.getGraphicsConfiguration();
+      System.out.println("agc config is " + config);
+    }
     drawable=factory.getGLDrawable(parent,capabilities,null);
     context=drawable.createContext(null);
     gl=context.getGL();
