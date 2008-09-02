@@ -9,7 +9,13 @@
       capabilities.setSampleBuffers(true);
       capabilities.setNumSamples(4);
     }
-    drawable=GLDrawableFactory.getFactory().getGLDrawable(parent,capabilities,null);
+    GLDrawableFactory factory=GLDrawableFactory.getFactory();
+    GraphicsConfiguration pconfig=parent.getGraphicsConfiguration();
+    System.out.println("parent config is " + pconfig);
+    AWTGraphicsConfiguration agc=(AWTGraphicsConfiguration)factory.chooseGraphicsConfiguration(capabilities,null,null);
+    GraphicsConfiguration config=agc.getGraphicsConfiguration();
+    System.out.println("agc config is " + config);
+    drawable=factory.getGLDrawable(parent,capabilities,null);
     context=drawable.createContext(null);
     gl=context.getGL();
     settingsInited=false;
