@@ -1,12 +1,12 @@
 {
-  boolean foundMethod=false;
-  for (int i=0; i < count; i++) {
-    if (objects[i] == object && methods[i].equals(method)) {
-      foundMethod=true;
-    }
-    if (foundMethod) {
+  int index=findIndex(object,method);
+  if (index != -1) {
+    count--;
+    for (int i=index; i < count; i++) {
       objects[i]=objects[i + 1];
+      methods[i]=methods[i + 1];
     }
+    objects[count]=null;
+    methods[count]=null;
   }
-  if (foundMethod)   count--;
 }

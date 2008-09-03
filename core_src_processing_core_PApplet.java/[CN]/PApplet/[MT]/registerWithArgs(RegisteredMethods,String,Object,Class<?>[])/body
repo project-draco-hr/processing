@@ -4,7 +4,10 @@
     Method method=c.getMethod(name,cargs);
     meth.add(o,method);
   }
- catch (  Exception e) {
+ catch (  NoSuchMethodException nsme) {
+    die("There is no " + name + "() method in the class "+ o.getClass().getName());
+  }
+catch (  Exception e) {
     die("Could not register " + name + " + () for "+ o,e);
   }
 }
