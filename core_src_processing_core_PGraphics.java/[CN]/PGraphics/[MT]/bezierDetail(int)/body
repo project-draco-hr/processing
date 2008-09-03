@@ -1,10 +1,9 @@
 {
-  if (bezierForwardMatrix == null) {
-    bezierForwardMatrix=new float[4][4];
-    bezierDrawMatrix=new float[4][4];
+  if (bezierDrawMatrix == null) {
+    bezierDrawMatrix=new PMatrix3D();
   }
   bezierDetail=detail;
   bezierInited=true;
-  setup_spline_forward(detail,bezierForwardMatrix);
-  mult_spline_matrix(bezierForwardMatrix,bezier_basis,bezierDrawMatrix,4);
+  setup_spline_forward(detail,bezierDrawMatrix);
+  bezierDrawMatrix.apply(bezierBasisMatrix);
 }
