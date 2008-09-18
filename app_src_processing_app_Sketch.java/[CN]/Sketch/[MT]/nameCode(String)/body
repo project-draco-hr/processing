@@ -45,7 +45,8 @@
   }
   if (renamingCode) {
     if (currentIndex == 0) {
-      File newFolder=new File(folder.getParentFile(),newName);
+      String folderName=newName.substring(0,newName.indexOf('.'));
+      File newFolder=new File(folder.getParentFile(),folderName);
       if (newFolder.exists()) {
         Base.showWarning("Cannot Rename","Sorry, a sketch (or folder) named " + "\"" + newName + "\" already exists.",null);
         return;
@@ -106,5 +107,4 @@
   sortCode();
   setCurrentCode(newName);
   editor.header.rebuild();
-  Toolkit.getDefaultToolkit().sync();
 }
