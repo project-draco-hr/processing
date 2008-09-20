@@ -4,7 +4,9 @@
     load();
   }
   File appletFolder=new File(appletPath);
-  Base.removeDir(appletFolder);
+  if (Preferences.getBoolean("export.delete_target_folder")) {
+    Base.removeDir(appletFolder);
+  }
   appletFolder.mkdirs();
   Hashtable zipFileContents=new Hashtable();
   String foundName=build(appletFolder.getPath());

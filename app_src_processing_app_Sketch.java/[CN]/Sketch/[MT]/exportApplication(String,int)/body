@@ -6,7 +6,9 @@
     }
   }
   File destFolder=new File(destPath);
-  Base.removeDir(destFolder);
+  if (Preferences.getBoolean("export.delete_target_folder")) {
+    Base.removeDir(destFolder);
+  }
   destFolder.mkdirs();
   String foundName=build(destFolder.getPath());
   if (foundName == null)   return false;
