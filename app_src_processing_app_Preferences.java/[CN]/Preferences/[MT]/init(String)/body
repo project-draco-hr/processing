@@ -18,16 +18,26 @@
   }
   defaults=(Hashtable)table.clone();
   setColor("run.window.bgcolor",SystemColor.control);
-  preferencesFile=Base.getSettingsFile(PREFS_FILE);
-  if (!preferencesFile.exists()) {
-    save();
-  }
- else {
+  if (commandLinePrefs != null) {
     try {
-      load(new FileInputStream(preferencesFile));
+      load(new FileInputStream(commandLinePrefs));
     }
- catch (    Exception ex) {
-      Base.showError("Error reading preferences","Error reading the preferences file. " + "Please delete (or move)\n" + preferencesFile.getAbsolutePath() + " and restart Processing.",ex);
+ catch (    Exception poe) {
+      Base.showError("Error","Could not read preferences from " + commandLinePrefs,poe);
+    }
+  }
+ else   if (!Base.isCommandLine()) {
+    preferencesFile=Base.getSettingsFile(PREFS_FILE);
+    if (!preferencesFile.exists()) {
+      save();
+    }
+ else {
+      try {
+        load(new FileInputStream(preferencesFile));
+      }
+ catch (      Exception ex) {
+        Base.showError("Error reading preferences","Error reading the preferences file. " + "Please delete (or move)\n" + preferencesFile.getAbsolutePath() + " and restart Processing.",ex);
+      }
     }
   }
 }

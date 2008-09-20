@@ -1,0 +1,15 @@
+{
+  try {
+    Class platformClass=Class.forName("processing.app.Platform");
+    if (Base.isMacOS()) {
+      platformClass=Class.forName("processing.app.macosx.Platform");
+    }
+ else     if (Base.isWindows()) {
+      platformClass=Class.forName("processing.app.windows.Platform");
+    }
+    platform=(Platform)platformClass.newInstance();
+  }
+ catch (  Exception e) {
+    Base.showError("Problem Setting the Platform","An unknown error occurred while trying to load\n" + "platform-specific code for your machine.",e);
+  }
+}

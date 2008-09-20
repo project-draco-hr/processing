@@ -1,6 +1,7 @@
 {
   String sketchPath=null;
   String outputPath=null;
+  String preferencesPath=null;
   String[] platforms=null;
   int mode=HELP;
   for (  String arg : args) {
@@ -29,6 +30,7 @@
       outputPath=arg.substring(outputArg.length());
     }
   }
+  Preferences.init(preferencesPath);
   if (platforms == null) {
     platforms=new String[]{"macosx","windows","linux"};
   }
@@ -49,9 +51,10 @@
     complainAndQuit("Sketch path must point to the main .pde file.");
   }
  else {
+    Sketch sketch=null;
+    boolean success=false;
     try {
-      Sketch sketch=new Sketch(null,sketchPath);
-      boolean success=false;
+      sketch=new Sketch(null,sketchPath);
       if (mode == PREPROCESS) {
         success=sketch.preprocess(outputPath) != null;
       }
@@ -99,6 +102,11 @@
       System.exit(success ? 0 : 1);
     }
  catch (    RunnerException re) {
+      String filename=sketch.getCode(re.getCodeIndex()).getFileName();
+      int line=re.getCodeLine();
+      int column=re.getCodeColumn();
+      if (column == -1)       column=0;
+      System.err.println(filename + ":" + line+ ":"+ column+ ":"+ line+ ":"+ column+ ":"+ " "+ re.getMessage());
     }
 catch (    IOException e) {
       e.printStackTrace();
