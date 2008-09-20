@@ -39,14 +39,14 @@
   }
   String prefsLine=Preferences.get("preproc.imports");
   defaultImports=PApplet.splitTokens(prefsLine,", ");
-  String importRegexp="\\s(import\\s+)(\\S+)(\\s*;)";
+  String importRegexp="(?:^|\\s|;)(import\\s+)(\\S+)(\\s*;)";
   programImports=new ArrayList<String>();
   do {
-    String[] pieces=PApplet.match(" " + program,importRegexp);
+    String[] pieces=PApplet.match(program,importRegexp);
     if (pieces == null)     break;
-    String piece=pieces[0] + pieces[1] + pieces[2];
+    String piece=pieces[1] + pieces[2] + pieces[3];
     int len=piece.length();
-    programImports.add(pieces[1]);
+    programImports.add(pieces[2]);
     int idx=program.indexOf(piece);
     program=program.substring(0,idx) + program.substring(idx + len);
   }

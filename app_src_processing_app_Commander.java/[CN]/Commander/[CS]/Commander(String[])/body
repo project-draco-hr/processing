@@ -1,5 +1,6 @@
 {
-  String sketchPath=null;
+  String sketchFolder=null;
+  String pdePath=null;
   String outputPath=null;
   String preferencesPath=null;
   int platformIndex=PApplet.platform;
@@ -27,31 +28,37 @@
       }
     }
  else     if (arg.startsWith(sketchArg)) {
-      sketchPath=arg.substring(sketchArg.length());
+      sketchFolder=arg.substring(sketchArg.length());
+      File sketchy=new File(sketchFolder);
+      File pdeFile=new File(sketchy,sketchy.getName() + ".pde");
+      pdePath=pdeFile.getAbsolutePath();
     }
  else     if (arg.startsWith(outputArg)) {
       outputPath=arg.substring(outputArg.length());
     }
+  }
+  if ((outputPath == null) && (mode == PREPROCESS || mode == BUILD || mode == RUN)) {
+    complainAndQuit("Output path must be specified when using " + preprocArg + ", "+ buildArg+ ", or "+ runArg+ ".");
   }
   Preferences.init(preferencesPath);
   if (mode == HELP) {
     printCommandLine(System.out);
     System.exit(0);
   }
- else   if (sketchPath == null) {
+ else   if (sketchFolder == null) {
     complainAndQuit("No sketch path specified.");
   }
- else   if (outputPath.equals(sketchPath)) {
+ else   if (outputPath.equals(pdePath)) {
     complainAndQuit("The sketch path and output path cannot be identical.");
   }
- else   if (!sketchPath.toLowerCase().endsWith(".pde")) {
+ else   if (!pdePath.toLowerCase().endsWith(".pde")) {
     complainAndQuit("Sketch path must point to the main .pde file.");
   }
  else {
     Sketch sketch=null;
     boolean success=false;
     try {
-      sketch=new Sketch(null,sketchPath);
+      sketch=new Sketch(null,pdePath);
       if (mode == PREPROCESS) {
         success=sketch.preprocess(outputPath) != null;
       }
@@ -63,8 +70,8 @@
           success=sketch.exportApplet(outputPath);
         }
  else {
-          String sketchFolder=sketchPath.substring(0,sketchPath.lastIndexOf(File.separatorChar));
-          success=sketch.exportApplet(sketchFolder + "applet");
+          String target=sketchFolder + File.separatorChar + "applet";
+          success=sketch.exportApplet(target);
         }
       }
  else       if (mode == EXPORT_APPLICATION) {
@@ -72,8 +79,7 @@
           success=sketch.exportApplication(outputPath,platformIndex);
         }
  else {
-          String sketchFolder=sketchPath.substring(0,sketchPath.lastIndexOf(File.separatorChar));
-          outputPath=sketchFolder + "application." + Base.getPlatformName(platformIndex);
+          outputPath=sketchFolder + File.separatorChar + "application."+ Base.getPlatformName(platformIndex);
           success=sketch.exportApplication(outputPath,platformIndex);
         }
       }

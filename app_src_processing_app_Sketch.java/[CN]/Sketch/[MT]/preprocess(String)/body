@@ -73,8 +73,8 @@ catch (  antlr.TokenStreamRecognitionException tsre) {
     String mess="^line (\\d+):(\\d+):\\s";
     String[] matches=PApplet.match(tsre.toString(),mess);
     if (matches != null) {
-      int errorLine=Integer.parseInt(matches[0]) - 1;
-      int errorColumn=Integer.parseInt(matches[1]);
+      int errorLine=Integer.parseInt(matches[1]) - 1;
+      int errorColumn=Integer.parseInt(matches[2]);
       int errorFile=0;
       for (int i=1; i < codeCount; i++) {
         if (code[i].isExtension("pde") && (code[i].getPreprocOffset() < errorLine)) {
