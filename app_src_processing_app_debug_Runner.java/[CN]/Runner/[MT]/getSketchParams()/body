@@ -1,15 +1,17 @@
 {
   ArrayList<String> params=new ArrayList<String>();
   params.add("processing.core.PApplet");
-  Point windowLocation=editor.getSketchLocation();
-  if (windowLocation != null) {
-    params.add(PApplet.ARGS_LOCATION + "=" + windowLocation.x+ ","+ windowLocation.y);
-  }
+  if (editor != null) {
+    Point windowLocation=editor.getSketchLocation();
+    if (windowLocation != null) {
+      params.add(PApplet.ARGS_LOCATION + "=" + windowLocation.x+ ","+ windowLocation.y);
+    }
  else {
-    Point editorLocation=editor.getLocation();
-    params.add(PApplet.ARGS_EDITOR_LOCATION + "=" + editorLocation.x+ ","+ editorLocation.y);
+      Point editorLocation=editor.getLocation();
+      params.add(PApplet.ARGS_EDITOR_LOCATION + "=" + editorLocation.x+ ","+ editorLocation.y);
+    }
+    params.add(PApplet.ARGS_EXTERNAL);
   }
-  params.add(PApplet.ARGS_EXTERNAL);
   params.add(PApplet.ARGS_DISPLAY + "=" + Preferences.get("run.display"));
   params.add(PApplet.ARGS_SKETCH_FOLDER + "=" + sketch.getFolder().getAbsolutePath());
   if (presenting) {
