@@ -45,25 +45,17 @@
         break;
       }
     }
-    String fname=(new String(buf,0,index,i - index)).replace('/',File.separatorChar);
-    if (fname.startsWith(File.separator)) {
-      fname=fname.substring(1);
-    }
-    File targ=new File(WebServer.root,fname);
-    if (targ.isDirectory()) {
-      File ind=new File(targ,"index.html");
-      if (ind.exists()) {
-        targ=ind;
+    String fname=new String(buf,index,i - index);
+    ZipEntry entry=entries.get(fname.substring(1));
+    boolean ok=printHeaders(entry,ps);
+    if (entry != null) {
+      InputStream stream=zip.getInputStream(entry);
+      if (doingGet && ok) {
+        sendFile(stream,ps);
       }
     }
-    boolean OK=printHeaders(targ,ps);
-    if (doingGet) {
-      if (OK) {
-        sendFile(targ,ps);
-      }
  else {
-        send404(targ,ps);
-      }
+      send404(ps);
     }
   }
   finally {

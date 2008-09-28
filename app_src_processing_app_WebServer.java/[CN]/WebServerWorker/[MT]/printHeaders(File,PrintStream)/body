@@ -3,7 +3,7 @@
   int rCode=0;
   if (!targ.exists()) {
     rCode=HTTP_NOT_FOUND;
-    ps.print("HTTP/1.0 " + HTTP_NOT_FOUND + " not found");
+    ps.print("HTTP/1.0 " + HTTP_NOT_FOUND + " Not Found");
     ps.write(EOL);
     ret=false;
   }
@@ -13,7 +13,7 @@
     ps.write(EOL);
     ret=true;
   }
-  log("From " + s.getInetAddress().getHostAddress() + ": GET "+ targ.getAbsolutePath()+ "-->"+ rCode);
+  WebServer.log("From " + s.getInetAddress().getHostAddress() + ": GET "+ targ.getAbsolutePath()+ "-->"+ rCode);
   ps.print("Server: Simple java");
   ps.write(EOL);
   ps.print("Date: " + (new Date()));
@@ -22,7 +22,7 @@
     if (!targ.isDirectory()) {
       ps.print("Content-length: " + targ.length());
       ps.write(EOL);
-      ps.print("Last Modified: " + (new Date(targ.lastModified())));
+      ps.print("Last Modified: " + new Date(targ.lastModified()));
       ps.write(EOL);
       String name=targ.getName();
       int ind=name.lastIndexOf('.');
