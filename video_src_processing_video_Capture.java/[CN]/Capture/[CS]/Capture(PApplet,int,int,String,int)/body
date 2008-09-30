@@ -1,64 +1,8 @@
 {
-  this.parent=parent;
-  this.name=name;
-  this.frameRate=frameRate;
-  try {
-    QTSession.open();
-  }
- catch (  QTException e) {
-    e.printStackTrace();
-    return;
-  }
-  try {
-    qdrect=new QDRect(requestWidth,requestHeight);
-    QDGraphics qdgraphics=null;
-    if (quicktime.util.EndianOrder.isNativeLittleEndian()) {
-      qdgraphics=new QDGraphics(QDConstants.k32BGRAPixelFormat,qdrect);
-    }
- else {
-      qdgraphics=new QDGraphics(QDGraphics.kDefaultPixelFormat,qdrect);
-    }
-    capture=new SequenceGrabber();
-    capture.setGWorld(qdgraphics,null);
-    channel=new SGVideoChannel(capture);
-    channel.setBounds(qdrect);
-    channel.setUsage(2);
-    capture.startPreview();
-    PixMap pixmap=qdgraphics.getPixMap();
-    raw=pixmap.getPixelData();
-    if ((name != null) && (name.length() > 0)) {
-      channel.setDevice(name);
-    }
-    dataRowBytes=raw.getRowBytes();
-    dataWidth=dataRowBytes / 4;
-    dataHeight=raw.getSize() / dataRowBytes;
-    if (dataWidth != requestWidth) {
-      crop=true;
-      cropX=0;
-      cropY=0;
-      cropW=requestWidth;
-      cropH=requestHeight;
-    }
-    super.init(requestWidth,requestHeight,RGB);
-    runner=new Thread(this);
-    runner.start();
-    parent.registerDispose(this);
-    try {
-      captureEventMethod=parent.getClass().getMethod("captureEvent",new Class[]{Capture.class});
-    }
- catch (    Exception e) {
+  SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      init(parent,requestWidth,requestHeight,name,frameRate);
     }
   }
- catch (  QTException qte) {
-    int errorCode=qte.errorCode();
-    if (errorCode == Errors.couldntGetRequiredComponent) {
-      parent.die("No capture could be found, " + "or the VDIG is not installed correctly.",qte);
-    }
- else {
-      parent.die("Error while setting up Capture",qte);
-    }
-  }
-catch (  Exception e) {
-    parent.die("Error while setting up Capture",e);
-  }
+);
 }

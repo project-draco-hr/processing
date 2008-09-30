@@ -1,67 +1,9 @@
 {
   super(1,1,RGB);
-  this.parent=parent;
-  try {
-    QTSession.open();
-  }
- catch (  QTException e) {
-    e.printStackTrace();
-    return;
-  }
-  try {
-    try {
-      File file=new File(parent.dataPath(filename));
-      if (file.exists()) {
-        movie=fromDataRef(new DataRef(new QTFile(file)));
-      }
-    }
- catch (    Exception e) {
-    }
-    if (movie == null) {
-      try {
-        File file=new File(filename);
-        if (file.exists()) {
-          movie=fromDataRef(new DataRef(new QTFile(file)));
-        }
-      }
- catch (      QTException e1) {
-      }
+  SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      init(parent,filename,ifps);
     }
   }
- catch (  SecurityException se) {
-  }
-  if (movie == null) {
-    byte data[]=parent.loadBytes(filename);
-    try {
-      movie=fromDataRef(new DataRef(new QTHandle(data)));
-    }
- catch (    QTException e) {
-      e.printStackTrace();
-    }
-  }
-  if (movie == null) {
-    parent.die("Could not find movie file " + filename,null);
-  }
-  try {
-    movie.preroll(0,1.0f);
-    while (movie.maxLoadedTimeInMovie() == 0) {
-      movie.task(100);
-    }
-    movie.setRate(1);
-    fps=ifps;
-    parent.registerDispose(this);
-    try {
-      movieEventMethod=parent.getClass().getMethod("movieEvent",new Class[]{Movie.class});
-    }
- catch (    Exception e) {
-    }
-    runner=new Thread(this);
-    runner.start();
-  }
- catch (  QTException qte) {
-    qte.printStackTrace();
-  }
-catch (  Exception e) {
-    e.printStackTrace();
-  }
+);
 }
