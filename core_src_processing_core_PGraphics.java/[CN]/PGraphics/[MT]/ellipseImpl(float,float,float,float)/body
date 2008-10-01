@@ -1,9 +1,9 @@
 {
-  float hradius=w / 2f;
-  float vradius=h / 2f;
-  float centerX=x1 + hradius;
-  float centerY=y1 + vradius;
-  int accuracy=(int)(4 + Math.sqrt(hradius + vradius) * 3);
+  float radiusH=w / 2;
+  float radiusV=h / 2;
+  float centerX=x + radiusH;
+  float centerY=y + radiusV;
+  int accuracy=(int)(4 + Math.sqrt(radiusH + radiusV) * 3);
   float inc=(float)SINCOS_LENGTH / accuracy;
   float val=0;
   if (fill) {
@@ -13,10 +13,10 @@
     normal(0,0,1);
     vertex(centerX,centerY);
     for (int i=0; i < accuracy; i++) {
-      vertex(centerX + cosLUT[(int)val] * hradius,centerY + sinLUT[(int)val] * vradius);
+      vertex(centerX + cosLUT[(int)val] * radiusH,centerY + sinLUT[(int)val] * radiusV);
       val+=inc;
     }
-    vertex(centerX + cosLUT[0] * hradius,centerY + sinLUT[0] * vradius);
+    vertex(centerX + cosLUT[0] * radiusH,centerY + sinLUT[0] * radiusV);
     endShape();
     stroke=savedStroke;
   }
@@ -26,7 +26,7 @@
     val=0;
     beginShape();
     for (int i=0; i < accuracy; i++) {
-      vertex(centerX + cosLUT[(int)val] * hradius,centerY + sinLUT[(int)val] * vradius);
+      vertex(centerX + cosLUT[(int)val] * radiusH,centerY + sinLUT[(int)val] * radiusV);
       val+=inc;
     }
     endShape(CLOSE);
