@@ -1,0 +1,98 @@
+{
+switch (shape) {
+case POINTS:
+{
+      int stop=shapeLast;
+      for (int i=shapeFirst; i < stop; i++) {
+        startStroke();
+        add_line(i,i);
+      }
+    }
+  break;
+case LINES:
+{
+  int first=lineCount;
+  int stop=shapeLast - 1;
+  if (shape != LINES)   startStroke();
+  for (int i=shapeFirst; i < stop; i+=2) {
+    if (shape == LINES)     startStroke();
+    add_line(i,i + 1);
+  }
+  if (mode == CLOSE) {
+    add_line(stop,lines[first][VERTEX1]);
+  }
+}
+break;
+case TRIANGLES:
+{
+for (int i=shapeFirst; i < shapeLast - 2; i+=3) {
+startStroke();
+add_line(i + 0,i + 1);
+add_line(i + 1,i + 2);
+add_line(i + 2,i + 0);
+}
+}
+break;
+case TRIANGLE_STRIP:
+{
+int stop=shapeLast - 1;
+startStroke();
+for (int i=shapeFirst; i < stop; i++) {
+add_line(i,i + 1);
+}
+stop=shapeLast - 2;
+for (int i=shapeFirst; i < stop; i++) {
+startStroke();
+add_line(i,i + 2);
+}
+}
+break;
+case TRIANGLE_FAN:
+{
+for (int i=shapeFirst + 1; i < shapeLast; i++) {
+startStroke();
+add_line(shapeFirst,i);
+}
+startStroke();
+for (int i=shapeFirst + 1; i < shapeLast - 1; i++) {
+add_line(i,i + 1);
+}
+add_line(shapeLast - 1,shapeFirst + 1);
+}
+break;
+case QUADS:
+{
+for (int i=shapeFirst; i < shapeLast; i+=4) {
+startStroke();
+add_line(i + 0,i + 1);
+add_line(i + 1,i + 2);
+add_line(i + 2,i + 3);
+add_line(i + 3,i + 0);
+}
+}
+break;
+case QUAD_STRIP:
+{
+for (int i=shapeFirst; i < shapeLast - 3; i+=2) {
+startStroke();
+add_line(i + 0,i + 2);
+add_line(i + 2,i + 3);
+add_line(i + 3,i + 1);
+add_line(i + 1,i + 0);
+}
+}
+break;
+case POLYGON:
+{
+int stop=shapeLast - 1;
+startStroke();
+for (int i=shapeFirst; i < stop; i++) {
+add_line(i,i + 1);
+}
+if (mode == CLOSE) {
+add_line(stop,shapeFirst);
+}
+}
+break;
+}
+}

@@ -7,14 +7,13 @@
   float wy=v[VY];
   float wz=v[VZ];
   float shine=v[SHINE];
-  float nx;
-  float ny;
-  float nz;
+  float nx=v[NX];
+  float ny=v[NY];
+  float nz=v[NZ];
   if (!normalIsWorld) {
-    toWorldNormal(v[NX],v[NY],v[NZ],worldNormal);
-    nx=worldNormal[X];
-    ny=worldNormal[Y];
-    nz=worldNormal[Z];
+    calcLightingNorm.set(nx,ny,nz);
+    modelviewInv.mult(calcLightingNorm,calcLightingWorldNorm);
+    calcLightingWorldNorm.normalize();
   }
  else {
     nx=v[NX];
@@ -41,7 +40,7 @@
     float spotTerm=1;
     if (lightType[i] == AMBIENT) {
       if (lightFalloffQuadratic[i] != 0 || lightFalloffLinear[i] != 0) {
-        float distSq=mag(lightPosition[i][0] - wx,lightPosition[i][1] - wy,lightPosition[i][2] - wz);
+        float distSq=mag(lightPosition[i].x - wx,lightPosition[i].y - wy,lightPosition[i].z - wz);
         denom+=lightFalloffQuadratic[i] * distSq + lightFalloffLinear[i] * (float)sqrt(distSq);
       }
       if (denom == 0)       denom=1;
@@ -54,9 +53,9 @@
       float lightDir_dot_li=0;
       float n_dot_li=0;
       if (lightType[i] == DIRECTIONAL) {
-        lix=-lightNormal[i][0];
-        liy=-lightNormal[i][1];
-        liz=-lightNormal[i][2];
+        lix=-lightNormal[i].x;
+        liy=-lightNormal[i].y;
+        liz=-lightNormal[i].z;
         denom=1;
         n_dot_li=(nx * lix + ny * liy + nz * liz);
         if (n_dot_li <= 0) {
@@ -64,9 +63,9 @@
         }
       }
  else {
-        lix=lightPosition[i][0] - wx;
-        liy=lightPosition[i][1] - wy;
-        liz=lightPosition[i][2] - wz;
+        lix=lightPosition[i].x - wx;
+        liy=lightPosition[i].y - wy;
+        liz=lightPosition[i].z - wz;
         float distSq=mag(lix,liy,liz);
         if (distSq != 0) {
           lix/=distSq;
@@ -78,7 +77,7 @@
           continue;
         }
         if (lightType[i] == SPOT) {
-          lightDir_dot_li=-(lightNormal[i][0] * lix + lightNormal[i][1] * liy + lightNormal[i][2] * liz);
+          lightDir_dot_li=-(lightNormal[i].x * lix + lightNormal[i].y * liy + lightNormal[i].z * liz);
           if (lightDir_dot_li <= lightSpotAngleCos[i]) {
             continue;
           }

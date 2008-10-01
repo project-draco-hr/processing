@@ -1,0 +1,61 @@
+{
+switch (shape) {
+case TRIANGLE_FAN:
+{
+      int stop=shapeLast - 1;
+      for (int i=shapeFirst + 1; i < stop; i++) {
+        add_triangle(shapeFirst,i,i + 1);
+      }
+    }
+  break;
+case TRIANGLES:
+{
+  int stop=shapeLast - 2;
+  for (int i=shapeFirst; i < stop; i+=3) {
+    if ((i % 2) == 0) {
+      add_triangle(i,i + 2,i + 1);
+    }
+ else {
+      add_triangle(i,i + 1,i + 2);
+    }
+  }
+}
+break;
+case TRIANGLE_STRIP:
+{
+int stop=shapeLast - 2;
+for (int i=shapeFirst; i < stop; i++) {
+if ((i % 2) == 0) {
+  add_triangle(i,i + 2,i + 1);
+}
+ else {
+  add_triangle(i,i + 1,i + 2);
+}
+}
+}
+break;
+case QUADS:
+{
+int stop=vertexCount - 3;
+for (int i=shapeFirst; i < stop; i+=4) {
+add_triangle(i,i + 1,i + 2);
+add_triangle(i,i + 2,i + 3);
+}
+}
+break;
+case QUAD_STRIP:
+{
+int stop=vertexCount - 3;
+for (int i=shapeFirst; i < stop; i+=2) {
+add_triangle(i + 0,i + 2,i + 1);
+add_triangle(i + 2,i + 3,i + 1);
+}
+}
+break;
+case POLYGON:
+{
+triangulate_polygon();
+}
+break;
+}
+}
