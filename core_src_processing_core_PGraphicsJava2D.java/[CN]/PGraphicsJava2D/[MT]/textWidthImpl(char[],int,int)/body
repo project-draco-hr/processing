@@ -1,7 +1,9 @@
 {
-  if (textFontNative == null) {
+  Font font=textFont.getFont();
+  if (font == null) {
     return super.textWidthImpl(buffer,start,stop);
   }
   int length=stop - start;
-  return textFontNativeMetrics.charsWidth(buffer,start,length);
+  FontMetrics metrics=g2.getFontMetrics(font);
+  return metrics.charsWidth(buffer,start,length);
 }

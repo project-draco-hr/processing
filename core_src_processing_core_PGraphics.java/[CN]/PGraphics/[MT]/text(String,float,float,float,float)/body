@@ -1,6 +1,6 @@
 {
   if (textFont == null) {
-    throw new RuntimeException("use textFont() before text()");
+    throwTextFontError("text");
   }
   if (textMode == SCREEN)   loadPixels();
   float hradius, vradius;
@@ -70,21 +70,21 @@ if (textAlignY == CENTER) {
 float lineHigh=textAscent() + textLeading * (lineCount - 1);
 float y=y1 + textAscent() + (boxHeight - lineHigh) / 2;
 for (int i=0; i < lineCount; i++) {
-textLineImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
+textLineAlignImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
 y+=textLeading;
 }
 }
  else if (textAlignY == BOTTOM) {
 float y=y2 - textDescent() - textLeading * (lineCount - 1);
 for (int i=0; i < lineCount; i++) {
-textLineImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
+textLineAlignImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
 y+=textLeading;
 }
 }
  else {
 float y=y1 + textAscent();
 for (int i=0; i < lineCount; i++) {
-textLineImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
+textLineAlignImpl(textBuffer,textBreakStart[i],textBreakStop[i],lineX,y);
 y+=textLeading;
 }
 }

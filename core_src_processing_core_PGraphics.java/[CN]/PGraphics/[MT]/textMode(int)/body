@@ -1,9 +1,24 @@
 {
   if ((mode == LEFT) || (mode == RIGHT)) {
-    throw new RuntimeException("textMode() is now textAlign() " + "in Processing beta");
+    showError("Since Processing beta, textMode() is now textAlign().");
+    return;
   }
-  if ((mode != SCREEN) && (mode != MODEL)) {
-    throw new RuntimeException("Only textMode(SCREEN) and textMode(MODEL) " + "are available with this renderer.");
+  if (textModeCheck(mode)) {
+    textMode=mode;
   }
-  textMode=mode;
+ else {
+    String modeStr=String.valueOf(mode);
+switch (mode) {
+case SCREEN:
+      modeStr="SCREEN";
+    break;
+case MODEL:
+  modeStr="MODEL";
+break;
+case SHAPE:
+modeStr="SHAPE";
+break;
+}
+showError("textMode(" + modeStr + ") is not supported by this renderer.");
+}
 }

@@ -1,6 +1,6 @@
 {
   if (textFont == null) {
-    throw new RuntimeException("use textFont() before text()");
+    throwTextFontError("text");
   }
   if (textMode == SCREEN)   loadPixels();
   int length=str.length();
@@ -27,14 +27,14 @@
   int index=0;
   while (index < length) {
     if (textBuffer[index] == '\n') {
-      textLineImpl(textBuffer,start,index,x,y);
+      textLineAlignImpl(textBuffer,start,index,x,y);
       start=index + 1;
       y+=textLeading;
     }
     index++;
   }
   if (start < length) {
-    textLineImpl(textBuffer,start,index,x,y);
+    textLineAlignImpl(textBuffer,start,index,x,y);
   }
   if (textMode == SCREEN)   updatePixels();
 }
