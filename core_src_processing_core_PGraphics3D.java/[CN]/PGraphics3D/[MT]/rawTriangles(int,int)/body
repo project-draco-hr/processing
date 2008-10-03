@@ -1,0 +1,62 @@
+{
+  raw.colorMode(RGB,1);
+  raw.noStroke();
+  raw.beginShape(TRIANGLES);
+  for (int i=start; i < stop; i++) {
+    float a[]=vertices[triangles[i][VERTEX1]];
+    float b[]=vertices[triangles[i][VERTEX2]];
+    float c[]=vertices[triangles[i][VERTEX3]];
+    float ar=clamp(triangleColors[i][0][TRI_DIFFUSE_R] + triangleColors[i][0][TRI_SPECULAR_R]);
+    float ag=clamp(triangleColors[i][0][TRI_DIFFUSE_G] + triangleColors[i][0][TRI_SPECULAR_G]);
+    float ab=clamp(triangleColors[i][0][TRI_DIFFUSE_B] + triangleColors[i][0][TRI_SPECULAR_B]);
+    float br=clamp(triangleColors[i][1][TRI_DIFFUSE_R] + triangleColors[i][1][TRI_SPECULAR_R]);
+    float bg=clamp(triangleColors[i][1][TRI_DIFFUSE_G] + triangleColors[i][1][TRI_SPECULAR_G]);
+    float bb=clamp(triangleColors[i][1][TRI_DIFFUSE_B] + triangleColors[i][1][TRI_SPECULAR_B]);
+    float cr=clamp(triangleColors[i][2][TRI_DIFFUSE_R] + triangleColors[i][2][TRI_SPECULAR_R]);
+    float cg=clamp(triangleColors[i][2][TRI_DIFFUSE_G] + triangleColors[i][2][TRI_SPECULAR_G]);
+    float cb=clamp(triangleColors[i][2][TRI_DIFFUSE_B] + triangleColors[i][2][TRI_SPECULAR_B]);
+    int tex=triangles[i][TEXTURE_INDEX];
+    PImage texImage=(tex > -1) ? textures[tex] : null;
+    if (texImage != null) {
+      if (raw.dimensional()) {
+        if ((a[VW] != 0) && (b[VW] != 0) && (c[VW] != 0)) {
+          raw.fill(ar,ag,ab,a[A]);
+          raw.vertex(a[VX] / a[VW],a[VY] / a[VW],a[VZ] / a[VW],a[U],a[V]);
+          raw.fill(br,bg,bb,b[A]);
+          raw.vertex(b[VX] / b[VW],b[VY] / b[VW],b[VZ] / b[VW],b[U],b[V]);
+          raw.fill(cr,cg,cb,c[A]);
+          raw.vertex(c[VX] / c[VW],c[VY] / c[VW],c[VZ] / c[VW],c[U],c[V]);
+        }
+      }
+ else {
+        raw.fill(ar,ag,ab,a[A]);
+        raw.vertex(a[TX],a[TY],a[U],a[V]);
+        raw.fill(br,bg,bb,b[A]);
+        raw.vertex(b[TX],b[TY],b[U],b[V]);
+        raw.fill(cr,cg,cb,c[A]);
+        raw.vertex(c[TX],c[TY],c[U],c[V]);
+      }
+    }
+ else {
+      if (raw.dimensional()) {
+        if ((a[VW] != 0) && (b[VW] != 0) && (c[VW] != 0)) {
+          raw.fill(ar,ag,ab,a[A]);
+          raw.vertex(a[VX] / a[VW],a[VY] / a[VW],a[VZ] / a[VW]);
+          raw.fill(br,bg,bb,b[A]);
+          raw.vertex(b[VX] / b[VW],b[VY] / b[VW],b[VZ] / b[VW]);
+          raw.fill(cr,cg,cb,c[A]);
+          raw.vertex(c[VX] / c[VW],c[VY] / c[VW],c[VZ] / c[VW]);
+        }
+      }
+ else {
+        raw.fill(ar,ag,ab,a[A]);
+        raw.vertex(a[TX],a[TY]);
+        raw.fill(br,bg,bb,b[A]);
+        raw.vertex(b[TX],b[TY]);
+        raw.fill(cr,cg,cb,c[A]);
+        raw.vertex(c[TX],c[TY]);
+      }
+    }
+  }
+  raw.endShape();
+}

@@ -3,24 +3,23 @@
     if (!lightingDependsOnVertexPosition && normalMode == NORMAL_MODE_SHAPE) {
       calcLightingContribution(shapeFirst,tempLightingContribution);
       for (int tri=0; tri < triangleCount; tri++) {
-        light_triangle(tri,tempLightingContribution);
+        lightTriangle(tri,tempLightingContribution);
       }
     }
  else {
       for (int tri=0; tri < triangleCount; tri++) {
-        light_triangle(tri);
+        lightTriangle(tri);
       }
     }
   }
  else {
-    int vIndex;
     for (int tri=0; tri < triangleCount; tri++) {
-      vIndex=triangles[tri][VERTEX1];
-      copy_prelit_vertex_color_to_triangle(tri,vIndex,0);
-      vIndex=triangles[tri][VERTEX2];
-      copy_prelit_vertex_color_to_triangle(tri,vIndex,1);
-      vIndex=triangles[tri][VERTEX3];
-      copy_prelit_vertex_color_to_triangle(tri,vIndex,2);
+      int index=triangles[tri][VERTEX1];
+      copyPrelitVertexColor(tri,index,0);
+      index=triangles[tri][VERTEX2];
+      copyPrelitVertexColor(tri,index,1);
+      index=triangles[tri][VERTEX3];
+      copyPrelitVertexColor(tri,index,2);
     }
   }
 }

@@ -1,9 +1,7 @@
 {
   if (vertexCount < 3)   return;
   pixels=parent.pixels;
-  noDepthTest=parent.hints[DISABLE_DEPTH_TEST];
   smooth=parent.smooth;
-  texture_smooth=true;
   width=smooth ? parent.width * SUBXRES : parent.width;
   height=smooth ? parent.height * SUBYRES : parent.height;
   width1=width - 1;
@@ -51,14 +49,14 @@
     while ((lefty <= y) && (remaining > 0)) {
       remaining--;
       int i=(lefti != 0) ? (lefti - 1) : (vertexCount - 1);
-      incrementalize_y(vertices[lefti],vertices[i],l,dl,y);
+      incrementalizeY(vertices[lefti],vertices[i],l,dl,y);
       lefty=(int)(vertices[i][Y] + 0.5f);
       lefti=i;
     }
     while ((righty <= y) && (remaining > 0)) {
       remaining--;
       int i=(righti != vertexCount - 1) ? (righti + 1) : 0;
-      incrementalize_y(vertices[righti],vertices[i],r,dr,y);
+      incrementalizeY(vertices[righti],vertices[i],r,dr,y);
       righty=(int)(vertices[i][Y] + 0.5f);
       righti=i;
     }

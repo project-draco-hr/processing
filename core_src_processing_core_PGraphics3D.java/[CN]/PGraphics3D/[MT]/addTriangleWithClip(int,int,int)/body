@@ -1,0 +1,69 @@
+{
+  boolean aClipped=false;
+  boolean bClipped=false;
+  int clippedCount=0;
+  cameraNear=-8;
+  if (vertices[a][VZ] > cameraNear) {
+    aClipped=true;
+    clippedCount++;
+  }
+  if (vertices[b][VZ] > cameraNear) {
+    bClipped=true;
+    clippedCount++;
+  }
+  if (vertices[c][VZ] > cameraNear) {
+    clippedCount++;
+  }
+  if (clippedCount == 0) {
+    addTriangleWithoutClip(a,b,c);
+    return;
+  }
+ else   if (clippedCount == 3) {
+    return;
+  }
+ else   if (clippedCount == 2) {
+    int ca, cb, cc, cd, ce;
+    if (!aClipped) {
+      ca=a;
+      cb=b;
+      cc=c;
+    }
+ else     if (!bClipped) {
+      ca=b;
+      cb=a;
+      cc=c;
+    }
+ else {
+      ca=c;
+      cb=b;
+      cc=a;
+    }
+    cd=interpolateClipVertex(ca,cb);
+    ce=interpolateClipVertex(ca,cc);
+    addTriangleWithoutClip(ca,cd,ce);
+    return;
+  }
+ else {
+    int ca, cb, cc, cd, ce;
+    if (aClipped) {
+      ca=c;
+      cb=b;
+      cc=a;
+    }
+ else     if (bClipped) {
+      ca=a;
+      cb=c;
+      cc=b;
+    }
+ else {
+      ca=a;
+      cb=b;
+      cc=c;
+    }
+    cd=interpolateClipVertex(ca,cc);
+    ce=interpolateClipVertex(cb,cc);
+    addTriangleWithoutClip(ca,cd,cb);
+    addTriangleWithoutClip(cb,cd,ce);
+    return;
+  }
+}
