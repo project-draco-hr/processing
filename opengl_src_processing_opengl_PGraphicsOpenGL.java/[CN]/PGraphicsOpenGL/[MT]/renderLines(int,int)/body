@@ -1,0 +1,22 @@
+{
+  report("render_lines in");
+  int i=0;
+  for (int j=0; j < pathCount; j++) {
+    float sw=vertices[lines[i][VERTEX1]][SW];
+    if (sw > 0) {
+      gl.glLineWidth(sw);
+      gl.glBegin(GL.GL_LINE_STRIP);
+      float a[]=vertices[lines[i][VERTEX1]];
+      gl.glColor4f(a[SR],a[SG],a[SB],a[SA]);
+      gl.glVertex3f(a[VX],a[VY],a[VZ]);
+      for (int k=0; k < pathLength[j]; k++) {
+        float b[]=vertices[lines[i][VERTEX2]];
+        gl.glColor4f(b[SR],b[SG],b[SB],b[SA]);
+        gl.glVertex3f(b[VX],b[VY],b[VZ]);
+        i++;
+      }
+      gl.glEnd();
+    }
+  }
+  report("render_lines out");
+}
