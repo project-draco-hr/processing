@@ -11,9 +11,10 @@
   float ny=v[NY];
   float nz=v[NZ];
   if (!normalIsWorld) {
-    calcLightingNorm.set(nx,ny,nz);
-    modelviewInv.mult(calcLightingNorm,calcLightingWorldNorm);
-    calcLightingWorldNorm.normalize();
+    toWorldNormal(v[NX],v[NY],v[NZ],worldNormal);
+    nx=worldNormal[X];
+    ny=worldNormal[Y];
+    nz=worldNormal[Z];
   }
  else {
     nx=v[NX];
@@ -41,7 +42,7 @@
     if (lightType[i] == AMBIENT) {
       if (lightFalloffQuadratic[i] != 0 || lightFalloffLinear[i] != 0) {
         float distSq=mag(lightPosition[i].x - wx,lightPosition[i].y - wy,lightPosition[i].z - wz);
-        denom+=lightFalloffQuadratic[i] * distSq + lightFalloffLinear[i] * (float)sqrt(distSq);
+        denom+=lightFalloffQuadratic[i] * distSq + lightFalloffLinear[i] * sqrt(distSq);
       }
       if (denom == 0)       denom=1;
       contribution[LIGHT_AMBIENT_R]+=lightDiffuse[i][0] / denom;

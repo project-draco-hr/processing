@@ -1,8 +1,8 @@
 {
-  if (vertex_order.length != vertices.length) {
+  if (vertexOrder.length != vertices.length) {
     int[] temp=new int[vertices.length];
-    PApplet.arraycopy(vertex_order,temp,vertexCount);
-    vertex_order=temp;
+    PApplet.arraycopy(vertexOrder,temp,vertexCount);
+    vertexOrder=temp;
   }
   int d1=X;
   int d2=Y;
@@ -42,13 +42,13 @@
   if (area > 0) {
     for (int i=shapeFirst; i < shapeLast; i++) {
       j=i - shapeFirst;
-      vertex_order[j]=i;
+      vertexOrder[j]=i;
     }
   }
  else {
     for (int i=shapeFirst; i < shapeLast; i++) {
       j=i - shapeFirst;
-      vertex_order[j]=(shapeLast - 1) - j;
+      vertexOrder[j]=(shapeLast - 1) - j;
     }
   }
   int vc=shapeLast - shapeFirst;
@@ -64,12 +64,12 @@
     if (vc <= v)     v=0;
     int w=v + 1;
     if (vc <= w)     w=0;
-    double Ax=-10 * vertices[vertex_order[u]][d1];
-    double Ay=10 * vertices[vertex_order[u]][d2];
-    double Bx=-10 * vertices[vertex_order[v]][d1];
-    double By=10 * vertices[vertex_order[v]][d2];
-    double Cx=-10 * vertices[vertex_order[w]][d1];
-    double Cy=10 * vertices[vertex_order[w]][d2];
+    double Ax=-10 * vertices[vertexOrder[u]][d1];
+    double Ay=10 * vertices[vertexOrder[u]][d2];
+    double Bx=-10 * vertices[vertexOrder[v]][d1];
+    double By=10 * vertices[vertexOrder[v]][d2];
+    double Cx=-10 * vertices[vertexOrder[w]][d1];
+    double Cy=10 * vertices[vertexOrder[w]][d2];
     if (EPSILON > (((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax)))) {
       continue;
     }
@@ -77,8 +77,8 @@
       if ((p == u) || (p == v) || (p == w)) {
         continue;
       }
-      double Px=-10 * vertices[vertex_order[p]][d1];
-      double Py=10 * vertices[vertex_order[p]][d2];
+      double Px=-10 * vertices[vertexOrder[p]][d1];
+      double Py=10 * vertices[vertexOrder[p]][d2];
       double ax=Cx - Bx;
       double ay=Cy - By;
       double bx=Ax - Cx;
@@ -99,10 +99,10 @@
       }
     }
     if (snip) {
-      addTriangle(vertex_order[u],vertex_order[v],vertex_order[w]);
+      addTriangle(vertexOrder[u],vertexOrder[v],vertexOrder[w]);
       m++;
       for (int s=v, t=v + 1; t < vc; s++, t++) {
-        vertex_order[s]=vertex_order[t];
+        vertexOrder[s]=vertexOrder[t];
       }
       vc--;
       count=2 * vc;
