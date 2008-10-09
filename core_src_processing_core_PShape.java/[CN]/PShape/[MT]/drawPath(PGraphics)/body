@@ -1,0 +1,50 @@
+{
+  g.beginShape();
+  for (int j=0; j < childCount; j++) {
+    if (j > 0)     g.breakShape();
+    int count=children[j].vertexCount;
+    float[][] vert=children[j].vertices;
+    int[] code=children[j].opcodes;
+    for (int i=0; i < count; i++) {
+      if (style) {
+        if (children[j].fill) {
+          g.fill(vert[i][R],vert[i][G],vert[i][B]);
+        }
+ else {
+          g.noFill();
+        }
+        if (children[j].stroke) {
+          g.stroke(vert[i][R],vert[i][G],vert[i][B]);
+        }
+ else {
+          g.noStroke();
+        }
+      }
+      g.edge(vert[i][EDGE] == 1);
+      if (code[i] == VERTEX) {
+        g.vertex(vert[i]);
+      }
+ else       if (code[i] == BEZIER_VERTEX) {
+        float z0=vert[i + 0][Z];
+        float z1=vert[i + 1][Z];
+        float z2=vert[i + 2][Z];
+        if (z0 == 0 && z1 == 0 && z2 == 0) {
+          g.bezierVertex(vert[i + 0][X],vert[i + 0][Y],z0,vert[i + 1][X],vert[i + 1][Y],z1,vert[i + 2][X],vert[i + 2][Y],z2);
+        }
+ else {
+          g.bezierVertex(vert[i + 0][X],vert[i + 0][Y],vert[i + 1][X],vert[i + 1][Y],vert[i + 2][X],vert[i + 2][Y]);
+        }
+      }
+ else       if (code[i] == CURVE_VERTEX) {
+        float z=vert[i][Z];
+        if (z == 0) {
+          g.curveVertex(vert[i][X],vert[i][Y]);
+        }
+ else {
+          g.curveVertex(vert[i][X],vert[i][Y],z);
+        }
+      }
+    }
+  }
+  g.endShape();
+}
