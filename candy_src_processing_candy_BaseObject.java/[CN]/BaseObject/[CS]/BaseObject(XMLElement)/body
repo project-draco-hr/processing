@@ -1,0 +1,26 @@
+{
+  this(null,svg);
+  if (!svg.getName().equals("svg")) {
+    throw new RuntimeException("root is not <svg>, it's <" + svg.getName() + ">");
+  }
+  String viewBoxStr=svg.getStringAttribute("viewBox");
+  if (viewBoxStr != null) {
+    int[] viewBox=PApplet.parseInt(PApplet.splitTokens(viewBoxStr));
+    width=viewBox[2];
+    height=viewBox[3];
+  }
+  String unitWidth=svg.getStringAttribute("width");
+  String unitHeight=svg.getStringAttribute("height");
+  if (unitWidth != null) {
+    width=parseUnitSize(unitWidth);
+    height=parseUnitSize(unitHeight);
+  }
+ else {
+    if ((width == 0) || (height == 0)) {
+      PGraphics.showWarning("The width and/or height is not " + "readable in the <svg> tag of this file.");
+      width=1;
+      height=1;
+    }
+  }
+  parseChildren(svg);
+}

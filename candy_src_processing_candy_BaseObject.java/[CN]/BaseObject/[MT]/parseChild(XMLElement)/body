@@ -1,31 +1,30 @@
 {
   String name=elem.getName();
+  BaseObject shape=new BaseObject(this,elem);
   if (name.equals("g")) {
-    return new BaseObject(this,elem);
   }
  else   if (name.equals("defs")) {
-    return new BaseObject(this,elem);
   }
  else   if (name.equals("line")) {
-    return new Line(this,elem);
+    shape.parseLine();
   }
  else   if (name.equals("circle")) {
-    return new Circle(this,elem);
+    shape.parseEllipse(true);
   }
  else   if (name.equals("ellipse")) {
-    return new Ellipse(this,elem);
+    shape.parseEllipse(false);
   }
  else   if (name.equals("rect")) {
-    return new Rect(this,elem);
+    shape.parseRect();
   }
  else   if (name.equals("polygon")) {
-    return new Poly(this,elem,true);
+    shape.parsePoly(true);
   }
  else   if (name.equals("polyline")) {
-    return new Poly(this,elem,false);
+    shape.parsePoly(false);
   }
  else   if (name.equals("path")) {
-    return new Path(this,elem);
+    shape.parsePath();
   }
  else   if (name.equals("radialGradient")) {
     return new RadialGradient(this,elem);
@@ -34,16 +33,16 @@
     return new LinearGradient(this,elem);
   }
  else   if (name.equals("text")) {
-    PGraphics.showWarning("Text is not currently handled, " + "convert text to outlines instead.");
+    PGraphics.showWarning("Text in SVG files is not currently supported, " + "convert text to outlines instead.");
   }
  else   if (name.equals("filter")) {
-    PApplet.println("Filters are not supported.");
+    PGraphics.showWarning("Filters are not supported.");
   }
  else   if (name.equals("mask")) {
-    PApplet.println("Masks are not supported.");
+    PGraphics.showWarning("Masks are not supported.");
   }
  else {
-    System.err.println("Ignoring  <" + name + "> tag.");
+    PGraphics.showWarning("Ignoring  <" + name + "> tag.");
   }
   return null;
 }
