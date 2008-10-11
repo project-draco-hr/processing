@@ -1,16 +1,13 @@
 {
-  if (name != null && name.equals(who)) {
+  if (name != null && name.equals(target)) {
     return this;
   }
   if (nameTable != null) {
-    for (    String n : nameTable.keySet()) {
-      if (n.equals(name)) {
-        return nameTable.get(name);
-      }
-    }
+    PShape found=nameTable.get(target);
+    if (found != null)     return found;
   }
   for (int i=0; i < childCount; i++) {
-    PShape found=children[i].getChild(name);
+    PShape found=children[i].getChild(target);
     if (found != null)     return found;
   }
   return null;
