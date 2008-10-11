@@ -66,7 +66,8 @@
   String LOADING_IMAGE="loading.gif";
   File loadingImage=new File(folder,LOADING_IMAGE);
   if (!loadingImage.exists()) {
-    loadingImage=new File("lib",LOADING_IMAGE);
+    File skeletonFolder=new File(Base.getContentFolder("lib"),"export");
+    loadingImage=new File(skeletonFolder,LOADING_IMAGE);
   }
   Base.copyFile(loadingImage,new File(appletFolder,LOADING_IMAGE));
   FileOutputStream zipOutputFile=new FileOutputStream(new File(appletFolder,name + ".jar"));
@@ -138,13 +139,14 @@
       }
     }
   }
-  String bagelJar="lib/core.jar";
+  File bagelJar=new File(Base.getContentFolder("lib"),"core.jar");
   if (separateJar) {
-    Base.copyFile(new File(bagelJar),new File(appletFolder,"core.jar"));
+    Base.copyFile(bagelJar,new File(appletFolder,"core.jar"));
     archives.append(",core.jar");
   }
  else {
-    packClassPathIntoZipFile(bagelJar,zos,zipFileContents);
+    String bagelJarPath=bagelJar.getAbsolutePath();
+    packClassPathIntoZipFile(bagelJarPath,zos,zipFileContents);
   }
   if (dataFolder.exists()) {
     String dataFiles[]=Base.listFiles(dataFolder,false);

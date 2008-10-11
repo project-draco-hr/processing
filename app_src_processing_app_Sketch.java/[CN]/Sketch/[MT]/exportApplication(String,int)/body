@@ -17,11 +17,12 @@
     return false;
   }
   File jarFolder=new File(destFolder,"lib");
+  File skeletonFolder=new File(Base.getContentFolder("lib"),"export");
   File dotAppFolder=null;
   if (exportPlatform == PConstants.MACOSX) {
     dotAppFolder=new File(destFolder,name + ".app");
     String APP_SKELETON="skeleton.app";
-    File dotAppSkeleton=new File("lib/export/" + APP_SKELETON);
+    File dotAppSkeleton=new File(skeletonFolder,APP_SKELETON);
     Base.copyDir(dotAppSkeleton,dotAppFolder);
     String stubName="Contents/MacOS/JavaApplicationStub";
     if (PApplet.platform == PConstants.WINDOWS) {
@@ -47,7 +48,7 @@
   }
   if (!jarFolder.exists())   jarFolder.mkdirs();
   if (exportPlatform == PConstants.WINDOWS) {
-    Base.copyFile(new File("lib/export/application.exe"),new File(destFolder,this.name + ".exe"));
+    Base.copyFile(new File(skeletonFolder,"application.exe"),new File(destFolder,this.name + ".exe"));
   }
   Vector jarListVector=new Vector();
   Hashtable zipFileContents=new Hashtable();
@@ -100,7 +101,8 @@
   zos.flush();
   zos.close();
   jarListVector.add(name + ".jar");
-  Base.copyFile(new File("lib/core.jar"),new File(jarFolder,"core.jar"));
+  File bagelJar=new File(Base.getContentFolder("lib"),"core.jar");
+  Base.copyFile(bagelJar,new File(jarFolder,"core.jar"));
   jarListVector.add("core.jar");
   for (  File libraryFolder : importedLibraries) {
     File exportSettings=new File(libraryFolder,"export.txt");
@@ -178,7 +180,7 @@
     String PLIST_TEMPLATE="template.plist";
     File plistTemplate=new File(folder,PLIST_TEMPLATE);
     if (!plistTemplate.exists()) {
-      plistTemplate=new File("lib/export/" + PLIST_TEMPLATE);
+      plistTemplate=new File(skeletonFolder,PLIST_TEMPLATE);
     }
     File plistFile=new File(dotAppFolder,"Contents/Info.plist");
     PrintWriter pw=PApplet.createWriter(plistFile);
