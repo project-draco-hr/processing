@@ -1,2 +1,79 @@
 {
+  if (vertexOrder == null || vertexOrder.length != vertices.length) {
+    vertexOrder=new int[vertices.length];
+  }
+  if (tpolygon == null) {
+    tpolygon=new PPolygon(this);
+  }
+  tpolygon.reset(3);
+  float area=0;
+  for (int p=vertexCount - 1, q=0; q < vertexCount; p=q++) {
+    area+=(vertices[q][X] * vertices[p][Y] - vertices[p][X] * vertices[q][Y]);
+  }
+  if (area == 0)   return;
+  float vfirst[]=vertices[0];
+  float vlast[]=vertices[vertexCount - 1];
+  if ((Math.abs(vfirst[X] - vlast[X]) < EPSILON) && (Math.abs(vfirst[Y] - vlast[Y]) < EPSILON) && (Math.abs(vfirst[Z] - vlast[Z]) < EPSILON)) {
+    vertexCount--;
+  }
+  for (int i=0; i < vertexCount; i++) {
+    vertexOrder[i]=(area > 0) ? i : (vertexCount - 1 - i);
+  }
+  int vc=vertexCount;
+  int count=2 * vc;
+  for (int m=0, v=vc - 1; vc > 2; ) {
+    boolean snip=true;
+    if (0 >= (count--)) {
+      break;
+    }
+    int u=v;
+    if (vc <= u)     u=0;
+    v=u + 1;
+    if (vc <= v)     v=0;
+    int w=v + 1;
+    if (vc <= w)     w=0;
+    double Ax=-10 * vertices[vertexOrder[u]][X];
+    double Ay=10 * vertices[vertexOrder[u]][Y];
+    double Bx=-10 * vertices[vertexOrder[v]][X];
+    double By=10 * vertices[vertexOrder[v]][Y];
+    double Cx=-10 * vertices[vertexOrder[w]][X];
+    double Cy=10 * vertices[vertexOrder[w]][Y];
+    if (EPSILON > (((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax)))) {
+      continue;
+    }
+    for (int p=0; p < vc; p++) {
+      if ((p == u) || (p == v) || (p == w)) {
+        continue;
+      }
+      double Px=-10 * vertices[vertexOrder[p]][X];
+      double Py=10 * vertices[vertexOrder[p]][Y];
+      double ax=Cx - Bx;
+      double ay=Cy - By;
+      double bx=Ax - Cx;
+      double by=Ay - Cy;
+      double cx=Bx - Ax;
+      double cy=By - Ay;
+      double apx=Px - Ax;
+      double apy=Py - Ay;
+      double bpx=Px - Bx;
+      double bpy=Py - By;
+      double cpx=Px - Cx;
+      double cpy=Py - Cy;
+      double aCROSSbp=ax * bpy - ay * bpx;
+      double cCROSSap=cx * apy - cy * apx;
+      double bCROSScp=bx * cpy - by * cpx;
+      if ((aCROSSbp >= 0.0) && (bCROSScp >= 0.0) && (cCROSSap >= 0.0)) {
+        snip=false;
+      }
+    }
+    if (snip) {
+      tpolygon.renderTriangle(vertices[vertexOrder[u]],vertices[vertexOrder[v]],vertices[vertexOrder[w]]);
+      m++;
+      for (int s=v, t=v + 1; t < vc; s++, t++) {
+        vertexOrder[s]=vertexOrder[t];
+      }
+      vc--;
+      count=2 * vc;
+    }
+  }
 }
