@@ -69,11 +69,14 @@
           }
         }
       }
-      codeLine=dotJavaLineIndex - sketch.getCode(codeIndex).getPreprocOffset();
+      if (codeLine != -1) {
+        codeLine=dotJavaLineIndex - sketch.getCode(codeIndex).getPreprocOffset();
+      }
       exception=new RunnerException(errorMessage,codeIndex,codeLine,-1,false);
       if (errorMessage.startsWith("The import ") && errorMessage.endsWith("cannot be resolved")) {
         String what=errorMessage.substring("The import ".length());
         what=what.substring(0,what.indexOf(' '));
+        System.err.println("Starting with release 0149, libraries must be " + "installed in a folder named 'libraries' " + "inside the 'sketchbook' folder.");
         exception.setMessage("The package " + "\u201C" + what + "\u201D"+ " does not exist. "+ "You might be missing a library.");
       }
  else       if (errorMessage.endsWith("cannot be resolved to a type")) {
