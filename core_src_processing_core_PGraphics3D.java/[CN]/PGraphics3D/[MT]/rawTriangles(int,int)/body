@@ -18,7 +18,7 @@
     int tex=triangles[i][TEXTURE_INDEX];
     PImage texImage=(tex > -1) ? textures[tex] : null;
     if (texImage != null) {
-      if (raw.dimensional()) {
+      if (raw.is3D()) {
         if ((a[VW] != 0) && (b[VW] != 0) && (c[VW] != 0)) {
           raw.fill(ar,ag,ab,a[A]);
           raw.vertex(a[VX] / a[VW],a[VY] / a[VW],a[VZ] / a[VW],a[U],a[V]);
@@ -28,7 +28,7 @@
           raw.vertex(c[VX] / c[VW],c[VY] / c[VW],c[VZ] / c[VW],c[U],c[V]);
         }
       }
- else {
+ else       if (raw.is2D()) {
         raw.fill(ar,ag,ab,a[A]);
         raw.vertex(a[TX],a[TY],a[U],a[V]);
         raw.fill(br,bg,bb,b[A]);
@@ -38,7 +38,7 @@
       }
     }
  else {
-      if (raw.dimensional()) {
+      if (raw.is3D()) {
         if ((a[VW] != 0) && (b[VW] != 0) && (c[VW] != 0)) {
           raw.fill(ar,ag,ab,a[A]);
           raw.vertex(a[VX] / a[VW],a[VY] / a[VW],a[VZ] / a[VW]);
@@ -48,7 +48,7 @@
           raw.vertex(c[VX] / c[VW],c[VY] / c[VW],c[VZ] / c[VW]);
         }
       }
- else {
+ else       if (raw.is2D()) {
         raw.fill(ar,ag,ab,a[A]);
         raw.vertex(a[TX],a[TY]);
         raw.fill(br,bg,bb,b[A]);
