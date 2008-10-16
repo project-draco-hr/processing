@@ -29,4 +29,17 @@
     }
     yindex-=width * 2;
   }
+  if ((height % 2) == 1) {
+    index=(height / 2) * width;
+    if (BIG_ENDIAN) {
+      for (int x=0; x < width; x++) {
+        pixels[index]=0xff000000 | ((pixels[index] >> 8) & 0x00ffffff);
+      }
+    }
+ else {
+      for (int x=0; x < width; x++) {
+        pixels[index]=0xff000000 | ((pixels[index] << 16) & 0xff0000) | (pixels[index] & 0xff00)| ((pixels[index] >> 16) & 0xff);
+      }
+    }
+  }
 }
