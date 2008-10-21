@@ -28,10 +28,14 @@ catch (  VMStartException exc) {
     Process p=exc.process();
     String[] errorStrings=PApplet.loadStrings(p.getErrorStream());
     PApplet.loadStrings(p.getInputStream());
-    PApplet.println(errorStrings);
     if (errorStrings != null && errorStrings.length > 1) {
       if (errorStrings[0].indexOf("Invalid maximum heap size") != -1) {
         Base.showWarning("Way Too High","Please lower the value for \u201Cmaximum available memory\u201D in the\n" + "Preferences window. For more information, read Help \u2192 Troubleshooting.",exc);
+      }
+ else {
+        PApplet.println(errorStrings);
+        System.err.println("Using startup command:");
+        PApplet.println(arguments);
       }
     }
  else {
