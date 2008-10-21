@@ -1,87 +1,59 @@
 {
   if (properties.hasAttribute("opacity")) {
-    opacity=properties.getFloatAttribute("opacity");
+    String opacityText=properties.getStringAttribute("opacity");
+    setOpacity(opacityText);
   }
-  int opacityMask=((int)(opacity * 255)) << 24;
   if (properties.hasAttribute("stroke")) {
     String strokeText=properties.getStringAttribute("stroke");
-    if (strokeText.equals("none")) {
-      stroke=false;
-    }
- else     if (strokeText.startsWith("#")) {
-      stroke=true;
-      strokeColor=opacityMask | (Integer.parseInt(strokeText.substring(1),16)) & 0xFFFFFF;
-    }
- else     if (strokeText.startsWith("rgb")) {
-      stroke=true;
-      strokeColor=opacityMask | parseRGB(strokeText);
-    }
- else     if (strokeText.startsWith("url(#")) {
-      strokeName=strokeText.substring(5,strokeText.length() - 1);
-      Object strokeObject=findChild(strokeName);
-      if (strokeObject instanceof Gradient) {
-        strokeGradient=(Gradient)strokeObject;
-        strokeGradientPaint=calcGradientPaint(strokeGradient);
-      }
- else {
-        System.err.println("url " + strokeName + " refers to unexpected data");
-      }
-    }
+    setStroke(strokeText);
   }
   if (properties.hasAttribute("stroke-width")) {
-    strokeWeight=properties.getFloatAttribute("stroke-width",strokeWeight);
+    String lineweight=properties.getStringAttribute("stroke-width");
+    setStrokeWeight(lineweight);
   }
   if (properties.hasAttribute("stroke-linejoin")) {
     String linejoin=properties.getStringAttribute("stroke-linejoin");
-    if (linejoin.equals("inherit")) {
-    }
- else     if (linejoin.equals("miter")) {
-      strokeJoin=PConstants.MITER;
-    }
- else     if (linejoin.equals("round")) {
-      strokeJoin=PConstants.ROUND;
-    }
- else     if (linejoin.equals("bevel")) {
-      strokeJoin=PConstants.BEVEL;
-    }
+    setStrokeJoin(linejoin);
   }
   if (properties.hasAttribute("stroke-linecap")) {
     String linecap=properties.getStringAttribute("stroke-linecap");
-    if (linecap.equals("inherit")) {
-    }
- else     if (linecap.equals("butt")) {
-      strokeCap=PConstants.SQUARE;
-    }
- else     if (linecap.equals("round")) {
-      strokeCap=PConstants.ROUND;
-    }
- else     if (linecap.equals("square")) {
-      strokeCap=PConstants.PROJECT;
-    }
+    setStrokeCap(linecap);
   }
   if (properties.hasAttribute("fill")) {
     String fillText=properties.getStringAttribute("fill");
-    if (fillText.equals("none")) {
-      fill=false;
-    }
- else     if (fillText.startsWith("#")) {
-      fill=true;
-      fillColor=opacityMask | (Integer.parseInt(fillText.substring(1),16)) & 0xFFFFFF;
-    }
- else     if (fillText.startsWith("rgb")) {
-      fill=true;
-      fillColor=opacityMask | parseRGB(fillText);
-    }
- else     if (fillText.startsWith("url(#")) {
-      fillName=fillText.substring(5,fillText.length() - 1);
-      Object fillObject=findChild(fillName);
-      if (fillObject instanceof Gradient) {
-        fill=true;
-        fillGradient=(Gradient)fillObject;
-        fillGradientPaint=calcGradientPaint(fillGradient);
+    setFill(fillText);
+  }
+  if (properties.hasAttribute("style")) {
+    String styleText=properties.getStringAttribute("style");
+    String[] styleTokens=PApplet.splitTokens(styleText,";");
+    for (int i=0; i < styleTokens.length; i++) {
+      String[] tokens=PApplet.splitTokens(styleTokens[i],":");
+      tokens[0]=PApplet.trim(tokens[0]);
+      if (tokens[0].equals("fill")) {
+        setFill(tokens[1]);
+      }
+ else       if (tokens[0].equals("fill-opacity")) {
+        setFillOpacity(tokens[1]);
+      }
+ else       if (tokens[0].equals("stroke")) {
+        setStroke(tokens[1]);
+      }
+ else       if (tokens[0].equals("stroke-width")) {
+        setStrokeWeight(tokens[1]);
+      }
+ else       if (tokens[0].equals("stroke-linecap")) {
+        setStrokeCap(tokens[1]);
+      }
+ else       if (tokens[0].equals("stroke-linejoin")) {
+        setStrokeJoin(tokens[1]);
+      }
+ else       if (tokens[0].equals("stroke-opacity")) {
+        setStrokeOpacity(tokens[1]);
+      }
+ else       if (tokens[0].equals("opacity")) {
+        setOpacity(tokens[1]);
       }
  else {
-        System.err.println("url " + fillName + " refers to unexpected data");
       }
     }
   }
