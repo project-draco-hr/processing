@@ -1,14 +1,16 @@
 {
-  String qtsystemPath=Registry.getStringValue(REGISTRY_ROOT_KEY.LOCAL_MACHINE,"Software\\Apple Computer, Inc.\\QuickTime","QTSysDir");
-  if (qtsystemPath == null) {
-    System.err.println("QuickTime not installed");
-  }
- else {
-    File qtjavaZip=new File(qtsystemPath,"QTJava.zip");
-    if (qtjavaZip.exists()) {
-      String qtjavaZipPath=qtjavaZip.getAbsolutePath();
-      String cp=System.getProperty("java.class.path");
-      System.setProperty("java.class.path",cp + File.pathSeparator + qtjavaZipPath);
+  try {
+    String qtsystemPath=Registry.getStringValue(REGISTRY_ROOT_KEY.LOCAL_MACHINE,"Software\\Apple Computer, Inc.\\QuickTime","QTSysDir");
+    if (qtsystemPath != null) {
+      File qtjavaZip=new File(qtsystemPath,"QTJava.zip");
+      if (qtjavaZip.exists()) {
+        String qtjavaZipPath=qtjavaZip.getAbsolutePath();
+        String cp=System.getProperty("java.class.path");
+        System.setProperty("java.class.path",cp + File.pathSeparator + qtjavaZipPath);
+      }
     }
+  }
+ catch (  UnsupportedEncodingException e) {
+    e.printStackTrace();
   }
 }
