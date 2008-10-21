@@ -8,16 +8,21 @@
  else {
     fd.setDirectory(folder.getParent());
   }
-  fd.setFile(folder.getName());
+  String oldName=folder.getName();
+  fd.setFile(oldName);
   fd.setVisible(true);
   newParentDir=fd.getDirectory();
   newName=fd.getFile();
   if (newName == null)   return false;
   newName=Sketch.checkName(newName);
-  File codeAlready=new File(folder,newName + ".pde");
-  if (codeAlready.exists() && (!newName.equals(name))) {
-    Base.showMessage("Nope","You can't save the sketch as \"" + newName + "\"\n"+ "because the sketch already has a tab with that name.");
+  if (newName.equals(oldName)) {
     return false;
+  }
+  for (  SketchCode c : code) {
+    if (newName.equals(c.getPrettyName())) {
+      Base.showMessage("Nope","You can't save the sketch as \"" + newName + "\"\n"+ "because the sketch already has a tab with that name.");
+      return false;
+    }
   }
   File hiddenAlready=new File(folder,newName + ".pde.x");
   if (hiddenAlready.exists()) {

@@ -33,16 +33,13 @@
   if (!shortName.equals(sanitaryName)) {
     newName=sanitaryName + "." + newExtension;
   }
+  for (  SketchCode c : code) {
+    if (sanitaryName.equals(c.getPrettyName())) {
+      Base.showMessage("Nope","A file named \"" + c.getFileName() + "\" already exists\n"+ "in \""+ folder.getAbsolutePath()+ "\"");
+      return;
+    }
+  }
   File newFile=new File(folder,newName);
-  if (newFile.exists()) {
-    Base.showMessage("Nope","A file named \"" + newFile + "\" already exists\n"+ "in \""+ folder.getAbsolutePath()+ "\"");
-    return;
-  }
-  File newFileHidden=new File(folder,newName + ".x");
-  if (newFileHidden.exists()) {
-    Base.showMessage("No Way","A hidden tab with the same name already exists.\n" + "Use \"Unhide\" to bring it back.");
-    return;
-  }
   if (renamingCode) {
     if (currentIndex == 0) {
       String folderName=newName.substring(0,newName.indexOf('.'));
