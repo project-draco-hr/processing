@@ -78,6 +78,12 @@
         what=what.substring(0,what.indexOf(' '));
         System.err.println("Starting with release 0149, libraries must be " + "installed in a folder named 'libraries' " + "inside the 'sketchbook' folder.");
         exception.setMessage("The package " + "\u201C" + what + "\u201D"+ " does not exist. "+ "You might be missing a library.");
+        File sketchbookLibraries=Base.getSketchbookLibrariesFolder();
+        if (!sketchbookLibraries.exists()) {
+          if (sketchbookLibraries.mkdirs()) {
+            Base.openFolder(sketchbookLibraries);
+          }
+        }
       }
  else       if (errorMessage.endsWith("cannot be resolved to a type")) {
         String what=errorMessage.substring(0,errorMessage.indexOf(' '));
