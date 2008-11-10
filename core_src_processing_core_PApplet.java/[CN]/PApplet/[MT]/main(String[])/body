@@ -92,10 +92,12 @@
     applet.sketchPath=folder;
     applet.args=PApplet.subset(args,1);
     applet.external=external;
+    Rectangle fullScreenRect=null;
     if (present) {
       frame.setUndecorated(true);
       frame.setBackground(backgroundColor);
       displayDevice.setFullScreenWindow(frame);
+      fullScreenRect=frame.getBounds();
     }
     frame.setLayout(null);
     frame.add(applet);
@@ -109,8 +111,8 @@
       }
     }
     if (present) {
-      Dimension fullscreen=frame.getSize();
-      applet.setBounds((fullscreen.width - applet.width) / 2,(fullscreen.height - applet.height) / 2,applet.width,applet.height);
+      frame.setBounds(fullScreenRect);
+      applet.setBounds((fullScreenRect.width - applet.width) / 2,(fullScreenRect.height - applet.height) / 2,applet.width,applet.height);
       if (!hideStop) {
         Label label=new Label("stop");
         label.setForeground(stopColor);
@@ -124,7 +126,7 @@
         Dimension labelSize=label.getPreferredSize();
         labelSize=new Dimension(100,labelSize.height);
         label.setSize(labelSize);
-        label.setLocation(20,fullscreen.height - labelSize.height - 20);
+        label.setLocation(20,fullScreenRect.height - labelSize.height - 20);
       }
       if (external) {
         applet.setupExternalMessages();
