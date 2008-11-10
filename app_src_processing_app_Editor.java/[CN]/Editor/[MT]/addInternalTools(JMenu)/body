@@ -1,54 +1,12 @@
 {
   JMenuItem item;
-  item=newJMenuItem("Auto Format",'T');
-  item.addActionListener(new ActionListener(){
-    synchronized public void actionPerformed(    ActionEvent e){
-      new AutoFormat(Editor.this).show();
-    }
-  }
-);
+  item=createToolMenuItem("processing.app.tools.AutoFormat");
+  int modifiers=Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+  item.setAccelerator(KeyStroke.getKeyStroke('T',modifiers));
   menu.add(item);
-  item=new JMenuItem("Create Font...");
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      new CreateFont(Editor.this).setVisible(true);
-    }
-  }
-);
-  menu.add(item);
-  item=new JMenuItem("Color Selector");
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      SwingUtilities.invokeLater(new Runnable(){
-        public void run(){
-          new ColorSelector(Editor.this).show();
-        }
-      }
-);
-    }
-  }
-);
-  menu.add(item);
-  item=new JMenuItem("Archive Sketch");
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      new Archiver(Editor.this).show();
-    }
-  }
-);
-  menu.add(item);
-  item=new JMenuItem("Fix Encoding & Reload");
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      SwingUtilities.invokeLater(new Runnable(){
-        public void run(){
-          new FixEncoding(Editor.this).show();
-        }
-      }
-);
-    }
-  }
-);
-  menu.add(item);
+  menu.add(createToolMenuItem("processing.app.tools.CreateFont"));
+  menu.add(createToolMenuItem("processing.app.tools.ColorSelector"));
+  menu.add(createToolMenuItem("processing.app.tools.Archiver"));
+  menu.add(createToolMenuItem("processing.app.tools.FixEncoding"));
   return menu;
 }

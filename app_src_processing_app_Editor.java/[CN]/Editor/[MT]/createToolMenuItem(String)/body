@@ -1,0 +1,19 @@
+{
+  try {
+    Class toolClass=Class.forName(className);
+    final Tool tool=(Tool)toolClass.newInstance();
+    JMenuItem item=new JMenuItem(tool.getMenuTitle());
+    tool.init(Editor.this);
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        SwingUtilities.invokeLater(tool);
+      }
+    }
+);
+    return item;
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    return null;
+  }
+}
