@@ -1,10 +1,15 @@
 {
-  if (untransformed() && !fillAlpha) {
-    int x1=(int)x1f;
-    int y1=(int)y1f;
-    int x2=(int)x2f;
-    int y2=(int)y2f;
-    rectImplFillUntranSolidRGB(x1,y1,x2,y2);
+  if (ctm.isWarped()) {
+    super.rectImpl(x1f,y1f,x2f,y2f);
+  }
+ else {
+    int x1=(int)(x1f + ctm.m02);
+    int y1=(int)(y1f + ctm.m12);
+    int x2=(int)(x2f + ctm.m02);
+    int y2=(int)(y2f + ctm.m12);
+    if (fill) {
+      rect_fill_simple(x1,y1,x2,y2);
+    }
     if (stroke) {
       if (strokeWeight == 1) {
         thin_flat_line(x1,y1,x2,y1);
@@ -13,19 +18,11 @@
         thin_flat_line(x1,y2,x1,y1);
       }
  else {
-        thick_flat_line(x1,y1,fillR,fillG,fillB,fillA,x2,y1,fillR,fillG,fillB,fillA);
-        thick_flat_line(x2,y1,fillR,fillG,fillB,fillA,x2,y2,fillR,fillG,fillB,fillA);
-        thick_flat_line(x2,y2,fillR,fillG,fillB,fillA,x1,y2,fillR,fillG,fillB,fillA);
-        thick_flat_line(x1,y2,fillR,fillG,fillB,fillA,x1,y1,fillR,fillG,fillB,fillA);
+        thick_flat_line(x1,y1,strokeR,strokeG,strokeB,strokeA,x2,y1,strokeR,strokeG,strokeB,strokeA);
+        thick_flat_line(x2,y1,strokeR,strokeG,strokeB,strokeA,x2,y2,strokeR,strokeG,strokeB,strokeA);
+        thick_flat_line(x2,y2,strokeR,strokeG,strokeB,strokeA,x1,y2,strokeR,strokeG,strokeB,strokeA);
+        thick_flat_line(x1,y2,strokeR,strokeG,strokeB,strokeA,x1,y1,strokeR,strokeG,strokeB,strokeA);
       }
     }
-  }
- else {
-    beginShape(QUADS);
-    vertex(x1f,y1f);
-    vertex(x2f,y1f);
-    vertex(x2f,y2f);
-    vertex(x1f,y2f);
-    endShape();
   }
 }

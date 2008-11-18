@@ -1,0 +1,39 @@
+{
+  if (y2 < y1) {
+    int temp=y1;
+    y1=y2;
+    y2=temp;
+  }
+  if (x2 < x1) {
+    int temp=x1;
+    x1=x2;
+    x2=temp;
+  }
+  if ((x1 > width1) || (x2 < 0) || (y1 > height1)|| (y2 < 0))   return;
+  if (x1 < 0)   x1=0;
+  if (x2 > width)   x2=width;
+  if (y1 < 0)   y1=0;
+  if (y2 > height)   y2=height;
+  int ww=x2 - x1;
+  if (fillAlpha) {
+    for (int y=y1; y < y2; y++) {
+      int index=y * width + x1;
+      for (int x=0; x < ww; x++) {
+        pixels[index]=_blendFill(pixels[index]);
+        index++;
+      }
+    }
+  }
+ else {
+    int hh=y2 - y1;
+    int index=y1 * width + x1;
+    int rowIndex=index;
+    for (int i=0; i < ww; i++) {
+      pixels[index + i]=fillColor;
+    }
+    for (int y=0; y < hh; y++) {
+      System.arraycopy(pixels,rowIndex,pixels,index,ww);
+      index+=width;
+    }
+  }
+}

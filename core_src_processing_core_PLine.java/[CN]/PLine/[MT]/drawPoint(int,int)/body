@@ -1,8 +1,13 @@
 {
   float iz=m_z0;
   int offset=y0 * SCREEN_WIDTH + x0;
-  if (iz <= m_zbuffer[offset]) {
+  if (m_zbuffer == null) {
     m_pixels[offset]=m_stroke;
-    m_zbuffer[offset]=iz;
+  }
+ else {
+    if (iz <= m_zbuffer[offset]) {
+      m_pixels[offset]=m_stroke;
+      m_zbuffer[offset]=iz;
+    }
   }
 }
