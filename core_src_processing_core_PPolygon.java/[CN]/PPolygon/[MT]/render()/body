@@ -22,20 +22,22 @@
   }
   if (smooth) {
     for (int i=0; i < vertexCount; i++) {
-      vertices[i][X]*=SUBXRES;
-      vertices[i][Y]*=SUBYRES;
+      vertices[i][TX]*=SUBXRES;
+      vertices[i][TY]*=SUBYRES;
     }
     firstModY=-1;
   }
   int topi=0;
-  float ymin=vertices[0][Y];
-  float ymax=vertices[0][Y];
+  float ymin=vertices[0][TY];
+  float ymax=vertices[0][TY];
   for (int i=1; i < vertexCount; i++) {
-    if (vertices[i][Y] < ymin) {
-      ymin=vertices[i][Y];
+    if (vertices[i][TY] < ymin) {
+      ymin=vertices[i][TY];
       topi=i;
     }
-    if (vertices[i][Y] > ymax)     ymax=vertices[i][Y];
+    if (vertices[i][TY] > ymax) {
+      ymax=vertices[i][TY];
+    }
   }
   lastY=(int)(ymax - 0.5f);
   int lefti=topi;
@@ -50,19 +52,19 @@
       remaining--;
       int i=(lefti != 0) ? (lefti - 1) : (vertexCount - 1);
       incrementalizeY(vertices[lefti],vertices[i],l,dl,y);
-      lefty=(int)(vertices[i][Y] + 0.5f);
+      lefty=(int)(vertices[i][TY] + 0.5f);
       lefti=i;
     }
     while ((righty <= y) && (remaining > 0)) {
       remaining--;
       int i=(righti != vertexCount - 1) ? (righti + 1) : 0;
       incrementalizeY(vertices[righti],vertices[i],r,dr,y);
-      righty=(int)(vertices[i][Y] + 0.5f);
+      righty=(int)(vertices[i][TY] + 0.5f);
       righti=i;
     }
     while (y < lefty && y < righty) {
       if ((y >= 0) && (y < height)) {
-        if (l[X] <= r[X])         scanline(y,l,r);
+        if (l[TX] <= r[TX])         scanline(y,l,r);
  else         scanline(y,r,l);
       }
       y++;
