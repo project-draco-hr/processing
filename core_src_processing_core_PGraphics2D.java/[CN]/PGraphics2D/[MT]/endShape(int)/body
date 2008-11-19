@@ -35,6 +35,45 @@ if (stroke) {
   draw_lines(vertices,vertexCount - 1,1,increment,0);
 }
 break;
+case TRIANGLE_FAN:
+if (fill) {
+fpolygon.vertexCount=3;
+for (int i=1; i < vertexCount - 1; i++) {
+fpolygon.vertices[2][R]=vertices[0][R];
+fpolygon.vertices[2][G]=vertices[0][G];
+fpolygon.vertices[2][B]=vertices[0][B];
+fpolygon.vertices[2][A]=vertices[0][A];
+fpolygon.vertices[2][TX]=vertices[0][TX];
+fpolygon.vertices[2][TY]=vertices[0][TY];
+if (textureImage != null) {
+  fpolygon.vertices[2][U]=vertices[0][U];
+  fpolygon.vertices[2][V]=vertices[0][V];
+}
+for (int j=0; j < 2; j++) {
+  fpolygon.vertices[j][R]=vertices[i + j][R];
+  fpolygon.vertices[j][G]=vertices[i + j][G];
+  fpolygon.vertices[j][B]=vertices[i + j][B];
+  fpolygon.vertices[j][A]=vertices[i + j][A];
+  fpolygon.vertices[j][TX]=vertices[i + j][TX];
+  fpolygon.vertices[j][TY]=vertices[i + j][TY];
+  if (textureImage != null) {
+    fpolygon.vertices[j][U]=vertices[i + j][U];
+    fpolygon.vertices[j][V]=vertices[i + j][V];
+  }
+}
+fpolygon.render();
+}
+}
+if (stroke) {
+for (int i=1; i < vertexCount; i++) {
+draw_line(vertices[0],vertices[i]);
+}
+for (int i=1; i < vertexCount - 1; i++) {
+draw_line(vertices[i],vertices[i + 1]);
+}
+draw_line(vertices[vertexCount - 1],vertices[1]);
+}
+break;
 case TRIANGLES:
 case TRIANGLE_STRIP:
 increment=(shape == TRIANGLES) ? 3 : 1;
@@ -50,8 +89,8 @@ fpolygon.vertices[j][TX]=vertices[i + j][TX];
 fpolygon.vertices[j][TY]=vertices[i + j][TY];
 fpolygon.vertices[j][TZ]=vertices[i + j][TZ];
 if (textureImage != null) {
-  fpolygon.vertices[j][U]=vertices[i + j][U];
-  fpolygon.vertices[j][V]=vertices[i + j][V];
+fpolygon.vertices[j][U]=vertices[i + j][U];
+fpolygon.vertices[j][V]=vertices[i + j][V];
 }
 }
 fpolygon.render();
