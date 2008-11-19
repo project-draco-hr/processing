@@ -45,15 +45,15 @@
   int tr, tg, tb, ta;
   for (int x=lx; x <= rx; x++) {
     if (interpUV) {
-      int tu=(int)sp[U];
-      int tv=(int)sp[V];
+      int tu=(int)(sp[U] * twidth);
+      int tv=(int)(sp[V] * theight);
       if (tu > twidth1)       tu=twidth1;
       if (tv > theight1)       tv=theight1;
       if (tu < 0)       tu=0;
       if (tv < 0)       tv=0;
       int txy=tv * twidth + tu;
-      int tuf1=(int)(255f * (sp[U] - (float)tu));
-      int tvf1=(int)(255f * (sp[V] - (float)tv));
+      int tuf1=(int)(255f * (sp[U] * twidth - (float)tu));
+      int tvf1=(int)(255f * (sp[V] * theight - (float)tv));
       int tuf=255 - tuf1;
       int tvf=255 - tvf1;
       int pixel00=tpixels[txy];
