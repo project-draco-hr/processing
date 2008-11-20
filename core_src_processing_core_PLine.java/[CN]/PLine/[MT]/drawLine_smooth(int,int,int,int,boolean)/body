@@ -3,6 +3,7 @@
   int offset=0;
   int temp;
   int end;
+  float iz=m_z0;
   int ir=(int)m_r0;
   int ig=(int)m_g0;
   int ib=(int)m_b0;
@@ -16,15 +17,18 @@
       int pr=ir & 0xFF0000;
       int pg=(ig >> 8) & 0xFF00;
       int pb=(ib >> 16);
-      int alpha=(((~xi >> 8) & 0xFF) * (ia >> 16)) >> 8;
-      int r0=m_pixels[offset];
-      int g0=r0 & 0xFF00;
-      int b0=r0 & 0xFF;
-      r0&=0xFF0000;
-      r0=r0 + (((pr - r0) * alpha) >> 8);
-      g0=g0 + (((pg - g0) * alpha) >> 8);
-      b0=b0 + (((pb - b0) * alpha) >> 8);
-      m_pixels[offset]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+      if ((m_zbuffer == null) || (iz <= m_zbuffer[offset])) {
+        int alpha=(((~xi >> 8) & 0xFF) * (ia >> 16)) >> 8;
+        int r0=m_pixels[offset];
+        int g0=r0 & 0xFF00;
+        int b0=r0 & 0xFF;
+        r0&=0xFF0000;
+        r0=r0 + (((pr - r0) * alpha) >> 8);
+        g0=g0 + (((pg - g0) * alpha) >> 8);
+        b0=b0 + (((pb - b0) * alpha) >> 8);
+        m_pixels[offset]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+        if (m_zbuffer != null)         m_zbuffer[offset]=iz;
+      }
       temp=((xi >> 16) + 1);
       if (temp >= SCREEN_WIDTH) {
         xi+=dt;
@@ -32,17 +36,21 @@
         continue;
       }
       offset=(yi >> 16) * SCREEN_WIDTH + temp;
-      alpha=(((xi >> 8) & 0xFF) * (ia >> 16)) >> 8;
-      r0=m_pixels[offset];
-      g0=r0 & 0xFF00;
-      b0=r0 & 0xFF;
-      r0&=0xFF0000;
-      r0=r0 + (((pr - r0) * alpha) >> 8);
-      g0=g0 + (((pg - g0) * alpha) >> 8);
-      b0=b0 + (((pb - b0) * alpha) >> 8);
-      m_pixels[offset]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+      if ((m_zbuffer == null) || (iz <= m_zbuffer[offset])) {
+        int alpha=(((xi >> 8) & 0xFF) * (ia >> 16)) >> 8;
+        int r0=m_pixels[offset];
+        int g0=r0 & 0xFF00;
+        int b0=r0 & 0xFF;
+        r0&=0xFF0000;
+        r0=r0 + (((pr - r0) * alpha) >> 8);
+        g0=g0 + (((pg - g0) * alpha) >> 8);
+        b0=b0 + (((pb - b0) * alpha) >> 8);
+        m_pixels[offset]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+        if (m_zbuffer != null)         m_zbuffer[offset]=iz;
+      }
       xi+=dt;
       yi+=(1 << 16);
+      iz+=dz;
       ir+=dr;
       ig+=dg;
       ib+=db;
@@ -58,15 +66,18 @@
       int pr=ir & 0xFF0000;
       int pg=(ig >> 8) & 0xFF00;
       int pb=(ib >> 16);
-      int alpha=(((~yi >> 8) & 0xFF) * (ia >> 16)) >> 8;
-      int r0=m_pixels[offset];
-      int g0=r0 & 0xFF00;
-      int b0=r0 & 0xFF;
-      r0&=0xFF0000;
-      r0=r0 + (((pr - r0) * alpha) >> 8);
-      g0=g0 + (((pg - g0) * alpha) >> 8);
-      b0=b0 + (((pb - b0) * alpha) >> 8);
-      m_pixels[offset]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+      if ((m_zbuffer == null) || (iz <= m_zbuffer[offset])) {
+        int alpha=(((~yi >> 8) & 0xFF) * (ia >> 16)) >> 8;
+        int r0=m_pixels[offset];
+        int g0=r0 & 0xFF00;
+        int b0=r0 & 0xFF;
+        r0&=0xFF0000;
+        r0=r0 + (((pr - r0) * alpha) >> 8);
+        g0=g0 + (((pg - g0) * alpha) >> 8);
+        b0=b0 + (((pb - b0) * alpha) >> 8);
+        m_pixels[offset]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+        if (m_zbuffer != null)         m_zbuffer[offset]=iz;
+      }
       temp=((yi >> 16) + 1);
       if (temp >= SCREEN_HEIGHT) {
         xi+=(1 << 16);
@@ -74,17 +85,21 @@
         continue;
       }
       offset=temp * SCREEN_WIDTH + (xi >> 16);
-      alpha=(((yi >> 8) & 0xFF) * (ia >> 16)) >> 8;
-      r0=m_pixels[offset];
-      g0=r0 & 0xFF00;
-      b0=r0 & 0xFF;
-      r0&=0xFF0000;
-      r0=r0 + (((pr - r0) * alpha) >> 8);
-      g0=g0 + (((pg - g0) * alpha) >> 8);
-      b0=b0 + (((pb - b0) * alpha) >> 8);
-      m_pixels[offset]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+      if ((m_zbuffer == null) || (iz <= m_zbuffer[offset])) {
+        int alpha=(((yi >> 8) & 0xFF) * (ia >> 16)) >> 8;
+        int r0=m_pixels[offset];
+        int g0=r0 & 0xFF00;
+        int b0=r0 & 0xFF;
+        r0&=0xFF0000;
+        r0=r0 + (((pr - r0) * alpha) >> 8);
+        g0=g0 + (((pg - g0) * alpha) >> 8);
+        b0=b0 + (((pb - b0) * alpha) >> 8);
+        m_pixels[offset]=0xFF000000 | (r0 & 0xFF0000) | (g0 & 0xFF00)| (b0 & 0xFF);
+        if (m_zbuffer != null)         m_zbuffer[offset]=iz;
+      }
       xi+=(1 << 16);
       yi+=dt;
+      iz+=dz;
       ir+=dr;
       ig+=dg;
       ib+=db;
