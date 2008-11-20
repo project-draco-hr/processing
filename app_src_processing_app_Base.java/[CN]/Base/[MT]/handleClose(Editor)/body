@@ -1,0 +1,24 @@
+{
+  if (!editor.checkModified(false)) {
+    return false;
+  }
+  editor.internalCloseRunner();
+  if (editors.size() == 1) {
+    System.out.println("editor count is 1, " + editor.untitled);
+    if (Preferences.getBoolean("sketchbook.closing_last_window_quits") || (editor.untitled && !editor.getSketch().isModified())) {
+      editors.remove(editor);
+      storeSketches();
+      Preferences.save();
+      System.exit(0);
+    }
+ else {
+      return handleNewReplaceImpl();
+    }
+  }
+ else {
+    editor.setVisible(false);
+    editor.dispose();
+    editors.remove(editor);
+  }
+  return true;
+}

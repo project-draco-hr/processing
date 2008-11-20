@@ -1,23 +1,17 @@
 {
   File file=new File(path);
   if (!file.exists())   return null;
-  for (int i=0; i < editorCount; i++) {
-    if (editors[i].getSketch().getMainFilePath().equals(path)) {
-      editors[i].toFront();
-      return editors[i];
+  for (  Editor editor : editors) {
+    if (editor.getSketch().getMainFilePath().equals(path)) {
+      editor.toFront();
+      return editor;
     }
   }
   Editor editor=new Editor(this,path,location);
   if (editor.getSketch() == null) {
     return null;
   }
-  if (editors == null) {
-    editors=new Editor[5];
-  }
-  if (editorCount == editors.length) {
-    editors=(Editor[])PApplet.expand(editors);
-  }
-  editors[editorCount++]=editor;
+  editors.add(editor);
   editor.setVisible(true);
   return editor;
 }

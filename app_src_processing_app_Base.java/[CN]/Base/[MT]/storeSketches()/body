@@ -3,15 +3,17 @@
   Preferences.setInteger("last.screen.width",screen.width);
   Preferences.setInteger("last.screen.height",screen.height);
   String untitledPath=untitledFolder.getAbsolutePath();
-  Preferences.setInteger("last.sketch.count",editorCount);
-  for (int i=0; i < editorCount; i++) {
-    String path=editors[i].getSketch().getMainFilePath();
-    if (path.startsWith(untitledPath)) {
-      path="";
+  int index=0;
+  for (  Editor editor : editors) {
+    String path=editor.getSketch().getMainFilePath();
+    if (path.startsWith(untitledPath) && !editor.getSketch().isModified()) {
+      continue;
     }
-    Preferences.set("last.sketch" + i + ".path",path);
-    int[] location=editors[i].getPlacement();
+    Preferences.set("last.sketch" + index + ".path",path);
+    int[] location=editor.getPlacement();
     String locationStr=PApplet.join(PApplet.str(location),",");
-    Preferences.set("last.sketch" + i + ".location",locationStr);
+    Preferences.set("last.sketch" + index + ".location",locationStr);
+    index++;
   }
+  Preferences.setInteger("last.sketch.count",index);
 }
