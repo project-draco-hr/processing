@@ -1,0 +1,79 @@
+{
+  JPanel panel=new JPanel();
+  panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+  panel.add(new JLabel("Export to Application"));
+  final JCheckBox windowsButton=new JCheckBox("Windows");
+  windowsButton.setMnemonic(KeyEvent.VK_W);
+  windowsButton.setSelected(Preferences.getBoolean("export.application.platform.windows"));
+  windowsButton.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      Preferences.setBoolean("export.application.platform.windows",windowsButton.isSelected());
+    }
+  }
+);
+  final JCheckBox macosxButton=new JCheckBox("Mac OS X");
+  macosxButton.setMnemonic(KeyEvent.VK_M);
+  macosxButton.setSelected(Preferences.getBoolean("export.application.platform.macosx"));
+  macosxButton.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      Preferences.setBoolean("export.application.platform.macosx",macosxButton.isSelected());
+    }
+  }
+);
+  final JCheckBox linuxButton=new JCheckBox("Linux");
+  linuxButton.setMnemonic(KeyEvent.VK_L);
+  linuxButton.setSelected(Preferences.getBoolean("export.application.platform.linux"));
+  linuxButton.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      Preferences.setBoolean("export.application.platform.linux",linuxButton.isSelected());
+    }
+  }
+);
+  JPanel platformPanel=new JPanel();
+  platformPanel.setLayout(new BoxLayout(platformPanel,BoxLayout.X_AXIS));
+  platformPanel.add(windowsButton);
+  platformPanel.add(macosxButton);
+  platformPanel.add(linuxButton);
+  platformPanel.setBorder(new TitledBorder("Platforms"));
+  panel.add(platformPanel);
+  final JCheckBox fullscreenButton=new JCheckBox("Full Screen (Present mode)");
+  fullscreenButton.setMnemonic(KeyEvent.VK_F);
+  fullscreenButton.setSelected(Preferences.getBoolean("export.application.fullscreen"));
+  fullscreenButton.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      Preferences.setBoolean("export.application.fullscreen",fullscreenButton.isSelected());
+    }
+  }
+);
+  JPanel optionPanel=new JPanel();
+  optionPanel.setLayout(new BoxLayout(optionPanel,BoxLayout.Y_AXIS));
+  optionPanel.add(fullscreenButton);
+  optionPanel.setBorder(new TitledBorder("Options"));
+  panel.add(optionPanel);
+  JPanel actionPanel=new JPanel();
+  optionPanel.setLayout(new BoxLayout(optionPanel,BoxLayout.X_AXIS));
+  optionPanel.add(Box.createHorizontalGlue());
+  String[] options={"Export","Cancel"};
+  final JOptionPane optionPane=new JOptionPane(panel,JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION,null,options,options[0]);
+  final JDialog dialog=new JDialog(editor,"Export to Application",true);
+  dialog.setContentPane(optionPane);
+  optionPane.addPropertyChangeListener(new PropertyChangeListener(){
+    public void propertyChange(    PropertyChangeEvent e){
+      String prop=e.getPropertyName();
+      if (dialog.isVisible() && (e.getSource() == optionPane) && (prop.equals(JOptionPane.VALUE_PROPERTY))) {
+        dialog.setVisible(false);
+      }
+    }
+  }
+);
+  dialog.pack();
+  dialog.setVisible(true);
+  Object value=optionPane.getValue();
+  if (value.equals(options[0])) {
+    return exportApplication();
+  }
+ else   if (value.equals(options[1]) || value.equals(new Integer(-1))) {
+    editor.statusNotice("Export to Application canceled.");
+  }
+  return false;
+}
