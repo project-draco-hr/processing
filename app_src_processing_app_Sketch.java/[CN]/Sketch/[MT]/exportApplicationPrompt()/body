@@ -1,10 +1,18 @@
 {
-  Box panel=Box.createVerticalBox();
-  String msg="<html><body>Export to Application creates a standalone, " + "double-clickable application for the selected plaforms.";
-  JLabel label=new JLabel(msg,SwingConstants.LEFT);
-  panel.add(label);
+  JPanel panel=new JPanel();
+  panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+  panel.add(Box.createVerticalStrut(6));
+  String line1="Export to Application creates double-clickable,";
+  String line2="standalone applications for the selected plaforms.";
+  JLabel label1=new JLabel(line1);
+  JLabel label2=new JLabel(line2);
+  label1.setAlignmentX(Component.LEFT_ALIGNMENT);
+  label2.setAlignmentX(Component.LEFT_ALIGNMENT);
+  panel.add(label1);
+  panel.add(label2);
+  int wide=label2.getPreferredSize().width;
+  panel.add(Box.createVerticalStrut(12));
   final JCheckBox windowsButton=new JCheckBox("Windows");
-  windowsButton.setMnemonic(KeyEvent.VK_W);
   windowsButton.setSelected(Preferences.getBoolean("export.application.platform.windows"));
   windowsButton.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){
@@ -13,7 +21,6 @@
   }
 );
   final JCheckBox macosxButton=new JCheckBox("Mac OS X");
-  macosxButton.setMnemonic(KeyEvent.VK_M);
   macosxButton.setSelected(Preferences.getBoolean("export.application.platform.macosx"));
   macosxButton.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){
@@ -22,7 +29,6 @@
   }
 );
   final JCheckBox linuxButton=new JCheckBox("Linux");
-  linuxButton.setMnemonic(KeyEvent.VK_L);
   linuxButton.setSelected(Preferences.getBoolean("export.application.platform.linux"));
   linuxButton.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){
@@ -32,12 +38,16 @@
 );
   JPanel platformPanel=new JPanel();
   platformPanel.add(windowsButton);
+  platformPanel.add(Box.createHorizontalStrut(6));
   platformPanel.add(macosxButton);
+  platformPanel.add(Box.createHorizontalStrut(6));
   platformPanel.add(linuxButton);
   platformPanel.setBorder(new TitledBorder("Platforms"));
+  Dimension goodIdea=new Dimension(wide,platformPanel.getPreferredSize().height);
+  platformPanel.setMaximumSize(goodIdea);
+  platformPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
   panel.add(platformPanel);
   final JCheckBox fullscreenButton=new JCheckBox("Full Screen (Present mode)");
-  fullscreenButton.setMnemonic(KeyEvent.VK_F);
   fullscreenButton.setSelected(Preferences.getBoolean("export.application.fullscreen"));
   fullscreenButton.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){
@@ -48,6 +58,9 @@
   JPanel optionPanel=new JPanel();
   optionPanel.add(fullscreenButton);
   optionPanel.setBorder(new TitledBorder("Options"));
+  goodIdea=new Dimension(wide,optionPanel.getPreferredSize().height);
+  optionPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+  optionPanel.setMaximumSize(goodIdea);
   panel.add(optionPanel);
   String[] options={"Export","Cancel"};
   final JOptionPane optionPane=new JOptionPane(panel,JOptionPane.PLAIN_MESSAGE,JOptionPane.YES_NO_OPTION,null,options,options[0]);
@@ -63,6 +76,8 @@
   }
 );
   dialog.pack();
+  Rectangle bounds=editor.getBounds();
+  dialog.setLocation(bounds.x + (bounds.width - dialog.getSize().width) / 2,bounds.y + (bounds.height - dialog.getSize().height) / 2);
   dialog.setVisible(true);
   Object value=optionPane.getValue();
   if (value.equals(options[0])) {
