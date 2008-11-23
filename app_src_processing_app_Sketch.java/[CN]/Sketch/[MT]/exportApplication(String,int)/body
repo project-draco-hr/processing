@@ -198,6 +198,9 @@
         while ((index=sb.indexOf("@@classpath@@")) != -1) {
           sb.replace(index,index + "@@classpath@@".length(),exportClassPath.toString());
         }
+        while ((index=sb.indexOf("@@lsuipresentationmode@@")) != -1) {
+          sb.replace(index,index + "@@lsuipresentationmode@@".length(),Preferences.getBoolean("export.application.fullscreen") ? "4" : "0");
+        }
         lines[i]=sb.toString();
       }
       pw.print(lines[i] + "\n");

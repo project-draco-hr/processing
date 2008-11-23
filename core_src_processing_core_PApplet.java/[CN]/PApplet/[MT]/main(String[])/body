@@ -9,10 +9,11 @@
   }
   try {
     boolean external=false;
-    int location[]=null;
-    int editorLocation[]=null;
+    int[] location=null;
+    int[] editorLocation=null;
     String name=null;
     boolean present=false;
+    boolean exclusive=false;
     Color backgroundColor=Color.BLACK;
     Color stopColor=Color.GRAY;
     GraphicsDevice displayDevice=null;
@@ -64,6 +65,9 @@
         if (args[argIndex].equals(ARGS_PRESENT)) {
           present=true;
         }
+ else         if (args[argIndex].equals(ARGS_EXCLUSIVE)) {
+          exclusive=true;
+        }
  else         if (args[argIndex].equals(ARGS_HIDE_STOP)) {
           hideStop=true;
         }
@@ -96,7 +100,7 @@
     if (present) {
       frame.setUndecorated(true);
       frame.setBackground(backgroundColor);
-      if (platform == MACOSX) {
+      if (exclusive) {
         displayDevice.setFullScreenWindow(frame);
         fullScreenRect=frame.getBounds();
       }
