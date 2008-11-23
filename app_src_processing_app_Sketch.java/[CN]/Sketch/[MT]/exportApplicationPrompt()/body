@@ -46,19 +46,22 @@
   wide=Math.max(wide,platformPanel.getPreferredSize().width);
   platformPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
   panel.add(platformPanel);
-  final JCheckBox fullScreenButton=new JCheckBox("Full Screen (Present mode)");
-  fullScreenButton.setSelected(Preferences.getBoolean("export.application.fullscreen"));
-  fullScreenButton.addItemListener(new ItemListener(){
-    public void itemStateChanged(    ItemEvent e){
-      Preferences.setBoolean("export.application.fullscreen",fullScreenButton.isSelected());
-    }
-  }
-);
-  final JCheckBox showStopButton=new JCheckBox("Show a Stop button in Full Screen");
+  final JCheckBox showStopButton=new JCheckBox("Show a Stop button");
   showStopButton.setSelected(Preferences.getBoolean("export.application.stop"));
   showStopButton.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){
       Preferences.setBoolean("export.application.stop",showStopButton.isSelected());
+    }
+  }
+);
+  showStopButton.setBorder(new EmptyBorder(50,50,50,50));
+  final JCheckBox fullScreenButton=new JCheckBox("Full Screen (Present mode)");
+  fullScreenButton.setSelected(Preferences.getBoolean("export.application.fullscreen"));
+  fullScreenButton.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      boolean sal=fullScreenButton.isSelected();
+      Preferences.setBoolean("export.application.fullscreen",sal);
+      showStopButton.setEnabled(sal);
     }
   }
 );
