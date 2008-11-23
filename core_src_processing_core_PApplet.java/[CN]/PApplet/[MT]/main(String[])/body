@@ -2,9 +2,6 @@
   if (platform == MACOSX) {
     System.setProperty("apple.awt.graphics.UseQuartz","true");
   }
-  if (platform == WINDOWS) {
-    System.setProperty("sun.java2d.d3d","false");
-  }
   if (args.length < 1) {
     System.err.println("Usage: PApplet <appletname>");
     System.err.println("For additional options, " + "see the Javadoc for PApplet");
@@ -16,8 +13,8 @@
     int editorLocation[]=null;
     String name=null;
     boolean present=false;
-    Color backgroundColor=Color.black;
-    Color stopColor=Color.gray;
+    Color backgroundColor=Color.BLACK;
+    Color stopColor=Color.GRAY;
     GraphicsDevice displayDevice=null;
     boolean hideStop=false;
     String param=null, value=null;
@@ -99,12 +96,20 @@
     if (present) {
       frame.setUndecorated(true);
       frame.setBackground(backgroundColor);
-      displayDevice.setFullScreenWindow(frame);
-      fullScreenRect=frame.getBounds();
+      if (platform == MACOSX) {
+        displayDevice.setFullScreenWindow(frame);
+        fullScreenRect=frame.getBounds();
+      }
+ else {
+        DisplayMode mode=displayDevice.getDisplayMode();
+        fullScreenRect=new Rectangle(0,0,mode.getWidth(),mode.getHeight());
+        frame.setBounds(fullScreenRect);
+        frame.setVisible(true);
+      }
     }
     frame.setLayout(null);
     frame.add(applet);
-    frame.pack();
+    frame.validate();
     applet.init();
     while (applet.defaultSize && !applet.finished) {
       try {
