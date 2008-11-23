@@ -1,0 +1,21 @@
+{
+  try {
+    load(Base.getStream("theme/theme.txt"));
+  }
+ catch (  Exception te) {
+    Base.showError(null,"Could not read color theme settings.\n" + "You'll need to reinstall Processing.",te);
+  }
+  String platformExt="." + PConstants.platformNames[PApplet.platform];
+  int platformExtLength=platformExt.length();
+  Enumeration e=table.keys();
+  while (e.hasMoreElements()) {
+    String key=(String)e.nextElement();
+    if (key.endsWith(platformExt)) {
+      String actualKey=key.substring(0,key.length() - platformExtLength);
+      String value=get(key);
+      table.put(actualKey,value);
+    }
+  }
+  setColor("run.window.bgcolor",SystemColor.control);
+  defaults=(Hashtable)table.clone();
+}

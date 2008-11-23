@@ -3,6 +3,7 @@
   JPopupMenu.setDefaultLightWeightPopupEnabled(false);
   initRequirements();
   Preferences.init(null);
+  Theme.init();
   if (Base.isMacOS()) {
     String fiasco="apple.laf.useScreenMenuBar";
     String menubar=Preferences.get(fiasco);
@@ -16,6 +17,7 @@
         Object[] options={"OK","More Info"};
         int result=JOptionPane.showOptionDialog(new Frame(),warning,"Menu Bar Problem",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[0]);
         if (result == -1) {
+          System.setProperty(fiasco,"false");
         }
  else {
           Preferences.set(fiasco,menubar);
@@ -26,7 +28,6 @@
         }
       }
     }
-    System.setProperty(fiasco,menubar);
   }
   try {
     platform.setLookAndFeel();

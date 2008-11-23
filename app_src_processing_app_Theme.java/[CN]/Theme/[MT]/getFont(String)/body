@@ -1,0 +1,28 @@
+{
+  boolean replace=false;
+  String value=get(attr);
+  if (value == null) {
+    value=getDefault(attr);
+    replace=true;
+  }
+  String[] pieces=PApplet.split(value,',');
+  if (pieces.length != 3) {
+    value=getDefault(attr);
+    pieces=PApplet.split(value,',');
+    replace=true;
+  }
+  String name=pieces[0];
+  int style=Font.PLAIN;
+  if (pieces[1].indexOf("bold") != -1) {
+    style|=Font.BOLD;
+  }
+  if (pieces[1].indexOf("italic") != -1) {
+    style|=Font.ITALIC;
+  }
+  int size=PApplet.parseInt(pieces[2],12);
+  Font font=new Font(name,style,size);
+  if (replace) {
+    set(attr,value);
+  }
+  return font;
+}
