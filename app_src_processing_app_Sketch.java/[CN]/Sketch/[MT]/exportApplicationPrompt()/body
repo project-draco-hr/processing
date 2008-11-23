@@ -4,8 +4,8 @@
   panel.add(Box.createVerticalStrut(6));
   String line1="Export to Application creates double-clickable,";
   String line2="standalone applications for the selected plaforms.";
-  JLabel label1=new JLabel(line1);
-  JLabel label2=new JLabel(line2);
+  JLabel label1=new JLabel(line1,SwingConstants.CENTER);
+  JLabel label2=new JLabel(line2,SwingConstants.CENTER);
   label1.setAlignmentX(Component.LEFT_ALIGNMENT);
   label2.setAlignmentX(Component.LEFT_ALIGNMENT);
   panel.add(label1);
@@ -43,25 +43,42 @@
   platformPanel.add(Box.createHorizontalStrut(6));
   platformPanel.add(linuxButton);
   platformPanel.setBorder(new TitledBorder("Platforms"));
-  Dimension goodIdea=new Dimension(wide,platformPanel.getPreferredSize().height);
-  platformPanel.setMaximumSize(goodIdea);
+  wide=Math.max(wide,platformPanel.getPreferredSize().width);
   platformPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
   panel.add(platformPanel);
-  final JCheckBox fullscreenButton=new JCheckBox("Full Screen (Present mode)");
-  fullscreenButton.setSelected(Preferences.getBoolean("export.application.fullscreen"));
-  fullscreenButton.addItemListener(new ItemListener(){
+  final JCheckBox fullScreenButton=new JCheckBox("Full Screen (Present mode)");
+  fullScreenButton.setSelected(Preferences.getBoolean("export.application.fullscreen"));
+  fullScreenButton.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){
-      Preferences.setBoolean("export.application.fullscreen",fullscreenButton.isSelected());
+      Preferences.setBoolean("export.application.fullscreen",fullScreenButton.isSelected());
+    }
+  }
+);
+  final JCheckBox showStopButton=new JCheckBox("Show a Stop button in Full Screen");
+  showStopButton.setSelected(Preferences.getBoolean("export.application.stop"));
+  showStopButton.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      Preferences.setBoolean("export.application.stop",showStopButton.isSelected());
     }
   }
 );
   JPanel optionPanel=new JPanel();
-  optionPanel.add(fullscreenButton);
+  optionPanel.setLayout(new BoxLayout(optionPanel,BoxLayout.Y_AXIS));
+  optionPanel.add(fullScreenButton);
+  optionPanel.add(showStopButton);
   optionPanel.setBorder(new TitledBorder("Options"));
-  goodIdea=new Dimension(wide,optionPanel.getPreferredSize().height);
+  wide=Math.max(wide,platformPanel.getPreferredSize().width);
   optionPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-  optionPanel.setMaximumSize(goodIdea);
   panel.add(optionPanel);
+  Dimension good;
+  good=new Dimension(wide,label1.getPreferredSize().height);
+  label1.setMaximumSize(good);
+  good=new Dimension(wide,label2.getPreferredSize().height);
+  label2.setMaximumSize(good);
+  good=new Dimension(wide,platformPanel.getPreferredSize().height);
+  platformPanel.setMaximumSize(good);
+  good=new Dimension(wide,optionPanel.getPreferredSize().height);
+  optionPanel.setMaximumSize(good);
   String[] options={"Export","Cancel"};
   final JOptionPane optionPane=new JOptionPane(panel,JOptionPane.PLAIN_MESSAGE,JOptionPane.YES_NO_OPTION,null,options,options[0]);
   final JDialog dialog=new JDialog(editor,"Export Options",true);
@@ -76,6 +93,7 @@
   }
 );
   dialog.pack();
+  dialog.setResizable(false);
   Rectangle bounds=editor.getBounds();
   dialog.setLocation(bounds.x + (bounds.width - dialog.getSize().width) / 2,bounds.y + (bounds.height - dialog.getSize().height) / 2);
   dialog.setVisible(true);
