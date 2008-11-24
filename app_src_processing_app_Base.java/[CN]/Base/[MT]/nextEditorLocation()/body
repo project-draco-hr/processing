@@ -1,17 +1,21 @@
 {
-  int[] location;
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  int defaultWidth=Preferences.getInteger("default.window.width");
+  int defaultHeight=Preferences.getInteger("default.window.height");
   if (activeEditor == null) {
-    location=new int[5];
-    location[2]=Preferences.getInteger("default.window.width");
-    location[3]=Preferences.getInteger("default.window.height");
-    Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
-    location[0]=(screen.width - location[2]) / 2;
-    location[1]=(screen.height - location[3]) / 2;
+    return new int[]{(screen.width - defaultWidth) / 2,(screen.height - defaultHeight) / 2,defaultWidth,defaultHeight,0};
   }
  else {
-    location=activeEditor.getPlacement();
-    location[0]+=50;
-    location[1]+=50;
+synchronized (editors) {
+      final int OVER=50;
+      Editor lastOpened=editors.get(editors.size() - 1);
+      int[] location=lastOpened.getPlacement();
+      location[0]+=OVER;
+      location[1]+=OVER;
+      if (location[0] == OVER || location[2] == OVER || location[0] + location[2] > screen.width || location[1] + location[3] > screen.height) {
+        return new int[]{(int)(Math.random() * (screen.width - defaultWidth)),(int)(Math.random() * (screen.height - defaultHeight)),defaultWidth,defaultHeight,0};
+      }
+      return location;
+    }
   }
-  return location;
 }
