@@ -91,7 +91,7 @@
     frame.setIconImage(image);
     frame.setTitle(name);
     Class<?> c=Thread.currentThread().getContextClassLoader().loadClass(name);
-    PApplet applet=(PApplet)c.newInstance();
+    final PApplet applet=(PApplet)c.newInstance();
     applet.frame=frame;
     applet.sketchPath=folder;
     applet.args=PApplet.subset(args,1);
@@ -113,7 +113,7 @@
     }
     frame.setLayout(null);
     frame.add(applet);
-    frame.validate();
+    frame.pack();
     applet.init();
     while (applet.defaultSize && !applet.finished) {
       try {
