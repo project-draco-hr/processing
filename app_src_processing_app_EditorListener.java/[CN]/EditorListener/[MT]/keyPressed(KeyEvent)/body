@@ -87,7 +87,11 @@
   }
 switch ((int)c) {
 case 9:
-    if (tabsExpand) {
+    if (textarea.isSelectionActive()) {
+      boolean outdent=(event.getModifiers() & KeyEvent.SHIFT_MASK) != 0;
+      editor.handleIndentOutdent(!outdent);
+    }
+ else     if (tabsExpand) {
       textarea.setSelectedText(tabString);
       event.consume();
       return true;
@@ -178,10 +182,12 @@ if (autoIndent) {
       }
     }
   }
-  event.consume();
-  return true;
 }
-break;
+ else {
+  textarea.setSelectedText(String.valueOf(c));
+}
+event.consume();
+return true;
 case '}':
 if (autoIndent) {
 if (textarea.getSelectionStart() != textarea.getSelectionStop()) {
@@ -193,14 +199,14 @@ int index=prevCharIndex;
 boolean finished=false;
 while ((index != -1) && (!finished)) {
 if (contents[index] == 10) {
-  finished=true;
-  index++;
+finished=true;
+index++;
 }
  else if (contents[index] != ' ') {
-  return false;
+return false;
 }
  else {
-  index--;
+index--;
 }
 }
 if (!finished) return false;
