@@ -25,10 +25,10 @@
     File dotAppSkeleton=new File(skeletonFolder,APP_SKELETON);
     Base.copyDir(dotAppSkeleton,dotAppFolder);
     String stubName="Contents/MacOS/JavaApplicationStub";
-    if (PApplet.platform == PConstants.WINDOWS) {
+    if (Base.isWindows()) {
       File warningFile=new File(destFolder,"readme.txt");
       PrintWriter pw=PApplet.createWriter(warningFile);
-      pw.println("This application was created on Windows, which doesn't");
+      pw.println("This application was created on Windows, which does not");
       pw.println("properly support setting files as \"executable\",");
       pw.println("a necessity for applications on Mac OS X.");
       pw.println();
@@ -69,7 +69,7 @@
     String dataFiles[]=Base.listFiles(dataFolder,false);
     int offset=folder.getAbsolutePath().length() + 1;
     for (int i=0; i < dataFiles.length; i++) {
-      if (PApplet.platform == PApplet.WINDOWS) {
+      if (Base.isWindows()) {
         dataFiles[i]=dataFiles[i].replace('\\','/');
       }
       File dataFile=new File(dataFiles[i]);
@@ -226,7 +226,7 @@
     pw.flush();
     pw.close();
     String shellPath=shellScript.getAbsolutePath();
-    if (PApplet.platform != PConstants.WINDOWS) {
+    if (!Base.isWindows()) {
       Runtime.getRuntime().exec(new String[]{"chmod","+x",shellPath});
     }
   }
