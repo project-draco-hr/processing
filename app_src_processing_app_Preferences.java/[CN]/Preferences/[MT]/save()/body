@@ -1,17 +1,11 @@
 {
-  try {
-    if (preferencesFile == null)     return;
-    FileOutputStream output=new FileOutputStream(preferencesFile);
-    PrintWriter writer=new PrintWriter(new OutputStreamWriter(output));
-    Enumeration e=table.keys();
-    while (e.hasMoreElements()) {
-      String key=(String)e.nextElement();
-      writer.println(key + "=" + ((String)table.get(key)));
-    }
-    writer.flush();
-    writer.close();
+  if (preferencesFile == null)   return;
+  PrintWriter writer=PApplet.createWriter(preferencesFile);
+  Enumeration e=table.keys();
+  while (e.hasMoreElements()) {
+    String key=(String)e.nextElement();
+    writer.println(key + "=" + ((String)table.get(key)));
   }
- catch (  IOException ex) {
-    Base.showWarning(null,"Error while saving the settings file",ex);
-  }
+  writer.flush();
+  writer.close();
 }
