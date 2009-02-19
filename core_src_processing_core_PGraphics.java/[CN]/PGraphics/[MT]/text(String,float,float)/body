@@ -8,33 +8,5 @@
     textBuffer=new char[length + 10];
   }
   str.getChars(0,length,textBuffer,0);
-  float high=0;
-  for (int i=0; i < length; i++) {
-    if (textBuffer[i] == '\n') {
-      high+=textLeading;
-    }
-  }
-  if (textAlignY == CENTER) {
-    y+=(textAscent() - high) / 2;
-  }
- else   if (textAlignY == TOP) {
-    y+=textAscent();
-  }
- else   if (textAlignY == BOTTOM) {
-    y-=textDescent() + high;
-  }
-  int start=0;
-  int index=0;
-  while (index < length) {
-    if (textBuffer[index] == '\n') {
-      textLineAlignImpl(textBuffer,start,index,x,y);
-      start=index + 1;
-      y+=textLeading;
-    }
-    index++;
-  }
-  if (start < length) {
-    textLineAlignImpl(textBuffer,start,index,x,y);
-  }
-  if (textMode == SCREEN)   updatePixels();
+  text(textBuffer,0,length,x,y);
 }
