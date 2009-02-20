@@ -1,4 +1,5 @@
 {
+  PStyle savedStyle=getStyle();
   g2.dispose();
   try {
     document.newPage();
@@ -6,5 +7,11 @@
  catch (  Exception e) {
     e.printStackTrace();
   }
-  g2=content.createGraphicsShapes(width,height);
+  if (textMode == SHAPE) {
+    g2=content.createGraphicsShapes(width,height);
+  }
+ else   if (textMode == MODEL) {
+    g2=content.createGraphics(width,height,mapper);
+  }
+  style(savedStyle);
 }
