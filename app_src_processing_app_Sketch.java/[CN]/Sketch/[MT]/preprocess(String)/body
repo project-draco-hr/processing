@@ -99,7 +99,8 @@ catch (  Exception ex) {
   }
   importedLibraries=new ArrayList<File>();
   for (  String item : preprocessor.getExtraImports()) {
-    String entry=item.substring(0,item.lastIndexOf('.'));
+    int dot=item.lastIndexOf('.');
+    String entry=(dot == -1) ? item : item.substring(0,dot);
     File libFolder=(File)Base.importToLibraryTable.get(entry);
     if (libFolder != null) {
       importedLibraries.add(libFolder);
