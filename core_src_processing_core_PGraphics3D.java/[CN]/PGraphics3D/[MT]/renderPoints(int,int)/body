@@ -1,12 +1,20 @@
 {
   if (strokeWeight != 1) {
+    for (int i=start; i < stop; i++) {
+      float[] a=vertices[points[i][VERTEX1]];
+      renderLineVertices(a,a);
+    }
   }
-  for (int i=start; i < stop; i++) {
-    float[] a=vertices[points[i][VERTEX1]];
-    int sx=(int)(a[TX] + 0.4999f);
-    int sy=(int)(a[TY] + 0.4999f);
-    int index=sy * width + sx;
-    pixels[index]=points[i][STROKE_COLOR];
-    zbuffer[index]=a[TZ];
+ else {
+    for (int i=start; i < stop; i++) {
+      float[] a=vertices[points[i][VERTEX1]];
+      int sx=(int)(a[TX] + 0.4999f);
+      int sy=(int)(a[TY] + 0.4999f);
+      if (sx >= 0 && sx < width && sy >= 0 && sy < height) {
+        int index=sy * width + sx;
+        pixels[index]=points[i][STROKE_COLOR];
+        zbuffer[index]=a[TZ];
+      }
+    }
   }
 }

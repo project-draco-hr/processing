@@ -1,58 +1,5 @@
 {
   for (int i=start; i < stop; i++) {
-    float a[]=vertices[lines[i][VERTEX1]];
-    float b[]=vertices[lines[i][VERTEX2]];
-    if (a[SW] > 1.25f || a[SW] < 0.75f) {
-      float ox1=a[TX];
-      float oy1=a[TY];
-      float ox2=b[TX];
-      float oy2=b[TY];
-      if (ox1 == ox2 && oy1 == oy2) {
-        oy1-=a[SW];
-        oy2+=a[SW];
-      }
-      float dX=ox2 - ox1 + EPSILON;
-      float dY=oy2 - oy1 + EPSILON;
-      float len=(float)Math.sqrt(dX * dX + dY * dY);
-      float rh=a[SW] / len;
-      float dx0=rh * dY;
-      float dy0=rh * dX;
-      float dx1=rh * dY;
-      float dy1=rh * dX;
-      float ax1=ox1 + dx0;
-      float ay1=oy1 - dy0;
-      float ax2=ox1 - dx0;
-      float ay2=oy1 + dy0;
-      float bx1=ox2 + dx1;
-      float by1=oy2 - dy1;
-      float bx2=ox2 - dx1;
-      float by2=oy2 + dy1;
-      if (smooth) {
-        smoothTriangle.reset(3);
-        smoothTriangle.smooth=true;
-        smoothTriangle.interpARGB=true;
-        smoothTriangle.setVertices(ax1,ay1,a[TZ],bx2,by2,b[TZ],ax2,ay2,a[TZ]);
-        smoothTriangle.setIntensities(a[SR],a[SG],a[SB],a[SA],b[SR],b[SG],b[SB],b[SA],a[SR],a[SG],a[SB],a[SA]);
-        smoothTriangle.render();
-        smoothTriangle.setVertices(ax1,ay1,a[TZ],bx2,by2,b[TZ],bx1,by1,b[TZ]);
-        smoothTriangle.setIntensities(a[SR],a[SG],a[SB],a[SA],b[SR],b[SG],b[SB],b[SA],b[SR],b[SG],b[SB],b[SA]);
-        smoothTriangle.render();
-      }
- else {
-        triangle.reset();
-        triangle.setVertices(ax1,ay1,a[TZ],bx2,by2,b[TZ],ax2,ay2,a[TZ]);
-        triangle.setIntensities(a[SR],a[SG],a[SB],a[SA],b[SR],b[SG],b[SB],b[SA],a[SR],a[SG],a[SB],a[SA]);
-        triangle.render();
-        triangle.setVertices(ax1,ay1,a[TZ],bx2,by2,b[TZ],bx1,by1,b[TZ]);
-        triangle.setIntensities(a[SR],a[SG],a[SB],a[SA],b[SR],b[SG],b[SB],b[SA],b[SR],b[SG],b[SB],b[SA]);
-        triangle.render();
-      }
-    }
- else {
-      line.reset();
-      line.setIntensities(a[SR],a[SG],a[SB],a[SA],b[SR],b[SG],b[SB],b[SA]);
-      line.setVertices(a[TX],a[TY],a[TZ],b[TX],b[TY],b[TZ]);
-      line.draw();
-    }
+    renderLineVertices(vertices[lines[i][VERTEX1]],vertices[lines[i][VERTEX2]]);
   }
 }
