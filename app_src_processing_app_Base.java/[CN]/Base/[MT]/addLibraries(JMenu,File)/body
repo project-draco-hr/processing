@@ -17,16 +17,27 @@
   }
 ;
   boolean ifound=false;
-  for (  String libraryName : list) {
-    File subfolder=new File(folder,libraryName);
+  for (  String potentialName : list) {
+    File subfolder=new File(folder,potentialName);
     File libraryFolder=new File(subfolder,"library");
-    File libraryJar=new File(libraryFolder,libraryName + ".jar");
+    File libraryJar=new File(libraryFolder,potentialName + ".jar");
     if (libraryJar.exists()) {
-      String sanityCheck=Sketch.sanitizeName(libraryName);
-      if (!sanityCheck.equals(libraryName)) {
-        String mess="The library \"" + libraryName + "\" cannot be used.\n"+ "Library names must contain only basic letters and numbers.\n"+ "(ascii only and no spaces, and it cannot start with a number)";
+      String sanityCheck=Sketch.sanitizeName(potentialName);
+      if (!sanityCheck.equals(potentialName)) {
+        String mess="The library \"" + potentialName + "\" cannot be used.\n"+ "Library names must contain only basic letters and numbers.\n"+ "(ASCII only and no spaces, and it cannot start with a number)";
         Base.showMessage("Ignoring bad library name",mess);
         continue;
+      }
+      String libraryName=potentialName;
+      File exportFile=new File(libraryFolder,"export.txt");
+      if (exportFile.exists()) {
+        String[] exportLines=PApplet.loadStrings(exportFile);
+        for (        String line : exportLines) {
+          String[] pieces=PApplet.trim(PApplet.split(line,'='));
+          if (pieces[0].equals("name")) {
+            libraryName=pieces[1].trim();
+          }
+        }
       }
       String libraryClassPath=Compiler.contentsToClassPath(libraryFolder);
       librariesClassPath+=File.pathSeparatorChar + libraryClassPath;
@@ -41,7 +52,7 @@
       ifound=true;
     }
  else {
-      JMenu submenu=new JMenu(libraryName);
+      JMenu submenu=new JMenu(potentialName);
       boolean found=addLibraries(submenu,subfolder);
       if (found) {
         menu.add(submenu);
