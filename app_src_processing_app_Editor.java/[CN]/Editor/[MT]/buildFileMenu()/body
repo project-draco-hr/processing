@@ -17,14 +17,25 @@
   }
 );
   fileMenu.add(item);
+  boolean nativeButBroken=Base.isMacOS() ? Preferences.getBoolean("apple.laf.useScreenMenuBar") : false;
   if (sketchbookMenu == null) {
     sketchbookMenu=new JMenu("Sketchbook");
-    base.rebuildSketchbookMenu(sketchbookMenu);
+    if (nativeButBroken) {
+      sketchbookMenu.setEnabled(false);
+    }
+ else {
+      base.rebuildSketchbookMenu(sketchbookMenu);
+    }
   }
   fileMenu.add(sketchbookMenu);
   if (examplesMenu == null) {
     examplesMenu=new JMenu("Examples");
-    base.rebuildExamplesMenu(examplesMenu);
+    if (nativeButBroken) {
+      examplesMenu.setEnabled(false);
+    }
+ else {
+      base.rebuildExamplesMenu(examplesMenu);
+    }
   }
   fileMenu.add(examplesMenu);
   item=Editor.newJMenuItem("Close",'W');
