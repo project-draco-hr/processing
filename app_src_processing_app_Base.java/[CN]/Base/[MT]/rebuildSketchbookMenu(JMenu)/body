@@ -1,7 +1,13 @@
 {
+  boolean nativeButBroken=Base.isMacOS() ? Preferences.getBoolean("apple.laf.useScreenMenuBar") : false;
   try {
-    menu.removeAll();
-    addSketches(menu,getSketchbookFolder(),false);
+    if (nativeButBroken) {
+      menu.setEnabled(false);
+    }
+ else {
+      menu.removeAll();
+      addSketches(menu,getSketchbookFolder(),false);
+    }
   }
  catch (  IOException e) {
     e.printStackTrace();
