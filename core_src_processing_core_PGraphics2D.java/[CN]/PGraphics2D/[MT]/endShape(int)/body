@@ -38,7 +38,7 @@ if (stroke) {
 }
 break;
 case TRIANGLE_FAN:
-if (fill) {
+if (fill || textureImage != null) {
 fpolygon.vertexCount=3;
 for (int i=1; i < vertexCount - 1; i++) {
 fpolygon.vertices[2][R]=vertices[0][R];
@@ -79,7 +79,7 @@ break;
 case TRIANGLES:
 case TRIANGLE_STRIP:
 increment=(shape == TRIANGLES) ? 3 : 1;
-if (fill) {
+if (fill || textureImage != null) {
 fpolygon.vertexCount=3;
 for (int i=0; i < vertexCount - 2; i+=increment) {
 for (int j=0; j < 3; j++) {
@@ -109,7 +109,7 @@ draw_lines(vertices,vertexCount - 2,2,increment,0);
 }
 break;
 case QUADS:
-if (fill) {
+if (fill || textureImage != null) {
 fpolygon.vertexCount=4;
 for (int i=0; i < vertexCount - 3; i+=4) {
 for (int j=0; j < 4; j++) {
@@ -139,7 +139,7 @@ draw_line(vertices[i + 3],vertices[i + 0]);
 }
 break;
 case QUAD_STRIP:
-if (fill) {
+if (fill || textureImage != null) {
 fpolygon.vertexCount=4;
 for (int i=0; i < vertexCount - 3; i+=2) {
 for (int j=0; j < 4; j++) {
@@ -168,7 +168,7 @@ draw_lines(vertices,vertexCount - 2,2,1,0);
 break;
 case POLYGON:
 if (isConvex()) {
-if (fill) {
+if (fill || textureImage != null) {
 fpolygon.renderPolygon(vertices,vertexCount);
 }
 if (stroke) {
@@ -179,7 +179,7 @@ draw_line(vertices[vertexCount - 1],vertices[0]);
 }
 }
  else {
-if (fill) {
+if (fill || textureImage != null) {
 boolean smoov=smooth;
 if (stroke) smooth=false;
 concaveRender();
