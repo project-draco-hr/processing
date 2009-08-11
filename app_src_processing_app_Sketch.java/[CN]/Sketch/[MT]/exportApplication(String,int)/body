@@ -50,8 +50,8 @@
   if (exportPlatform == PConstants.WINDOWS) {
     Base.copyFile(new File(skeletonFolder,"application.exe"),new File(destFolder,this.name + ".exe"));
   }
-  Vector jarListVector=new Vector();
-  Hashtable zipFileContents=new Hashtable();
+  Vector<String> jarListVector=new Vector<String>();
+  HashMap<String,Object> zipFileContents=new HashMap<String,Object>();
   FileOutputStream zipOutputFile=new FileOutputStream(new File(jarFolder,name + ".jar"));
   ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
   ZipEntry entry;
@@ -106,7 +106,7 @@
   jarListVector.add("core.jar");
   for (  File libraryFolder : importedLibraries) {
     File exportSettings=new File(libraryFolder,"export.txt");
-    Hashtable exportTable=readSettings(exportSettings);
+    HashMap<String,String> exportTable=readSettings(exportSettings);
     String commaList=null;
     String exportList[]=null;
     if (exportPlatform == PConstants.MACOSX) {
@@ -136,7 +136,12 @@
         System.err.println("File " + exportList[i] + " does not exist");
       }
  else       if (exportFile.isDirectory()) {
-        System.err.println("Ignoring sub-folder \"" + exportList[i] + "\"");
+        if (exportPlatform == PConstants.MACOSX) {
+          Base.copyDir(exportFile,new File(jarFolder,exportFile.getName()));
+        }
+ else {
+          Base.copyDir(exportFile,new File(destFolder,exportFile.getName()));
+        }
       }
  else       if (exportFile.getName().toLowerCase().endsWith(".zip") || exportFile.getName().toLowerCase().endsWith(".jar")) {
         Base.copyFile(exportFile,new File(jarFolder,exportList[i]));
