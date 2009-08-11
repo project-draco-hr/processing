@@ -1,5 +1,19 @@
 {
-  currentConsole.write(b,offset,length,err);
+  if (currentConsole != null) {
+    currentConsole.write(b,offset,length,err);
+  }
+ else {
+    try {
+      if (err) {
+        systemErr.write(b);
+      }
+ else {
+        systemOut.write(b);
+      }
+    }
+ catch (    IOException e) {
+    }
+  }
   OutputStream echo=err ? stderrFile : stdoutFile;
   if (echo != null) {
     try {

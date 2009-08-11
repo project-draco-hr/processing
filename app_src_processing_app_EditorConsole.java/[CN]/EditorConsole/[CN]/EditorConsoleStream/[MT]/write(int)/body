@@ -1,6 +1,11 @@
 {
   single[0]=(byte)b;
-  currentConsole.write(single,0,1,err);
+  if (currentConsole != null) {
+    currentConsole.write(single,0,1,err);
+  }
+ else {
+    write(new byte[]{(byte)b},0,1);
+  }
   OutputStream echo=err ? stderrFile : stdoutFile;
   if (echo != null) {
     try {
