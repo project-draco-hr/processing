@@ -7,16 +7,14 @@
   }
   String platformExt="." + PConstants.platformNames[PApplet.platform];
   int platformExtLength=platformExt.length();
-  Enumeration e=table.keys();
-  while (e.hasMoreElements()) {
-    String key=(String)e.nextElement();
+  for (  String key : table.keySet()) {
     if (key.endsWith(platformExt)) {
       String actualKey=key.substring(0,key.length() - platformExtLength);
       String value=get(key);
       table.put(actualKey,value);
     }
   }
-  defaults=(Hashtable)table.clone();
+  defaults=(HashMap<String,String>)table.clone();
   setColor("run.window.bgcolor",SystemColor.control);
   if (commandLinePrefs != null) {
     try {
