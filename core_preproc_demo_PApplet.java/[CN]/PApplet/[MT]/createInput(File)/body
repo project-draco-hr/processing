@@ -1,0 +1,18 @@
+{
+  try {
+    InputStream input=new FileInputStream(file);
+    if (file.getName().toLowerCase().endsWith(".gz")) {
+      return new GZIPInputStream(input);
+    }
+    return input;
+  }
+ catch (  IOException e) {
+    if (file == null) {
+      throw new RuntimeException("File passed to openStream() was null");
+    }
+ else {
+      e.printStackTrace();
+      throw new RuntimeException("Couldn't openStream() for " + file.getAbsolutePath());
+    }
+  }
+}

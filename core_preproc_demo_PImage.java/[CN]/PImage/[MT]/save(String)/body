@@ -1,0 +1,48 @@
+{
+  boolean success=false;
+  File file=new File(path);
+  if (!file.isAbsolute()) {
+    if (parent != null) {
+      path=parent.savePath(path);
+    }
+ else {
+      String msg="PImage.save() requires an absolute path. " + "Use createImage(), or pass savePath() to save().";
+      PGraphics.showException(msg);
+    }
+  }
+  loadPixels();
+  try {
+    OutputStream os=null;
+    if (saveImageFormats == null) {
+      saveImageFormats=javax.imageio.ImageIO.getWriterFormatNames();
+    }
+    if (saveImageFormats != null) {
+      for (int i=0; i < saveImageFormats.length; i++) {
+        if (path.endsWith("." + saveImageFormats[i])) {
+          saveImageIO(path);
+          return;
+        }
+      }
+    }
+    if (path.toLowerCase().endsWith(".tga")) {
+      os=new BufferedOutputStream(new FileOutputStream(path),32768);
+      success=saveTGA(os);
+    }
+ else {
+      if (!path.toLowerCase().endsWith(".tif") && !path.toLowerCase().endsWith(".tiff")) {
+        path+=".tif";
+      }
+      os=new BufferedOutputStream(new FileOutputStream(path),32768);
+      success=saveTIFF(os);
+    }
+    os.flush();
+    os.close();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+    success=false;
+  }
+  if (!success) {
+    throw new RuntimeException("Error while saving image.");
+  }
+}
