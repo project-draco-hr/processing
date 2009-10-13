@@ -9,15 +9,22 @@
   int[] tmp=new int[1];
   gl.glGenTextures(1,tmp,0);
   tindex=tmp[0];
-  int width2=nextPowerOfTwo(source.width);
-  int height2=nextPowerOfTwo(source.height);
+  if (npotTextures == null) {
+    npotTextures=gl.isExtensionAvailable("GL_ARB_texture_non_power_of_two") ? Boolean.TRUE : Boolean.FALSE;
+  }
+  int width2=source.width;
+  int height2=source.height;
+  if (npotTextures == Boolean.FALSE) {
+    width2=nextPowerOfTwo(source.width);
+    height2=nextPowerOfTwo(source.height);
+  }
   if (maxTextureSize == 0) {
     int maxSize[]=new int[1];
     gl.glGetIntegerv(GL.GL_MAX_TEXTURE_SIZE,maxSize,0);
     maxTextureSize=maxSize[0];
   }
   if ((width2 > maxTextureSize) || (height2 > maxTextureSize)) {
-    throw new RuntimeException("Image width and height cannot be" + " larger than " + maxTextureSize + " with your graphics card.");
+    throw new RuntimeException("Image width and height cannot be" + " larger than " + maxTextureSize + " with this graphics card.");
   }
   if ((width2 > twidth) || (height2 > theight)) {
     tpixels=null;
