@@ -1,20 +1,10 @@
 {
-  String platformExt="." + PConstants.platformNames[PApplet.platform];
-  int platformExtLength=platformExt.length();
   String[] lines=PApplet.loadStrings(input);
   for (  String line : lines) {
     if ((line.length() == 0) || (line.charAt(0) == '#'))     continue;
     int equals=line.indexOf('=');
     if (equals != -1) {
       String key=line.substring(0,equals).trim();
-      if (key.endsWith(platformExt)) {
-        key=key.substring(0,key.length() - platformExtLength);
-      }
- else {
-        if (table.get(key) != null) {
-          continue;
-        }
-      }
       String value=line.substring(equals + 1).trim();
       table.put(key,value);
     }

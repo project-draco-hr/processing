@@ -1,8 +1,10 @@
 {
   if (preferencesFile == null)   return;
   PrintWriter writer=PApplet.createWriter(preferencesFile);
-  for (  String key : table.keySet()) {
-    writer.println(key + "=" + table.get(key));
+  Enumeration e=table.keys();
+  while (e.hasMoreElements()) {
+    String key=(String)e.nextElement();
+    writer.println(key + "=" + ((String)table.get(key)));
   }
   writer.flush();
   writer.close();
