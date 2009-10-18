@@ -1,0 +1,22 @@
+{
+  PrintWriter writer=PApplet.createWriter(file);
+  writer.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+  writer.println("<project name=\"" + projectName + "\" default=\"help\">");
+  writer.println("  <property file=\"local.properties\"/>");
+  writer.println("  <property file=\"build.properties\"/>");
+  writer.println("  <property file=\"default.properties\"/>");
+  writer.println("  <path id=\"android.antlibs\">");
+  writer.println("    <pathelement path=\"${sdk-location}/tools/lib/anttasks.jar\" />");
+  writer.println("    <pathelement path=\"${sdk-location}/tools/lib/sdklib.jar\" />");
+  writer.println("    <pathelement path=\"${sdk-location}/tools/lib/androidprefs.jar\" />");
+  writer.println("    <pathelement path=\"${sdk-location}/tools/lib/apkbuilder.jar\" />");
+  writer.println("    <pathelement path=\"${sdk-location}/tools/lib/jarutils.jar\" />");
+  writer.println("  </path>");
+  writer.println("  <taskdef name=\"setup\"");
+  writer.println("           classname=\"com.android.ant.SetupTask\"");
+  writer.println("           classpathref=\"android.antlibs\" />");
+  writer.println("  <setup />");
+  writer.println("</project>");
+  writer.flush();
+  writer.close();
+}
