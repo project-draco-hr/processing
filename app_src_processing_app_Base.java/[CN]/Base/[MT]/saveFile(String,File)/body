@@ -1,3 +1,14 @@
 {
-  PApplet.saveStrings(file,new String[]{str});
+  File temp=File.createTempFile(file.getName(),null,file.getParentFile());
+  PApplet.saveStrings(temp,new String[]{str});
+  if (file.exists()) {
+    boolean result=file.delete();
+    if (!result) {
+      throw new IOException("Could not remove old version of " + file.getAbsolutePath());
+    }
+  }
+  boolean result=temp.renameTo(file);
+  if (!result) {
+    throw new IOException("Could not replace " + file.getAbsolutePath());
+  }
 }

@@ -13,33 +13,6 @@
   initRequirements();
   Preferences.init(null);
   Theme.init();
-  if (Base.isMacOS()) {
-    String properMenuBar="apple.laf.useScreenMenuBar";
-    String menubar=Preferences.get(properMenuBar);
-    if (menubar != null) {
-      System.setProperty(properMenuBar,menubar);
-    }
- else {
-      if (System.getProperty("os.version").startsWith("10.4")) {
-        Preferences.set(properMenuBar,"true");
-        System.setProperty(properMenuBar,"true");
-      }
- else {
-        String warning="<html>" + "<head> <style type=\"text/css\">" + "b { font: 13pt \"Lucida Grande\" }"+ "p { font: 11pt \"Lucida Grande\"; margin-top: 8px }"+ "</style> </head> <body>"+ "<b>Some menus have been disabled.</b>"+ "<p>Due to an Apple bug, the Sketchbook and Example menus "+ "are unusable. <br>"+ "As a workaround, these items will be disabled from the "+ "standard menu bar, <br>"+ "but you can use the Open button on "+ "the toolbar to access the same items. <br>"+ "If this bug makes you sad, "+ "please contact Apple via bugreporter.apple.com.</p>"+ "</body> </html>";
-        Object[] options={"OK","More Info"};
-        int result=JOptionPane.showOptionDialog(new Frame(),warning,"Menu Bar Problem",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[0]);
-        if (result == -1) {
-        }
- else {
-          Preferences.set(properMenuBar,"true");
-          if (result == 1) {
-            Base.openURL("http://dev.processing.org/bugs/show_bug.cgi?id=786");
-          }
-        }
-        System.setProperty(properMenuBar,"true");
-      }
-    }
-  }
   try {
     platform.setLookAndFeel();
   }
