@@ -9,15 +9,8 @@
   int[] tmp=new int[1];
   gl.glGenTextures(1,tmp,0);
   tindex=tmp[0];
-  if (npotTextures == null) {
-    npotTextures=gl.isExtensionAvailable("GL_ARB_texture_non_power_of_two") ? Boolean.TRUE : Boolean.FALSE;
-  }
-  int width2=source.width;
-  int height2=source.height;
-  if (npotTextures == Boolean.FALSE) {
-    width2=nextPowerOfTwo(source.width);
-    height2=nextPowerOfTwo(source.height);
-  }
+  int width2=nextPowerOfTwo(source.width);
+  int height2=nextPowerOfTwo(source.height);
   if (maxTextureSize == 0) {
     int maxSize[]=new int[1];
     gl.glGetIntegerv(GL.GL_MAX_TEXTURE_SIZE,maxSize,0);
