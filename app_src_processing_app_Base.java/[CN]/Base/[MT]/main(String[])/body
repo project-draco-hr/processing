@@ -17,9 +17,12 @@
     platform.setLookAndFeel();
   }
  catch (  Exception e) {
-    System.err.println("Non-fatal error while setting the Look & Feel.");
-    System.err.println("The error message follows, however Processing should run fine.");
-    System.err.println(e.getMessage());
+    String mess=e.getMessage();
+    if (mess.indexOf("ch.randelshofer.quaqua.QuaquaLookAndFeel") == -1) {
+      System.err.println("Non-fatal error while setting the Look & Feel.");
+      System.err.println("The error message follows, however Processing should run fine.");
+      System.err.println(mess);
+    }
   }
   untitledFolder=createTempFolder("untitled");
   untitledFolder.deleteOnExit();

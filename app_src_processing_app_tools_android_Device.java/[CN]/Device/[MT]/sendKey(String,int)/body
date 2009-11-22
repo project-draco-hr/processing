@@ -1,0 +1,11 @@
+{
+  String inputDevice=device.startsWith("emulator") ? "/dev/input/event0" : "/dev/input/event3";
+  String[] cmd=new String[]{"adb","-s",device,"shell","sendevent",inputDevice,"1",String.valueOf(key),"1"};
+  try {
+    Runtime.getRuntime().exec(cmd).waitFor();
+    cmd[cmd.length - 1]="0";
+    Runtime.getRuntime().exec(cmd).waitFor();
+  }
+ catch (  InterruptedException ie) {
+  }
+}

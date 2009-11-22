@@ -1,0 +1,40 @@
+{
+  String[] cmd={"adb","devices"};
+  Process p=Runtime.getRuntime().exec(cmd);
+  StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
+  StringRedirectThread output=new StringRedirectThread(p.getInputStream());
+  try {
+    int result=p.waitFor();
+    if (result == 0) {
+      String[] lines=output.getLines();
+      if (lines == null) {
+        System.out.println("No devices found.");
+        return new String[]{};
+      }
+      if (!lines[0].startsWith("List of devices") || lines[lines.length - 1].trim().length() != 0) {
+        Base.showWarning("Android Error",ADB_DEVICES_ERROR,null);
+      }
+      String[] devices=new String[lines.length - 2];
+      int deviceIndex=0;
+      for (int i=1; i < lines.length - 1; i++) {
+        int tab=lines[i].indexOf('\t');
+        if (tab != -1) {
+          devices[deviceIndex++]=lines[i].substring(0,tab);
+        }
+ else         if (lines[i].trim().length() != 0) {
+          System.out.println("Unknown ???adb devices??? response: " + lines[i]);
+        }
+      }
+      devices=PApplet.subset(devices,0,deviceIndex);
+      return devices;
+    }
+ else {
+      for (      String s : error.getLines()) {
+        System.err.println(s);
+      }
+    }
+  }
+ catch (  InterruptedException ie) {
+  }
+  return null;
+}

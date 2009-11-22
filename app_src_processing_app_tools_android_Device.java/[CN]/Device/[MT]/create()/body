@@ -1,0 +1,23 @@
+{
+  String[] cmd={"android","create","avd","-n",name,"-t",target};
+  Process p=Runtime.getRuntime().exec(cmd);
+  StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
+  StringRedirectThread output=new StringRedirectThread(p.getInputStream());
+  try {
+    int result=p.waitFor();
+    if (result == 0) {
+      for (      String s : output.getLines()) {
+        System.out.println(s);
+      }
+      return true;
+    }
+ else {
+      for (      String s : error.getLines()) {
+        System.err.println(s);
+      }
+    }
+  }
+ catch (  InterruptedException ie) {
+  }
+  return false;
+}

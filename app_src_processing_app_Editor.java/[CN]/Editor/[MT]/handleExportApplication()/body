@@ -1,23 +1,5 @@
 {
   if (!handleExportCheckModified())   return;
   toolbar.activate(EditorToolbar.EXPORT);
-  SwingUtilities.invokeLater(new Runnable(){
-    public void run(){
-      statusNotice("Exporting application...");
-      try {
-        if (sketch.exportApplicationPrompt()) {
-          Base.openFolder(sketch.getFolder());
-          statusNotice("Done exporting.");
-        }
- else {
-        }
-      }
- catch (      Exception e) {
-        statusNotice("Error during export.");
-        e.printStackTrace();
-      }
-      toolbar.deactivate(EditorToolbar.EXPORT);
-    }
-  }
-);
+  new Thread(exportAppHandler).start();
 }

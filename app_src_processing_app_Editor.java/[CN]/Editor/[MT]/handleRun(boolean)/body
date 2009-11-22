@@ -7,21 +7,10 @@
   if (Preferences.getBoolean("console.auto_clear")) {
     console.clear();
   }
-  presenting=present;
-  try {
-    String appletClassName=sketch.compile();
-    if (appletClassName != null) {
-      runtime=new Runner(sketch,appletClassName,presenting,Editor.this);
-      Thread t=new Thread(new Runnable(){
-        public void run(){
-          runtime.launch();
-        }
-      }
-);
-      t.start();
-    }
+  if (present) {
+    new Thread(presentHandler).start();
   }
- catch (  Exception e) {
-    statusError(e);
+ else {
+    new Thread(runHandler).start();
   }
 }

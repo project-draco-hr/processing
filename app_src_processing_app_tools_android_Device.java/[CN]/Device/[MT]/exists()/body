@@ -1,0 +1,26 @@
+{
+  String[] cmd={"android","list","avds"};
+  Process p=Runtime.getRuntime().exec(cmd);
+  StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
+  StringRedirectThread output=new StringRedirectThread(p.getInputStream());
+  try {
+    int result=p.waitFor();
+    if (result == 0) {
+      String[] lines=output.getLines();
+      for (      String line : lines) {
+        String[] m=PApplet.match(line,"\\s+Name:\\s+(\\S+)");
+        if (m != null) {
+          if (m[1].equals(name))           return true;
+        }
+      }
+    }
+ else {
+      for (      String s : error.getLines()) {
+        System.err.println(s);
+      }
+    }
+  }
+ catch (  InterruptedException ie) {
+  }
+  return false;
+}

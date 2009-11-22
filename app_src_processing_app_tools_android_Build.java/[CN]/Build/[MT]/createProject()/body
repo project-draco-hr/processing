@@ -1,0 +1,47 @@
+{
+  Sketch sketch=editor.getSketch();
+  androidFolder=new File(sketch.getFolder(),"android");
+  if (androidFolder.exists()) {
+    Date mod=new Date(androidFolder.lastModified());
+    File dest=new File(sketch.getFolder(),"android." + dateFormat.format(mod));
+    boolean result=androidFolder.renameTo(dest);
+    if (!result) {
+      Base.showWarning("Failed to rename","Could not rename the old ???android??? build folder.\n" + "Please delete, close, or rename the folder\n" + androidFolder.getAbsolutePath() + "\n"+ "and try again.",null);
+      Base.openFolder(sketch.getFolder());
+      return false;
+    }
+  }
+ else {
+    boolean result=androidFolder.mkdirs();
+    if (!result) {
+      Base.showWarning("Folders, folders, folders","Could not create the necessary folders to build.\n" + "Perhaps you have some file permissions to sort out?",null);
+      return false;
+    }
+  }
+  File srcFolder=new File(androidFolder,"src");
+  File javaFolder=new File(srcFolder,getPackageName().replace('.','/'));
+  javaFolder.mkdirs();
+  String buildPath=javaFolder.getAbsolutePath();
+  String prefsLine=Preferences.get("preproc.imports");
+  Preferences.set("preproc.imports","");
+  try {
+    className=sketch.preprocess(buildPath,new Preproc());
+    if (className != null) {
+      File androidXML=new File(androidFolder,"AndroidManifest.xml");
+      writeAndroidManifest(androidXML,sketch.getName(),className);
+      writeBuildProps(new File(androidFolder,"build.properties"));
+      buildFile=new File(androidFolder,"build.xml");
+      writeBuildXML(buildFile,sketch.getName());
+      writeDefaultProps(new File(androidFolder,"default.properties"));
+      writeLocalProps(new File(androidFolder,"local.properties"));
+      writeRes(new File(androidFolder,"res"),className);
+      writeLibs(new File(androidFolder,"libs"));
+    }
+  }
+ catch (  RunnerException e) {
+    editor.statusError(e);
+    Preferences.set("preproc.imports",prefsLine);
+    return false;
+  }
+  return true;
+}

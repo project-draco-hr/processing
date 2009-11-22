@@ -1,0 +1,25 @@
+{
+  Project p=new Project();
+  p.setUserProperty("ant.file",buildFile.getAbsolutePath());
+  DefaultLogger consoleLogger=new DefaultLogger();
+  consoleLogger.setErrorPrintStream(System.err);
+  consoleLogger.setOutputPrintStream(System.out);
+  consoleLogger.setMessageOutputLevel(Project.MSG_INFO);
+  p.addBuildListener(consoleLogger);
+  try {
+    editor.statusNotice("Building sketch for Android...");
+    p.fireBuildStarted();
+    p.init();
+    ProjectHelper helper=ProjectHelper.getProjectHelper();
+    p.addReference("ant.projectHelper",helper);
+    helper.parse(p,buildFile);
+    p.executeTarget("debug");
+    editor.statusNotice("Finished building sketch.");
+    return true;
+  }
+ catch (  BuildException e) {
+    p.fireBuildFinished(e);
+    editor.statusError(e);
+  }
+  return false;
+}

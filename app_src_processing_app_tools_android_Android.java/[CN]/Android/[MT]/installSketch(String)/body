@@ -1,0 +1,49 @@
+{
+  boolean emu=device.startsWith("emulator");
+  editor.statusNotice("Sending sketch to the " + (emu ? "emulator" : "phone") + ".");
+  try {
+    Device.sendMenuButton(device);
+    Device.sendHomeButton(device);
+    String[] cmd=new String[]{"adb","-s",device,"install","-r",build.getPathForAPK("debug")};
+    Process p=Runtime.getRuntime().exec(cmd);
+    System.out.println();
+    System.out.print("Install command: ");
+    System.out.println(PApplet.join(cmd," "));
+    StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
+    StringRedirectThread output=new StringRedirectThread(p.getInputStream());
+    int result=p.waitFor();
+    if (result != 0) {
+      for (      String err : error.getLines()) {
+        System.err.println(err);
+      }
+      editor.statusError("Could not install the sketch.");
+      System.out.println("???adb install??? returned " + result + ".");
+      return false;
+    }
+ else {
+      String errorMsg=null;
+      for (      String out : output.getLines()) {
+        if (out.startsWith("Failure")) {
+          errorMsg=out.substring(8);
+          System.err.println(out);
+        }
+ else {
+          System.out.println(out);
+        }
+      }
+      if (errorMsg == null) {
+        editor.statusNotice("Done installing.");
+        return true;
+      }
+ else {
+        editor.statusError("Error while installing " + errorMsg);
+      }
+    }
+  }
+ catch (  IOException e) {
+    editor.statusError(e);
+  }
+catch (  InterruptedException e) {
+  }
+  return false;
+}

@@ -1,24 +1,5 @@
 {
   if (!handleExportCheckModified())   return;
   toolbar.activate(EditorToolbar.EXPORT);
-  Thread t=new Thread(new Runnable(){
-    public void run(){
-      try {
-        boolean success=sketch.exportApplet();
-        if (success) {
-          File appletFolder=new File(sketch.getFolder(),"applet");
-          Base.openFolder(appletFolder);
-          statusNotice("Done exporting.");
-        }
- else {
-        }
-      }
- catch (      Exception e) {
-        statusError(e);
-      }
-      toolbar.deactivate(EditorToolbar.EXPORT);
-    }
-  }
-);
-  t.start();
+  new Thread(exportHandler).start();
 }

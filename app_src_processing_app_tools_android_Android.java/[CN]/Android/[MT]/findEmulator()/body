@@ -1,0 +1,32 @@
+{
+  String portString=Preferences.get("android.emulator.port");
+  if (portString == null) {
+    portString="5566";
+    Preferences.set("android.emulator.port",portString);
+  }
+  String name="emulator-" + portString;
+  try {
+    String[] devices=Debug.listDevices();
+    for (    String s : devices) {
+      if (s.equals(name)) {
+        return name;
+      }
+    }
+  }
+ catch (  IOException e) {
+    editor.statusError(e);
+    return null;
+  }
+  try {
+    editor.statusNotice("Starting new Android emulator.");
+    emulatorProcess=Runtime.getRuntime().exec(new String[]{"emulator","-avd",getDefaultDevice(),"-port",portString,"-logcat","'*:i'","-no-boot-anim"});
+    System.out.println(PApplet.join(new String[]{"emulator","-avd",getDefaultDevice(),"-port",portString,"-logcat","'*:i'","-no-boot-anim"}," "));
+    new StreamRedirectThread("android-emulator-out",emulatorProcess.getInputStream(),System.out).start();
+    new StreamRedirectThread("android-emulator-err",emulatorProcess.getErrorStream(),System.err).start();
+    return name;
+  }
+ catch (  IOException e) {
+    editor.statusError(e);
+    return null;
+  }
+}

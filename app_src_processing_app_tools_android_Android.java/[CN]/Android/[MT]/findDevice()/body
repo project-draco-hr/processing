@@ -1,0 +1,16 @@
+{
+  String[] devices;
+  try {
+    devices=Debug.listDevices();
+  }
+ catch (  IOException e) {
+    editor.statusError(e);
+    return null;
+  }
+  for (  String name : devices) {
+    if (!name.startsWith("emulator-")) {
+      return name;
+    }
+  }
+  return null;
+}
