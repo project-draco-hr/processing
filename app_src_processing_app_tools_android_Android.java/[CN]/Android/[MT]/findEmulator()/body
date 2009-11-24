@@ -18,9 +18,18 @@
     return null;
   }
   try {
+    if (emulatorProcess != null) {
+      try {
+        int result=emulatorProcess.exitValue();
+        emulatorProcess.destroy();
+      }
+ catch (      IllegalThreadStateException itse) {
+      }
+    }
     editor.statusNotice("Starting new Android emulator.");
-    emulatorProcess=Runtime.getRuntime().exec(new String[]{"emulator","-avd",getDefaultDevice(),"-port",portString,"-logcat","'*:i'","-no-boot-anim"});
-    System.out.println(PApplet.join(new String[]{"emulator","-avd",getDefaultDevice(),"-port",portString,"-logcat","'*:i'","-no-boot-anim"}," "));
+    String[] cmd=new String[]{"emulator","-avd",getDefaultDevice(),"-port",portString,"-logcat","'*:i'","-no-boot-anim"};
+    emulatorProcess=Runtime.getRuntime().exec(cmd);
+    System.out.println(PApplet.join(cmd," "));
     new StreamRedirectThread("android-emulator-out",emulatorProcess.getInputStream(),System.out).start();
     new StreamRedirectThread("android-emulator-err",emulatorProcess.getErrorStream(),System.err).start();
     return name;
