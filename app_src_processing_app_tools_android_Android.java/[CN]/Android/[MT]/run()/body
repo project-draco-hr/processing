@@ -1,13 +1,16 @@
 {
   editor.statusNotice("Loading Android tools.");
-  checkPath();
-  boolean success=Device.checkDefaults();
-  if (success) {
-    editor.setHandlers(new RunHandler(),new PresentHandler(),new StopHandler(),new ExportHandler(),new ExportAppHandler());
-    build=new Build(editor);
-    editor.statusNotice("Done loading Android tools.");
+  boolean success=checkPath();
+  if (!success) {
+    editor.statusNotice("Android mode canceled.");
+    return;
   }
- else {
+  success=Device.checkDefaults();
+  if (!success) {
     editor.statusError("Could not load Android tools.");
+    return;
   }
+  editor.setHandlers(new RunHandler(),new PresentHandler(),new StopHandler(),new ExportHandler(),new ExportAppHandler());
+  build=new Build(editor);
+  editor.statusNotice("Done loading Android tools.");
 }
