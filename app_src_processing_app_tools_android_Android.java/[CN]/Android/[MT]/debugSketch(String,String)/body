@@ -1,0 +1,42 @@
+{
+  try {
+    String port=null;
+    long timeout=System.currentTimeMillis() + 15 * 1000;
+    while (System.currentTimeMillis() < timeout) {
+      if (port != null) {
+        System.out.println("Waiting for application to launch...");
+        try {
+          Thread.sleep(500);
+        }
+ catch (        InterruptedException ie) {
+        }
+      }
+      port=getJdwpPort(device);
+      if (!port.equals(prevPort)) {
+        System.out.println("I'm digging port " + port + " instead of "+ prevPort+ ".");
+        break;
+      }
+    }
+    String[] cmd=new String[]{"adb","-s",device,"forward","tcp:29892","jdwp:" + port};
+    PApplet.println(cmd);
+    Pavarotti fwd=new Pavarotti(cmd);
+    System.out.println("waiting for forward");
+    int result=fwd.waitFor();
+    fwd.printLines();
+    System.out.println("done with forward");
+    if (result != 0) {
+      editor.statusError("Could not connect for debugging.");
+      return false;
+    }
+    System.out.println("launching vm");
+    AndroidRunner ar=new AndroidRunner(editor);
+    ar.launch("29892");
+    System.out.println("vm launched");
+  }
+ catch (  IOException e) {
+    editor.statusError(e);
+  }
+catch (  InterruptedException e) {
+  }
+  return false;
+}

@@ -1,7 +1,6 @@
 {
   try {
-    Device.sendMenuButton(device);
-    Device.sendHomeButton(device);
+    String lastPort=getJdwpPort(device);
     Process p=Runtime.getRuntime().exec(new String[]{"adb","-s",device,"shell","am","start","-e","debug","true","-a","android.intent.action.MAIN","-n",build.getPackageName() + "/." + build.getClassName()});
     int result=p.waitFor();
     if (result != 0) {
@@ -11,7 +10,7 @@
  else {
       boolean emu=device.startsWith("emulator");
       editor.statusNotice("Sketch started on the " + (emu ? "emulator" : "phone") + ".");
-      return true;
+      return lastPort;
     }
   }
  catch (  IOException e) {
@@ -20,5 +19,5 @@
 catch (  InterruptedException e) {
     e.printStackTrace();
   }
-  return false;
+  return null;
 }
