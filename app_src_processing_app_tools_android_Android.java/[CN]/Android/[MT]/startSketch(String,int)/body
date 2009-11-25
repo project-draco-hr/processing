@@ -13,6 +13,22 @@
       editor.statusNotice("Sketch started on the " + (emu ? "emulator" : "phone") + ".");
       return true;
     }
+    Process fwd=Runtime.getRuntime().exec(new String[]{"adb","-s",device,"-d","forward","tcp:29892","jdwp:" + port});
+    StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
+    StringRedirectThread output=new StringRedirectThread(p.getInputStream());
+    result=fwd.waitFor();
+    for (    String err : error.getLines()) {
+      System.err.println("err: " + err);
+    }
+    for (    String out : output.getLines()) {
+      System.out.println("out: " + out);
+    }
+    if (result != 0) {
+      editor.statusError("Could not connect for debugging.");
+      return false;
+    }
+    AndroidRunner ar=new AndroidRunner(editor);
+    ar.launch(String.valueOf(port));
   }
  catch (  IOException e) {
     editor.statusError(e);

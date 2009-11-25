@@ -5,7 +5,10 @@
   if (!success)   return;
   success=build.antBuild("debug");
   if (!success)   return;
-  success=installSketch(device);
-  if (!success)   return;
-  success=startSketch(device);
+  int port=waitUntilReady(device);
+  if (port != 0) {
+    success=installSketch(device);
+    if (!success)     return;
+    success=startSketch(device,port);
+  }
 }

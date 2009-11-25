@@ -1,0 +1,42 @@
+{
+  long timeout=System.currentTimeMillis() + 30 * 1000;
+  try {
+    while (System.currentTimeMillis() < timeout) {
+      String[] cmd=new String[]{"adb","-s",device,"jdwp"};
+      Process p=Runtime.getRuntime().exec(cmd);
+      StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
+      StringRedirectThread output=new StringRedirectThread(p.getInputStream());
+      int result=p.waitFor();
+      error.finish();
+      output.finish();
+      for (      String err : error.getLines()) {
+        if (err.length() != 0) {
+          System.err.println("err: " + err);
+        }
+      }
+      for (      String out : output.getLines()) {
+        if (out.length() != 0) {
+          System.out.println("out: " + out);
+        }
+      }
+      if (result == 0) {
+        String[] lines=output.getLines();
+        String last=lines[lines.length - 1];
+        if (last.length() == 0) {
+          last=lines[lines.length - 2];
+        }
+        System.out.println("last is " + last);
+        return PApplet.parseInt(last);
+      }
+      try {
+        Thread.sleep(1000);
+      }
+ catch (      InterruptedException ie) {
+      }
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  return 0;
+}
