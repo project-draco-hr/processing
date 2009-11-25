@@ -3,13 +3,19 @@
   Map arguments=connector.defaultArguments();
   Connector.Argument portArg=(Connector.Argument)arguments.get("port");
   portArg.setValue(port);
+  ((Connector.Argument)arguments.get("hostname")).setValue("localhost");
+  ((Connector.Argument)arguments.get("timeout")).setValue("5000");
   try {
+    PApplet.println(connector);
+    PApplet.println(arguments);
     return connector.attach(arguments);
   }
- catch (  IOException exc) {
-    throw new Error("Unable to launch target VM: " + exc);
+ catch (  IOException ioe) {
+    ioe.printStackTrace();
+    editor.statusError(ioe);
   }
-catch (  IllegalConnectorArgumentsException exc) {
-    throw new Error("Internal error: " + exc);
+catch (  IllegalConnectorArgumentsException icae) {
+    editor.statusError(icae);
   }
+  return null;
 }
