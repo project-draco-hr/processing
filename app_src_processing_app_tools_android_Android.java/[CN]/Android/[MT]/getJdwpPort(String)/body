@@ -5,15 +5,19 @@
       String[] cmd=new String[]{"adb","-s",device,"jdwp"};
       Pavarotti p=new Pavarotti(cmd);
       int result=p.waitFor();
-      if (result == 0)       return true;
-      for (      String err : p.getErrorLines()) {
-        if (err.length() != 0) {
-          System.err.println("err: " + err);
+      if (result == 0) {
+        String[] lines=p.getOutputLines();
+        String last=lines[lines.length - 1];
+        if (last.trim().length() == 0) {
+          last=lines[lines.length - 2];
         }
+        return last.trim();
       }
-      for (      String out : p.getOutputLines()) {
-        if (out.length() != 0) {
-          System.out.println("out: " + out);
+ else {
+        for (        String err : p.getErrorLines()) {
+          if (err.length() != 0) {
+            System.err.println("err: " + err);
+          }
         }
       }
       try {
@@ -26,5 +30,5 @@
  catch (  Exception e) {
     e.printStackTrace();
   }
-  return false;
+  return null;
 }

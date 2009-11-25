@@ -1,0 +1,24 @@
+{
+  try {
+    Device.sendMenuButton(device);
+    Device.sendHomeButton(device);
+    Process p=Runtime.getRuntime().exec(new String[]{"adb","-s",device,"shell","am","start","-e","debug","true","-a","android.intent.action.MAIN","-n",build.getPackageName() + "/." + build.getClassName()});
+    int result=p.waitFor();
+    if (result != 0) {
+      editor.statusError("Could not start the sketch.");
+      System.err.println("???adb shell?????for ???am start??? returned " + result + ".");
+    }
+ else {
+      boolean emu=device.startsWith("emulator");
+      editor.statusNotice("Sketch started on the " + (emu ? "emulator" : "phone") + ".");
+      return true;
+    }
+  }
+ catch (  IOException e) {
+    editor.statusError(e);
+  }
+catch (  InterruptedException e) {
+    e.printStackTrace();
+  }
+  return false;
+}
