@@ -1,0 +1,50 @@
+{
+  try {
+    int codeIndex=-1;
+    int lineNumber=-1;
+    List<StackFrame> frames=thread.frames();
+    for (    StackFrame frame : frames) {
+      Location location=frame.location();
+      String filename=null;
+      filename=location.sourceName();
+      lineNumber=location.lineNumber();
+      String appletJavaFile=appletClassName + ".java";
+      SketchCode errorCode=null;
+      if (filename.equals(appletJavaFile)) {
+        for (        SketchCode code : sketch.getCode()) {
+          if (code.isExtension("pde")) {
+            if (lineNumber >= code.getPreprocOffset()) {
+              errorCode=code;
+            }
+          }
+        }
+      }
+ else {
+        for (        SketchCode code : sketch.getCode()) {
+          if (code.isExtension("java")) {
+            if (filename.equals(code.getFileName())) {
+              errorCode=code;
+            }
+          }
+        }
+      }
+      codeIndex=sketch.getCodeIndex(errorCode);
+      if (codeIndex != -1) {
+        lineNumber-=sketch.getCode(codeIndex).getPreprocOffset();
+        lineNumber--;
+        exception=new RunnerException(message,codeIndex,lineNumber,-1);
+        exception.hideStackTrace();
+        listener.statusError(exception);
+        return;
+      }
+    }
+  }
+ catch (  AbsentInformationException e) {
+    exception=new RunnerException(message);
+    exception.hideStackTrace();
+    listener.statusError(exception);
+  }
+catch (  IncompatibleThreadStateException e) {
+    e.printStackTrace();
+  }
+}
