@@ -7,11 +7,14 @@
       int result=p.waitFor();
       if (result == 0) {
         String[] lines=p.getOutputLines();
-        String last=lines[lines.length - 1];
-        if (last.trim().length() == 0) {
-          last=lines[lines.length - 2];
+        PApplet.println(lines);
+        for (int i=lines.length - 1; i >= 0; --i) {
+          String s=lines[i].trim();
+          if (s.length() != 0) {
+            return s;
+          }
         }
-        return last.trim();
+        return null;
       }
  else {
         for (        String err : p.getErrorLines()) {

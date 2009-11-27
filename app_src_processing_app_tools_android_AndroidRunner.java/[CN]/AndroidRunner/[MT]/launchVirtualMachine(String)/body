@@ -3,12 +3,14 @@
   Map arguments=connector.defaultArguments();
   Connector.Argument portArg=(Connector.Argument)arguments.get("port");
   portArg.setValue(port);
-  ((Connector.Argument)arguments.get("hostname")).setValue("localhost");
-  ((Connector.Argument)arguments.get("timeout")).setValue("5000");
+  ((Connector.Argument)arguments.get("hostname")).setValue("127.0.0.1");
   try {
     PApplet.println(connector);
     PApplet.println(arguments);
-    return connector.attach(arguments);
+    PApplet.println("attaching now...");
+    VirtualMachine machine=connector.attach(arguments);
+    PApplet.println("attached");
+    return machine;
   }
  catch (  IOException ioe) {
     ioe.printStackTrace();
