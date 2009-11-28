@@ -1,8 +1,7 @@
 {
   AttachingConnector connector=(AttachingConnector)findConnector("com.sun.jdi.SocketAttach");
   Map arguments=connector.defaultArguments();
-  Connector.Argument portArg=(Connector.Argument)arguments.get("port");
-  portArg.setValue(port);
+  ((Connector.Argument)arguments.get("port")).setValue(localPort);
   ((Connector.Argument)arguments.get("hostname")).setValue("127.0.0.1");
   try {
     PApplet.println(connector);

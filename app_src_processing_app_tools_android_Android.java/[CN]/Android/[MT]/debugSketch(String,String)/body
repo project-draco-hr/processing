@@ -4,7 +4,7 @@
     long timeout=System.currentTimeMillis() + 15 * 1000;
     while (System.currentTimeMillis() < timeout) {
       if (port != null) {
-        System.out.println("Waiting for application to launch...");
+        System.out.println("Waiting a half second " + "for the application to launch...");
         try {
           Thread.sleep(500);
         }
@@ -19,6 +19,7 @@
     System.out.println("Found application on port " + port + ".");
     String[] cmd=new String[]{"adb","-s",device,"forward","tcp:" + ADB_SOCKET_PORT,"jdwp:" + port};
     Pavarotti fwd=new Pavarotti(cmd);
+    fwd.printCommand();
     int result=fwd.waitFor();
     fwd.printLines();
     if (result != 0) {

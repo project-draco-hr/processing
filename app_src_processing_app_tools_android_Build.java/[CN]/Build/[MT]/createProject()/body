@@ -22,8 +22,6 @@
   File javaFolder=new File(srcFolder,getPackageName().replace('.','/'));
   javaFolder.mkdirs();
   String buildPath=javaFolder.getAbsolutePath();
-  String prefsLine=Preferences.get("preproc.imports");
-  Preferences.set("preproc.imports","");
   try {
     className=sketch.preprocess(buildPath,new Preproc());
     if (className != null) {
@@ -40,7 +38,6 @@
   }
  catch (  RunnerException e) {
     editor.statusError(e);
-    Preferences.set("preproc.imports",prefsLine);
     return false;
   }
   return true;
