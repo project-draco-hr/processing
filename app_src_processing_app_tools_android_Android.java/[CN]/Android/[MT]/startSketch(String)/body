@@ -1,7 +1,7 @@
 {
   try {
     String lastPort=getJdwpPort(device);
-    Process p=Runtime.getRuntime().exec(new String[]{"adb","-s",device,"shell","am","start","-e","debug","true","-a","android.intent.action.MAIN","-n",build.getPackageName() + "/." + build.getClassName()});
+    Process p=Runtime.getRuntime().exec(new String[]{"adb","-s",device,"shell","am","start","-D","-a","android.intent.action.MAIN","-c","android.intent.category.LAUNCHER","-n",build.getPackageName() + "/." + build.getClassName()});
     int result=p.waitFor();
     if (result != 0) {
       editor.statusError("Could not start the sketch.");

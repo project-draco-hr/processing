@@ -2,9 +2,14 @@
   try {
     int codeIndex=-1;
     int lineNumber=-1;
+    Sketch sketch=editor.getSketch();
+    String appletClassName=sketch.getName();
+    List<StackFrame> framey=thread.frames();
+    for (    StackFrame frame : framey) {
+      System.out.println("frame: " + frame);
+    }
     List<StackFrame> frames=thread.frames();
     for (    StackFrame frame : frames) {
-      System.out.println("frame: " + frame);
       Location location=frame.location();
       String filename=null;
       filename=location.sourceName();
