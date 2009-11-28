@@ -1,28 +1,7 @@
 {
-  int count=1;
-  for (  String s : getCoreImports()) {
-    out.println(s);
-    count++;
-  }
-  if (programImports.size() != 0) {
-    for (    String item : programImports) {
-      out.println("import " + item + "; ");
-    }
-    out.println();
-    count+=programImports.size() + 1;
-  }
-  if (codeFolderImports.size() != 0) {
-    for (    String item : codeFolderImports) {
-      out.println("import " + item + "; ");
-    }
-    out.println();
-    count+=codeFolderImports.size() + 1;
-  }
-  String[] defaultImports=getDefaultImports();
-  for (  String item : defaultImports) {
-    out.println("import " + item + "; ");
-  }
-  out.println();
-  count+=defaultImports.length + 1;
+  int count=writeImportList(out,getCoreImports());
+  count+=writeImportList(out,programImports);
+  count+=writeImportList(out,codeFolderImports);
+  count+=writeImportList(out,getDefaultImports());
   return count;
 }

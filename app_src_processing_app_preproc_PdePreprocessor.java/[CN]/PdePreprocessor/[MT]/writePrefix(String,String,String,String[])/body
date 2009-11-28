@@ -1,52 +1,24 @@
 {
   this.buildPath=buildPath;
   this.name=name;
-  int tabSize=Preferences.getInteger("editor.tabs.size");
-  char[] indentChars=new char[tabSize];
-  Arrays.fill(indentChars,' ');
-  indent=new String(indentChars);
   foundMain=false;
   program+="\n";
-  Sketch.scrubComments(program);
+  String scrubbed=Sketch.scrubComments(program);
+  System.out.println(scrubbed);
   if (Preferences.getBoolean("preproc.substitute_unicode")) {
-    char p[]=program.toCharArray();
-    int unicodeCount=0;
-    for (int i=0; i < p.length; i++) {
-      if (p[i] > 127)       unicodeCount++;
-    }
-    if (unicodeCount != 0) {
-      int index=0;
-      char p2[]=new char[p.length + unicodeCount * 5];
-      for (int i=0; i < p.length; i++) {
-        if (p[i] < 128) {
-          p2[index++]=p[i];
-        }
- else         if (p[i] == 160) {
-          p2[index++]=' ';
-        }
- else {
-          int c=p[i];
-          p2[index++]='\\';
-          p2[index++]='u';
-          char str[]=Integer.toHexString(c).toCharArray();
-          for (int m=0; m < 4 - str.length; m++)           p2[index++]='0';
-          System.arraycopy(str,0,p2,index,str.length);
-          index+=str.length;
-        }
-      }
-      program=new String(p2,0,index);
-    }
+    program=substituteUnicode(program);
   }
   String importRegexp="(?:^|;)\\s*(import\\s+)(\\S+)(\\s*;)";
   programImports=new ArrayList<String>();
   do {
-    String[] pieces=PApplet.match(program,importRegexp);
+    String[] pieces=PApplet.match(scrubbed,importRegexp);
     if (pieces == null)     break;
     String piece=pieces[1] + pieces[2] + pieces[3];
     int len=piece.length();
     programImports.add(pieces[2]);
-    int idx=program.indexOf(piece);
+    int idx=scrubbed.indexOf(piece);
     program=program.substring(0,idx) + program.substring(idx + len);
+    scrubbed=scrubbed.substring(0,idx) + scrubbed.substring(idx + len);
   }
  while (true);
   codeFolderImports=new ArrayList<String>();
