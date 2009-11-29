@@ -1,0 +1,105 @@
+{
+  this.font=font;
+  this.smooth=smooth;
+  if (charset != null) {
+    Arrays.sort(charset);
+  }
+  this.charCount=(charset == null) ? 65536 : charset.length;
+  this.size=size;
+  fwidth=fheight=size;
+  PImage bitmaps[]=new PImage[charCount];
+  value=new int[charCount];
+  height=new int[charCount];
+  width=new int[charCount];
+  setWidth=new int[charCount];
+  topExtent=new int[charCount];
+  leftExtent=new int[charCount];
+  ascii=new int[128];
+  for (int i=0; i < 128; i++)   ascii[i]=-1;
+  int mbox3=size * 3;
+  Bitmap playground=Bitmap.createBitmap(mbox3,mbox3,Config.ARGB_8888);
+  Canvas canvas=new Canvas(playground);
+  Paint paint=new Paint();
+  paint.setAntiAlias(smooth);
+  paint.setTypeface(font);
+  paint.setTextSize(size);
+  int samples[]=new int[mbox3 * mbox3];
+  int maxWidthHeight=0;
+  int index=0;
+  for (int i=0; i < charCount; i++) {
+    char c=(charset == null) ? (char)i : charset[i];
+    canvas.drawColor(Color.WHITE);
+    paint.setColor(Color.BLACK);
+    canvas.drawText(String.valueOf(c),size,size * 2,paint);
+    playground.getPixels(samples,0,mbox3,0,0,mbox3,mbox3);
+    int minX=1000, maxX=0;
+    int minY=1000, maxY=0;
+    boolean pixelFound=false;
+    for (int y=0; y < mbox3; y++) {
+      for (int x=0; x < mbox3; x++) {
+        int sample=samples[y * mbox3 + x] & 0xff;
+        if (sample != 255) {
+          if (x < minX)           minX=x;
+          if (y < minY)           minY=y;
+          if (x > maxX)           maxX=x;
+          if (y > maxY)           maxY=y;
+          pixelFound=true;
+        }
+      }
+    }
+    if (!pixelFound) {
+      minX=minY=0;
+      maxX=maxY=0;
+    }
+    value[index]=c;
+    height[index]=(maxY - minY) + 1;
+    width[index]=(maxX - minX) + 1;
+    setWidth[index]=(int)paint.measureText(String.valueOf(c));
+    if (c < 128)     ascii[c]=index;
+    topExtent[index]=size * 2 - minY;
+    leftExtent[index]=minX - size;
+    if (c == 'd') {
+      ascent=topExtent[index];
+    }
+    if (c == 'p') {
+      descent=-topExtent[index] + height[index];
+    }
+    if (width[index] > maxWidthHeight)     maxWidthHeight=width[index];
+    if (height[index] > maxWidthHeight)     maxWidthHeight=height[index];
+    bitmaps[index]=new PImage(width[index],height[index],ALPHA);
+    for (int y=minY; y <= maxY; y++) {
+      for (int x=minX; x <= maxX; x++) {
+        int val=255 - (samples[y * mbox3 + x] & 0xff);
+        int pindex=(y - minY) * width[index] + (x - minX);
+        bitmaps[index].pixels[pindex]=val;
+      }
+    }
+    index++;
+  }
+  charCount=index;
+  if ((ascent == 0) && (descent == 0)) {
+    for (int i=0; i < charCount; i++) {
+      char cc=(char)value[i];
+      if (Character.isWhitespace(cc) || (cc == '\u00A0') || (cc == '\u2007')|| (cc == '\u202F')) {
+        continue;
+      }
+      if (topExtent[i] > ascent) {
+        ascent=topExtent[i];
+      }
+      int d=-topExtent[i] + height[i];
+      if (d > descent) {
+        descent=d;
+      }
+    }
+  }
+  mbox2=(int)Math.pow(2,Math.ceil(Math.log(maxWidthHeight) / Math.log(2)));
+  twidth=theight=mbox2;
+  images=new PImage[charCount];
+  for (int i=0; i < charCount; i++) {
+    images[i]=new PImage(mbox2,mbox2,ALPHA);
+    for (int y=0; y < height[i]; y++) {
+      System.arraycopy(bitmaps[i].pixels,y * width[i],images[i].pixels,y * mbox2,width[i]);
+    }
+    bitmaps[i]=null;
+  }
+}

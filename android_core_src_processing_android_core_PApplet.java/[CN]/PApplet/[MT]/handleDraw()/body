@@ -1,0 +1,33 @@
+{
+  if (g != null && (looping || redraw)) {
+    if (!g.canDraw()) {
+      return;
+    }
+    g.beginDraw();
+    long now=System.nanoTime();
+    if (frameCount == 0) {
+      setup();
+      this.defaultSize=false;
+    }
+ else {
+      double rate=1000000.0 / ((now - frameRateLastNanos) / 1000000.0);
+      float instantaneousRate=(float)rate / 1000.0f;
+      frameRate=(frameRate * 0.9f) + (instantaneousRate * 0.1f);
+      pmouseX=dmouseX;
+      pmouseY=dmouseY;
+      pmotionX=dmotionX;
+      pmotionY=dmotionY;
+      draw();
+      dmouseX=mouseX;
+      dmouseY=mouseY;
+      dmotionX=motionX;
+      dmotionY=motionY;
+      dequeueMouseEvents();
+      dequeueKeyEvents();
+      redraw=false;
+    }
+    g.endDraw();
+    frameRateLastNanos=now;
+    frameCount++;
+  }
+}

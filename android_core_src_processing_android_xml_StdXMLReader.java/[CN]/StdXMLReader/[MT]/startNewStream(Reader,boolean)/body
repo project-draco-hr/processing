@@ -1,0 +1,15 @@
+{
+  StackedReader oldReader=this.currentReader;
+  this.readers.push(this.currentReader);
+  this.currentReader=new StackedReader();
+  if (isInternalEntity) {
+    this.currentReader.lineReader=null;
+    this.currentReader.pbReader=new PushbackReader(reader,2);
+  }
+ else {
+    this.currentReader.lineReader=new LineNumberReader(reader);
+    this.currentReader.pbReader=new PushbackReader(this.currentReader.lineReader,2);
+  }
+  this.currentReader.systemId=oldReader.systemId;
+  this.currentReader.publicId=oldReader.publicId;
+}

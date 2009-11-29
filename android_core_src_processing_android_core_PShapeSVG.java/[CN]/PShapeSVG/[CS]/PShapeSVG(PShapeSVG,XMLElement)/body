@@ -1,0 +1,46 @@
+{
+  if (parent == null) {
+    stroke=false;
+    strokeColor=0xff000000;
+    strokeWeight=1;
+    strokeCap=PConstants.SQUARE;
+    strokeJoin=PConstants.MITER;
+    strokeGradient=null;
+    strokeGradientPaint=null;
+    strokeName=null;
+    fill=true;
+    fillColor=0xff000000;
+    fillGradient=null;
+    fillGradientPaint=null;
+    fillName=null;
+    strokeOpacity=1;
+    fillOpacity=1;
+    opacity=1;
+  }
+ else {
+    stroke=parent.stroke;
+    strokeColor=parent.strokeColor;
+    strokeWeight=parent.strokeWeight;
+    strokeCap=parent.strokeCap;
+    strokeJoin=parent.strokeJoin;
+    strokeGradient=parent.strokeGradient;
+    strokeGradientPaint=parent.strokeGradientPaint;
+    strokeName=parent.strokeName;
+    fill=parent.fill;
+    fillColor=parent.fillColor;
+    fillGradient=parent.fillGradient;
+    fillGradientPaint=parent.fillGradientPaint;
+    fillName=parent.fillName;
+    opacity=parent.opacity;
+  }
+  element=properties;
+  name=properties.getStringAttribute("id");
+  String displayStr=properties.getStringAttribute("display","inline");
+  visible=!displayStr.equals("none");
+  String transformStr=properties.getStringAttribute("transform");
+  if (transformStr != null) {
+    matrix=parseMatrix(transformStr);
+  }
+  parseColors(properties);
+  parseChildren(properties);
+}

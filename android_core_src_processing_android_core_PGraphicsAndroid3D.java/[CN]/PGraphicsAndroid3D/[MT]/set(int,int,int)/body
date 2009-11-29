@@ -1,0 +1,12 @@
+{
+  int getset=0;
+  if (BIG_ENDIAN) {
+    getset=(argb << 8) | 0xff;
+  }
+ else {
+    getset=(argb & 0xff00ff00) | ((argb << 16) & 0xff0000) | ((argb >> 16) & 0xff);
+  }
+  getsetBuffer.put(0,getset);
+  getsetBuffer.rewind();
+  setRasterPos(x,(height - y) - 1);
+}

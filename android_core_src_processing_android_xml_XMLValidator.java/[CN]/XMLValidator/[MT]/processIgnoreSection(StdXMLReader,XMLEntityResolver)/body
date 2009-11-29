@@ -1,0 +1,15 @@
+{
+  if (!XMLUtil.checkLiteral(reader,"NORE")) {
+    XMLUtil.skipTag(reader);
+    return;
+  }
+  XMLUtil.skipWhitespace(reader,null);
+  String str=XMLUtil.read(reader,'%');
+  char ch=str.charAt(0);
+  if (ch != '[') {
+    XMLUtil.skipTag(reader);
+    return;
+  }
+  Reader subreader=new CDATAReader(reader);
+  subreader.close();
+}

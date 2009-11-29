@@ -1,0 +1,57 @@
+{
+  String name=elem.getName();
+  PShapeSVG shape=null;
+  if (name.equals("g")) {
+    shape=new PShapeSVG(this,elem);
+  }
+ else   if (name.equals("defs")) {
+    shape=new PShapeSVG(this,elem);
+  }
+ else   if (name.equals("line")) {
+    shape=new PShapeSVG(this,elem);
+    shape.parseLine();
+  }
+ else   if (name.equals("circle")) {
+    shape=new PShapeSVG(this,elem);
+    shape.parseEllipse(true);
+  }
+ else   if (name.equals("ellipse")) {
+    shape=new PShapeSVG(this,elem);
+    shape.parseEllipse(false);
+  }
+ else   if (name.equals("rect")) {
+    shape=new PShapeSVG(this,elem);
+    shape.parseRect();
+  }
+ else   if (name.equals("polygon")) {
+    shape=new PShapeSVG(this,elem);
+    shape.parsePoly(true);
+  }
+ else   if (name.equals("polyline")) {
+    shape=new PShapeSVG(this,elem);
+    shape.parsePoly(false);
+  }
+ else   if (name.equals("path")) {
+    shape=new PShapeSVG(this,elem);
+    shape.parsePath();
+  }
+ else   if (name.equals("radialGradient")) {
+    return new RadialGradient(this,elem);
+  }
+ else   if (name.equals("linearGradient")) {
+    return new LinearGradient(this,elem);
+  }
+ else   if (name.equals("text")) {
+    PGraphics.showWarning("Text in SVG files is not currently supported, " + "convert text to outlines instead.");
+  }
+ else   if (name.equals("filter")) {
+    PGraphics.showWarning("Filters are not supported.");
+  }
+ else   if (name.equals("mask")) {
+    PGraphics.showWarning("Masks are not supported.");
+  }
+ else {
+    PGraphics.showWarning("Ignoring  <" + name + "> tag.");
+  }
+  return shape;
+}

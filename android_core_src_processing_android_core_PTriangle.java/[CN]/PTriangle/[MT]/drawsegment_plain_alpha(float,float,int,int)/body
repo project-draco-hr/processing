@@ -1,0 +1,38 @@
+{
+  ytop*=SCREEN_WIDTH;
+  ybottom*=SCREEN_WIDTH;
+  int pr=m_fill & 0xFF0000;
+  int pg=m_fill & 0xFF00;
+  int pb=m_fill & 0xFF;
+  float iaf=iaadd;
+  while (ytop < ybottom) {
+    int xstart=(int)(xleft + PIXEL_CENTER);
+    if (xstart < 0)     xstart=0;
+    int xend=(int)(xrght + PIXEL_CENTER);
+    if (xend > SCREEN_WIDTH)     xend=SCREEN_WIDTH;
+    float xdiff=(xstart + PIXEL_CENTER) - xleft;
+    float iz=izadd * xdiff + zleft;
+    int ia=(int)(iaf * xdiff + aleft);
+    xstart+=ytop;
+    xend+=ytop;
+    for (; xstart < xend; xstart++) {
+      if (noDepthTest || (iz <= m_zbuffer[xstart])) {
+        int alpha=ia >> 16;
+        int mr0=m_pixels[xstart];
+        int mg0=mr0 & 0xFF00;
+        int mb0=mr0 & 0xFF;
+        mr0&=0xFF0000;
+        mr0=mr0 + (((pr - mr0) * alpha) >> 8);
+        mg0=mg0 + (((pg - mg0) * alpha) >> 8);
+        mb0=mb0 + (((pb - mb0) * alpha) >> 8);
+        m_pixels[xstart]=0xFF000000 | (mr0 & 0xFF0000) | (mg0 & 0xFF00)| (mb0 & 0xFF);
+      }
+      iz+=izadd;
+      ia+=iaadd;
+    }
+    ytop+=SCREEN_WIDTH;
+    xleft+=leftadd;
+    xrght+=rghtadd;
+    zleft+=zleftadd;
+  }
+}

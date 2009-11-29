@@ -1,0 +1,56 @@
+{
+  int action=event.getAction();
+  pmotionX=emotionX;
+  pmotionY=emotionY;
+  motionX=event.getX();
+  motionY=event.getY();
+  pmouseX=emouseX;
+  pmouseY=emouseY;
+  mouseX=(int)event.getRawX();
+  mouseY=(int)event.getRawY();
+  motionPressure=event.getPressure();
+  motionEvent=event;
+  if (firstMotion) {
+    pmouseX=mouseX;
+    pmouseY=mouseY;
+    dmouseX=mouseX;
+    dmouseY=mouseY;
+    pmotionX=motionX;
+    pmotionY=motionY;
+    dmotionX=motionX;
+    dmotionY=motionY;
+    firstMotion=false;
+  }
+switch (action) {
+case MotionEvent.ACTION_DOWN:
+    mousePressed=true;
+  mousePressed();
+break;
+case MotionEvent.ACTION_UP:
+mousePressed=false;
+mouseReleased();
+break;
+case MotionEvent.ACTION_MOVE:
+int count=event.getHistorySize();
+for (int pos=0; pos < count; pos++) {
+mouseX=(int)event.getHistoricalX(pos);
+mouseY=(int)event.getHistoricalY(pos);
+motionPressure=event.getHistoricalPressure(pos);
+if (mousePressed) {
+mouseDragged();
+}
+ else {
+mouseMoved();
+}
+pmouseX=mouseX;
+pmouseY=mouseY;
+}
+break;
+}
+if (action == MotionEvent.ACTION_MOVE) {
+emotionX=motionX;
+emotionY=motionY;
+emouseX=mouseX;
+emouseY=mouseY;
+}
+}

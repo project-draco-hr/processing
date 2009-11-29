@@ -1,0 +1,39 @@
+{
+  if (!str.startsWith("<?xml")) {
+    return null;
+  }
+  int index=5;
+  while (index < str.length()) {
+    StringBuffer key=new StringBuffer();
+    while ((index < str.length()) && (str.charAt(index) <= ' ')) {
+      index++;
+    }
+    while ((index < str.length()) && (str.charAt(index) >= 'a') && (str.charAt(index) <= 'z')) {
+      key.append(str.charAt(index));
+      index++;
+    }
+    while ((index < str.length()) && (str.charAt(index) <= ' ')) {
+      index++;
+    }
+    if ((index >= str.length()) || (str.charAt(index) != '=')) {
+      break;
+    }
+    while ((index < str.length()) && (str.charAt(index) != '\'') && (str.charAt(index) != '"')) {
+      index++;
+    }
+    if (index >= str.length()) {
+      break;
+    }
+    char delimiter=str.charAt(index);
+    index++;
+    int index2=str.indexOf(delimiter,index);
+    if (index2 < 0) {
+      break;
+    }
+    if (key.toString().equals("encoding")) {
+      return str.substring(index,index2);
+    }
+    index=index2 + 1;
+  }
+  return null;
+}

@@ -1,0 +1,12 @@
+{
+  if (offset == items.length - 1) {
+    return getChildren(items[offset]);
+  }
+  XMLElement[] matches=getChildren(items[offset]);
+  XMLElement[] outgoing=new XMLElement[0];
+  for (int i=0; i < matches.length; i++) {
+    XMLElement[] kidMatches=matches[i].getChildrenRecursive(items,offset + 1);
+    outgoing=(XMLElement[])PApplet.concat(outgoing,kidMatches);
+  }
+  return outgoing;
+}

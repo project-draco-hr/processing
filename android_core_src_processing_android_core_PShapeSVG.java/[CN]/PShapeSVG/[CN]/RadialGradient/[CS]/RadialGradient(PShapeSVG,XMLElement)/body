@@ -1,0 +1,19 @@
+{
+  super(parent,properties);
+  this.cx=properties.getFloatAttribute("cx");
+  this.cy=properties.getFloatAttribute("cy");
+  this.r=properties.getFloatAttribute("r");
+  String transformStr=properties.getStringAttribute("gradientTransform");
+  if (transformStr != null) {
+    float t[]=parseMatrix(transformStr).get(null);
+    transform=new Matrix();
+    transform.setValues(new float[]{t[0],t[1],t[2],t[3],t[4],t[5],0,0,1});
+    float[] t1=new float[]{cx,cy};
+    float[] t2=new float[]{cx + r,cy};
+    transform.mapPoints(t1);
+    transform.mapPoints(t2);
+    cx=t1[0];
+    cy=t1[1];
+    r=t2[0] - t1[0];
+  }
+}

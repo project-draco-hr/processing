@@ -1,0 +1,17 @@
+{
+  for (int i=start; i < stop; i++) {
+    float vx[]=vertices[i];
+    float ox=projection.m00 * vx[VX] + projection.m01 * vx[VY] + projection.m02 * vx[VZ] + projection.m03 * vx[VW];
+    float oy=projection.m10 * vx[VX] + projection.m11 * vx[VY] + projection.m12 * vx[VZ] + projection.m13 * vx[VW];
+    float oz=projection.m20 * vx[VX] + projection.m21 * vx[VY] + projection.m22 * vx[VZ] + projection.m23 * vx[VW];
+    float ow=projection.m30 * vx[VX] + projection.m31 * vx[VY] + projection.m32 * vx[VZ] + projection.m33 * vx[VW];
+    if (ow != 0 && ow != 1) {
+      ox/=ow;
+      oy/=ow;
+      oz/=ow;
+    }
+    vx[TX]=width * (1 + ox) / 2.0f;
+    vx[TY]=height * (1 + oy) / 2.0f;
+    vx[TZ]=(oz + 1) / 2.0f;
+  }
+}

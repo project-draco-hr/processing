@@ -1,0 +1,17 @@
+{
+  Enumeration<XMLAttribute> en=this.attributes.elements();
+  while (en.hasMoreElements()) {
+    XMLAttribute attr=(XMLAttribute)en.nextElement();
+    boolean found=attr.getName().equals(name);
+    if (namespace == null) {
+      found&=(attr.getNamespace() == null);
+    }
+ else {
+      found&=namespace.equals(attr.getNamespace());
+    }
+    if (found) {
+      return attr;
+    }
+  }
+  return null;
+}

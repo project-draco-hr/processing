@@ -1,0 +1,22 @@
+{
+  while ((!this.reader.atEOF()) && (this.builder.getResult() == null)) {
+    String str=XMLUtil.read(this.reader,'&');
+    char ch=str.charAt(0);
+    if (ch == '&') {
+      XMLUtil.processEntity(str,this.reader,this.entityResolver);
+      continue;
+    }
+switch (ch) {
+case '<':
+      this.scanSomeTag(false,null,new Properties());
+    break;
+case ' ':
+case '\t':
+case '\r':
+case '\n':
+  break;
+default :
+XMLUtil.errorInvalidInput(reader.getSystemID(),reader.getLineNr(),"`" + ch + "' (0x"+ Integer.toHexString((int)ch)+ ')');
+}
+}
+}

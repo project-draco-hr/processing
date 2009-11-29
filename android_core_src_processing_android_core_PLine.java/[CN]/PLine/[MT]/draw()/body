@@ -1,0 +1,140 @@
+{
+  int xi;
+  int yi;
+  int length;
+  boolean visible=true;
+  if (parent.smooth) {
+    SMOOTH=true;
+    m_drawFlags|=R_SMOOTH;
+  }
+ else {
+    SMOOTH=false;
+    m_drawFlags&=~R_SMOOTH;
+  }
+  visible=lineClipping();
+  if (!visible) {
+    return;
+  }
+  int shortLen;
+  int longLen;
+  boolean yLonger;
+  int dt;
+  yLonger=false;
+  if (x_array[1] < x_array[0]) {
+    float t;
+    t=x_array[1];
+    x_array[1]=x_array[0];
+    x_array[0]=t;
+    t=y_array[1];
+    y_array[1]=y_array[0];
+    y_array[0]=t;
+    t=z_array[1];
+    z_array[1]=z_array[0];
+    z_array[0]=t;
+    t=r_array[1];
+    r_array[1]=r_array[0];
+    r_array[0]=t;
+    t=g_array[1];
+    g_array[1]=g_array[0];
+    g_array[0]=t;
+    t=b_array[1];
+    b_array[1]=b_array[0];
+    b_array[0]=t;
+    t=a_array[1];
+    a_array[1]=a_array[0];
+    a_array[0]=t;
+  }
+  longLen=(int)x_array[1] - (int)x_array[0];
+  shortLen=(int)y_array[1] - (int)y_array[0];
+  if (Math.abs(shortLen) > Math.abs(longLen)) {
+    int swap=shortLen;
+    shortLen=longLen;
+    longLen=swap;
+    yLonger=true;
+  }
+  if (longLen < 0) {
+    o0=1;
+    o1=0;
+    xi=(int)x_array[1];
+    yi=(int)y_array[1];
+    length=-longLen;
+  }
+ else {
+    o0=0;
+    o1=1;
+    xi=(int)x_array[0];
+    yi=(int)y_array[0];
+    length=longLen;
+  }
+  if (length == 0) {
+    dt=0;
+  }
+ else {
+    dt=(shortLen << 16) / longLen;
+  }
+  m_r0=r_array[o0];
+  m_g0=g_array[o0];
+  m_b0=b_array[o0];
+  if (INTERPOLATE_RGB) {
+    dr=(r_array[o1] - r_array[o0]) / length;
+    dg=(g_array[o1] - g_array[o0]) / length;
+    db=(b_array[o1] - b_array[o0]) / length;
+  }
+ else {
+    dr=0;
+    dg=0;
+    db=0;
+  }
+  m_a0=a_array[o0];
+  if (INTERPOLATE_ALPHA) {
+    da=(a_array[o1] - a_array[o0]) / length;
+  }
+ else {
+    da=0;
+  }
+  m_z0=z_array[o0];
+  if (INTERPOLATE_Z) {
+    dz=(z_array[o1] - z_array[o0]) / length;
+  }
+ else {
+    dz=0;
+  }
+  if (length == 0) {
+    if (INTERPOLATE_ALPHA) {
+      drawPoint_alpha(xi,yi);
+    }
+ else {
+      drawPoint(xi,yi);
+    }
+    return;
+  }
+  if (SMOOTH) {
+    drawLine_smooth(xi,yi,dt,length,yLonger);
+  }
+ else {
+    if (m_drawFlags == 0) {
+      drawLine_plain(xi,yi,dt,length,yLonger);
+    }
+ else     if (m_drawFlags == R_ALPHA) {
+      drawLine_plain_alpha(xi,yi,dt,length,yLonger);
+    }
+ else     if (m_drawFlags == R_COLOR) {
+      drawLine_color(xi,yi,dt,length,yLonger);
+    }
+ else     if (m_drawFlags == (R_COLOR + R_ALPHA)) {
+      drawLine_color_alpha(xi,yi,dt,length,yLonger);
+    }
+ else     if (m_drawFlags == R_SPATIAL) {
+      drawLine_plain_spatial(xi,yi,dt,length,yLonger);
+    }
+ else     if (m_drawFlags == (R_SPATIAL + R_ALPHA)) {
+      drawLine_plain_alpha_spatial(xi,yi,dt,length,yLonger);
+    }
+ else     if (m_drawFlags == (R_SPATIAL + R_COLOR)) {
+      drawLine_color_spatial(xi,yi,dt,length,yLonger);
+    }
+ else     if (m_drawFlags == (R_SPATIAL + R_COLOR + R_ALPHA)) {
+      drawLine_color_alpha_spatial(xi,yi,dt,length,yLonger);
+    }
+  }
+}

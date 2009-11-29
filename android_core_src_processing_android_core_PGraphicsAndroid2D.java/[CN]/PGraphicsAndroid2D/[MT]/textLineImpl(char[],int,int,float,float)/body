@@ -1,0 +1,14 @@
+{
+  Typeface font=textFont.getFont();
+  if (font == null) {
+    super.textLineImpl(buffer,start,stop,x,y);
+    return;
+  }
+  fillPaint.setAntiAlias(textFont.smooth);
+  int length=stop - start;
+  canvas.drawText(buffer,start,length,x,y,fillPaint);
+  fillPaint.setAntiAlias(smooth);
+  textX=x + textWidthImpl(buffer,start,stop);
+  textY=y;
+  textZ=0;
+}

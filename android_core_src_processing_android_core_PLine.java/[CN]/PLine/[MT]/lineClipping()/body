@@ -1,0 +1,50 @@
+{
+  int code1=lineClipCode(x_array[0],y_array[0]);
+  int code2=lineClipCode(x_array[1],y_array[1]);
+  int dip=code1 | code2;
+  if ((code1 & code2) != 0) {
+    return false;
+  }
+ else   if (dip != 0) {
+    float a0=0, a1=1, a=0;
+    for (int i=0; i < 4; i++) {
+      if (((dip >> i) % 2) == 1) {
+        a=lineSlope(x_array[0],y_array[0],x_array[1],y_array[1],i + 1);
+        if (((code1 >> i) % 2) == 1) {
+          a0=(a > a0) ? a : a0;
+        }
+ else {
+          a1=(a < a1) ? a : a1;
+        }
+      }
+    }
+    if (a0 > a1) {
+      return false;
+    }
+ else {
+      float xt=x_array[0];
+      float yt=y_array[0];
+      x_array[0]=xt + a0 * (x_array[1] - xt);
+      y_array[0]=yt + a0 * (y_array[1] - yt);
+      x_array[1]=xt + a1 * (x_array[1] - xt);
+      y_array[1]=yt + a1 * (y_array[1] - yt);
+      if (INTERPOLATE_RGB) {
+        float t=r_array[0];
+        r_array[0]=t + a0 * (r_array[1] - t);
+        r_array[1]=t + a1 * (r_array[1] - t);
+        t=g_array[0];
+        g_array[0]=t + a0 * (g_array[1] - t);
+        g_array[1]=t + a1 * (g_array[1] - t);
+        t=b_array[0];
+        b_array[0]=t + a0 * (b_array[1] - t);
+        b_array[1]=t + a1 * (b_array[1] - t);
+      }
+      if (INTERPOLATE_ALPHA) {
+        float t=a_array[0];
+        a_array[0]=t + a0 * (a_array[1] - t);
+        a_array[1]=t + a1 * (a_array[1] - t);
+      }
+    }
+  }
+  return true;
+}

@@ -1,0 +1,21 @@
+{
+  ByteBuffer bb=ByteBuffer.allocateDirect(mVertexList.size() * 4 * 4);
+  bb.order(ByteOrder.nativeOrder());
+  mColorBuffer=bb.asIntBuffer();
+  bb=ByteBuffer.allocateDirect(mVertexList.size() * 4 * 3);
+  bb.order(ByteOrder.nativeOrder());
+  mVertexBuffer=bb.asIntBuffer();
+  bb=ByteBuffer.allocateDirect(mIndexCount * 2);
+  bb.order(ByteOrder.nativeOrder());
+  mIndexBuffer=bb.asShortBuffer();
+  Iterator<GLVertex> iter2=mVertexList.iterator();
+  while (iter2.hasNext()) {
+    GLVertex vertex=iter2.next();
+    vertex.put(mVertexBuffer,mColorBuffer);
+  }
+  Iterator<GLShape> iter3=mShapeList.iterator();
+  while (iter3.hasNext()) {
+    GLShape shape=iter3.next();
+    shape.putIndices(mIndexBuffer);
+  }
+}

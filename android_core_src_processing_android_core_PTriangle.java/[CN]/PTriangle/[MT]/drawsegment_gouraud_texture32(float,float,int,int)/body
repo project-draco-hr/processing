@@ -1,0 +1,189 @@
+{
+  int ypixel=ytop;
+  int lastRowStart=m_texture.length - TEX_WIDTH - 2;
+  boolean accurateMode=parent.hints[ENABLE_ACCURATE_TEXTURES];
+  float screenx=0;
+  float screeny=0;
+  float screenz=0;
+  float a=0;
+  float b=0;
+  float c=0;
+  int linearInterpPower=TEX_INTERP_POWER;
+  int linearInterpLength=1 << linearInterpPower;
+  if (accurateMode) {
+    if (precomputeAccurateTexturing()) {
+      newax*=linearInterpLength;
+      newbx*=linearInterpLength;
+      newcx*=linearInterpLength;
+      screenz=nearPlaneDepth;
+      firstSegment=false;
+    }
+ else {
+      accurateMode=false;
+    }
+  }
+  ytop*=SCREEN_WIDTH;
+  ybottom*=SCREEN_WIDTH;
+  float iuf=iuadd;
+  float ivf=ivadd;
+  float irf=iradd;
+  float igf=igadd;
+  float ibf=ibadd;
+  while (ytop < ybottom) {
+    int xstart=(int)(xleft + PIXEL_CENTER);
+    if (xstart < 0)     xstart=0;
+    int xpixel=xstart;
+    int xend=(int)(xrght + PIXEL_CENTER);
+    if (xend > SCREEN_WIDTH)     xend=SCREEN_WIDTH;
+    float xdiff=(xstart + PIXEL_CENTER) - xleft;
+    int iu=(int)(iuf * xdiff + uleft);
+    int iv=(int)(ivf * xdiff + vleft);
+    int ir=(int)(irf * xdiff + rleft);
+    int ig=(int)(igf * xdiff + gleft);
+    int ib=(int)(ibf * xdiff + bleft);
+    float iz=izadd * xdiff + zleft;
+    xstart+=ytop;
+    xend+=ytop;
+    if (accurateMode) {
+      screenx=xmult * (xpixel + .5f - (SCREEN_WIDTH / 2.0f));
+      screeny=ymult * (ypixel + .5f - (SCREEN_HEIGHT / 2.0f));
+      a=screenx * ax + screeny * ay + screenz * az;
+      b=screenx * bx + screeny * by + screenz * bz;
+      c=screenx * cx + screeny * cy + screenz * cz;
+    }
+    boolean goingIn=((newcx > 0) == (c > 0)) ? false : true;
+    int interpCounter=0;
+    int deltaU=0;
+    int deltaV=0;
+    float fu=0;
+    float fv=0;
+    float oldfu=0;
+    float oldfv=0;
+    if (accurateMode && goingIn) {
+      int rightOffset=(xend - xstart - 1) % linearInterpLength;
+      int leftOffset=linearInterpLength - rightOffset;
+      float rightOffset2=rightOffset / ((float)linearInterpLength);
+      float leftOffset2=leftOffset / ((float)linearInterpLength);
+      interpCounter=leftOffset;
+      float ao=a - leftOffset2 * newax;
+      float bo=b - leftOffset2 * newbx;
+      float co=c - leftOffset2 * newcx;
+      float oneoverc=65536.0f / co;
+      oldfu=(ao * oneoverc);
+      oldfv=(bo * oneoverc);
+      a+=rightOffset2 * newax;
+      b+=rightOffset2 * newbx;
+      c+=rightOffset2 * newcx;
+      oneoverc=65536.0f / c;
+      fu=a * oneoverc;
+      fv=b * oneoverc;
+      deltaU=((int)(fu - oldfu)) >> linearInterpPower;
+      deltaV=((int)(fv - oldfv)) >> linearInterpPower;
+      iu=((int)oldfu) + (leftOffset - 1) * deltaU;
+      iv=((int)oldfv) + (leftOffset - 1) * deltaV;
+    }
+ else {
+      float preoneoverc=65536.0f / c;
+      fu=(a * preoneoverc);
+      fv=(b * preoneoverc);
+    }
+    for (; xstart < xend; xstart++) {
+      if (accurateMode) {
+        if (interpCounter == linearInterpLength)         interpCounter=0;
+        if (interpCounter == 0) {
+          a+=newax;
+          b+=newbx;
+          c+=newcx;
+          float oneoverc=65536.0f / c;
+          oldfu=fu;
+          oldfv=fv;
+          fu=(a * oneoverc);
+          fv=(b * oneoverc);
+          iu=(int)oldfu;
+          iv=(int)oldfv;
+          deltaU=((int)(fu - oldfu)) >> linearInterpPower;
+          deltaV=((int)(fv - oldfv)) >> linearInterpPower;
+        }
+ else {
+          iu+=deltaU;
+          iv+=deltaV;
+        }
+        interpCounter++;
+      }
+      try {
+        if (noDepthTest || (iz <= m_zbuffer[xstart])) {
+          int red;
+          int grn;
+          int blu;
+          int al;
+          if (m_bilinear) {
+            int ofs=(iv >> 16) * TEX_WIDTH + (iu >> 16);
+            int iui=(iu & 0xFFFF) >> 9;
+            int ivi=(iv & 0xFFFF) >> 9;
+            int pix0=m_texture[ofs];
+            int pix1=m_texture[ofs + 1];
+            if (ofs < lastRowStart)             ofs+=TEX_WIDTH;
+            int pix2=m_texture[ofs];
+            int pix3=m_texture[ofs + 1];
+            int red0=(pix0 & 0xFF0000);
+            int red2=(pix2 & 0xFF0000);
+            int up=red0 + ((((pix1 & 0xFF0000) - red0) * iui) >> 7);
+            int dn=red2 + ((((pix3 & 0xFF0000) - red2) * iui) >> 7);
+            red=(up + (((dn - up) * ivi) >> 7)) >> 16;
+            red0=(pix0 & 0xFF00);
+            red2=(pix2 & 0xFF00);
+            up=red0 + ((((pix1 & 0xFF00) - red0) * iui) >> 7);
+            dn=red2 + ((((pix3 & 0xFF00) - red2) * iui) >> 7);
+            grn=(up + (((dn - up) * ivi) >> 7)) >> 8;
+            red0=(pix0 & 0xFF);
+            red2=(pix2 & 0xFF);
+            up=red0 + ((((pix1 & 0xFF) - red0) * iui) >> 7);
+            dn=red2 + ((((pix3 & 0xFF) - red2) * iui) >> 7);
+            blu=up + (((dn - up) * ivi) >> 7);
+            pix0>>>=24;
+            pix2>>>=24;
+            up=pix0 + ((((pix1 >>> 24) - pix0) * iui) >> 7);
+            dn=pix2 + ((((pix3 >>> 24) - pix2) * iui) >> 7);
+            al=up + (((dn - up) * ivi) >> 7);
+          }
+ else {
+            blu=m_texture[(iv >> 16) * TEX_WIDTH + (iu >> 16)];
+            al=(blu >>> 24);
+            red=(blu & 0xFF0000) >> 16;
+            grn=(blu & 0xFF00) >> 8;
+            blu=blu & 0xFF;
+          }
+          red=(red * ir) >>> 8;
+          grn=(grn * ig) >>> 16;
+          blu=(blu * ib) >>> 24;
+          int bb=m_pixels[xstart];
+          int br=(bb & 0xFF0000);
+          int bg=(bb & 0xFF00);
+          bb=(bb & 0xFF);
+          m_pixels[xstart]=0xFF000000 | ((br + (((red - br) * al) >> 8)) & 0xFF0000) | ((bg + (((grn - bg) * al) >> 8)) & 0xFF00)| ((bb + (((blu - bb) * al) >> 8)) & 0xFF);
+        }
+      }
+ catch (      Exception e) {
+      }
+      xpixel++;
+      if (!accurateMode) {
+        iu+=iuadd;
+        iv+=ivadd;
+      }
+      ir+=iradd;
+      ig+=igadd;
+      ib+=ibadd;
+      iz+=izadd;
+    }
+    ypixel++;
+    ytop+=SCREEN_WIDTH;
+    xleft+=leftadd;
+    xrght+=rghtadd;
+    uleft+=uleftadd;
+    vleft+=vleftadd;
+    rleft+=rleftadd;
+    gleft+=gleftadd;
+    bleft+=bleftadd;
+    zleft+=zleftadd;
+  }
+}

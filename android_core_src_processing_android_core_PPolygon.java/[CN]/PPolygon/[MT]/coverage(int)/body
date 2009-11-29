@@ -1,0 +1,16 @@
+{
+  if ((x >= aaleftfull) && (x <= aarightfull) && (firstModY == 0)&& (lastModY == SUBYRES1)) {
+    return 255;
+  }
+  int pixelLeft=x * SUBXRES;
+  int pixelRight=pixelLeft + 8;
+  int amt=0;
+  for (int i=firstModY; i <= lastModY; i++) {
+    if ((aaleft[i] > pixelRight) || (aaright[i] < pixelLeft)) {
+      continue;
+    }
+    amt+=((aaright[i] < pixelRight ? aaright[i] : pixelRight) - (aaleft[i] > pixelLeft ? aaleft[i] : pixelLeft));
+  }
+  amt<<=2;
+  return (amt == 256) ? 255 : amt;
+}

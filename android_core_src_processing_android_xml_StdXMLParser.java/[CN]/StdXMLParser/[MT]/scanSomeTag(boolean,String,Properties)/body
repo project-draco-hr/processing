@@ -1,0 +1,18 @@
+{
+  String str=XMLUtil.read(this.reader,'&');
+  char ch=str.charAt(0);
+  if (ch == '&') {
+    XMLUtil.errorUnexpectedEntity(reader.getSystemID(),reader.getLineNr(),str);
+  }
+switch (ch) {
+case '?':
+    this.processPI();
+  break;
+case '!':
+this.processSpecialTag(allowCDATA);
+break;
+default :
+this.reader.unread(ch);
+this.processElement(defaultNamespace,namespaces);
+}
+}

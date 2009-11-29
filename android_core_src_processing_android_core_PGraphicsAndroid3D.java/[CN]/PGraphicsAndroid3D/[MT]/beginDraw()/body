@@ -1,0 +1,49 @@
+{
+  if (mEglHelper == null) {
+    mEglHelper=new EglHelper();
+  }
+  super.beginDraw();
+  report("top beginDraw()");
+  gl.glDisable(GL10.GL_LIGHTING);
+  for (int i=0; i < MAX_LIGHTS; i++) {
+    gl.glDisable(GL10.GL_LIGHT0 + i);
+  }
+  gl.glMatrixMode(GL10.GL_PROJECTION);
+  if (projectionFloats == null) {
+    projectionFloats=new float[]{projection.m00,projection.m10,projection.m20,projection.m30,projection.m01,projection.m11,projection.m21,projection.m31,projection.m02,projection.m12,projection.m22,projection.m32,projection.m03,projection.m13,projection.m23,projection.m33};
+  }
+ else {
+    projectionFloats[0]=projection.m00;
+    projectionFloats[1]=projection.m10;
+    projectionFloats[2]=projection.m20;
+    projectionFloats[3]=projection.m30;
+    projectionFloats[4]=projection.m01;
+    projectionFloats[5]=projection.m11;
+    projectionFloats[6]=projection.m21;
+    projectionFloats[7]=projection.m31;
+    projectionFloats[8]=projection.m02;
+    projectionFloats[9]=projection.m12;
+    projectionFloats[10]=projection.m22;
+    projectionFloats[11]=projection.m32;
+    projectionFloats[12]=projection.m03;
+    projectionFloats[13]=projection.m13;
+    projectionFloats[14]=projection.m23;
+    projectionFloats[15]=projection.m33;
+  }
+  gl.glLoadMatrixf(projectionFloats,0);
+  gl.glMatrixMode(GL10.GL_MODELVIEW);
+  gl.glLoadIdentity();
+  gl.glScalef(1,-1,1);
+  gl.glEnable(GL10.GL_BLEND);
+  gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_ONE_MINUS_SRC_ALPHA);
+  if (hints[DISABLE_DEPTH_TEST]) {
+    gl.glDisable(GL10.GL_DEPTH_TEST);
+  }
+ else {
+    gl.glEnable(GL10.GL_DEPTH_TEST);
+  }
+  gl.glDepthFunc(GL10.GL_LEQUAL);
+  gl.glFrontFace(GL10.GL_CW);
+  gl.glEnable(GL10.GL_COLOR_MATERIAL);
+  report("bot beginDraw()");
+}

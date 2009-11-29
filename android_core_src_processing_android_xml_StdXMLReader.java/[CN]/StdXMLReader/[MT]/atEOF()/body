@@ -1,0 +1,13 @@
+{
+  int ch=this.currentReader.pbReader.read();
+  while (ch < 0) {
+    if (this.readers.empty()) {
+      return true;
+    }
+    this.currentReader.pbReader.close();
+    this.currentReader=(StackedReader)this.readers.pop();
+    ch=this.currentReader.pbReader.read();
+  }
+  this.currentReader.pbReader.unread(ch);
+  return false;
+}

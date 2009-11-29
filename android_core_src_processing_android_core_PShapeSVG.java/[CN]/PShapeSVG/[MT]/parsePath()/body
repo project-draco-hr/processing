@@ -1,0 +1,222 @@
+{
+  family=PATH;
+  kind=0;
+  String pathData=element.getStringAttribute("d");
+  if (pathData == null)   return;
+  char[] pathDataChars=pathData.toCharArray();
+  StringBuffer pathBuffer=new StringBuffer();
+  boolean lastSeparate=false;
+  for (int i=0; i < pathDataChars.length; i++) {
+    char c=pathDataChars[i];
+    boolean separate=false;
+    if (c == 'M' || c == 'm' || c == 'L' || c == 'l' || c == 'H' || c == 'h' || c == 'V' || c == 'v' || c == 'C' || c == 'c' || c == 'S' || c == 's' || c == 'Q' || c == 'q' || c == 'T' || c == 't' || c == 'Z' || c == 'z' || c == ',') {
+      separate=true;
+      if (i != 0) {
+        pathBuffer.append("|");
+      }
+    }
+    if (c == 'Z' || c == 'z') {
+      separate=false;
+    }
+    if (c == '-' && !lastSeparate) {
+      pathBuffer.append("|");
+    }
+    if (c != ',') {
+      pathBuffer.append(c);
+    }
+    if (separate && c != ',' && c != '-') {
+      pathBuffer.append("|");
+    }
+    lastSeparate=separate;
+  }
+  String[] pathDataKeys=PApplet.splitTokens(pathBuffer.toString(),"|" + WHITESPACE);
+  vertices=new float[pathDataKeys.length][2];
+  vertexCodes=new int[pathDataKeys.length];
+  float cx=0;
+  float cy=0;
+  int i=0;
+  while (i < pathDataKeys.length) {
+    char c=pathDataKeys[i].charAt(0);
+switch (c) {
+case 'M':
+      cx=PApplet.parseFloat(pathDataKeys[i + 1]);
+    cy=PApplet.parseFloat(pathDataKeys[i + 2]);
+  parsePathMoveto(cx,cy);
+i+=3;
+break;
+case 'm':
+cx=cx + PApplet.parseFloat(pathDataKeys[i + 1]);
+cy=cy + PApplet.parseFloat(pathDataKeys[i + 2]);
+parsePathMoveto(cx,cy);
+i+=3;
+break;
+case 'L':
+cx=PApplet.parseFloat(pathDataKeys[i + 1]);
+cy=PApplet.parseFloat(pathDataKeys[i + 2]);
+parsePathLineto(cx,cy);
+i+=3;
+break;
+case 'l':
+cx=cx + PApplet.parseFloat(pathDataKeys[i + 1]);
+cy=cy + PApplet.parseFloat(pathDataKeys[i + 2]);
+parsePathLineto(cx,cy);
+i+=3;
+break;
+case 'H':
+cx=PApplet.parseFloat(pathDataKeys[i + 1]);
+parsePathLineto(cx,cy);
+i+=2;
+break;
+case 'h':
+cx=cx + PApplet.parseFloat(pathDataKeys[i + 1]);
+parsePathLineto(cx,cy);
+i+=2;
+break;
+case 'V':
+cy=PApplet.parseFloat(pathDataKeys[i + 1]);
+parsePathLineto(cx,cy);
+i+=2;
+break;
+case 'v':
+cy=cy + PApplet.parseFloat(pathDataKeys[i + 1]);
+parsePathLineto(cx,cy);
+i+=2;
+break;
+case 'C':
+{
+float ctrlX1=PApplet.parseFloat(pathDataKeys[i + 1]);
+float ctrlY1=PApplet.parseFloat(pathDataKeys[i + 2]);
+float ctrlX2=PApplet.parseFloat(pathDataKeys[i + 3]);
+float ctrlY2=PApplet.parseFloat(pathDataKeys[i + 4]);
+float endX=PApplet.parseFloat(pathDataKeys[i + 5]);
+float endY=PApplet.parseFloat(pathDataKeys[i + 6]);
+parsePathCurveto(ctrlX1,ctrlY1,ctrlX2,ctrlY2,endX,endY);
+cx=endX;
+cy=endY;
+i+=7;
+}
+break;
+case 'c':
+{
+float ctrlX1=cx + PApplet.parseFloat(pathDataKeys[i + 1]);
+float ctrlY1=cy + PApplet.parseFloat(pathDataKeys[i + 2]);
+float ctrlX2=cx + PApplet.parseFloat(pathDataKeys[i + 3]);
+float ctrlY2=cy + PApplet.parseFloat(pathDataKeys[i + 4]);
+float endX=cx + PApplet.parseFloat(pathDataKeys[i + 5]);
+float endY=cy + PApplet.parseFloat(pathDataKeys[i + 6]);
+parsePathCurveto(ctrlX1,ctrlY1,ctrlX2,ctrlY2,endX,endY);
+cx=endX;
+cy=endY;
+i+=7;
+}
+break;
+case 'S':
+{
+float ppx=vertices[vertexCount - 2][X];
+float ppy=vertices[vertexCount - 2][Y];
+float px=vertices[vertexCount - 1][X];
+float py=vertices[vertexCount - 1][Y];
+float ctrlX1=px + (px - ppx);
+float ctrlY1=py + (py - ppy);
+float ctrlX2=PApplet.parseFloat(pathDataKeys[i + 1]);
+float ctrlY2=PApplet.parseFloat(pathDataKeys[i + 2]);
+float endX=PApplet.parseFloat(pathDataKeys[i + 3]);
+float endY=PApplet.parseFloat(pathDataKeys[i + 4]);
+parsePathCurveto(ctrlX1,ctrlY1,ctrlX2,ctrlY2,endX,endY);
+cx=endX;
+cy=endY;
+i+=5;
+}
+break;
+case 's':
+{
+float ppx=vertices[vertexCount - 2][X];
+float ppy=vertices[vertexCount - 2][Y];
+float px=vertices[vertexCount - 1][X];
+float py=vertices[vertexCount - 1][Y];
+float ctrlX1=px + (px - ppx);
+float ctrlY1=py + (py - ppy);
+float ctrlX2=cx + PApplet.parseFloat(pathDataKeys[i + 1]);
+float ctrlY2=cy + PApplet.parseFloat(pathDataKeys[i + 2]);
+float endX=cx + PApplet.parseFloat(pathDataKeys[i + 3]);
+float endY=cy + PApplet.parseFloat(pathDataKeys[i + 4]);
+parsePathCurveto(ctrlX1,ctrlY1,ctrlX2,ctrlY2,endX,endY);
+cx=endX;
+cy=endY;
+i+=5;
+}
+break;
+case 'Q':
+{
+float ctrlX=PApplet.parseFloat(pathDataKeys[i + 1]);
+float ctrlY=PApplet.parseFloat(pathDataKeys[i + 2]);
+float endX=PApplet.parseFloat(pathDataKeys[i + 3]);
+float endY=PApplet.parseFloat(pathDataKeys[i + 4]);
+parsePathCurveto(ctrlX,ctrlY,ctrlX,ctrlY,endX,endY);
+cx=endX;
+cy=endY;
+i+=5;
+}
+break;
+case 'q':
+{
+float ctrlX=cx + PApplet.parseFloat(pathDataKeys[i + 1]);
+float ctrlY=cy + PApplet.parseFloat(pathDataKeys[i + 2]);
+float endX=cx + PApplet.parseFloat(pathDataKeys[i + 3]);
+float endY=cy + PApplet.parseFloat(pathDataKeys[i + 4]);
+parsePathCurveto(ctrlX,ctrlY,ctrlX,ctrlY,endX,endY);
+cx=endX;
+cy=endY;
+i+=5;
+}
+break;
+case 'T':
+{
+float ppx=vertices[vertexCount - 2][X];
+float ppy=vertices[vertexCount - 2][Y];
+float px=vertices[vertexCount - 1][X];
+float py=vertices[vertexCount - 1][Y];
+float ctrlX=px + (px - ppx);
+float ctrlY=py + (py - ppy);
+float endX=PApplet.parseFloat(pathDataKeys[i + 1]);
+float endY=PApplet.parseFloat(pathDataKeys[i + 2]);
+parsePathCurveto(ctrlX,ctrlY,ctrlX,ctrlY,endX,endY);
+cx=endX;
+cy=endY;
+i+=3;
+}
+break;
+case 't':
+{
+float ppx=vertices[vertexCount - 2][X];
+float ppy=vertices[vertexCount - 2][Y];
+float px=vertices[vertexCount - 1][X];
+float py=vertices[vertexCount - 1][Y];
+float ctrlX=px + (px - ppx);
+float ctrlY=py + (py - ppy);
+float endX=cx + PApplet.parseFloat(pathDataKeys[i + 1]);
+float endY=cy + PApplet.parseFloat(pathDataKeys[i + 2]);
+parsePathCurveto(ctrlX,ctrlY,ctrlX,ctrlY,endX,endY);
+cx=endX;
+cy=endY;
+i+=3;
+}
+break;
+case 'Z':
+case 'z':
+close=true;
+i++;
+break;
+default :
+String parsed=PApplet.join(PApplet.subset(pathDataKeys,0,i),",");
+String unparsed=PApplet.join(PApplet.subset(pathDataKeys,i),",");
+System.err.println("parsed: " + parsed);
+System.err.println("unparsed: " + unparsed);
+if (pathDataKeys[i].equals("a") || pathDataKeys[i].equals("A")) {
+String msg="Sorry, elliptical arc support for SVG files " + "is not yet implemented (See bug #996 for details)";
+throw new RuntimeException(msg);
+}
+throw new RuntimeException("shape command not handled: " + pathDataKeys[i]);
+}
+}
+}

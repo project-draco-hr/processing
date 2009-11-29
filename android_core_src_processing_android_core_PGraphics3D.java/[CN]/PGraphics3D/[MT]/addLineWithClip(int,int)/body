@@ -1,0 +1,21 @@
+{
+  float az=vertices[a][VZ];
+  float bz=vertices[b][VZ];
+  if (az > cameraNear) {
+    if (bz > cameraNear) {
+      return;
+    }
+    int cb=interpolateClipVertex(a,b);
+    addLineWithoutClip(cb,b);
+    return;
+  }
+ else {
+    if (bz <= cameraNear) {
+      addLineWithoutClip(a,b);
+      return;
+    }
+    int cb=interpolateClipVertex(a,b);
+    addLineWithoutClip(a,cb);
+    return;
+  }
+}

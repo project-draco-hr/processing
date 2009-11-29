@@ -1,0 +1,57 @@
+{
+  if (!XMLUtil.checkLiteral(reader,"NTITY")) {
+    XMLUtil.skipTag(reader);
+    return;
+  }
+  XMLUtil.skipWhitespace(reader,null);
+  char ch=XMLUtil.readChar(reader,'\0');
+  if (ch == '%') {
+    XMLUtil.skipWhitespace(reader,null);
+    entityResolver=this.parameterEntityResolver;
+  }
+ else {
+    reader.unread(ch);
+  }
+  String key=XMLUtil.scanIdentifier(reader);
+  XMLUtil.skipWhitespace(reader,null);
+  ch=XMLUtil.readChar(reader,'%');
+  String systemID=null;
+  String publicID=null;
+switch (ch) {
+case 'P':
+    if (!XMLUtil.checkLiteral(reader,"UBLIC")) {
+      XMLUtil.skipTag(reader);
+      return;
+    }
+  XMLUtil.skipWhitespace(reader,null);
+publicID=XMLUtil.scanString(reader,'%',this.parameterEntityResolver);
+XMLUtil.skipWhitespace(reader,null);
+systemID=XMLUtil.scanString(reader,'%',this.parameterEntityResolver);
+XMLUtil.skipWhitespace(reader,null);
+XMLUtil.readChar(reader,'%');
+break;
+case 'S':
+if (!XMLUtil.checkLiteral(reader,"YSTEM")) {
+XMLUtil.skipTag(reader);
+return;
+}
+XMLUtil.skipWhitespace(reader,null);
+systemID=XMLUtil.scanString(reader,'%',this.parameterEntityResolver);
+XMLUtil.skipWhitespace(reader,null);
+XMLUtil.readChar(reader,'%');
+break;
+case '"':
+case '\'':
+reader.unread(ch);
+String value=XMLUtil.scanString(reader,'%',this.parameterEntityResolver);
+entityResolver.addInternalEntity(key,value);
+XMLUtil.skipWhitespace(reader,null);
+XMLUtil.readChar(reader,'%');
+break;
+default :
+XMLUtil.skipTag(reader);
+}
+if (systemID != null) {
+entityResolver.addExternalEntity(key,publicID,systemID);
+}
+}

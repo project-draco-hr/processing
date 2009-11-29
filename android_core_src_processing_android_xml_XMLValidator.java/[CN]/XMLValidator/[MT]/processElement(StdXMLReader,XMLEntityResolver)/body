@@ -1,0 +1,26 @@
+{
+  String str=XMLUtil.read(reader,'%');
+  char ch=str.charAt(0);
+  if (ch != '!') {
+    XMLUtil.skipTag(reader);
+    return;
+  }
+  str=XMLUtil.read(reader,'%');
+  ch=str.charAt(0);
+switch (ch) {
+case '-':
+    XMLUtil.skipComment(reader);
+  break;
+case '[':
+this.processConditionalSection(reader,entityResolver);
+break;
+case 'E':
+this.processEntity(reader,entityResolver);
+break;
+case 'A':
+this.processAttList(reader,entityResolver);
+break;
+default :
+XMLUtil.skipTag(reader);
+}
+}

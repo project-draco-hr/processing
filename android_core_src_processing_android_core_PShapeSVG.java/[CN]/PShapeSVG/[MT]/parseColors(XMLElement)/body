@@ -1,0 +1,60 @@
+{
+  if (properties.hasAttribute("opacity")) {
+    String opacityText=properties.getStringAttribute("opacity");
+    setOpacity(opacityText);
+  }
+  if (properties.hasAttribute("stroke")) {
+    String strokeText=properties.getStringAttribute("stroke");
+    setStroke(strokeText);
+  }
+  if (properties.hasAttribute("stroke-width")) {
+    String lineweight=properties.getStringAttribute("stroke-width");
+    setStrokeWeight(lineweight);
+  }
+  if (properties.hasAttribute("stroke-linejoin")) {
+    String linejoin=properties.getStringAttribute("stroke-linejoin");
+    setStrokeJoin(linejoin);
+  }
+  if (properties.hasAttribute("stroke-linecap")) {
+    String linecap=properties.getStringAttribute("stroke-linecap");
+    setStrokeCap(linecap);
+  }
+  if (properties.hasAttribute("fill")) {
+    String fillText=properties.getStringAttribute("fill");
+    setFill(fillText);
+  }
+  if (properties.hasAttribute("style")) {
+    String styleText=properties.getStringAttribute("style");
+    String[] styleTokens=PApplet.splitTokens(styleText,";");
+    for (int i=0; i < styleTokens.length; i++) {
+      String[] tokens=PApplet.splitTokens(styleTokens[i],":");
+      tokens[0]=PApplet.trim(tokens[0]);
+      if (tokens[0].equals("fill")) {
+        setFill(tokens[1]);
+      }
+ else       if (tokens[0].equals("fill-opacity")) {
+        setFillOpacity(tokens[1]);
+      }
+ else       if (tokens[0].equals("stroke")) {
+        setStroke(tokens[1]);
+      }
+ else       if (tokens[0].equals("stroke-width")) {
+        setStrokeWeight(tokens[1]);
+      }
+ else       if (tokens[0].equals("stroke-linecap")) {
+        setStrokeCap(tokens[1]);
+      }
+ else       if (tokens[0].equals("stroke-linejoin")) {
+        setStrokeJoin(tokens[1]);
+      }
+ else       if (tokens[0].equals("stroke-opacity")) {
+        setStrokeOpacity(tokens[1]);
+      }
+ else       if (tokens[0].equals("opacity")) {
+        setOpacity(tokens[1]);
+      }
+ else {
+      }
+    }
+  }
+}

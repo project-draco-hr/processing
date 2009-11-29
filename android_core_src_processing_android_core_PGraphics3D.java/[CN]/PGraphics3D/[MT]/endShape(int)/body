@@ -1,0 +1,35 @@
+{
+  shapeLast=vertexCount;
+  shapeLastPlusClipped=shapeLast;
+  if (vertexCount == 0) {
+    shape=0;
+    return;
+  }
+  endShapeModelToCamera(shapeFirst,shapeLast);
+  if (stroke) {
+    endShapeStroke(mode);
+  }
+  if (fill) {
+    endShapeFill();
+  }
+  endShapeLighting(lightCount > 0 && fill);
+  endShapeCameraToScreen(shapeFirst,shapeLastPlusClipped);
+  if (!hints[ENABLE_DEPTH_SORT]) {
+    if (fill) {
+      renderTriangles(0,triangleCount);
+      if (raw != null) {
+        rawTriangles(0,triangleCount);
+      }
+      triangleCount=0;
+    }
+    if (stroke) {
+      renderLines(0,lineCount);
+      if (raw != null) {
+        rawLines(0,lineCount);
+      }
+      lineCount=0;
+    }
+    pathCount=0;
+  }
+  shape=0;
+}

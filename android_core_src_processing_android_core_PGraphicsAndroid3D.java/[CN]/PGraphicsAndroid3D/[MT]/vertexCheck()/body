@@ -1,0 +1,18 @@
+{
+  super.vertexCheck();
+  int vertexAlloc=vertices.length;
+  if (vertexBuffer == null || vertexBuffer.capacity() != vertexAlloc) {
+    ByteBuffer vbb=ByteBuffer.allocateDirect(vertexAlloc * 3);
+    vbb.order(ByteOrder.nativeOrder());
+    vertexBuffer=vbb.asIntBuffer();
+    ByteBuffer cbb=ByteBuffer.allocateDirect(vertexAlloc * 4);
+    cbb.order(ByteOrder.nativeOrder());
+    colorBuffer=cbb.asIntBuffer();
+    ByteBuffer tbb=ByteBuffer.allocateDirect(vertexAlloc * 2);
+    tbb.order(ByteOrder.nativeOrder());
+    textureBuffer=tbb.asIntBuffer();
+    ByteBuffer nbb=ByteBuffer.allocateDirect(vertexAlloc * 3);
+    nbb.order(ByteOrder.nativeOrder());
+    normalBuffer=nbb.asIntBuffer();
+  }
+}
