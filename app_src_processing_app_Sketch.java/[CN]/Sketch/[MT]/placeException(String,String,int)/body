@@ -1,8 +1,6 @@
 {
   int codeIndex=0;
   int codeLine=-1;
-  System.out.println("placing " + dotJavaFilename + " "+ dotJavaLine);
-  System.out.println("code count is " + getCodeCount());
   for (int i=0; i < getCodeCount(); i++) {
     SketchCode code=getCode(i);
     if (code.isExtension("java")) {
@@ -23,7 +21,7 @@
       }
     }
   }
-  if (codeLine == -1) {
+  if (codeLine == -1 && !dotJavaFilename.equals(name + ".java")) {
     return null;
   }
   return new RunnerException(message,codeIndex,codeLine,0,false);
