@@ -7,22 +7,22 @@
       if (dotJavaFilename.equals(code.getFileName())) {
         codeIndex=i;
         codeLine=dotJavaLine;
+        return new RunnerException(message,codeIndex,codeLine);
       }
     }
   }
-  if (codeIndex == 0) {
-    for (int i=0; i < getCodeCount(); i++) {
-      SketchCode code=getCode(i);
-      if (code.isExtension("pde")) {
-        if (code.getPreprocOffset() <= dotJavaLine) {
-          codeIndex=i;
-          codeLine=dotJavaLine - code.getPreprocOffset();
-        }
-      }
-    }
-  }
-  if (codeLine == -1 && !dotJavaFilename.equals(name + ".java")) {
+  if (!dotJavaFilename.equals(name + ".java")) {
     return null;
   }
-  return new RunnerException(message,codeIndex,codeLine,0,false);
+  codeIndex=0;
+  for (int i=0; i < getCodeCount(); i++) {
+    SketchCode code=getCode(i);
+    if (code.isExtension("pde")) {
+      if (code.getPreprocOffset() <= dotJavaLine) {
+        codeIndex=i;
+        codeLine=dotJavaLine - code.getPreprocOffset();
+      }
+    }
+  }
+  return new RunnerException(message,codeIndex,codeLine);
 }

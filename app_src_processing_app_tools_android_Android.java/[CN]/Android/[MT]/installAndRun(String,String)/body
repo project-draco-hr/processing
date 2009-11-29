@@ -1,5 +1,14 @@
 {
   boolean success;
+  try {
+    System.out.print("(installAndRun) adb get state: ");
+    Pavarotti p=new Pavarotti(new String[]{"adb","get-state"});
+    p.waitFor();
+    p.printLines();
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
   Build build=getBuilder();
   success=build.createProject();
   if (!success)   return;
