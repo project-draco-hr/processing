@@ -1,5 +1,8 @@
 {
   try {
+    for (    StackFrame frame : thread.frames()) {
+      System.out.println("frame: " + frame);
+    }
     List<StackFrame> frames=thread.frames();
     for (    StackFrame frame : frames) {
       try {
@@ -22,5 +25,7 @@
  catch (  IncompatibleThreadStateException e) {
     e.printStackTrace();
   }
-  return new RunnerException(message);
+  RunnerException rex=new RunnerException(message);
+  rex.hideStackTrace();
+  return rex;
 }

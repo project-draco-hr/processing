@@ -6,9 +6,27 @@
     File dest=new File(sketch.getFolder(),"android." + dateFormat.format(mod));
     boolean result=androidFolder.renameTo(dest);
     if (!result) {
-      Base.showWarning("Failed to rename","Could not rename the old ???android??? build folder.\n" + "Please delete, close, or rename the folder\n" + androidFolder.getAbsolutePath() + "\n"+ "and try again.",null);
-      Base.openFolder(sketch.getFolder());
-      return false;
+      int what=-1;
+      Pavarotti mv;
+      try {
+        System.out.println("createProject renameTo() failed, resorting to mv/move instead.");
+        mv=new Pavarotti(new String[]{"mv",androidFolder.getAbsolutePath(),dest.getAbsolutePath()});
+        what=mv.waitFor();
+      }
+ catch (      IOException e) {
+        editor.statusError(e);
+        return false;
+      }
+catch (      InterruptedException e) {
+        e.printStackTrace();
+        return false;
+      }
+      if (what != 0) {
+        mv.printLines();
+        Base.showWarning("Failed to rename","Could not rename the old ???android??? build folder.\n" + "Please delete, close, or rename the folder\n" + androidFolder.getAbsolutePath() + "\n"+ "and try again.",null);
+        Base.openFolder(sketch.getFolder());
+        return false;
+      }
     }
   }
  else {

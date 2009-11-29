@@ -5,15 +5,7 @@
     editor.statusNotice("Android mode canceled.");
     return;
   }
-  try {
-    System.out.print("adb get state: ");
-    Pavarotti p=new Pavarotti(new String[]{"adb","get-state"});
-    p.waitFor();
-    p.printLines();
-  }
- catch (  Exception e) {
-    e.printStackTrace();
-  }
+  checkServer();
   success=Device.checkDefaults();
   if (!success) {
     editor.statusError("Could not load Android tools.");

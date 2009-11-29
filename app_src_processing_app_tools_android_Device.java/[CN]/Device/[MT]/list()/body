@@ -1,15 +1,19 @@
 {
   String[] cmd={"adb","devices"};
-  Process p=Runtime.getRuntime().exec(cmd);
-  StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
-  StringRedirectThread output=new StringRedirectThread(p.getInputStream());
+  Pavarotti p=new Pavarotti(cmd);
   try {
     int result=p.waitFor();
     if (result == 0) {
-      String[] lines=output.getLines();
-      if (lines == null) {
+      String[] lines=p.getOutputLines();
+      if (lines == null || lines.length == 0) {
         System.out.println("No devices found.");
         return new String[]{};
+      }
+      if (lines[0].startsWith("* daemon not running. starting it now *")) {
+        lines=PApplet.subset(lines,1);
+      }
+      if (lines[0].startsWith("* daemon started successfully *")) {
+        lines=PApplet.subset(lines,1);
       }
       if (!lines[0].startsWith("List of devices") || lines[lines.length - 1].trim().length() != 0) {
         Base.showWarning("Android Error",ADB_DEVICES_ERROR,null);
@@ -29,7 +33,7 @@
       return devices;
     }
  else {
-      for (      String s : error.getLines()) {
+      for (      String s : p.getErrorLines()) {
         System.err.println(s);
       }
     }

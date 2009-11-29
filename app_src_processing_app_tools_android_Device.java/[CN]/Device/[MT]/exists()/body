@@ -1,12 +1,10 @@
 {
   String[] cmd={"android","list","avds"};
-  Process p=Runtime.getRuntime().exec(cmd);
-  StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
-  StringRedirectThread output=new StringRedirectThread(p.getInputStream());
+  Pavarotti p=new Pavarotti(cmd);
   try {
     int result=p.waitFor();
     if (result == 0) {
-      String[] lines=output.getLines();
+      String[] lines=p.getOutputLines();
       for (      String line : lines) {
         String[] m=PApplet.match(line,"\\s+Name:\\s+(\\S+)");
         if (m != null) {
@@ -15,9 +13,7 @@
       }
     }
  else {
-      for (      String s : error.getLines()) {
-        System.err.println(s);
-      }
+      p.printLines();
     }
   }
  catch (  InterruptedException ie) {
