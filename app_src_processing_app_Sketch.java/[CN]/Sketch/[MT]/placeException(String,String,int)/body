@@ -1,0 +1,30 @@
+{
+  int codeIndex=0;
+  int codeLine=-1;
+  System.out.println("placing " + dotJavaFilename + " "+ dotJavaLine);
+  System.out.println("code count is " + getCodeCount());
+  for (int i=0; i < getCodeCount(); i++) {
+    SketchCode code=getCode(i);
+    if (code.isExtension("java")) {
+      if (dotJavaFilename.equals(code.getFileName())) {
+        codeIndex=i;
+        codeLine=dotJavaLine;
+      }
+    }
+  }
+  if (codeIndex == 0) {
+    for (int i=0; i < getCodeCount(); i++) {
+      SketchCode code=getCode(i);
+      if (code.isExtension("pde")) {
+        if (code.getPreprocOffset() <= dotJavaLine) {
+          codeIndex=i;
+          codeLine=dotJavaLine - code.getPreprocOffset();
+        }
+      }
+    }
+  }
+  if (codeLine == -1) {
+    return null;
+  }
+  return new RunnerException(message,codeIndex,codeLine,0,false);
+}

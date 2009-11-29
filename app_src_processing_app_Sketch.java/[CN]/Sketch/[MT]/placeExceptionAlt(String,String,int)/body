@@ -1,0 +1,31 @@
+{
+  String appletJavaFile=appletClassName + ".java";
+  SketchCode errorCode=null;
+  if (filename.equals(appletJavaFile)) {
+    for (    SketchCode code : getCode()) {
+      if (code.isExtension("pde")) {
+        if (line >= code.getPreprocOffset()) {
+          errorCode=code;
+        }
+      }
+    }
+  }
+ else {
+    for (    SketchCode code : getCode()) {
+      if (code.isExtension("java")) {
+        if (filename.equals(code.getFileName())) {
+          errorCode=code;
+        }
+      }
+    }
+  }
+  int codeIndex=getCodeIndex(errorCode);
+  if (codeIndex != -1) {
+    line-=getCode(codeIndex).getPreprocOffset();
+    line--;
+    RunnerException exception=new RunnerException(message,codeIndex,line,-1);
+    exception.hideStackTrace();
+    return exception;
+  }
+  return null;
+}
