@@ -1,5 +1,5 @@
 {
-  HashMap toolItems=new HashMap();
+  HashMap<String,JMenuItem> toolItems=new HashMap<String,JMenuItem>();
   File[] folders=sourceFolder.listFiles(new FileFilter(){
     public boolean accept(    File folder){
       if (folder.isDirectory()) {
@@ -33,7 +33,7 @@
         if (className != null)         break;
       }
       if (className == null)       continue;
-      Class toolClass=Class.forName(className,true,loader);
+      Class<?> toolClass=Class.forName(className,true,loader);
       final Tool tool=(Tool)toolClass.newInstance();
       tool.init(Editor.this);
       String title=tool.getMenuTitle();
@@ -50,7 +50,7 @@
       e.printStackTrace();
     }
   }
-  ArrayList<String> toolList=new ArrayList(toolItems.keySet());
+  ArrayList<String> toolList=new ArrayList<String>(toolItems.keySet());
   if (toolList.size() == 0)   return;
   menu.addSeparator();
   Collections.sort(toolList);
