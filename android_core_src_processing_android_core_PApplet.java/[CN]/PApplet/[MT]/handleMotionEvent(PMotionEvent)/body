@@ -1,15 +1,13 @@
 {
-  int action=event.getAction();
   pmotionX=emotionX;
   pmotionY=emotionY;
-  motionX=event.getX();
-  motionY=event.getY();
+  motionX=pme.motionX;
+  motionY=pme.motionY;
+  motionPressure=pme.motionPressure;
   pmouseX=emouseX;
   pmouseY=emouseY;
-  mouseX=(int)event.getRawX();
-  mouseY=(int)event.getRawY();
-  motionPressure=event.getPressure();
-  motionEvent=event;
+  mouseX=pme.mouseX;
+  mouseY=pme.mouseY;
   if (firstMotion) {
     pmouseX=mouseX;
     pmouseY=mouseY;
@@ -21,7 +19,7 @@
     dmotionY=motionY;
     firstMotion=false;
   }
-switch (action) {
+switch (pme.action) {
 case MotionEvent.ACTION_DOWN:
     mousePressed=true;
   mousePressed();
@@ -31,23 +29,15 @@ mousePressed=false;
 mouseReleased();
 break;
 case MotionEvent.ACTION_MOVE:
-int count=event.getHistorySize();
-for (int pos=0; pos < count; pos++) {
-mouseX=(int)event.getHistoricalX(pos);
-mouseY=(int)event.getHistoricalY(pos);
-motionPressure=event.getHistoricalPressure(pos);
 if (mousePressed) {
 mouseDragged();
 }
  else {
 mouseMoved();
 }
-pmouseX=mouseX;
-pmouseY=mouseY;
-}
 break;
 }
-if (action == MotionEvent.ACTION_MOVE) {
+if (pme.action == MotionEvent.ACTION_MOVE) {
 emotionX=motionX;
 emotionY=motionY;
 emouseX=mouseX;

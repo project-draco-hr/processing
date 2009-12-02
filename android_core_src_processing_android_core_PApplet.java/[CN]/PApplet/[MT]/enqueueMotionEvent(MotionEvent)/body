@@ -1,8 +1,40 @@
 {
-synchronized (motionEventQueue) {
-    if (motionEventCount == motionEventQueue.length) {
-      motionEventQueue=(MotionEvent[])PApplet.expand(motionEventQueue);
+synchronized (motionLock) {
+    if (motionEventQueue == null) {
+      motionEventQueue=new PMotionEvent[20];
+      for (int i=0; i < motionEventQueue.length; i++) {
+        motionEventQueue[i]=new PMotionEvent();
+      }
     }
-    motionEventQueue[motionEventCount++]=e;
+    if (motionEventCount + event.getHistorySize() >= motionEventQueue.length) {
+      PMotionEvent[] temp=new PMotionEvent[motionEventCount << 1];
+      System.arraycopy(motionEventQueue,0,temp,0,motionEventCount);
+      motionEventQueue=temp;
+      for (int i=motionEventCount; i < motionEventCount << 1; i++) {
+        motionEventQueue[i]=new PMotionEvent();
+      }
+    }
+    int historyCount=event.getHistorySize();
+    PMotionEvent pme=motionEventQueue[motionEventCount + historyCount];
+    pme.action=event.getAction();
+    pme.motionX=event.getX();
+    pme.motionY=event.getY();
+    pme.motionPressure=event.getPressure();
+    pme.mouseX=(int)event.getRawX();
+    pme.mouseY=(int)event.getRawY();
+    if (pme.action == MotionEvent.ACTION_MOVE && historyCount > 0) {
+      float rawOffsetX=pme.mouseX - pme.motionX;
+      float rawOffsetY=pme.mouseY - pme.motionY;
+      for (int i=0; i < historyCount; i++) {
+        PMotionEvent hist=motionEventQueue[motionEventCount++];
+        hist.action=pme.action;
+        hist.motionX=event.getHistoricalX(i);
+        hist.motionY=event.getHistoricalY(i);
+        hist.motionPressure=event.getHistoricalPressure(i);
+        hist.mouseX=(int)(hist.motionX + rawOffsetX);
+        hist.mouseY=(int)(hist.motionY + rawOffsetY);
+      }
+    }
+    motionEventCount++;
   }
 }
