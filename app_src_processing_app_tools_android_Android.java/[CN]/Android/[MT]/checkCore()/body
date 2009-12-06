@@ -1,0 +1,14 @@
+{
+  File target=new File(Base.getSketchbookFolder(),ANDROID_CORE_FILENAME);
+  if (!target.exists()) {
+    try {
+      URL url=new URL(ANDROID_CORE_URL);
+      PApplet.saveStream(target,url.openStream());
+    }
+ catch (    Exception e) {
+      Base.showWarning("Download Error","Could not download Android core.zip",e);
+      return false;
+    }
+  }
+  return true;
+}
