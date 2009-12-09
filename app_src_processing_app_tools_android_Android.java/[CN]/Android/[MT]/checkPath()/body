@@ -12,7 +12,7 @@
       if (result == JOptionPane.YES_OPTION) {
         File folder=Base.selectFolder(SELECT_ANDROID_SDK_FOLDER,null,editor);
         if (folder != null) {
-          boolean basicCheck=new File(folder,"tools/android").exists();
+          boolean basicCheck=Base.isWindows() ? new File(folder,"tools/android.exe").exists() : new File(folder,"tools/android").exists();
           if (basicCheck) {
             sdkPath=folder.getAbsolutePath();
             Preferences.set("android.sdk.path",sdkPath);
