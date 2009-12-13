@@ -1,20 +1,6 @@
 {
-  if (inactive == null) {
-    inactive=new Image[BUTTON_COUNT];
-    rollover=new Image[BUTTON_COUNT];
-    active=new Image[BUTTON_COUNT];
-    int IMAGE_SIZE=33;
-    for (int i=0; i < BUTTON_COUNT; i++) {
-      inactive[i]=createImage(BUTTON_WIDTH,BUTTON_HEIGHT);
-      Graphics g=inactive[i].getGraphics();
-      g.drawImage(buttons,-(i * IMAGE_SIZE) - 3,-2 * IMAGE_SIZE,null);
-      rollover[i]=createImage(BUTTON_WIDTH,BUTTON_HEIGHT);
-      g=rollover[i].getGraphics();
-      g.drawImage(buttons,-(i * IMAGE_SIZE) - 3,-1 * IMAGE_SIZE,null);
-      active[i]=createImage(BUTTON_WIDTH,BUTTON_HEIGHT);
-      g=active[i].getGraphics();
-      g.drawImage(buttons,-(i * IMAGE_SIZE) - 3,-0 * IMAGE_SIZE,null);
-    }
+  if (buttonImages == null) {
+    loadButtons();
   }
   if (stateImage == null) {
     state=new int[buttonCount];
@@ -48,7 +34,10 @@
   }
   g.setColor(statusColor);
   g.setFont(statusFont);
-  int statusY=(BUTTON_HEIGHT + g.getFontMetrics().getAscent()) / 2;
-  g.drawString(status,buttonCount * BUTTON_WIDTH + 3 * BUTTON_GAP,statusY);
+  if (currentRollover != -1) {
+    int statusY=(BUTTON_HEIGHT + g.getFontMetrics().getAscent()) / 2;
+    String status=shiftPressed ? titleShift[currentRollover] : title[currentRollover];
+    g.drawString(status,buttonCount * BUTTON_WIDTH + 3 * BUTTON_GAP,statusY);
+  }
   screen.drawImage(offscreen,0,0,null);
 }
