@@ -4,7 +4,18 @@
     System.err.println("Could not find the image " + filename + ".");
     return null;
   }
-  Bitmap bitmap=BitmapFactory.decodeStream(stream);
+  Bitmap bitmap=null;
+  try {
+    bitmap=BitmapFactory.decodeStream(stream);
+  }
+  finally {
+    try {
+      stream.close();
+      stream=null;
+    }
+ catch (    IOException e) {
+    }
+  }
   PImage image=new PImage(bitmap);
   image.parent=this;
   return image;
