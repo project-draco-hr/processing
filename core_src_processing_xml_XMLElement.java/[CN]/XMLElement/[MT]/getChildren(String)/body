@@ -1,9 +1,9 @@
 {
-  if (name.indexOf('/') != -1) {
-    return getChildrenRecursive(PApplet.split(name,'/'),0);
+  if (path.indexOf('/') != -1) {
+    return getChildrenRecursive(PApplet.split(path,'/'),0);
   }
-  if (Character.isDigit(name.charAt(0))) {
-    return new XMLElement[]{getChild(Integer.parseInt(name))};
+  if (Character.isDigit(path.charAt(0))) {
+    return new XMLElement[]{getChild(Integer.parseInt(path))};
   }
   int childCount=getChildCount();
   XMLElement[] matches=new XMLElement[childCount];
@@ -11,7 +11,7 @@
   for (int i=0; i < childCount; i++) {
     XMLElement kid=getChild(i);
     String kidName=kid.getName();
-    if (kidName != null && kidName.equals(name)) {
+    if (kidName != null && kidName.equals(path)) {
       matches[matchCount++]=kid;
     }
   }
