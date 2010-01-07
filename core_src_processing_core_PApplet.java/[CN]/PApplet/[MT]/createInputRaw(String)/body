@@ -4,18 +4,20 @@
   if (filename.length() == 0) {
     return null;
   }
-  try {
-    URL url=new URL(filename);
-    stream=url.openStream();
-    return stream;
-  }
- catch (  MalformedURLException mfue) {
-  }
-catch (  FileNotFoundException fnfe) {
-  }
-catch (  IOException e) {
-    e.printStackTrace();
-    return null;
+  if (filename.indexOf("://") != -1) {
+    try {
+      URL url=new URL(filename);
+      stream=url.openStream();
+      return stream;
+    }
+ catch (    MalformedURLException mfue) {
+    }
+catch (    FileNotFoundException fnfe) {
+    }
+catch (    IOException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
   try {
     File file=new File(dataPath(filename));
