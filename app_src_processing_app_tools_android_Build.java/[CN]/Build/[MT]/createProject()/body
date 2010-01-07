@@ -40,6 +40,15 @@ catch (      InterruptedException e) {
   File javaFolder=new File(srcFolder,getPackageName().replace('.','/'));
   javaFolder.mkdirs();
   String buildPath=javaFolder.getAbsolutePath();
+  File sketchDataFolder=sketch.getDataFolder();
+  if (sketchDataFolder.exists()) {
+    try {
+      Base.copyDir(sketchDataFolder,srcFolder);
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+  }
   try {
     sketch.prepare();
     className=sketch.preprocess(buildPath,new Preproc());
