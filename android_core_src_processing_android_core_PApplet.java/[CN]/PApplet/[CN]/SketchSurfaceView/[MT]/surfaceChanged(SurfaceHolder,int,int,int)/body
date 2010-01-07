@@ -2,15 +2,17 @@
   System.out.println("surfaceChanged() " + w + " "+ h);
   width=w;
   height=h;
+  PGraphics newGraphics=null;
   if (sketchRenderer().equals(A2D)) {
-    g=new PGraphicsAndroid2D();
+    newGraphics=new PGraphicsAndroid2D();
   }
  else   if (sketchRenderer().equals(A3D)) {
-    g=new PGraphicsAndroid3D();
+    newGraphics=new PGraphicsAndroid3D();
   }
-  g.setSize(w,h);
-  g.setParent(PApplet.this);
-  g.setPrimary(true);
+  newGraphics.setSize(w,h);
+  newGraphics.setParent(PApplet.this);
+  newGraphics.setPrimary(true);
+  g=newGraphics;
   init();
   setFocusable(true);
   setFocusableInTouchMode(true);
