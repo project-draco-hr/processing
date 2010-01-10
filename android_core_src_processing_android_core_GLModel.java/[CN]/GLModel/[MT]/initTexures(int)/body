@@ -1,0 +1,12 @@
+{
+  numTextures=n;
+  texCoordsVBO=new int[numTextures];
+  textures=new GLTexture[numTextures];
+  gl.glGenBuffers(numTextures,texCoordsVBO,0);
+  for (n=0; n < numTextures; n++) {
+    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,texCoordsVBO[n]);
+    gl.glBufferData(GL11.GL_ARRAY_BUFFER,size * 2 * SIZEOF_FLOAT,null,vboUsage);
+  }
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
+  texCoords=FloatBuffer.allocate(size * 2);
+}

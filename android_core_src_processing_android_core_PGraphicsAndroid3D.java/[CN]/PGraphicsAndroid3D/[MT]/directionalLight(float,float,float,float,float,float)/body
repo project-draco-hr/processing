@@ -1,9 +1,30 @@
 {
-  super.directionalLight(r,g,b,nx,ny,nz);
-  glLightEnable(lightCount - 1);
-  glLightNoAmbient(lightCount - 1);
-  glLightDirection(lightCount - 1);
-  glLightDiffuse(lightCount - 1);
-  glLightSpecular(lightCount - 1);
-  glLightFalloff(lightCount - 1);
+  if (lightCountGL == MAX_LIGHTS_GL) {
+    throw new RuntimeException("can only create " + MAX_LIGHTS_GL + " lights");
+  }
+  colorCalc(r,g,b);
+  lightDiffuseGL[lightCountGL][0]=calcR;
+  lightDiffuseGL[lightCountGL][1]=calcG;
+  lightDiffuseGL[lightCountGL][2]=calcB;
+  lightDiffuseGL[lightCountGL][3]=1.0f;
+  lightTypeGL[lightCountGL]=DIRECTIONAL;
+  lightFalloffConstantGL[lightCountGL]=currentLightFalloffConstantGL;
+  lightFalloffLinearGL[lightCountGL]=currentLightFalloffLinearGL;
+  lightFalloffQuadraticGL[lightCountGL]=currentLightFalloffQuadraticGL;
+  lightSpecularGL[lightCountGL][0]=currentLightSpecularGL[0];
+  lightSpecularGL[lightCountGL][1]=currentLightSpecularGL[1];
+  lightSpecularGL[lightCountGL][2]=currentLightSpecularGL[2];
+  lightSpecularGL[lightCountGL][2]=currentLightSpecularGL[3];
+  float invn=1.0f / PApplet.dist(0,0,0,nx,ny,nz);
+  lightNormalGL[lightCountGL][0]=invn * nx;
+  lightNormalGL[lightCountGL][1]=invn * ny;
+  lightNormalGL[lightCountGL][2]=invn * nz;
+  lightNormalGL[lightCountGL][3]=0.0f;
+  glLightEnable(lightCountGL);
+  glLightNoAmbient(lightCountGL);
+  glLightDirection(lightCountGL);
+  glLightDiffuse(lightCountGL);
+  glLightSpecular(lightCountGL);
+  glLightFalloff(lightCountGL);
+  lightCountGL++;
 }

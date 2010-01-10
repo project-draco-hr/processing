@@ -1,0 +1,75 @@
+{
+  if (colorsVBO == null)   gl.glColor4f(tintR,tintG,tintB,tintA);
+  gl.glMaterialfv(GL11.GL_FRONT_AND_BACK,GL11.GL_SPECULAR,specularColor,0);
+  gl.glMaterialfv(GL11.GL_FRONT_AND_BACK,GL11.GL_SHININESS,shininess,0);
+  gl.glMaterialfv(GL11.GL_FRONT_AND_BACK,GL11.GL_EMISSION,emissiveColor,0);
+  gl.glLineWidth(lineWidth);
+  if (usingPointSprites)   gl.glPointSize(PApplet.min(pointSize,maxPointSize));
+ else   gl.glPointSize(pointSize);
+  blend0=gl.glIsEnabled(GL11.GL_BLEND);
+  if (blend) {
+    gl.glEnable(GL11.GL_BLEND);
+    if (blendMode == BLEND)     gl.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+ else     if (blendMode == ADD)     gl.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE);
+ else     if (blendMode == MULTIPLY)     gl.glBlendFunc(GL11.GL_DST_COLOR,GL11.GL_SRC_COLOR);
+ else     if (blendMode == SUBTRACT)     gl.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR,GL11.GL_ZERO);
+  }
+  if (normCoordsVBO != null) {
+    gl.glEnableClientState(GL11.GL_NORMAL_ARRAY);
+    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,normCoordsVBO[0]);
+    gl.glNormalPointer(GL11.GL_FLOAT,0,0);
+  }
+  if (colorsVBO != null) {
+    gl.glEnableClientState(GL11.GL_COLOR_ARRAY);
+    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,colorsVBO[0]);
+    gl.glColorPointer(4,GL11.GL_FLOAT,0,0);
+  }
+  if (texCoordsVBO != null) {
+    gl.glEnable(textures[0].getTextureTarget());
+    for (int n=0; n < numTextures; n++) {
+      gl.glActiveTexture(GL11.GL_TEXTURE0 + n);
+      gl.glBindTexture(GL11.GL_TEXTURE_2D,textures[n].getTextureID());
+    }
+    if (usingPointSprites) {
+      float quadratic[]={1.0f,0.0f,0.01f,1};
+      ByteBuffer temp=ByteBuffer.allocateDirect(16);
+      temp.order(ByteOrder.nativeOrder());
+      gl.glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION,(FloatBuffer)temp.asFloatBuffer().put(quadratic).flip());
+      gl.glPointParameterf(GL11.GL_POINT_FADE_THRESHOLD_SIZE,spriteFadeSize);
+      gl.glPointParameterf(GL11.GL_POINT_SIZE_MIN,1.0f);
+      gl.glPointParameterf(GL11.GL_POINT_SIZE_MAX,maxPointSize);
+      gl.glTexEnvf(GL11.GL_POINT_SPRITE_OES,GL11.GL_COORD_REPLACE_OES,GL11.GL_TRUE);
+      gl.glEnable(GL11.GL_POINT_SPRITE_OES);
+    }
+ else {
+      gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+      for (int n=0; n < numTextures; n++) {
+        gl.glClientActiveTexture(GL11.GL_TEXTURE0 + n);
+        gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,texCoordsVBO[n]);
+        gl.glTexCoordPointer(2,GL11.GL_FLOAT,0,0);
+      }
+    }
+  }
+  gl.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,vertCoordsVBO[0]);
+  gl.glVertexPointer(3,GL11.GL_FLOAT,0,0);
+  gl.glPushMatrix();
+  gl.glScalef(1,-1,1);
+  gl.glDrawArrays(vertexMode,first,last - first + 1);
+  gl.glPopMatrix();
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
+  gl.glDisableClientState(GL11.GL_VERTEX_ARRAY);
+  if (texCoordsVBO != null) {
+    if (usingPointSprites) {
+      gl.glDisable(GL11.GL_POINT_SPRITE_OES);
+    }
+ else {
+      gl.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+    }
+    gl.glDisable(textures[0].getTextureTarget());
+  }
+  if (colorsVBO != null)   gl.glDisableClientState(GL11.GL_COLOR_ARRAY);
+  if (normCoordsVBO != null)   gl.glDisableClientState(GL11.GL_NORMAL_ARRAY);
+  if (!blend0 && blend)   gl.glDisable(GL11.GL_BLEND);
+  gl.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+}

@@ -1,0 +1,30 @@
+{
+  leftScreen=left;
+  rightScreen=right;
+  bottomScreen=bottom;
+  topScreen=top;
+  nearPlane=znear;
+  float temp, temp2, temp3, temp4;
+  temp=2.0f * znear;
+  temp2=right - left;
+  temp3=top - bottom;
+  temp4=zfar - znear;
+  projectionGL[0]=temp / temp2;
+  projectionGL[1]=0.0f;
+  projectionGL[2]=0.0f;
+  projectionGL[3]=0.0f;
+  projectionGL[4]=0.0f;
+  projectionGL[5]=temp / temp3;
+  projectionGL[6]=0.0f;
+  projectionGL[7]=0.0f;
+  projectionGL[8]=(right + left) / temp2;
+  projectionGL[9]=(top + bottom) / temp3;
+  projectionGL[10]=(-zfar - znear) / temp4;
+  projectionGL[11]=-1.0f;
+  projectionGL[12]=0.0f;
+  projectionGL[13]=0.0f;
+  projectionGL[14]=(-temp * zfar) / temp4;
+  projectionGL[15]=0.0f;
+  gl.glLoadMatrixf(projectionGL,0);
+  projectionUpdated=true;
+}

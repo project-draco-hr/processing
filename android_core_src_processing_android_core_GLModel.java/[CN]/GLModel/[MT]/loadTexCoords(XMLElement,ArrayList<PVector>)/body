@@ -1,0 +1,16 @@
+{
+  int n=xml.getChildCount();
+  XMLElement child;
+  String name;
+  String coordStr;
+  float[] coord;
+  for (int i=0; i < n; i++) {
+    child=xml.getChild(i);
+    name=child.getName();
+    if (name.equals("texcoord")) {
+      coordStr=child.getContent();
+      coord=PApplet.parseFloat(PApplet.split(coordStr,' '));
+      if (coord.length == 2)       texCoordsList.add(new PVector(coord[0],coord[1]));
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  if (tex[0] == 0) {
+    initTexture(width,height);
+  }
+  int[] convArray=intArray;
+  int glFormat;
+  if (format == TEX1) {
+    glFormat=GL10.GL_LUMINANCE;
+    if (type == TEX_BYTE) {
+      convArray=convertToRGBA(intArray,ALPHA);
+    }
+  }
+ else   if (format == TEX3) {
+    glFormat=GL10.GL_RGB;
+    if (type == TEX_BYTE)     convArray=convertToRGBA(intArray,RGB);
+  }
+ else {
+    glFormat=GL10.GL_RGBA;
+    if (type == TEX_BYTE)     convArray=convertToRGBA(intArray,ARGB);
+  }
+  int glType;
+  glType=GL10.GL_UNSIGNED_BYTE;
+  gl.glBindTexture(texTarget,tex[0]);
+  gl.glTexSubImage2D(texTarget,0,0,0,width,height,glFormat,glType,IntBuffer.wrap(convArray));
+  gl.glBindTexture(texTarget,0);
+}

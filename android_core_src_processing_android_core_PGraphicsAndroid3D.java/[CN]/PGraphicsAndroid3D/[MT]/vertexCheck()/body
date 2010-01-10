@@ -1,18 +1,29 @@
 {
   super.vertexCheck();
   int vertexAlloc=vertices.length;
-  if (vertexBuffer == null || vertexBuffer.capacity() != vertexAlloc) {
-    ByteBuffer vbb=ByteBuffer.allocateDirect(vertexAlloc * 3);
+  int triangleAlloc=3 * vertexAlloc;
+  ;
+  int lineAlloc=2 * vertexAlloc;
+  if (vertexBuffer == null || vertexBuffer.capacity() < triangleAlloc) {
+    ByteBuffer vbb=ByteBuffer.allocateDirect(triangleAlloc * 3);
     vbb.order(ByteOrder.nativeOrder());
     vertexBuffer=vbb.asIntBuffer();
-    ByteBuffer cbb=ByteBuffer.allocateDirect(vertexAlloc * 4);
+    ByteBuffer cbb=ByteBuffer.allocateDirect(triangleAlloc * 4);
     cbb.order(ByteOrder.nativeOrder());
     colorBuffer=cbb.asIntBuffer();
-    ByteBuffer tbb=ByteBuffer.allocateDirect(vertexAlloc * 2);
+    ByteBuffer tbb=ByteBuffer.allocateDirect(triangleAlloc * 2);
     tbb.order(ByteOrder.nativeOrder());
     textureBuffer=tbb.asIntBuffer();
-    ByteBuffer nbb=ByteBuffer.allocateDirect(vertexAlloc * 3);
+    ByteBuffer nbb=ByteBuffer.allocateDirect(triangleAlloc * 3);
     nbb.order(ByteOrder.nativeOrder());
     normalBuffer=nbb.asIntBuffer();
+  }
+  if (linesVertexBuffer == null || linesVertexBuffer.capacity() < lineAlloc) {
+    ByteBuffer vbb=ByteBuffer.allocateDirect(lineAlloc * 3);
+    vbb.order(ByteOrder.nativeOrder());
+    linesVertexBuffer=vbb.asIntBuffer();
+    ByteBuffer cbb=ByteBuffer.allocateDirect(lineAlloc * 4);
+    cbb.order(ByteOrder.nativeOrder());
+    linesColorBuffer=cbb.asIntBuffer();
   }
 }

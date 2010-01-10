@@ -1,3 +1,72 @@
 {
-  addTriangleWithoutClip(a,b,c);
+  float[] vertexa=vertices[a];
+  float[] vertexb=vertices[b];
+  float[] vertexc=vertices[c];
+  float uscale=1.0f;
+  float vscale=1.0f;
+  float cx=0.0f;
+  float sx=+1.0f;
+  float cy=0.0f;
+  float sy=+1.0f;
+  if (textureImage != null && textureImage instanceof GLTexture) {
+    GLTexture tex=(GLTexture)textureImage;
+    uscale*=tex.getMaxTextureCoordS();
+    vscale*=tex.getMaxTextureCoordT();
+    if (tex.isFlippedX()) {
+      cx=1.0f;
+      sx=-1.0f;
+    }
+    if (tex.isFlippedY()) {
+      cy=1.0f;
+      sy=-1.0f;
+    }
+  }
+  vertexBuffer.put(toFixed32(vertexa[X]));
+  vertexBuffer.put(toFixed32(vertexa[Y]));
+  vertexBuffer.put(toFixed32(vertexa[Z]));
+  colorBuffer.put(toFixed32(vertexa[R]));
+  colorBuffer.put(toFixed32(vertexa[G]));
+  colorBuffer.put(toFixed32(vertexa[B]));
+  colorBuffer.put(toFixed32(vertexa[A]));
+  normalBuffer.put(toFixed32(vertexa[NX]));
+  normalBuffer.put(toFixed32(vertexa[NY]));
+  normalBuffer.put(toFixed32(vertexa[NZ]));
+  textureBuffer.put(toFixed32((cx + sx * vertexa[U]) * uscale));
+  textureBuffer.put(toFixed32((cy + sy * vertexa[V]) * vscale));
+  vertexBuffer.put(toFixed32(vertexb[X]));
+  vertexBuffer.put(toFixed32(vertexb[Y]));
+  vertexBuffer.put(toFixed32(vertexb[Z]));
+  colorBuffer.put(toFixed32(vertexb[R]));
+  colorBuffer.put(toFixed32(vertexb[G]));
+  colorBuffer.put(toFixed32(vertexb[B]));
+  colorBuffer.put(toFixed32(vertexb[A]));
+  normalBuffer.put(toFixed32(vertexb[NX]));
+  normalBuffer.put(toFixed32(vertexb[NY]));
+  normalBuffer.put(toFixed32(vertexb[NZ]));
+  textureBuffer.put(toFixed32((cx + sx * vertexb[U]) * uscale));
+  textureBuffer.put(toFixed32((cy + sy * vertexb[V]) * vscale));
+  vertexBuffer.put(toFixed32(vertexc[X]));
+  vertexBuffer.put(toFixed32(vertexc[Y]));
+  vertexBuffer.put(toFixed32(vertexc[Z]));
+  colorBuffer.put(toFixed32(vertexc[R]));
+  colorBuffer.put(toFixed32(vertexc[G]));
+  colorBuffer.put(toFixed32(vertexc[B]));
+  colorBuffer.put(toFixed32(vertexc[A]));
+  normalBuffer.put(toFixed32(vertexc[NX]));
+  normalBuffer.put(toFixed32(vertexc[NY]));
+  normalBuffer.put(toFixed32(vertexc[NZ]));
+  textureBuffer.put(toFixed32((cx + sx * vertexc[U]) * uscale));
+  textureBuffer.put(toFixed32((cy + sy * vertexc[V]) * vscale));
+  System.out.println("vertexBuffer.capacity(): " + vertexBuffer.capacity() + " - vertexBuffer.position(): "+ vertexBuffer.position());
+  triangleCount++;
+  if (textureImage != textureImagePrev) {
+    if (currentTexTriangleRange != null) {
+      texTriangleRanges.add(currentTexTriangleRange);
+    }
+    currentTexTriangleRange=new TexturedTriangleRange(triangleCount - 1,triangleCount,textureImage);
+  }
+ else   if (textureImage != null) {
+    currentTexTriangleRange.lastTriangle=triangleCount;
+  }
+  textureImagePrev=textureImage;
 }

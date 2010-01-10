@@ -1,0 +1,23 @@
+{
+  int mult;
+  if (format == TEX1) {
+    mult=1;
+  }
+ else   if (format == TEX3) {
+    mult=3;
+  }
+ else {
+    mult=4;
+  }
+  int size=mult * width * height;
+  if (floatArray.length != size) {
+    System.err.println("Wrong size of buffer!");
+    return;
+  }
+  FloatBuffer buffer=FloatBuffer.allocate(size);
+  gl.glBindTexture(texTarget,tex[0]);
+  gl.glBindTexture(texTarget,0);
+  buffer.get(floatArray);
+  if (flippedX)   flipArrayOnX(floatArray,mult);
+  if (flippedY)   flipArrayOnY(floatArray,mult);
+}

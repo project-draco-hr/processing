@@ -1,8 +1,20 @@
 {
   super.onCreate(savedInstanceState);
+  Window window=getWindow();
   requestWindowFeature(Window.FEATURE_NO_TITLE);
-  getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-  getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-  surfaceView=new SketchSurfaceView(this);
-  getWindow().setContentView(surfaceView);
+  window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+  window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+  if (sketchRenderer().equals(A2D)) {
+    surfaceView=new SketchSurfaceView2D(this);
+  }
+ else   if (sketchRenderer().equals(A3D)) {
+    surfaceView=new SketchSurfaceView3D(this);
+  }
+  window.setContentView(surfaceView);
+  millisOffset=System.currentTimeMillis();
+  finished=false;
+  looping=true;
+  redraw=true;
+  firstMotion=true;
+  start();
 }

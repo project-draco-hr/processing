@@ -1,0 +1,17 @@
+{
+  int w=width;
+  int h=height;
+  if ((img.width != w) || (img.height != h)) {
+    img.init(w,h,ARGB);
+  }
+  int size=w * h;
+  IntBuffer buffer=BufferUtil.newIntBuffer(size);
+  gl.glBindTexture(texTarget,tex[0]);
+  gl.glBindTexture(texTarget,0);
+  buffer.get(img.pixels);
+  int[] pixelsARGB=convertToARGB(img.pixels);
+  PApplet.arrayCopy(pixelsARGB,img.pixels);
+  if (flippedX)   flipArrayOnX(img.pixels,1);
+  if (flippedY)   flipArrayOnY(img.pixels,1);
+  img.updatePixels();
+}

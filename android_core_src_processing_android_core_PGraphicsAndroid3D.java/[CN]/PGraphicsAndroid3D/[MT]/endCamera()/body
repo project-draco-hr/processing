@@ -1,0 +1,10 @@
+{
+  if (!manipulatingCamera) {
+    throw new RuntimeException("Cannot call endCamera() " + "without first calling beginCamera()");
+  }
+  getModelviewMatrix();
+  calculateModelviewInvNoScaling();
+  PApplet.arrayCopy(modelviewGL,cameramat);
+  PApplet.arrayCopy(modelviewInvGL,cameramatInv);
+  manipulatingCamera=false;
+}

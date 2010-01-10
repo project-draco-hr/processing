@@ -1,0 +1,18 @@
+{
+  super(context);
+  println("surface holder");
+  surfaceHolder=getHolder();
+  surfaceHolder.addCallback(this);
+  surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
+  println("creating graphics");
+  PGraphics newGraphics=new PGraphicsAndroid2D();
+  newGraphics.setSize(100,100);
+  newGraphics.setParent(PApplet.this);
+  newGraphics.setPrimary(true);
+  g=newGraphics;
+  println("setting focusable, requesting focus");
+  setFocusable(true);
+  setFocusableInTouchMode(true);
+  requestFocus();
+  println("done making surface view");
+}

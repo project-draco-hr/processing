@@ -1,0 +1,92 @@
+{
+  int n=xml.getChildCount();
+  String name, content;
+  XMLElement child;
+  GLTexture[] texturesList;
+  ArrayList<PVector> verticesList;
+  ArrayList<PVector>[] texCoordsList;
+  ArrayList<PVector> normalsList;
+  ArrayList<float[]> colorsList;
+  String[] texNames;
+  texturesList=null;
+  verticesList=new ArrayList<PVector>();
+  texCoordsList=null;
+  normalsList=new ArrayList<PVector>();
+  colorsList=new ArrayList<float[]>();
+  texNames=null;
+  for (int i=0; i < n; i++) {
+    child=xml.getChild(i);
+    name=child.getName();
+    if (name.equals("description")) {
+      description=child.getContent();
+    }
+ else     if (name.equals("size")) {
+      size=PApplet.parseInt(child.getContent());
+    }
+ else     if (name.equals("geometry")) {
+      content=child.getContent();
+      vertexMode=GLUtils.parsePrimitiveTypeUpperCase(content);
+      if (vertexMode == GL11.GL_POINTS && content.equals("POINT_SPRITES")) {
+        vertexMode=GL11.GL_POINTS;
+        usingPointSprites=true;
+        float[] tmp={0.0f};
+        gl.glGetFloatv(GL11.GL_POINT_SIZE_MAX,tmp,0);
+        maxPointSize=tmp[0];
+        pointSize=maxPointSize;
+        spriteFadeSize=0.6f * pointSize;
+      }
+    }
+ else     if (name.equals("mode")) {
+      vboUsage=GLUtils.parseVBOMode(child.getContent());
+    }
+ else     if (name.equals("textures")) {
+      int ntex=child.getChildCount();
+      texturesList=new GLTexture[ntex];
+      texNames=new String[ntex];
+      texCoordsList=new ArrayList[ntex];
+      loadTextures(child,texturesList,texCoordsList,texNames);
+    }
+ else     if (name.equals("vertices")) {
+      loadVertices(child,verticesList);
+    }
+ else     if (name.equals("texcoords")) {
+      if (texCoordsList != null) {
+        int unit=child.getIntAttribute("unit");
+        if (texCoordsList[unit] != null) {
+          loadTexCoords(child,texCoordsList[unit]);
+        }
+      }
+    }
+ else     if (name.equals("colors")) {
+      loadColors(child,colorsList);
+    }
+ else     if (name.equals("normals")) {
+      loadNormals(child,normalsList);
+    }
+  }
+  gl.glGenBuffers(1,vertCoordsVBO,0);
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,vertCoordsVBO[0]);
+  gl.glBufferData(GL11.GL_ARRAY_BUFFER,size * 4 * SIZEOF_FLOAT,null,vboUsage);
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
+  updateVertices(verticesList);
+  int ntex=texturesList.length;
+  if (0 < ntex) {
+    initTexures(ntex);
+    GLTexture tex;
+    ArrayList<PVector> tcoords;
+    for (int j=0; j < ntex; j++) {
+      tex=texturesList[j];
+      setTexture(j,tex);
+      tcoords=(ArrayList<PVector>)texCoordsList[j];
+      if (tcoords.size() == size)       updateTexCoords(j,tcoords);
+    }
+  }
+  if (normalsList.size() == size) {
+    initNormals();
+    updateNormals(normalsList);
+  }
+  if (colorsList.size() == size) {
+    initColors();
+    updateColors(colorsList);
+  }
+}

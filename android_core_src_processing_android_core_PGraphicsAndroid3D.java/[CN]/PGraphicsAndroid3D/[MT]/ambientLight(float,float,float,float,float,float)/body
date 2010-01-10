@@ -1,7 +1,23 @@
 {
-  super.ambientLight(r,g,b,x,y,z);
-  glLightEnable(lightCount - 1);
-  glLightAmbient(lightCount - 1);
-  glLightPosition(lightCount - 1);
-  glLightFalloff(lightCount - 1);
+  if (lightCountGL == MAX_LIGHTS_GL) {
+    throw new RuntimeException("can only create " + MAX_LIGHTS_GL + " lights");
+  }
+  colorCalc(r,g,b);
+  lightDiffuseGL[lightCountGL][0]=calcR;
+  lightDiffuseGL[lightCountGL][1]=calcG;
+  lightDiffuseGL[lightCountGL][2]=calcB;
+  lightDiffuseGL[lightCountGL][3]=1.0f;
+  lightTypeGL[lightCountGL]=AMBIENT;
+  lightFalloffConstantGL[lightCountGL]=currentLightFalloffConstantGL;
+  lightFalloffLinearGL[lightCountGL]=currentLightFalloffLinearGL;
+  lightFalloffQuadraticGL[lightCountGL]=currentLightFalloffQuadraticGL;
+  lightPositionGL[lightCountGL][0]=x;
+  lightPositionGL[lightCountGL][1]=y;
+  lightPositionGL[lightCountGL][2]=z;
+  lightPositionGL[lightCountGL][3]=0.0f;
+  glLightEnable(lightCountGL);
+  glLightAmbient(lightCountGL);
+  glLightPosition(lightCountGL);
+  glLightFalloff(lightCountGL);
+  lightCountGL++;
 }

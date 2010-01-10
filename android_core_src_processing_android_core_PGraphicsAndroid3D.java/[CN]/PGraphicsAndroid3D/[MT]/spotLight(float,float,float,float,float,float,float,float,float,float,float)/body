@@ -1,11 +1,38 @@
 {
-  super.spotLight(r,g,b,x,y,z,nx,ny,nz,angle,concentration);
-  glLightNoAmbient(lightCount - 1);
-  glLightPosition(lightCount - 1);
-  glLightDirection(lightCount - 1);
-  glLightDiffuse(lightCount - 1);
-  glLightSpecular(lightCount - 1);
-  glLightFalloff(lightCount - 1);
-  glLightSpotAngle(lightCount - 1);
-  glLightSpotConcentration(lightCount - 1);
+  if (lightCountGL == MAX_LIGHTS_GL) {
+    throw new RuntimeException("can only create " + MAX_LIGHTS_GL + " lights");
+  }
+  colorCalc(r,g,b);
+  lightDiffuseGL[lightCountGL][0]=calcR;
+  lightDiffuseGL[lightCountGL][1]=calcG;
+  lightDiffuseGL[lightCountGL][2]=calcB;
+  lightDiffuseGL[lightCountGL][3]=1.0f;
+  lightTypeGL[lightCountGL]=SPOT;
+  lightFalloffConstantGL[lightCountGL]=currentLightFalloffConstantGL;
+  lightFalloffLinearGL[lightCountGL]=currentLightFalloffLinearGL;
+  lightFalloffQuadraticGL[lightCountGL]=currentLightFalloffQuadraticGL;
+  lightSpecularGL[lightCountGL][0]=currentLightSpecularGL[0];
+  lightSpecularGL[lightCountGL][1]=currentLightSpecularGL[1];
+  lightSpecularGL[lightCountGL][2]=currentLightSpecularGL[2];
+  lightPositionGL[lightCountGL][0]=x;
+  lightPositionGL[lightCountGL][1]=y;
+  lightPositionGL[lightCountGL][2]=z;
+  lightPositionGL[lightCountGL][3]=0.0f;
+  float invn=1.0f / PApplet.dist(0,0,0,nx,ny,nz);
+  lightNormalGL[lightCountGL][0]=invn * nx;
+  lightNormalGL[lightCountGL][1]=invn * ny;
+  lightNormalGL[lightCountGL][2]=invn * nz;
+  lightNormalGL[lightCountGL][3]=0.0f;
+  lightSpotAngleGL[lightCountGL]=angle;
+  lightSpotAngleCosGL[lightCountGL]=Math.max(0,(float)Math.cos(angle));
+  lightSpotConcentrationGL[lightCountGL]=concentration;
+  glLightNoAmbient(lightCountGL);
+  glLightPosition(lightCountGL);
+  glLightDirection(lightCountGL);
+  glLightDiffuse(lightCountGL);
+  glLightSpecular(lightCountGL);
+  glLightFalloff(lightCountGL);
+  glLightSpotAngle(lightCountGL);
+  glLightSpotConcentration(lightCountGL);
+  lightCountGL++;
 }

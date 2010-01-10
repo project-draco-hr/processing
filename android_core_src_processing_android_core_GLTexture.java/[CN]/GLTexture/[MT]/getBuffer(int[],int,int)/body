@@ -1,0 +1,36 @@
+{
+  int mult;
+  int glFormat;
+  if (format == TEX1) {
+    mult=1;
+    glFormat=GL10.GL_LUMINANCE;
+  }
+ else   if (format == TEX3) {
+    mult=3;
+    glFormat=GL10.GL_RGB;
+  }
+ else {
+    mult=4;
+    glFormat=GL10.GL_RGBA;
+  }
+  int size;
+  int glType;
+  if (type == TEX_INT) {
+    glType=GL10.GL_UNSIGNED_BYTE;
+  }
+ else {
+    mult=1;
+    glType=GL10.GL_UNSIGNED_BYTE;
+  }
+  size=mult * width * height;
+  if (intArray.length != size) {
+    System.err.println("Wrong size of buffer!");
+    return;
+  }
+  IntBuffer buffer=BufferUtil.newIntBuffer(size);
+  gl.glBindTexture(texTarget,tex[0]);
+  gl.glBindTexture(texTarget,0);
+  buffer.get(intArray);
+  if (flippedX)   flipArrayOnX(intArray,mult);
+  if (flippedY)   flipArrayOnY(intArray,mult);
+}

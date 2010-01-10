@@ -1,0 +1,11 @@
+{
+  int size=width * height;
+  IntBuffer buffer=BufferUtil.newIntBuffer(size);
+  gl.glBindTexture(texTarget,tex[0]);
+  gl.glBindTexture(texTarget,0);
+  buffer.get(pixels);
+  int[] pixelsARGB=convertToARGB(pixels);
+  PApplet.arrayCopy(pixelsARGB,pixels);
+  if (flippedX)   flipArrayOnX(pixels,1);
+  if (flippedY)   flipArrayOnY(pixels,1);
+}

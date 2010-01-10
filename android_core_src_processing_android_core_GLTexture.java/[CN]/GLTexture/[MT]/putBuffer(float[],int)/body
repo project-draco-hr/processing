@@ -1,0 +1,12 @@
+{
+  if (tex[0] == 0) {
+    initTexture(width,height);
+  }
+  int glFormat;
+  if (format == TEX1)   glFormat=GL10.GL_LUMINANCE;
+ else   if (format == TEX3)   glFormat=GL10.GL_RGB;
+ else   glFormat=GL10.GL_RGBA;
+  gl.glBindTexture(texTarget,tex[0]);
+  gl.glTexSubImage2D(texTarget,0,0,0,width,height,glFormat,GL10.GL_FLOAT,FloatBuffer.wrap(floatArray));
+  gl.glBindTexture(texTarget,0);
+}

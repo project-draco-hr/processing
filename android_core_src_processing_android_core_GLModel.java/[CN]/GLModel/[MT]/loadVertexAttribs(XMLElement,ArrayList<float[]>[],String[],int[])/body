@@ -1,0 +1,18 @@
+{
+  int n=xml.getChildCount();
+  XMLElement child;
+  String name;
+  String numStr;
+  int num;
+  for (int i=0; i < n; i++) {
+    child=xml.getChild(i);
+    name=child.getName();
+    if (name.equals("vertexattrib")) {
+      numStr=child.getContent();
+      num=PApplet.parseInt(numStr);
+      vertexAttribsList[num]=new ArrayList<float[]>();
+      attrNames[num]=child.getStringAttribute("name");
+      attrSizes[num]=child.getIntAttribute("size");
+    }
+  }
+}
