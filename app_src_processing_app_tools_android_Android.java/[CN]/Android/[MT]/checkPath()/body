@@ -7,13 +7,13 @@
       Preferences.unset("android.sdk.path");
     }
   }
-  String envPath=platform.getenv("ANDROID_SDK");
+  String envPath=checkLegit(platform.getenv("ANDROID_SDK"));
   if (envPath != null) {
     sdkPath=envPath;
     Preferences.set("android.sdk.path",envPath);
   }
  else {
-    sdkPath=Preferences.get("android.sdk.path");
+    sdkPath=checkLegit(Preferences.get("android.sdk.path"));
     if (sdkPath == null) {
       int result=Base.showYesNoQuestion(editor,"Android SDK",ANDROID_SDK_PRIMARY,ANDROID_SDK_SECONDARY);
       if (result == JOptionPane.YES_OPTION) {
