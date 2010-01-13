@@ -1,19 +1,9 @@
 {
-  init(100,100,params);
-  pixels=new int[100 * 100];
-  int ranger0=(int)parent.random(0,255);
-  int ranger1=(int)parent.random(ranger0,255);
-  int rangeg0=(int)parent.random(0,255);
-  int rangeg1=(int)parent.random(rangeg0,255);
-  int rangeb0=(int)parent.random(0,255);
-  int rangeb1=(int)parent.random(rangeb0,255);
-  for (int i=0; i < 100 * 100; i++) {
-    int r=(int)parent.random(ranger0,ranger1);
-    int g=(int)parent.random(rangeg0,rangeg1);
-    int b=(int)parent.random(rangeb0,rangeb1);
-    int a=255;
-    pixels[i]=a << 24 | r << 16 | g << 8 | b;
+  img.loadPixels();
+  if ((img.width != width) || (img.height != height)) {
+    init(img.width,img.height,params);
   }
+  for (int i=0; i < width * height; i++)   pixels[i]=img.pixels[i];
   loadTexture();
   updatePixels();
 }
