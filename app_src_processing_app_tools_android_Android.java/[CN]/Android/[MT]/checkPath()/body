@@ -46,7 +46,13 @@
   System.out.println("path before set is " + path);
   platform.setenv("PATH",path + File.pathSeparator + toolsPath);
   System.out.println("path after set is " + Base.getPlatform().getenv("PATH"));
-  String[] cmd={"echo","%PATH%"};
+  try {
+    PApplet.println(Device.list());
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  String[] cmd={"echo","$PATH"};
   try {
     Pavarotti p=new Pavarotti(cmd);
     int result=p.waitFor();
