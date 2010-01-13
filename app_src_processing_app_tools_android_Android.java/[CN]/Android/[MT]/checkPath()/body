@@ -1,5 +1,4 @@
 {
-  Platform platform=Base.getPlatform();
   String oldPath=Preferences.get("android.sdk.path");
   if (oldPath != null) {
     File oldFolder=new File(oldPath);
@@ -7,31 +6,20 @@
       Preferences.unset("android.sdk.path");
     }
   }
-  String envPath=checkLegit(platform.getenv("ANDROID_SDK"));
-  if (envPath != null) {
-    sdkPath=envPath;
-    Preferences.set("android.sdk.path",envPath);
+  Platform platform=Base.getPlatform();
+  sdkPath=findAndroidTool(platform.getenv("ANDROID_SDK"));
+  if (sdkPath != null) {
+    Preferences.set("android.sdk.path",sdkPath);
   }
  else {
-    sdkPath=checkLegit(Preferences.get("android.sdk.path"));
+    sdkPath=findAndroidTool(Preferences.get("android.sdk.path"));
     if (sdkPath == null) {
       int result=Base.showYesNoQuestion(editor,"Android SDK",ANDROID_SDK_PRIMARY,ANDROID_SDK_SECONDARY);
       if (result == JOptionPane.YES_OPTION) {
         File folder=Base.selectFolder(SELECT_ANDROID_SDK_FOLDER,null,editor);
         if (folder != null) {
-          if (Base.isWindows()) {
-            if (new File(folder,"tools/android.exe").exists()) {
-              toolName="android.exe";
-            }
- else             if (new File(folder,"tools/android.bat").exists()) {
-              toolName="android.bat";
-            }
-          }
- else           if (new File(folder,"tools/android").exists()) {
-            toolName="android";
-          }
-          if (toolName != null) {
-            sdkPath=folder.getAbsolutePath();
+          sdkPath=findAndroidTool(folder.getAbsolutePath());
+          if (sdkPath != null) {
             Preferences.set("android.sdk.path",sdkPath);
           }
  else {
@@ -49,8 +37,6 @@
   if (sdkPath == null) {
     return false;
   }
-  if (envPath == null) {
-    platform.setenv("ANDROID_SDK",sdkPath);
-  }
+  platform.setenv("ANDROID_SDK",sdkPath);
   return true;
 }

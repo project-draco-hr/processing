@@ -1,0 +1,16 @@
+{
+  if (path == null)   return null;
+  File folder=new File(path);
+  if (Base.isWindows()) {
+    if (new File(folder,"tools/android.exe").exists()) {
+      toolName="android.exe";
+    }
+ else     if (new File(folder,"tools/android.bat").exists()) {
+      toolName="android.bat";
+    }
+  }
+ else   if (new File(folder,"tools/android").exists()) {
+    toolName="android";
+  }
+  return toolName != null ? path : null;
+}
