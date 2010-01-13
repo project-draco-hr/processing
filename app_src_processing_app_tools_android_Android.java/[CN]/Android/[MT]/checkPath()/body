@@ -1,5 +1,12 @@
 {
   Platform platform=Base.getPlatform();
+  String oldPath=Preferences.get("android.sdk.path");
+  if (oldPath != null) {
+    File oldFolder=new File(oldPath);
+    if (!oldFolder.exists()) {
+      Preferences.unset("android.sdk.path");
+    }
+  }
   String envPath=platform.getenv("ANDROID_SDK");
   if (envPath != null) {
     sdkPath=envPath;
@@ -12,19 +19,23 @@
       if (result == JOptionPane.YES_OPTION) {
         File folder=Base.selectFolder(SELECT_ANDROID_SDK_FOLDER,null,editor);
         if (folder != null) {
-          boolean basicCheck=false;
           if (Base.isWindows()) {
-            basicCheck=(new File(folder,"tools/android.exe").exists() || new File(folder,"tools/android.bat").exists());
+            if (new File(folder,"tools/android.exe").exists()) {
+              toolName="android.exe";
+            }
+ else             if (new File(folder,"tools/android.bat").exists()) {
+              toolName="android.bat";
+            }
           }
- else {
-            basicCheck=new File(folder,"tools/android").exists();
+ else           if (new File(folder,"tools/android").exists()) {
+            toolName="android";
           }
-          if (basicCheck) {
+          if (toolName != null) {
             sdkPath=folder.getAbsolutePath();
             Preferences.set("android.sdk.path",sdkPath);
           }
  else {
-            System.err.println("Could not find the android executable at " + folder.getAbsolutePath() + "/tools/android");
+            System.err.println("Could not find the android executable inside " + folder.getAbsolutePath() + "/tools/");
             JOptionPane.showMessageDialog(editor,NOT_ANDROID_SDK);
             return false;
           }
@@ -40,28 +51,6 @@
   }
   if (envPath == null) {
     platform.setenv("ANDROID_SDK",sdkPath);
-  }
-  String toolsPath=sdkPath + File.separator + "tools";
-  String path=platform.getenv("PATH");
-  System.out.println("path before set is " + path);
-  platform.setenv("PATH",path + File.pathSeparator + toolsPath);
-  System.out.println("path after set is " + Base.getPlatform().getenv("PATH"));
-  try {
-    PApplet.println(Device.list());
-  }
- catch (  Exception e) {
-    e.printStackTrace();
-  }
-  String[] cmd={"echo","$PATH"};
-  try {
-    Pavarotti p=new Pavarotti(cmd);
-    int result=p.waitFor();
-    if (result == 0) {
-      PApplet.println(p.getOutputLines());
-    }
-  }
- catch (  Exception e) {
-    e.printStackTrace();
   }
   return true;
 }
