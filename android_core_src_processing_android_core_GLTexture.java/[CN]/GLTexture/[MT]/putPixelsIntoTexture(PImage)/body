@@ -2,5 +2,13 @@
   if ((img.width != width) || (img.height != height)) {
     init(img.width,img.height,new Parameters());
   }
-  putBuffer(img.pixels);
+  if (texInternalFormat == GL10.GL_RGB) {
+    putBuffer(img.pixels,RGB);
+  }
+  if (texInternalFormat == GL10.GL_RGBA) {
+    putBuffer(img.pixels,ARGB);
+  }
+  if (texInternalFormat == GL10.GL_ALPHA) {
+    putBuffer(img.pixels,ALPHA);
+  }
 }

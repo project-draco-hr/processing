@@ -4,13 +4,17 @@
   }
   int[] convArray=intArray;
   int glFormat;
-  if (format == TEX1) {
-    glFormat=GL10.GL_LUMINANCE;
+  if (format == ALPHA) {
+    glFormat=GL10.GL_ALPHA;
     if (type == TEX_BYTE) {
-      convArray=convertToRGBA(intArray,ALPHA);
+      byte[] convArray2=convertToAlpha(intArray);
+      gl.glBindTexture(texTarget,tex[0]);
+      gl.glTexSubImage2D(texTarget,0,0,0,width,height,glFormat,GL10.GL_UNSIGNED_BYTE,ByteBuffer.wrap(convArray2));
+      gl.glBindTexture(texTarget,0);
+      return;
     }
   }
- else   if (format == TEX3) {
+ else   if (format == RGB) {
     glFormat=GL10.GL_RGB;
     if (type == TEX_BYTE)     convArray=convertToRGBA(intArray,RGB);
   }
