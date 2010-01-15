@@ -19,20 +19,23 @@ catch (    IOException e) {
       return null;
     }
   }
-  ClassLoader cl=getClass().getClassLoader();
-  stream=cl.getResourceAsStream(filename);
-  if (stream != null) {
-    String cn=stream.getClass().getName();
-    if (!cn.equals("sun.plugin.cache.EmptyInputStream")) {
+  AssetManager assets=getAssets();
+  try {
+    stream=assets.open(filename);
+    if (stream != null) {
       return stream;
     }
   }
+ catch (  IOException e) {
+  }
   Context context=getApplicationContext();
   try {
-    return context.openFileInput(filename);
+    stream=context.openFileInput(filename);
+    if (stream != null) {
+      return stream;
+    }
   }
  catch (  FileNotFoundException e) {
-    e.printStackTrace();
   }
   return null;
 }
