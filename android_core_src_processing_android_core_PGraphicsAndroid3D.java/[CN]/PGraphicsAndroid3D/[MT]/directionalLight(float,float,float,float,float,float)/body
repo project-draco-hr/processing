@@ -1,30 +1,30 @@
 {
-  if (lightCountGL == MAX_LIGHTS_GL) {
-    throw new RuntimeException("can only create " + MAX_LIGHTS_GL + " lights");
+  if (lightCount == MAX_LIGHTS) {
+    throw new RuntimeException("can only create " + MAX_LIGHTS + " lights");
   }
   colorCalc(r,g,b);
-  lightDiffuseGL[lightCountGL][0]=calcR;
-  lightDiffuseGL[lightCountGL][1]=calcG;
-  lightDiffuseGL[lightCountGL][2]=calcB;
-  lightDiffuseGL[lightCountGL][3]=1.0f;
-  lightTypeGL[lightCountGL]=DIRECTIONAL;
-  lightFalloffConstantGL[lightCountGL]=currentLightFalloffConstantGL;
-  lightFalloffLinearGL[lightCountGL]=currentLightFalloffLinearGL;
-  lightFalloffQuadraticGL[lightCountGL]=currentLightFalloffQuadraticGL;
-  lightSpecularGL[lightCountGL][0]=currentLightSpecularGL[0];
-  lightSpecularGL[lightCountGL][1]=currentLightSpecularGL[1];
-  lightSpecularGL[lightCountGL][2]=currentLightSpecularGL[2];
-  lightSpecularGL[lightCountGL][2]=currentLightSpecularGL[3];
+  lightDiffuse[lightCount][0]=calcR;
+  lightDiffuse[lightCount][1]=calcG;
+  lightDiffuse[lightCount][2]=calcB;
+  lightDiffuse[lightCount][3]=1.0f;
+  lightType[lightCount]=DIRECTIONAL;
+  lightFalloffConstant[lightCount]=currentLightFalloffConstant;
+  lightFalloffLinear[lightCount]=currentLightFalloffLinear;
+  lightFalloffQuadratic[lightCount]=currentLightFalloffQuadratic;
+  lightSpecular[lightCount][0]=currentLightSpecular[0];
+  lightSpecular[lightCount][1]=currentLightSpecular[1];
+  lightSpecular[lightCount][2]=currentLightSpecular[2];
+  lightSpecular[lightCount][2]=currentLightSpecular[3];
   float invn=1.0f / PApplet.dist(0,0,0,nx,ny,nz);
-  lightNormalGL[lightCountGL][0]=invn * nx;
-  lightNormalGL[lightCountGL][1]=invn * ny;
-  lightNormalGL[lightCountGL][2]=invn * nz;
-  lightNormalGL[lightCountGL][3]=0.0f;
-  glLightEnable(lightCountGL);
-  glLightNoAmbient(lightCountGL);
-  glLightDirection(lightCountGL);
-  glLightDiffuse(lightCountGL);
-  glLightSpecular(lightCountGL);
-  glLightFalloff(lightCountGL);
-  lightCountGL++;
+  lightNormal[lightCount][0]=invn * nx;
+  lightNormal[lightCount][1]=invn * ny;
+  lightNormal[lightCount][2]=invn * nz;
+  lightNormal[lightCount][3]=0.0f;
+  glLightEnable(lightCount);
+  glLightNoAmbient(lightCount);
+  glLightDirection(lightCount);
+  glLightDiffuse(lightCount);
+  glLightSpecular(lightCount);
+  glLightFalloff(lightCount);
+  lightCount++;
 }
