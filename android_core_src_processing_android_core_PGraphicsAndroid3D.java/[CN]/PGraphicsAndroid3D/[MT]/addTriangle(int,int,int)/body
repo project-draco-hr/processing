@@ -21,6 +21,9 @@
       sy=-1.0f;
     }
   }
+ else {
+    throw new RuntimeException("A3D only accepts GLTextures for texturing!");
+  }
   vertexBuffer.put(toFixed32(vertexa[X]));
   vertexBuffer.put(toFixed32(vertexa[Y]));
   vertexBuffer.put(toFixed32(vertexa[Z]));
@@ -57,7 +60,6 @@
   normalBuffer.put(toFixed32(vertexc[NZ]));
   textureBuffer.put(toFixed32((cx + sx * vertexc[U]) * uscale));
   textureBuffer.put(toFixed32((cy + sy * vertexc[V]) * vscale));
-  System.out.println("vertexBuffer.capacity(): " + vertexBuffer.capacity() + " - vertexBuffer.position(): "+ vertexBuffer.position());
   triangleCount++;
   if (textureImage != textureImagePrev) {
     if (currentTexTriangleRange != null) {
