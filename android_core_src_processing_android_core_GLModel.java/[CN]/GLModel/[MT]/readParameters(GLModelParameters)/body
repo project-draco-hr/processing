@@ -1,0 +1,28 @@
+{
+  pointSprites=false;
+  if (params.drawMode == POINTS)   glMode=GL11.GL_POINTS;
+ else   if (params.drawMode == POINT_SPRITES) {
+    glMode=GL11.GL_POINTS;
+    pointSprites=true;
+    usingPointSprites=true;
+    float[] tmp={0.0f};
+    gl.glGetFloatv(GL11.GL_POINT_SIZE_MAX,tmp,0);
+    maxPointSize=tmp[0];
+    pointSize=maxPointSize;
+    spriteFadeSize=0.6f * pointSize;
+  }
+ else   if (params.drawMode == LINES)   glMode=GL11.GL_LINES;
+ else   if (params.drawMode == LINE_STRIP)   glMode=GL11.GL_LINE_STRIP;
+ else   if (params.drawMode == LINE_LOOP)   glMode=GL11.GL_LINE_LOOP;
+ else   if (params.drawMode == TRIANGLES)   glMode=GL11.GL_TRIANGLES;
+ else   if (params.drawMode == TRIANGLE_FAN)   glMode=GL11.GL_TRIANGLE_FAN;
+ else   if (params.drawMode == TRIANGLE_STRIP)   glMode=GL11.GL_TRIANGLE_STRIP;
+ else {
+    throw new RuntimeException("GLModel: Unknown draw mode");
+  }
+  if (params.updateMode == STATIC)   glUsage=GL11.GL_STATIC_DRAW;
+ else   if (params.updateMode == DYNAMIC)   glUsage=GL11.GL_DYNAMIC_DRAW;
+ else {
+    throw new RuntimeException("GLModel: Unknown update mode");
+  }
+}

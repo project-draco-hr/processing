@@ -8,5 +8,7 @@
     gl.glBufferData(GL11.GL_ARRAY_BUFFER,size * 2 * SIZEOF_FLOAT,null,vboUsage);
   }
   gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
-  texCoords=FloatBuffer.allocate(size * 2);
+  ByteBuffer vbb=ByteBuffer.allocateDirect(size * 2 * 4);
+  vbb.order(ByteOrder.nativeOrder());
+  texCoords=vbb.asFloatBuffer();
 }

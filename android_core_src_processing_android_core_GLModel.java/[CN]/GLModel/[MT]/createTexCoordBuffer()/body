@@ -1,0 +1,17 @@
+{
+  float[] values=new float[numVertices * 2];
+  for (int i=0; i < values.length; i++)   values[i]=0.0f;
+  for (int i=0; i < numTextures; i++) {
+    ByteBuffer vbb=ByteBuffer.allocateDirect(numVertices * 2 * SIZEOF_FLOAT);
+    vbb.order(ByteOrder.nativeOrder());
+    texCoords[i]=vbb.asFloatBuffer();
+    texCoords[i].put(values);
+    texCoords[i].position(0);
+  }
+  gl.glGenBuffers(numTextures,glTexCoordBufferID,numTextures);
+  for (int i=0; i < numTextures; i++) {
+    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[i]);
+    gl.glBufferData(GL11.GL_ARRAY_BUFFER,texCoords[i].capacity(),texCoords[i],glUsage);
+  }
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
+}
