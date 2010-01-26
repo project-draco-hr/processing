@@ -4,5 +4,16 @@
   }
   float[] res=new float[numVertices * 2];
   PApplet.arrayCopy(updateTexCoordArray,res);
+  if (a3d.imageMode == IMAGE) {
+    float u, v;
+    for (int i=0; i < numVertices; i++) {
+      u=res[2 * i + 0];
+      v=res[2 * i + 1];
+      u*=vertGroup[i].textures[selectedTexture].width;
+      v*=vertGroup[i].textures[selectedTexture].height;
+      res[2 * i + 0]=u;
+      res[2 * i + 1]=v;
+    }
+  }
   return res;
 }

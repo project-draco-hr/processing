@@ -4,5 +4,18 @@
   }
   firstUpdateIdx=0;
   firstUpdateIdx=numVertices;
-  PApplet.arrayCopy(data,updateTexCoordArray);
+  if (a3d.imageMode == IMAGE) {
+    float u, v;
+    for (int i=0; i < numVertices; i++) {
+      u=data[2 * i + 0];
+      v=data[2 * i + 1];
+      u/=vertGroup[i].textures[selectedTexture].width;
+      v/=vertGroup[i].textures[selectedTexture].height;
+      updateTexCoordArray[2 * i + 0]=u;
+      updateTexCoordArray[2 * i + 1]=v;
+    }
+  }
+ else {
+    PApplet.arrayCopy(data,updateTexCoordArray);
+  }
 }
