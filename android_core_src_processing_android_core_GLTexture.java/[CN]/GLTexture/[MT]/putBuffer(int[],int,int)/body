@@ -1,5 +1,5 @@
 {
-  if (tex[0] == 0) {
+  if (glTexID[0] == 0) {
     initTexture(width,height);
   }
   int[] convArray=intArray;
@@ -8,9 +8,9 @@
     glFormat=GL10.GL_ALPHA;
     if (type == TEX_BYTE) {
       byte[] convArray2=convertToAlpha(intArray);
-      gl.glBindTexture(texTarget,tex[0]);
-      gl.glTexSubImage2D(texTarget,0,0,0,width,height,glFormat,GL10.GL_UNSIGNED_BYTE,ByteBuffer.wrap(convArray2));
-      gl.glBindTexture(texTarget,0);
+      gl.glBindTexture(glTexTarget,glTexID[0]);
+      gl.glTexSubImage2D(glTexTarget,0,0,0,width,height,glFormat,GL10.GL_UNSIGNED_BYTE,ByteBuffer.wrap(convArray2));
+      gl.glBindTexture(glTexTarget,0);
       return;
     }
   }
@@ -24,7 +24,7 @@
   }
   int glType;
   glType=GL10.GL_UNSIGNED_BYTE;
-  gl.glBindTexture(texTarget,tex[0]);
-  gl.glTexSubImage2D(texTarget,0,0,0,width,height,glFormat,glType,IntBuffer.wrap(convArray));
-  gl.glBindTexture(texTarget,0);
+  gl.glBindTexture(glTexTarget,glTexID[0]);
+  gl.glTexSubImage2D(glTexTarget,0,0,0,width,height,glFormat,glType,IntBuffer.wrap(convArray));
+  gl.glBindTexture(glTexTarget,0);
 }
