@@ -1,0 +1,22 @@
+{
+  composedTextLayout=null;
+  AttributedCharacterIterator text=event.getText();
+  committed_count=event.getCommittedCharacterCount();
+  if (committed_count == 0) {
+    if (text.getEndIndex() == 0) {
+      caretPositionChanged(event);
+      return;
+    }
+    if (text.getEndIndex() < text.getBeginIndex()) {
+      caretPositionChanged(event);
+      return;
+    }
+    isComposing=true;
+    drawComposingText(text,committed_count);
+    caretPositionChanged(event);
+    return;
+  }
+  commitText(text,committed_count);
+  isComposing=false;
+  caretPositionChanged(event);
+}
