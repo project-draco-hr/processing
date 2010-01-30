@@ -4,5 +4,10 @@
   pgl=(PGraphicsAndroid3D)parent.g;
   gl=pgl.gl;
   setTextureParams(new Parameters());
+  int maxSize[]=new int[1];
+  gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE,maxSize,0);
+  String extensions=gl.glGetString(GL10.GL_EXTENSIONS);
+  if (extensions.indexOf("GL_ARB_texture_non_power_of_two") == -1) {
+  }
   initTexture(width,height);
 }

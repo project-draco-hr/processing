@@ -1,2 +1,31 @@
 {
+  if (pixels.length != width * height) {
+    throw new RuntimeException("GLTexture: wrong length of pixels array");
+  }
+  if (glTexID[0] == 0) {
+    initTexture(width,height);
+  }
+  int[] convArray=pixels;
+  int glFormat;
+  if (format == ALPHA) {
+    glFormat=GL10.GL_ALPHA;
+    byte[] convArray2=convertToAlpha(pixels);
+    gl.glBindTexture(glTexTarget,glTexID[0]);
+    gl.glTexSubImage2D(glTexTarget,0,0,0,width,height,glFormat,GL10.GL_UNSIGNED_BYTE,ByteBuffer.wrap(convArray2));
+    gl.glBindTexture(glTexTarget,0);
+    return;
+  }
+ else   if (format == RGB) {
+    glFormat=GL10.GL_RGB;
+    convArray=convertToRGBA(pixels,RGB);
+  }
+ else {
+    glFormat=GL10.GL_RGBA;
+    convArray=convertToRGBA(pixels,ARGB);
+  }
+  int glType;
+  glType=GL10.GL_UNSIGNED_BYTE;
+  gl.glBindTexture(glTexTarget,glTexID[0]);
+  gl.glTexSubImage2D(glTexTarget,0,0,0,width,height,glFormat,glType,IntBuffer.wrap(convArray));
+  gl.glBindTexture(glTexTarget,0);
 }
