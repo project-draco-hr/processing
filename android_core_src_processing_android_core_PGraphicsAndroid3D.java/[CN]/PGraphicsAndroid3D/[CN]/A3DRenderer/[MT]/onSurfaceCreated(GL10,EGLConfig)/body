@@ -1,5 +1,26 @@
 {
   gl=igl;
+  npotTexSupported=false;
+  mipmapSupported=false;
+  matrixGetSupported=false;
+  vboSupported=false;
+  fboSupported=false;
+  String extensions=gl.glGetString(GL10.GL_EXTENSIONS);
+  if (-1 < extensions.indexOf("GL_ARB_texture_non_power_of_two")) {
+    npotTexSupported=true;
+  }
+  if (-1 < extensions.indexOf("GL_ANDROID_generate_mipmap")) {
+    mipmapSupported=true;
+  }
+  if (extensions.indexOf("GL_OES_matrix_get") == -1) {
+    matrixGetSupported=true;
+  }
+  if (-1 < extensions.indexOf("GL_ANDROID_vertex_buffer_object")) {
+    vboSupported=true;
+  }
+  if (-1 < extensions.indexOf("GL_OES_framebuffer_object")) {
+    fboSupported=true;
+  }
   recreateResources();
   gl=null;
 }
