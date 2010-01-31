@@ -1,8 +1,7 @@
 {
-  int twidth=width;
   int t=0;
   int p=0;
-  int[] tIntArray=new int[width * height];
+  int[] tIntArray=new int[glWidth * glHeight];
   if (PGraphicsAndroid3D.BIG_ENDIAN) {
 switch (arrayFormat) {
 case ALPHA:
@@ -10,7 +9,7 @@ case ALPHA:
         for (int x=0; x < width; x++) {
           tIntArray[t++]=0xFFFFFF00 | intArray[p++];
         }
-        t+=twidth - width;
+        t+=glWidth - width;
       }
     break;
 case RGB:
@@ -19,7 +18,7 @@ case RGB:
       int pixel=intArray[p++];
       tIntArray[t++]=(pixel << 8) | 0xff;
     }
-    t+=twidth - width;
+    t+=glWidth - width;
   }
 break;
 case ARGB:
@@ -28,7 +27,7 @@ for (int x=0; x < width; x++) {
   int pixel=intArray[p++];
   tIntArray[t++]=(pixel << 8) | ((pixel >> 24) & 0xff);
 }
-t+=twidth - width;
+t+=glWidth - width;
 }
 break;
 }
@@ -40,7 +39,7 @@ for (int y=0; y < height; y++) {
 for (int x=0; x < width; x++) {
 tIntArray[t++]=(intArray[p++] << 24) | 0x00FFFFFF;
 }
-t+=twidth - width;
+t+=glWidth - width;
 }
 break;
 case RGB:
@@ -49,7 +48,7 @@ for (int x=0; x < width; x++) {
 int pixel=intArray[p++];
 tIntArray[t++]=0xff000000 | ((pixel & 0xFF) << 16) | ((pixel & 0xFF0000) >> 16)| (pixel & 0x0000FF00);
 }
-t+=twidth - width;
+t+=glWidth - width;
 }
 break;
 case ARGB:
@@ -58,7 +57,7 @@ for (int x=0; x < width; x++) {
 int pixel=intArray[p++];
 tIntArray[t++]=((pixel & 0xFF) << 16) | ((pixel & 0xFF0000) >> 16) | (pixel & 0xFF00FF00);
 }
-t+=twidth - width;
+t+=glWidth - width;
 }
 break;
 }

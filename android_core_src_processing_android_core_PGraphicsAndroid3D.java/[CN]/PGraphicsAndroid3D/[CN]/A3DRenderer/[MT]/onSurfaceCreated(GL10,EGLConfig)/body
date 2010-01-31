@@ -12,7 +12,7 @@
   if (-1 < extensions.indexOf("GL_ANDROID_generate_mipmap")) {
     mipmapSupported=true;
   }
-  if (extensions.indexOf("GL_OES_matrix_get") == -1) {
+  if (-1 < extensions.indexOf("GL_OES_matrix_get")) {
     matrixGetSupported=true;
   }
   if (-1 < extensions.indexOf("GL_ANDROID_vertex_buffer_object")) {
@@ -21,6 +21,9 @@
   if (-1 < extensions.indexOf("GL_OES_framebuffer_object")) {
     fboSupported=true;
   }
+  int maxSize[]=new int[1];
+  gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE,maxSize,0);
+  maxTextureSize=maxSize[0];
   recreateResources();
   gl=null;
 }

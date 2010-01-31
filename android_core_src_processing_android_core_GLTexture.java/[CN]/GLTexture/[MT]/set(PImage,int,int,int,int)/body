@@ -1,2 +1,17 @@
 {
+  x=PApplet.constrain(x,0,img.width);
+  y=PApplet.constrain(y,0,img.height);
+  w=PApplet.constrain(w,0,img.width - x);
+  h=PApplet.constrain(h,0,img.height - y);
+  if ((w != width) || (h != height)) {
+    super.init(w,h,img.format);
+    createTexture(w,h);
+  }
+  int p0;
+  int dest[]=new int[w * h];
+  for (int j=0; j < h; j++) {
+    p0=y * img.width + x + (img.width - w) * j;
+    PApplet.arrayCopy(img.pixels,p0 + w * j,dest,w * j,w);
+  }
+  set(dest,img.format);
 }

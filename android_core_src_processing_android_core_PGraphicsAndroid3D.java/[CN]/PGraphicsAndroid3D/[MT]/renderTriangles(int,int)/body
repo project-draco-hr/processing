@@ -14,10 +14,15 @@
   TexturedTriangleRange texRange;
   for (int i=0; i < texTriangleRanges.size(); i++) {
     texRange=(TexturedTriangleRange)texTriangleRanges.get(i);
-    if (texRange.textureImage != null && textureImage instanceof GLTexture) {
-      tex=(GLTexture)textureImage;
-      gl.glEnable(tex.getTextureTarget());
-      gl.glBindTexture(tex.getTextureTarget(),tex.getGLTexID());
+    if (texRange.textureImage != null) {
+      try {
+        tex=(GLTexture)texRange.textureImage;
+      }
+ catch (      ClassCastException cce) {
+        throw new RuntimeException("A3D only accepts GLTextures for texturing!");
+      }
+      gl.glEnable(tex.getGLTarget());
+      gl.glBindTexture(tex.getGLTarget(),tex.getGLTextureID());
       gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
       texturing=true;
     }
@@ -28,7 +33,7 @@
     if (texturing)     gl.glTexCoordPointer(2,GL10.GL_FIXED,0,textureBuffer);
     gl.glDrawArrays(GL10.GL_TRIANGLES,3 * texRange.firstTriangle,3 * (texRange.lastTriangle - texRange.firstTriangle));
     if (texturing) {
-      gl.glDisable(tex.getTextureTarget());
+      gl.glDisable(tex.getGLTarget());
       ;
       gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
     }

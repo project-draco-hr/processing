@@ -8,8 +8,14 @@
   float sx=+1.0f;
   float cy=0.0f;
   float sy=+1.0f;
-  if (textureImage != null)   if (textureImage instanceof GLTexture) {
-    GLTexture tex=(GLTexture)textureImage;
+  if (textureImage != null) {
+    GLTexture tex;
+    try {
+      tex=(GLTexture)textureImage;
+    }
+ catch (    ClassCastException cce) {
+      throw new RuntimeException("A3D only accepts GLTextures for texturing!");
+    }
     uscale*=tex.getMaxTextureCoordS();
     vscale*=tex.getMaxTextureCoordT();
     if (tex.isFlippedX()) {
@@ -20,9 +26,6 @@
       cy=1.0f;
       sy=-1.0f;
     }
-  }
- else {
-    throw new RuntimeException("A3D only accepts GLTextures for texturing!");
   }
   vertexBuffer.put(toFixed32(vertexa[X]));
   vertexBuffer.put(toFixed32(vertexa[Y]));
