@@ -36,15 +36,15 @@
     normals.rewind();
   }
  else   if (updateElement == TEXTURES) {
-    for (int i=0; i < groups.size(); i++)     if (((VertexGroup)groups.get(i)).textures[selectedTexture] == null)     throw new RuntimeException("GLModel: texture must be set first in group " + i);
-    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[selectedTexture]);
+    for (int i=0; i < groups.size(); i++)     if (((VertexGroup)groups.get(i)).texture == null)     throw new RuntimeException("GLModel: texture must be set first in group " + i);
+    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[0]);
     if (updateTexCoordArray == null) {
-      updateTexCoordArray=new float[texCoords[selectedTexture].capacity()];
+      updateTexCoordArray=new float[texCoords.capacity()];
     }
     int offset=first * 2;
     int size=(last - first + 1) * 2;
-    texCoords[selectedTexture].get(updateTexCoordArray,offset,size);
-    texCoords[selectedTexture].rewind();
+    texCoords.get(updateTexCoordArray,offset,size);
+    texCoords.rewind();
   }
  else   if (updateElement == GROUPS) {
     groupBreaks.clear();
