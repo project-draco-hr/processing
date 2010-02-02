@@ -4,8 +4,11 @@
   }
   if (idx < firstUpdateIdx)   firstUpdateIdx=idx;
   if (lastUpdateIdx < idx)   lastUpdateIdx=idx;
+  if (updateTexture != null && vertGroup[idx] != null) {
+    vertGroup[idx].texture=updateTexture;
+  }
   if (a3d.imageMode == IMAGE) {
-    if (vertGroup[idx].texture == null) {
+    if (vertGroup[idx] != null && vertGroup[idx].texture == null) {
       throw new RuntimeException("GLModel: when setting texture coordinates in IMAGE mode, the textures need to be assigned first");
     }
     u/=vertGroup[idx].texture.width;
