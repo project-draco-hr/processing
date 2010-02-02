@@ -1,8 +1,11 @@
 {
   if (updateElement == -1) {
-    throw new RuntimeException("GLModel: call beginUpdate()");
+    throw new RuntimeException("GLModel: call beginUpdate() first");
   }
-  if (lastUpdateIdx < firstUpdateIdx)   return;
+  if (lastUpdateIdx < firstUpdateIdx) {
+    updateElement=-1;
+    return;
+  }
   if (updateElement == VERTICES) {
     if (updateVertexArray == null) {
       throw new RuntimeException("GLModel: vertex array is null");
@@ -13,6 +16,9 @@
     vertices.position(0);
     gl.glBufferSubData(GL11.GL_ARRAY_BUFFER,offset * SIZEOF_FLOAT,size * SIZEOF_FLOAT,vertices);
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
+    if (creatingGroup) {
+      addGroup(grIdx0,grIdx1,null);
+    }
   }
  else   if (updateElement == COLORS) {
     if (updateColorArray == null) {
@@ -48,7 +54,6 @@
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
   }
  else   if (updateElement == GROUPS) {
-    createGroups();
   }
   updateElement=-1;
 }

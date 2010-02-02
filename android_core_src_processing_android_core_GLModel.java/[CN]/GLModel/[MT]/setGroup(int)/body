@@ -1,5 +1,14 @@
 {
-  if (idx < firstUpdateIdx)   firstUpdateIdx=idx;
-  if (lastUpdateIdx < idx)   lastUpdateIdx=idx;
-  groupBreaks.add(new Integer(idx));
+  if (updateElement != VERTICES) {
+    throw new RuntimeException("GLModel: setGroup() with group number as only argument must be used while updating vertices");
+  }
+  if (firstSetGroup) {
+    firstSetGroup=false;
+    groups.clear();
+  }
+  if (creatingGroup) {
+    addGroup(grIdx0,grIdx1,null);
+  }
+  creatingGroup=true;
+  grIdx0=grIdx1=-1;
 }

@@ -14,6 +14,8 @@
     int size=(last - first + 1) * 3;
     vertices.get(updateVertexArray,offset,size);
     vertices.rewind();
+    creatingGroup=false;
+    firstSetGroup=true;
   }
  else   if (updateElement == COLORS) {
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glColorBufferID[0]);
@@ -36,7 +38,6 @@
     normals.rewind();
   }
  else   if (updateElement == TEXTURES) {
-    for (int i=0; i < groups.size(); i++)     if (((VertexGroup)groups.get(i)).texture == null)     throw new RuntimeException("GLModel: texture must be set first in group " + i);
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[0]);
     if (updateTexCoordArray == null) {
       updateTexCoordArray=new float[texCoords.capacity()];
@@ -47,7 +48,7 @@
     texCoords.rewind();
   }
  else   if (updateElement == GROUPS) {
-    groupBreaks.clear();
+    groups.clear();
   }
  else {
     throw new RuntimeException("GLModel: unknown element to update");
