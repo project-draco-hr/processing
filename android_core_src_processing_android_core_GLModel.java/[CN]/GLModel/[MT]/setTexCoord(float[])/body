@@ -3,7 +3,12 @@
     throw new RuntimeException("GLModel: update mode is not set to TEXTURES");
   }
   firstUpdateIdx=0;
-  firstUpdateIdx=numVertices;
+  firstUpdateIdx=numVertices - 1;
+  if (updateTexture != null) {
+    for (int i=0; i < numVertices; i++)     if (vertGroup[i] != null) {
+      vertGroup[i].texture=updateTexture;
+    }
+  }
   if (a3d.imageMode == IMAGE) {
     float u, v;
     for (int i=0; i < numVertices; i++) {
