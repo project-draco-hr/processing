@@ -1,6 +1,5 @@
 {
   shapeLast=vertexCount;
-  shapeLastPlusClipped=shapeLast;
   if (vertexCount == 0) {
     shape=0;
     return;
@@ -11,9 +10,19 @@
   if (fill) {
     endShapeFill();
   }
-  if (fill)   renderTriangles(0,triangleCount);
-  if (stroke) {
-    renderLines(0,lineCount);
+  if (!hints[ENABLE_DEPTH_SORT]) {
+    if (fill) {
+      renderTriangles(0,triangleCount);
+      if (raw != null) {
+      }
+      triangleCount=0;
+    }
+    if (stroke) {
+      renderLines(0,lineCount);
+      if (raw != null) {
+      }
+      lineCount=0;
+    }
     pathCount=0;
   }
   shape=0;
