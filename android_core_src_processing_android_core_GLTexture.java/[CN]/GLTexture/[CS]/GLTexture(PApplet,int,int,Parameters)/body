@@ -3,6 +3,14 @@
   this.parent=parent;
   a3d=(PGraphicsAndroid3D)parent.g;
   gl=a3d.gl;
+  filenameSaved="";
   setParameters(params);
   createTexture(width,height);
+  try {
+    Method meth=this.getClass().getMethod("recreateResource",new Class[]{PGraphicsAndroid3D.class});
+    recreateResourceIdx=a3d.addRecreateResourceMethod(this,meth);
+  }
+ catch (  Exception e) {
+    recreateResourceIdx=-1;
+  }
 }

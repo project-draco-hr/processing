@@ -1,2 +1,12 @@
 {
+  for (int i=0; i < recreateResourceMethods.size(); i++) {
+    GLResource resource=(GLResource)recreateResourceMethods.get(i);
+    try {
+      resource.method.invoke(resource.object,new Object[]{this});
+    }
+ catch (    Exception e) {
+      System.err.println("Error, opengl resources in " + resource.object + " cannot be recreated.");
+      e.printStackTrace();
+    }
+  }
 }
