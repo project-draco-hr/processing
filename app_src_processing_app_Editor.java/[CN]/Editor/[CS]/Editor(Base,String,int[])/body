@@ -70,6 +70,14 @@
   pain.setTransferHandler(new FileDropHandler());
   pack();
   setPlacement(location);
+  final int minX=400;
+  final int minY=450;
+  addComponentListener(new java.awt.event.ComponentAdapter(){
+    public void componentResized(    ComponentEvent event){
+      setSize((getWidth() < minX) ? minX : getWidth(),(getHeight() < minY) ? minY : getHeight());
+    }
+  }
+);
   applyPreferences();
   boolean loaded=handleOpenInternal(path);
   if (!loaded)   sketch=null;
