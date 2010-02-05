@@ -9,31 +9,34 @@
     float sw=vertices[lines[i][VERTEX1]][SW];
     if (sw > 0) {
       gl.glLineWidth(sw);
-      linesVertexBuffer.rewind();
-      linesColorBuffer.rewind();
+      if (vertexBuffer.capacity() == pathLength[j] + 1) {
+        expandBuffers();
+      }
+      vertexBuffer.rewind();
+      colorBuffer.rewind();
       float a[]=vertices[lines[i][VERTEX1]];
-      linesColorBuffer.put(toFixed32(a[SR]));
-      linesColorBuffer.put(toFixed32(a[SG]));
-      linesColorBuffer.put(toFixed32(a[SB]));
-      linesColorBuffer.put(toFixed32(a[SA]));
-      linesVertexBuffer.put(toFixed32(a[X]));
-      linesVertexBuffer.put(toFixed32(a[Y]));
-      linesVertexBuffer.put(toFixed32(a[Z]));
+      colorBuffer.put(toFixed32(a[SR]));
+      colorBuffer.put(toFixed32(a[SG]));
+      colorBuffer.put(toFixed32(a[SB]));
+      colorBuffer.put(toFixed32(a[SA]));
+      vertexBuffer.put(toFixed32(a[X]));
+      vertexBuffer.put(toFixed32(a[Y]));
+      vertexBuffer.put(toFixed32(a[Z]));
       for (int k=0; k < pathLength[j]; k++) {
         float b[]=vertices[lines[i][VERTEX2]];
-        linesColorBuffer.put(toFixed32(b[SR]));
-        linesColorBuffer.put(toFixed32(b[SG]));
-        linesColorBuffer.put(toFixed32(b[SB]));
-        linesColorBuffer.put(toFixed32(b[SA]));
-        linesVertexBuffer.put(toFixed32(b[X]));
-        linesVertexBuffer.put(toFixed32(b[Y]));
-        linesVertexBuffer.put(toFixed32(b[Z]));
+        colorBuffer.put(toFixed32(b[SR]));
+        colorBuffer.put(toFixed32(b[SG]));
+        colorBuffer.put(toFixed32(b[SB]));
+        colorBuffer.put(toFixed32(b[SA]));
+        vertexBuffer.put(toFixed32(b[X]));
+        vertexBuffer.put(toFixed32(b[Y]));
+        vertexBuffer.put(toFixed32(b[Z]));
         i++;
       }
-      linesVertexBuffer.position(0);
-      linesColorBuffer.position(0);
-      gl.glVertexPointer(3,GL10.GL_FIXED,0,linesVertexBuffer);
-      gl.glColorPointer(4,GL10.GL_FIXED,0,linesColorBuffer);
+      vertexBuffer.position(0);
+      colorBuffer.position(0);
+      gl.glVertexPointer(3,GL10.GL_FIXED,0,vertexBuffer);
+      gl.glColorPointer(4,GL10.GL_FIXED,0,colorBuffer);
       gl.glDrawArrays(GL10.GL_LINE_STRIP,0,pathLength[j] + 1);
     }
   }
