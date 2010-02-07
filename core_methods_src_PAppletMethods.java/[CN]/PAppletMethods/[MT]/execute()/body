@@ -2,7 +2,6 @@
   if (baseDir == null) {
     throw new BuildException("dir parameter must be set!");
   }
-  System.out.println("using basedir " + baseDir);
   File graphicsFile=new File(baseDir,"PGraphics.java");
   File appletFile=new File(baseDir,"PApplet.java");
   File imageFile=new File(baseDir,"PImage.java");
@@ -15,14 +14,14 @@
   if (!imageFile.exists() || !imageFile.canRead()) {
     throw new BuildException("PImage file not readable: " + imageFile.getAbsolutePath());
   }
-  ByteArrayOutputStream outBytes=new ByteArrayOutputStream();
-  PrintStream out=new PrintStream(outBytes);
+  StringBuffer out=new StringBuffer();
   StringBuffer content=new StringBuffer();
   try {
     BufferedReader applet=createReader(appletFile);
     String line;
     while ((line=applet.readLine()) != null) {
-      out.println(line);
+      out.append(line);
+      out.append('\n');
       content.append(line);
       content.append('\n');
       if (line.indexOf("public functions for processing.core") >= 0) {
@@ -36,28 +35,26 @@
     applet.close();
     process(out,graphicsFile);
     process(out,imageFile);
-    out.println("}");
+    out.append('}');
+    out.append('\n');
   }
- catch (  IOException e) {
-    e.printStackTrace();
+ catch (  Exception e) {
+    throw new BuildException(e);
   }
-catch (  Exception ex) {
-    ex.printStackTrace();
-  }
-  out.flush();
-  if (content.toString().equals(outBytes.toString())) {
+  String outString=out.toString();
+  if (content.toString().equals(outString)) {
     System.out.println("No changes to PApplet API.");
   }
  else {
     System.out.println("Updating PApplet with API changes " + "from PImage or PGraphics.");
     try {
-      PrintStream temp=new PrintStream(appletFile);
-      temp.print(outBytes.toString());
+      PrintStream temp=new PrintStream(appletFile,"UTF-8");
+      temp.print(outString);
       temp.flush();
       temp.close();
     }
- catch (    FileNotFoundException e) {
-      e.printStackTrace();
+ catch (    IOException e) {
+      throw new BuildException(e);
     }
   }
 }

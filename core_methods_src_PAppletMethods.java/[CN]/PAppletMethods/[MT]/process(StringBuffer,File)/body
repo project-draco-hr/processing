@@ -48,17 +48,19 @@
       }
       line=line.replaceFirst(Pattern.quote("abstract")," ");
       line=line.replaceAll(Pattern.quote(";")," {\n");
-      out.println();
-      out.println();
-      out.print(commentBuffer.toString());
+      out.append('\n');
+      out.append('\n');
+      out.append(commentBuffer.toString());
       commentBuffer.setLength(0);
-      out.println(line);
+      out.append(line);
+      out.append('\n');
       decl+=line;
       while (line.indexOf(')') == -1) {
         line=in.readLine();
         decl+=line;
         line=line.replaceAll("\\;\\s*$"," {\n");
-        out.println(line);
+        out.append(line);
+        out.append('\n');
       }
       result=Pattern.compile(".*?\\s(\\S+)\\(.*?").matcher(decl);
       result.matches();
@@ -93,10 +95,13 @@
       gline+=");";
       rline+=");";
       if (!gotStatic && returns.equals("")) {
-        out.println(rline);
+        out.append(rline);
+        out.append('\n');
       }
-      out.println(gline);
-      out.println("  }");
+      out.append(gline);
+      out.append('\n');
+      out.append("  }");
+      out.append('\n');
     }
  else {
       commentBuffer.setLength(0);
