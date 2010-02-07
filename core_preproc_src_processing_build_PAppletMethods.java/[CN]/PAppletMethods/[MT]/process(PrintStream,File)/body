@@ -2,16 +2,21 @@
   BufferedReader in=createReader(input);
   int comments=0;
   String line=null;
-  StringBuffer comment=new StringBuffer();
+  StringBuffer commentBuffer=new StringBuffer();
   while ((line=in.readLine()) != null) {
     String decl="";
-    if (line.matches(Pattern.quote("/*"))) {
+    if (line.indexOf("/*") != -1) {
       comments++;
     }
-    if (line.matches(Pattern.quote("*/"))) {
+    if (line.indexOf("*/") != -1) {
+      commentBuffer.append(line);
+      commentBuffer.append('\n');
       comments--;
+      continue;
     }
     if (comments > 0) {
+      commentBuffer.append(line);
+      commentBuffer.append('\n');
       continue;
     }
     boolean gotSomething=false;
@@ -43,7 +48,11 @@
       }
       line=line.replaceFirst(Pattern.quote("abstract")," ");
       line=line.replaceAll(Pattern.quote(";")," {\n");
-      out.println("\n\n" + line);
+      out.println();
+      out.println();
+      out.print(commentBuffer.toString());
+      commentBuffer.setLength(0);
+      out.println(line);
       decl+=line;
       while (line.indexOf(')') == -1) {
         line=in.readLine();
@@ -88,6 +97,9 @@
       }
       out.println(gline);
       out.println("  }");
+    }
+ else {
+      commentBuffer.setLength(0);
     }
   }
   in.close();

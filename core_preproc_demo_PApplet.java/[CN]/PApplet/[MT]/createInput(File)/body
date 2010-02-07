@@ -1,4 +1,7 @@
 {
+  if (file == null) {
+    throw new IllegalArgumentException("File passed to createInput() was null");
+  }
   try {
     InputStream input=new FileInputStream(file);
     if (file.getName().toLowerCase().endsWith(".gz")) {
@@ -7,12 +10,8 @@
     return input;
   }
  catch (  IOException e) {
-    if (file == null) {
-      throw new RuntimeException("File passed to openStream() was null");
-    }
- else {
-      e.printStackTrace();
-      throw new RuntimeException("Couldn't openStream() for " + file.getAbsolutePath());
-    }
+    System.err.println("Could not createInput() for " + file);
+    e.printStackTrace();
+    return null;
   }
 }

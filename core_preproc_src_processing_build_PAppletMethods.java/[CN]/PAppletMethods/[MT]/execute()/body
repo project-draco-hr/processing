@@ -2,6 +2,7 @@
   if (baseDir == null) {
     throw new BuildException("dir parameter must be set!");
   }
+  System.out.println("using basedir " + baseDir);
   File graphicsFile=new File(baseDir,"PGraphics.java");
   File appletFile=new File(baseDir,"PApplet.java");
   File imageFile=new File(baseDir,"PImage.java");
@@ -22,13 +23,15 @@
     String line;
     while ((line=applet.readLine()) != null) {
       out.println(line);
-      content.append(line + "\n");
+      content.append(line);
+      content.append('\n');
       if (line.indexOf("public functions for processing.core") >= 0) {
         break;
       }
     }
     while ((line=applet.readLine()) != null) {
-      content.append(line + "\n");
+      content.append(line);
+      content.append('\n');
     }
     applet.close();
     process(out,graphicsFile);
@@ -46,7 +49,7 @@ catch (  Exception ex) {
     System.out.println("No changes to PApplet API.");
   }
  else {
-    System.out.println("Updating PApplet with API changes from PImage or PGraphics.");
+    System.out.println("Updating PApplet with API changes " + "from PImage or PGraphics.");
     try {
       PrintStream temp=new PrintStream(appletFile);
       temp.print(outBytes.toString());
