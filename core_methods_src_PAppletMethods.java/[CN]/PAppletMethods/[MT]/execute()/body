@@ -1,0 +1,63 @@
+{
+  if (baseDir == null) {
+    throw new BuildException("dir parameter must be set!");
+  }
+  System.out.println("using basedir " + baseDir);
+  File graphicsFile=new File(baseDir,"PGraphics.java");
+  File appletFile=new File(baseDir,"PApplet.java");
+  File imageFile=new File(baseDir,"PImage.java");
+  if (!graphicsFile.exists() || !graphicsFile.canRead()) {
+    throw new BuildException("PGraphics file not readable: " + graphicsFile.getAbsolutePath());
+  }
+  if (!appletFile.exists() || !appletFile.canRead() || !appletFile.canWrite()) {
+    throw new BuildException("PApplet file not read/writeable: " + appletFile.getAbsolutePath());
+  }
+  if (!imageFile.exists() || !imageFile.canRead()) {
+    throw new BuildException("PImage file not readable: " + imageFile.getAbsolutePath());
+  }
+  ByteArrayOutputStream outBytes=new ByteArrayOutputStream();
+  PrintStream out=new PrintStream(outBytes);
+  StringBuffer content=new StringBuffer();
+  try {
+    BufferedReader applet=createReader(appletFile);
+    String line;
+    while ((line=applet.readLine()) != null) {
+      out.println(line);
+      content.append(line);
+      content.append('\n');
+      if (line.indexOf("public functions for processing.core") >= 0) {
+        break;
+      }
+    }
+    while ((line=applet.readLine()) != null) {
+      content.append(line);
+      content.append('\n');
+    }
+    applet.close();
+    process(out,graphicsFile);
+    process(out,imageFile);
+    out.println("}");
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+catch (  Exception ex) {
+    ex.printStackTrace();
+  }
+  out.flush();
+  if (content.toString().equals(outBytes.toString())) {
+    System.out.println("No changes to PApplet API.");
+  }
+ else {
+    System.out.println("Updating PApplet with API changes " + "from PImage or PGraphics.");
+    try {
+      PrintStream temp=new PrintStream(appletFile);
+      temp.print(outBytes.toString());
+      temp.flush();
+      temp.close();
+    }
+ catch (    FileNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+}
