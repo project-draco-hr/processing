@@ -35,10 +35,10 @@
     colorBuffer.rewind();
     normalBuffer.rewind();
     textureBuffer.rewind();
-    for (int k=i; k < faceLength[j]; k++) {
-      float a[]=vertices[triangles[k][VERTEX1]];
-      float b[]=vertices[triangles[k][VERTEX2]];
-      float c[]=vertices[triangles[k][VERTEX3]];
+    for (int k=0; k < faceLength[j]; k++) {
+      float a[]=vertices[triangles[i][VERTEX1]];
+      float b[]=vertices[triangles[i][VERTEX2]];
+      float c[]=vertices[triangles[i][VERTEX3]];
       float uscale=1.0f;
       float vscale=1.0f;
       float cx=0.0f;
@@ -93,6 +93,7 @@
       normalBuffer.put(toFixed32(c[NZ]));
       textureBuffer.put(toFixed32((cx + sx * c[U]) * uscale));
       textureBuffer.put(toFixed32((cy + sy * c[V]) * vscale));
+      i++;
     }
     vertexBuffer.position(0);
     colorBuffer.position(0);
