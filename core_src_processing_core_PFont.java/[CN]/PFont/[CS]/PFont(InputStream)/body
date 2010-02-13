@@ -10,6 +10,7 @@
   ascii=new int[128];
   for (int i=0; i < 128; i++)   ascii[i]=-1;
   for (int i=0; i < charCount; i++) {
+    glyphs[i]=new Glyph();
     Glyph glyph=glyphs[i];
     glyph.value=is.readInt();
     glyph.height=is.readInt();
@@ -30,16 +31,17 @@
     throw new RuntimeException("Please use \"Create Font\" to " + "re-create this font.");
   }
   for (  Glyph glyph : glyphs) {
-    PImage image=new PImage(glyph.width,glyph.height,ALPHA);
+    glyph.image=new PImage(glyph.width,glyph.height,ALPHA);
     int bitmapSize=glyph.width * glyph.height;
     byte[] temp=new byte[bitmapSize];
     is.readFully(temp);
     int w=glyph.width;
     int h=glyph.height;
+    int[] pixels=glyph.image.pixels;
     for (int y=0; y < h; y++) {
       for (int x=0; x < w; x++) {
         int valu=temp[y * w + x] & 0xff;
-        image.pixels[y * glyph.width + x]=valu;
+        pixels[y * glyph.width + x]=valu;
       }
     }
   }
