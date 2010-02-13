@@ -8,14 +8,7 @@
   }
   this.charCount=(charset == null) ? 65536 : charset.length;
   this.size=font.getSize();
-  fwidth=fheight=size;
-  PImage bitmaps[]=new PImage[charCount];
-  value=new int[charCount];
-  height=new int[charCount];
-  width=new int[charCount];
-  setWidth=new int[charCount];
-  topExtent=new int[charCount];
-  leftExtent=new int[charCount];
+  glyphs=new Glyph[charCount];
   ascii=new int[128];
   for (int i=0; i < 128; i++)   ascii[i]=-1;
   int mbox3=size * 3;
@@ -28,6 +21,7 @@
   int maxWidthHeight=0;
   int index=0;
   for (int i=0; i < charCount; i++) {
+    Glyph glyph=new Glyph();
     char c=(charset == null) ? (char)i : charset[i];
     if (!font.canDisplay(c)) {
       continue;
@@ -36,8 +30,8 @@
     g.fillRect(0,0,mbox3,mbox3);
     g.setColor(Color.black);
     g.drawString(String.valueOf(c),size,size * 2);
-    Raster raster=playground.getData();
-    raster.getSamples(0,0,mbox3,mbox3,0,samples);
+    WritableRaster raster=playground.getRaster();
+    raster.getDataElements(0,0,mbox3,mbox3,samples);
     int minX=1000, maxX=0;
     int minY=1000, maxY=0;
     boolean pixelFound=false;
@@ -57,55 +51,45 @@
       minX=minY=0;
       maxX=maxY=0;
     }
-    value[index]=c;
-    height[index]=(maxY - minY) + 1;
-    width[index]=(maxX - minX) + 1;
-    setWidth[index]=metrics.charWidth(c);
+    glyph.value=c;
+    glyph.height=(maxY - minY) + 1;
+    glyph.width=(maxX - minX) + 1;
+    glyph.setWidth=metrics.charWidth(c);
     if (c < 128)     ascii[c]=index;
-    topExtent[index]=size * 2 - minY;
-    leftExtent[index]=minX - size;
-    if (c == 'd') {
-      ascent=topExtent[index];
-    }
-    if (c == 'p') {
-      descent=-topExtent[index] + height[index];
-    }
-    if (width[index] > maxWidthHeight)     maxWidthHeight=width[index];
-    if (height[index] > maxWidthHeight)     maxWidthHeight=height[index];
-    bitmaps[index]=new PImage(width[index],height[index],ALPHA);
+    glyph.topExtent=size * 2 - minY;
+    glyph.leftExtent=minX - size;
+    ascent=metrics.getAscent();
+    descent=metrics.getDescent();
+    if (glyph.width > maxWidthHeight)     maxWidthHeight=glyph.width;
+    if (glyph.height > maxWidthHeight)     maxWidthHeight=glyph.height;
+    glyph.image=new PImage(glyph.width,glyph.height,ALPHA);
+    int[] pixels=glyph.image.pixels;
     for (int y=minY; y <= maxY; y++) {
       for (int x=minX; x <= maxX; x++) {
         int val=255 - (samples[y * mbox3 + x] & 0xff);
-        int pindex=(y - minY) * width[index] + (x - minX);
-        bitmaps[index].pixels[pindex]=val;
+        int pindex=(y - minY) * glyph.width + (x - minX);
+        pixels[pindex]=val;
       }
     }
-    index++;
+    glyphs[index++]=glyph;
   }
-  charCount=index;
+  if (charCount != index) {
+    glyphs=(Glyph[])PApplet.subset(glyphs,0,index);
+    charCount=index;
+  }
   if ((ascent == 0) && (descent == 0)) {
-    for (int i=0; i < charCount; i++) {
-      char cc=(char)value[i];
+    for (    Glyph glyph : glyphs) {
+      char cc=(char)glyph.value;
       if (Character.isWhitespace(cc) || (cc == '\u00A0') || (cc == '\u2007')|| (cc == '\u202F')) {
         continue;
       }
-      if (topExtent[i] > ascent) {
-        ascent=topExtent[i];
+      if (glyph.topExtent > ascent) {
+        ascent=glyph.topExtent;
       }
-      int d=-topExtent[i] + height[i];
+      int d=-glyph.topExtent + glyph.height;
       if (d > descent) {
         descent=d;
       }
     }
-  }
-  mbox2=(int)Math.pow(2,Math.ceil(Math.log(maxWidthHeight) / Math.log(2)));
-  twidth=theight=mbox2;
-  images=new PImage[charCount];
-  for (int i=0; i < charCount; i++) {
-    images[i]=new PImage(mbox2,mbox2,ALPHA);
-    for (int y=0; y < height[i]; y++) {
-      System.arraycopy(bitmaps[i].pixels,y * width[i],images[i].pixels,y * mbox2,width[i]);
-    }
-    bitmaps[i]=null;
   }
 }

@@ -3,52 +3,43 @@
   charCount=is.readInt();
   int version=is.readInt();
   size=is.readInt();
-  mbox2=is.readInt();
-  fwidth=size;
-  fheight=size;
-  mbox2=(int)Math.pow(2,Math.ceil(Math.log(mbox2) / Math.log(2)));
-  twidth=theight=mbox2;
+  is.readInt();
   ascent=is.readInt();
   descent=is.readInt();
-  value=new int[charCount];
-  height=new int[charCount];
-  width=new int[charCount];
-  setWidth=new int[charCount];
-  topExtent=new int[charCount];
-  leftExtent=new int[charCount];
+  glyphs=new Glyph[charCount];
   ascii=new int[128];
   for (int i=0; i < 128; i++)   ascii[i]=-1;
   for (int i=0; i < charCount; i++) {
-    value[i]=is.readInt();
-    height[i]=is.readInt();
-    width[i]=is.readInt();
-    setWidth[i]=is.readInt();
-    topExtent[i]=is.readInt();
-    leftExtent[i]=is.readInt();
+    Glyph glyph=glyphs[i];
+    glyph.value=is.readInt();
+    glyph.height=is.readInt();
+    glyph.width=is.readInt();
+    glyph.setWidth=is.readInt();
+    glyph.topExtent=is.readInt();
+    glyph.leftExtent=is.readInt();
     is.readInt();
-    if (value[i] < 128)     ascii[value[i]]=i;
-    if (value[i] == 'd') {
-      if (ascent == 0)       ascent=topExtent[i];
+    if (glyph.value < 128)     ascii[glyph.value]=i;
+    if (glyph.value == 'd') {
+      if (ascent == 0)       ascent=glyph.topExtent;
     }
-    if (value[i] == 'p') {
-      if (descent == 0)       descent=-topExtent[i] + height[i];
+    if (glyph.value == 'p') {
+      if (descent == 0)       descent=-glyph.topExtent + glyph.height;
     }
   }
   if ((ascent == 0) && (descent == 0)) {
     throw new RuntimeException("Please use \"Create Font\" to " + "re-create this font.");
   }
-  images=new PImage[charCount];
-  for (int i=0; i < charCount; i++) {
-    images[i]=new PImage(twidth,theight,ALPHA);
-    int bitmapSize=height[i] * width[i];
-    byte temp[]=new byte[bitmapSize];
+  for (  Glyph glyph : glyphs) {
+    PImage image=new PImage(glyph.width,glyph.height,ALPHA);
+    int bitmapSize=glyph.width * glyph.height;
+    byte[] temp=new byte[bitmapSize];
     is.readFully(temp);
-    int w=width[i];
-    int h=height[i];
+    int w=glyph.width;
+    int h=glyph.height;
     for (int y=0; y < h; y++) {
       for (int x=0; x < w; x++) {
         int valu=temp[y * w + x] & 0xff;
-        images[i].pixels[y * twidth + x]=valu;
+        image.pixels[y * glyph.width + x]=valu;
       }
     }
   }

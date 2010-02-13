@@ -25,7 +25,7 @@
   int pixels1[]=glyph.pixels;
   for (int row=y0; row < y0 + h0; row++) {
     for (int col=x0; col < x0 + w0; col++) {
-      int a1=(fa * pixels1[row * textFont.twidth + col]) >> 8;
+      int a1=(fa * pixels1[row * glyph.width + col]) >> 8;
       int a2=a1 ^ 0xff;
       int p2=pixels[(yy + row - y0) * width + (xx + col - x0)];
       pixels[(yy + row - y0) * width + xx + col - x0]=(0xff000000 | (((a1 * fr + a2 * ((p2 >> 16) & 0xff)) & 0xff00) << 8) | ((a1 * fg + a2 * ((p2 >> 8) & 0xff)) & 0xff00)| ((a1 * fb + a2 * (p2 & 0xff)) >> 8));
