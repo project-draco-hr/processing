@@ -1,0 +1,81 @@
+{
+  charsetList=new CheckBoxList();
+  DefaultListModel model=new DefaultListModel();
+  charsetList.setModel(model);
+  for (  String item : blockNames) {
+    model.addElement(new JCheckBox(item));
+  }
+  unicodeBlockScroller=new JScrollPane(charsetList,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+  final JFrame frame=new JFrame("Characters");
+  Container outer=frame.getContentPane();
+  outer.setLayout(new BorderLayout());
+  JPanel pain=new JPanel();
+  pain.setBorder(new EmptyBorder(13,13,13,13));
+  outer.add(pain,BorderLayout.CENTER);
+  pain.setLayout(new BoxLayout(pain,BoxLayout.Y_AXIS));
+  String labelText="Default characters will include most bitmaps for Mac OS\n" + "and Windows Latin scripts. Including all characters may\n" + "require large amounts of memory for all of the bitmaps.\n"+ "For greater control, you can select specific Unicode blocks.";
+  JTextArea textarea=new JTextArea(labelText);
+  textarea.setBorder(new EmptyBorder(13,8,13,8));
+  textarea.setBackground(null);
+  textarea.setEditable(false);
+  textarea.setHighlighter(null);
+  textarea.setFont(new Font("Dialog",Font.PLAIN,12));
+  pain.add(textarea);
+  ActionListener listener=new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      charsetList.setEnabled(unicodeCharsButton.isSelected());
+    }
+  }
+;
+  defaultCharsButton=new JRadioButton("Default Characters");
+  allCharsButton=new JRadioButton("All Characters");
+  unicodeCharsButton=new JRadioButton("Specific Unicode Blocks");
+  defaultCharsButton.addActionListener(listener);
+  allCharsButton.addActionListener(listener);
+  unicodeCharsButton.addActionListener(listener);
+  ButtonGroup group=new ButtonGroup();
+  group.add(defaultCharsButton);
+  group.add(allCharsButton);
+  group.add(unicodeCharsButton);
+  JPanel radioPanel=new JPanel();
+  radioPanel.setLayout(new BoxLayout(radioPanel,BoxLayout.Y_AXIS));
+  radioPanel.add(defaultCharsButton);
+  radioPanel.add(allCharsButton);
+  radioPanel.add(unicodeCharsButton);
+  JPanel rightStuff=new JPanel();
+  rightStuff.setLayout(new BoxLayout(rightStuff,BoxLayout.X_AXIS));
+  rightStuff.add(radioPanel);
+  rightStuff.add(Box.createHorizontalGlue());
+  pain.add(rightStuff);
+  pain.add(Box.createVerticalStrut(13));
+  defaultCharsButton.setSelected(true);
+  charsetList.setEnabled(false);
+  pain.add(unicodeBlockScroller);
+  pain.add(Box.createVerticalStrut(8));
+  JPanel buttons=new JPanel();
+  JButton okButton=new JButton("OK");
+  okButton.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      frame.setVisible(false);
+    }
+  }
+);
+  okButton.setEnabled(true);
+  buttons.add(okButton);
+  pain.add(buttons);
+  JRootPane root=frame.getRootPane();
+  root.setDefaultButton(okButton);
+  ActionListener disposer=new ActionListener(){
+    public void actionPerformed(    ActionEvent actionEvent){
+      frame.setVisible(false);
+    }
+  }
+;
+  Base.registerWindowCloseKeys(root,disposer);
+  Base.setIcon(frame);
+  frame.pack();
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  Dimension windowSize=frame.getSize();
+  frame.setLocation((screen.width - windowSize.width) / 2,(screen.height - windowSize.height) / 2);
+  return frame;
+}
