@@ -8,6 +8,11 @@
   inputHandler.addKeyBinding(mod + "+BACK_SPACE",InputHandler.BACKSPACE_WORD);
   inputHandler.addKeyBinding(mod + "+DELETE",InputHandler.DELETE_WORD);
   inputHandler.addKeyBinding("INSERT",InputHandler.OVERWRITE);
+  if (!Base.isMacOS()) {
+    inputHandler.addKeyBinding("C+INSERT",InputHandler.CLIPBOARD_COPY);
+    inputHandler.addKeyBinding("S+INSERT",InputHandler.CLIPBOARD_PASTE);
+    inputHandler.addKeyBinding("S+DELETE",InputHandler.CLIPBOARD_CUT);
+  }
   if (Base.isMacOS()) {
     inputHandler.addKeyBinding("HOME",InputHandler.DOCUMENT_HOME);
     inputHandler.addKeyBinding("END",InputHandler.DOCUMENT_END);
