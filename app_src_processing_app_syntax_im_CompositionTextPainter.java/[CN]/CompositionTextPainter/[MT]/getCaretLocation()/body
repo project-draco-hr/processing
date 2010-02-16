@@ -1,0 +1,11 @@
+{
+  Point loc=new Point();
+  TextAreaPainter painter=textArea.getPainter();
+  FontMetrics fm=painter.getFontMetrics();
+  int offsetY=fm.getHeight() - CompositionTextManager.COMPOSING_UNDERBAR_HEIGHT;
+  int lineIndex=textArea.getCaretLine();
+  loc.y=lineIndex * fm.getHeight() + offsetY;
+  int offsetX=composedBeginCaretPosition - textArea.getLineStartOffset(lineIndex);
+  loc.x=textArea.offsetToX(lineIndex,offsetX);
+  return loc;
+}
