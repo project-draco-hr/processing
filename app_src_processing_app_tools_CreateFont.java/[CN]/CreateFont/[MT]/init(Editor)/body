@@ -42,15 +42,7 @@
   pain.add(fontScroller);
   Dimension d1=new Dimension(13,13);
   pain.add(new Box.Filler(d1,d1,d1));
-  sample=new JTextArea("The quick brown fox blah blah."){
-    public void paintComponent(    Graphics g){
-      Graphics2D g2=(Graphics2D)g;
-      g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,smooth ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,smooth ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
-      super.paintComponent(g2);
-    }
-  }
-;
+  sample=new SampleComponent(this);
   sample.setFont(new Font("Dialog",Font.PLAIN,12));
   pain.add(sample);
   Dimension d2=new Dimension(6,6);
@@ -83,7 +75,7 @@
   charsetButton=new JButton("Characters...");
   charsetButton.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      charsetFrame.setVisible(true);
+      charSelector.setVisible(true);
     }
   }
 );
@@ -129,5 +121,5 @@
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   windowSize=getSize();
   setLocation((screen.width - windowSize.width) / 2,(screen.height - windowSize.height) / 2);
-  charsetFrame=createCharacterList();
+  charSelector=new CharacterSelector();
 }

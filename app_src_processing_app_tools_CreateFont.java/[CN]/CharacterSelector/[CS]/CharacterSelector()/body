@@ -1,4 +1,5 @@
 {
+  super("Character Selector");
   charsetList=new CheckBoxList();
   DefaultListModel model=new DefaultListModel();
   charsetList.setModel(model);
@@ -6,8 +7,7 @@
     model.addElement(new JCheckBox(item));
   }
   unicodeBlockScroller=new JScrollPane(charsetList,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-  final JFrame frame=new JFrame("Characters");
-  Container outer=frame.getContentPane();
+  Container outer=getContentPane();
   outer.setLayout(new BorderLayout());
   JPanel pain=new JPanel();
   pain.setBorder(new EmptyBorder(13,13,13,13));
@@ -56,26 +56,25 @@
   JButton okButton=new JButton("OK");
   okButton.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      frame.setVisible(false);
+      setVisible(false);
     }
   }
 );
   okButton.setEnabled(true);
   buttons.add(okButton);
   pain.add(buttons);
-  JRootPane root=frame.getRootPane();
+  JRootPane root=getRootPane();
   root.setDefaultButton(okButton);
   ActionListener disposer=new ActionListener(){
     public void actionPerformed(    ActionEvent actionEvent){
-      frame.setVisible(false);
+      setVisible(false);
     }
   }
 ;
   Base.registerWindowCloseKeys(root,disposer);
-  Base.setIcon(frame);
-  frame.pack();
+  Base.setIcon(this);
+  pack();
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
-  Dimension windowSize=frame.getSize();
-  frame.setLocation((screen.width - windowSize.width) / 2,(screen.height - windowSize.height) / 2);
-  return frame;
+  Dimension windowSize=getSize();
+  setLocation((screen.width - windowSize.width) / 2,(screen.height - windowSize.height) / 2);
 }
