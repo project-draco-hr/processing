@@ -1,6 +1,11 @@
 {
   PrintWriter writer=PApplet.createWriter(file);
-  writer.println("sdk.dir=" + Android.sdkPath);
+  if (Base.isWindows()) {
+    writer.println("sdk.dir=" + Android.sdkPath.replace('\\','/'));
+  }
+ else {
+    writer.println("sdk.dir=" + Android.sdkPath);
+  }
   writer.flush();
   writer.close();
 }
