@@ -1,0 +1,42 @@
+{
+  String oldPath=Preferences.get("android.sdk.path");
+  if (oldPath != null) {
+    File oldFolder=new File(oldPath);
+    if (!oldFolder.exists()) {
+      Preferences.unset("android.sdk.path");
+    }
+  }
+  Platform platform=Base.getPlatform();
+  sdkPath=findAndroidTool(platform.getenv("ANDROID_SDK"));
+  if (sdkPath != null) {
+    Preferences.set("android.sdk.path",sdkPath);
+  }
+ else {
+    sdkPath=findAndroidTool(Preferences.get("android.sdk.path"));
+    if (sdkPath == null) {
+      int result=Base.showYesNoQuestion(editor,"Android SDK",ANDROID_SDK_PRIMARY,ANDROID_SDK_SECONDARY);
+      if (result == JOptionPane.YES_OPTION) {
+        File folder=Base.selectFolder(SELECT_ANDROID_SDK_FOLDER,null,editor);
+        if (folder != null) {
+          sdkPath=findAndroidTool(folder.getAbsolutePath());
+          if (sdkPath != null) {
+            Preferences.set("android.sdk.path",sdkPath);
+          }
+ else {
+            System.err.println("Could not find the android executable inside " + folder.getAbsolutePath() + "/tools/");
+            JOptionPane.showMessageDialog(editor,NOT_ANDROID_SDK);
+            return false;
+          }
+        }
+      }
+ else       if (result == JOptionPane.NO_OPTION) {
+        Base.openURL(ANDROID_SDK_URL);
+      }
+    }
+  }
+  if (sdkPath == null) {
+    return false;
+  }
+  platform.setenv("ANDROID_SDK",sdkPath);
+  return true;
+}

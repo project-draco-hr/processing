@@ -1,42 +1,29 @@
 {
-  String oldPath=Preferences.get("android.sdk.path");
-  if (oldPath != null) {
-    File oldFolder=new File(oldPath);
-    if (!oldFolder.exists()) {
-      Preferences.unset("android.sdk.path");
-    }
-  }
   Platform platform=Base.getPlatform();
-  sdkPath=findAndroidTool(platform.getenv("ANDROID_SDK"));
-  if (sdkPath != null) {
-    Preferences.set("android.sdk.path",sdkPath);
-  }
- else {
-    sdkPath=findAndroidTool(Preferences.get("android.sdk.path"));
-    if (sdkPath == null) {
-      int result=Base.showYesNoQuestion(editor,"Android SDK",ANDROID_SDK_PRIMARY,ANDROID_SDK_SECONDARY);
-      if (result == JOptionPane.YES_OPTION) {
-        File folder=Base.selectFolder(SELECT_ANDROID_SDK_FOLDER,null,editor);
-        if (folder != null) {
-          sdkPath=findAndroidTool(folder.getAbsolutePath());
-          if (sdkPath != null) {
-            Preferences.set("android.sdk.path",sdkPath);
-          }
- else {
-            System.err.println("Could not find the android executable inside " + folder.getAbsolutePath() + "/tools/");
-            JOptionPane.showMessageDialog(editor,NOT_ANDROID_SDK);
-            return false;
-          }
-        }
-      }
- else       if (result == JOptionPane.NO_OPTION) {
-        Base.openURL(ANDROID_SDK_URL);
-      }
-    }
-  }
+  sdkPath=platform.getenv("ANDROID_SDK");
   if (sdkPath == null) {
+    Base.showWarning("Android Tools Error","Before using Android mode, you must first set\n" + "the ANDROID_SDK environment variable.",null);
     return false;
   }
-  platform.setenv("ANDROID_SDK",sdkPath);
-  return true;
+  File toolsFolder=new File(sdkPath,"tools");
+  if (!toolsFolder.exists()) {
+    Base.showWarning("Android Tools Error","The ANDROID_SDK environment variable is set incorrectly,\n" + "or the directory no longer exists. No tools folder was\n" + "found in " + toolsFolder.getAbsolutePath() + ".",null);
+    return false;
+  }
+  try {
+    String canonicalTools=toolsFolder.getCanonicalPath();
+    String envPath=platform.getenv("PATH");
+    String[] entries=PApplet.split(envPath,File.pathSeparatorChar);
+    for (    String entry : entries) {
+      String canonicalEntry=new File(entry).getCanonicalPath();
+      if (canonicalEntry.equals(canonicalTools)) {
+        return true;
+      }
+    }
+    Base.showWarning("Android Tools Error","You need to add the tools folder of the Android SDK\n" + "to your PATH environment variable. The folder is:\n" + toolsFolder.getAbsolutePath() + ".",null);
+  }
+ catch (  IOException e) {
+    Base.showWarning("Android Tools Error","Error while trying to check the PATH for the Android tools.",e);
+  }
+  return false;
 }

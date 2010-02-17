@@ -1,13 +1,6 @@
 {
   this.cmd=cmd;
-  ProcessBuilder pb=new ProcessBuilder(cmd);
-  Map<String,String> env=pb.environment();
-  env.put("ANDROID_SDK",Android.sdkPath);
-  String path=env.get("PATH");
-  String toolsPath=Android.sdkPath + File.separator + "tools";
-  env.put("PATH",path + File.pathSeparator + toolsPath);
-  System.out.println("path should be " + env.get("PATH"));
-  process=pb.start();
+  process=Runtime.getRuntime().exec(cmd);
   error=new StringRedirectThread(process.getErrorStream());
   output=new StringRedirectThread(process.getInputStream());
 }
