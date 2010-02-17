@@ -2,18 +2,23 @@
   inputHandler=new DefaultInputHandler();
   String mod=Base.isMacOS() ? "A" : "C";
   inputHandler.addKeyBinding("BACK_SPACE",InputHandler.BACKSPACE);
+  if (Preferences.getBoolean("editor.keys.shift_backspace_is_delete")) {
+    inputHandler.addKeyBinding("S+BACK_SPACE",InputHandler.DELETE);
+  }
+ else {
+    inputHandler.addKeyBinding("S+BACK_SPACE",InputHandler.BACKSPACE);
+  }
   inputHandler.addKeyBinding("DELETE",InputHandler.DELETE);
-  inputHandler.addKeyBinding("S+BACK_SPACE",InputHandler.DELETE);
   inputHandler.addKeyBinding("S+DELETE",InputHandler.DELETE);
   inputHandler.addKeyBinding(mod + "+BACK_SPACE",InputHandler.BACKSPACE_WORD);
   inputHandler.addKeyBinding(mod + "+DELETE",InputHandler.DELETE_WORD);
   inputHandler.addKeyBinding("INSERT",InputHandler.OVERWRITE);
-  if (!Base.isMacOS()) {
+  if (Preferences.getBoolean("editor.keys.alternative_cut_copy_paste")) {
     inputHandler.addKeyBinding("C+INSERT",InputHandler.CLIPBOARD_COPY);
     inputHandler.addKeyBinding("S+INSERT",InputHandler.CLIPBOARD_PASTE);
     inputHandler.addKeyBinding("S+DELETE",InputHandler.CLIPBOARD_CUT);
   }
-  if (Base.isMacOS()) {
+  if (Preferences.getBoolean("editor.keys.home_and_end_travel_far")) {
     inputHandler.addKeyBinding("HOME",InputHandler.DOCUMENT_HOME);
     inputHandler.addKeyBinding("END",InputHandler.DOCUMENT_END);
     inputHandler.addKeyBinding("S+HOME",InputHandler.SELECT_DOC_HOME);
