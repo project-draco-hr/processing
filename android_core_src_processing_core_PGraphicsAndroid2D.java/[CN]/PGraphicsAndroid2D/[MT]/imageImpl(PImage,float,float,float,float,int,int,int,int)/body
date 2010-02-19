@@ -1,19 +1,27 @@
 {
-  rect.set(x1,y1,x2,y2);
-  if (who.bitmap == null || who.width != who.bitmap.getWidth() || who.height != who.bitmap.getHeight()) {
-    who.bitmap=Bitmap.createBitmap(who.width,who.height,Config.ARGB_8888);
-    who.modified=true;
-  }
-  if (who.modified) {
-    who.bitmap.setPixels(who.pixels,0,who.width,0,0,who.width,who.height);
-  }
-  if (imageImplSrcRect == null) {
-    imageImplSrcRect=new Rect(u1,v1,u2 - u1,v2 - v1);
-    imageImplDstRect=new Rect((int)x1,(int)y1,(int)(x2 - x1),(int)(y2 - y1));
+  if (who.bitmap == null && (who.format == ARGB || who.format == RGB)) {
+    int offset=v1 * who.width + u1;
+    System.out.println(tint + " " + PApplet.hex(tintPaint.getColor()));
+    canvas.drawBitmap(who.pixels,offset,who.width,x1,y1,u2 - u1,v2 - v1,who.format == ARGB,tint ? tintPaint : null);
   }
  else {
-    imageImplSrcRect.set(u1,v1,u2 - u1,v2 - v1);
-    imageImplDstRect.set((int)x1,(int)y1,(int)(x2 - x1),(int)(y2 - y1));
+    rect.set(x1,y1,x2,y2);
+    if (who.bitmap == null || who.width != who.bitmap.getWidth() || who.height != who.bitmap.getHeight()) {
+      who.bitmap=Bitmap.createBitmap(who.width,who.height,Config.ARGB_8888);
+      who.modified=true;
+    }
+    if (who.modified) {
+      who.bitmap.setPixels(who.pixels,0,who.width,0,0,who.width,who.height);
+      who.modified=false;
+    }
+    if (imageImplSrcRect == null) {
+      imageImplSrcRect=new Rect(u1,v1,u2 - u1,v2 - v1);
+      imageImplDstRect=new Rect((int)x1,(int)y1,(int)(x2 - x1),(int)(y2 - y1));
+    }
+ else {
+      imageImplSrcRect.set(u1,v1,u2 - u1,v2 - v1);
+      imageImplDstRect.set((int)x1,(int)y1,(int)(x2 - x1),(int)(y2 - y1));
+    }
+    canvas.drawBitmap(who.bitmap,imageImplSrcRect,imageImplDstRect,null);
   }
-  canvas.drawBitmap(who.bitmap,imageImplSrcRect,imageImplDstRect,tint ? tintPaint : null);
 }
