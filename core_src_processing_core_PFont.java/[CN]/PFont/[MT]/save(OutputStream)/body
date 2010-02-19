@@ -7,26 +7,14 @@
   }
   os.writeInt(11);
   os.writeInt(size);
-  int mbox2=(int)Math.pow(2,Math.ceil(Math.log(size) / Math.log(2)));
-  os.writeInt(mbox2);
+  os.writeInt(0);
   os.writeInt(ascent);
   os.writeInt(descent);
-  for (  Glyph glyph : glyphs) {
-    os.writeInt(glyph.value);
-    os.writeInt(glyph.height);
-    os.writeInt(glyph.width);
-    os.writeInt(glyph.setWidth);
-    os.writeInt(glyph.topExtent);
-    os.writeInt(glyph.leftExtent);
-    os.writeInt(0);
+  for (int i=0; i < glyphCount; i++) {
+    glyphs[i].writeHeader(os);
   }
-  for (  Glyph glyph : glyphs) {
-    int[] pixels=glyph.image.pixels;
-    for (int y=0; y < glyph.height; y++) {
-      for (int x=0; x < glyph.width; x++) {
-        os.write(pixels[y * glyph.width + x] & 0xff);
-      }
-    }
+  for (int i=0; i < glyphCount; i++) {
+    glyphs[i].writeBitmap(os);
   }
   os.writeUTF(name);
   os.writeUTF(psname);
