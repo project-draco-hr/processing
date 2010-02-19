@@ -1,30 +1,20 @@
 {
   DataOutputStream os=new DataOutputStream(output);
-  os.writeInt(charCount);
+  os.writeInt(glyphCount);
   if ((name == null) || (psname == null)) {
     name="";
     psname="";
   }
   os.writeInt(11);
   os.writeInt(size);
-  os.writeInt(mbox2);
+  os.writeInt(0);
   os.writeInt(ascent);
   os.writeInt(descent);
-  for (int i=0; i < charCount; i++) {
-    os.writeInt(value[i]);
-    os.writeInt(height[i]);
-    os.writeInt(width[i]);
-    os.writeInt(setWidth[i]);
-    os.writeInt(topExtent[i]);
-    os.writeInt(leftExtent[i]);
-    os.writeInt(0);
+  for (int i=0; i < glyphCount; i++) {
+    glyphs[i].writeHeader(os);
   }
-  for (int i=0; i < charCount; i++) {
-    for (int y=0; y < height[i]; y++) {
-      for (int x=0; x < width[i]; x++) {
-        os.write(images[i].pixels[y * mbox2 + x] & 0xff);
-      }
-    }
+  for (int i=0; i < glyphCount; i++) {
+    glyphs[i].writeBitmap(os);
   }
   os.writeUTF(name);
   os.writeUTF(psname);

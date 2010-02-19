@@ -1,5 +1,18 @@
 {
-  if (charCount == 0)   return -1;
-  if (c < 128)   return ascii[c];
-  return indexHunt(c,0,charCount - 1);
+  if (lazy) {
+    int index=indexActual(c);
+    if (index != -1) {
+      return index;
+    }
+    if (font.canDisplay(c)) {
+      addGlyph(c);
+      return indexActual(c);
+    }
+ else {
+      return -1;
+    }
+  }
+ else {
+    return indexActual(c);
+  }
 }

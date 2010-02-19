@@ -1,6 +1,15 @@
 {
   if (font == null) {
-    throw new RuntimeException("findFont() not available with Android.");
+    if (!fontSearched) {
+      font=new Font(name,Font.PLAIN,size);
+      if (!font.getPSName().equals(psname)) {
+        font=new Font(psname,Font.PLAIN,size);
+      }
+      if (!font.getPSName().equals(psname)) {
+        font=null;
+      }
+      fontSearched=true;
+    }
   }
   return font;
 }
