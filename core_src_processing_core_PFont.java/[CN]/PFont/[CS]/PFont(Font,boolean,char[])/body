@@ -6,9 +6,9 @@
   if (charset != null) {
     Arrays.sort(charset);
   }
-  this.charCount=(charset == null) ? 65536 : charset.length;
+  this.glyphCount=(charset == null) ? 65536 : charset.length;
   this.size=font.getSize();
-  glyphs=new Glyph[charCount];
+  glyphs=new Glyph[glyphCount];
   ascii=new int[128];
   for (int i=0; i < 128; i++)   ascii[i]=-1;
   int mbox3=size * 3;
@@ -21,7 +21,7 @@
   int samples[]=new int[mbox3 * mbox3];
   int maxWidthHeight=0;
   int index=0;
-  for (int i=0; i < charCount; i++) {
+  for (int i=0; i < glyphCount; i++) {
     Glyph glyph=new Glyph();
     char c=(charset == null) ? (char)i : charset[i];
     if (!font.canDisplay(c)) {
@@ -74,9 +74,9 @@
     }
     glyphs[index++]=glyph;
   }
-  if (charCount != index) {
+  if (glyphCount != index) {
     glyphs=(Glyph[])PApplet.subset(glyphs,0,index);
-    charCount=index;
+    glyphCount=index;
   }
   if ((ascent == 0) && (descent == 0)) {
     for (    Glyph glyph : glyphs) {
