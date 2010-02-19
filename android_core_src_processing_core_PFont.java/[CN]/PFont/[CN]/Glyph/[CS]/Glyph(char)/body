@@ -1,11 +1,9 @@
 {
   int mbox3=size * 3;
-  lazyGraphics.setColor(Color.white);
-  lazyGraphics.fillRect(0,0,mbox3,mbox3);
-  lazyGraphics.setColor(Color.black);
-  lazyGraphics.drawString(String.valueOf(c),size,size * 2);
-  WritableRaster raster=lazyImage.getRaster();
-  raster.getDataElements(0,0,mbox3,mbox3,lazySamples);
+  lazyCanvas.drawColor(Color.WHITE);
+  lazyPaint.setColor(Color.BLACK);
+  lazyCanvas.drawText(String.valueOf(c),size,size * 2,lazyPaint);
+  lazyBitmap.getPixels(lazySamples,0,mbox3,0,0,mbox3,mbox3);
   int minX=1000, maxX=0;
   int minY=1000, maxY=0;
   boolean pixelFound=false;
@@ -28,7 +26,7 @@
   value=c;
   height=(maxY - minY) + 1;
   width=(maxX - minX) + 1;
-  setWidth=lazyMetrics.charWidth(c);
+  setWidth=(int)lazyPaint.measureText(String.valueOf(c));
   topExtent=size * 2 - minY;
   leftExtent=minX - size;
   image=new PImage(width,height,ALPHA);
