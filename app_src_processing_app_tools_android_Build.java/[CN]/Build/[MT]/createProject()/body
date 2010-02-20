@@ -40,15 +40,6 @@ catch (      InterruptedException e) {
   File javaFolder=new File(srcFolder,getPackageName().replace('.','/'));
   javaFolder.mkdirs();
   String buildPath=javaFolder.getAbsolutePath();
-  File sketchDataFolder=sketch.getDataFolder();
-  if (sketchDataFolder.exists()) {
-    try {
-      Base.copyDir(sketchDataFolder,srcFolder);
-    }
- catch (    IOException e) {
-      e.printStackTrace();
-    }
-  }
   try {
     sketch.prepare();
     className=sketch.preprocess(buildPath,new Preproc());
@@ -61,7 +52,23 @@ catch (      InterruptedException e) {
       writeDefaultProps(new File(androidFolder,"default.properties"));
       writeLocalProps(new File(androidFolder,"local.properties"));
       writeRes(new File(androidFolder,"res"),className);
-      writeLibs(new File(androidFolder,"libs"));
+      File libsFolder=new File(androidFolder,"libs");
+      libsFolder.mkdirs();
+      File assetsFolder=new File(androidFolder,"assets");
+      assetsFolder.mkdirs();
+      InputStream input=PApplet.createInput(Android.getCoreZipFile());
+      PApplet.saveStream(new File(libsFolder,"processing-core.jar"),input);
+      try {
+        writeLibraries(libsFolder,assetsFolder);
+        File sketchDataFolder=sketch.getDataFolder();
+        if (sketchDataFolder.exists()) {
+          Base.copyDir(sketchDataFolder,assetsFolder);
+        }
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+        throw new RunnerException(e.getMessage());
+      }
     }
   }
  catch (  RunnerException e) {
