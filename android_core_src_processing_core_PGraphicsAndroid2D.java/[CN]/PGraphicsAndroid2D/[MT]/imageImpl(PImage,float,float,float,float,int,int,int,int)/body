@@ -1,11 +1,18 @@
 {
-  if (who.bitmap == null && (who.format == ARGB || who.format == RGB)) {
+  if (who.bitmap == null && who.format == ALPHA) {
+    who.bitmap=Bitmap.createBitmap(who.width,who.height,Config.ARGB_8888);
+    int[] px=new int[who.pixels.length];
+    for (int i=0; i < px.length; i++) {
+      px[i]=who.pixels[i] << 24 | 0xFFFFFF;
+    }
+    who.bitmap.setPixels(px,0,who.width,0,0,who.width,who.height);
+    who.modified=false;
+  }
+  if (who.bitmap == null) {
     int offset=v1 * who.width + u1;
-    System.out.println(tint + " " + PApplet.hex(tintPaint.getColor()));
     canvas.drawBitmap(who.pixels,offset,who.width,x1,y1,u2 - u1,v2 - v1,who.format == ARGB,tint ? tintPaint : null);
   }
  else {
-    rect.set(x1,y1,x2,y2);
     if (who.bitmap == null || who.width != who.bitmap.getWidth() || who.height != who.bitmap.getHeight()) {
       who.bitmap=Bitmap.createBitmap(who.width,who.height,Config.ARGB_8888);
       who.modified=true;
