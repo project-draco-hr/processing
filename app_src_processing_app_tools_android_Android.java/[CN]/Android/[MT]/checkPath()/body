@@ -15,7 +15,18 @@
     String envPath=platform.getenv("PATH");
     String[] entries=PApplet.split(envPath,File.pathSeparatorChar);
     for (    String entry : entries) {
-      String canonicalEntry=new File(entry).getCanonicalPath();
+      entry=entry.trim();
+      if (entry.length() == 0)       continue;
+      final Matcher m=quotedPathElement.matcher(entry);
+      if (m.matches())       entry=m.group(1);
+      final String canonicalEntry;
+      try {
+        canonicalEntry=new File(entry).getCanonicalPath();
+      }
+ catch (      IOException unexpected) {
+        System.err.println(unexpected);
+        continue;
+      }
       if (canonicalEntry.equals(canonicalTools)) {
         if (Base.isWindows()) {
           if (new File(toolsFolder,"android.bat").exists()) {
