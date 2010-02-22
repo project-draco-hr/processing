@@ -1,25 +1,25 @@
 {
-  String[] cmd={Android.toolName,"create","avd","-n",name,"-t",target,"-c","64M"};
-  Pavarotti p=new Pavarotti(cmd);
+  final String[] cmd={Android.toolName,"create","avd","-n",name,"-t",target,"-c","64M"};
+  final Pavarotti p=new Pavarotti(cmd);
   try {
-    int result=p.waitFor();
+    final int result=p.waitFor();
     if (result == 0) {
-      for (      String s : p.getOutputLines()) {
+      for (      final String s : p.getOutputLines()) {
         System.out.println(s);
       }
       return true;
     }
  else {
       System.out.println("Attempted: '" + PApplet.join(cmd," ") + "'");
-      for (      String s : p.getOutputLines()) {
+      for (      final String s : p.getOutputLines()) {
         System.out.println(s);
       }
-      for (      String s : p.getErrorLines()) {
+      for (      final String s : p.getErrorLines()) {
         System.err.println(s);
       }
     }
   }
- catch (  InterruptedException ie) {
+ catch (  final InterruptedException ie) {
   }
   return false;
 }

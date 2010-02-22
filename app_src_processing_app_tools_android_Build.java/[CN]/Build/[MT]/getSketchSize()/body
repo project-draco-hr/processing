@@ -1,16 +1,16 @@
 {
   int wide=Device.DEFAULT_WIDTH;
   int high=Device.DEFAULT_HEIGHT;
-  String sizeRegex="(?:^|\\s|;)size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\d+),?\\s*([^\\)]*)\\s*\\)";
-  Sketch sketch=editor.getSketch();
-  String scrubbed=Sketch.scrubComments(sketch.getCode(0).getProgram());
-  String[] matches=PApplet.match(scrubbed,sizeRegex);
+  final String sizeRegex="(?:^|\\s|;)size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\d+),?\\s*([^\\)]*)\\s*\\)";
+  final Sketch sketch=editor.getSketch();
+  final String scrubbed=Sketch.scrubComments(sketch.getCode(0).getProgram());
+  final String[] matches=PApplet.match(scrubbed,sizeRegex);
   if (matches != null) {
     try {
       wide=Integer.parseInt(matches[1]);
       high=Integer.parseInt(matches[2]);
     }
- catch (    NumberFormatException e) {
+ catch (    final NumberFormatException e) {
       final String message="The size of this applet could not automatically be\n" + "determined from your code.\n" + "Use only numeric values (not variables) for the size()\n"+ "command. See the size() reference for an explanation.";
       Base.showWarning("Could not find sketch size",message,null);
     }

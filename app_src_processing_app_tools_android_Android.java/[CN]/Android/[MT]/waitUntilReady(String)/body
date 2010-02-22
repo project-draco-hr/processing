@@ -1,20 +1,22 @@
 {
-  long timeout=System.currentTimeMillis() + 30 * 1000;
+  final long timeout=System.currentTimeMillis() + 30 * 1000;
   try {
     while (System.currentTimeMillis() < timeout) {
-      String[] cmd=new String[]{"adb","-s",device,"jdwp"};
-      Pavarotti p=new Pavarotti(cmd);
-      int result=p.waitFor();
-      if (result == 0)       return true;
+      final String[] cmd=new String[]{"adb","-s",device,"jdwp"};
+      final Pavarotti p=new Pavarotti(cmd);
+      final int result=p.waitFor();
+      if (result == 0) {
+        return true;
+      }
       p.printLines();
       try {
         Thread.sleep(1000);
       }
- catch (      InterruptedException ie) {
+ catch (      final InterruptedException ie) {
       }
     }
   }
- catch (  Exception e) {
+ catch (  final Exception e) {
     e.printStackTrace();
   }
   return false;

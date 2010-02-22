@@ -1,14 +1,14 @@
 {
   try {
     String port=null;
-    long timeout=System.currentTimeMillis() + 15 * 1000;
+    final long timeout=System.currentTimeMillis() + 15 * 1000;
     while (System.currentTimeMillis() < timeout) {
       if (port != null) {
         System.out.println("Waiting a half second " + "for the application to launch...");
         try {
           Thread.sleep(500);
         }
- catch (        InterruptedException ie) {
+ catch (        final InterruptedException ie) {
         }
       }
       port=getJdwpPort(device);
@@ -17,23 +17,23 @@
       }
     }
     System.out.println("Found application on port " + port + ".");
-    String[] cmd=new String[]{"adb","-s",device,"forward","tcp:" + ADB_SOCKET_PORT,"jdwp:" + port};
-    Pavarotti fwd=new Pavarotti(cmd);
+    final String[] cmd=new String[]{"adb","-s",device,"forward","tcp:" + ADB_SOCKET_PORT,"jdwp:" + port};
+    final Pavarotti fwd=new Pavarotti(cmd);
     fwd.printCommand();
-    int result=fwd.waitFor();
+    final int result=fwd.waitFor();
     fwd.printLines();
     if (result != 0) {
       editor.statusError("Could not connect for debugging.");
       return false;
     }
     System.out.println("creating runner");
-    AndroidRunner ar=new AndroidRunner(editor,editor.getSketch());
+    final AndroidRunner ar=new AndroidRunner(editor,editor.getSketch());
     return ar.launch(ADB_SOCKET_PORT);
   }
- catch (  IOException e) {
+ catch (  final IOException e) {
     editor.statusError(e);
   }
-catch (  InterruptedException e) {
+catch (  final InterruptedException e) {
   }
   return false;
 }

@@ -4,7 +4,7 @@
       emulatorProcess.exitValue();
       emulatorProcess=null;
     }
- catch (    IllegalThreadStateException itse) {
+ catch (    final IllegalThreadStateException itse) {
     }
   }
   String portString=Preferences.get("android.emulator.port");
@@ -12,33 +12,33 @@
     portString="5566";
     Preferences.set("android.emulator.port",portString);
   }
-  String name="emulator-" + portString;
+  final String name="emulator-" + portString;
   if (emulatorProcess != null) {
     System.out.println("Found a perfectly good emulator. Trying that.");
     return name;
   }
   try {
-    String[] devices=Device.list();
-    for (    String s : devices) {
+    final String[] devices=Device.list();
+    for (    final String s : devices) {
       if (s.equals(name)) {
         return name;
       }
     }
   }
- catch (  IOException e) {
+ catch (  final IOException e) {
     editor.statusError(e);
     return null;
   }
   try {
     editor.statusNotice("Starting new Android emulator.");
-    String[] cmd=new String[]{"emulator","-avd",getDefaultDevice(),"-port",portString,"-no-boot-anim"};
+    final String[] cmd=new String[]{"emulator","-avd",getDefaultDevice(),"-port",portString,"-no-boot-anim"};
     emulatorProcess=Runtime.getRuntime().exec(cmd);
     System.out.println(PApplet.join(cmd," "));
     new StreamRedirectThread("android-emulator-out",emulatorProcess.getInputStream(),System.out).start();
     new StreamRedirectThread("android-emulator-err",emulatorProcess.getErrorStream(),System.err).start();
     return name;
   }
- catch (  IOException e) {
+ catch (  final IOException e) {
     editor.statusError(e);
     return null;
   }

@@ -1,15 +1,25 @@
 {
   boolean success;
-  Build build=getBuilder();
+  final Build build=getBuilder();
   success=build.createProject();
-  if (!success)   return;
+  if (!success) {
+    return;
+  }
   success=build.antBuild("debug");
-  if (!success)   return;
+  if (!success) {
+    return;
+  }
   success=waitUntilReady(device);
-  if (!success)   return;
+  if (!success) {
+    return;
+  }
   success=installSketch(device);
-  if (!success)   return;
-  String prevPort=startSketch(device);
-  if (prevPort == null)   return;
+  if (!success) {
+    return;
+  }
+  final String prevPort=startSketch(device);
+  if (prevPort == null) {
+    return;
+  }
   success=debugSketch(device,prevPort);
 }

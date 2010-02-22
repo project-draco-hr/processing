@@ -1,18 +1,18 @@
 {
-  Project p=new Project();
+  final Project p=new Project();
   p.setUserProperty("ant.file",buildFile.getAbsolutePath());
   p.setUserProperty("build.compiler","extJavac");
-  DefaultLogger consoleLogger=new DefaultLogger();
+  final DefaultLogger consoleLogger=new DefaultLogger();
   consoleLogger.setErrorPrintStream(System.err);
   consoleLogger.setOutputPrintStream(System.out);
   consoleLogger.setMessageOutputLevel(Project.MSG_INFO);
   p.addBuildListener(consoleLogger);
-  DefaultLogger errorLogger=new DefaultLogger();
-  ByteArrayOutputStream errb=new ByteArrayOutputStream();
-  PrintStream errp=new PrintStream(errb);
+  final DefaultLogger errorLogger=new DefaultLogger();
+  final ByteArrayOutputStream errb=new ByteArrayOutputStream();
+  final PrintStream errp=new PrintStream(errb);
   errorLogger.setErrorPrintStream(errp);
-  ByteArrayOutputStream outb=new ByteArrayOutputStream();
-  PrintStream outp=new PrintStream(outb);
+  final ByteArrayOutputStream outb=new ByteArrayOutputStream();
+  final PrintStream outp=new PrintStream(outb);
   errorLogger.setOutputPrintStream(outp);
   errorLogger.setMessageOutputLevel(Project.MSG_INFO);
   p.addBuildListener(errorLogger);
@@ -20,29 +20,29 @@
     editor.statusNotice("Building sketch for Android...");
     p.fireBuildStarted();
     p.init();
-    ProjectHelper helper=ProjectHelper.getProjectHelper();
+    final ProjectHelper helper=ProjectHelper.getProjectHelper();
     p.addReference("ant.projectHelper",helper);
     helper.parse(p,buildFile);
     p.executeTarget("debug");
     editor.statusNotice("Finished building sketch.");
     return true;
   }
- catch (  BuildException e) {
+ catch (  final BuildException e) {
     p.fireBuildFinished(e);
-    String outPile=new String(outb.toByteArray());
-    String[] outLines=outPile.split(System.getProperty("line.separator"));
-    for (    String line : outLines) {
-      String javacPrefix="[javac]";
-      int javacIndex=line.indexOf(javacPrefix);
+    final String outPile=new String(outb.toByteArray());
+    final String[] outLines=outPile.split(System.getProperty("line.separator"));
+    for (    final String line : outLines) {
+      final String javacPrefix="[javac]";
+      final int javacIndex=line.indexOf(javacPrefix);
       if (javacIndex != -1) {
-        Sketch sketch=editor.getSketch();
-        int offset=javacIndex + javacPrefix.length() + 1;
-        String[] pieces=PApplet.match(line.substring(offset),"^(.+):([0-9]+):\\s+(.+)$");
+        final Sketch sketch=editor.getSketch();
+        final int offset=javacIndex + javacPrefix.length() + 1;
+        final String[] pieces=PApplet.match(line.substring(offset),"^(.+):([0-9]+):\\s+(.+)$");
         if (pieces != null) {
           String fileName=pieces[1];
           fileName=fileName.substring(fileName.lastIndexOf('/') + 1);
-          int lineNumber=PApplet.parseInt(pieces[2]) - 1;
-          RunnerException rex=sketch.placeException(pieces[3],fileName,lineNumber);
+          final int lineNumber=PApplet.parseInt(pieces[2]) - 1;
+          final RunnerException rex=sketch.placeException(pieces[3],fileName,lineNumber);
           if (rex != null) {
             rex.hideStackTrace();
             editor.statusError(rex);

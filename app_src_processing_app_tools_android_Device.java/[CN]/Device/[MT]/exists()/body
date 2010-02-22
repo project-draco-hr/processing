@@ -1,14 +1,16 @@
 {
-  String[] cmd={Android.toolName,"list","avds"};
-  Pavarotti p=new Pavarotti(cmd);
+  final String[] cmd={Android.toolName,"list","avds"};
+  final Pavarotti p=new Pavarotti(cmd);
   try {
-    int result=p.waitFor();
+    final int result=p.waitFor();
     if (result == 0) {
-      String[] lines=p.getOutputLines();
-      for (      String line : lines) {
-        String[] m=PApplet.match(line,"\\s+Name:\\s+(\\S+)");
+      final String[] lines=p.getOutputLines();
+      for (      final String line : lines) {
+        final String[] m=PApplet.match(line,"\\s+Name:\\s+(\\S+)");
         if (m != null) {
-          if (m[1].equals(name))           return true;
+          if (m[1].equals(name)) {
+            return true;
+          }
         }
       }
     }
@@ -16,7 +18,7 @@
       p.printLines();
     }
   }
- catch (  InterruptedException ie) {
+ catch (  final InterruptedException ie) {
   }
   return false;
 }

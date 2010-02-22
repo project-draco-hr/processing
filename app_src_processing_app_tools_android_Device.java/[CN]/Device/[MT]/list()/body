@@ -1,8 +1,8 @@
 {
-  String[] cmd={"adb","devices"};
-  Pavarotti p=new Pavarotti(cmd);
+  final String[] cmd={"adb","devices"};
+  final Pavarotti p=new Pavarotti(cmd);
   try {
-    int result=p.waitFor();
+    final int result=p.waitFor();
     if (result == 0) {
       String[] lines=p.getOutputLines();
       if (lines == null || lines.length == 0) {
@@ -21,7 +21,7 @@
       String[] devices=new String[lines.length - 2];
       int deviceIndex=0;
       for (int i=1; i < lines.length - 1; i++) {
-        int tab=lines[i].indexOf('\t');
+        final int tab=lines[i].indexOf('\t');
         if (tab != -1) {
           devices[deviceIndex++]=lines[i].substring(0,tab);
         }
@@ -33,12 +33,12 @@
       return devices;
     }
  else {
-      for (      String s : p.getErrorLines()) {
+      for (      final String s : p.getErrorLines()) {
         System.err.println(s);
       }
     }
   }
- catch (  InterruptedException ie) {
+ catch (  final InterruptedException ie) {
   }
   return null;
 }

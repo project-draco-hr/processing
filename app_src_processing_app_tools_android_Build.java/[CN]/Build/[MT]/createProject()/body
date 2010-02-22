@@ -1,10 +1,10 @@
 {
-  Sketch sketch=editor.getSketch();
+  final Sketch sketch=editor.getSketch();
   androidFolder=new File(sketch.getFolder(),"android");
   if (androidFolder.exists()) {
-    Date mod=new Date(androidFolder.lastModified());
-    File dest=new File(sketch.getFolder(),"android." + dateFormat.format(mod));
-    boolean result=androidFolder.renameTo(dest);
+    final Date mod=new Date(androidFolder.lastModified());
+    final File dest=new File(sketch.getFolder(),"android." + dateFormat.format(mod));
+    final boolean result=androidFolder.renameTo(dest);
     if (!result) {
       int what=-1;
       Pavarotti mv;
@@ -13,11 +13,11 @@
         mv=new Pavarotti(new String[]{"mv",androidFolder.getAbsolutePath(),dest.getAbsolutePath()});
         what=mv.waitFor();
       }
- catch (      IOException e) {
+ catch (      final IOException e) {
         editor.statusError(e);
         return false;
       }
-catch (      InterruptedException e) {
+catch (      final InterruptedException e) {
         e.printStackTrace();
         return false;
       }
@@ -30,21 +30,20 @@ catch (      InterruptedException e) {
     }
   }
  else {
-    boolean result=androidFolder.mkdirs();
+    final boolean result=androidFolder.mkdirs();
     if (!result) {
       Base.showWarning("Folders, folders, folders","Could not create the necessary folders to build.\n" + "Perhaps you have some file permissions to sort out?",null);
       return false;
     }
   }
-  File srcFolder=new File(androidFolder,"src");
-  File javaFolder=new File(srcFolder,getPackageName().replace('.','/'));
-  javaFolder.mkdirs();
-  String buildPath=javaFolder.getAbsolutePath();
+  final File srcFolder=new File(androidFolder,"src");
   try {
+    final File javaFolder=mkdirs(srcFolder,getPackageName().replace('.','/'));
+    final String buildPath=javaFolder.getAbsolutePath();
     sketch.prepare();
     className=sketch.preprocess(buildPath,new Preproc());
     if (className != null) {
-      File androidXML=new File(androidFolder,"AndroidManifest.xml");
+      final File androidXML=new File(androidFolder,"AndroidManifest.xml");
       writeAndroidManifest(androidXML,sketch.getName(),className);
       writeBuildProps(new File(androidFolder,"build.properties"));
       buildFile=new File(androidFolder,"build.xml");
@@ -52,26 +51,24 @@ catch (      InterruptedException e) {
       writeDefaultProps(new File(androidFolder,"default.properties"));
       writeLocalProps(new File(androidFolder,"local.properties"));
       writeRes(new File(androidFolder,"res"),className);
-      File libsFolder=new File(androidFolder,"libs");
-      libsFolder.mkdirs();
-      File assetsFolder=new File(androidFolder,"assets");
-      assetsFolder.mkdirs();
-      InputStream input=PApplet.createInput(Android.getCoreZipFile());
+      final File libsFolder=mkdirs(androidFolder,"libs");
+      final File assetsFolder=mkdirs(androidFolder,"assets");
+      final InputStream input=PApplet.createInput(Android.getCoreZipFile());
       PApplet.saveStream(new File(libsFolder,"processing-core.jar"),input);
       try {
         writeLibraries(libsFolder,assetsFolder);
-        File sketchDataFolder=sketch.getDataFolder();
+        final File sketchDataFolder=sketch.getDataFolder();
         if (sketchDataFolder.exists()) {
           Base.copyDir(sketchDataFolder,assetsFolder);
         }
       }
- catch (      IOException e) {
+ catch (      final IOException e) {
         e.printStackTrace();
         throw new RunnerException(e.getMessage());
       }
     }
   }
- catch (  RunnerException e) {
+ catch (  final RunnerException e) {
     editor.statusError(e);
     return false;
   }

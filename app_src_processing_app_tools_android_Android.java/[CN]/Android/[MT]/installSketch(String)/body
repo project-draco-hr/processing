@@ -1,17 +1,17 @@
 {
-  boolean emu=device.startsWith("emulator");
+  final boolean emu=device.startsWith("emulator");
   editor.statusNotice("Sending sketch to the " + (emu ? "emulator" : "phone") + ".");
   try {
-    String[] cmd=new String[]{"adb","-s",device,"install","-r",build.getPathForAPK("debug")};
-    Process p=Runtime.getRuntime().exec(cmd);
+    final String[] cmd=new String[]{"adb","-s",device,"install","-r",build.getPathForAPK("debug")};
+    final Process p=Runtime.getRuntime().exec(cmd);
     System.out.println();
     System.out.print("Install command: ");
     System.out.println(PApplet.join(cmd," "));
-    StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
-    StringRedirectThread output=new StringRedirectThread(p.getInputStream());
-    int result=p.waitFor();
+    final StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
+    final StringRedirectThread output=new StringRedirectThread(p.getInputStream());
+    final int result=p.waitFor();
     if (result != 0) {
-      for (      String err : error.getLines()) {
+      for (      final String err : error.getLines()) {
         System.err.println(err);
       }
       editor.statusError("Could not install the sketch.");
@@ -20,7 +20,7 @@
     }
  else {
       String errorMsg=null;
-      for (      String out : output.getLines()) {
+      for (      final String out : output.getLines()) {
         if (out.startsWith("Failure")) {
           errorMsg=out.substring(8);
           System.err.println(out);
@@ -38,10 +38,10 @@
       }
     }
   }
- catch (  IOException e) {
+ catch (  final IOException e) {
     editor.statusError(e);
   }
-catch (  InterruptedException e) {
+catch (  final InterruptedException e) {
   }
   return false;
 }

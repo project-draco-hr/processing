@@ -4,9 +4,9 @@
   eventThread=new EventThread(this,vm,excludes,writer);
   eventThread.setEventRequests(watchFields);
   eventThread.start();
-  Process process=vm.process();
+  final Process process=vm.process();
   if (process != null) {
-    MessageSiphon ms=new MessageSiphon(process.getErrorStream(),this);
+    final MessageSiphon ms=new MessageSiphon(process.getErrorStream(),this);
     errThread=ms.getThread();
     outThread=new StreamRedirectThread("output reader",process.getInputStream(),System.out);
     errThread.start();
@@ -18,12 +18,16 @@
   vm.resume();
   System.out.println("done with resume");
   try {
-    if (eventThread != null)     eventThread.join();
+    if (eventThread != null) {
+      eventThread.join();
+    }
     if (editor != null) {
       editor.internalRunnerClosed();
     }
   }
- catch (  InterruptedException exc) {
+ catch (  final InterruptedException exc) {
   }
-  if (writer != null)   writer.close();
+  if (writer != null) {
+    writer.close();
+  }
 }

@@ -1,11 +1,11 @@
 {
   try {
-    Pavarotti killer=new Pavarotti(new String[]{"adb","kill-server"});
+    final Pavarotti killer=new Pavarotti(new String[]{"adb","kill-server"});
     killer.waitFor();
     killer.printLines();
     Thread.sleep(1000);
-    Pavarotti starter=new Pavarotti(new String[]{"adb","start-server"});
-    int result=starter.waitFor();
+    final Pavarotti starter=new Pavarotti(new String[]{"adb","start-server"});
+    final int result=starter.waitFor();
     starter.printLines();
     if (result == 0) {
       return true;
@@ -14,10 +14,10 @@
     starter.printLines();
     editor.statusError("Could not start Android debug server.");
   }
- catch (  IOException e) {
+ catch (  final IOException e) {
     editor.statusError(e);
   }
-catch (  InterruptedException e) {
+catch (  final InterruptedException e) {
     e.printStackTrace();
   }
   return false;
