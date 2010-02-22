@@ -2,13 +2,11 @@
   final long timeout=System.currentTimeMillis() + 30 * 1000;
   try {
     while (System.currentTimeMillis() < timeout) {
-      final String[] cmd=new String[]{"adb","-s",device,"jdwp"};
-      final Pavarotti p=new Pavarotti(cmd);
-      final int result=p.waitFor();
-      if (result == 0) {
+      final ProcessHelper p=new ProcessHelper("adb","-s",device,"jdwp");
+      if (p.execute() == 0) {
         return true;
       }
-      p.printLines();
+      p.dump();
       try {
         Thread.sleep(1000);
       }

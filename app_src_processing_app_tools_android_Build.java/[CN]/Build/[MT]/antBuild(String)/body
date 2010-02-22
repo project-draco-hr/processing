@@ -1,11 +1,11 @@
 {
   final Project p=new Project();
-  p.setUserProperty("ant.file",buildFile.getAbsolutePath());
+  p.setUserProperty("ant.file",buildFile.getAbsolutePath().replace('\\','/'));
   p.setUserProperty("build.compiler","extJavac");
   final DefaultLogger consoleLogger=new DefaultLogger();
   consoleLogger.setErrorPrintStream(System.err);
   consoleLogger.setOutputPrintStream(System.out);
-  consoleLogger.setMessageOutputLevel(Project.MSG_INFO);
+  consoleLogger.setMessageOutputLevel(Project.MSG_WARN);
   p.addBuildListener(consoleLogger);
   final DefaultLogger errorLogger=new DefaultLogger();
   final ByteArrayOutputStream errb=new ByteArrayOutputStream();
@@ -23,7 +23,7 @@
     final ProjectHelper helper=ProjectHelper.getProjectHelper();
     p.addReference("ant.projectHelper",helper);
     helper.parse(p,buildFile);
-    p.executeTarget("debug");
+    p.executeTarget(target);
     editor.statusNotice("Finished building sketch.");
     return true;
   }

@@ -1,42 +1,41 @@
 {
-  final String[] cmd={"adb","devices"};
-  final Pavarotti p=new Pavarotti(cmd);
+  final ProcessHelper p=new ProcessHelper("adb","devices");
   try {
-    final int result=p.waitFor();
-    if (result == 0) {
-      String[] lines=p.getOutputLines();
-      if (lines == null || lines.length == 0) {
-        System.out.println("No devices found.");
-        return new String[]{};
-      }
-      if (lines[0].startsWith("* daemon not running. starting it now *")) {
-        lines=PApplet.subset(lines,1);
-      }
-      if (lines[0].startsWith("* daemon started successfully *")) {
-        lines=PApplet.subset(lines,1);
-      }
-      if (!lines[0].startsWith("List of devices") || lines[lines.length - 1].trim().length() != 0) {
-        Base.showWarning("Android Error",ADB_DEVICES_ERROR,null);
-      }
-      String[] devices=new String[lines.length - 2];
-      int deviceIndex=0;
-      for (int i=1; i < lines.length - 1; i++) {
-        final int tab=lines[i].indexOf('\t');
-        if (tab != -1) {
-          devices[deviceIndex++]=lines[i].substring(0,tab);
-        }
- else         if (lines[i].trim().length() != 0) {
-          System.out.println("Unknown ???adb devices??? response: " + lines[i]);
-        }
-      }
-      devices=PApplet.subset(devices,0,deviceIndex);
-      return devices;
+    final int result=p.execute(false);
+    if (result != 0) {
+      System.err.println(p.getStderr());
+      return null;
     }
- else {
-      for (      final String s : p.getErrorLines()) {
-        System.err.println(s);
+    final String[] lines=p.getStdout().split("\n");
+    if (lines.length == 0) {
+      System.out.println("No devices found.");
+      return new String[]{};
+    }
+    int startIndex=0;
+    if (lines[startIndex].startsWith("* daemon not running. starting it now *")) {
+      startIndex++;
+    }
+    if (lines[startIndex].startsWith("* daemon started successfully *")) {
+      startIndex++;
+    }
+    if (!lines[startIndex].startsWith("List of devices")) {
+      Base.showWarning("Android Error",ADB_DEVICES_ERROR,null);
+    }
+    startIndex++;
+    String[] devices=new String[lines.length - startIndex];
+    int deviceIndex=0;
+    for (int i=startIndex; i < lines.length - 1; i++) {
+      final String line=lines[i];
+      final int tab=line.indexOf('\t');
+      if (tab != -1) {
+        devices[deviceIndex++]=line.substring(0,tab);
+      }
+ else       if (line.trim().length() != 0) {
+        System.out.println("Unknown ???adb devices??? response: " + line);
       }
     }
+    devices=PApplet.subset(devices,0,deviceIndex);
+    return devices;
   }
  catch (  final InterruptedException ie) {
   }

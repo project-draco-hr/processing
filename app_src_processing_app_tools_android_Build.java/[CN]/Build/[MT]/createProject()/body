@@ -1,17 +1,23 @@
 {
   final Sketch sketch=editor.getSketch();
-  androidFolder=new File(sketch.getFolder(),"android");
+  try {
+    androidFolder=createAndroidBuildFolder(sketch);
+  }
+ catch (  final IOException e) {
+    editor.statusError(e);
+    return false;
+  }
   if (androidFolder.exists()) {
     final Date mod=new Date(androidFolder.lastModified());
     final File dest=new File(sketch.getFolder(),"android." + dateFormat.format(mod));
     final boolean result=androidFolder.renameTo(dest);
     if (!result) {
-      int what=-1;
-      Pavarotti mv;
+      final int exitValue;
+      final ProcessHelper mv;
       try {
-        System.out.println("createProject renameTo() failed, resorting to mv/move instead.");
-        mv=new Pavarotti(new String[]{"mv",androidFolder.getAbsolutePath(),dest.getAbsolutePath()});
-        what=mv.waitFor();
+        System.err.println("createProject renameTo() failed, resorting to mv/move instead.");
+        mv=new ProcessHelper("mv",androidFolder.getAbsolutePath(),dest.getAbsolutePath());
+        exitValue=mv.execute();
       }
  catch (      final IOException e) {
         editor.statusError(e);
@@ -21,8 +27,8 @@ catch (      final InterruptedException e) {
         e.printStackTrace();
         return false;
       }
-      if (what != 0) {
-        mv.printLines();
+      if (exitValue != 0) {
+        mv.dump();
         Base.showWarning("Failed to rename","Could not rename the old ???android??? build folder.\n" + "Please delete, close, or rename the folder\n" + androidFolder.getAbsolutePath() + "\n"+ "and try again.",null);
         Base.openFolder(sketch.getFolder());
         return false;

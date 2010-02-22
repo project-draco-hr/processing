@@ -1,24 +1,20 @@
 {
   try {
-    final Pavarotti killer=new Pavarotti(new String[]{"adb","kill-server"});
-    killer.waitFor();
-    killer.printLines();
+    final ProcessHelper killer=new ProcessHelper("adb","kill-server");
+    killer.execute(true,false);
     Thread.sleep(1000);
-    final Pavarotti starter=new Pavarotti(new String[]{"adb","start-server"});
-    final int result=starter.waitFor();
-    starter.printLines();
-    if (result == 0) {
+    final ProcessHelper starter=new ProcessHelper("adb","start-server");
+    if (starter.execute(true,false) == 0) {
       return true;
     }
-    killer.printLines();
-    starter.printLines();
+    System.err.println(killer.getStderr());
+    System.err.println(starter.getStderr());
     editor.statusError("Could not start Android debug server.");
   }
  catch (  final IOException e) {
     editor.statusError(e);
   }
 catch (  final InterruptedException e) {
-    e.printStackTrace();
   }
   return false;
 }

@@ -1,23 +1,11 @@
 {
-  final String[] cmd={Android.toolName,"create","avd","-n",name,"-t",target,"-c","64M"};
-  final Pavarotti p=new Pavarotti(cmd);
+  final ProcessHelper p=new ProcessHelper(Android.toolName,"create","avd","-n",name,"-t",target,"-c","64M");
   try {
-    final int result=p.waitFor();
-    if (result == 0) {
-      for (      final String s : p.getOutputLines()) {
-        System.out.println(s);
-      }
+    if (p.execute(true,false) == 0) {
       return true;
     }
- else {
-      System.out.println("Attempted: '" + PApplet.join(cmd," ") + "'");
-      for (      final String s : p.getOutputLines()) {
-        System.out.println(s);
-      }
-      for (      final String s : p.getErrorLines()) {
-        System.err.println(s);
-      }
-    }
+    System.out.println("Attempted: '" + PApplet.join(new String[]{Android.toolName,"create","avd","-n",name,"-t",target,"-c","64M"}," ") + "'");
+    p.dump();
   }
  catch (  final InterruptedException ie) {
   }

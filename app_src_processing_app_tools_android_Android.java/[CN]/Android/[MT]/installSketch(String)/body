@@ -2,41 +2,32 @@
   final boolean emu=device.startsWith("emulator");
   editor.statusNotice("Sending sketch to the " + (emu ? "emulator" : "phone") + ".");
   try {
-    final String[] cmd=new String[]{"adb","-s",device,"install","-r",build.getPathForAPK("debug")};
-    final Process p=Runtime.getRuntime().exec(cmd);
+    final ProcessHelper p=new ProcessHelper("adb","-s",device,"install","-r",build.getPathForAPK("debug"));
     System.out.println();
     System.out.print("Install command: ");
-    System.out.println(PApplet.join(cmd," "));
-    final StringRedirectThread error=new StringRedirectThread(p.getErrorStream());
-    final StringRedirectThread output=new StringRedirectThread(p.getInputStream());
-    final int result=p.waitFor();
+    System.out.println(p.getCommand());
+    final int result=p.execute();
     if (result != 0) {
-      for (      final String err : error.getLines()) {
-        System.err.println(err);
-      }
+      p.dump();
       editor.statusError("Could not install the sketch.");
-      System.out.println("???adb install??? returned " + result + ".");
+      System.err.println("???adb install??? returned " + result + ".");
       return false;
     }
- else {
-      String errorMsg=null;
-      for (      final String out : output.getLines()) {
-        if (out.startsWith("Failure")) {
-          errorMsg=out.substring(8);
-          System.err.println(out);
-        }
- else {
-          System.out.println(out);
-        }
-      }
-      if (errorMsg == null) {
-        editor.statusNotice("Done installing.");
-        return true;
+    String errorMsg=null;
+    for (    final String out : p.getStdout().split("\n")) {
+      if (out.startsWith("Failure")) {
+        errorMsg=out.substring(8);
+        System.err.println(out);
       }
  else {
-        editor.statusError("Error while installing " + errorMsg);
+        System.out.println(out);
       }
     }
+    if (errorMsg == null) {
+      editor.statusNotice("Done installing.");
+      return true;
+    }
+    editor.statusError("Error while installing " + errorMsg);
   }
  catch (  final IOException e) {
     editor.statusError(e);

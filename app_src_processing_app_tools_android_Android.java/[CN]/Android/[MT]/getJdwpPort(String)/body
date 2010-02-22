@@ -2,11 +2,9 @@
   final long timeout=System.currentTimeMillis() + 30 * 1000;
   try {
     while (System.currentTimeMillis() < timeout) {
-      final String[] cmd=new String[]{"adb","-s",device,"jdwp"};
-      final Pavarotti p=new Pavarotti(cmd);
-      final int result=p.waitFor();
-      if (result == 0) {
-        final String[] lines=p.getOutputLines();
+      final ProcessHelper p=new ProcessHelper("adb","-s",device,"jdwp");
+      if (p.execute() == 0) {
+        final String[] lines=p.getStdout().split("\n");
         for (int i=lines.length - 1; i >= 0; --i) {
           final String s=lines[i].trim();
           if (s.length() != 0) {
@@ -15,13 +13,7 @@
         }
         return null;
       }
- else {
-        for (        final String err : p.getErrorLines()) {
-          if (err.length() != 0) {
-            System.err.println("err: " + err);
-          }
-        }
-      }
+      p.dump();
       try {
         Thread.sleep(1000);
       }

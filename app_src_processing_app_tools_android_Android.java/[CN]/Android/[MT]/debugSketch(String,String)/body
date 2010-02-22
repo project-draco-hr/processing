@@ -17,12 +17,9 @@
       }
     }
     System.out.println("Found application on port " + port + ".");
-    final String[] cmd=new String[]{"adb","-s",device,"forward","tcp:" + ADB_SOCKET_PORT,"jdwp:" + port};
-    final Pavarotti fwd=new Pavarotti(cmd);
-    fwd.printCommand();
-    final int result=fwd.waitFor();
-    fwd.printLines();
-    if (result != 0) {
+    final ProcessHelper fwd=new ProcessHelper("adb","-s",device,"forward","tcp:" + ADB_SOCKET_PORT,"jdwp:" + port);
+    System.out.println(fwd.getCommand());
+    if (fwd.execute(true) != 0) {
       editor.statusError("Could not connect for debugging.");
       return false;
     }
