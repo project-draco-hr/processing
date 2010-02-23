@@ -1,11 +1,11 @@
 {
   final long startTime=System.currentTimeMillis();
+  System.err.println("Executing " + PApplet.join(cmd,' '));
   final Process process=Runtime.getRuntime().exec(cmd);
   final CountDownLatch latch=new CountDownLatch(2);
   new StringRedirectThread(process.getInputStream(),stdout,latch,teeOut ? System.out : null).start();
   new StringRedirectThread(process.getErrorStream(),stderr,latch,teeErr ? System.err : null).start();
-  final int result=process.waitFor();
   latch.await();
   System.err.println((System.currentTimeMillis() - startTime) + "ms: " + PApplet.join(cmd," "));
-  return result;
+  return process.waitFor();
 }
