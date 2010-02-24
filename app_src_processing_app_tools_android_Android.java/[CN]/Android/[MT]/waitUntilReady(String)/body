@@ -6,7 +6,9 @@
       if (p.execute() == 0) {
         return true;
       }
-      p.dump();
+      if (!p.getStderr().contains("device offline")) {
+        p.dump();
+      }
       try {
         Thread.sleep(1000);
       }

@@ -3,8 +3,18 @@
   System.err.println("Executing " + PApplet.join(cmd,' '));
   final Process process=Runtime.getRuntime().exec(cmd);
   final CountDownLatch latch=new CountDownLatch(2);
-  new StringRedirectThread(process.getInputStream(),stdout,latch,teeOut ? System.out : null).start();
-  new StringRedirectThread(process.getErrorStream(),stderr,latch,teeErr ? System.err : null).start();
+  if (teeOut) {
+    new StringRedirectThread(process.getInputStream(),latch,stdout,new OutputStreamWriter(System.out)).start();
+  }
+ else {
+    new StringRedirectThread(process.getInputStream(),latch,stdout).start();
+  }
+  if (teeErr) {
+    new StringRedirectThread(process.getErrorStream(),latch,stderr,new OutputStreamWriter(System.err)).start();
+  }
+ else {
+    new StringRedirectThread(process.getErrorStream(),latch,stderr).start();
+  }
   latch.await();
   System.err.println((System.currentTimeMillis() - startTime) + "ms: " + PApplet.join(cmd," "));
   return process.waitFor();

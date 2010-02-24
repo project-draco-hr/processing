@@ -18,12 +18,12 @@
     }
     System.out.println("Found application on port " + port + ".");
     final ProcessHelper fwd=new ProcessHelper("adb","-s",device,"forward","tcp:" + ADB_SOCKET_PORT,"jdwp:" + port);
-    System.out.println(fwd.getCommand());
+    System.err.println(fwd.getCommand());
     if (fwd.execute(true) != 0) {
       editor.statusError("Could not connect for debugging.");
       return false;
     }
-    System.out.println("creating runner");
+    System.err.println("creating runner");
     final AndroidRunner ar=new AndroidRunner(editor,editor.getSketch());
     return ar.launch(ADB_SOCKET_PORT);
   }

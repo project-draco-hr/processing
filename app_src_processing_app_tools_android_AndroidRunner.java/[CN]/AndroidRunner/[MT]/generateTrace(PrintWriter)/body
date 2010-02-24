@@ -1,26 +1,32 @@
 {
   vm.setDebugTraceMode(debugTraceMode);
-  EventThread eventThread=null;
-  eventThread=new EventThread(this,vm,excludes,writer);
+  final EventThread eventThread=new EventThread(this,vm,excludes,writer);
   eventThread.setEventRequests(watchFields);
   eventThread.start();
-  final Process process=vm.process();
-  if (process != null) {
-    final MessageSiphon ms=new MessageSiphon(process.getErrorStream(),this);
-    errThread=ms.getThread();
-    outThread=new StreamRedirectThread("output reader",process.getInputStream(),System.out);
-    errThread.start();
-    outThread.start();
-  }
- else {
-    System.out.println("process is null, so no streams...");
-  }
   vm.resume();
-  System.out.println("done with resume");
+  System.err.println("done with resume");
+  final Thread logcatter=new Thread(new Runnable(){
+    public void run(){
+      try {
+        new SketchLogCatter().start();
+        System.err.println("logcatter exited normally");
+      }
+ catch (      final InterruptedException e) {
+        System.err.println("logcat interrupted");
+      }
+catch (      final Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+,"logcatter");
+  logcatter.start();
   try {
     if (eventThread != null) {
       eventThread.join();
     }
+    System.err.println("interrupting logcatter");
+    logcatter.interrupt();
     if (editor != null) {
       editor.internalRunnerClosed();
     }

@@ -1,9 +1,8 @@
 {
-  System.err.println("Beginning sketch logcatter");
   final Process process=Runtime.getRuntime().exec(new String[]{"adb","logcat"});
   final CountDownLatch latch=new CountDownLatch(2);
-  new LogcatThread(process,Stream.out,latch).start();
-  new LogcatThread(process,Stream.err,latch).start();
+  new LogcatThread(process,latch).start();
+  new ProcessHelper.StringRedirectThread(process.getErrorStream(),latch,new OutputStreamWriter(System.err)).start();
   latch.await();
   process.waitFor();
 }
