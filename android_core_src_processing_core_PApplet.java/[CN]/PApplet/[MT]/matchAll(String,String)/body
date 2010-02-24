@@ -1,10 +1,10 @@
 {
-  final Pattern p=Pattern.compile(regexp,Pattern.MULTILINE | Pattern.DOTALL);
-  final Matcher m=p.matcher(what);
-  final ArrayList<String[]> results=new ArrayList<String[]>();
-  final int count=m.groupCount() + 1;
+  Pattern p=Pattern.compile(regexp,Pattern.MULTILINE | Pattern.DOTALL);
+  Matcher m=p.matcher(what);
+  ArrayList<String[]> results=new ArrayList<String[]>();
+  int count=m.groupCount() + 1;
   while (m.find()) {
-    final String[] groups=new String[count];
+    String[] groups=new String[count];
     for (int i=0; i < count; i++) {
       groups[i]=m.group(i);
     }
@@ -13,9 +13,9 @@
   if (results.isEmpty()) {
     return null;
   }
-  final String[][] matches=new String[results.size()][count];
+  String[][] matches=new String[results.size()][count];
   for (int i=0; i < matches.length; i++) {
-    matches[i]=results.get(i);
+    matches[i]=(String[])results.get(i);
   }
   return matches;
 }

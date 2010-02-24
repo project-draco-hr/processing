@@ -1,44 +1,42 @@
 {
   InputStream stream=null;
-  if (filename == null) {
-    return null;
-  }
+  if (filename == null)   return null;
   if (filename.length() == 0) {
     return null;
   }
   if (filename.indexOf(":") != -1) {
     try {
-      final URL url=new URL(filename);
+      URL url=new URL(filename);
       stream=url.openStream();
       return stream;
     }
- catch (    final MalformedURLException mfue) {
+ catch (    MalformedURLException mfue) {
     }
-catch (    final FileNotFoundException fnfe) {
+catch (    FileNotFoundException fnfe) {
     }
-catch (    final IOException e) {
+catch (    IOException e) {
       e.printStackTrace();
       return null;
     }
   }
-  final AssetManager assets=getAssets();
+  AssetManager assets=getAssets();
   try {
     stream=assets.open(filename);
     if (stream != null) {
       return stream;
     }
   }
- catch (  final IOException e) {
+ catch (  IOException e) {
     e.printStackTrace();
   }
-  final Context context=getApplicationContext();
+  Context context=getApplicationContext();
   try {
     stream=context.openFileInput(filename);
     if (stream != null) {
       return stream;
     }
   }
- catch (  final FileNotFoundException e) {
+ catch (  FileNotFoundException e) {
     e.printStackTrace();
   }
   return null;

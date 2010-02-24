@@ -1,12 +1,12 @@
 {
   File tempFile=null;
   try {
-    final File parentDir=targetFile.getParentFile();
+    File parentDir=targetFile.getParentFile();
     tempFile=File.createTempFile(targetFile.getName(),null,parentDir);
-    final BufferedInputStream bis=new BufferedInputStream(sourceStream,16384);
-    final FileOutputStream fos=new FileOutputStream(tempFile);
+    BufferedInputStream bis=new BufferedInputStream(sourceStream,16384);
+    FileOutputStream fos=new FileOutputStream(tempFile);
     BufferedOutputStream bos=new BufferedOutputStream(fos);
-    final byte[] buffer=new byte[8192];
+    byte[] buffer=new byte[8192];
     int bytesRead;
     while ((bytesRead=bis.read(buffer)) != -1) {
       bos.write(buffer,0,bytesRead);
@@ -18,7 +18,7 @@
       System.err.println("Could not rename temporary file " + tempFile.getAbsolutePath());
     }
   }
- catch (  final IOException e) {
+ catch (  IOException e) {
     if (tempFile != null) {
       tempFile.delete();
     }

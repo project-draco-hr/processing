@@ -7,15 +7,15 @@ synchronized (motionLock) {
       }
     }
     if (motionEventCount + event.getHistorySize() >= motionEventQueue.length) {
-      final PMotionEvent[] temp=new PMotionEvent[motionEventCount << 1];
+      PMotionEvent[] temp=new PMotionEvent[motionEventCount << 1];
       System.arraycopy(motionEventQueue,0,temp,0,motionEventCount);
       motionEventQueue=temp;
       for (int i=motionEventCount; i < motionEventCount << 1; i++) {
         motionEventQueue[i]=new PMotionEvent();
       }
     }
-    final int historyCount=event.getHistorySize();
-    final PMotionEvent pme=motionEventQueue[motionEventCount + historyCount];
+    int historyCount=event.getHistorySize();
+    PMotionEvent pme=motionEventQueue[motionEventCount + historyCount];
     pme.action=event.getAction();
     pme.motionX=event.getX();
     pme.motionY=event.getY();
@@ -23,10 +23,10 @@ synchronized (motionLock) {
     pme.mouseX=(int)event.getRawX();
     pme.mouseY=(int)event.getRawY();
     if (pme.action == MotionEvent.ACTION_MOVE && historyCount > 0) {
-      final float rawOffsetX=pme.mouseX - pme.motionX;
-      final float rawOffsetY=pme.mouseY - pme.motionY;
+      float rawOffsetX=pme.mouseX - pme.motionX;
+      float rawOffsetY=pme.mouseY - pme.motionY;
       for (int i=0; i < historyCount; i++) {
-        final PMotionEvent hist=motionEventQueue[motionEventCount++];
+        PMotionEvent hist=motionEventQueue[motionEventCount++];
         hist.action=pme.action;
         hist.motionX=event.getHistoricalX(i);
         hist.motionY=event.getHistoricalY(i);
