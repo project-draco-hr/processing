@@ -1,13 +1,14 @@
 {
-  String line;
   try {
-    while ((line=in.readLine()) != null) {
-      if (line.trim().length() > 0) {
-        out.println(line);
-      }
+    char[] cbuf=new char[BUFFER_SIZE];
+    int count;
+    while ((count=in.read(cbuf,0,BUFFER_SIZE)) >= 0) {
+      out.write(cbuf,0,count);
+      out.flush();
     }
+    out.flush();
   }
- catch (  final IOException exc) {
+ catch (  IOException exc) {
     System.err.println("Child I/O Transfer - " + exc);
   }
 }
