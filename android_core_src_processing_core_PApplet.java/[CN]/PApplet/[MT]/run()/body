@@ -4,16 +4,18 @@
   int noDelays=0;
   final int NO_DELAYS_PER_YIELD=15;
   while ((Thread.currentThread() == thread) && !finished) {
-    if (g != null)     g.requestDraw();
-    long afterTime=System.nanoTime();
-    long timeDiff=afterTime - beforeTime;
-    long sleepTime=(frameRatePeriod - timeDiff) - overSleepTime;
+    if (g != null) {
+      g.requestDraw();
+    }
+    final long afterTime=System.nanoTime();
+    final long timeDiff=afterTime - beforeTime;
+    final long sleepTime=(frameRatePeriod - timeDiff) - overSleepTime;
     if (sleepTime > 0) {
       try {
         Thread.sleep(sleepTime / 1000000L,(int)(sleepTime % 1000000L));
         noDelays=0;
       }
- catch (      InterruptedException ex) {
+ catch (      final InterruptedException ex) {
       }
       overSleepTime=(System.nanoTime() - afterTime) - sleepTime;
     }
