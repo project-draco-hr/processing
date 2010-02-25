@@ -2,6 +2,7 @@
   final StringWriter outWriter=new StringWriter();
   final StringWriter errWriter=new StringWriter();
   final long startTime=System.currentTimeMillis();
+  final String prettyCommand=getCommand();
   final Process process=Runtime.getRuntime().exec(cmd);
   final StreamPump outpump=new StreamPump(process.getInputStream()).addTarget(outWriter);
   if (teeOut) {
@@ -14,10 +15,12 @@
   }
   errpump.start();
   try {
-    return new ProcessResult(getCommand(),process.waitFor(),outWriter.toString(),errWriter.toString(),System.currentTimeMillis() - startTime);
+    final int result=process.waitFor();
+    final long time=System.currentTimeMillis() - startTime;
+    return new ProcessResult(prettyCommand,result,outWriter.toString(),errWriter.toString(),time);
   }
  catch (  final InterruptedException e) {
-    System.err.println("Interrupted: " + getCommand());
+    System.err.println("Interrupted: " + prettyCommand);
     throw e;
   }
 }
