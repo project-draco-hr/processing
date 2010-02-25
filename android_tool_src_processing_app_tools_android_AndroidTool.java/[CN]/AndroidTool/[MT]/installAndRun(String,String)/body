@@ -1,25 +1,16 @@
 {
-  boolean success;
   final Build build=getBuilder();
-  success=build.createProject();
-  if (!success) {
+  if (!build.createProject()) {
     return;
   }
-  success=build.antBuild("debug");
-  if (!success) {
+  if (!build.antBuild("debug")) {
     return;
   }
-  success=waitUntilReady(device);
-  if (!success) {
+  if (!waitUntilReady(device)) {
     return;
   }
-  success=installSketch(device);
-  if (!success) {
+  if (!installSketch(device)) {
     return;
   }
-  final String prevPort=startSketch(device);
-  if (prevPort == null) {
-    return;
-  }
-  new AndroidRunner(editor,editor.getSketch()).launch(ADB_SOCKET_PORT);
+  startSketch(device);
 }

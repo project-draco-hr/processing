@@ -1,8 +1,6 @@
 {
   final Process process=Runtime.getRuntime().exec(new String[]{"adb","logcat"});
-  final CountDownLatch latch=new CountDownLatch(2);
-  new LogcatThread(process,latch).start();
-  new ProcessHelper.StringRedirectThread(process.getErrorStream(),latch,new OutputStreamWriter(System.err)).start();
-  latch.await();
+  new StreamPump(process.getInputStream()).addTarget(this).start();
+  new StreamPump(process.getErrorStream()).addTarget(System.err).start();
   process.waitFor();
 }

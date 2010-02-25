@@ -1,21 +1,17 @@
 {
-  final StringWriter stdout=new StringWriter();
-  final StringWriter stderr=new StringWriter();
+  final StringWriter outWriter=new StringWriter();
+  final StringWriter errWriter=new StringWriter();
   final long startTime=System.currentTimeMillis();
   final Process process=Runtime.getRuntime().exec(cmd);
-  final CountDownLatch latch=new CountDownLatch(2);
+  final StreamPump outpump=new StreamPump(process.getInputStream()).addTarget(outWriter);
   if (teeOut) {
-    new StringRedirectThread(process.getInputStream(),latch,stdout,new OutputStreamWriter(System.out)).start();
+    outpump.addTarget(System.out);
   }
- else {
-    new StringRedirectThread(process.getInputStream(),latch,stdout).start();
-  }
+  outpump.start();
+  final StreamPump errpump=new StreamPump(process.getErrorStream()).addTarget(errWriter);
   if (teeErr) {
-    new StringRedirectThread(process.getErrorStream(),latch,stderr,new OutputStreamWriter(System.err)).start();
+    errpump.addTarget(System.err);
   }
- else {
-    new StringRedirectThread(process.getErrorStream(),latch,stderr).start();
-  }
-  latch.await();
-  return new ProcessResult(PApplet.join(cmd,' '),process.waitFor(),stdout.toString(),stderr.toString(),System.currentTimeMillis() - startTime);
+  errpump.start();
+  return new ProcessResult(getCommand(),process.waitFor(),outWriter.toString(),errWriter.toString(),System.currentTimeMillis() - startTime);
 }
