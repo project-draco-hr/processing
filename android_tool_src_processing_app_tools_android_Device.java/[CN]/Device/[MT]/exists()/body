@@ -1,8 +1,8 @@
 {
-  final ProcessHelper p=new ProcessHelper(AndroidTool.toolName,"list","avds");
   try {
-    if (p.execute(true) == 0) {
-      for (      final String line : p.getStdout().split("\n")) {
+    final ProcessResult listResult=LIST_AVDS_CMD.execute();
+    if (listResult.succeeded()) {
+      for (      final String line : listResult) {
         final String[] m=PApplet.match(line,"\\s+Name:\\s+(\\S+)");
         if (m != null) {
           if (m[1].equals(name)) {
@@ -12,7 +12,7 @@
       }
     }
  else {
-      p.dump();
+      System.err.println(listResult);
     }
   }
  catch (  final InterruptedException ie) {

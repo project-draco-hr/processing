@@ -1,11 +1,11 @@
 {
   final ProcessHelper p=new ProcessHelper(AndroidTool.toolName,"create","avd","-n",name,"-t",target,"-c","64M");
   try {
-    if (p.execute(true,false) == 0) {
+    final ProcessResult createAvdResult=p.execute();
+    if (createAvdResult.succeeded()) {
       return true;
     }
-    System.out.println("Attempted: '" + p.getCommand() + "'");
-    p.dump();
+    System.err.println(createAvdResult);
   }
  catch (  final InterruptedException ie) {
   }

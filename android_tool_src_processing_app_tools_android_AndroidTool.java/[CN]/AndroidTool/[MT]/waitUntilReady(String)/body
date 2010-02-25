@@ -1,23 +1,26 @@
 {
+  System.err.println("Waiting until " + device + " is ready.");
   final long timeout=System.currentTimeMillis() + 30 * 1000;
   try {
     while (System.currentTimeMillis() < timeout) {
       final ProcessHelper p=new ProcessHelper("adb","-s",device,"jdwp");
-      if (p.execute() == 0) {
+      final ProcessResult jdwpResult=p.execute();
+      if (jdwpResult.succeeded()) {
+        System.err.println(device + " is seemingly ready.");
         return true;
       }
-      if (!p.getStderr().contains("device offline")) {
-        p.dump();
+      if (!jdwpResult.getStderr().contains("device offline")) {
+        System.err.println(jdwpResult);
       }
-      try {
-        Thread.sleep(1000);
-      }
- catch (      final InterruptedException ie) {
-      }
+      Thread.sleep(1000);
     }
   }
- catch (  final Exception e) {
+ catch (  final InterruptedException e) {
+    System.err.println("waitUntilReady interrupted");
+  }
+catch (  final Exception e) {
     e.printStackTrace();
   }
+  System.err.println("Timed out waiting for " + device + ".");
   return false;
 }

@@ -1,14 +1,13 @@
 {
   try {
-    final ProcessHelper killer=new ProcessHelper("adb","kill-server");
-    killer.execute(true,false);
+    final ProcessResult killResult=KILL_SERVER_COMMAND.execute();
     Thread.sleep(1000);
-    final ProcessHelper starter=new ProcessHelper("adb","start-server");
-    if (starter.execute(true,false) == 0) {
+    final ProcessResult startResult=START_SERVER_CMD.execute();
+    if (startResult.succeeded()) {
       return true;
     }
-    System.err.println(killer.getStderr());
-    System.err.println(starter.getStderr());
+    System.err.println(killResult.getStderr());
+    System.err.println(startResult.getStderr());
     editor.statusError("Could not start Android debug server.");
   }
  catch (  final IOException e) {

@@ -1,6 +1,7 @@
 {
+  final StringWriter stdout=new StringWriter();
+  final StringWriter stderr=new StringWriter();
   final long startTime=System.currentTimeMillis();
-  System.err.println("Executing " + PApplet.join(cmd,' '));
   final Process process=Runtime.getRuntime().exec(cmd);
   final CountDownLatch latch=new CountDownLatch(2);
   if (teeOut) {
@@ -16,6 +17,5 @@
     new StringRedirectThread(process.getErrorStream(),latch,stderr).start();
   }
   latch.await();
-  System.err.println((System.currentTimeMillis() - startTime) + "ms: " + PApplet.join(cmd," "));
-  return process.waitFor();
+  return new ProcessResult(PApplet.join(cmd,' '),process.waitFor(),stdout.toString(),stderr.toString(),System.currentTimeMillis() - startTime);
 }

@@ -1,12 +1,11 @@
 {
-  final ProcessHelper p=new ProcessHelper("adb","devices");
   try {
-    final int result=p.execute(false);
-    if (result != 0) {
-      System.err.println(p.getStderr());
+    final ProcessResult result=LIST_DEVICES_CMD.execute();
+    if (!result.succeeded()) {
+      System.err.println(result);
       return null;
     }
-    final String[] lines=p.getStdout().split("\n");
+    final String[] lines=result.getStdout().split("\r?\n");
     if (lines.length == 0) {
       System.out.println("No devices found.");
       return new String[]{};

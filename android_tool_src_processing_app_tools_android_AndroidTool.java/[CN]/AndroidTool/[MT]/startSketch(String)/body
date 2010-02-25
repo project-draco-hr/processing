@@ -1,16 +1,13 @@
 {
   try {
-    final String lastPort=getJdwpPort(device);
-    final int result=new ProcessHelper("adb","-s",device,"shell","am","start","-e","debug","true","-a","android.intent.action.MAIN","-c","android.intent.category.LAUNCHER","-n",build.getPackageName() + "/." + build.getClassName()).execute(true);
-    if (result != 0) {
-      editor.statusError("Could not start the sketch.");
-      System.err.println("???adb shell?????for ???am start??? returned " + result + ".");
-    }
- else {
+    final ProcessResult result=new ProcessHelper("adb","-s",device,"shell","am","start","-e","debug","true","-a","android.intent.action.MAIN","-c","android.intent.category.LAUNCHER","-n",build.getPackageName() + "/." + build.getClassName()).execute();
+    if (result.succeeded()) {
       final boolean emu=device.startsWith("emulator");
       editor.statusNotice("Sketch started on the " + (emu ? "emulator" : "phone") + ".");
-      return lastPort;
+      return "";
     }
+    editor.statusError("Could not start the sketch.");
+    System.err.println(result);
   }
  catch (  final IOException e) {
     editor.statusError(e);
