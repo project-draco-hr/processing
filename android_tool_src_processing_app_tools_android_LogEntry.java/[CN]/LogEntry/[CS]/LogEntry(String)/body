@@ -1,0 +1,10 @@
+{
+  final Matcher m=PARSER.matcher(line);
+  if (!m.matches()) {
+    throw new RuntimeException("I can't understand log entry\n" + line);
+  }
+  this.severity=Severity.fromChar(m.group(1).charAt(0));
+  this.source=m.group(2);
+  this.sourcePid=m.group(3);
+  this.message=m.group(4);
+}

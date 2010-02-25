@@ -1,0 +1,29 @@
+{
+  ProcessResult result;
+  try {
+    result=new ProcessHelper("adb","devices").execute();
+  }
+ catch (  final InterruptedException e) {
+    return Collections.emptyList();
+  }
+catch (  final IOException e) {
+    System.err.println(e);
+    return Collections.emptyList();
+  }
+  if (!result.succeeded()) {
+    System.err.println(result);
+    return Collections.emptyList();
+  }
+  if (!result.getStdout().startsWith("List of devices")) {
+    System.err.println(ADB_DEVICES_ERROR);
+    return Collections.emptyList();
+  }
+  final List<String> devices=new ArrayList<String>();
+  for (  final String line : result) {
+    if (!line.contains("\t")) {
+      continue;
+    }
+    devices.add(line.split("\t")[0]);
+  }
+  return devices;
+}

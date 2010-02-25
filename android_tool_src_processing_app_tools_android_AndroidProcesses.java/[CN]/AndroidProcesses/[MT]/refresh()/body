@@ -1,0 +1,18 @@
+{
+  processes.clear();
+  try {
+    for (    final String line : new ProcessHelper(this.device.generateAdbCommand("shell","ps")).execute()) {
+      final String[] fields=line.split("\\s+");
+      if (fields.length != 9 || fields[0].equals("USER")) {
+        continue;
+      }
+      final String pid=fields[1];
+      final String name=fields[8];
+      processes.add(new AndroidProcess(pid,name));
+    }
+  }
+ catch (  final Exception e) {
+    System.err.println("Unable to refresh processes on " + device + ":");
+    e.printStackTrace(System.err);
+  }
+}

@@ -1,0 +1,24 @@
+{
+  final LogEntry entry=new LogEntry(line);
+  final String src=entry.source;
+  final String msg=entry.message;
+  final Severity sev=entry.severity;
+  if (src.equals("ActivityManager") && msg.startsWith("Start proc")) {
+    handleStartProcEntry(entry);
+  }
+ else {
+    if ((src.equals("AndroidRuntime") && sev == Severity.Error) || src.equals("System.out") || src.equals("System.err")) {
+      final List<ProcessOutputListener> listeners=getListeners(entry.sourcePid);
+      if (listeners != null) {
+        for (        final ProcessOutputListener listener : listeners) {
+          if (sev == Severity.Warning || sev == Severity.Error || sev == Severity.Fatal) {
+            listener.handleStderr(msg);
+          }
+ else {
+            listener.handleStdout(msg);
+          }
+        }
+      }
+    }
+  }
+}

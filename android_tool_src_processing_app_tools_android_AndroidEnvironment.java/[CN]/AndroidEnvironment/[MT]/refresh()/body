@@ -1,0 +1,13 @@
+{
+  final List<String> activeDevices=listDevices();
+  for (  final String deviceId : activeDevices) {
+    if (!devices.containsKey(deviceId)) {
+      addDevice(new AndroidDevice(this,deviceId));
+    }
+  }
+  for (  final String deviceId : new ArrayList<String>(devices.keySet())) {
+    if (!activeDevices.contains(deviceId)) {
+      devices.get(deviceId).shutdown();
+    }
+  }
+}
