@@ -1,28 +1,3 @@
 {
-  checkServer();
-  final String device=findDevice();
-  if (device == null) {
-    editor.statusError("No device found.");
-  }
- else {
-    boolean success;
-    final Build build=getBuilder();
-    success=build.createProject();
-    if (!success) {
-      return;
-    }
-    success=build.antBuild("debug");
-    if (!success) {
-      return;
-    }
-    success=waitUntilReady(device);
-    if (!success) {
-      return;
-    }
-    success=installSketch(device);
-    if (!success) {
-      return;
-    }
-    startSketch(device);
-  }
+  runSketchOnDevice(AndroidEnvironment.getInstance().getHardware());
 }

@@ -1,8 +1,11 @@
 {
-  for (  final AndroidDevice device : devices.values()) {
-    if (device.getId().contains("emulator")) {
-      return device;
+  final Callable<AndroidDevice> androidFinder=new Callable<AndroidDevice>(){
+    public AndroidDevice call() throws Exception {
+      return blockingGetEmulator();
     }
   }
-  return null;
+;
+  final FutureTask<AndroidDevice> task=new FutureTask<AndroidDevice>(androidFinder);
+  deviceLaunchThread.execute(task);
+  return task;
 }

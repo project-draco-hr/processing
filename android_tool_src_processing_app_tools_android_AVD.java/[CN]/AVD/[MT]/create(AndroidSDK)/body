@@ -1,0 +1,13 @@
+{
+  final ProcessHelper p=new ProcessHelper(sdk.getAndroidTool().getAbsolutePath(),"create","avd","-n",name,"-t",target,"-c","64M");
+  try {
+    final ProcessResult createAvdResult=p.execute();
+    if (createAvdResult.succeeded()) {
+      return true;
+    }
+    System.err.println(createAvdResult);
+  }
+ catch (  final InterruptedException ie) {
+  }
+  return false;
+}

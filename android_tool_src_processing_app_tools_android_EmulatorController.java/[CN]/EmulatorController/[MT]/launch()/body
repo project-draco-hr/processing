@@ -1,0 +1,22 @@
+{
+  String portString=Preferences.get("android.emulator.port");
+  if (portString == null) {
+    portString="5566";
+    Preferences.set("android.emulator.port",portString);
+  }
+  final String[] cmd=new String[]{"emulator","-avd",AVD.ECLAIR.name,"-port",portString,"-netfast","-no-boot-anim"};
+  threads.execute(new Runnable(){
+    public void run(){
+      try {
+        System.err.println("Launching emulator");
+        final Process p=Runtime.getRuntime().exec(cmd);
+        p.getInputStream().close();
+        p.getErrorStream().close();
+      }
+ catch (      final IOException e) {
+        e.printStackTrace(System.err);
+      }
+    }
+  }
+);
+}

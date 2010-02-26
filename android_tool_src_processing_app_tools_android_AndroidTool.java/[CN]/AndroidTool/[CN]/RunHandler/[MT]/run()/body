@@ -1,18 +1,4 @@
 {
-  checkServer();
-  final String device=findEmulator();
-  final Build build=getBuilder();
-  if (!build.createProject()) {
-    return;
-  }
-  if (!build.antBuild("debug")) {
-    return;
-  }
-  if (!waitUntilReady(device)) {
-    return;
-  }
-  if (!installSketch(device)) {
-    return;
-  }
-  startSketch(device);
+  AVD.ensureEclairAVD(sdk);
+  runSketchOnDevice(AndroidEnvironment.getInstance().getEmulator());
 }

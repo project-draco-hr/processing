@@ -1,0 +1,13 @@
+{
+  final String id=build.getPackageName() + "/." + build.getClassName();
+  try {
+    if (device.launchApp(id)) {
+      editor.statusNotice("Sketch started on the " + (device.isEmulator() ? "emulator" : "phone") + ".");
+      return;
+    }
+  }
+ catch (  final Exception e) {
+    e.printStackTrace(System.err);
+    editor.statusError("Could not start the sketch.");
+  }
+}

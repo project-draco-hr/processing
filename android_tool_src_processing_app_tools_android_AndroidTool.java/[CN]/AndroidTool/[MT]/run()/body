@@ -1,18 +1,29 @@
 {
   editor.statusNotice("Loading Android tools.");
-  boolean success=checkPath();
-  if (!success) {
+  final Platform platform=Base.getPlatform();
+  final String sdkPath=platform.getenv("ANDROID_SDK");
+  if (sdkPath == null) {
+    Base.showWarning("Android Tools Error","Before using Android mode, you must first set the\n" + "ANDROID_SDK environment variable, and restart Processing.",null);
     editor.statusNotice("Android mode canceled.");
     return;
   }
-  checkServer();
-  success=Device.checkDefaults();
-  if (!success) {
-    editor.statusError("Could not load Android tools.");
+  try {
+    sdk=new AndroidSDK(sdkPath);
+  }
+ catch (  final BadSDKException e) {
+    Base.showWarning("Android Tools Error",e.getMessage(),null);
+    editor.statusNotice("Android mode canceled.");
     return;
   }
-  checkCore();
+  if (!checkPath()) {
+    editor.statusNotice("Android mode canceled.");
+    return;
+  }
+  if (!checkCore()) {
+    editor.statusNotice("Android mode canceled.");
+    return;
+  }
   editor.setHandlers(new RunHandler(),new PresentHandler(),new StopHandler(),new ExportHandler(),new ExportAppHandler());
-  build=new Build(editor);
+  build=new Build(editor,sdk);
   editor.statusNotice("Done loading Android tools.");
 }

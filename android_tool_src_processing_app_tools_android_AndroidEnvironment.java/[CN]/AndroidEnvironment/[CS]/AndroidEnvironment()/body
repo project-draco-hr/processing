@@ -1,2 +1,15 @@
 {
+  System.err.println("Startup AndroidEnvironment");
+  try {
+    new ProcessHelper("adb","start-server").execute();
+  }
+ catch (  final Exception e) {
+    e.printStackTrace(System.err);
+  }
+  Runtime.getRuntime().addShutdownHook(new Thread("AndroidEnvironment Shutdown"){
+    @Override public void run(){
+      shutdown();
+    }
+  }
+);
 }

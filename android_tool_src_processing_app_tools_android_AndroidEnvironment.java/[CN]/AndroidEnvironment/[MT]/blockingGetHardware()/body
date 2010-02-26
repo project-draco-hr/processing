@@ -1,0 +1,19 @@
+{
+  AndroidDevice emu=find(false);
+  if (emu != null) {
+    return emu;
+  }
+  while (!Thread.currentThread().isInterrupted()) {
+    try {
+      Thread.sleep(2000);
+    }
+ catch (    final InterruptedException e) {
+      return null;
+    }
+    emu=find(false);
+    if (emu != null) {
+      return emu;
+    }
+  }
+  return null;
+}

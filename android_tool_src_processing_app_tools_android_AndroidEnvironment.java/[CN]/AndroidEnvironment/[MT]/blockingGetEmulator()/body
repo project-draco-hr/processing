@@ -1,0 +1,26 @@
+{
+  AndroidDevice emu=find(true);
+  if (emu != null) {
+    return emu;
+  }
+  try {
+    EmulatorController.launch();
+  }
+ catch (  final IOException e) {
+    e.printStackTrace(System.err);
+    return null;
+  }
+  while (!Thread.currentThread().isInterrupted()) {
+    try {
+      Thread.sleep(2000);
+    }
+ catch (    final InterruptedException e) {
+      return null;
+    }
+    emu=find(true);
+    if (emu != null) {
+      return emu;
+    }
+  }
+  return null;
+}

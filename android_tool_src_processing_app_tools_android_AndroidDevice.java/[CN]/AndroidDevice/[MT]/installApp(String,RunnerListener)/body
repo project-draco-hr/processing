@@ -1,0 +1,29 @@
+{
+  try {
+    final ProcessHelper p=new ProcessHelper(generateAdbCommand("install","-r",apkPath));
+    final ProcessResult installResult=p.execute();
+    if (!installResult.succeeded()) {
+      status.statusError("Could not install the sketch.");
+      System.err.println(installResult);
+      return false;
+    }
+    String errorMsg=null;
+    for (    final String line : installResult) {
+      if (line.startsWith("Failure")) {
+        errorMsg=line.substring(8);
+        System.err.println(line);
+      }
+    }
+    if (errorMsg == null) {
+      status.statusNotice("Done installing.");
+      return true;
+    }
+    status.statusError("Error while installing " + errorMsg);
+  }
+ catch (  final IOException e) {
+    status.statusError(e);
+  }
+catch (  final InterruptedException e) {
+  }
+  return false;
+}
