@@ -1,5 +1,12 @@
 {
-  if (g != null && !paused && (looping || redraw)) {
+  if (surfaceChanged) {
+    width=surfaceView.getWidth();
+    height=surfaceView.getHeight();
+    g.setSize(width,height);
+    surfaceChanged=false;
+  }
+  boolean validSize=width != 0 && height != 0;
+  if (g != null && validSize && !paused && (looping || redraw)) {
     if (!g.canDraw()) {
       return;
     }
