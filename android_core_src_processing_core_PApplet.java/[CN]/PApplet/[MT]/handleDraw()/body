@@ -8,17 +8,13 @@
       g.setSize(width,height);
     }
     surfaceChanged=false;
+    surfaceReady=true;
   }
-  boolean validSize=width != 0 && height != 0;
-  if (g != null && validSize && !paused && (looping || redraw)) {
-    if (!g.canDraw()) {
-      return;
-    }
+  if (g != null && surfaceReady && !paused && (looping || redraw)) {
     g.beginDraw();
     long now=System.nanoTime();
     if (frameCount == 0) {
       setup();
-      this.defaultSize=false;
     }
  else {
       double rate=1000000.0 / ((now - frameRateLastNanos) / 1000000.0);
