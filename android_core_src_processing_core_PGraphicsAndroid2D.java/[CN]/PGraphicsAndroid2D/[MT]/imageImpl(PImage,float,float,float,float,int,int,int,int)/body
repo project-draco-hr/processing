@@ -13,11 +13,14 @@
     canvas.drawBitmap(who.pixels,offset,who.width,x1,y1,u2 - u1,v2 - v1,who.format == ARGB,tint ? tintPaint : null);
   }
  else {
-    if (who.bitmap == null || who.width != who.bitmap.getWidth() || who.height != who.bitmap.getHeight()) {
+    if (who.width != who.bitmap.getWidth() || who.height != who.bitmap.getHeight()) {
       who.bitmap=Bitmap.createBitmap(who.width,who.height,Config.ARGB_8888);
       who.modified=true;
     }
     if (who.modified) {
+      if (!who.bitmap.isMutable()) {
+        who.bitmap=Bitmap.createBitmap(who.width,who.height,Config.ARGB_8888);
+      }
       who.bitmap.setPixels(who.pixels,0,who.width,0,0,who.width,who.height);
       who.modified=false;
     }
