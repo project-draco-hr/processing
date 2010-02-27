@@ -1,28 +1,28 @@
 {
-  if (who.bitmap == null && who.format == ALPHA) {
-    who.bitmap=Bitmap.createBitmap(who.width,who.height,Config.ARGB_8888);
-    int[] px=new int[who.pixels.length];
+  if (src.bitmap == null && src.format == ALPHA) {
+    src.bitmap=Bitmap.createBitmap(src.width,src.height,Config.ARGB_8888);
+    int[] px=new int[src.pixels.length];
     for (int i=0; i < px.length; i++) {
-      px[i]=who.pixels[i] << 24 | 0xFFFFFF;
+      px[i]=src.pixels[i] << 24 | 0xFFFFFF;
     }
-    who.bitmap.setPixels(px,0,who.width,0,0,who.width,who.height);
-    who.modified=false;
+    src.bitmap.setPixels(px,0,src.width,0,0,src.width,src.height);
+    src.modified=false;
   }
-  if (who.bitmap == null) {
-    int offset=v1 * who.width + u1;
-    canvas.drawBitmap(who.pixels,offset,who.width,x1,y1,u2 - u1,v2 - v1,who.format == ARGB,tint ? tintPaint : null);
+  if (src.bitmap == null) {
+    int offset=v1 * src.width + u1;
+    canvas.drawBitmap(src.pixels,offset,src.width,x1,y1,u2 - u1,v2 - v1,src.format == ARGB,tint ? tintPaint : null);
   }
  else {
-    if (who.width != who.bitmap.getWidth() || who.height != who.bitmap.getHeight()) {
-      who.bitmap=Bitmap.createBitmap(who.width,who.height,Config.ARGB_8888);
-      who.modified=true;
+    if (src.width != src.bitmap.getWidth() || src.height != src.bitmap.getHeight()) {
+      src.bitmap=Bitmap.createBitmap(src.width,src.height,Config.ARGB_8888);
+      src.modified=true;
     }
-    if (who.modified) {
-      if (!who.bitmap.isMutable()) {
-        who.bitmap=Bitmap.createBitmap(who.width,who.height,Config.ARGB_8888);
+    if (src.modified) {
+      if (!src.bitmap.isMutable()) {
+        src.bitmap=Bitmap.createBitmap(src.width,src.height,Config.ARGB_8888);
       }
-      who.bitmap.setPixels(who.pixels,0,who.width,0,0,who.width,who.height);
-      who.modified=false;
+      src.bitmap.setPixels(src.pixels,0,src.width,0,0,src.width,src.height);
+      src.modified=false;
     }
     if (imageImplSrcRect == null) {
       imageImplSrcRect=new Rect(u1,v1,u2,v2);
@@ -32,6 +32,6 @@
       imageImplSrcRect.set(u1,v1,u2,v2);
       imageImplDstRect.set(x1,y1,x2,y2);
     }
-    canvas.drawBitmap(who.bitmap,imageImplSrcRect,imageImplDstRect,tint ? tintPaint : null);
+    canvas.drawBitmap(src.bitmap,imageImplSrcRect,imageImplDstRect,tint ? tintPaint : null);
   }
 }
