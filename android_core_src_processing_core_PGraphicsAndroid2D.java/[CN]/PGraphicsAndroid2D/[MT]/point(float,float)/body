@@ -1,8 +1,12 @@
 {
   if (strokeWeight > 1) {
-    line(x,y,x + EPSILON,y + EPSILON);
+    float sw=strokeWeight / 2;
+    rect.set(x - sw,y - sw,x + sw,y + sw);
+    strokePaint.setStyle(Style.FILL);
+    canvas.drawOval(rect,strokePaint);
+    strokePaint.setStyle(Style.STROKE);
   }
  else {
-    set((int)screenX(x,y),(int)screenY(x,y),strokeColor);
+    set(PApplet.round(screenX(x,y)),PApplet.round(screenY(x,y)),strokeColor);
   }
 }
