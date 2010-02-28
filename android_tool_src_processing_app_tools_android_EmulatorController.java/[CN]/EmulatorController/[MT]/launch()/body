@@ -7,6 +7,12 @@
   final String[] cmd=new String[]{"emulator","-avd",AVD.ECLAIR.name,"-port",portString,"-no-boot-anim"};
   System.err.println("Launching emulator");
   final Process p=Runtime.getRuntime().exec(cmd);
+  Runtime.getRuntime().addShutdownHook(new Thread(){
+    @Override public void run(){
+      p.destroy();
+    }
+  }
+);
   new StreamPump(p.getInputStream()).addTarget(System.out).start();
   new StreamPump(p.getErrorStream()).addTarget(System.err).start();
   new Thread(new Runnable(){
@@ -21,5 +27,5 @@
       }
     }
   }
-).start();
+,"Emulator Babysitter").start();
 }
