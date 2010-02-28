@@ -1,10 +1,17 @@
 {
   try {
-    Context context=getApplicationContext();
-    return context.openFileOutput(filename,MODE_WORLD_READABLE);
+    File file=new File(filename);
+    if (!file.isAbsolute()) {
+      file=new File(sketchPath(filename));
+    }
+    FileOutputStream fos=new FileOutputStream(file);
+    if (file.getName().toLowerCase().endsWith(".gz")) {
+      return new GZIPOutputStream(fos);
+    }
+    return fos;
   }
- catch (  Exception e) {
+ catch (  IOException e) {
     e.printStackTrace();
-    return null;
   }
+  return null;
 }

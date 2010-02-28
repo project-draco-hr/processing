@@ -27,7 +27,28 @@ catch (    IOException e) {
     }
   }
  catch (  IOException e) {
-    e.printStackTrace();
+  }
+  File absFile=new File(filename);
+  if (absFile.exists()) {
+    try {
+      stream=new FileInputStream(absFile);
+      if (stream != null) {
+        return stream;
+      }
+    }
+ catch (    FileNotFoundException fnfe) {
+    }
+  }
+  File sketchFile=new File(sketchPath(filename));
+  if (sketchFile.exists()) {
+    try {
+      stream=new FileInputStream(sketchFile);
+      if (stream != null) {
+        return stream;
+      }
+    }
+ catch (    FileNotFoundException fnfe) {
+    }
   }
   Context context=getApplicationContext();
   try {
@@ -37,7 +58,6 @@ catch (    IOException e) {
     }
   }
  catch (  FileNotFoundException e) {
-    e.printStackTrace();
   }
   return null;
 }
