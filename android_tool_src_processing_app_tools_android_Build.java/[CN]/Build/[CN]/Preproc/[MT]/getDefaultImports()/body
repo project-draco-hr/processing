@@ -1,3 +1,9 @@
 {
-  return new String[]{};
+  final String prefsLine=Preferences.get("android.preproc.imports.list");
+  if (prefsLine != null) {
+    return PApplet.splitTokens(prefsLine,", ");
+  }
+  final String[] androidImports=new String[]{"android.view.MotionEvent","android.view.KeyEvent","android.graphics.Bitmap","java.io.*","java.util.*"};
+  Preferences.set("android.preproc.imports.list",PApplet.join(androidImports,","));
+  return androidImports;
 }
