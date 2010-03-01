@@ -8,4 +8,7 @@
     throw new BadSDKException("There is no tools folder in " + sdk);
   }
   androidTool=findAndroidTool(tools);
+  final Platform p=Base.getPlatform();
+  p.setenv("ANDROID_SDK",sdk.getCanonicalPath());
+  p.setenv("PATH",tools.getCanonicalPath() + File.pathSeparator + p.getenv("PATH"));
 }

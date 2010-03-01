@@ -1,21 +1,10 @@
 {
   editor.statusNotice("Loading Android tools.");
-  final Platform platform=Base.getPlatform();
-  final String sdkPath=platform.getenv("ANDROID_SDK");
-  if (sdkPath == null) {
-    Base.showWarning("Android Tools Error","Before using Android mode, you must first set the\n" + "ANDROID_SDK environment variable, and restart Processing.",null);
-    editor.statusNotice("Android mode canceled.");
-    return;
-  }
   try {
-    sdk=new AndroidSDK(sdkPath);
+    sdk=AndroidSDK.find(editor);
   }
- catch (  final BadSDKException e) {
+ catch (  final Exception e) {
     Base.showWarning("Android Tools Error",e.getMessage(),null);
-    editor.statusNotice("Android mode canceled.");
-    return;
-  }
-  if (!checkPath()) {
     editor.statusNotice("Android mode canceled.");
     return;
   }
