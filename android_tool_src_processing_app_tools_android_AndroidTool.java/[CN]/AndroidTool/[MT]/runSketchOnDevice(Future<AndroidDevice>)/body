@@ -6,20 +6,8 @@
   if (!build.antBuild("debug")) {
     return;
   }
-  final AndroidDevice device;
-  try {
-    device=deviceFuture.get(30,TimeUnit.SECONDS);
-  }
- catch (  final InterruptedException e) {
-    editor.statusError("Interrupted.");
-    return;
-  }
-catch (  final ExecutionException e) {
-    editor.statusError(e);
-    return;
-  }
-catch (  final TimeoutException e) {
-    editor.statusError("Giving up on launching the emulator.");
+  final AndroidDevice device=waitForDevice(deviceFuture);
+  if (device == null) {
     return;
   }
   if (!device.installApp(build.getPathForAPK("debug"),editor)) {
