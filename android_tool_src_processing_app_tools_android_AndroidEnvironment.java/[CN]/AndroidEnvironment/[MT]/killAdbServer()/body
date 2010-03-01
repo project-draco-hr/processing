@@ -1,10 +1,13 @@
 {
-  System.err.println("Attempting to shut down existing adb server...");
+  System.err.print("Shutting down any existing adb server...");
+  System.err.flush();
   try {
     new ProcessHelper("adb","kill-server").execute();
-    System.err.println("...it's dead, or at least not at all well.");
+    System.err.println("OK.");
   }
  catch (  final Exception e) {
+    System.err.println("failed.");
+    System.err.println();
     e.printStackTrace(System.err);
   }
 }
