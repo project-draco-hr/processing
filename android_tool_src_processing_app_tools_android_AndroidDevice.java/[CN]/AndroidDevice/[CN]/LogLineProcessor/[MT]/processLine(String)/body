@@ -1,32 +1,27 @@
 {
   final LogEntry entry=new LogEntry(line);
-  final String src=entry.source;
-  final String msg=entry.message;
-  final Severity sev=entry.severity;
-  if (msg.startsWith("PROCESSING")) {
-    if (msg.contains("onStart")) {
-      startProc(src,entry.sourcePid);
+  if (entry.message.startsWith("PROCESSING")) {
+    if (entry.message.contains("onStart")) {
+      startProc(entry.source,entry.pid);
     }
- else     if (msg.contains("onStop")) {
-      endProc(entry.sourcePid);
+ else     if (entry.message.contains("onStop")) {
+      endProc(entry.pid);
     }
   }
- else   if (src.equals("Process")) {
-    final Matcher m=SIG.matcher(msg);
+ else   if (entry.source.equals("Process")) {
+    final Matcher m=SIG.matcher(entry.message);
     if (m.find()) {
       final int pid=Integer.parseInt(m.group(1));
       final int signal=Integer.parseInt(m.group(2));
       if (signal == 9) {
         endProc(pid);
       }
+ else       if (signal == 3) {
+        reportStackTrace(entry);
+      }
     }
   }
- else   if (activeProcesses.contains(entry.sourcePid) && ((src.equals("AndroidRuntime") && sev == Severity.Error) || src.equals("System.out") || src.equals("System.err"))) {
-    if (sev.useErrorStream) {
-      System.err.println(msg);
-    }
- else {
-      System.out.println(msg);
-    }
+ else   if (activeProcesses.contains(entry.pid)) {
+    handleConsole(entry);
   }
 }
