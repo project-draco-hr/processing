@@ -1,17 +1,45 @@
 {
-  final Build build=getBuilder();
-  if (!build.createProject()) {
-    return;
+  final ProgressMonitor monitor=new ProgressMonitor(editor,"Building and launching...","Creating project...",0,5);
+  try {
+    monitor.setMillisToDecideToPopup(100);
+    final Build build=getBuilder();
+    if (!build.createProject()) {
+      return;
+    }
+    if (monitor.isCanceled()) {
+      throw new Cancelled();
+    }
+    monitor.setNote("Building...");
+    monitor.setProgress(1);
+    if (!build.antBuild("debug")) {
+      return;
+    }
+    if (monitor.isCanceled()) {
+      throw new Cancelled();
+    }
+    monitor.setNote("Waiting for device to become available...");
+    monitor.setProgress(2);
+    final AndroidDevice device=waitForDevice(deviceFuture,monitor);
+    if (device == null) {
+      return;
+    }
+    if (monitor.isCanceled()) {
+      throw new Cancelled();
+    }
+    monitor.setNote("Installing sketch on " + device.getId());
+    monitor.setProgress(3);
+    if (!device.installApp(build.getPathForAPK("debug"),editor)) {
+      return;
+    }
+    if (monitor.isCanceled()) {
+      throw new Cancelled();
+    }
+    monitor.setNote("Starting sketch on " + device.getId());
+    monitor.setProgress(4);
+    startSketch(device);
+    lastRunDevice=device;
   }
-  if (!build.antBuild("debug")) {
-    return;
+  finally {
+    monitor.close();
   }
-  final AndroidDevice device=waitForDevice(deviceFuture);
-  if (device == null) {
-    return;
-  }
-  if (!device.installApp(build.getPathForAPK("debug"),editor)) {
-    return;
-  }
-  startSketch(device);
 }

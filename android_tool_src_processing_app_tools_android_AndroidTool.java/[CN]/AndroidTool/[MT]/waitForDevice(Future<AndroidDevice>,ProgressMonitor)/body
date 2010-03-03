@@ -1,7 +1,10 @@
 {
-  for (int i=0; i < 4; i++) {
+  for (int i=0; i < 120; i++) {
+    if (monitor.isCanceled()) {
+      throw new Cancelled();
+    }
     try {
-      return deviceFuture.get(30,TimeUnit.SECONDS);
+      return deviceFuture.get(1,TimeUnit.SECONDS);
     }
  catch (    final InterruptedException e) {
       editor.statusError("Interrupted.");
@@ -11,8 +14,7 @@ catch (    final ExecutionException e) {
       editor.statusError(e);
       return null;
     }
-catch (    final TimeoutException e) {
-      System.err.println("Gee, it's taking a while. Let's wait some more.");
+catch (    final TimeoutException expected) {
     }
   }
   editor.statusError("No, on second thought, I'm giving up on waiting for that device to show up.");
