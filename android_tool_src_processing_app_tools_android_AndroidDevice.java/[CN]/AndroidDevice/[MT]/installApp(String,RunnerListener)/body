@@ -1,8 +1,7 @@
 {
   bringLauncherToFront();
   try {
-    final ProcessHelper p=new ProcessHelper(generateAdbCommand("install","-r",apkPath));
-    final ProcessResult installResult=p.execute();
+    final ProcessResult installResult=adb("install","-r",apkPath);
     if (!installResult.succeeded()) {
       status.statusError("Could not install the sketch.");
       System.err.println(installResult);

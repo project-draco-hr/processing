@@ -1,5 +1,5 @@
 {
-  new ProcessHelper(generateAdbCommand("logcat","-c")).execute();
+  adb("logcat","-c");
   logcat=Runtime.getRuntime().exec(generateAdbCommand("logcat"));
   new StreamPump(logcat.getInputStream()).addTarget(new LogLineProcessor()).start();
   new StreamPump(logcat.getErrorStream()).addTarget(System.err).start();
