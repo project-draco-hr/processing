@@ -9,8 +9,7 @@
     return;
   }
   final String exceptionClass=m.group(1);
-  final String message=m.group(2);
-  if (Runner.handleCommonErrors(exceptionClass,message,editor)) {
+  if (Runner.handleCommonErrors(exceptionClass,exceptionLine,editor)) {
     return;
   }
   while (frames.hasNext()) {
@@ -20,8 +19,9 @@
       if (lm.find()) {
         final String filename=lm.group(1);
         final int lineNumber=Integer.parseInt(lm.group(2)) - 1;
-        final RunnerException rex=editor.getSketch().placeException(message,filename,lineNumber);
-        editor.statusError(rex == null ? new RunnerException(message,false) : rex);
+        final RunnerException rex=editor.getSketch().placeException(exceptionLine,filename,lineNumber);
+        editor.statusError(rex == null ? new RunnerException(exceptionLine,false) : rex);
+        return;
       }
     }
   }
