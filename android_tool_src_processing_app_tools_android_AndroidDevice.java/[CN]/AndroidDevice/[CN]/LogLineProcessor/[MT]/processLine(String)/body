@@ -9,15 +9,7 @@
     }
   }
  else   if (entry.source.equals("Process")) {
-    final Matcher m=SIG.matcher(entry.message);
-    if (m.find()) {
-      final int pid=Integer.parseInt(m.group(1));
-      final int signal=Integer.parseInt(m.group(2));
-      if (signal == 3) {
-        endProc(pid);
-        reportStackTrace(entry);
-      }
-    }
+    handleCrash(entry);
   }
  else   if (activeProcesses.contains(entry.pid)) {
     handleConsole(entry);
