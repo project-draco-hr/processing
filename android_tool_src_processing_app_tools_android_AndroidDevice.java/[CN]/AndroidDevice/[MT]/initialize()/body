@@ -1,6 +1,8 @@
 {
   adb("logcat","-c");
   logcat=Runtime.getRuntime().exec(generateAdbCommand("logcat"));
+  ProcessRegistry.watch(logcat);
   new StreamPump(logcat.getInputStream()).addTarget(new LogLineProcessor()).start();
   new StreamPump(logcat.getErrorStream()).addTarget(System.err).start();
+  System.err.println("Receiving log entries from " + id);
 }
