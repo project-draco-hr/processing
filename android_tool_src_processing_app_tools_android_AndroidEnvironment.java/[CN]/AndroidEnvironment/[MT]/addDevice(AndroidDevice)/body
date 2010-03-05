@@ -1,12 +1,11 @@
 {
-  if (devices.put(device.getId(),device) != null) {
-    throw new IllegalStateException("Adding " + device + ", which already exists!");
-  }
   try {
     device.initialize();
+    if (devices.put(device.getId(),device) != null) {
+      throw new IllegalStateException("Adding " + device + ", which already exists!");
+    }
   }
  catch (  final Exception e) {
-    System.err.println("Cannot initialize " + device + ": "+ e);
-    devices.remove(device.getId());
+    System.err.println("While initializing " + device.getId() + ": "+ e);
   }
 }
