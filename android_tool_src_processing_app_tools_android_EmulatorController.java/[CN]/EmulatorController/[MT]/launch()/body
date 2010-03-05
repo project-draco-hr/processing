@@ -1,27 +1,48 @@
 {
+  if (state != State.Idle) {
+    throw new IllegalStateException("You can't launch an emulator whose state is " + state);
+  }
   String portString=Preferences.get("android.emulator.port");
   if (portString == null) {
     portString="5566";
     Preferences.set("android.emulator.port",portString);
   }
-  final String[] cmd=new String[]{"emulator","-avd",AVD.ECLAIR.name,"-port",portString,"-no-boot-anim"};
   System.err.println("Launching emulator");
-  final Process p=Runtime.getRuntime().exec(cmd);
+  final Process p=Runtime.getRuntime().exec(new String[]{"emulator","-avd",AVD.ECLAIR.name,"-port",portString,"-no-boot-anim"});
+  setState(State.Launched);
   ProcessRegistry.watch(p);
   new StreamPump(p.getInputStream()).addTarget(System.out).start();
   new StreamPump(p.getErrorStream()).addTarget(System.err).start();
   new Thread(new Runnable(){
     public void run(){
       try {
-        final int result=p.waitFor();
-        System.err.println("Emulator process exited " + ((result == 0) ? "normally" : " with status " + result) + ".");
+        if (AndroidEnvironment.getInstance().getEmulator().get() != null) {
+          setState(State.Running);
+        }
       }
- catch (      final InterruptedException e) {
-        System.err.println("Emulator was interrupted.");
+ catch (      final Exception e) {
+        System.err.println("While waiting for emulator to launch " + e);
       }
+    }
+  }
+).start();
+  new Thread(new Runnable(){
+    public void run(){
+      try {
+        try {
+          final int result=p.waitFor();
+          System.err.println("Emulator process exited " + ((result == 0) ? "normally" : " with status " + result) + ".");
+        }
+ catch (        final InterruptedException e) {
+          System.err.println("Emulator was interrupted.");
+        }
  finally {
-        p.destroy();
-        ProcessRegistry.unwatch(p);
+          p.destroy();
+          ProcessRegistry.unwatch(p);
+        }
+      }
+  finally {
+        setState(State.Idle);
       }
     }
   }

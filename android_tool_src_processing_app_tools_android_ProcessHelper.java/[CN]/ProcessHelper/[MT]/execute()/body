@@ -4,6 +4,7 @@
   final long startTime=System.currentTimeMillis();
   final String prettyCommand=getCommand();
   final Process process=Runtime.getRuntime().exec(cmd);
+  ProcessRegistry.watch(process);
   try {
     new StreamPump(process.getInputStream()).addTarget(outWriter).start();
     new StreamPump(process.getErrorStream()).addTarget(errWriter).start();
@@ -14,11 +15,11 @@
     }
  catch (    final InterruptedException e) {
       System.err.println("Interrupted: " + prettyCommand);
-      process.destroy();
       throw e;
     }
   }
   finally {
     process.destroy();
+    ProcessRegistry.unwatch(process);
   }
 }
