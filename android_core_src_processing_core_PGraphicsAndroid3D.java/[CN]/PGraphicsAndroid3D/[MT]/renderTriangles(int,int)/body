@@ -14,16 +14,16 @@
   for (int j=0; j < faceCount; j++) {
     int i=faceOffset[j];
     if (faceTexture[j] != null) {
-      try {
-        tex=(GLTexture)faceTexture[j];
+      tex=faceTexture[j].getTexture();
+      if (tex != null) {
+        gl.glEnable(tex.getGLTarget());
+        gl.glBindTexture(tex.getGLTarget(),tex.getGLTextureID());
+        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+        texturing=true;
       }
- catch (      ClassCastException cce) {
-        throw new RuntimeException("A3D only accepts GLTextures for texturing!");
+ else {
+        texturing=false;
       }
-      gl.glEnable(tex.getGLTarget());
-      gl.glBindTexture(tex.getGLTarget(),tex.getGLTextureID());
-      gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-      texturing=true;
     }
  else {
       texturing=false;
