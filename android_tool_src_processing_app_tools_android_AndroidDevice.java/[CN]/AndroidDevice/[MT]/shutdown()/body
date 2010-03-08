@@ -1,10 +1,17 @@
 {
-  System.err.println(id + " is shutting down.");
+  if (!isAlive()) {
+    return;
+  }
   if (logcat != null) {
     logcat.destroy();
     logcat=null;
     ProcessRegistry.unwatch(logcat);
   }
   env.deviceRemoved(this);
+  if (activeProcesses.size() > 0) {
+    for (    final DeviceListener listener : listeners) {
+      listener.sketchStopped();
+    }
+  }
   listeners.clear();
 }

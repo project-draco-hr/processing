@@ -4,5 +4,18 @@
   ProcessRegistry.watch(logcat);
   new StreamPump(logcat.getInputStream()).addTarget(new LogLineProcessor()).start();
   new StreamPump(logcat.getErrorStream()).addTarget(System.err).start();
-  System.err.println("Receiving log entries from " + id);
+  new Thread(new Runnable(){
+    public void run(){
+      try {
+        logcat.waitFor();
+      }
+ catch (      final InterruptedException e) {
+        System.err.println("AndroidDevice: logcat process monitor interrupted");
+      }
+ finally {
+        shutdown();
+      }
+    }
+  }
+,"AndroidDevice: logcat process monitor").start();
 }
