@@ -7,7 +7,6 @@
     portString="5566";
     Preferences.set("android.emulator.port",portString);
   }
-  System.err.println("EmulatorController: Launching emulator");
   final Process p=Runtime.getRuntime().exec(new String[]{"emulator","-avd",AVD.ECLAIR.name,"-port",portString,"-no-boot-anim"});
   ProcessRegistry.watch(p);
   setState(State.WAITING_FOR_BOOT);
@@ -17,12 +16,10 @@
   new Thread(new Runnable(){
     public void run(){
       try {
-        System.err.println("EmulatorController: Waiting for boot.");
         while (state == State.WAITING_FOR_BOOT) {
           Thread.sleep(2000);
           for (          final String device : AndroidEnvironment.listDevices()) {
             if (device.contains("emulator")) {
-              System.err.println("EmulatorController: Emulator booted.");
               setState(State.RUNNING);
               return;
             }
@@ -31,7 +28,7 @@
         System.err.println("EmulatorController: Emulator never booted.");
       }
  catch (      final Exception e) {
-        System.err.println("While waiting for emulator to launch " + e);
+        System.err.println("While waiting for emulator to boot " + e);
         p.destroy();
       }
  finally {
@@ -44,8 +41,7 @@
     public void run(){
       try {
         try {
-          final int result=p.waitFor();
-          System.err.println("Emulator process exited " + ((result == 0) ? "normally" : " with status " + result) + ".");
+          p.waitFor();
         }
  catch (        final InterruptedException e) {
           System.err.println("Emulator was interrupted.");

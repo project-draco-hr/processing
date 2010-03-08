@@ -21,15 +21,12 @@
     System.err.println("That's weird. The emulator process seems to be running, but I don't know about it.");
   }
   while (!Thread.currentThread().isInterrupted()) {
-    System.err.println("AndroidEnvironment: looking for emulator in loop.");
-    System.err.println("AndroidEnvironment: emulatorcontroller state is " + emuController.getState());
     if (emuController.getState() == State.NOT_RUNNING) {
       System.err.println("Ouch. Emulator got killed, I think.");
       return null;
     }
     emu=find(true);
     if (emu != null) {
-      System.err.println("AndroidEnvironment: returning " + emu.getId() + " from loop.");
       return emu;
     }
     try {
