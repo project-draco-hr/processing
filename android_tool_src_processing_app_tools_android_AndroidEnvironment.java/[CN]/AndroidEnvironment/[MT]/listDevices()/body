@@ -1,7 +1,7 @@
 {
   ProcessResult result;
   try {
-    result=new ProcessHelper("adb","devices").execute();
+    result=AndroidSDK.runADB("devices");
   }
  catch (  final InterruptedException e) {
     return Collections.emptyList();
@@ -25,7 +25,10 @@ catch (  final IOException e) {
     if (!line.contains("\t")) {
       continue;
     }
-    devices.add(line.split("\t")[0]);
+    final String[] fields=line.split("\t");
+    if (fields[1].equals("device")) {
+      devices.add(fields[0]);
+    }
   }
   return devices;
 }

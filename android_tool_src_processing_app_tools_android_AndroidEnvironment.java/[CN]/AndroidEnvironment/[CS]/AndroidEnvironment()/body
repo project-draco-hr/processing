@@ -1,17 +1,6 @@
 {
   System.err.println("Starting up AndroidEnvironment");
   killAdbServer();
-  System.err.print("Starting up fresh adb server...");
-  System.err.flush();
-  try {
-    new ProcessHelper("adb","start-server").execute();
-    System.err.println("OK.");
-  }
- catch (  final Exception e) {
-    System.err.println("failed.");
-    System.err.println();
-    e.printStackTrace(System.err);
-  }
   Runtime.getRuntime().addShutdownHook(new Thread("AndroidEnvironment Shutdown"){
     @Override public void run(){
       shutdown();

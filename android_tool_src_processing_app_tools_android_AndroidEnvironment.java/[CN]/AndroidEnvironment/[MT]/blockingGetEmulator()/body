@@ -5,7 +5,7 @@
   }
   final EmulatorController emuController=EmulatorController.getInstance();
   final State currentState=emuController.getState();
-  if (currentState == State.Idle) {
+  if (currentState == State.NOT_RUNNING) {
     try {
       emuController.launch();
     }
@@ -14,22 +14,30 @@
       return null;
     }
   }
- else   if (currentState == State.Launched) {
-    System.err.println("Emulator has already been launched. I shall wait.");
+ else   if (currentState == State.WAITING_FOR_BOOT) {
+    System.err.println("Emulator has already been launched. I'll wait.");
   }
- else   if (currentState == State.Running) {
+ else   if (currentState == State.RUNNING) {
     System.err.println("That's weird. The emulator process seems to be running, but I don't know about it.");
   }
   while (!Thread.currentThread().isInterrupted()) {
-    try {
-      Thread.sleep(2000);
-    }
- catch (    final InterruptedException e) {
+    System.err.println("AndroidEnvironment: looking for emulator in loop.");
+    System.err.println("AndroidEnvironment: emulatorcontroller state is " + emuController.getState());
+    if (emuController.getState() == State.NOT_RUNNING) {
+      System.err.println("Ouch. Emulator got killed, I think.");
       return null;
     }
     emu=find(true);
     if (emu != null) {
+      System.err.println("AndroidEnvironment: returning " + emu.getId() + " from loop.");
       return emu;
+    }
+    try {
+      Thread.sleep(2000);
+    }
+ catch (    final InterruptedException e) {
+      System.err.println("AndroidEnvironment: interrupted in loop.");
+      return null;
     }
   }
   return null;

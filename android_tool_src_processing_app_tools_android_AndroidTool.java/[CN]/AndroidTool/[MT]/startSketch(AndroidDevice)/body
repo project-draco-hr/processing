@@ -3,12 +3,11 @@
   final String className=build.getClassName();
   try {
     if (device.launchApp(packageName,className)) {
-      editor.statusNotice("Sketch launched on the " + (device.isEmulator() ? "emulator" : "phone") + ".");
-      return;
+      return true;
     }
   }
  catch (  final Exception e) {
     e.printStackTrace(System.err);
-    editor.statusError("Could not start the sketch.");
   }
+  return false;
 }
