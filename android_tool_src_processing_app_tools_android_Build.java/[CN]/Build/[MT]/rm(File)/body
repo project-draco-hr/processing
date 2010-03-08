@@ -1,0 +1,14 @@
+{
+  if (f.isDirectory()) {
+    final File[] kids=f.listFiles(new FilenameFilter(){
+      public boolean accept(      final File dir,      final String name){
+        return !(name.equals(".") || name.equals(".."));
+      }
+    }
+);
+    for (    final File k : kids) {
+      rm(k);
+    }
+  }
+  f.delete();
+}

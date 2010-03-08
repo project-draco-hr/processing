@@ -12,11 +12,8 @@
       exportList=libraryFolder.list();
     }
     for (int i=0; i < exportList.length; i++) {
-      if (exportList[i].equals(".") || exportList[i].equals("..")) {
-        continue;
-      }
       exportList[i]=PApplet.trim(exportList[i]);
-      if (exportList[i].equals("")) {
+      if (exportList[i].equals("") || exportList[i].equals(".") || exportList[i].equals("..")) {
         continue;
       }
       final File exportFile=new File(libraryFolder,exportList[i]);
@@ -26,34 +23,28 @@
  else       if (exportFile.isDirectory()) {
         System.err.println("Ignoring sub-folder \"" + exportList[i] + "\"");
       }
- else       if (exportFile.getName().toLowerCase().endsWith(".zip")) {
-        String exportFilename=exportFile.getName();
-        exportFilename=exportFilename.substring(0,exportFilename.length() - 4) + ".jar";
-        Base.copyFile(exportFile,new File(libsFolder,exportFilename));
-      }
- else       if (exportFile.getName().toLowerCase().endsWith(".jar")) {
-        final String exportFilename=exportFile.getName();
-        Base.copyFile(exportFile,new File(libsFolder,exportFilename));
-      }
  else {
-        Base.copyFile(exportFile,new File(assetsFolder,exportFile.getName()));
+        final String name=exportFile.getName();
+        final String lcname=name.toLowerCase();
+        if (lcname.endsWith(".zip") || lcname.endsWith(".jar")) {
+          final String jarName=name.substring(0,name.length() - 4) + ".jar";
+          Base.copyFile(exportFile,new File(libsFolder,jarName));
+        }
+ else {
+          Base.copyFile(exportFile,new File(assetsFolder,name));
+        }
       }
     }
   }
   final File codeFolder=sketch.getCodeFolder();
   if (codeFolder != null && codeFolder.exists()) {
-    final File[] codeFiles=codeFolder.listFiles();
-    for (    final File item : codeFiles) {
+    for (    final File item : codeFolder.listFiles()) {
       if (!item.isDirectory()) {
-        String name=item.getName();
-        if (name.toLowerCase().endsWith(".jar")) {
-          final File targetFile=new File(libsFolder,name);
-          Base.copyFile(item,targetFile);
-        }
- else         if (name.toLowerCase().endsWith(".zip")) {
-          name=name.substring(0,name.length() - 4) + ".jar";
-          final File targetFile=new File(libsFolder,name);
-          Base.copyFile(item,targetFile);
+        final String name=item.getName();
+        final String lcname=name.toLowerCase();
+        if (lcname.endsWith(".jar") || lcname.endsWith(".zip")) {
+          final String jarName=name.substring(0,name.length() - 4) + ".jar";
+          Base.copyFile(item,new File(libsFolder,jarName));
         }
       }
     }

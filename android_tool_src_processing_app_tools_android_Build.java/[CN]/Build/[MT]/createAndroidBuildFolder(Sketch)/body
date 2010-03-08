@@ -1,11 +1,7 @@
 {
-  final File sketchFolder=sketch.getFolder();
-  if (sketchFolder.getAbsolutePath().indexOf(' ') > -1) {
-    final File tmp=File.createTempFile("android",".pde");
-    if (!(tmp.delete() && tmp.mkdir())) {
-      throw new IOException("Cannot create temp dir " + tmp + " to build android sketch");
-    }
-    return tmp;
+  final File tmp=File.createTempFile("android",".pde");
+  if (!(tmp.delete() && tmp.mkdir())) {
+    throw new IOException("Cannot create temp dir " + tmp + " to build android sketch");
   }
-  return new File(sketchFolder,"android");
+  return tmp;
 }
