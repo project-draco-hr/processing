@@ -1,4 +1,5 @@
 {
+  long t0=System.currentTimeMillis();
   if (document == null) {
     document=new Document(new Rectangle(width,height));
     try {
@@ -12,6 +13,7 @@
       e.printStackTrace();
       throw new RuntimeException("Problem saving the PDF file.");
     }
+    long t=System.currentTimeMillis();
     mapper=new DefaultFontMapper();
     if (PApplet.platform == PApplet.MACOSX) {
       try {
@@ -41,7 +43,9 @@
         }
       }
     }
+    System.out.println("beginDraw fonts " + (System.currentTimeMillis() - t));
     g2=content.createGraphics(width,height,mapper);
   }
+  System.out.println("beginDraw " + (System.currentTimeMillis() - t0));
   super.beginDraw();
 }
