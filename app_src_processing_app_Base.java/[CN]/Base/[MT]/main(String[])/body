@@ -2,7 +2,11 @@
   try {
     File versionFile=getContentFile("lib/version.txt");
     if (versionFile.exists()) {
-      VERSION_NAME=PApplet.loadStrings(versionFile)[0];
+      String version=PApplet.loadStrings(versionFile)[0];
+      if (!version.equals(VERSION_NAME)) {
+        VERSION_NAME=version;
+        RELEASE=true;
+      }
     }
   }
  catch (  Exception e) {
