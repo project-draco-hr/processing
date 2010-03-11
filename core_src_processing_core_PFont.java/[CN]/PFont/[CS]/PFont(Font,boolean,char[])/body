@@ -17,8 +17,6 @@
   lazyGraphics.setFont(font);
   lazyMetrics=lazyGraphics.getFontMetrics();
   lazySamples=new int[mbox3 * mbox3];
-  ascent=lazyMetrics.getAscent();
-  descent=lazyMetrics.getDescent();
   if (charset != null) {
     Arrays.sort(charset);
     glyphs=new Glyph[charset.length];
@@ -30,6 +28,22 @@
     }
     if (glyphCount != charset.length) {
       glyphs=(Glyph[])PApplet.subset(glyphs,0,glyphCount);
+    }
+  }
+  if (ascent == 0) {
+    if (font.canDisplay('d')) {
+      new Glyph('d');
+    }
+ else {
+      ascent=lazyMetrics.getAscent();
+    }
+  }
+  if (descent == 0) {
+    if (font.canDisplay('p')) {
+      new Glyph('p');
+    }
+ else {
+      descent=lazyMetrics.getDescent();
     }
   }
 }
