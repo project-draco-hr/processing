@@ -1,0 +1,10 @@
+{
+  Font font=textFont.getFont();
+  if (font == null) {
+    throw new RuntimeException("Use createFont() instead of loadFont() " + "when drawing text using the PDF library.");
+  }
+ else   if (textFont.isStream() && textMode != SHAPE) {
+    throw new RuntimeException("Use textMode(SHAPE) with when loading " + ".ttf and .otf files with createFont().");
+  }
+  super.textLineImpl(buffer,start,stop,x,y);
+}
