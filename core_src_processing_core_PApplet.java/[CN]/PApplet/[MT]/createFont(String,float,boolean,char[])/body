@@ -2,8 +2,9 @@
   String lowerName=name.toLowerCase();
   Font baseFont=null;
   try {
+    InputStream stream=null;
     if (lowerName.endsWith(".otf") || lowerName.endsWith(".ttf")) {
-      InputStream stream=createInput(name);
+      stream=createInput(name);
       if (stream == null) {
         System.err.println("The font \"" + name + "\" "+ "is missing or inaccessible, make sure "+ "the URL is valid or that the file has been "+ "added to your sketch and is readable.");
         return null;
@@ -13,15 +14,11 @@
  else {
       baseFont=PFont.findFont(name);
     }
+    return new PFont(baseFont.deriveFont(size),smooth,charset,stream != null);
   }
  catch (  Exception e) {
-    System.err.println("Problem using createFont() with " + name);
+    System.err.println("Problem createFont(" + name + ")");
     e.printStackTrace();
-  }
-  if (charset == null) {
-    return new PFont(baseFont.deriveFont(size),smooth);
-  }
- else {
-    return new PFont(baseFont.deriveFont(size),smooth,charset);
+    return null;
   }
 }
