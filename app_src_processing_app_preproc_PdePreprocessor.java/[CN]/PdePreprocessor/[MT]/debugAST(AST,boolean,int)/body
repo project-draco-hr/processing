@@ -1,0 +1,15 @@
+{
+  for (int i=0; i < indent; i++)   System.err.print("    ");
+  if (includeHidden) {
+    System.err.print(debugHiddenBefore(ast));
+  }
+  if (ast.getType() > 0 && !ast.getText().equals(TokenUtil.nameOf(ast))) {
+    System.err.print(TokenUtil.nameOf(ast) + "/");
+  }
+  System.err.print(ast.getText().replace("\n","\\n"));
+  if (includeHidden) {
+    System.err.print(debugHiddenAfter(ast));
+  }
+  System.err.println();
+  for (AST kid=ast.getFirstChild(); kid != null; kid=kid.getNextSibling())   debugAST(kid,includeHidden,indent + 1);
+}
