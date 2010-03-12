@@ -72,6 +72,7 @@ case OBJBLOCK:
 case CTOR_DEF:
 case PARAMETERS:
 case PARAMETER_DEF:
+case VARIABLE_PARAMETER_DEF:
 case VARIABLE_DEF:
 case TYPE:
 case SLIST:
@@ -164,7 +165,13 @@ break;
 case LITERAL_for:
 out.print(ast.getText());
 dumpHiddenAfter(ast);
+if (child1.getType() == FOR_EACH_CLAUSE) {
+printChildren(child1);
+print(child2);
+}
+ else {
 printChildren(ast);
+}
 break;
 case POST_INC:
 case POST_DEC:
