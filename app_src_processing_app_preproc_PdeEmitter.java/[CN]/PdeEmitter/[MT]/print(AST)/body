@@ -42,6 +42,7 @@ out.print("interface");
 }
 dumpHiddenBefore(getChild(ast,IDENT));
 print(getChild(ast,IDENT));
+print(getChild(ast,TYPE_PARAMETERS));
 print(getChild(ast,EXTENDS_CLAUSE));
 print(getChild(ast,IMPLEMENTS_CLAUSE));
 print(getChild(ast,OBJBLOCK));
@@ -161,14 +162,14 @@ case BOR_ASSIGN:
 printBinaryOperator(ast);
 break;
 case LITERAL_for:
-out.print(name(ast));
+out.print(ast.getText());
 dumpHiddenAfter(ast);
 printChildren(ast);
 break;
 case POST_INC:
 case POST_DEC:
 print(child1);
-out.print(name(ast));
+out.print(ast.getText());
 dumpHiddenAfter(ast);
 break;
 case BNOT:
@@ -177,7 +178,7 @@ case INC:
 case DEC:
 case UNARY_MINUS:
 case UNARY_PLUS:
-out.print(name(ast));
+out.print(ast.getText());
 dumpHiddenAfter(ast);
 print(child1);
 break;
@@ -227,7 +228,7 @@ out.print(ast.getText());
 dumpHiddenAfter(ast);
 break;
 case LITERAL_synchronized:
-out.print(name(ast));
+out.print(ast.getText());
 dumpHiddenAfter(ast);
 printChildren(ast);
 break;
@@ -260,7 +261,7 @@ case LITERAL_this:
 case LITERAL_super:
 case LITERAL_continue:
 case LITERAL_break:
-out.print(name(ast));
+out.print(ast.getText());
 dumpHiddenAfter(ast);
 break;
 case EMPTY_STAT:
@@ -362,6 +363,26 @@ if (Preferences.getBoolean("preproc.substitute_floats")) {
 out.print("f");
 }
 dumpHiddenAfter(ast);
+break;
+case TYPE_ARGUMENTS:
+case TYPE_PARAMETERS:
+printChildren(ast);
+break;
+case TYPE_ARGUMENT:
+case TYPE_PARAMETER:
+print(ast.getFirstChild());
+break;
+case WILDCARD_TYPE:
+out.print("? ");
+print(ast.getFirstChild());
+break;
+case TYPE_LOWER_BOUNDS:
+out.print("super ");
+print(ast.getFirstChild());
+break;
+case TYPE_UPPER_BOUNDS:
+out.print("extends ");
+print(ast.getFirstChild());
 break;
 default :
 System.out.println("Invalid type:" + ast.getType());

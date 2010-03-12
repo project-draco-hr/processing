@@ -1,0 +1,13 @@
+{
+  if (!(ast instanceof antlr.CommonASTWithHiddenTokens))   return "";
+  antlr.CommonHiddenStreamToken child=null, parent=((antlr.CommonASTWithHiddenTokens)ast).getHiddenBefore();
+  if (parent == null) {
+    return "";
+  }
+  do {
+    child=parent;
+    parent=child.getHiddenBefore();
+  }
+ while (parent != null);
+  return debugHiddenTokens(child);
+}
