@@ -27,7 +27,7 @@
   AST rootNode=factory.create(ROOT_ID,"AST ROOT");
   rootNode.setFirstChild(parserAST);
   CommonAST.setVerboseStringConversion(true,parser.getTokenNames());
-  if (programType == JAVA) {
+  if (programType == ProgramType.JAVA) {
     name=getFirstClassName(parserAST);
   }
   if (name == null)   return null;
@@ -35,12 +35,6 @@
   writeDeclaration(stream,name);
   emitter.setOut(stream);
   emitter.print(rootNode);
-  debugAST(rootNode,false);
-  final ByteArrayOutputStream buf=new ByteArrayOutputStream();
-  final PrintStream bufout=new PrintStream(buf);
-  emitter.setOut(bufout);
-  emitter.print(rootNode);
-  System.err.println(new String(buf.toByteArray()));
   writeFooter(stream,name);
   stream.close();
   if (Preferences.getBoolean("preproc.output_parse_tree")) {
