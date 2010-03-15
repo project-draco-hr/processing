@@ -1,11 +1,11 @@
 {
   this.name=sketchName;
   foundMain=false;
-  String scrubbed=Sketch.scrubComments(program);
   if (Preferences.getBoolean("preproc.substitute_unicode")) {
     program=substituteUnicode(program);
   }
-  String importRegexp="(?:^|;)\\s*(import\\s+)((?:static\\s+)?\\S+)(\\s*;)";
+  String scrubbed=Sketch.scrubComments(program);
+  final String importRegexp="(?:^|;)\\s*(import\\s+)((?:static\\s+)?\\S+)(\\s*;)";
   programImports=new ArrayList<String>();
   do {
     String[] pieces=PApplet.match(scrubbed,importRegexp);
