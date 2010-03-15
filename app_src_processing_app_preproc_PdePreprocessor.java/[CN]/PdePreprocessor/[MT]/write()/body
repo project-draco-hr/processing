@@ -19,7 +19,7 @@
   filter.copy(PdeRecognizer.GT);
   filter.copy(PdeRecognizer.SR);
   filter.copy(PdeRecognizer.BSR);
-  PdeRecognizer parser=new PdeRecognizer(filter);
+  PdeRecognizer parser=new PdeRecognizer(this,filter);
   parser.setASTNodeClass("antlr.ExtendedCommonASTWithHiddenTokens");
   parser.pdeProgram();
   ASTFactory factory=new ASTFactory();
@@ -31,9 +31,8 @@
     name=getFirstClassName(parserAST);
   }
   if (name == null)   return null;
-  PdeEmitter emitter=new PdeEmitter();
+  PdeEmitter emitter=new PdeEmitter(this,stream);
   writeDeclaration(stream,name);
-  emitter.setOut(stream);
   emitter.print(rootNode);
   writeFooter(stream,name);
   stream.close();
