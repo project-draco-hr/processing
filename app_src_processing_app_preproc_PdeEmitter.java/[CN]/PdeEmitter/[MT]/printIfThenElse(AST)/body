@@ -1,0 +1,14 @@
+{
+  out.print(literalIf.getText());
+  dumpHiddenAfter(literalIf);
+  final AST condition=literalIf.getFirstChild();
+  print(condition);
+  final AST thenPath=condition.getNextSibling();
+  print(thenPath);
+  final AST elsePath=thenPath.getNextSibling();
+  if (elsePath != null) {
+    out.print("else");
+    dumpHiddenBefore(getBestPrintableNode(elsePath,true));
+    print(elsePath);
+  }
+}
