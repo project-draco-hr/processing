@@ -31,11 +31,19 @@
     name=getFirstClassName(parserAST);
   }
   if (name == null)   return null;
-  PdeEmitter emitter=new PdeEmitter(this,stream);
   writeDeclaration(stream,name);
-  emitter.print(rootNode);
+  new PdeEmitter(this,stream).print(rootNode);
   writeFooter(stream,name);
   stream.close();
+  if (false) {
+    final ByteArrayOutputStream buf=new ByteArrayOutputStream();
+    final PrintStream bufout=new PrintStream(buf);
+    writeDeclaration(bufout,name);
+    new PdeEmitter(this,bufout).print(rootNode);
+    writeFooter(bufout,name);
+    debugAST(rootNode,true);
+    System.err.println(new String(buf.toByteArray()));
+  }
   if (Preferences.getBoolean("preproc.output_parse_tree")) {
     writeParseTree("parseTree.xml",parserAST);
   }
