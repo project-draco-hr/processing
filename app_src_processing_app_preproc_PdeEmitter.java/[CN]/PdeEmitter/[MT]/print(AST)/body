@@ -218,6 +218,7 @@ out.print("switch");
 dumpHiddenAfter(ast);
 printChildren(ast);
 break;
+case LABELED_STAT:
 case CASE_GROUP:
 printChildren(ast);
 break;
@@ -271,13 +272,19 @@ case LITERAL_null:
 case SEMI:
 case LITERAL_this:
 case LITERAL_super:
-case LITERAL_continue:
-case LITERAL_break:
 out.print(ast.getText());
 dumpHiddenAfter(ast);
 break;
 case EMPTY_STAT:
 case EMPTY_FIELD:
+break;
+case LITERAL_continue:
+case LITERAL_break:
+out.print(ast.getText());
+dumpHiddenAfter(ast);
+if (child1 != null) {
+print(child1);
+}
 break;
 case STAR:
 if (hasChildren(ast)) {
