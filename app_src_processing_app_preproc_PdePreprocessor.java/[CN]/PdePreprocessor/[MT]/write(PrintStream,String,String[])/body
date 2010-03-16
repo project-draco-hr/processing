@@ -1,0 +1,27 @@
+{
+  final ArrayList<String> programImports=new ArrayList<String>();
+  final ArrayList<String> codeFolderImports=new ArrayList<String>();
+  foundMain=false;
+  checkForUnterminatedMultilineComment(program);
+  if (Preferences.getBoolean("preproc.substitute_unicode")) {
+    program=substituteUnicode(program);
+  }
+  final String importRegexp="(?:^|;)\\s*(import\\s+)((?:static\\s+)?\\S+)(\\s*;)";
+  do {
+    String[] pieces=PApplet.match(program,importRegexp);
+    if (pieces == null)     break;
+    String piece=pieces[1] + pieces[2] + pieces[3];
+    int len=piece.length();
+    programImports.add(pieces[2]);
+    int idx=program.indexOf(piece);
+    program=program.substring(0,idx) + program.substring(idx + len);
+  }
+ while (true);
+  if (codeFolderPackages != null) {
+    for (    String item : codeFolderPackages) {
+      codeFolderImports.add(item + ".*");
+    }
+  }
+  final int headerOffset=writeImports(stream,programImports,codeFolderImports);
+  return new PreprocessResult(headerOffset + 2,write(program,stream),programImports);
+}

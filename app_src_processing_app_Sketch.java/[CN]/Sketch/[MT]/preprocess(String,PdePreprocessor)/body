@@ -21,24 +21,23 @@
       bigCount+=sc.getLineCount();
     }
   }
-  int headerOffset=0;
+  final PreprocessResult result;
   try {
-    headerOffset=preprocessor.writePrefix(bigCode.toString(),codeFolderPackages);
+    final File java=new File(buildPath,name + ".java");
+    final PrintStream stream=new PrintStream(new FileOutputStream(java));
+    try {
+      result=preprocessor.write(stream,bigCode.toString(),codeFolderPackages);
+    }
+  finally {
+      stream.close();
+    }
   }
  catch (  FileNotFoundException fnfe) {
     fnfe.printStackTrace();
     String msg="Build folder disappeared or could not be written";
     throw new RunnerException(msg);
   }
-  String primaryClassName=null;
-  try {
-    final String className=preprocessor.write();
-    if (className == null) {
-      throw new RunnerException("Could not find main class");
-    }
-    primaryClassName=className;
-  }
- catch (  antlr.RecognitionException re) {
+catch (  antlr.RecognitionException re) {
     int errorFile=0;
     int errorLine=re.getLine() - 1;
     for (int i=1; i < codeCount; i++) {
@@ -101,7 +100,7 @@ catch (  Exception ex) {
     throw new RunnerException(ex.toString());
   }
   importedLibraries=new ArrayList<File>();
-  for (  String item : preprocessor.getExtraImports()) {
+  for (  String item : result.extraImports) {
     int dot=item.lastIndexOf('.');
     String entry=(dot == -1) ? item : item.substring(0,dot);
     File libFolder=(File)Base.importToLibraryTable.get(entry);
@@ -128,9 +127,9 @@ catch (  Exception ex) {
       }
     }
  else     if (sc.isExtension("pde")) {
-      sc.addPreprocOffset(headerOffset);
+      sc.addPreprocOffset(result.headerOffset);
     }
   }
   foundMain=preprocessor.getFoundMain();
-  return primaryClassName;
+  return result.className;
 }

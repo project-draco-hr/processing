@@ -11,7 +11,13 @@
     if (mods.getNextSibling().getType() == TYPE_PARAMETERS) {
       return;
     }
-    final AST publicNode=new CommonASTWithHiddenTokens(new BogusPublicToken());
+    final CommonHiddenStreamToken publicToken=new CommonHiddenStreamToken(LITERAL_public,"public"){
+{
+        setHiddenAfter(new CommonHiddenStreamToken(WS," "));
+      }
+    }
+;
+    final AST publicNode=new CommonASTWithHiddenTokens(publicToken);
     publicNode.setNextSibling(oldFirstMod);
     mods.setFirstChild(publicNode);
   }
