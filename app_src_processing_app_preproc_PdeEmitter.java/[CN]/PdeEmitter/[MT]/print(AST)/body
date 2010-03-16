@@ -370,8 +370,9 @@ dumpHiddenAfter(terminalTypeNode);
 print(exprToCast);
 break;
 case NUM_DOUBLE:
-out.print(ast.getText());
-if (Preferences.getBoolean("preproc.substitute_floats")) {
+final String literalDouble=ast.getText().toLowerCase();
+out.print(literalDouble);
+if (Preferences.getBoolean("preproc.substitute_floats") && literalDouble.indexOf('d') == -1) {
 out.print("f");
 }
 dumpHiddenAfter(ast);
