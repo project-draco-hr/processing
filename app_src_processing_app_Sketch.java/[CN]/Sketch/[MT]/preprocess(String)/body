@@ -1,3 +1,8 @@
 {
-  return preprocess(buildPath,new PdePreprocessor());
+  try {
+    return preprocess(buildPath,new PdePreprocessor(buildPath,name));
+  }
+ catch (  IOException e) {
+    throw new RunnerException("Error while preprocessing",true);
+  }
 }

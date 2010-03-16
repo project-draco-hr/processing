@@ -26,15 +26,12 @@
   AST parserAST=parser.getAST();
   AST rootNode=factory.create(ROOT_ID,"AST ROOT");
   rootNode.setFirstChild(parserAST);
+  makeSimpleMethodsPublic(rootNode);
   CommonAST.setVerboseStringConversion(true,parser.getTokenNames());
   if (programType == ProgramType.JAVA) {
     name=getFirstClassName(parserAST);
   }
   if (name == null)   return null;
-  writeDeclaration(stream,name);
-  new PdeEmitter(this,stream).print(rootNode);
-  writeFooter(stream,name);
-  stream.close();
   if (false) {
     final ByteArrayOutputStream buf=new ByteArrayOutputStream();
     final PrintStream bufout=new PrintStream(buf);
@@ -44,6 +41,10 @@
     debugAST(rootNode,true);
     System.err.println(new String(buf.toByteArray()));
   }
+  writeDeclaration(stream,name);
+  new PdeEmitter(this,stream).print(rootNode);
+  writeFooter(stream,name);
+  stream.close();
   if (Preferences.getBoolean("preproc.output_parse_tree")) {
     writeParseTree("parseTree.xml",parserAST);
   }
