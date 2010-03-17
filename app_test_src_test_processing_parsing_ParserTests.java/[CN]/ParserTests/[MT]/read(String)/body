@@ -1,0 +1,19 @@
+{
+  try {
+    final FileInputStream fin=new FileInputStream(path);
+    final InputStreamReader in=new InputStreamReader(fin,"UTF-8");
+    try {
+      final StringBuilder sb=new StringBuilder();
+      final char[] buf=new char[1 << 12];
+      int len;
+      while ((len=in.read(buf)) != -1)       sb.append(buf,0,len);
+      return sb.toString();
+    }
+  finally {
+      in.close();
+    }
+  }
+ catch (  Exception e) {
+    throw new RuntimeException("Unexpected",e);
+  }
+}

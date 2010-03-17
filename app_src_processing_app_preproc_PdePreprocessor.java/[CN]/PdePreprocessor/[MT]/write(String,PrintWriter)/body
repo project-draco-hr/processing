@@ -37,13 +37,13 @@
   }
   if (className == null)   return null;
   if (false) {
-    final ByteArrayOutputStream buf=new ByteArrayOutputStream();
-    final PrintStream bufout=new PrintStream(buf);
+    final StringWriter buf=new StringWriter();
+    final PrintWriter bufout=new PrintWriter(buf);
     writeDeclaration(bufout,className);
     new PdeEmitter(this,bufout).print(rootNode);
     writeFooter(bufout,className);
     debugAST(rootNode,true);
-    System.err.println(new String(buf.toByteArray()));
+    System.err.println(buf.toString());
   }
   writeDeclaration(stream,className);
   new PdeEmitter(this,stream).print(rootNode);
