@@ -1,0 +1,23 @@
+{
+  final File tmpdir=File.createTempFile("utcompiler",".tmp");
+  if (!tmpdir.delete())   throw new IOException("Cannot delete " + tmpdir);
+  if (!tmpdir.mkdir())   throw new IOException("Cannot create " + tmpdir);
+  final File javaFile=new File(tmpdir,name + ".java");
+  final FileWriter java=new FileWriter(javaFile);
+  try {
+    java.write(program);
+  }
+  finally {
+    java.close();
+  }
+  try {
+    return new ProcessHelper("javac","-sourcepath",tmpdir.getAbsolutePath(),"-cp",classpath,"-nowarn","-d",tmpdir.getAbsolutePath(),javaFile.getAbsolutePath()).execute();
+  }
+ catch (  InterruptedException e) {
+    throw new RuntimeException(e);
+  }
+ finally {
+    for (    final File f : tmpdir.listFiles())     if (!f.getName().startsWith("."))     if (!f.delete())     throw new IOException("Can't delete " + f);
+    if (!tmpdir.delete())     throw new IOException("Can't delete " + tmpdir);
+  }
+}
