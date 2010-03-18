@@ -1,0 +1,19 @@
+{
+  try {
+    final String program=preprocess(id,res(id + ".pde"));
+    final ProcessResult compilerResult=COMPILER.compile(id,program);
+    if (compilerResult.succeeded()) {
+      fail("Expected to fail with \"" + expectedMessage + "\" on line "+ expectedLine);
+    }
+    final String e=compilerResult.getStderr().split("\n")[0];
+    System.err.println(e);
+    final Matcher m=Pattern.compile(":(\\d+):\\s+(.+)$").matcher(e);
+    m.find();
+    assertEquals(expectedMessage,m.group(2));
+    assertEquals(String.valueOf(expectedLine),m.group(1));
+  }
+ catch (  Exception e) {
+    if (!e.equals(e.getCause()) && e.getCause() != null)     fail(e.getCause().toString());
+ else     fail(e.toString());
+  }
+}
