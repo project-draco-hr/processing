@@ -4,11 +4,11 @@
   if (vertexBuffer.capacity() / 3 < 3 * (stop - start)) {
     expandBuffers();
   }
-  vertexBuffer.rewind();
-  colorBuffer.rewind();
   float sw=vertices[lines[start][VERTEX1]][SW];
   if (sw > 0) {
     gl.glPointSize(sw);
+    vertexBuffer.position(0);
+    colorBuffer.position(0);
     for (int i=start; i < stop; i++) {
       float[] a=vertices[points[i][VERTEX1]];
       colorBuffer.put(toFixed16(a[SR]));
@@ -19,6 +19,8 @@
       vertexBuffer.put(toFixed32(a[VY]));
       vertexBuffer.put(toFixed32(a[VZ]));
     }
+    vertexBuffer.position(0);
+    colorBuffer.position(0);
     gl.glVertexPointer(3,GL10.GL_FIXED,0,vertexBuffer);
     gl.glColorPointer(4,GL10.GL_FIXED,0,colorBuffer);
     gl.glDrawArrays(GL10.GL_POINTS,start,stop - start);

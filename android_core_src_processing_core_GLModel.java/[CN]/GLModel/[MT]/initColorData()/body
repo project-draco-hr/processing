@@ -1,9 +1,8 @@
 {
   ByteBuffer vbb=ByteBuffer.allocateDirect(numVertices * 4 * SIZEOF_FLOAT);
   vbb.order(ByteOrder.nativeOrder());
-  colors=vbb.asFloatBuffer();
-  float[] values=new float[colors.capacity()];
-  for (int i=0; i < values.length; i++)   values[i]=1.0f;
-  colors.put(values);
-  colors.position(0);
+  colorBuffer=vbb.asFloatBuffer();
+  colorArray=new float[numVertices * 4];
+  colorBuffer.put(colorArray);
+  colorBuffer.flip();
 }

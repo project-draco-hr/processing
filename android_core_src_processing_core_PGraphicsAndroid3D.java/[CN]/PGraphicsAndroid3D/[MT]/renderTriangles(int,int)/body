@@ -2,10 +2,6 @@
   report("render_triangles in");
   GLTexture tex=null;
   boolean texturing=false;
-  vertexBuffer.position(0);
-  colorBuffer.position(0);
-  normalBuffer.position(0);
-  textureBuffer.position(0);
   gl.glPushMatrix();
   gl.glScalef(1,-1,1);
   gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
@@ -28,14 +24,13 @@
  else {
       texturing=false;
     }
-    System.out.println("Sizes = " + vertexBuffer.capacity() / 3 + " " + 3 * faceLength[j]);
     if (vertexBuffer.capacity() / 3 < 3 * faceLength[j]) {
       expandBuffers();
     }
-    vertexBuffer.rewind();
-    colorBuffer.rewind();
-    normalBuffer.rewind();
-    textureBuffer.rewind();
+    vertexBuffer.position(0);
+    colorBuffer.position(0);
+    normalBuffer.position(0);
+    textureBuffer.position(0);
     for (int k=0; k < faceLength[j]; k++) {
       float a[]=vertices[triangles[i][VERTEX1]];
       float b[]=vertices[triangles[i][VERTEX2]];
