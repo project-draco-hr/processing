@@ -1,0 +1,23 @@
+{
+  int[] pix=new int[width * height];
+  for (int i=0; i < width * height; i++)   pix[i]=0xFF000000;
+  gl.glGenTextures(1,screenTexID,0);
+  gl.glBindTexture(GL10.GL_TEXTURE_2D,screenTexID[0]);
+  gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_MIN_FILTER,GL10.GL_LINEAR);
+  gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_MAG_FILTER,GL10.GL_LINEAR);
+  gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_S,GL10.GL_CLAMP_TO_EDGE);
+  gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_T,GL10.GL_CLAMP_TO_EDGE);
+  gl.glTexImage2D(GL10.GL_TEXTURE_2D,0,GL10.GL_RGBA,width,height,0,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(pix));
+  gl.glBindTexture(GL10.GL_TEXTURE_2D,0);
+  int fw=toFixed32(width);
+  int fh=toFixed32(height);
+  int one=toFixed32(1.0f);
+  int[] quadCoords={0,fh,0,0,0,0,fw,0,0,0,fh,0,fw,0,0,fw,fh,0};
+  int[] quadTexCoords={0,one,0,0,one,0,0,one,one,0,one,one};
+  screenVertBuffer.position(0);
+  screenTexCoordBuffer.position(0);
+  screenVertBuffer.put(quadCoords);
+  screenTexCoordBuffer.put(quadTexCoords);
+  screenTex=parent.createImage(width,height,ARGB);
+  screenTex.getTexture().set(pix);
+}

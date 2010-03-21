@@ -30,7 +30,7 @@
     vertexBuffer.position(0);
     colorBuffer.position(0);
     normalBuffer.position(0);
-    textureBuffer.position(0);
+    texCoordBuffer.position(0);
     for (int k=0; k < faceLength[j]; k++) {
       float a[]=vertices[triangles[i][VERTEX1]];
       float b[]=vertices[triangles[i][VERTEX2]];
@@ -63,8 +63,8 @@
       normalBuffer.put(toFixed32(a[NX]));
       normalBuffer.put(toFixed32(a[NY]));
       normalBuffer.put(toFixed32(a[NZ]));
-      textureBuffer.put(toFixed32((cx + sx * a[U]) * uscale));
-      textureBuffer.put(toFixed32((cy + sy * a[V]) * vscale));
+      texCoordBuffer.put(toFixed32((cx + sx * a[U]) * uscale));
+      texCoordBuffer.put(toFixed32((cy + sy * a[V]) * vscale));
       vertexBuffer.put(toFixed32(b[X]));
       vertexBuffer.put(toFixed32(b[Y]));
       vertexBuffer.put(toFixed32(b[Z]));
@@ -75,8 +75,8 @@
       normalBuffer.put(toFixed32(b[NX]));
       normalBuffer.put(toFixed32(b[NY]));
       normalBuffer.put(toFixed32(b[NZ]));
-      textureBuffer.put(toFixed32((cx + sx * b[U]) * uscale));
-      textureBuffer.put(toFixed32((cy + sy * b[V]) * vscale));
+      texCoordBuffer.put(toFixed32((cx + sx * b[U]) * uscale));
+      texCoordBuffer.put(toFixed32((cy + sy * b[V]) * vscale));
       vertexBuffer.put(toFixed32(c[X]));
       vertexBuffer.put(toFixed32(c[Y]));
       vertexBuffer.put(toFixed32(c[Z]));
@@ -87,20 +87,21 @@
       normalBuffer.put(toFixed32(c[NX]));
       normalBuffer.put(toFixed32(c[NY]));
       normalBuffer.put(toFixed32(c[NZ]));
-      textureBuffer.put(toFixed32((cx + sx * c[U]) * uscale));
-      textureBuffer.put(toFixed32((cy + sy * c[V]) * vscale));
+      texCoordBuffer.put(toFixed32((cx + sx * c[U]) * uscale));
+      texCoordBuffer.put(toFixed32((cy + sy * c[V]) * vscale));
       i++;
     }
     vertexBuffer.position(0);
     colorBuffer.position(0);
     normalBuffer.position(0);
-    textureBuffer.position(0);
+    texCoordBuffer.position(0);
     gl.glVertexPointer(3,GL10.GL_FIXED,0,vertexBuffer);
     gl.glColorPointer(4,GL10.GL_FIXED,0,colorBuffer);
     gl.glNormalPointer(GL10.GL_FIXED,0,normalBuffer);
-    if (texturing)     gl.glTexCoordPointer(2,GL10.GL_FIXED,0,textureBuffer);
+    if (texturing)     gl.glTexCoordPointer(2,GL10.GL_FIXED,0,texCoordBuffer);
     gl.glDrawArrays(GL10.GL_TRIANGLES,0,3 * faceLength[j]);
     if (texturing) {
+      gl.glBindTexture(tex.getGLTarget(),0);
       gl.glDisable(tex.getGLTarget());
       gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
     }
