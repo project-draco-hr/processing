@@ -28,16 +28,15 @@
   gl.glEnable(GL10.GL_NORMALIZE);
   gl.glEnable(GL10.GL_RESCALE_NORMAL);
   shapeFirst=0;
-  if (screenTexID[0] == 0) {
-    createScreenTexture();
+  if (clear) {
+    gl.glClearColor(0,0,0,0);
+    gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
   }
-  tint(255);
-  beginShape(QUADS);
-  texture(screenTex);
-  vertex(0,0,0,screenTex.height);
-  vertex(width,0,screenTex.width,screenTex.height);
-  vertex(width,height,screenTex.width,0);
-  vertex(0,height,0,0);
-  endShape();
+ else {
+    if (screenTex == null || screenTex.width != width || screenTex.height != height) {
+      createScreenTexture();
+    }
+    drawScreenTexture();
+  }
   report("bot beginDraw()");
 }
