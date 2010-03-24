@@ -1,0 +1,28 @@
+{
+  Properties keybindings=new Properties();
+  InputMap inputMap=anEditorPane.getInputMap();
+  try {
+    InputStream inputStream=NBEditorFactory.class.getResourceAsStream("keybindings.properties");
+    keybindings.load(inputStream);
+    inputStream.close();
+    Enumeration keynames=keybindings.keys();
+    while (keynames.hasMoreElements()) {
+      String keyName=(String)keynames.nextElement();
+      KeyStroke ks=Utilities.stringToKey(keyName);
+      String actionName=keybindings.getProperty(keyName);
+      inputMap.put(ks,actionName);
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace(System.err);
+    inputMap.put(KeyStroke.getKeyStroke("DELETE"),ExtKit.deleteNextCharAction);
+    inputMap.put(KeyStroke.getKeyStroke("BACK_SPACE"),ExtKit.deletePrevCharAction);
+    inputMap.put(KeyStroke.getKeyStroke("ENTER"),ExtKit.insertBreakAction);
+    inputMap.put(KeyStroke.getKeyStroke("UP"),ExtKit.upAction);
+    inputMap.put(KeyStroke.getKeyStroke("DOWN"),ExtKit.downAction);
+    inputMap.put(KeyStroke.getKeyStroke("LEFT"),ExtKit.backwardAction);
+    inputMap.put(KeyStroke.getKeyStroke("RIGHT"),ExtKit.forwardAction);
+    inputMap.put(KeyStroke.getKeyStroke("ctrl Z"),ExtKit.undoAction);
+    inputMap.put(KeyStroke.getKeyStroke("ctrl Y"),ExtKit.redoAction);
+  }
+}
