@@ -2,7 +2,6 @@
   int texTarget=GL11.GL_TEXTURE_2D;
   GLTexture tex;
   float pointSize;
-  gl.glLineWidth(a3d.strokeWeight);
   pointSize=PApplet.min(a3d.strokeWeight,a3d.maxPointSize);
   gl.glPointSize(pointSize);
   gl.glEnableClientState(GL11.GL_NORMAL_ARRAY);
@@ -43,7 +42,18 @@
     }
     gl.glPushMatrix();
     gl.glScalef(1,-1,1);
-    gl.glDrawArrays(glMode,group.first,group.last - group.first + 1);
+    if (0 < group.sw) {
+      gl.glLineWidth(group.sw);
+    }
+ else {
+      gl.glLineWidth(a3d.strokeWeight);
+    }
+    if (0 < group.glMode && !pointSprites) {
+      gl.glDrawArrays(group.glMode,group.first,group.last - group.first + 1);
+    }
+ else {
+      gl.glDrawArrays(glMode,group.first,group.last - group.first + 1);
+    }
     gl.glPopMatrix();
     if (tex != null) {
       if (pointSprites) {
