@@ -1,19 +1,18 @@
 {
   char r;
   int l, kk;
-  String j_string=new String(string);
-  if (j < 1)   return (0);
+  if (j < 1)   return false;
   kk=0;
-  while (string[kk] == ' ')   kk++;
+  while (buf[kk] == ' ')   kk++;
   l=0;
-  l=j_string.indexOf(keyword);
+  l=new String(buf).indexOf(keyword);
   if (l < 0 || l != kk) {
-    return 0;
+    return false;
   }
-  r=string[kk + keyword.length()];
-  if (r >= 'a' && r <= 'z')   return (0);
-  if (r >= 'A' && r <= 'Z')   return (0);
-  if (r >= '0' && r <= '9')   return (0);
-  if (r == '_' || r == '&')   return (0);
-  return (1);
+  r=buf[kk + keyword.length()];
+  if (r >= 'a' && r <= 'z')   return false;
+  if (r >= 'A' && r <= 'Z')   return false;
+  if (r >= '0' && r <= '9')   return false;
+  if (r == '_' || r == '&')   return false;
+  return true;
 }

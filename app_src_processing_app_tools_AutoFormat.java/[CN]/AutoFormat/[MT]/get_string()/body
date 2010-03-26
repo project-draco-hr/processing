@@ -4,16 +4,16 @@
   while (true) {
 switch (ch) {
 default :
-      ch=string[j++]=getchr();
+      ch=buf[j++]=getchr();
     if (ch == '\\') {
-      string[j++]=getchr();
+      buf[j++]=getchr();
       break;
     }
   if (ch == '\'' || ch == '"') {
-    cc=string[j++]=getchr();
-    while (cc != ch) {
-      if (cc == '\\')       string[j++]=getchr();
-      cc=string[j++]=getchr();
+    cc=buf[j++]=getchr();
+    while (!EOF && cc != ch) {
+      if (cc == '\\')       buf[j++]=getchr();
+      cc=buf[j++]=getchr();
     }
     break;
   }

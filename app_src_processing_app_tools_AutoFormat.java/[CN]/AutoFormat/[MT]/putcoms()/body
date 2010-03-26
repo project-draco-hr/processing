@@ -6,12 +6,12 @@
       p_tabs();
       s_flg=0;
     }
-    string[j]='\0';
+    buf[j]='\0';
     i=0;
-    while (string[i] == ' ')     i++;
+    while (buf[i] == ' ')     i++;
     if (lookup_com(w_jdoc) == 1)     jdoc=1;
-    String strBuffer=new String(string,0,j);
-    if (string[i] == '/' && string[i + 1] == '*') {
+    String strBuffer=new String(buf,0,j);
+    if (buf[i] == '/' && buf[i + 1] == '*') {
       if ((last_char != ';') && (sav_s_flg == 1)) {
         fprintf(strBuffer.substring(i,j));
       }
@@ -20,10 +20,10 @@
       }
     }
  else {
-      if (string[i] == '*' || jdoc == 0)       fprintf(" " + strBuffer.substring(i,j));
+      if (buf[i] == '*' || jdoc == 0)       fprintf(" " + strBuffer.substring(i,j));
  else       fprintf(" * " + strBuffer.substring(i,j));
     }
     j=0;
-    string[0]='\0';
+    buf[0]='\0';
   }
 }

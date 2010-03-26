@@ -3,7 +3,7 @@
   save_s_flg=tabs;
   peekc=getchr();
   while (peekc == '\t' || peekc == ' ') {
-    string[j++]=peekc;
+    buf[j++]=peekc;
     peek=-1;
     peekc='`';
     peekc=getchr();
@@ -15,22 +15,22 @@
     peekc='`';
     peekc=getchr();
     if (peekc == '*') {
-      string[j++]='/';
-      string[j++]='*';
+      buf[j++]='/';
+      buf[j++]='*';
       peek=-1;
       peekc='`';
       comment();
     }
  else     if (peekc == '/') {
-      string[j++]='/';
-      string[j++]='/';
+      buf[j++]='/';
+      buf[j++]='/';
       peek=-1;
       peekc='`';
       cpp_comment();
       return (1);
     }
  else {
-      string[j++]='/';
+      buf[j++]='/';
       peek=1;
     }
   }
