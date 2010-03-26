@@ -20,17 +20,8 @@
   ind=new int[10];
   p_flg=new int[10];
   s_tabs=new int[20][10];
-  w_else="else";
-  w_if_=new String("if");
-  w_for=new String("for");
-  w_ds=new String("default");
-  w_case=new String("case");
-  w_cpp_comment=new String("//");
-  w_jdoc=new String("/**");
   line_feed=new String("\n");
   EOF=false;
-  chars=new char[BLOCK_MAXLEN];
-  buf=new char[BLOCK_MAXLEN];
   try {
     reader=new CharArrayReader(originalText.toCharArray());
     lineLength=readCount=0;
@@ -51,7 +42,7 @@ default :
     break;
 case ' ':
 case '\t':
-  if (lookup(w_else)) {
+  if (lookup("else")) {
     gotelse();
     if (s_flg == 0 || j > 0) {
       buf[j++]=c;
@@ -70,11 +61,11 @@ lineNumber++;
 if (EOF) {
 break;
 }
-e_flg=lookup(w_else);
+e_flg=lookup("else");
 if (e_flg) {
 gotelse();
 }
-if (lookup_com(w_cpp_comment) == 1) {
+if (lookup_com("//") == 1) {
 if (buf[j] == '\n') {
 buf[j]='\0';
 j--;
@@ -92,7 +83,7 @@ a_flg=1;
 }
 break;
 case '{':
-if (lookup(w_else)) {
+if (lookup("else")) {
 gotelse();
 }
 if (s_if_lev.length == c_level) {
@@ -234,7 +225,7 @@ if (q_flg == 1) {
 q_flg=0;
 break;
 }
-if (!lookup(w_ds) && !lookup(w_case)) {
+if (!lookup("default") && !lookup("case")) {
 s_flg=0;
 indent_puts();
 }
@@ -311,7 +302,7 @@ break;
 case '(':
 buf[j++]=c;
 paren++;
-if ((lookup(w_for))) {
+if ((lookup("for"))) {
 c=get_string();
 while (c != ';') {
 c=get_string();
@@ -347,7 +338,7 @@ ind[level]=0;
 }
 break;
 }
-if (lookup(w_if_)) {
+if (lookup("if")) {
 indent_puts();
 s_tabs[c_level][if_lev]=tabs;
 sp_flg[c_level][if_lev]=p_flg[level];
