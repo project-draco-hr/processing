@@ -5,7 +5,7 @@
   indentValue=Preferences.getInteger("editor.tabs.size");
   lineNumber=0;
   q_flg=e_flg=a_flg=if_flg=false;
-  s_flg=true;
+  s_flag=true;
   c_level=if_lev=level=paren=0;
   tabs=0;
   jdoc_flag=false;
@@ -27,23 +27,25 @@
 switch (c) {
 default :
         currentLine.append(c);
-      if (c != ',') {
-        l_char=c;
-      }
+      l_char=c;
     break;
+case ',':
+  trimRight(currentLine);
+currentLine.append(c);
+break;
 case ' ':
 case '\t':
-  if (lookup("else")) {
-    gotelse();
-    if ((!s_flg) || currentLine.length() > 0) {
-      currentLine.append(c);
-    }
-    indent_puts();
-    s_flg=false;
-    break;
-  }
-if ((!s_flg) || currentLine.length() > 0) {
-  currentLine.append(c);
+if (lookup("else")) {
+gotelse();
+if ((!s_flag) || currentLine.length() > 0) {
+currentLine.append(c);
+}
+writeIndentedLine();
+s_flag=false;
+break;
+}
+if ((!s_flag) || currentLine.length() > 0) {
+currentLine.append(c);
 }
 break;
 case '\n':
@@ -61,9 +63,9 @@ if (lastChar == '\n') {
 currentLine.setLength(currentLine.length() - 1);
 }
 }
-indent_puts();
+writeIndentedLine();
 result.append("\n");
-s_flg=true;
+s_flag=true;
 if (e_flg) {
 p_flg[level]++;
 tabs++;
@@ -85,17 +87,19 @@ s_if_flg[c_level]=if_flg;
 if_lev=0;
 if_flg=false;
 c_level++;
-if (s_flg && p_flg[level] != 0) {
+if (s_flag && p_flg[level] != 0) {
 p_flg[level]--;
 tabs--;
 }
+trimRight(currentLine);
+if (currentLine.length() > 0 || (result.length() > 0 && !Character.isWhitespace(result.charAt(result.length() - 1)))) currentLine.append(" ");
 currentLine.append(c);
-indent_puts();
+writeIndentedLine();
 getnl();
-indent_puts();
+writeIndentedLine();
 result.append("\n");
 tabs++;
-s_flg=true;
+s_flag=true;
 if (p_flg[level] > 0) {
 ind[level]=1;
 level++;
@@ -107,7 +111,7 @@ c_level--;
 if (c_level < 0) {
 c_level=0;
 currentLine.append(c);
-indent_puts();
+writeIndentedLine();
 break;
 }
 if_lev=s_if_lev[c_level] - 1;
@@ -115,17 +119,20 @@ if (if_lev < 0) {
 if_lev=0;
 }
 if_flg=s_if_flg[c_level];
-indent_puts();
+trimRight(currentLine);
+writeIndentedLine();
 tabs--;
-p_tabs();
+trimRight(result);
+result.append("\n");
+printIndentation();
 result.append(c);
 if (peek() == ';') {
 result.append(next());
 }
 getnl();
-indent_puts();
+writeIndentedLine();
 result.append("\n");
-s_flg=true;
+s_flag=true;
 if (c_level < s_level[level]) {
 if (level > 0) {
 level--;
@@ -148,8 +155,8 @@ currentLine.append(cc=next());
 }
 if (cc == '\n') {
 lineNumber++;
-indent_puts();
-s_flg=true;
+writeIndentedLine();
+s_flag=true;
 }
 cc=next();
 }
@@ -161,15 +168,15 @@ chars[pos--]='\n';
 break;
 case ';':
 currentLine.append(c);
-indent_puts();
+writeIndentedLine();
 if (p_flg[level] > 0 && ind[level] == 0) {
 tabs-=p_flg[level];
 p_flg[level]=0;
 }
 getnl();
-indent_puts();
+writeIndentedLine();
 result.append("\n");
-s_flg=true;
+s_flag=true;
 if (if_lev > 0) {
 if (if_flg) {
 if_lev--;
@@ -191,7 +198,7 @@ break;
 case ':':
 currentLine.append(c);
 if (peek() == ':') {
-indent_puts();
+writeIndentedLine();
 result.append(next());
 break;
 }
@@ -200,32 +207,32 @@ q_flg=false;
 break;
 }
 if (!lookup("default") && !lookup("case")) {
-s_flg=false;
-indent_puts();
+s_flag=false;
+writeIndentedLine();
 }
  else {
 tabs--;
-indent_puts();
+writeIndentedLine();
 tabs++;
 }
 if (peek() == ';') {
 result.append(next());
 }
 getnl();
-indent_puts();
+writeIndentedLine();
 result.append("\n");
-s_flg=true;
+s_flag=true;
 break;
 case '/':
 final char la=peek();
 if (la == '/') {
 currentLine.append(c).append(next());
-cpp_comment();
+handleSingleLineComment();
 result.append("\n");
 }
  else if (la == '*') {
 if (currentLine.length() > 0) {
-indent_puts();
+writeIndentedLine();
 }
 currentLine.append(c).append(next());
 comment();
@@ -240,7 +247,7 @@ if (paren < 0) {
 paren=0;
 }
 currentLine.append(c);
-indent_puts();
+writeIndentedLine();
 if (getnl()) {
 chars[pos--]='\n';
 if (paren != 0) {
@@ -282,7 +289,7 @@ paren--;
 if (paren < 0) {
 paren=0;
 }
-indent_puts();
+writeIndentedLine();
 if (getnl()) {
 chars[pos--]='\n';
 p_flg[level]++;
@@ -292,7 +299,7 @@ ind[level]=0;
 break;
 }
 if (lookup("if")) {
-indent_puts();
+writeIndentedLine();
 s_tabs[c_level][if_lev]=tabs;
 sp_flg[c_level][if_lev]=p_flg[level];
 s_ind[c_level][if_lev]=ind[level];

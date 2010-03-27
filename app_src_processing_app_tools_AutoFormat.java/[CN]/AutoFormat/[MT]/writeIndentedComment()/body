@@ -1,9 +1,9 @@
 {
-  final boolean sav_s_flg=s_flg;
+  final boolean saved_s_flag=s_flag;
   if (currentLine.length() > 0) {
-    if (s_flg) {
-      p_tabs();
-      s_flg=false;
+    if (s_flag) {
+      printIndentation();
+      s_flag=false;
     }
     int i=0;
     while (currentLine.charAt(i) == ' ') {
@@ -13,7 +13,7 @@
       jdoc_flag=true;
     }
     if (currentLine.charAt(i) == '/' && currentLine.charAt(i + 1) == '*') {
-      if ((currentChar != ';') && sav_s_flg) {
+      if (saved_s_flag && prev() != ';') {
         result.append(currentLine.substring(i));
       }
  else {
@@ -22,7 +22,7 @@
     }
  else {
       if (currentLine.charAt(i) == '*' || !jdoc_flag) {
-        result.append((INDENT_STRING + currentLine.substring(i)));
+        result.append((" " + currentLine.substring(i)));
       }
  else {
         result.append((" * " + currentLine.substring(i)));
