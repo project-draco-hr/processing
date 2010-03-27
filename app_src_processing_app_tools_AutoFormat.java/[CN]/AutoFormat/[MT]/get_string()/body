@@ -1,32 +1,26 @@
 {
   char ch;
-  ch='*';
   while (true) {
-switch (ch) {
-default :
-      ch=buf[j++]=getchr();
+    currentLine.append(ch=next());
     if (ch == '\\') {
-      buf[j++]=getchr();
-      break;
+      currentLine.append(next());
+      continue;
     }
-  if (ch == '\'' || ch == '"') {
-    cc=buf[j++]=getchr();
-    while (!EOF && cc != ch) {
-      if (cc == '\\') {
-        buf[j++]=getchr();
+    if (ch == '\'' || ch == '"') {
+      currentLine.append(cc=next());
+      while (!EOF && cc != ch) {
+        if (cc == '\\') {
+          currentLine.append(next());
+        }
+        currentLine.append(cc=next());
       }
-      cc=buf[j++]=getchr();
+      continue;
     }
-    break;
+    if (ch == '\n') {
+      indent_puts();
+      a_flg=true;
+      continue;
+    }
+    return ch;
   }
-if (ch == '\n' || ch == '\r') {
-  indent_puts();
-  a_flg=1;
-  break;
-}
- else {
-  return (ch);
-}
-}
-}
 }

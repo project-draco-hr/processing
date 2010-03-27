@@ -1,24 +1,21 @@
 {
-  buf[j]='\0';
-  if (j > 0) {
-    if (s_flg != 0) {
-      if ((tabs > 0) && (buf[0] != '{') && (a_flg == 1)) {
+  if (currentLine.length() > 0) {
+    if (s_flg) {
+      final boolean shouldIndent=(tabs > 0) && (currentLine.charAt(0) != '{') && a_flg;
+      if (shouldIndent) {
         tabs++;
       }
       p_tabs();
-      s_flg=0;
-      if ((tabs > 0) && (buf[0] != '{') && (a_flg == 1)) {
+      s_flg=false;
+      if (shouldIndent) {
         tabs--;
       }
-      a_flg=0;
+      a_flg=false;
     }
-    strOut.append(buf,0,j);
-    j=0;
+    result.append(currentLine);
+    currentLine.setLength(0);
   }
- else {
-    if (s_flg != 0) {
-      s_flg=0;
-      a_flg=0;
-    }
+ else   if (s_flg) {
+    s_flg=a_flg=false;
   }
 }

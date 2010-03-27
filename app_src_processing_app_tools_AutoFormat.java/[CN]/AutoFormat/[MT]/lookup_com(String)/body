@@ -1,17 +1,4 @@
 {
-  int l, kk;
-  final String j_string=new String(buf);
-  if (j < 1) {
-    return (0);
-  }
-  kk=0;
-  while (buf[kk] == ' ') {
-    kk++;
-  }
-  l=0;
-  l=j_string.indexOf(keyword);
-  if (l < 0 || l != kk) {
-    return 0;
-  }
-  return (1);
+  final String regex="^\\s*" + keyword.replaceAll("\\*","\\\\*") + ".*$";
+  return Pattern.matches(regex,currentLine);
 }

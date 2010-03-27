@@ -1,49 +1,29 @@
 {
-  int save_s_flg;
-  save_s_flg=tabs;
-  peekc=getchr();
-  while (peekc == '\t' || peekc == ' ') {
-    buf[j++]=peekc;
-    peek=-1;
-    peekc='`';
-    peekc=getchr();
-    peek=1;
+  final int savedTabs=tabs;
+  char c=peek();
+  while (!EOF && (c == '\t' || c == ' ')) {
+    currentLine.append(next());
+    c=peek();
   }
-  peek=1;
-  if (peekc == '/') {
-    peek=-1;
-    peekc='`';
-    peekc=getchr();
-    if (peekc == '*') {
-      buf[j++]='/';
-      buf[j++]='*';
-      peek=-1;
-      peekc='`';
+  if (c == '/') {
+    currentLine.append(next());
+    c=peek();
+    if (c == '*') {
+      currentLine.append(next());
       comment();
     }
- else     if (peekc == '/') {
-      buf[j++]='/';
-      buf[j++]='/';
-      peek=-1;
-      peekc='`';
+ else     if (c == '/') {
+      currentLine.append(next());
       cpp_comment();
-      return (1);
-    }
- else {
-      buf[j++]='/';
-      peek=1;
+      return true;
     }
   }
-  peekc=getchr();
-  if (peekc == '\n') {
+  c=peek();
+  if (c == '\n') {
+    next();
     lineNumber++;
-    peek=-1;
-    peekc='`';
-    tabs=save_s_flg;
-    return (1);
+    tabs=savedTabs;
+    return true;
   }
- else {
-    peek=1;
-  }
-  return 0;
+  return false;
 }

@@ -1,25 +1,23 @@
 {
-  int save_s_flg;
-  save_s_flg=s_flg;
-  int done=0;
-  c=buf[j++]=getchr();
-  while (done == 0) {
-    c=buf[j++]=getchr();
-    while ((c != '/') && (j < buf.length)) {
-      if (c == '\n' || c == '\r') {
+  final boolean save_s_flg=s_flg;
+  currentLine.append(c=next());
+  while (true) {
+    currentLine.append(c=next());
+    while ((c != '/')) {
+      if (c == '\n') {
         lineNumber++;
         putcoms();
-        s_flg=1;
+        s_flg=true;
       }
-      c=buf[j++]=getchr();
+      currentLine.append(c=next());
     }
-    if (j > 1 && buf[j - 2] == '*') {
-      done=1;
-      jdoc=0;
+    if (currentLine.length() >= 2 && currentLine.charAt(currentLine.length() - 2) == '*') {
+      jdoc_flag=false;
+      break;
     }
   }
   putcoms();
   s_flg=save_s_flg;
-  jdoc=0;
+  jdoc_flag=false;
   return;
 }
