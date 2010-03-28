@@ -26,26 +26,26 @@
       c=next();
 switch (c) {
 default :
-        currentLine.append(c);
+        buf.append(c);
       l_char=c;
     break;
 case ',':
-  trimRight(currentLine);
-currentLine.append(c);
+  trimRight(buf);
+buf.append(c);
 break;
 case ' ':
 case '\t':
 if (lookup("else")) {
 gotelse();
-if ((!s_flag) || currentLine.length() > 0) {
-currentLine.append(c);
+if ((!s_flag) || buf.length() > 0) {
+buf.append(c);
 }
 writeIndentedLine();
 s_flag=false;
 break;
 }
-if ((!s_flag) || currentLine.length() > 0) {
-currentLine.append(c);
+if ((!s_flag) || buf.length() > 0) {
+buf.append(c);
 }
 break;
 case '\n':
@@ -58,9 +58,9 @@ if (e_flg) {
 gotelse();
 }
 if (lookup_com("//")) {
-final char lastChar=currentLine.charAt(currentLine.length() - 1);
+final char lastChar=buf.charAt(buf.length() - 1);
 if (lastChar == '\n') {
-currentLine.setLength(currentLine.length() - 1);
+buf.setLength(buf.length() - 1);
 }
 }
 writeIndentedLine();
@@ -91,9 +91,9 @@ if (s_flag && p_flg[level] != 0) {
 p_flg[level]--;
 tabs--;
 }
-trimRight(currentLine);
-if (currentLine.length() > 0 || (result.length() > 0 && !Character.isWhitespace(result.charAt(result.length() - 1)))) currentLine.append(" ");
-currentLine.append(c);
+trimRight(buf);
+if (buf.length() > 0 || (result.length() > 0 && !Character.isWhitespace(result.charAt(result.length() - 1)))) buf.append(" ");
+buf.append(c);
 writeIndentedLine();
 getnl();
 writeIndentedLine();
@@ -110,7 +110,7 @@ case '}':
 c_level--;
 if (c_level < 0) {
 c_level=0;
-currentLine.append(c);
+buf.append(c);
 writeIndentedLine();
 break;
 }
@@ -119,7 +119,7 @@ if (if_lev < 0) {
 if_lev=0;
 }
 if_flg=s_if_flg[c_level];
-trimRight(currentLine);
+trimRight(buf);
 writeIndentedLine();
 tabs--;
 trimRight(result);
@@ -146,12 +146,12 @@ ind[level]=0;
 break;
 case '"':
 case '\'':
-currentLine.append(c);
+buf.append(c);
 cc=next();
 while (!EOF && cc != c) {
-currentLine.append(cc);
+buf.append(cc);
 if (cc == '\\') {
-currentLine.append(cc=next());
+buf.append(cc=next());
 }
 if (cc == '\n') {
 lineNumber++;
@@ -160,14 +160,14 @@ s_flag=true;
 }
 cc=next();
 }
-currentLine.append(cc);
+buf.append(cc);
 if (getnl()) {
 l_char=cc;
 chars[pos--]='\n';
 }
 break;
 case ';':
-currentLine.append(c);
+buf.append(c);
 writeIndentedLine();
 if (p_flg[level] > 0 && ind[level] == 0) {
 tabs-=p_flg[level];
@@ -188,15 +188,15 @@ if_lev=0;
 }
 break;
 case '\\':
-currentLine.append(c);
-currentLine.append(next());
+buf.append(c);
+buf.append(next());
 break;
 case '?':
 q_flg=true;
-currentLine.append(c);
+buf.append(c);
 break;
 case ':':
-currentLine.append(c);
+buf.append(c);
 if (peek() == ':') {
 writeIndentedLine();
 result.append(next());
@@ -226,34 +226,35 @@ break;
 case '/':
 final char la=peek();
 if (la == '/') {
-currentLine.append(c).append(next());
+buf.append(c).append(next());
 handleSingleLineComment();
 result.append("\n");
 }
  else if (la == '*') {
-if (currentLine.length() > 0) {
+if (buf.length() > 0) {
 writeIndentedLine();
 }
-currentLine.append(c).append(next());
+buf.append(c).append(next());
 comment();
 }
  else {
-currentLine.append(c);
+buf.append(c);
 }
 break;
 case ')':
+final boolean isCast=castFlags.isEmpty() ? false : castFlags.pop();
 paren--;
 if (paren < 0) {
 paren=0;
 }
-currentLine.append(c);
+buf.append(c);
 writeIndentedLine();
 if (getnl()) {
 chars[pos--]='\n';
 if (paren != 0) {
 a_flg=true;
 }
- else if (tabs > 0) {
+ else if (tabs > 0 && !isCast) {
 p_flg[level]++;
 tabs++;
 ind[level]=0;
@@ -261,7 +262,8 @@ ind[level]=0;
 }
 break;
 case '(':
-currentLine.append(c);
+castFlags.push(Pattern.matches("^.*?(?:int|color|float)\\s*$",buf));
+buf.append(c);
 paren++;
 if ((lookup("for"))) {
 c=get_string();

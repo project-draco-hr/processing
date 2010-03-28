@@ -1,33 +1,33 @@
 {
   final boolean saved_s_flag=s_flag;
-  if (currentLine.length() > 0) {
+  if (buf.length() > 0) {
     if (s_flag) {
       printIndentation();
       s_flag=false;
     }
     int i=0;
-    while (currentLine.charAt(i) == ' ') {
+    while (buf.charAt(i) == ' ') {
       i++;
     }
     if (lookup_com("/**")) {
       jdoc_flag=true;
     }
-    if (currentLine.charAt(i) == '/' && currentLine.charAt(i + 1) == '*') {
+    if (buf.charAt(i) == '/' && buf.charAt(i + 1) == '*') {
       if (saved_s_flag && prev() != ';') {
-        result.append(currentLine.substring(i));
+        result.append(buf.substring(i));
       }
  else {
-        result.append(currentLine);
+        result.append(buf);
       }
     }
  else {
-      if (currentLine.charAt(i) == '*' || !jdoc_flag) {
-        result.append((" " + currentLine.substring(i)));
+      if (buf.charAt(i) == '*' || !jdoc_flag) {
+        result.append((" " + buf.substring(i)));
       }
  else {
-        result.append((" * " + currentLine.substring(i)));
+        result.append((" * " + buf.substring(i)));
       }
     }
-    currentLine.setLength(0);
+    buf.setLength(0);
   }
 }
