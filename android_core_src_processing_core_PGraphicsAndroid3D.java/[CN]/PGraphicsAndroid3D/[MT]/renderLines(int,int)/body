@@ -1,5 +1,6 @@
 {
   report("render_lines in");
+  float sw0=0;
   gl.glPushMatrix();
   gl.glScalef(1,-1,1);
   gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
@@ -9,6 +10,14 @@
     float sw=vertices[lines[i][VERTEX1]][SW];
     if (sw > 0) {
       gl.glLineWidth(sw);
+      if (sw0 != sw && recordingModel) {
+        int n0=recordedVertices.size();
+        int n1=n0 + pathLength[j] - 1;
+        VertexGroup group=GLModel.newVertexGroup(n0,n1,LINES,sw,null);
+        if (recordingModel) {
+          recordedGroups.add(group);
+        }
+      }
       if (vertexBuffer.capacity() / 3 <= 3 * (pathLength[j] + 1)) {
         expandBuffers();
       }
@@ -22,6 +31,12 @@
       vertexBuffer.put(toFixed32(a[X]));
       vertexBuffer.put(toFixed32(a[Y]));
       vertexBuffer.put(toFixed32(a[Z]));
+      if (recordingModel) {
+        recordedVertices.add(new PVector(a[X],a[Y],a[Z]));
+        recordedColors.add(new float[]{a[SR],a[SG],a[SB],a[SA]});
+        recordedNormals.add(new PVector(0,0,0));
+        recordedTexCoords.add(new PVector(0,0,0));
+      }
       for (int k=0; k < pathLength[j]; k++) {
         float b[]=vertices[lines[i][VERTEX2]];
         colorBuffer.put(toFixed32(b[SR]));
@@ -31,6 +46,12 @@
         vertexBuffer.put(toFixed32(b[X]));
         vertexBuffer.put(toFixed32(b[Y]));
         vertexBuffer.put(toFixed32(b[Z]));
+        if (recordingModel) {
+          recordedVertices.add(new PVector(b[X],b[Y],b[Z]));
+          recordedColors.add(new float[]{b[SR],b[SG],b[SB],b[SA]});
+          recordedNormals.add(new PVector(0,0,0));
+          recordedTexCoords.add(new PVector(0,0,0));
+        }
         i++;
       }
       vertexBuffer.position(0);
@@ -39,6 +60,7 @@
       gl.glColorPointer(4,GL10.GL_FIXED,0,colorBuffer);
       gl.glDrawArrays(GL10.GL_LINE_STRIP,0,pathLength[j] + 1);
     }
+    sw0=sw;
   }
   gl.glPopMatrix();
   report("render_lines out");
