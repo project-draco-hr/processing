@@ -13,10 +13,16 @@
       if (sw0 != sw && recordingModel) {
         int n0=recordedVertices.size();
         int n1=n0 + pathLength[j] - 1;
-        VertexGroup group=GLModel.newVertexGroup(n0,n1,LINES,sw,null);
-        if (recordingModel) {
-          recordedGroups.add(group);
+        for (int k=j + 1; k < stop; k++) {
+          int i1=pathOffset[k];
+          float sw1=vertices[lines[i1][VERTEX1]][SW];
+          if (sw0 != sw1) {
+            break;
+          }
+          n1=n0 + pathLength[k] - 1;
         }
+        VertexGroup group=GLModel.newVertexGroup(n0,n1,LINES,sw,null);
+        recordedGroups.add(group);
       }
       if (vertexBuffer.capacity() / 3 <= 3 * (pathLength[j] + 1)) {
         expandBuffers();
