@@ -59,71 +59,79 @@
           sy=-1.0f;
         }
       }
-      vertexBuffer.put(toFixed32(a[X]));
-      vertexBuffer.put(toFixed32(a[Y]));
-      vertexBuffer.put(toFixed32(a[Z]));
-      colorBuffer.put(toFixed32(a[R]));
-      colorBuffer.put(toFixed32(a[G]));
-      colorBuffer.put(toFixed32(a[B]));
-      colorBuffer.put(toFixed32(a[A]));
-      normalBuffer.put(toFixed32(a[NX]));
-      normalBuffer.put(toFixed32(a[NY]));
-      normalBuffer.put(toFixed32(a[NZ]));
-      texCoordBuffer.put(toFixed32((cx + sx * a[U]) * uscale));
-      texCoordBuffer.put(toFixed32((cy + sy * a[V]) * vscale));
       if (recordingModel) {
         recordedVertices.add(new PVector(a[X],a[Y],a[Z]));
         recordedColors.add(new float[]{a[R],a[G],a[B],a[A]});
         recordedNormals.add(new PVector(a[NX],a[NY],a[NZ]));
         recordedTexCoords.add(new PVector((cx + sx * a[U]) * uscale,(cy + sy * a[V]) * vscale,0.0f));
       }
-      vertexBuffer.put(toFixed32(b[X]));
-      vertexBuffer.put(toFixed32(b[Y]));
-      vertexBuffer.put(toFixed32(b[Z]));
-      colorBuffer.put(toFixed32(b[R]));
-      colorBuffer.put(toFixed32(b[G]));
-      colorBuffer.put(toFixed32(b[B]));
-      colorBuffer.put(toFixed32(b[A]));
-      normalBuffer.put(toFixed32(b[NX]));
-      normalBuffer.put(toFixed32(b[NY]));
-      normalBuffer.put(toFixed32(b[NZ]));
-      texCoordBuffer.put(toFixed32((cx + sx * b[U]) * uscale));
-      texCoordBuffer.put(toFixed32((cy + sy * b[V]) * vscale));
+ else {
+        vertexBuffer.put(toFixed32(a[X]));
+        vertexBuffer.put(toFixed32(a[Y]));
+        vertexBuffer.put(toFixed32(a[Z]));
+        colorBuffer.put(toFixed32(a[R]));
+        colorBuffer.put(toFixed32(a[G]));
+        colorBuffer.put(toFixed32(a[B]));
+        colorBuffer.put(toFixed32(a[A]));
+        normalBuffer.put(toFixed32(a[NX]));
+        normalBuffer.put(toFixed32(a[NY]));
+        normalBuffer.put(toFixed32(a[NZ]));
+        texCoordBuffer.put(toFixed32((cx + sx * a[U]) * uscale));
+        texCoordBuffer.put(toFixed32((cy + sy * a[V]) * vscale));
+      }
       if (recordingModel) {
         recordedVertices.add(new PVector(b[X],b[Y],b[Z]));
         recordedColors.add(new float[]{b[R],b[G],b[B],b[A]});
         recordedNormals.add(new PVector(b[NX],b[NY],b[NZ]));
         recordedTexCoords.add(new PVector((cx + sx * b[U]) * uscale,(cy + sy * b[V]) * vscale,0.0f));
       }
-      vertexBuffer.put(toFixed32(c[X]));
-      vertexBuffer.put(toFixed32(c[Y]));
-      vertexBuffer.put(toFixed32(c[Z]));
-      colorBuffer.put(toFixed32(c[R]));
-      colorBuffer.put(toFixed32(c[G]));
-      colorBuffer.put(toFixed32(c[B]));
-      colorBuffer.put(toFixed32(c[A]));
-      normalBuffer.put(toFixed32(c[NX]));
-      normalBuffer.put(toFixed32(c[NY]));
-      normalBuffer.put(toFixed32(c[NZ]));
-      texCoordBuffer.put(toFixed32((cx + sx * c[U]) * uscale));
-      texCoordBuffer.put(toFixed32((cy + sy * c[V]) * vscale));
+ else {
+        vertexBuffer.put(toFixed32(b[X]));
+        vertexBuffer.put(toFixed32(b[Y]));
+        vertexBuffer.put(toFixed32(b[Z]));
+        colorBuffer.put(toFixed32(b[R]));
+        colorBuffer.put(toFixed32(b[G]));
+        colorBuffer.put(toFixed32(b[B]));
+        colorBuffer.put(toFixed32(b[A]));
+        normalBuffer.put(toFixed32(b[NX]));
+        normalBuffer.put(toFixed32(b[NY]));
+        normalBuffer.put(toFixed32(b[NZ]));
+        texCoordBuffer.put(toFixed32((cx + sx * b[U]) * uscale));
+        texCoordBuffer.put(toFixed32((cy + sy * b[V]) * vscale));
+      }
       if (recordingModel) {
         recordedVertices.add(new PVector(c[X],c[Y],c[Z]));
         recordedColors.add(new float[]{c[R],c[G],c[B],c[A]});
         recordedNormals.add(new PVector(c[NX],c[NY],c[NZ]));
         recordedTexCoords.add(new PVector((cx + sx * c[U]) * uscale,(cy + sy * c[V]) * vscale,0.0f));
       }
+ else {
+        vertexBuffer.put(toFixed32(c[X]));
+        vertexBuffer.put(toFixed32(c[Y]));
+        vertexBuffer.put(toFixed32(c[Z]));
+        colorBuffer.put(toFixed32(c[R]));
+        colorBuffer.put(toFixed32(c[G]));
+        colorBuffer.put(toFixed32(c[B]));
+        colorBuffer.put(toFixed32(c[A]));
+        normalBuffer.put(toFixed32(c[NX]));
+        normalBuffer.put(toFixed32(c[NY]));
+        normalBuffer.put(toFixed32(c[NZ]));
+        texCoordBuffer.put(toFixed32((cx + sx * c[U]) * uscale));
+        texCoordBuffer.put(toFixed32((cy + sy * c[V]) * vscale));
+      }
       i++;
     }
-    vertexBuffer.position(0);
-    colorBuffer.position(0);
-    normalBuffer.position(0);
-    texCoordBuffer.position(0);
-    gl.glVertexPointer(3,GL10.GL_FIXED,0,vertexBuffer);
-    gl.glColorPointer(4,GL10.GL_FIXED,0,colorBuffer);
-    gl.glNormalPointer(GL10.GL_FIXED,0,normalBuffer);
-    if (texturing)     gl.glTexCoordPointer(2,GL10.GL_FIXED,0,texCoordBuffer);
-    gl.glDrawArrays(GL10.GL_TRIANGLES,0,3 * faceLength[j]);
+    if (!recordingModel) {
+      vertexBuffer.position(0);
+      colorBuffer.position(0);
+      normalBuffer.position(0);
+      texCoordBuffer.position(0);
+      gl.glVertexPointer(3,GL10.GL_FIXED,0,vertexBuffer);
+      gl.glColorPointer(4,GL10.GL_FIXED,0,colorBuffer);
+      gl.glNormalPointer(GL10.GL_FIXED,0,normalBuffer);
+      if (texturing)       gl.glTexCoordPointer(2,GL10.GL_FIXED,0,texCoordBuffer);
+      gl.glDrawArrays(GL10.GL_TRIANGLES,0,3 * faceLength[j]);
+    }
     if (texturing) {
       gl.glBindTexture(tex.getGLTarget(),0);
       gl.glDisable(tex.getGLTarget());
