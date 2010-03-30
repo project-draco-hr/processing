@@ -1,13 +1,6 @@
 {
   try {
-    final String program=ProcessingTestUtil.preprocess(id,res(id + ".pde"));
-    final ProcessResult compilerResult=COMPILER.compile(id,program);
-    if (!compilerResult.succeeded()) {
-      System.err.println(program);
-      System.err.println("----------------------------");
-      System.err.println(compilerResult.getStderr());
-      fail("Compilation failed with status " + compilerResult.getResult());
-    }
+    final String program=ProcessingTestUtil.format(res(id + ".pde"));
     final File expectedFile=res(id + ".expected");
     if (expectedFile.exists()) {
       final String expected=ProcessingTestUtil.read(expectedFile);
@@ -22,6 +15,7 @@
   }
  catch (  Exception e) {
     if (!e.equals(e.getCause()) && e.getCause() != null)     fail(e.getCause().toString());
- else     fail(e.toString());
+ else     e.printStackTrace(System.err);
+    fail(e.toString());
   }
 }
