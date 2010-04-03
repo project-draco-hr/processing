@@ -96,7 +96,13 @@
       packClassPathIntoZipFile(cp,zos,zipFileContents);
     }
   }
+  File openglLibraryFolder=new File(Base.getLibrariesPath(),"opengl/library");
+  String openglLibraryPath=openglLibraryFolder.getAbsolutePath();
+  boolean openglApplet=false;
   for (  File libraryFolder : importedLibraries) {
+    if (libraryFolder.getAbsolutePath().equals(openglLibraryPath)) {
+      openglApplet=true;
+    }
     File exportSettings=new File(libraryFolder,"export.txt");
     HashMap<String,String> exportTable=Base.readSettings(exportSettings);
     String appletList=(String)exportTable.get("applet");
@@ -122,11 +128,7 @@
         if (separateJar) {
           String exportFilename=exportFile.getName();
           Base.copyFile(exportFile,new File(appletFolder,exportFilename));
-          if (renderer.equals("OPENGL") && exportFilename.indexOf("natives") != -1) {
-          }
- else {
-            archives.append("," + exportFilename);
-          }
+          archives.append("," + exportFilename);
         }
  else {
           String path=exportFile.getAbsolutePath();
@@ -189,8 +191,14 @@
   if (customHtml.exists()) {
     is=new FileInputStream(customHtml);
   }
+  for (  File libraryFolder : importedLibraries) {
+    System.out.println(libraryFolder + " " + libraryFolder.getAbsolutePath());
+  }
+  if (renderer.equals("OPENGL")) {
+    openglApplet=true;
+  }
   if (is == null) {
-    if (renderer.equals("OPENGL")) {
+    if (openglApplet) {
       is=Base.getLibStream("export/applet-opengl.html");
     }
  else {
