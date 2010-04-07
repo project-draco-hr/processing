@@ -48,5 +48,21 @@
         throw new RunnerException("Unterminated string constant",0,countNewlines(program.substring(0,stringStart)));
       }
     }
+ else     if (program.charAt(i) == '\'') {
+      i++;
+      if (i >= length) {
+        throw new RunnerException("Unterminated character constant",0,countNewlines(program.substring(0,i)));
+      }
+      if (program.charAt(i) == '\\') {
+        i++;
+      }
+      i++;
+      if (i >= length) {
+        throw new RunnerException("Unterminated character constant",0,countNewlines(program.substring(0,i)));
+      }
+      if (program.charAt(i) != '\'') {
+        throw new RunnerException("Badly formed character constant",0,countNewlines(program.substring(0,i)));
+      }
+    }
   }
 }
