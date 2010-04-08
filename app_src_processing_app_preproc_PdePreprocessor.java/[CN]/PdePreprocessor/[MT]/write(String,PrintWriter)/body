@@ -21,7 +21,17 @@
   filter.copy(PdeRecognizer.BSR);
   PdeRecognizer parser=new PdeRecognizer(this,filter);
   parser.setASTNodeClass("antlr.ExtendedCommonASTWithHiddenTokens");
-  parser.pdeProgram();
+  if (PUBLIC_CLASS.matcher(program).find()) {
+    setMode(Mode.JAVA);
+    parser.javaProgram();
+  }
+ else   if (FUNCTION_DECL.matcher(program).find()) {
+    setMode(Mode.ACTIVE);
+    parser.activeProgram();
+  }
+ else {
+    parser.pdeProgram();
+  }
   ASTFactory factory=new ASTFactory();
   AST parserAST=parser.getAST();
   AST rootNode=factory.create(ROOT_ID,"AST ROOT");
