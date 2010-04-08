@@ -1,0 +1,27 @@
+{
+  if (updateElement != TEXTURES) {
+    throw new RuntimeException("PShape3D: update mode is not set to TEXTURES");
+  }
+  firstUpdateIdx=0;
+  lastUpdateIdx=numVertices - 1;
+  if (updateTexture != null) {
+    for (int i=0; i < numVertices; i++)     if (vertGroup[i] != null) {
+      vertGroup[i].texture=updateTexture;
+    }
+  }
+  PVector vec;
+  for (int i=0; i < numVertices; i++) {
+    vec=(PVector)data.get(i);
+    if (a3d.imageMode == IMAGE) {
+      if (vertGroup[i] != null && vertGroup[i].texture == null) {
+        throw new RuntimeException("PShape3D: when setting texture coordinates in IMAGE mode, the textures need to be assigned first");
+      }
+      texCoordArray[2 * i + 0]=vec.x / vertGroup[i].texture.width;
+      texCoordArray[2 * i + 1]=vec.y / vertGroup[i].texture.height;
+    }
+ else {
+      texCoordArray[2 * i + 0]=vec.x;
+      texCoordArray[2 * i + 1]=vec.y;
+    }
+  }
+}

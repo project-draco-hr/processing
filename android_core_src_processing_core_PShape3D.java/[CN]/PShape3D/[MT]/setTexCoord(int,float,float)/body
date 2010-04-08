@@ -1,0 +1,19 @@
+{
+  if (updateElement != TEXTURES) {
+    throw new RuntimeException("PShape3D: update mode is not set to TEXTURES");
+  }
+  if (idx < firstUpdateIdx)   firstUpdateIdx=idx;
+  if (lastUpdateIdx < idx)   lastUpdateIdx=idx;
+  if (updateTexture != null && vertGroup[idx] != null) {
+    vertGroup[idx].texture=updateTexture;
+  }
+  if (a3d.imageMode == IMAGE) {
+    if (vertGroup[idx] != null && vertGroup[idx].texture == null) {
+      throw new RuntimeException("PShape3D: when setting texture coordinates in IMAGE mode, the textures need to be assigned first");
+    }
+    u/=vertGroup[idx].texture.width;
+    v/=vertGroup[idx].texture.height;
+  }
+  texCoordArray[2 * idx + 0]=u;
+  texCoordArray[2 * idx + 1]=v;
+}

@@ -1,0 +1,23 @@
+{
+  if (updateElement != TEXTURES) {
+    throw new RuntimeException("PShape3D: update mode is not set to TEXTURES");
+  }
+  float[] res=new float[numVertices * 2];
+  getTexCoordArrayImpl(res,0,numVertices,0);
+  PApplet.arrayCopy(texCoordArray,res);
+  if (a3d.imageMode == IMAGE) {
+    float u, v;
+    for (int i=0; i < numVertices; i++) {
+      if (vertGroup[i] != null && vertGroup[i].texture == null) {
+        throw new RuntimeException("PShape3D: when setting texture coordinates in IMAGE mode, the textures need to be assigned first");
+      }
+      u=res[2 * i + 0];
+      v=res[2 * i + 1];
+      u*=vertGroup[i].texture.width;
+      v*=vertGroup[i].texture.height;
+      res[2 * i + 0]=u;
+      res[2 * i + 1]=v;
+    }
+  }
+  return res;
+}
