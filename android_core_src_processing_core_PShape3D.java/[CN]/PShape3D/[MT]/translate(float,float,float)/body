@@ -1,0 +1,14 @@
+{
+  float[] tmpVertexArray=new float[numVertices * 3];
+  beginUpdate(VERTICES);
+  getVertexArrayImpl(tmpVertexArray,0,numVertices,0);
+  endUpdate();
+  for (int i=0; i < numVertices; i++) {
+    tmpVertexArray[3 * i + 0]+=tx;
+    tmpVertexArray[3 * i + 1]+=-ty;
+    tmpVertexArray[3 * i + 2]+=tz;
+  }
+  beginUpdateImpl(VERTICES,0,numVertices - 1);
+  setVertex(tmpVertexArray);
+  endUpdate();
+}
