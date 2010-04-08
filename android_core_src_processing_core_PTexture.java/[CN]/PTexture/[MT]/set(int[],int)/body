@@ -1,0 +1,19 @@
+{
+  if (intArray.length != width * height) {
+    throw new RuntimeException("PTexture: wrong length of pixels array");
+  }
+  if (glTextureID[0] == 0) {
+    createTexture(width,height);
+  }
+  int[] convArray=convertToRGBA(intArray,arrayFormat);
+  gl.glBindTexture(glTarget,glTextureID[0]);
+  if (usingMipmaps) {
+    if (a3d.gl11 != null && a3d.mipmapSupported) {
+      gl.glTexParameterf(GL11.GL_TEXTURE_2D,GL11.GL_GENERATE_MIPMAP,GL11.GL_TRUE);
+    }
+ else {
+    }
+  }
+  gl.glTexSubImage2D(glTarget,0,0,0,glWidth,glHeight,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(convArray));
+  gl.glBindTexture(glTarget,0);
+}
