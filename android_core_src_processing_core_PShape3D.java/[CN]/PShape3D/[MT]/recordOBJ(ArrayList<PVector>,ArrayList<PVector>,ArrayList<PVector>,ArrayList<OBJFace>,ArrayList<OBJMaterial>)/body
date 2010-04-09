@@ -14,19 +14,37 @@
     }
     a3d.beginShape();
     for (int j=0; j < face.vertIdx.size(); j++) {
-      int vertIdx=face.vertIdx.get(j).intValue() - 1;
-      int normIdx=face.normIdx.get(j).intValue() - 1;
-      PVector vert=(PVector)vertices.get(vertIdx);
-      PVector norms=(PVector)normals.get(normIdx);
+      int vertIdx, normIdx;
+      PVector vert, norms;
+      vert=norms=null;
+      vertIdx=face.vertIdx.get(j).intValue() - 1;
+      vert=(PVector)vertices.get(vertIdx);
+      if (j < face.normIdx.size()) {
+        normIdx=face.normIdx.get(j).intValue() - 1;
+        norms=(PVector)normals.get(normIdx);
+      }
       if (mtl != null && mtl.kdMap != null) {
-        int texIdx=face.texIdx.get(j).intValue() - 1;
-        PVector tex=(PVector)textures.get(texIdx);
+        int texIdx;
+        PVector tex=null;
+        if (j < face.texIdx.size()) {
+          texIdx=face.texIdx.get(j).intValue() - 1;
+          tex=(PVector)textures.get(texIdx);
+        }
         a3d.texture(mtl.kdMap);
-        a3d.normal(norms.x,norms.y,norms.z);
-        a3d.vertex(vert.x,vert.y,vert.z,tex.x,tex.y);
+        if (norms != null) {
+          a3d.normal(norms.x,norms.y,norms.z);
+        }
+        if (tex != null) {
+          a3d.vertex(vert.x,vert.y,vert.z,tex.x,tex.y);
+        }
+ else {
+          a3d.vertex(vert.x,vert.y,vert.z);
+        }
       }
  else {
-        a3d.normal(norms.x,norms.y,norms.z);
+        if (norms != null) {
+          a3d.normal(norms.x,norms.y,norms.z);
+        }
         a3d.vertex(vert.x,vert.y,vert.z);
       }
     }
