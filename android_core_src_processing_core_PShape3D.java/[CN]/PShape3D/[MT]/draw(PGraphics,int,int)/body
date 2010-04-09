@@ -1,5 +1,6 @@
 {
   int texTarget=GL11.GL_TEXTURE_2D;
+  PImage img;
   PTexture tex;
   float pointSize;
   pointSize=PApplet.min(a3d.strokeWeight,a3d.maxPointSize);
@@ -16,12 +17,14 @@
   VertexGroup group;
   for (int i=gr0; i <= gr1; i++) {
     group=(VertexGroup)groups.get(i);
-    tex=group.texture;
-    if (tex != null) {
-      texTarget=group.texture.getGLTarget();
+    img=group.texture;
+    tex=null;
+    if (img != null && img.getTexture() != null) {
+      tex=img.getTexture();
+      texTarget=tex.getGLTarget();
       gl.glEnable(texTarget);
       gl.glActiveTexture(GL11.GL_TEXTURE0);
-      gl.glBindTexture(GL11.GL_TEXTURE_2D,group.texture.getGLTextureID());
+      gl.glBindTexture(GL11.GL_TEXTURE_2D,tex.getGLTextureID());
       if (pointSprites) {
         float quadratic[]={1.0f,0.0f,0.01f,1};
         ByteBuffer temp=ByteBuffer.allocateDirect(16);
