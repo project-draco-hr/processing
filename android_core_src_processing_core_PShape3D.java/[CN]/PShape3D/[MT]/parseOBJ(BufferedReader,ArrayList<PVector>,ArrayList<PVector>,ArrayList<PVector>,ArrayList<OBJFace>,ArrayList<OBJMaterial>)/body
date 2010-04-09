@@ -1,2 +1,44 @@
 {
+  Hashtable<String,Integer> mtlHash=new Hashtable<String,Integer>();
+  try {
+    String line;
+    while ((line=reader.readLine()) != null) {
+      while (line.contains("\\")) {
+        line=line.split("\\\\")[0];
+        final String s=reader.readLine();
+        if (s != null)         line+=s;
+      }
+      String[] elements=line.split("\\s+");
+      if (elements.length > 0) {
+        if (elements[0].equals("v")) {
+          PVector tmpv=new PVector(Float.valueOf(elements[1]).floatValue(),Float.valueOf(elements[2]).floatValue(),Float.valueOf(elements[3]).floatValue());
+          vertices.add(tmpv);
+        }
+ else         if (elements[0].equals("vn")) {
+          PVector tmpn=new PVector(Float.valueOf(elements[1]).floatValue(),Float.valueOf(elements[2]).floatValue(),Float.valueOf(elements[3]).floatValue());
+          normals.add(tmpn);
+        }
+ else         if (elements[0].equals("vt")) {
+          PVector tmpv=new PVector(Float.valueOf(elements[1]).floatValue(),Float.valueOf(elements[2]).floatValue());
+          textures.add(tmpv);
+        }
+ else         if (elements[0].equals("o")) {
+        }
+ else         if (elements[0].equals("mtllib")) {
+          if (elements[1] != null) {
+            parseMTL(getBufferedReader(elements[1]),materials,mtlHash);
+          }
+        }
+ else         if (elements[0].equals("g")) {
+        }
+ else         if (elements[0].equals("usemtl")) {
+        }
+ else         if (elements[0].equals("f")) {
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
 }
