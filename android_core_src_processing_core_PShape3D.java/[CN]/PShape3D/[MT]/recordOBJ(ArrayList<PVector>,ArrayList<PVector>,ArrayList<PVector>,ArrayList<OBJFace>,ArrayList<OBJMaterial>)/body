@@ -1,0 +1,36 @@
+{
+  int mtlIdxCur=-1;
+  a3d.beginShapeRecorderImpl();
+  for (int i=0; i < faces.size(); i++) {
+    OBJFace face=(OBJFace)faces.get(i);
+    OBJMaterial mtl=null;
+    if (mtlIdxCur != face.matIdx) {
+      mtlIdxCur=PApplet.max(0,face.matIdx);
+      mtl=(OBJMaterial)materials.get(mtlIdxCur);
+      a3d.specular(mtl.ks.x * 255.0f,mtl.ks.y * 255.0f,mtl.ks.z * 255.0f);
+      a3d.ambient(mtl.ka.x * 255.0f,mtl.ka.y * 255.0f,mtl.ka.z * 255.0f);
+      a3d.fill(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
+      a3d.shininess(mtl.ns);
+    }
+    a3d.beginShape();
+    for (int j=0; j < face.vertIdx.size(); j++) {
+      int vertIdx=face.vertIdx.get(j).intValue() - 1;
+      int normIdx=face.normIdx.get(j).intValue() - 1;
+      PVector vert=(PVector)vertices.get(vertIdx);
+      PVector norms=(PVector)normals.get(normIdx);
+      if (mtl != null && mtl.kdMap != null) {
+        int texIdx=face.texIdx.get(j).intValue() - 1;
+        PVector tex=(PVector)textures.get(texIdx);
+        a3d.texture(mtl.kdMap);
+        a3d.normal(norms.x,norms.y,norms.z);
+        a3d.vertex(vert.x,vert.y,vert.z,tex.x,tex.y);
+      }
+ else {
+        a3d.normal(norms.x,norms.y,norms.z);
+        a3d.vertex(vert.x,vert.y,vert.z);
+      }
+    }
+    a3d.endShape(CLOSE);
+  }
+  a3d.endShapeRecorderImpl(this);
+}
