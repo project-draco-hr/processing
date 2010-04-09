@@ -1,0 +1,22 @@
+{
+  offsets=new ArrayList<Integer>();
+  final int len=text.length();
+  for (pos=0; pos < len; pos++) {
+    final char c=text.charAt(pos);
+    if (c == '/' && (pos < len - 1)) {
+      final char d=text.charAt(++pos);
+      if (d == '/') {
+        readComment(text);
+      }
+ else       if (d == '*') {
+        readMLComment(text);
+      }
+    }
+ else     if (c == '"' || c == '\'') {
+      readString(text,c);
+    }
+ else     if (c == '{' || c == '[' || c == '(' || c == '}' || c == ']' || c == ')') {
+      offsets.add(pos);
+    }
+  }
+}
