@@ -17,6 +17,15 @@
   if (reader == null) {
     throw new RuntimeException("PShape3D: Cannot read source file");
   }
+  Parameters params=PShape3D.newParameters(TRIANGLES,mode);
+  setParameters(params);
   parseOBJ(reader,vertices,normals,textures,faces,materials);
   recordOBJ(vertices,normals,textures,faces,materials);
+  try {
+    Method meth=this.getClass().getMethod("recreateResource",new Class[]{PGraphicsAndroid3D.class});
+    recreateResourceIdx=a3d.addRecreateResourceMethod(this,meth);
+  }
+ catch (  Exception e) {
+    recreateResourceIdx=-1;
+  }
 }

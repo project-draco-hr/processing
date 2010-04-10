@@ -1,7 +1,9 @@
 {
   Hashtable<String,Integer> materialsHash=new Hashtable<String,Integer>();
   int mtlIdxCur=-1;
+  boolean readv, readvn, readvt;
   try {
+    readv=readvn=readvt=false;
     String line;
     while ((line=reader.readLine()) != null) {
       while (line.contains("\\")) {
@@ -14,14 +16,17 @@
         if (elements[0].equals("v")) {
           PVector tmpv=new PVector(Float.valueOf(elements[1]).floatValue(),Float.valueOf(elements[2]).floatValue(),Float.valueOf(elements[3]).floatValue());
           vertices.add(tmpv);
+          readv=true;
         }
  else         if (elements[0].equals("vn")) {
           PVector tmpn=new PVector(Float.valueOf(elements[1]).floatValue(),Float.valueOf(elements[2]).floatValue(),Float.valueOf(elements[3]).floatValue());
           normals.add(tmpn);
+          readvn=true;
         }
  else         if (elements[0].equals("vt")) {
           PVector tmpv=new PVector(Float.valueOf(elements[1]).floatValue(),Float.valueOf(elements[2]).floatValue());
           textures.add(tmpv);
+          readvt=true;
         }
  else         if (elements[0].equals("o")) {
         }
@@ -52,32 +57,37 @@
             if (seg.indexOf("/") > 0) {
               String[] forder=seg.split("/");
               if (forder.length > 2) {
-                if (forder[0].length() > 0) {
+                if (forder[0].length() > 0 && readv) {
                   face.vertIdx.add(Integer.valueOf(forder[0]));
                 }
-                if (forder[1].length() > 0) {
+                if (forder[1].length() > 0 && readvt) {
                   face.texIdx.add(Integer.valueOf(forder[1]));
                 }
-                if (forder[2].length() > 0) {
+                if (forder[2].length() > 0 && readvn) {
                   face.normIdx.add(Integer.valueOf(forder[2]));
                 }
               }
  else               if (forder.length > 1) {
-                if (forder[0].length() > 0) {
+                if (forder[0].length() > 0 && readv) {
                   face.vertIdx.add(Integer.valueOf(forder[0]));
                 }
                 if (forder[1].length() > 0) {
-                  face.texIdx.add(Integer.valueOf(forder[1]));
+                  if (readvt) {
+                    face.texIdx.add(Integer.valueOf(forder[1]));
+                  }
+ else                   if (readvn) {
+                    face.normIdx.add(Integer.valueOf(forder[1]));
+                  }
                 }
               }
  else               if (forder.length > 0) {
-                if (forder[0].length() > 0) {
+                if (forder[0].length() > 0 && readv) {
                   face.vertIdx.add(Integer.valueOf(forder[0]));
                 }
               }
             }
  else {
-              if (seg.length() > 0) {
+              if (seg.length() > 0 && readv) {
                 face.vertIdx.add(Integer.valueOf(seg));
               }
             }
