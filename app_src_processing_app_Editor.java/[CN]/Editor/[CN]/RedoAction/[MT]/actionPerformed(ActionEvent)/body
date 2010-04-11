@@ -4,6 +4,13 @@
   }
  catch (  CannotRedoException ex) {
   }
+  try {
+    final Integer caret=caretRedoStack.pop();
+    caretUndoStack.push(caret);
+    textarea.setCaretPosition(caret);
+  }
+ catch (  Exception ignore) {
+  }
   updateRedoState();
   undoAction.updateUndoState();
 }

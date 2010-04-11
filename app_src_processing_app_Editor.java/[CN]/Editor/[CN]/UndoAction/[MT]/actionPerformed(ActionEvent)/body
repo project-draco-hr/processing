@@ -1,5 +1,13 @@
 {
   try {
+    final Integer caret=caretUndoStack.pop();
+    caretRedoStack.push(caret);
+    textarea.setCaretPosition(caret);
+    textarea.scrollToCaret();
+  }
+ catch (  Exception ignore) {
+  }
+  try {
     undo.undo();
   }
  catch (  CannotUndoException ex) {
