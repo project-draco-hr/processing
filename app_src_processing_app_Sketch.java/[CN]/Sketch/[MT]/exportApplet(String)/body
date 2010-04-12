@@ -32,23 +32,19 @@
       Base.showWarning("Could not find applet size",message,null);
     }
   }
-  StringBuffer dbuffer=new StringBuffer();
-  String lines[]=PApplet.split(code[0].getProgram(),'\n');
-  for (int i=0; i < lines.length; i++) {
-    if (lines[i].trim().startsWith("/**")) {
-      for (int j=i + 1; j < lines.length; j++) {
-        if (lines[j].trim().endsWith("*/")) {
-          break;
-        }
-        int offset=0;
-        while ((offset < lines[j].length()) && ((lines[j].charAt(offset) == '*') || (lines[j].charAt(offset) == ' '))) {
-          offset++;
-        }
-        dbuffer.append(lines[j].substring(offset) + "\n");
-      }
+  String description="";
+  String[] javadoc=PApplet.match(code[0].getProgram(),"/\\*{2,}(.*)\\*+/");
+  if (javadoc != null) {
+    StringBuffer dbuffer=new StringBuffer();
+    String[] pieces=PApplet.split(javadoc[1],'\n');
+    for (    String line : pieces) {
+      String[] m=PApplet.match(line,"^\\s*\\*+(.*)");
+      dbuffer.append(m != null ? m[1] : line);
+      dbuffer.append('\n');
     }
+    description=dbuffer.toString();
+    PApplet.println(description);
   }
-  String description=dbuffer.toString();
   StringBuffer sources=new StringBuffer();
   for (int i=0; i < codeCount; i++) {
     sources.append("<a href=\"" + code[i].getFileName() + "\">"+ code[i].getPrettyName()+ "</a> ");
