@@ -16,12 +16,15 @@
     bos=null;
     if (!tempFile.renameTo(targetFile)) {
       System.err.println("Could not rename temporary file " + tempFile.getAbsolutePath());
+      return false;
     }
+    return true;
   }
  catch (  IOException e) {
     if (tempFile != null) {
       tempFile.delete();
     }
     e.printStackTrace();
+    return false;
   }
 }
