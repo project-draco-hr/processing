@@ -9,7 +9,7 @@
         throw new Cancelled();
       }
       monitor.setNote("Building...");
-      if (!build.antBuild("debug")) {
+      if (!build.antBuild(flavor)) {
         return;
       }
       if (monitor.isCanceled()) {
@@ -26,7 +26,7 @@
         throw new Cancelled();
       }
       monitor.setNote("Installing sketch on " + device.getId());
-      if (!device.installApp(build.getPathForAPK("debug"),editor)) {
+      if (!device.installApp(build.getPathForAPK(flavor),editor)) {
         editor.statusError("Device killed or disconnected.");
         return;
       }
