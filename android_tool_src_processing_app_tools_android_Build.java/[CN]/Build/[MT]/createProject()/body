@@ -1,29 +1,29 @@
 {
   final Sketch sketch=editor.getSketch();
   try {
-    androidFolder=createAndroidBuildFolder(sketch);
+    tempBuildFolder=createTempBuildFolder(sketch);
   }
  catch (  final IOException e) {
     editor.statusError(e);
-    return false;
+    return null;
   }
-  final File srcFolder=new File(androidFolder,"src");
+  final File srcFolder=new File(tempBuildFolder,"src");
   try {
     final File javaFolder=mkdirs(srcFolder,getPackageName().replace('.','/'));
     final String buildPath=javaFolder.getAbsolutePath();
     sketch.prepare();
     className=sketch.preprocess(buildPath,new Preproc(sketch.getName()));
     if (className != null) {
-      final File androidXML=new File(androidFolder,"AndroidManifest.xml");
+      final File androidXML=new File(tempBuildFolder,"AndroidManifest.xml");
       writeAndroidManifest(androidXML,sketch.getName(),className);
-      writeBuildProps(new File(androidFolder,"build.properties"));
-      buildFile=new File(androidFolder,"build.xml");
+      writeBuildProps(new File(tempBuildFolder,"build.properties"));
+      buildFile=new File(tempBuildFolder,"build.xml");
       writeBuildXML(buildFile,sketch.getName());
-      writeDefaultProps(new File(androidFolder,"default.properties"));
-      writeLocalProps(new File(androidFolder,"local.properties"));
-      writeRes(new File(androidFolder,"res"),className);
-      final File libsFolder=mkdirs(androidFolder,"libs");
-      final File assetsFolder=mkdirs(androidFolder,"assets");
+      writeDefaultProps(new File(tempBuildFolder,"default.properties"));
+      writeLocalProps(new File(tempBuildFolder,"local.properties"));
+      writeRes(new File(tempBuildFolder,"res"),className);
+      final File libsFolder=mkdirs(tempBuildFolder,"libs");
+      final File assetsFolder=mkdirs(tempBuildFolder,"assets");
       final InputStream input=PApplet.createInput(AndroidTool.getCoreZipFile());
       PApplet.saveStream(new File(libsFolder,"processing-core.jar"),input);
       try {
@@ -41,11 +41,11 @@
   }
  catch (  final RunnerException e) {
     editor.statusError(e);
-    return false;
+    return null;
   }
 catch (  final IOException e) {
     editor.statusError(e);
-    return false;
+    return null;
   }
-  return true;
+  return tempBuildFolder;
 }

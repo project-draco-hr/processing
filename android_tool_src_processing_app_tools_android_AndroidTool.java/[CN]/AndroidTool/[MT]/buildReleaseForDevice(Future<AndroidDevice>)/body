@@ -1,7 +1,8 @@
 {
-  final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(editor,"Building and launching...","Creating project...");
+  final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(editor,"Building and running...","Creating project...");
   try {
-    if (build.createProject() != null) {
+    File tempFolder=build.createProject();
+    if (tempFolder == null) {
       return;
     }
     try {
@@ -9,7 +10,7 @@
         throw new Cancelled();
       }
       monitor.setNote("Building...");
-      if (!build.antBuild("debug")) {
+      if (!build.antBuild("release")) {
         return;
       }
       if (monitor.isCanceled()) {

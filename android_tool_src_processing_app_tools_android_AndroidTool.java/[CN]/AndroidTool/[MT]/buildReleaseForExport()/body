@@ -1,0 +1,42 @@
+{
+  final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(editor,"Building and exporting...","Creating project...");
+  try {
+    File tempFolder=build.createProject();
+    if (tempFolder == null) {
+      return;
+    }
+    try {
+      if (monitor.isCanceled()) {
+        throw new Cancelled();
+      }
+      monitor.setNote("Building release version...");
+      if (!build.antBuild("release")) {
+        return;
+      }
+      System.out.println("build like.");
+      if (monitor.isCanceled()) {
+        throw new Cancelled();
+      }
+      File exportFolder=build.createExportFolder();
+      if (exportFolder != null) {
+        Base.copyDir(tempFolder,exportFolder);
+        editor.statusNotice("Done with export.");
+        Base.openFolder(exportFolder);
+      }
+ else {
+        System.err.println("bad copy");
+        editor.statusError("Could not copy files to export folder.");
+      }
+    }
+ catch (    IOException e) {
+      System.err.println("bad copy ioe");
+      editor.statusError(e);
+    }
+ finally {
+      build.cleanup();
+    }
+  }
+  finally {
+    monitor.close();
+  }
+}
