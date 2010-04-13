@@ -1,9 +1,11 @@
 {
   adb("logcat","-c");
-  logcat=Runtime.getRuntime().exec(generateAdbCommand("logcat"));
+  final String[] cmd=generateAdbCommand("logcat");
+  final String title=PApplet.join(cmd,' ');
+  logcat=Runtime.getRuntime().exec(cmd);
   ProcessRegistry.watch(logcat);
-  new StreamPump(logcat.getInputStream()).addTarget(new LogLineProcessor()).start();
-  new StreamPump(logcat.getErrorStream()).addTarget(System.err).start();
+  new StreamPump(logcat.getInputStream(),"log: " + title).addTarget(new LogLineProcessor()).start();
+  new StreamPump(logcat.getErrorStream(),"err: " + title).addTarget(System.err).start();
   new Thread(new Runnable(){
     public void run(){
       try {

@@ -6,8 +6,9 @@
   final Process process=Runtime.getRuntime().exec(cmd);
   ProcessRegistry.watch(process);
   try {
-    new StreamPump(process.getInputStream()).addTarget(outWriter).start();
-    new StreamPump(process.getErrorStream()).addTarget(errWriter).start();
+    String title=PApplet.join(cmd,' ');
+    new StreamPump(process.getInputStream(),"out: " + title).addTarget(outWriter).start();
+    new StreamPump(process.getErrorStream(),"err: " + title).addTarget(errWriter).start();
     try {
       final int result=process.waitFor();
       final long time=System.currentTimeMillis() - startTime;
