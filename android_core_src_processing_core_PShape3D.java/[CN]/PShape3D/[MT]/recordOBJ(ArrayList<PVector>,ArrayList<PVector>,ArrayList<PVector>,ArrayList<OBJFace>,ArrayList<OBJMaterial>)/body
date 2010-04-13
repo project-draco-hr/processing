@@ -12,7 +12,15 @@
       a3d.fill(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
       a3d.shininess(mtl.ns);
     }
-    a3d.beginShape();
+    if (face.vertIdx.size() == 3) {
+      a3d.beginShape(TRIANGLES);
+    }
+ else     if (face.vertIdx.size() == 4) {
+      a3d.beginShape(QUADS);
+    }
+ else {
+      a3d.beginShape();
+    }
     for (int j=0; j < face.vertIdx.size(); j++) {
       int vertIdx, normIdx;
       PVector vert, norms;
