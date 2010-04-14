@@ -7,12 +7,36 @@
   if (updateTexture != null && vertGroup[idx] != null) {
     vertGroup[idx].texture=updateTexture;
   }
-  if (a3d.imageMode == IMAGE) {
-    if (vertGroup[idx] != null && vertGroup[idx].texture == null) {
-      throw new RuntimeException("PShape3D: when setting texture coordinates in IMAGE mode, the textures need to be assigned first");
+  if (vertGroup[idx] != null && vertGroup[idx].texture != null) {
+    PTexture tex=vertGroup[idx].texture.getTexture();
+    float uscale=1.0f;
+    float vscale=1.0f;
+    float cx=0.0f;
+    float sx=+1.0f;
+    float cy=0.0f;
+    float sy=+1.0f;
+    int w=vertGroup[idx].texture.width;
+    int h=vertGroup[idx].texture.height;
+    if (tex.isFlippedX()) {
+      cx=1.0f;
+      sx=-1.0f;
     }
-    u/=vertGroup[idx].texture.width;
-    v/=vertGroup[idx].texture.height;
+    if (tex.isFlippedY()) {
+      cy=1.0f;
+      sy=-1.0f;
+    }
+    uscale*=tex.getMaxTextureCoordS();
+    vscale*=tex.getMaxTextureCoordT();
+    u=(cx + sx * u) * uscale;
+    v=(cy + sy * v) * vscale;
+    if (a3d.imageMode == IMAGE) {
+      u/=w;
+      v/=h;
+    }
+    if (u < 0)     v=0;
+ else     if (u > 1)     u=1;
+    if (v < 0)     v=0;
+ else     if (v > 1)     v=1;
   }
   texCoordArray[2 * idx + 0]=u;
   texCoordArray[2 * idx + 1]=v;

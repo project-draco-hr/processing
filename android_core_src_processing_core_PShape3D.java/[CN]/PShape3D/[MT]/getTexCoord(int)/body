@@ -4,12 +4,30 @@
   }
   float u=texCoordArray[2 * idx + 0];
   float v=texCoordArray[2 * idx + 1];
-  if (a3d.imageMode == IMAGE) {
-    if (vertGroup[idx] != null && vertGroup[idx].texture == null) {
-      throw new RuntimeException("PShape3D: when setting texture coordinates in IMAGE mode, the textures need to be assigned first");
+  if (vertGroup[idx] != null && vertGroup[idx].texture != null) {
+    PTexture tex=vertGroup[idx].texture.getTexture();
+    float uscale=1.0f;
+    float vscale=1.0f;
+    float cx=0.0f;
+    float sx=+1.0f;
+    float cy=0.0f;
+    float sy=+1.0f;
+    if (tex.isFlippedX()) {
+      cx=1.0f;
+      sx=-1.0f;
     }
-    u*=vertGroup[idx].texture.width;
-    v*=vertGroup[idx].texture.height;
+    if (tex.isFlippedY()) {
+      cy=1.0f;
+      sy=-1.0f;
+    }
+    uscale*=tex.getMaxTextureCoordS();
+    vscale*=tex.getMaxTextureCoordT();
+    u=(u / uscale - cx) / sx;
+    v=(v / vscale - cy) / sy;
+    if (a3d.imageMode == IMAGE) {
+      u*=vertGroup[idx].texture.width;
+      v*=vertGroup[idx].texture.height;
+    }
   }
   PVector res=new PVector(u,v,0);
   return res;
