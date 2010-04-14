@@ -1,19 +1,19 @@
 {
   final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(editor,"Building and launching...","Creating project...");
   try {
-    if (build.createProject() != null) {
+    if (build.createProject() == null) {
       return;
     }
     try {
       if (monitor.isCanceled()) {
-        throw new Cancelled();
+        throw new MonitorCanceled();
       }
       monitor.setNote("Building...");
-      if (!build.antBuild(flavor)) {
+      if (!build.antBuild(target)) {
         return;
       }
       if (monitor.isCanceled()) {
-        throw new Cancelled();
+        throw new MonitorCanceled();
       }
       monitor.setNote("Waiting for device to become available...");
       final AndroidDevice device=waitForDevice(deviceFuture,monitor);
@@ -23,15 +23,15 @@
       }
       device.addListener(this);
       if (monitor.isCanceled()) {
-        throw new Cancelled();
+        throw new MonitorCanceled();
       }
       monitor.setNote("Installing sketch on " + device.getId());
-      if (!device.installApp(build.getPathForAPK(flavor),editor)) {
+      if (!device.installApp(build.getPathForAPK(target),editor)) {
         editor.statusError("Device killed or disconnected.");
         return;
       }
       if (monitor.isCanceled()) {
-        throw new Cancelled();
+        throw new MonitorCanceled();
       }
       monitor.setNote("Starting sketch on " + device.getId());
       if (startSketch(device)) {

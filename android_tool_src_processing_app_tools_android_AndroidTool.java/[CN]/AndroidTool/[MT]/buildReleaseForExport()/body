@@ -7,14 +7,14 @@
     }
     try {
       if (monitor.isCanceled()) {
-        throw new Cancelled();
+        throw new MonitorCanceled();
       }
       monitor.setNote("Building release version...");
       if (!build.antBuild("release")) {
         return;
       }
       if (monitor.isCanceled()) {
-        throw new Cancelled();
+        throw new MonitorCanceled();
       }
       File exportFolder=build.createExportFolder();
       if (exportFolder != null) {
