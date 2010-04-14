@@ -9,16 +9,20 @@
     gl.glPointSize(sw);
     vertexBuffer.position(0);
     colorBuffer.position(0);
+    int n=0;
     for (int i=start; i < stop; i++) {
       float[] a=vertices[points[i][VERTEX1]];
-      colorBuffer.put(toFixed16(a[SR]));
-      colorBuffer.put(toFixed16(a[SG]));
-      colorBuffer.put(toFixed16(a[SB]));
-      colorBuffer.put(toFixed16(a[SA]));
-      vertexBuffer.put(toFixed32(a[VX]));
-      vertexBuffer.put(toFixed32(a[VY]));
-      vertexBuffer.put(toFixed32(a[VZ]));
+      vertexArray[3 * n + 0]=toFixed32(a[VX]);
+      vertexArray[3 * n + 1]=toFixed32(a[VY]);
+      vertexArray[3 * n + 2]=toFixed32(a[VZ]);
+      colorArray[4 * n + 0]=toFixed32(a[SR]);
+      colorArray[4 * n + 1]=toFixed32(a[SG]);
+      colorArray[4 * n + 2]=toFixed32(a[SB]);
+      colorArray[4 * n + 3]=toFixed32(a[SA]);
+      n++;
     }
+    vertexBuffer.put(vertexArray);
+    colorBuffer.put(colorArray);
     vertexBuffer.position(0);
     colorBuffer.position(0);
     gl.glVertexPointer(3,GL10.GL_FIXED,0,vertexBuffer);

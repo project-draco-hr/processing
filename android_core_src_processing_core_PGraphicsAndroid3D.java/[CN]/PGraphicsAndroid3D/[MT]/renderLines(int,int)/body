@@ -29,6 +29,7 @@
       }
       vertexBuffer.position(0);
       colorBuffer.position(0);
+      int n=0;
       float a[]=vertices[lines[i][VERTEX1]];
       if (recordingModel) {
         recordedVertices.add(new PVector(a[X],a[Y],a[Z]));
@@ -37,13 +38,14 @@
         recordedTexCoords.add(new PVector(0,0,0));
       }
  else {
-        colorBuffer.put(toFixed32(a[SR]));
-        colorBuffer.put(toFixed32(a[SG]));
-        colorBuffer.put(toFixed32(a[SB]));
-        colorBuffer.put(toFixed32(a[SA]));
-        vertexBuffer.put(toFixed32(a[X]));
-        vertexBuffer.put(toFixed32(a[Y]));
-        vertexBuffer.put(toFixed32(a[Z]));
+        vertexArray[3 * n + 0]=toFixed32(a[X]);
+        vertexArray[3 * n + 1]=toFixed32(a[Y]);
+        vertexArray[3 * n + 2]=toFixed32(a[Z]);
+        colorArray[4 * n + 0]=toFixed32(a[SR]);
+        colorArray[4 * n + 1]=toFixed32(a[SG]);
+        colorArray[4 * n + 2]=toFixed32(a[SB]);
+        colorArray[4 * n + 3]=toFixed32(a[SA]);
+        n++;
       }
       for (int k=0; k < pathLength[j]; k++) {
         float b[]=vertices[lines[i][VERTEX2]];
@@ -54,17 +56,20 @@
           recordedTexCoords.add(new PVector(0,0,0));
         }
  else {
-          colorBuffer.put(toFixed32(b[SR]));
-          colorBuffer.put(toFixed32(b[SG]));
-          colorBuffer.put(toFixed32(b[SB]));
-          colorBuffer.put(toFixed32(b[SA]));
-          vertexBuffer.put(toFixed32(b[X]));
-          vertexBuffer.put(toFixed32(b[Y]));
-          vertexBuffer.put(toFixed32(b[Z]));
+          vertexArray[3 * n + 0]=toFixed32(b[X]);
+          vertexArray[3 * n + 1]=toFixed32(b[Y]);
+          vertexArray[3 * n + 2]=toFixed32(b[Z]);
+          colorArray[4 * n + 0]=toFixed32(b[SR]);
+          colorArray[4 * n + 1]=toFixed32(b[SG]);
+          colorArray[4 * n + 2]=toFixed32(b[SB]);
+          colorArray[4 * n + 3]=toFixed32(b[SA]);
+          n++;
         }
         i++;
       }
       if (!recordingModel) {
+        vertexBuffer.put(vertexArray);
+        colorBuffer.put(colorArray);
         vertexBuffer.position(0);
         colorBuffer.position(0);
         gl.glVertexPointer(3,GL10.GL_FIXED,0,vertexBuffer);
