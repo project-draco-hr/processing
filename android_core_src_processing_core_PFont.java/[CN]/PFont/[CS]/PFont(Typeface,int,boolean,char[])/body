@@ -4,7 +4,6 @@
   name="";
   psname="";
   this.size=size;
-  lazy=true;
   int initialCount=10;
   glyphs=new Glyph[initialCount];
   ascii=new int[128];
@@ -17,12 +16,19 @@
   lazyPaint.setTypeface(font);
   lazyPaint.setTextSize(size);
   lazySamples=new int[mbox3 * mbox3];
-  if (charset != null) {
+  if (charset == null) {
+    lazy=true;
+  }
+ else {
     Arrays.sort(charset);
     glyphs=new Glyph[charset.length];
     glyphCount=0;
     for (    char c : charset) {
-      glyphs[glyphCount++]=new Glyph(c);
+      Glyph glyf=new Glyph(c);
+      if (glyf.value < 128) {
+        ascii[glyf.value]=glyphCount;
+      }
+      glyphs[glyphCount++]=glyf;
     }
   }
   if (ascent == 0) {
