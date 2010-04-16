@@ -9,6 +9,7 @@
   gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
   for (int j=start; j < stop; j++) {
     int i=faceOffset[j];
+    FACECOUNT++;
     if (faceTexture[j] != null) {
       tex=faceTexture[j].getTexture();
       if (tex != null) {
@@ -39,6 +40,7 @@
     texCoordBuffer.position(0);
     int n=0;
     for (int k=0; k < faceLength[j]; k++) {
+      TRIANGLECOUNT++;
       float a[]=vertices[triangles[i][VERTEX1]];
       float b[]=vertices[triangles[i][VERTEX2]];
       float c[]=vertices[triangles[i][VERTEX3]];
@@ -132,7 +134,7 @@
       vertexBuffer.put(vertexArray);
       colorBuffer.put(colorArray);
       normalBuffer.put(normalArray);
-      texCoordBuffer.put(texCoordArray);
+      if (texturing)       texCoordBuffer.put(texCoordArray);
       vertexBuffer.position(0);
       colorBuffer.position(0);
       normalBuffer.position(0);

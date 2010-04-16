@@ -1,0 +1,14 @@
+{
+  int[] configSpecs={EGL10.EGL_DEPTH_SIZE,16,EGL10.EGL_NONE};
+  int[] num_config=new int[1];
+  egl.eglChooseConfig(display,configSpecs,null,0,num_config);
+  int numConfigs=num_config[0];
+  if (numConfigs <= 0) {
+    throw new IllegalArgumentException("No EGL configs match configSpec");
+  }
+  EGLConfig[] configs=new EGLConfig[numConfigs];
+  egl.eglChooseConfig(display,configSpecs,configs,numConfigs,num_config);
+  String configStr="A3D - selected EGL config : " + printConfig(egl,display,configs[0]);
+  System.out.println(configStr);
+  return configs[0];
+}
