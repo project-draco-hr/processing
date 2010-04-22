@@ -6,10 +6,15 @@
  catch (  ClassCastException cce) {
     gl11=null;
   }
-  String vendor=gl.glGetString(GL10.GL_VENDOR);
-  String renderer=gl.glGetString(GL10.GL_RENDERER);
-  String version=gl.glGetString(GL10.GL_VERSION);
-  System.out.println(vendor + " " + renderer+ " "+ version);
+  try {
+    gl11x=(GL11ExtensionPack)gl;
+  }
+ catch (  ClassCastException cce) {
+    gl11x=null;
+  }
+  OPENGL_VENDOR=gl.glGetString(GL10.GL_VENDOR);
+  OPENGL_RENDERER=gl.glGetString(GL10.GL_RENDERER);
+  OPENGL_VERSION=gl.glGetString(GL10.GL_VERSION);
   npotTexSupported=false;
   mipmapSupported=false;
   matrixGetSupported=false;
@@ -41,4 +46,6 @@
   }
   recreateResources();
   gl=null;
+  gl11=null;
+  gl11x=null;
 }
