@@ -2,11 +2,15 @@
   super(context);
   surfaceHolder=getHolder();
   surfaceHolder.addCallback(this);
+  if (PGraphicsAndroid3D.TRANSLUCENT) {
+    this.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+  }
   PGraphics newGraphics=new PGraphicsAndroid3D();
   newGraphics.setSize(screenWidth,screenHeight);
   newGraphics.setParent(PApplet.this);
   newGraphics.setPrimary(true);
   g=newGraphics;
+  setEGLContextFactory(((PGraphicsAndroid3D)g).getContextFactory());
   setEGLConfigChooser(((PGraphicsAndroid3D)g).getConfigChooser());
   setRenderer(((PGraphicsAndroid3D)g).getRenderer());
   setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
