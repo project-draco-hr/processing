@@ -29,10 +29,7 @@
       gl.glActiveTexture(GL11.GL_TEXTURE0);
       gl.glBindTexture(GL11.GL_TEXTURE_2D,tex.getGLTextureID());
       if (pointSprites) {
-        float quadratic[]={1.0f,0.0f,0.01f,1};
-        ByteBuffer temp=ByteBuffer.allocateDirect(16);
-        temp.order(ByteOrder.nativeOrder());
-        gl.glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION,(FloatBuffer)temp.asFloatBuffer().put(quadratic).flip());
+        gl.glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION,ptDistAtt,0);
         gl.glPointParameterf(GL11.GL_POINT_FADE_THRESHOLD_SIZE,0.6f * pointSize);
         gl.glPointParameterf(GL11.GL_POINT_SIZE_MIN,1.0f);
         gl.glPointParameterf(GL11.GL_POINT_SIZE_MAX,a3d.maxPointSize);
