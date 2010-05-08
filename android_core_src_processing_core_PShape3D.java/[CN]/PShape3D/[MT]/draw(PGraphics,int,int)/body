@@ -8,6 +8,9 @@
   g.TRIANGLECOUNT=g.VERTEXCOUNT / 3;
   pointSize=PApplet.min(a3d.strokeWeight,a3d.maxPointSize);
   gl.glPointSize(pointSize);
+  if (!depthMaskEnabled) {
+    gl.glDepthMask(false);
+  }
   gl.glEnableClientState(GL11.GL_NORMAL_ARRAY);
   gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glNormalBufferID[0]);
   gl.glNormalPointer(GL11.GL_FLOAT,0,0);
@@ -67,6 +70,9 @@
       }
       gl.glDisable(texTarget);
     }
+  }
+  if (!depthMaskEnabled) {
+    gl.glDepthMask(true);
   }
   gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
   gl.glDisableClientState(GL11.GL_VERTEX_ARRAY);
