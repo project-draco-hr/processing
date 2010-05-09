@@ -1,6 +1,10 @@
 {
   int mtlIdxCur=-1;
   OBJMaterial mtl=null;
+  int tMode0=a3d.textureMode;
+  a3d.textureMode=NORMAL;
+  int cMode0=a3d.colorMode;
+  a3d.colorMode=RGB;
   a3d.beginShapeRecorderImpl();
   for (int i=0; i < faces.size(); i++) {
     OBJFace face=(OBJFace)faces.get(i);
@@ -11,6 +15,9 @@
       a3d.ambient(mtl.ka.x * 255.0f,mtl.ka.y * 255.0f,mtl.ka.z * 255.0f);
       a3d.fill(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
       a3d.shininess(mtl.ns);
+      if (mtl.kdMap != null) {
+        a3d.tint(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
+      }
     }
     if (face.vertIdx.size() == 3) {
       a3d.beginShape(TRIANGLES);
@@ -69,4 +76,6 @@
   xmin=ymin=zmin=10000;
   xmax=ymax=zmax=-10000;
   a3d.endShapeRecorderImpl(this);
+  a3d.textureMode=tMode0;
+  a3d.colorMode=cMode0;
 }
