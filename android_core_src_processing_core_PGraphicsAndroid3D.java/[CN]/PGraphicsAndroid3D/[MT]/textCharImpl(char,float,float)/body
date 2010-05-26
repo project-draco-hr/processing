@@ -1,5 +1,10 @@
 {
   PFont.Glyph glyph=textFont.getGlyph(ch);
+  if (glyph.texture == null) {
+    textFont.beginAddToTexture(gl);
+    glyph.addToTexture(gl);
+    textFont.endAddToTexture(gl);
+  }
   if (glyph != null) {
     if (textMode == MODEL) {
       float high=glyph.height / (float)textFont.size;
