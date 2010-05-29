@@ -1,2 +1,44 @@
 {
+  String text=String.valueOf((char)value);
+  int ascent=0;
+  int descent=0;
+  int measuredTextWidth=0;
+  if (!fromStream) {
+    ascent=(int)Math.ceil(-lazyPaint.ascent());
+    descent=(int)Math.ceil(lazyPaint.descent());
+    measuredTextWidth=(int)Math.ceil(lazyPaint.measureText(text));
+  }
+  int textHeight=ascent + descent;
+  int textWidth=Math.min(texWidth,measuredTextWidth);
+  int u=texU;
+  int v=texV;
+  int lineHeight=texLineHeight;
+  if (textWidth > texWidth) {
+    textWidth=texWidth;
+  }
+  if (u + textWidth > texWidth) {
+    u=0;
+    v+=lineHeight;
+    lineHeight=0;
+  }
+  lineHeight=Math.max(lineHeight,textHeight);
+  if (v + lineHeight > texHeight) {
+    addTexture(gl);
+    u=texU=offsetU=0;
+    v=texV=offsetV=0;
+    lineHeight=texLineHeight=0;
+  }
+  int vBase=v + ascent;
+  if (fromStream) {
+    lazyCanvas.drawBitmap(image.pixels,0,0,0,0,width,height,true,lazyPaint);
+  }
+ else {
+    lazyCanvas.drawText(text,0,0,lazyPaint);
+  }
+  offsetU=u;
+  offsetV=vBase;
+  texU=u + textWidth;
+  texV=v;
+  texLineHeight=lineHeight;
+  texture=new TextureInfo(currentID,textWidth,textHeight,ascent,u,v + textHeight,textWidth,-textHeight);
 }

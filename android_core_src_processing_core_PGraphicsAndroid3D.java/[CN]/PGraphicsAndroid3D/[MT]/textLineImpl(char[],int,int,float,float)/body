@@ -1,7 +1,25 @@
 {
   if (textFont.mTextureID == -1) {
-    textFont.initialize(gl);
+    textFont.initialize(gl,maxTextureSize,maxTextureSize);
     textFont.addToTexture(gl);
   }
+  textFontTexID=textFont.currentID;
+  gl.glBindTexture(GL10.GL_TEXTURE_2D,textFontTexID);
+  gl.glShadeModel(GL10.GL_FLAT);
+  gl.glEnable(GL10.GL_BLEND);
+  gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_ONE_MINUS_SRC_ALPHA);
+  gl.glColor4x(0x10000,0x10000,0x10000,0x10000);
+  gl.glMatrixMode(GL10.GL_PROJECTION);
+  gl.glPushMatrix();
+  gl.glLoadIdentity();
+  gl.glOrthof(0.0f,width,0.0f,height,0.0f,1.0f);
+  gl.glMatrixMode(GL10.GL_MODELVIEW);
+  gl.glPushMatrix();
+  gl.glLoadIdentity();
+  gl.glTranslatef(0.375f,0.375f,0.0f);
   super.textLineImpl(buffer,start,stop,x,y);
+  gl.glMatrixMode(GL10.GL_PROJECTION);
+  gl.glPopMatrix();
+  gl.glMatrixMode(GL10.GL_MODELVIEW);
+  gl.glPopMatrix();
 }
