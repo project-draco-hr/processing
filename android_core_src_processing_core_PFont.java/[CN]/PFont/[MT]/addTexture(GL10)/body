@@ -1,12 +1,21 @@
 {
   int[] textures=new int[1];
   gl.glGenTextures(1,textures,0);
-  mTextureID=textures[0];
-  gl.glBindTexture(GL10.GL_TEXTURE_2D,mTextureID);
+  gl.glBindTexture(GL10.GL_TEXTURE_2D,textures[0]);
   gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_MIN_FILTER,GL10.GL_NEAREST);
   gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_MAG_FILTER,GL10.GL_NEAREST);
   gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_S,GL10.GL_CLAMP_TO_EDGE);
   gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_T,GL10.GL_CLAMP_TO_EDGE);
   gl.glTexEnvf(GL10.GL_TEXTURE_ENV,GL10.GL_TEXTURE_ENV_MODE,GL10.GL_REPLACE);
-  currentID=mTextureID;
+  if (texIDList == null) {
+    texIDList=new int[1];
+    texIDList[0]=textures[0];
+  }
+ else {
+    int[] tmp=texIDList;
+    texIDList=new int[texIDList.length + 1];
+    PApplet.arrayCopy(tmp,texIDList,tmp.length);
+    texIDList[tmp.length]=textures[0];
+  }
+  currentTexID=textures[0];
 }
