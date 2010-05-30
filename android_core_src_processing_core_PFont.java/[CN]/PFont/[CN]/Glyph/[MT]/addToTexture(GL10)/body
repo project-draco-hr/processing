@@ -1,44 +1,34 @@
 {
-  String text=String.valueOf((char)value);
-  int ascent=0;
-  int descent=0;
-  int measuredTextWidth=0;
-  if (!fromStream) {
-    ascent=(int)Math.ceil(-lazyPaint.ascent());
-    descent=(int)Math.ceil(lazyPaint.descent());
-    measuredTextWidth=(int)Math.ceil(lazyPaint.measureText(text));
-  }
-  int textHeight=ascent + descent;
-  int textWidth=Math.min(texWidth,measuredTextWidth);
-  int u=texU;
-  int v=texV;
-  int lineHeight=texLineHeight;
-  if (textWidth > texWidth) {
-    textWidth=texWidth;
-  }
-  if (u + textWidth > texWidth) {
-    u=0;
-    v+=lineHeight;
+  if (offsetX + width > texWidth) {
+    offsetX=0;
+    offsetY+=lineHeight;
     lineHeight=0;
   }
-  lineHeight=Math.max(lineHeight,textHeight);
-  if (v + lineHeight > texHeight) {
+  lineHeight=Math.max(lineHeight,height);
+  if (offsetY + lineHeight > texHeight) {
     addTexture(gl);
-    u=texU=offsetU=0;
-    v=texV=offsetV=0;
-    lineHeight=texLineHeight=0;
+    offsetX=0;
+    offsetY=0;
+    lineHeight=0;
   }
-  int vBase=v + ascent;
-  if (fromStream) {
-    lazyCanvas.drawBitmap(image.pixels,0,0,0,0,width,height,true,lazyPaint);
+  int[] rgba=new int[width * height];
+  int t=0;
+  int p=0;
+  if (PGraphicsAndroid3D.BIG_ENDIAN) {
+    for (int y=0; y < height; y++) {
+      for (int x=0; x < width; x++) {
+        rgba[t++]=255 << 24 | 255 << 16 | 0 << 8 | 0;
+      }
+    }
   }
  else {
-    lazyCanvas.drawText(text,0,0,lazyPaint);
+    for (int y=0; y < height; y++) {
+      for (int x=0; x < width; x++) {
+        rgba[t++]=255 << 24 | 0 << 16 | 0 << 8 | 0;
+      }
+    }
   }
-  offsetU=u;
-  offsetV=vBase;
-  texU=u + textWidth;
-  texV=v;
-  texLineHeight=lineHeight;
-  texture=new TextureInfo(currentID,textWidth,textHeight,ascent,u,v + textHeight,textWidth,-textHeight);
+  gl.glTexSubImage2D(GL10.GL_TEXTURE_2D,0,offsetX,offsetY,width,height,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(rgba));
+  texture=new TextureInfo(currentID,offsetX,offsetY,width,height);
+  offsetX+=width;
 }
