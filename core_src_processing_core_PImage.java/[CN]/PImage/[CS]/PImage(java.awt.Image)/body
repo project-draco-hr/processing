@@ -1,4 +1,5 @@
 {
+  format=RGB;
   if (img instanceof BufferedImage) {
     BufferedImage bi=(BufferedImage)img;
     width=bi.getWidth();
@@ -6,6 +7,9 @@
     pixels=new int[width * height];
     WritableRaster raster=bi.getRaster();
     raster.getDataElements(0,0,width,height,pixels);
+    if (bi.getType() == BufferedImage.TYPE_INT_ARGB) {
+      format=ARGB;
+    }
   }
  else {
     width=img.getWidth(null);
@@ -18,5 +22,4 @@
  catch (    InterruptedException e) {
     }
   }
-  format=RGB;
 }
