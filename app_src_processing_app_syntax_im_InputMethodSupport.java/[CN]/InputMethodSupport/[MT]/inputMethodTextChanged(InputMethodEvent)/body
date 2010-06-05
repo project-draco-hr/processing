@@ -1,6 +1,11 @@
 {
   AttributedCharacterIterator text=event.getText();
   committed_count=event.getCommittedCharacterCount();
+  if (isFullWidthSpaceInput(text)) {
+    textManager.insertFullWidthSpace();
+    caretPositionChanged(event);
+    return;
+  }
   if (isBeginInputProcess(text,textManager)) {
     textManager.beginCompositionText(text,committed_count);
     caretPositionChanged(event);
