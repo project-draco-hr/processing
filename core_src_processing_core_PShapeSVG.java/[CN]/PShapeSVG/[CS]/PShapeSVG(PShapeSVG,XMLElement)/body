@@ -35,6 +35,14 @@
   }
   element=properties;
   name=properties.getStringAttribute("id");
+  if (name != null) {
+    while (true) {
+      String[] m=PApplet.match(name,"_x(.*)_");
+      if (m == null)       break;
+      char repair=(char)PApplet.unhex(m[1]);
+      name=name.replace(m[0],"" + repair);
+    }
+  }
   String displayStr=properties.getStringAttribute("display","inline");
   visible=!displayStr.equals("none");
   String transformStr=properties.getStringAttribute("transform");
