@@ -4,7 +4,13 @@
       methods[i].invoke(objects[i],oargs);
     }
  catch (    Exception e) {
-      e.printStackTrace();
+      if (e instanceof InvocationTargetException) {
+        InvocationTargetException ite=(InvocationTargetException)e;
+        ite.getTargetException().printStackTrace();
+      }
+ else {
+        e.printStackTrace();
+      }
     }
   }
 }
