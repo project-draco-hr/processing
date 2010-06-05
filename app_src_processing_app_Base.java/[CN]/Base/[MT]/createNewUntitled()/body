@@ -3,11 +3,20 @@
   String newbieName=null;
   File sketchbookDir=getSketchbookFolder();
   File newbieParentDir=untitledFolder;
+  String prefix=Preferences.get("editor.untitled.prefix");
   int index=0;
-  Calendar cal=Calendar.getInstance();
-  int day=cal.get(Calendar.DAY_OF_MONTH);
-  int month=cal.get(Calendar.MONTH);
-  String purty=months[month] + PApplet.nf(day,2);
+  String format=Preferences.get("editor.untitled.suffix");
+  String suffix=null;
+  if (format == null) {
+    Calendar cal=Calendar.getInstance();
+    int day=cal.get(Calendar.DAY_OF_MONTH);
+    int month=cal.get(Calendar.MONTH);
+    suffix=months[month] + PApplet.nf(day,2);
+  }
+ else {
+    SimpleDateFormat formatter=new SimpleDateFormat(format);
+    suffix=formatter.format(new Date());
+  }
   do {
     if (index == 26) {
       if (!breakTime) {
@@ -19,7 +28,7 @@
       }
       return null;
     }
-    newbieName="sketch_" + purty + ((char)('a' + index));
+    newbieName=prefix + suffix + ((char)('a' + index));
     newbieDir=new File(newbieParentDir,newbieName);
     index++;
   }
