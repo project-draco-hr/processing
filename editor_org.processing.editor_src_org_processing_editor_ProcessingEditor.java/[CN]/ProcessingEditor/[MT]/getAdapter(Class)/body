@@ -1,0 +1,14 @@
+{
+  if (IContentOutlinePage.class.equals(required)) {
+    if (fOutlinePage == null) {
+      fOutlinePage=new ProcessingContentOutlinePage(getDocumentProvider(),this);
+      if (getEditorInput() != null)       fOutlinePage.setInput(getEditorInput());
+    }
+    return fOutlinePage;
+  }
+  if (fProjectionSupport != null) {
+    Object adapter=fProjectionSupport.getAdapter(getSourceViewer(),required);
+    if (adapter != null)     return adapter;
+  }
+  return super.getAdapter(required);
+}

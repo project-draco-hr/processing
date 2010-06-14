@@ -1,0 +1,23 @@
+{
+  ITextEditor editor=getTextEditor();
+  ISelection selection=editor.getSelectionProvider().getSelection();
+  if (selection instanceof ITextSelection) {
+    ITextSelection textSelection=(ITextSelection)selection;
+    if (!textSelection.isEmpty()) {
+      IAnnotationModel model=getAnnotationModel(editor);
+      if (model != null) {
+        int start=textSelection.getStartLine();
+        int end=textSelection.getEndLine();
+        try {
+          IDocument document=editor.getDocumentProvider().getDocument(editor.getEditorInput());
+          int offset=document.getLineOffset(start);
+          int endOffset=document.getLineOffset(end + 1);
+          Position position=new Position(offset,endOffset - offset);
+          model.addAnnotation(new ProjectionAnnotation(),position);
+        }
+ catch (        BadLocationException x) {
+        }
+      }
+    }
+  }
+}
