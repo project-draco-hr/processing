@@ -1,11 +1,5 @@
 {
-  if (textFont.texIDList == null) {
-    textFont.initialize(gl,maxTextureSize,maxTextureSize);
-    textFont.addAllGlyphsToTexture(gl);
-  }
   gl.glEnable(GL10.GL_TEXTURE_2D);
-  textFont.currentTexID=textFont.texIDList[0];
-  gl.glBindTexture(GL10.GL_TEXTURE_2D,textFont.currentTexID);
   gl.glMatrixMode(GL10.GL_PROJECTION);
   gl.glPushMatrix();
   gl.glLoadIdentity();
@@ -13,6 +7,12 @@
   gl.glMatrixMode(GL10.GL_MODELVIEW);
   gl.glPushMatrix();
   gl.glLoadIdentity();
+  if (textFont.texIDList == null) {
+    textFont.initTexture(gl,maxTextureSize,maxTextureSize);
+    textFont.addAllGlyphsToTexture(gl);
+  }
+  textFont.currentTexID=textFont.texIDList[0];
+  gl.glBindTexture(GL10.GL_TEXTURE_2D,textFont.currentTexID);
   gl.glColor4f(colorFloats[0],colorFloats[1],colorFloats[2],colorFloats[3]);
   super.textLineImpl(buffer,start,stop,x,y);
   gl.glMatrixMode(GL10.GL_PROJECTION);
