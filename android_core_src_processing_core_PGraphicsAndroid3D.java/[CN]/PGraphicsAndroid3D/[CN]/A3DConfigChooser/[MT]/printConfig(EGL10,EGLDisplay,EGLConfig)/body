@@ -8,6 +8,6 @@
   int type=findConfigAttrib(egl,display,config,EGL10.EGL_RENDERABLE_TYPE,0);
   int nat=findConfigAttrib(egl,display,config,EGL10.EGL_NATIVE_RENDERABLE,0);
   int bufSize=findConfigAttrib(egl,display,config,EGL10.EGL_BUFFER_SIZE,0);
-  int bufSurf=findConfigAttrib(egl,display,config,EGL10.EGL_SINGLE_BUFFER,0);
-  return String.format(" rgba=%d%d%d%d depth=%d stencil=%d",r,g,b,a,d,s) + " buffer surface=" + bufSurf;
+  int bufSurf=findConfigAttrib(egl,display,config,EGL10.EGL_RENDER_BUFFER,0);
+  return String.format("EGLConfig rgba=%d%d%d%d depth=%d stencil=%d",r,g,b,a,d,s) + " type=" + type+ " native="+ nat+ " buffer size="+ bufSize+ " buffer surface="+ bufSurf+ String.format(" caveat=0x%04x",findConfigAttrib(egl,display,config,EGL10.EGL_CONFIG_CAVEAT,0));
 }
