@@ -1,0 +1,13 @@
+{
+  if (width == 0 || height == 0) {
+  }
+  a3d.pushFramebuffer();
+  a3d.setFramebuffer(this);
+  int[] tmp=new int[1];
+  gl.glGenRenderbuffersOES(1,tmp,0);
+  glDepthBufferID=tmp[0];
+  gl.glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glDepthBufferID);
+  gl.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,GL11ExtensionPack.GL_DEPTH_COMPONENT16,width,height);
+  gl.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,GL11ExtensionPack.GL_DEPTH_ATTACHMENT_OES,GL11ExtensionPack.GL_RENDERBUFFER_OES,glDepthBufferID);
+  a3d.popFramebuffer();
+}

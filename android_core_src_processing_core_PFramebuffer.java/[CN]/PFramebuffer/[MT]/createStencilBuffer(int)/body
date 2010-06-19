@@ -1,0 +1,21 @@
+{
+  a3d.pushFramebuffer();
+  a3d.setFramebuffer(this);
+  int[] tmp=new int[1];
+  gl.glGenRenderbuffersOES(1,tmp,0);
+  glStencilBufferID=tmp[0];
+  gl.glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glStencilBufferID);
+  int glConst=GL11ExtensionPack.GL_STENCIL_INDEX1_OES;
+  if (bits == 1) {
+    glConst=GL11ExtensionPack.GL_STENCIL_INDEX1_OES;
+  }
+ else   if (bits == 4) {
+    glConst=GL11ExtensionPack.GL_STENCIL_INDEX4_OES;
+  }
+ else   if (bits == 8) {
+    glConst=GL11ExtensionPack.GL_STENCIL_INDEX8_OES;
+  }
+  gl.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glConst,width,height);
+  gl.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,GL11ExtensionPack.GL_STENCIL_ATTACHMENT_OES,GL11ExtensionPack.GL_RENDERBUFFER_OES,glStencilBufferID);
+  a3d.popFramebuffer();
+}

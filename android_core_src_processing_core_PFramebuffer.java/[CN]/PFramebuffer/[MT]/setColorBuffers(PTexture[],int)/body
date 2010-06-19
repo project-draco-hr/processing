@@ -1,0 +1,16 @@
+{
+  a3d.pushFramebuffer();
+  a3d.setFramebuffer(this);
+  for (int i=0; i < numDrawBuffersInUse; i++) {
+    gl.glFramebufferTexture2DOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,GL11ExtensionPack.GL_COLOR_ATTACHMENT0_OES,GL10.GL_TEXTURE_2D,0,0);
+  }
+  numDrawBuffersInUse=PApplet.min(n,textures.length);
+  for (int i=0; i < numDrawBuffersInUse; i++) {
+    colorDrawBuffers[i]=GL11ExtensionPack.GL_COLOR_ATTACHMENT0_OES + i;
+    textureTargets[i]=textures[i].getGLTarget();
+    textureIDs[i]=textures[i].getGLTextureID();
+    gl.glFramebufferTexture2DOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,colorDrawBuffers[i],textureTargets[i],textureIDs[i],0);
+  }
+  checkFBO();
+  a3d.popFramebuffer();
+}
