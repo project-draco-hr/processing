@@ -1,0 +1,34 @@
+{
+  try {
+    File versionFile=getContentFile("lib/version.txt");
+    if (versionFile.exists()) {
+      String version=PApplet.loadStrings(versionFile)[0];
+      if (!version.equals(VERSION_NAME)) {
+        VERSION_NAME=version;
+        RELEASE=true;
+      }
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  initPlatform();
+  JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+  initRequirements();
+  Preferences.init(null);
+  Theme.init();
+  try {
+    platform.setLookAndFeel();
+  }
+ catch (  Exception e) {
+    String mess=e.getMessage();
+    if (mess.indexOf("ch.randelshofer.quaqua.QuaquaLookAndFeel") == -1) {
+      System.err.println("Non-fatal error while setting the Look & Feel.");
+      System.err.println("The error message follows, however Processing should run fine.");
+      System.err.println(mess);
+    }
+  }
+  untitledFolder=createTempFolder("untitled");
+  untitledFolder.deleteOnExit();
+  new Base(args);
+}
