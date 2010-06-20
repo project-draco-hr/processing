@@ -1,13 +1,18 @@
 {
-  if (fboSupported) {
-    popFramebuffer();
-    gl.glClearColor(0,0,0,0);
-    gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-    renderDrawTexture();
-  }
+  if (!clear) {
+    if (fboSupported) {
+      if (drawFramebuffer != null) {
+        popFramebuffer();
+        gl.glClearColor(0,0,0,0);
+        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+        renderDrawTexture(drawIndex);
+        swapDrawIndex();
+      }
+    }
  else {
-    if (!clear && screenTexID[0] != 0) {
-      copyFrameToScreenTexture();
+      if (screenTexID[0] != 0) {
+        copyFrameToScreenTexture();
+      }
     }
   }
   gl.glFlush();
