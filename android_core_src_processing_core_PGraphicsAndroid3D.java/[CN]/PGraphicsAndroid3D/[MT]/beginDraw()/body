@@ -31,17 +31,37 @@
   gl.glEnable(GL10.GL_NORMALIZE);
   gl.glEnable(GL10.GL_RESCALE_NORMAL);
   shapeFirst=0;
-  if (clear) {
-    gl.glClearColor(0,0,0,0);
-    gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+  if (fboSupported) {
+    if (fbStack == null) {
+      fbStack=new Stack<PFramebuffer>();
+      screenFramebuffer=new PFramebuffer(parent,width,height,true);
+      setFramebuffer(screenFramebuffer);
+      drawImage=parent.createImage(width,height,ARGB);
+      drawTexture=drawImage.getTexture();
+      drawFramebuffer=new PFramebuffer(parent,drawTexture.getGLWidth(),drawTexture.getGLHeight(),false);
+      drawFramebuffer.addColorBuffer(drawTexture);
+      drawFramebuffer.addDepthBuffer(DEPTH_BITS);
+      if (0 < STENCIL_BITS) {
+        drawFramebuffer.addStencilBuffer(STENCIL_BITS);
+      }
+      drawFramebuffer.validFbo();
+    }
+    pushFramebuffer();
+    setFramebuffer(drawFramebuffer);
   }
  else {
-    if (screenTexID[0] == 0) {
-      createScreenTexture();
+    if (clear) {
+      gl.glClearColor(0,0,0,0);
+      gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
     }
-    gl.glClearColor(0,0,0,0);
-    gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-    drawScreenTexture();
+ else {
+      if (screenTexID[0] == 0) {
+        createScreenTexture();
+      }
+      gl.glClearColor(0,0,0,0);
+      gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+      drawScreenTexture();
+    }
   }
   report("bot beginDraw()");
 }
