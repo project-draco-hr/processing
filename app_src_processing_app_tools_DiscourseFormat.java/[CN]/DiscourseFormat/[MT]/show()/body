@@ -1,5 +1,5 @@
 {
-  StringBuffer cf=new StringBuffer("[quote]\n");
+  StringBuffer cf=new StringBuffer(html ? "<pre>\n" : "[quote]\n");
   int selStart=textarea.getSelectionStart();
   int selStop=textarea.getSelectionStop();
   int startLine=textarea.getSelectionStartLine();
@@ -16,7 +16,7 @@
   for (int i=startLine; i <= stopLine; i++) {
     appendFormattedLine(cf,i);
   }
-  cf.append("\n[/quote]");
+  cf.append(html ? "\n</pre>" : "\n[/quote]");
   StringSelection formatted=new StringSelection(cf.toString());
   Clipboard clipboard=Toolkit.getDefaultToolkit().getSystemClipboard();
   clipboard.setContents(formatted,new ClipboardOwner(){
@@ -24,5 +24,5 @@
     }
   }
 );
-  editor.statusNotice("Code formatted for processing.org/discourse " + "has been copied to the clipboard.");
+  editor.statusNotice("Code formatted as HTML " + "has been copied to the clipboard.");
 }

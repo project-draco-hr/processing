@@ -40,22 +40,22 @@
       if (id == Token.NULL) {
       }
  else {
-        cf.append("[color=#");
+        cf.append(html ? "<span style=\"color: #" : "[color=#");
         cf.append(PApplet.hex(styles[id].getColor().getRGB() & 0xFFFFFF,6));
-        cf.append("]");
-        if (styles[id].isBold())         cf.append("[b]");
+        cf.append(html ? ";\">" : "]");
+        if (styles[id].isBold())         cf.append(html ? "<b>" : "[b]");
       }
       int length=tokens.length;
       for (int j=0; j < length; j++) {
         char c=segmentArray[segmentOffset + offset + j];
         if (offset == 0 && c == ' ') {
-          cf.append('\u00A0');
+          cf.append(html ? "&nbsp;" : '\u00A0');
         }
  else {
           cf.append(c);
         }
-        if (j == (length - 1) && id != Token.NULL && styles[id].isBold())         cf.append("[/b]");
-        if (j == (length - 1) && id != Token.NULL)         cf.append("[/color]");
+        if (j == (length - 1) && id != Token.NULL && styles[id].isBold())         cf.append(html ? "</b>" : "[/b]");
+        if (j == (length - 1) && id != Token.NULL)         cf.append(html ? "</span>" : "[/color]");
       }
       offset+=length;
       tokens=tokens.next;
