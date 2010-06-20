@@ -33,37 +33,6 @@
   int sizeFudge=6;
   setPreferredSize(new Dimension(1024,(height * lines) + sizeFudge));
   setMinimumSize(new Dimension(1024,(height * 4) + sizeFudge));
-  if (systemOut == null) {
-    systemOut=System.out;
-    systemErr=System.err;
-    tempFolder=Base.createTempFolder("console");
-    try {
-      String outFileName=Preferences.get("console.output.file");
-      if (outFileName != null) {
-        outFile=new File(tempFolder,outFileName);
-        stdoutFile=new FileOutputStream(outFile);
-      }
-      String errFileName=Preferences.get("console.error.file");
-      if (errFileName != null) {
-        errFile=new File(tempFolder,errFileName);
-        stderrFile=new FileOutputStream(errFile);
-      }
-    }
- catch (    IOException e) {
-      Base.showWarning("Console Error","A problem occurred while trying to open the\n" + "files used to store the console output.",e);
-    }
-    consoleOut=new PrintStream(new EditorConsoleStream(false));
-    consoleErr=new PrintStream(new EditorConsoleStream(true));
-    if (Preferences.getBoolean("console")) {
-      try {
-        System.setOut(consoleOut);
-        System.setErr(consoleErr);
-      }
- catch (      Exception e) {
-        e.printStackTrace(systemOut);
-      }
-    }
-  }
   if (Base.isMacOS()) {
     setBorder(null);
   }
