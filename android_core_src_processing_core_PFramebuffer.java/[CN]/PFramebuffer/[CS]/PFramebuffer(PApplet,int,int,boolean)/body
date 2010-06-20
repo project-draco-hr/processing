@@ -1,4 +1,6 @@
 {
+  this.parent=parent;
+  a3d=(PGraphicsAndroid3D)parent.g;
   gl=a3d.gl11xp;
   if (gl == null) {
     throw new RuntimeException("PFramebuffer: OpenGL ES 1.1 Extension Pack required");
@@ -6,9 +8,12 @@
   if (!a3d.fboSupported) {
     throw new RuntimeException("PFramebuffer: Frame Buffer Objects are not available");
   }
-  int[] tmp=new int[1];
-  gl.glGenFramebuffersOES(1,tmp,0);
-  glFboID=tmp[0];
-  width=w;
-  height=h;
+  initFramebuffer(w,h,onscreen);
+  try {
+    Method meth=this.getClass().getMethod("recreateResource",new Class[]{PGraphicsAndroid3D.class});
+    recreateResourceIdx=a3d.addRecreateResourceMethod(this,meth);
+  }
+ catch (  Exception e) {
+    recreateResourceIdx=-1;
+  }
 }
