@@ -2,6 +2,16 @@
   if (filename.toLowerCase().endsWith(".svg")) {
     return new PShapeSVG(this,filename);
   }
+ else   if (filename.toLowerCase().endsWith(".svgz")) {
+    try {
+      InputStream input=new GZIPInputStream(createInput(filename));
+      XMLElement xml=new XMLElement(createReader(input));
+      return new PShapeSVG(xml);
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+  }
  else   if (filename.toLowerCase().endsWith(".obj")) {
     if (g instanceof PGraphicsAndroid3D) {
       return new PShape3D(this,filename,mode);
