@@ -8,6 +8,20 @@
     for (int i=0; i < a3d.lightCount; i++) {
       a3d.glLightDisable(i);
     }
+    gl=a3d.gl;
+    gl11=a3d.gl11;
+    gl11x=a3d.gl11x;
+    gl11xp=a3d.gl11xp;
+    OPENGL_VENDOR=a3d.OPENGL_VENDOR;
+    OPENGL_RENDERER=a3d.OPENGL_RENDERER;
+    OPENGL_VERSION=a3d.OPENGL_VERSION;
+    npotTexSupported=a3d.npotTexSupported;
+    mipmapSupported=a3d.mipmapSupported;
+    matrixGetSupported=a3d.matrixGetSupported;
+    vboSupported=a3d.vboSupported;
+    fboSupported=a3d.fboSupported;
+    maxTextureSize=a3d.maxTextureSize;
+    maxPointSize=a3d.maxPointSize;
   }
   if (!settingsInited)   defaultSettings();
   resetMatrix();
@@ -42,36 +56,25 @@
     screenFramebuffer=new PFramebuffer(parent,width,height,true);
     setFramebuffer(screenFramebuffer);
   }
-  if (clear) {
+  if (clear && primarySurface) {
     gl.glClearColor(0,0,0,0);
     gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
   }
  else {
     if (fboSupported) {
       if (drawFramebuffer == null) {
-        drawTexCrop=new int[4];
-        drawTexCrop[0]=0;
-        drawTexCrop[1]=0;
-        drawTexCrop[2]=width;
-        drawTexCrop[3]=height;
-        drawImages=new PImage[2];
-        drawImages[0]=parent.createImage(width,height,ARGB,NEAREST);
-        drawImages[1]=parent.createImage(width,height,ARGB,NEAREST);
-        drawTextures=new PTexture[2];
-        drawTextures[0]=drawImages[0].getTexture();
-        drawTextures[1]=drawImages[1].getTexture();
-        drawIndex=0;
-        drawFramebuffer=new PFramebuffer(parent,drawTextures[0].getGLWidth(),drawTextures[0].getGLHeight(),false);
-        drawFramebuffer.addDepthBuffer(DEPTH_BITS);
-        if (0 < STENCIL_BITS) {
-          drawFramebuffer.addStencilBuffer(STENCIL_BITS);
-        }
+        createDrawFramebuffer();
       }
       pushFramebuffer();
       setFramebuffer(drawFramebuffer);
       drawFramebuffer.addColorBuffer(drawTextures[drawIndex]);
       gl.glClearColor(0,0,0,0);
-      gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
+      if (clear) {
+        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+      }
+ else {
+        gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
+      }
       renderDrawTexture((drawIndex + 1) % 2);
     }
  else {

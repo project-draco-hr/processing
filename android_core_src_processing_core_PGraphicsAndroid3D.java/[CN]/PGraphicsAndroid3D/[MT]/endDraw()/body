@@ -1,11 +1,13 @@
 {
-  if (!clear) {
+  if (!clear || !primarySurface) {
     if (fboSupported) {
       if (drawFramebuffer != null) {
         popFramebuffer();
-        gl.glClearColor(0,0,0,0);
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-        renderDrawTexture(drawIndex);
+        if (primarySurface) {
+          gl.glClearColor(0,0,0,0);
+          gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+          renderDrawTexture(drawIndex);
+        }
         swapDrawIndex();
       }
     }
