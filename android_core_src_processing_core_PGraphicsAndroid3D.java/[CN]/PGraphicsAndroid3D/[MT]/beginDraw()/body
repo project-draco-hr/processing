@@ -2,6 +2,13 @@
   VERTEXCOUNT=0;
   TRIANGLECOUNT=0;
   FACECOUNT=0;
+  if (!primarySurface) {
+    PGraphicsAndroid3D a3d=(PGraphicsAndroid3D)parent.g;
+    a3d.saveGLState();
+    for (int i=0; i < a3d.lightCount; i++) {
+      a3d.glLightDisable(i);
+    }
+  }
   if (!settingsInited)   defaultSettings();
   resetMatrix();
   report("top beginDraw()");
@@ -11,8 +18,7 @@
   normalBuffer.rewind();
   textureImage=null;
   textureImagePrev=null;
-  gl.glEnable(GL10.GL_BLEND);
-  gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_ONE_MINUS_SRC_ALPHA);
+  blend(BLEND);
   if (hints[DISABLE_DEPTH_TEST]) {
     gl.glDisable(GL10.GL_DEPTH_TEST);
   }
@@ -64,7 +70,6 @@
       pushFramebuffer();
       setFramebuffer(drawFramebuffer);
       drawFramebuffer.addColorBuffer(drawTextures[drawIndex]);
-      drawFramebuffer.validFbo();
       gl.glClearColor(0,0,0,0);
       gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
       renderDrawTexture((drawIndex + 1) % 2);

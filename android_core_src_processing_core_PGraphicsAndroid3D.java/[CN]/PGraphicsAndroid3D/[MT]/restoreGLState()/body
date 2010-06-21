@@ -1,0 +1,67 @@
+{
+  if (blend) {
+    blend(blendMode);
+  }
+ else {
+    noBlend();
+  }
+  gl.glViewport(0,0,width,height);
+  if (hints[DISABLE_DEPTH_TEST]) {
+    gl.glDisable(GL10.GL_DEPTH_TEST);
+    gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
+  }
+ else {
+    gl.glEnable(GL10.GL_DEPTH_TEST);
+  }
+  if (fill) {
+    fillFromCalc();
+  }
+  ambientFromCalc();
+  specularFromCalc();
+  shininess(shininess);
+  emissiveFromCalc();
+  if (lights) {
+    for (int i=0; i < lightCount; i++) {
+      glLightEnable(i);
+      if (lightType[i] == AMBIENT) {
+        glLightAmbient(i);
+        glLightPosition(i);
+        glLightFalloff(i);
+        glLightNoSpot(i);
+      }
+ else       if (lightType[i] == DIRECTIONAL) {
+        glLightNoAmbient(i);
+        glLightDirection(i);
+        glLightDiffuse(i);
+        glLightSpecular(i);
+        glLightFalloff(i);
+        glLightNoSpot(i);
+      }
+ else       if (lightType[i] == POINT) {
+        glLightNoAmbient(i);
+        glLightPosition(i);
+        glLightDiffuse(i);
+        glLightSpecular(i);
+        glLightFalloff(i);
+        glLightNoSpot(i);
+      }
+ else       if (lightType[i] == SPOT) {
+        glLightNoAmbient(i);
+        glLightPosition(i);
+        glLightDirection(i);
+        glLightDiffuse(i);
+        glLightSpecular(i);
+        glLightFalloff(i);
+        glLightSpotAngle(i);
+        glLightSpotConcentration(i);
+      }
+    }
+  }
+ else {
+    noLights();
+  }
+  gl.glMatrixMode(GL10.GL_PROJECTION);
+  gl.glPopMatrix();
+  gl.glMatrixMode(GL10.GL_MODELVIEW);
+  gl.glPopMatrix();
+}

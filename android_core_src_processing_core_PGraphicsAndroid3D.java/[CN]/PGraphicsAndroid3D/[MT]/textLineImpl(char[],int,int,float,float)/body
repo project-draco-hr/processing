@@ -1,5 +1,9 @@
 {
   gl.glEnable(GL10.GL_TEXTURE_2D);
+  if (!blend || blendMode != BLEND) {
+    gl.glEnable(GL10.GL_BLEND);
+    gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_ONE_MINUS_SRC_ALPHA);
+  }
   if (textFont.texIDList == null) {
     textFont.initTexture(gl,maxTextureSize,maxTextureSize);
     textFont.addAllGlyphsToTexture(gl);
@@ -8,5 +12,11 @@
   gl.glBindTexture(GL10.GL_TEXTURE_2D,textFont.currentTexID);
   gl.glColor4f(colorFloats[0],colorFloats[1],colorFloats[2],colorFloats[3]);
   super.textLineImpl(buffer,start,stop,x,y);
+  if (blend) {
+    blend(blendMode);
+  }
+ else {
+    noBlend();
+  }
   gl.glDisable(GL10.GL_TEXTURE_2D);
 }
