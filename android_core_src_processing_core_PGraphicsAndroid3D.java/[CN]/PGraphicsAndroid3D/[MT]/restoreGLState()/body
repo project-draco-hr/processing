@@ -1,11 +1,9 @@
 {
-  if (blend) {
-    blend(blendMode);
-  }
- else {
-    noBlend();
-  }
   gl.glViewport(0,0,width,height);
+  gl.glMatrixMode(GL10.GL_PROJECTION);
+  gl.glPopMatrix();
+  gl.glMatrixMode(GL10.GL_MODELVIEW);
+  gl.glPopMatrix();
   if (hints[DISABLE_DEPTH_TEST]) {
     gl.glDisable(GL10.GL_DEPTH_TEST);
     gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
@@ -13,14 +11,30 @@
  else {
     gl.glEnable(GL10.GL_DEPTH_TEST);
   }
+  if (blend) {
+    blend(blendMode);
+  }
+ else {
+    noBlend();
+  }
   if (fill) {
     fillFromCalc();
   }
+  calcR=ambientR;
+  calcG=ambientG;
+  calcB=ambientB;
   ambientFromCalc();
+  calcR=specularR;
+  calcG=specularG;
+  calcB=specularB;
   specularFromCalc();
   shininess(shininess);
+  calcR=emissiveR;
+  calcG=emissiveG;
+  calcB=emissiveB;
   emissiveFromCalc();
   if (lights) {
+    lights();
     for (int i=0; i < lightCount; i++) {
       glLightEnable(i);
       if (lightType[i] == AMBIENT) {
@@ -60,8 +74,4 @@
  else {
     noLights();
   }
-  gl.glMatrixMode(GL10.GL_PROJECTION);
-  gl.glPopMatrix();
-  gl.glMatrixMode(GL10.GL_MODELVIEW);
-  gl.glPopMatrix();
 }
