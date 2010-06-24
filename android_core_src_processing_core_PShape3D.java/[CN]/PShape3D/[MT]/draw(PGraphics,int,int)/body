@@ -6,7 +6,7 @@
   g.VERTEXCOUNT=vertexBuffer.capacity() / 3;
   g.FACECOUNT=groups.size();
   g.TRIANGLECOUNT=g.VERTEXCOUNT / 3;
-  pointSize=PApplet.min(a3d.strokeWeight,a3d.maxPointSize);
+  pointSize=PApplet.min(g.strokeWeight,PGraphicsAndroid3D.maxPointSize);
   gl.glPointSize(pointSize);
   if (!depthMaskEnabled) {
     gl.glDepthMask(false);
@@ -35,7 +35,7 @@
         gl.glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION,ptDistAtt,0);
         gl.glPointParameterf(GL11.GL_POINT_FADE_THRESHOLD_SIZE,0.6f * pointSize);
         gl.glPointParameterf(GL11.GL_POINT_SIZE_MIN,1.0f);
-        gl.glPointParameterf(GL11.GL_POINT_SIZE_MAX,a3d.maxPointSize);
+        gl.glPointParameterf(GL11.GL_POINT_SIZE_MAX,PGraphicsAndroid3D.maxPointSize);
         gl.glTexEnvf(GL11.GL_POINT_SPRITE_OES,GL11.GL_COORD_REPLACE_OES,GL11.GL_TRUE);
         gl.glEnable(GL11.GL_POINT_SPRITE_OES);
       }
@@ -52,7 +52,7 @@
       gl.glLineWidth(group.sw);
     }
  else {
-      gl.glLineWidth(a3d.strokeWeight);
+      gl.glLineWidth(g.strokeWeight);
     }
     if (0 < group.glMode && !pointSprites) {
       gl.glDrawArrays(group.glMode,group.first,group.last - group.first + 1);

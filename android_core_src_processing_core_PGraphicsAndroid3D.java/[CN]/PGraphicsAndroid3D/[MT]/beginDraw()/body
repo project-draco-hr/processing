@@ -5,23 +5,16 @@
   if (!primarySurface) {
     PGraphicsAndroid3D a3d=(PGraphicsAndroid3D)parent.g;
     a3d.saveGLState();
-    for (int i=0; i < a3d.lightCount; i++) {
-      a3d.glLightDisable(i);
-    }
     gl=a3d.gl;
     gl11=a3d.gl11;
     gl11x=a3d.gl11x;
     gl11xp=a3d.gl11xp;
-    OPENGL_VENDOR=a3d.OPENGL_VENDOR;
-    OPENGL_RENDERER=a3d.OPENGL_RENDERER;
-    OPENGL_VERSION=a3d.OPENGL_VERSION;
-    npotTexSupported=a3d.npotTexSupported;
-    mipmapSupported=a3d.mipmapSupported;
-    matrixGetSupported=a3d.matrixGetSupported;
-    vboSupported=a3d.vboSupported;
-    fboSupported=a3d.fboSupported;
-    maxTextureSize=a3d.maxTextureSize;
-    maxPointSize=a3d.maxPointSize;
+    for (int i=0; i < a3d.lightCount; i++) {
+      a3d.glLightDisable(i);
+    }
+    if (a3d.lights) {
+      noLights();
+    }
   }
   if (!settingsInited) {
     defaultSettings();
