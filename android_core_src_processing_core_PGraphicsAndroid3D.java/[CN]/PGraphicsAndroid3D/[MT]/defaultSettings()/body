@@ -2,4 +2,14 @@
   super.defaultSettings();
   manipulatingCamera=false;
   textureMode(IMAGE);
+  if (!primarySurface) {
+    PGraphicsAndroid3D a3d=(PGraphicsAndroid3D)parent.g;
+    try {
+      Method meth=this.getClass().getMethod("recreateResource",new Class[]{PGraphicsAndroid3D.class});
+      recreateResourceIdx=a3d.addRecreateResourceMethod(this,meth);
+    }
+ catch (    Exception e) {
+      recreateResourceIdx=-1;
+    }
+  }
 }
