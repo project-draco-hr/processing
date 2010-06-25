@@ -14,8 +14,10 @@
   }
   usingMipmaps=((glMinFilter == GL10.GL_NEAREST_MIPMAP_NEAREST) || (glMinFilter == GL10.GL_LINEAR_MIPMAP_NEAREST) || (glMinFilter == GL10.GL_NEAREST_MIPMAP_LINEAR)|| (glMinFilter == GL10.GL_LINEAR_MIPMAP_LINEAR));
   gl.glEnable(glTarget);
-  gl.glGenTextures(1,glTextureID,0);
-  gl.glBindTexture(glTarget,glTextureID[0]);
+  int[] tmp=new int[1];
+  gl.glGenTextures(1,tmp,0);
+  glTextureID=tmp[0];
+  gl.glBindTexture(glTarget,glTextureID);
   gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_MIN_FILTER,glMinFilter);
   gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_MAG_FILTER,glMagFilter);
   gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_S,GL10.GL_CLAMP_TO_EDGE);
