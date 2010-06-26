@@ -1,0 +1,17 @@
+{
+  setCellRenderer(new CellRenderer());
+  addMouseListener(new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
+      if (isEnabled()) {
+        int index=locationToIndex(e.getPoint());
+        if (index != -1) {
+          JCheckBox checkbox=(JCheckBox)getModel().getElementAt(index);
+          checkbox.setSelected(!checkbox.isSelected());
+          repaint();
+        }
+      }
+    }
+  }
+);
+  setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+}

@@ -1,0 +1,54 @@
+{
+  super("Android Permissions Selector");
+  this.editor=editor;
+  permissionList=new CheckBoxList();
+  DefaultListModel model=new DefaultListModel();
+  permissionList.setModel(model);
+  for (  String item : title) {
+    model.addElement(new JCheckBox(item));
+  }
+  permissionsScroller=new JScrollPane(permissionList,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+  Container outer=getContentPane();
+  outer.setLayout(new BorderLayout());
+  JPanel pain=new JPanel();
+  pain.setBorder(new EmptyBorder(13,13,13,13));
+  outer.add(pain,BorderLayout.CENTER);
+  pain.setLayout(new BoxLayout(pain,BoxLayout.Y_AXIS));
+  String labelText="<html><body>" + "Android applications must specifically ask for permission\n" + "to do things like connect to the internet, write a file,\n"+ "or make phone calls. When installing your application,\n"+ "users will be asked whether they want to allow such access.\n"+ "More about permissions can be found "+ "<a href=\"" + GUIDE_URL + "\">here</a>.</body></html>";
+  JTextArea textarea=new JTextArea(labelText);
+  textarea.setBorder(new EmptyBorder(13,8,13,8));
+  textarea.setBackground(null);
+  textarea.setEditable(false);
+  textarea.setHighlighter(null);
+  textarea.setFont(new Font("Dialog",Font.PLAIN,12));
+  pain.add(textarea);
+  pain.add(permissionsScroller);
+  pain.add(Box.createVerticalStrut(8));
+  JPanel buttons=new JPanel();
+  JButton okButton=new JButton("OK");
+  okButton.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      PApplet.println(getSelections());
+      setVisible(false);
+    }
+  }
+);
+  okButton.setEnabled(true);
+  buttons.add(okButton);
+  pain.add(buttons);
+  JRootPane root=getRootPane();
+  root.setDefaultButton(okButton);
+  ActionListener disposer=new ActionListener(){
+    public void actionPerformed(    ActionEvent actionEvent){
+      setVisible(false);
+    }
+  }
+;
+  Base.registerWindowCloseKeys(root,disposer);
+  Base.setIcon(this);
+  pack();
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  Dimension windowSize=getSize();
+  setLocation((screen.width - windowSize.width) / 2,(screen.height - windowSize.height) / 2);
+  setVisible(true);
+}
