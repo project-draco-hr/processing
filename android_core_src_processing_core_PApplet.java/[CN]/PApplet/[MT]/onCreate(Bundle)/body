@@ -1,5 +1,6 @@
 {
   super.onCreate(savedInstanceState);
+  println("onCreate() happening here: " + Thread.currentThread().getName());
   Window window=getWindow();
   requestWindowFeature(Window.FEATURE_NO_TITLE);
   window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
@@ -8,15 +9,21 @@
   getWindowManager().getDefaultDisplay().getMetrics(dm);
   screenWidth=dm.widthPixels;
   screenHeight=dm.heightPixels;
+  println("density is " + dm.density);
+  println("densityDpi is " + dm.densityDpi);
+  println(dm);
+  layout=new RelativeLayout(this);
+  layout.setGravity(RelativeLayout.CENTER_IN_PARENT);
   if (sketchRenderer().equals(A2D)) {
     surfaceView=new SketchSurfaceView2D(this);
   }
  else   if (sketchRenderer().equals(A3D)) {
     surfaceView=new SketchSurfaceView3D(this);
   }
+  layout.addView(surfaceView);
   width=screenWidth;
   height=screenHeight;
-  window.setContentView(surfaceView);
+  window.setContentView(layout);
   millisOffset=System.currentTimeMillis();
   finished=false;
   looping=true;
@@ -24,5 +31,8 @@
   firstMotion=true;
   Context context=getApplicationContext();
   sketchPath=context.getFilesDir().getAbsolutePath();
+  handler=new Handler();
+  println("calling loop()");
+  println("done with loop() call, will continue...");
   start();
 }

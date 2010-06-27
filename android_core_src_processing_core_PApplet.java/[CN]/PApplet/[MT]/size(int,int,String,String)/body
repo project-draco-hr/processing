@@ -1,0 +1,31 @@
+{
+  handler.post(new Runnable(){
+    public void run(){
+      println("Handler is on thread " + Thread.currentThread().getName());
+      println("I'm the ole thread " + Thread.currentThread().getName());
+      String currentRenderer=g.getClass().getName();
+      if (currentRenderer.equals(irenderer)) {
+        println("resizing renderer inside size(....)");
+        resizeRenderer(iwidth,iheight);
+      }
+ else {
+        println("changing renderer inside size(....)");
+        if (irenderer.equals(A2D)) {
+          surfaceView=new SketchSurfaceView2D(PApplet.this);
+        }
+ else         if (irenderer.equals(A3D)) {
+          surfaceView=new SketchSurfaceView3D(PApplet.this);
+        }
+        g=((SketchSurfaceView)surfaceView).getGraphics();
+        width=screenWidth;
+        height=screenHeight;
+        println("getting window");
+        Window window=getWindow();
+        window.setContentView(surfaceView);
+        println("interrupting animation thread");
+        thread.interrupt();
+      }
+    }
+  }
+);
+}

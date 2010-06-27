@@ -1,0 +1,23 @@
+{
+  try {
+    Class<?> rendererClass=Thread.currentThread().getContextClassLoader().loadClass(irenderer);
+    Constructor<?> constructor=rendererClass.getConstructor(new Class[]{});
+    PGraphics pg=(PGraphics)constructor.newInstance();
+    pg.setParent(this);
+    pg.setPrimary(iprimary);
+    if (ipath != null)     pg.setPath(ipath);
+    pg.setSize(iwidth,iheight);
+    return pg;
+  }
+ catch (  InvocationTargetException ite) {
+    ite.getTargetException().printStackTrace();
+    Throwable target=ite.getTargetException();
+    throw new RuntimeException(target.getMessage());
+  }
+catch (  ClassNotFoundException cnfe) {
+    throw new RuntimeException("You need to use \"Import Library\" " + "to add " + irenderer + " to your sketch.");
+  }
+catch (  Exception e) {
+    throw new RuntimeException(e.getMessage());
+  }
+}

@@ -14,7 +14,12 @@
     g.beginDraw();
     long now=System.nanoTime();
     if (frameCount == 0) {
-      setup();
+      try {
+        setup();
+      }
+ catch (      RendererChangeException e) {
+        return;
+      }
     }
  else {
       double rate=1000000.0 / ((now - frameRateLastNanos) / 1000000.0);
