@@ -1,6 +1,6 @@
 {
   if (application == null) {
-    application=com.apple.eawt.Application.getApplication();
+    application=Application.getApplication();
   }
   if (adapter == null) {
     adapter=new ThinkDifferent(base);
@@ -8,4 +8,18 @@
   application.addApplicationListener(adapter);
   application.setEnabledAboutMenu(true);
   application.setEnabledPreferencesMenu(true);
+  try {
+    Class<?> appClass=Application.class;
+    Method method=appClass.getMethod("setDefaultMenuBar",new Class[]{JMenuBar.class});
+    if (method != null) {
+      JMenuBar defaultMenuBar=new JMenuBar();
+      JMenu fileMenu=base.buildFileMenu(null);
+      defaultMenuBar.add(fileMenu);
+      method.invoke(application,new Object[]{defaultMenuBar});
+      Base.defaultFileMenu=fileMenu;
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
 }

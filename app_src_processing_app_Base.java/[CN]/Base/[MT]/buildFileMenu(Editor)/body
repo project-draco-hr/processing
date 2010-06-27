@@ -1,0 +1,145 @@
+{
+  JMenuItem item;
+  JMenu fileMenu=new JMenu("File");
+  item=newJMenuItem("New",'N');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleNew();
+    }
+  }
+);
+  fileMenu.add(item);
+  item=newJMenuItem("Open...",'O');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleOpenPrompt();
+    }
+  }
+);
+  fileMenu.add(item);
+  if (sketchbookMenu == null) {
+    sketchbookMenu=new JMenu("Sketchbook");
+    rebuildSketchbookMenu(sketchbookMenu);
+  }
+  fileMenu.add(sketchbookMenu);
+  if (examplesMenu == null) {
+    examplesMenu=new JMenu("Examples");
+    rebuildExamplesMenu(examplesMenu);
+  }
+  fileMenu.add(examplesMenu);
+  item=newJMenuItem("Close",'W');
+  if (editor != null) {
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        handleClose(editor);
+      }
+    }
+);
+  }
+ else {
+    item.setEnabled(false);
+  }
+  fileMenu.add(item);
+  item=newJMenuItem("Save",'S');
+  if (editor != null) {
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        editor.handleSave(false);
+      }
+    }
+);
+    editor.setSaveItem(item);
+  }
+ else {
+    item.setEnabled(false);
+  }
+  fileMenu.add(item);
+  item=newJMenuItemShift("Save As...",'S');
+  if (editor != null) {
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        editor.handleSaveAs();
+      }
+    }
+);
+    editor.setSaveAsItem(item);
+  }
+ else {
+    item.setEnabled(false);
+  }
+  fileMenu.add(item);
+  item=newJMenuItem("Export",'E');
+  if (editor != null) {
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        editor.handleExport();
+      }
+    }
+);
+  }
+ else {
+    item.setEnabled(false);
+  }
+  fileMenu.add(item);
+  item=newJMenuItemShift("Export Application",'E');
+  if (editor != null) {
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        editor.handleExportApplication();
+      }
+    }
+);
+  }
+ else {
+    item.setEnabled(false);
+  }
+  fileMenu.add(item);
+  fileMenu.addSeparator();
+  item=newJMenuItemShift("Page Setup",'P');
+  if (editor != null) {
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        editor.handlePageSetup();
+      }
+    }
+);
+  }
+ else {
+    item.setEnabled(false);
+  }
+  fileMenu.add(item);
+  item=newJMenuItem("Print",'P');
+  if (editor != null) {
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        editor.handlePrint();
+      }
+    }
+);
+  }
+ else {
+    item.setEnabled(false);
+  }
+  fileMenu.add(item);
+  if (!Base.isMacOS()) {
+    fileMenu.addSeparator();
+    item=newJMenuItem("Preferences",',');
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        handlePrefs();
+      }
+    }
+);
+    fileMenu.add(item);
+    fileMenu.addSeparator();
+    item=newJMenuItem("Quit",'Q');
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        handleQuit();
+      }
+    }
+);
+    fileMenu.add(item);
+  }
+  return fileMenu;
+}

@@ -1,7 +1,7 @@
 {
   JMenuItem item;
   sketchMenu=new JMenu("Sketch");
-  item=newJMenuItem("Run",'R');
+  item=Base.newJMenuItem("Run",'R');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       handleRun(false);
@@ -9,7 +9,7 @@
   }
 );
   sketchMenu.add(item);
-  item=newJMenuItemShift("Present",'R');
+  item=Base.newJMenuItemShift("Present",'R');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       handleRun(true);
@@ -26,12 +26,12 @@
 );
   sketchMenu.add(item);
   sketchMenu.addSeparator();
-  if (importMenu == null) {
-    importMenu=new JMenu("Import Library...");
-    base.rebuildImportMenu(importMenu);
+  if (Base.importMenu == null) {
+    Base.importMenu=new JMenu("Import Library...");
+    base.rebuildImportMenu();
   }
-  sketchMenu.add(importMenu);
-  item=newJMenuItem("Show Sketch Folder",'K');
+  sketchMenu.add(Base.importMenu);
+  item=Base.newJMenuItem("Show Sketch Folder",'K');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Base.openFolder(sketch.getFolder());

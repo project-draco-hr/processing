@@ -5,17 +5,28 @@
   editor.internalCloseRunner();
   if (editors.size() == 1) {
     if (Base.isMacOS()) {
-      Object[] options={"OK","Cancel"};
-      String prompt="<html> " + "<head> <style type=\"text/css\">" + "b { font: 13pt \"Lucida Grande\" }"+ "p { font: 11pt \"Lucida Grande\"; margin-top: 8px }"+ "</style> </head>"+ "<b>Are you sure you want to Quit?</b>"+ "<p>Closing the last open sketch will quit Processing.";
-      int result=JOptionPane.showOptionDialog(editor,prompt,"Quit",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
-      if (result == JOptionPane.NO_OPTION || result == JOptionPane.CLOSED_OPTION) {
-        return false;
+      if (defaultFileMenu == null) {
+        Object[] options={"OK","Cancel"};
+        String prompt="<html> " + "<head> <style type=\"text/css\">" + "b { font: 13pt \"Lucida Grande\" }"+ "p { font: 11pt \"Lucida Grande\"; margin-top: 8px }"+ "</style> </head>"+ "<b>Are you sure you want to Quit?</b>"+ "<p>Closing the last open sketch will quit Processing.";
+        int result=JOptionPane.showOptionDialog(editor,prompt,"Quit",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+        if (result == JOptionPane.NO_OPTION || result == JOptionPane.CLOSED_OPTION) {
+          return false;
+        }
       }
     }
     editors.remove(editor);
     storeSketches();
     Preferences.save();
-    System.exit(0);
+    if (defaultFileMenu == null) {
+      System.exit(0);
+    }
+ else {
+      editor.setVisible(false);
+      editor.dispose();
+      defaultFileMenu.insert(Base.sketchbookMenu,2);
+      defaultFileMenu.insert(Base.examplesMenu,3);
+      activeEditor=null;
+    }
   }
  else {
     editor.setVisible(false);
