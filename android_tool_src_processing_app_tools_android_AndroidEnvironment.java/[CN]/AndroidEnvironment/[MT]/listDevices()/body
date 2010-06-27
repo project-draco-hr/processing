@@ -1,25 +1,34 @@
 {
   ProcessResult result;
   try {
+    System.out.println("listing devices 00");
     result=AndroidSDK.runADB("devices");
+    System.out.println("listing devices 05");
   }
- catch (  final InterruptedException e) {
+ catch (  InterruptedException e) {
     return Collections.emptyList();
   }
-catch (  final IOException e) {
-    System.err.println(e);
+catch (  IOException e) {
+    e.printStackTrace();
     return Collections.emptyList();
   }
+  System.out.println("listing devices 10");
   if (!result.succeeded()) {
-    System.err.println(result);
+    if (result.getStderr().contains("protocol fault (no status)")) {
+      System.err.println("bleh: " + result);
+    }
+ else {
+      System.err.println("nope: " + result);
+    }
     return Collections.emptyList();
   }
+  System.out.println("listing devices 20");
   final String stdout=result.getStdout();
   if (!(stdout.startsWith("List of devices") || stdout.trim().length() == 0)) {
-    System.err.println(result);
     System.err.println(ADB_DEVICES_ERROR);
     return Collections.emptyList();
   }
+  System.out.println("listing devices 30");
   final List<String> devices=new ArrayList<String>();
   for (  final String line : result) {
     if (!line.contains("\t")) {

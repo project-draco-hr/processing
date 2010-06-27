@@ -1,13 +1,14 @@
 {
   if (state != State.NOT_RUNNING) {
-    throw new IllegalStateException("You can't launch an emulator whose state is " + state);
+    String illegal="You can't launch an emulator whose state is " + state;
+    throw new IllegalStateException(illegal);
   }
   String portString=Preferences.get("android.emulator.port");
   if (portString == null) {
     portString="5566";
     Preferences.set("android.emulator.port",portString);
   }
-  final String[] cmd=new String[]{"emulator","-avd",AVD.ECLAIR.name,"-port",portString,"-no-boot-anim"};
+  final String[] cmd=new String[]{"emulator","-avd",AVD.defaultAVD.name,"-port",portString,"-no-boot-anim"};
   final Process p=Runtime.getRuntime().exec(cmd);
   ProcessRegistry.watch(p);
   setState(State.WAITING_FOR_BOOT);
@@ -19,7 +20,9 @@
     public void run(){
       try {
         while (state == State.WAITING_FOR_BOOT) {
+          System.out.println("sleeping for 2 seconds " + new java.util.Date().toString());
           Thread.sleep(2000);
+          System.out.println("done sleeping");
           for (          final String device : AndroidEnvironment.listDevices()) {
             if (device.contains("emulator")) {
               setState(State.RUNNING);
@@ -27,7 +30,7 @@
             }
           }
         }
-        System.err.println("EmulatorController: Emulator never booted.");
+        System.err.println("EmulatorController: Emulator never booted. " + state);
       }
  catch (      final Exception e) {
         System.err.println("While waiting for emulator to boot " + e);
