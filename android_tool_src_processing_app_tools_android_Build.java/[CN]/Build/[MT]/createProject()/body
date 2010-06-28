@@ -12,6 +12,10 @@
     final File javaFolder=mkdirs(srcFolder,getPackageName().replace('.','/'));
     final String buildPath=javaFolder.getAbsolutePath();
     sketch.prepare();
+    if (!calcSketchSize()) {
+      editor.statusError("Could not parse the size() command.");
+      return null;
+    }
     className=sketch.preprocess(buildPath,new Preproc(sketch.getName()));
     if (className != null) {
       final File androidXML=new File(tempBuildFolder,"AndroidManifest.xml");

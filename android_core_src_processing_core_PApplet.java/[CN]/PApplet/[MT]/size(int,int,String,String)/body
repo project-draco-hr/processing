@@ -10,18 +10,15 @@
       }
  else {
         println("changing renderer inside size(....)");
+        layout.removeView(surfaceView);
         if (irenderer.equals(A2D)) {
-          surfaceView=new SketchSurfaceView2D(PApplet.this);
+          surfaceView=new SketchSurfaceView2D(PApplet.this,iwidth,iheight);
         }
  else         if (irenderer.equals(A3D)) {
-          surfaceView=new SketchSurfaceView3D(PApplet.this);
+          surfaceView=new SketchSurfaceView3D(PApplet.this,iwidth,iheight);
         }
         g=((SketchSurfaceView)surfaceView).getGraphics();
-        width=screenWidth;
-        height=screenHeight;
-        println("getting window");
-        Window window=getWindow();
-        window.setContentView(surfaceView);
+        layout.addView(surfaceView);
         println("interrupting animation thread");
         thread.interrupt();
       }

@@ -1,0 +1,24 @@
+{
+  final String sizeRegex="(?:^|\\s|;)size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\d+),?\\s*([^\\)]*)\\s*\\)\\s*\\;";
+  Sketch sketch=editor.getSketch();
+  String scrubbed=Sketch.scrubComments(sketch.getCode(0).getProgram());
+  String[] matches=PApplet.match(scrubbed,sizeRegex);
+  if (matches != null) {
+    try {
+      Integer.parseInt(matches[1]);
+      Integer.parseInt(matches[2]);
+    }
+ catch (    final NumberFormatException e) {
+      final String message="The size of this applet could not automatically be\n" + "determined from your code.\n" + "Use only numeric values (not variables) for the size()\n"+ "command. See the size() reference for an explanation.";
+      Base.showWarning("Could not find sketch size",message,null);
+      return false;
+    }
+    sketchSize=matches[0];
+    sketchWidth=matches[1];
+    sketchHeight=matches[2];
+    if (matches[3].trim().length() != 0) {
+      sketchRenderer=matches[3];
+    }
+  }
+  return true;
+}
