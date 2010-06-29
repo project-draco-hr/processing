@@ -1,28 +1,4 @@
 {
-  handler.post(new Runnable(){
-    public void run(){
-      println("Handler is on thread " + Thread.currentThread().getName());
-      println("I'm the ole thread " + Thread.currentThread().getName());
-      String currentRenderer=g.getClass().getName();
-      if (currentRenderer.equals(irenderer)) {
-        println("resizing renderer inside size(....)");
-        resizeRenderer(iwidth,iheight);
-      }
- else {
-        println("changing renderer inside size(....)");
-        layout.removeView(surfaceView);
-        if (irenderer.equals(A2D)) {
-          surfaceView=new SketchSurfaceView2D(PApplet.this,iwidth,iheight);
-        }
- else         if (irenderer.equals(A3D)) {
-          surfaceView=new SketchSurfaceView3D(PApplet.this,iwidth,iheight);
-        }
-        g=((SketchSurfaceView)surfaceView).getGraphics();
-        layout.addView(surfaceView);
-        println("interrupting animation thread");
-        thread.interrupt();
-      }
-    }
-  }
-);
+  System.out.println("This size() method is ignored on Android.");
+  System.out.println("See http://wiki.processing.org/w/Android for more information.");
 }

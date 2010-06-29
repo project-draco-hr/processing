@@ -10,20 +10,27 @@
   screenWidth=dm.widthPixels;
   screenHeight=dm.heightPixels;
   println(dm);
-  overallLayout=new RelativeLayout(this);
+  int sw=sketchWidth();
+  int sh=sketchHeight();
   if (sketchRenderer().equals(A2D)) {
-    surfaceView=new SketchSurfaceView2D(this,sketchWidth(),sketchHeight());
+    surfaceView=new SketchSurfaceView2D(this,sw,sh);
   }
  else   if (sketchRenderer().equals(A3D)) {
-    surfaceView=new SketchSurfaceView3D(this,sketchWidth(),sketchHeight());
+    surfaceView=new SketchSurfaceView3D(this,sw,sh);
   }
   g=((SketchSurfaceView)surfaceView).getGraphics();
-  RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-  lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-  layout=new LinearLayout(this);
-  layout.addView(surfaceView,sketchWidth(),sketchHeight());
-  overallLayout.addView(layout,lp);
-  window.setContentView(overallLayout);
+  if (sw == screenWidth && sh == screenHeight) {
+    window.setContentView(surfaceView);
+  }
+ else {
+    RelativeLayout overallLayout=new RelativeLayout(this);
+    RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+    lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+    LinearLayout layout=new LinearLayout(this);
+    layout.addView(surfaceView,sketchWidth(),sketchHeight());
+    overallLayout.addView(layout,lp);
+    window.setContentView(overallLayout);
+  }
   millisOffset=System.currentTimeMillis();
   finished=false;
   looping=true;
