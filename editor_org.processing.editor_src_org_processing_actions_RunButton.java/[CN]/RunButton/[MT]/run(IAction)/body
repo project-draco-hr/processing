@@ -1,3 +1,12 @@
 {
   ProcessingLog.logInfo("Someone hit the toolbar button!");
+  try {
+    StringWriter feedback=new StringWriter();
+    PdePreprocessor preproc=new PdePreprocessor("test",4);
+    @SuppressWarnings("unused") PreprocessResult result=preproc.write(feedback,editorContents);
+    ProcessingLog.logInfo(feedback.toString());
+  }
+ catch (  Exception e) {
+    ProcessingLog.logError("Expected problem with the preprocessor.",e);
+  }
 }
