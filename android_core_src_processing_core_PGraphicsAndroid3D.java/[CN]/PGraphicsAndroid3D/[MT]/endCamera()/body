@@ -3,8 +3,14 @@
     throw new RuntimeException("Cannot call endCamera() " + "without first calling beginCamera()");
   }
   getModelviewMatrix();
-  calculateModelviewInvNoScaling();
+  if (scalingDuringCamManip) {
+    calculateModelviewInverse();
+  }
+ else {
+    calculateModelviewInvNoScaling();
+  }
   PApplet.arrayCopy(modelview,camera);
   PApplet.arrayCopy(modelviewInv,cameraInv);
   manipulatingCamera=false;
+  scalingDuringCamManip=false;
 }
