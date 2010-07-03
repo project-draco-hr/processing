@@ -1,8 +1,9 @@
 {
-  if (gl11 != null && matrixGetSupported) {
-    gl11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX,modelview,0);
-    modelviewUpdated=true;
+  if (usingModelviewStack) {
+    modelviewStack.get(modelview);
   }
  else {
+    gl11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX,modelview,0);
   }
+  modelviewUpdated=true;
 }
