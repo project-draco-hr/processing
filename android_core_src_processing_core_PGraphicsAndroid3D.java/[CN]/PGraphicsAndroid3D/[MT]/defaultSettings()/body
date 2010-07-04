@@ -2,7 +2,13 @@
   super.defaultSettings();
   manipulatingCamera=false;
   scalingDuringCamManip=false;
-  if (usingModelviewStack) {
+  clearColorBuffer=false;
+  if (fbStack == null) {
+    fbStack=new Stack<PFramebuffer>();
+    screenFramebuffer=new PFramebuffer(parent,width,height,true);
+    setFramebuffer(screenFramebuffer);
+  }
+  if (usingModelviewStack && modelviewStack == null) {
     modelviewStack=new A3DMatrixStack();
   }
   textureMode(IMAGE);

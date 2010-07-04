@@ -45,43 +45,72 @@
   gl.glEnable(GL10.GL_NORMALIZE);
   gl.glEnable(GL10.GL_RESCALE_NORMAL);
   shapeFirst=0;
-  if (fbStack == null) {
-    fbStack=new Stack<PFramebuffer>();
-    screenFramebuffer=new PFramebuffer(parent,width,height,true);
-    setFramebuffer(screenFramebuffer);
-  }
-  if (clear && primarySurface) {
-    gl.glClearColor(0,0,0,0);
-    gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-  }
- else {
-    if (fboSupported) {
-      if (drawFramebuffer == null) {
-        createDrawFramebuffer();
-      }
-      pushFramebuffer();
-      setFramebuffer(drawFramebuffer);
-      drawFramebuffer.addColorBuffer(drawTextures[drawIndex]);
-      gl.glClearColor(0,0,0,0);
-      if (clear) {
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+  if (primarySurface) {
+    if (parent.frameCount == 0) {
+      if (fboSupported) {
+        if (drawFramebuffer == null) {
+          createDrawFramebuffer();
+        }
       }
  else {
-        gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
-        renderDrawTexture((drawIndex + 1) % 2);
+        if (gl11 == null || gl11x == null) {
+          throw new RuntimeException("PGraphicsAndroid3D:  no clear mode with no FBOs requires OpenGL ES 1.1");
+        }
+        if (screenTexID[0] == 0) {
+          createScreenTexture();
+        }
       }
     }
- else {
-      if (gl11 == null || gl11x == null) {
-        throw new RuntimeException("PGraphicsAndroid3D: noClear mode requires OpenGL ES 1.1");
-      }
-      if (screenTexID[0] == 0) {
-        createScreenTexture();
-      }
+    if (clearColorBuffer) {
       gl.glClearColor(0,0,0,0);
       gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-      drawScreenTexture();
+    }
+ else {
+      if (fboSupported) {
+        if (drawFramebuffer != null) {
+          pushFramebuffer();
+          setFramebuffer(drawFramebuffer);
+          drawFramebuffer.setColorBuffer(drawTextures[drawIndex]);
+          gl.glClearColor(0,0,0,0);
+          if (parent.frameCount == 0) {
+            gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+          }
+ else {
+            gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
+            renderDrawTexture((drawIndex + 1) % 2);
+          }
+        }
+      }
+ else {
+        if (screenTexID[0] != 0) {
+          gl.glClearColor(0,0,0,0);
+          gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+          if (0 < parent.frameCount) {
+            drawScreenTexture();
+          }
+        }
+      }
     }
   }
+ else {
+    if (!fboSupported) {
+      throw new RuntimeException("PGraphicsAndroid3D: offscreen rendering requires FBO extension.");
+    }
+    if (drawFramebuffer == null) {
+      createDrawFramebuffer();
+    }
+    pushFramebuffer();
+    setFramebuffer(drawFramebuffer);
+    drawFramebuffer.setColorBuffer(drawTextures[drawIndex]);
+    gl.glClearColor(0,0,0,0);
+    if (clearColorBuffer || parent.frameCount == 0) {
+      gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+    }
+ else {
+      gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
+      renderDrawTexture((drawIndex + 1) % 2);
+    }
+  }
+  clearColorBuffer0=clearColorBuffer;
   report("bot beginDraw()");
 }
