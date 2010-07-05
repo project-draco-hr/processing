@@ -1,26 +1,9 @@
 {
-  if (screenTexID[0] != 0) {
-    gl.glDeleteTextures(1,screenTexID,0);
-  }
-  if (npotTexSupported) {
-    screenTexWidth=width;
-    screenTexHeight=height;
-  }
- else {
-    screenTexWidth=nextPowerOfTwo(width);
-    screenTexHeight=nextPowerOfTwo(height);
-  }
-  gl.glEnable(GL10.GL_TEXTURE_2D);
-  gl.glGenTextures(1,screenTexID,0);
-  gl.glBindTexture(GL10.GL_TEXTURE_2D,screenTexID[0]);
-  gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_MIN_FILTER,GL10.GL_NEAREST);
-  gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_MAG_FILTER,GL10.GL_NEAREST);
-  gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_S,GL10.GL_CLAMP_TO_EDGE);
-  gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_T,GL10.GL_CLAMP_TO_EDGE);
-  int[] buf=new int[screenTexWidth * screenTexHeight];
+  loadTexture();
+  int[] buf=new int[width * height];
   for (int i=0; i < buf.length; i++)   buf[i]=0xFF000000;
-  gl.glTexImage2D(GL10.GL_TEXTURE_2D,0,GL10.GL_RGBA,screenTexWidth,screenTexHeight,0,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(buf));
-  gl.glDisable(GL10.GL_TEXTURE_2D);
+  texture.set(buf);
+  screenTexCrop=new int[4];
   screenTexCrop[0]=0;
   screenTexCrop[1]=0;
   screenTexCrop[2]=width;
