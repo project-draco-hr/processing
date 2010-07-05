@@ -1,12 +1,35 @@
 {
   ProcessingLog.logInfo("Someone hit the toolbar button!");
+  spoof_preferences();
   try {
-    StringWriter feedback=new StringWriter();
     PdePreprocessor preproc=new PdePreprocessor("test",4);
-    @SuppressWarnings("unused") PreprocessResult result=preproc.write(feedback,editorContents);
+    StringWriter feedback=new StringWriter();
+    PreprocessResult result=preproc.write(feedback,editorContents);
     ProcessingLog.logInfo(feedback.toString());
   }
- catch (  Exception e) {
-    ProcessingLog.logError("Expected problem with the preprocessor.",e);
+ catch (  antlr.RecognitionException re) {
+    String msg=re.getMessage();
+    if (msg.equals("expecting RCURLY, found 'null'")) {
+      msg="Found one too many { characters without a } to match it.";
+    }
+    if (msg.indexOf("expecting RBRACK") != -1) {
+      System.err.println(msg);
+      msg="Syntax error, maybe a missing right ] character?";
+    }
+    if (msg.indexOf("expecting SEMI") != -1) {
+      System.err.println(msg);
+      msg="Syntax error, maybe a missing semicolon?";
+    }
+    if (msg.indexOf("expecting RPAREN") != -1) {
+      System.err.println(msg);
+      msg="Syntax error, maybe a missing right parenthesis?";
+    }
+    if (msg.indexOf("preproc.web_colors") != -1) {
+      msg="A web color (such as #ffcc00) must be six digits.";
+    }
+    ProcessingLog.logError(msg,re);
+  }
+catch (  Exception e) {
+    ProcessingLog.logError(e);
   }
 }
