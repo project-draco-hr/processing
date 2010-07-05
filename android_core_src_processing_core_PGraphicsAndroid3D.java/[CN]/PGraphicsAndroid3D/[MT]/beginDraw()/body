@@ -48,8 +48,8 @@
   if (primarySurface) {
     if (parent.frameCount == 0) {
       if (fboSupported) {
-        if (drawFramebuffer == null) {
-          createDrawFramebuffer();
+        if (offscreenFramebuffer == null) {
+          createOffscreenFramebuffer();
         }
       }
  else {
@@ -67,17 +67,17 @@
     }
  else {
       if (fboSupported) {
-        if (drawFramebuffer != null) {
+        if (offscreenFramebuffer != null) {
           pushFramebuffer();
-          setFramebuffer(drawFramebuffer);
-          drawFramebuffer.setColorBuffer(drawTextures[drawIndex]);
+          setFramebuffer(offscreenFramebuffer);
+          offscreenFramebuffer.setColorBuffer(offscreenTextures[offscreenIndex]);
           gl.glClearColor(0,0,0,0);
           if (parent.frameCount == 0) {
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
           }
  else {
             gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
-            renderDrawTexture((drawIndex + 1) % 2);
+            drawOffscreenTexture((offscreenIndex + 1) % 2);
           }
         }
       }
@@ -96,19 +96,19 @@
     if (!fboSupported) {
       throw new RuntimeException("PGraphicsAndroid3D: offscreen rendering requires FBO extension.");
     }
-    if (drawFramebuffer == null) {
-      createDrawFramebuffer();
+    if (offscreenFramebuffer == null) {
+      createOffscreenFramebuffer();
     }
     pushFramebuffer();
-    setFramebuffer(drawFramebuffer);
-    drawFramebuffer.setColorBuffer(drawTextures[drawIndex]);
+    setFramebuffer(offscreenFramebuffer);
+    offscreenFramebuffer.setColorBuffer(offscreenTextures[offscreenIndex]);
     gl.glClearColor(0,0,0,0);
     if (clearColorBuffer || parent.frameCount == 0) {
       gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
     }
  else {
       gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
-      renderDrawTexture((drawIndex + 1) % 2);
+      drawOffscreenTexture((offscreenIndex + 1) % 2);
     }
   }
   clearColorBuffer0=clearColorBuffer;

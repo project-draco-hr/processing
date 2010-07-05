@@ -1,0 +1,27 @@
+{
+  offscreenTexCrop=new int[4];
+  offscreenTexCrop[0]=0;
+  offscreenTexCrop[1]=0;
+  offscreenTexCrop[2]=width;
+  offscreenTexCrop[3]=height;
+  offscreenImages=new PImage[2];
+  if (primarySurface) {
+    offscreenImages[0]=parent.createImage(width,height,ARGB,NEAREST);
+    offscreenImages[1]=parent.createImage(width,height,ARGB,NEAREST);
+  }
+ else {
+    offscreenImages[0]=parent.createImage(width,height,ARGB,LINEAR);
+    offscreenImages[1]=parent.createImage(width,height,ARGB,LINEAR);
+  }
+  offscreenTextures=new PTexture[2];
+  offscreenTextures[0]=offscreenImages[0].getTexture();
+  offscreenTextures[1]=offscreenImages[1].getTexture();
+  offscreenTextures[0].setFlippedY(true);
+  offscreenTextures[1].setFlippedY(true);
+  offscreenIndex=0;
+  offscreenFramebuffer=new PFramebuffer(parent,offscreenTextures[0].getGLWidth(),offscreenTextures[0].getGLHeight(),false);
+  offscreenFramebuffer.addDepthBuffer(DEPTH_BITS);
+  if (0 < STENCIL_BITS) {
+    offscreenFramebuffer.addStencilBuffer(STENCIL_BITS);
+  }
+}
