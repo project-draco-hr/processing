@@ -1,0 +1,11 @@
+{
+  if (!manipulatingCamera) {
+    throw new RuntimeException("Cannot call updateCamera() " + "without first calling beginCamera()");
+  }
+  copyPMatrixToGLArray(camera,glmodelview);
+  gl.glLoadMatrixf(glmodelview,0);
+  if (usingModelviewStack) {
+    modelviewStack.set(glmodelview);
+  }
+  scalingDuringCamManip=true;
+}

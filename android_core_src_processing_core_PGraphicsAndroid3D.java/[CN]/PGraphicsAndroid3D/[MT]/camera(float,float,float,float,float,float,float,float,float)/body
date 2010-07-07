@@ -29,29 +29,32 @@
     y1/=mag;
     y2/=mag;
   }
-  modelview[0]=x0;
-  modelview[1]=y0;
-  modelview[2]=z0;
-  modelview[3]=0.0f;
-  modelview[4]=x1;
-  modelview[5]=y1;
-  modelview[6]=z1;
-  modelview[7]=0.0f;
-  modelview[8]=x2;
-  modelview[9]=y2;
-  modelview[10]=z2;
-  modelview[11]=0;
-  modelview[12]=-cameraX;
-  modelview[13]=cameraY;
-  modelview[14]=-cameraZ;
-  modelview[15]=1.0f;
+  glmodelview[0]=x0;
+  glmodelview[1]=y0;
+  glmodelview[2]=z0;
+  glmodelview[3]=0.0f;
+  glmodelview[4]=x1;
+  glmodelview[5]=y1;
+  glmodelview[6]=z1;
+  glmodelview[7]=0.0f;
+  glmodelview[8]=x2;
+  glmodelview[9]=y2;
+  glmodelview[10]=z2;
+  glmodelview[11]=0;
+  glmodelview[12]=-cameraX;
+  glmodelview[13]=cameraY;
+  glmodelview[14]=-cameraZ;
+  glmodelview[15]=1.0f;
   gl.glMatrixMode(GL10.GL_MODELVIEW);
-  gl.glLoadMatrixf(modelview,0);
+  gl.glLoadMatrixf(glmodelview,0);
   if (usingModelviewStack) {
-    modelviewStack.set(modelview);
+    modelviewStack.set(glmodelview);
   }
+  copyGLArrayToPMatrix(glmodelview,modelview);
   modelviewUpdated=true;
   calculateModelviewInvNoScaling();
-  PApplet.arrayCopy(modelview,camera);
-  PApplet.arrayCopy(modelviewInv,cameraInv);
+  PApplet.arrayCopy(glmodelview,pcamera);
+  PApplet.arrayCopy(glmodelviewInv,pcameraInv);
+  copyGLArrayToPMatrix(pcamera,camera);
+  copyGLArrayToPMatrix(pcameraInv,cameraInv);
 }
