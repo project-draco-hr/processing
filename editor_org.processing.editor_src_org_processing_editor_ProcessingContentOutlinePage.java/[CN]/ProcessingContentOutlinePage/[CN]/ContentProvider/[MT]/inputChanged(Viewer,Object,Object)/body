@@ -1,0 +1,22 @@
+{
+  if (oldInput != null) {
+    IDocument document=fDocumentProvider.getDocument(oldInput);
+    if (document != null) {
+      try {
+        document.removePositionCategory(SEGMENTS);
+      }
+ catch (      BadPositionCategoryException x) {
+      }
+      document.removePositionUpdater(fPositionUpdater);
+    }
+  }
+  fContent.clear();
+  if (newInput != null) {
+    IDocument document=fDocumentProvider.getDocument(newInput);
+    if (document != null) {
+      document.addPositionCategory(SEGMENTS);
+      document.addPositionUpdater(fPositionUpdater);
+      parse(document);
+    }
+  }
+}

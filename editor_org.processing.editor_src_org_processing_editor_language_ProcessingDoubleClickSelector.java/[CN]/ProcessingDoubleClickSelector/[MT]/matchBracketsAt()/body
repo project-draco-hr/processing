@@ -1,0 +1,38 @@
+{
+  char prevChar, nextChar;
+  int i;
+  int bracketIndex1=fgBrackets.length;
+  int bracketIndex2=fgBrackets.length;
+  fStartPos=-1;
+  fEndPos=-1;
+  try {
+    IDocument doc=fText.getDocument();
+    prevChar=doc.getChar(fPos - 1);
+    nextChar=doc.getChar(fPos);
+    for (i=0; i < fgBrackets.length; i=i + 2) {
+      if (prevChar == fgBrackets[i]) {
+        fStartPos=fPos - 1;
+        bracketIndex1=i;
+      }
+    }
+    for (i=1; i < fgBrackets.length; i=i + 2) {
+      if (nextChar == fgBrackets[i]) {
+        fEndPos=fPos;
+        bracketIndex2=i;
+      }
+    }
+    if (fStartPos > -1 && bracketIndex1 < bracketIndex2) {
+      fEndPos=searchForClosingBracket(fStartPos,prevChar,fgBrackets[bracketIndex1 + 1],doc);
+      if (fEndPos > -1)       return true;
+      fStartPos=-1;
+    }
+ else     if (fEndPos > -1) {
+      fStartPos=searchForOpenBracket(fEndPos,fgBrackets[bracketIndex2 - 1],nextChar,doc);
+      if (fStartPos > -1)       return true;
+      fEndPos=-1;
+    }
+  }
+ catch (  BadLocationException x) {
+  }
+  return false;
+}

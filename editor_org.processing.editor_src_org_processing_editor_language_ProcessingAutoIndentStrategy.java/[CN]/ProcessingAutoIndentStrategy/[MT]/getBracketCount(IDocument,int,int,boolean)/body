@@ -1,0 +1,45 @@
+{
+  int begin=start;
+  int bracketcount=0;
+  while (begin < end) {
+    char curr=document.getChar(begin);
+    begin++;
+switch (curr) {
+case '/':
+      if (begin < end) {
+        char next=document.getChar(begin);
+        if (next == '*') {
+          begin=getCommentEnd(document,begin + 1,end);
+        }
+ else         if (next == '/') {
+          begin=end;
+        }
+      }
+    break;
+case '*':
+  if (begin < end) {
+    char next=document.getChar(begin);
+    if (next == '/') {
+      bracketcount=0;
+      begin++;
+    }
+  }
+break;
+case '{':
+bracketcount++;
+ignoreCloseBrackets=false;
+break;
+case '}':
+if (!ignoreCloseBrackets) {
+bracketcount--;
+}
+break;
+case '"':
+case '\'':
+begin=getStringEnd(document,begin,end,curr);
+break;
+default :
+}
+}
+return bracketcount;
+}
