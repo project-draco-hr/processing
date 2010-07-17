@@ -1,24 +1,35 @@
 {
-  final String sizeRegex="(?:^|\\s|;)size\\s*\\(\\s*(\\S+)\\s*,\\s*(\\d+),?\\s*([^\\)]*)\\s*\\)\\s*\\;";
   Sketch sketch=editor.getSketch();
   String scrubbed=Sketch.scrubComments(sketch.getCode(0).getProgram());
-  String[] matches=PApplet.match(scrubbed,sizeRegex);
+  String[] matches=PApplet.match(scrubbed,Sketch.SIZE_REGEX);
   if (matches != null) {
-    try {
-      Integer.parseInt(matches[1]);
-      Integer.parseInt(matches[2]);
+    boolean badSize=false;
+    if (!matches[1].equals("screenWidth") && !matches[1].equals("screenHeight") && PApplet.parseInt(matches[1],-1) == -1) {
+      badSize=true;
     }
- catch (    final NumberFormatException e) {
-      final String message="The size of this applet could not automatically be\n" + "determined from your code.\n" + "Use only numeric values (not variables) for the size()\n"+ "command. See the size() reference for an explanation.";
+    if (!matches[2].equals("screenWidth") && !matches[2].equals("screenHeight") && PApplet.parseInt(matches[2],-1) == -1) {
+      badSize=true;
+    }
+    if (badSize) {
+      final String message="The size of this applet could not automatically be determined\n" + "from your code. Use only numeric values (not variables) for the\n" + "size() command. See the size() reference for more information.";
       Base.showWarning("Could not find sketch size",message,null);
+      System.out.println("More about the size() command on Android can be");
+      System.out.println("found here: http://wiki.processing.org/w/Android");
       return false;
     }
-    sketchSize=matches[0];
+    sizeStatement=matches[0];
     sketchWidth=matches[1];
     sketchHeight=matches[2];
-    if (matches[3].trim().length() != 0) {
-      sketchRenderer=matches[3];
+    sketchRenderer=matches[3].trim();
+    if (sketchRenderer.length() == 0) {
+      sketchRenderer=null;
     }
+  }
+ else {
+    sizeStatement=null;
+    sketchWidth=null;
+    sketchHeight=null;
+    sketchRenderer=null;
   }
   return true;
 }

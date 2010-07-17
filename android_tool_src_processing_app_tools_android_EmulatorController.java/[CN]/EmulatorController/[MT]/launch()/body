@@ -13,8 +13,28 @@
   ProcessRegistry.watch(p);
   setState(State.WAITING_FOR_BOOT);
   final String title=PApplet.join(cmd,' ');
-  new StreamPump(p.getInputStream(),"out: " + title).addTarget(System.out).start();
-  new StreamPump(p.getErrorStream(),"err: " + title).addTarget(System.err).start();
+  StreamPump outie=new StreamPump(p.getInputStream(),"out: " + title);
+  outie.addTarget(new LineProcessor(){
+    public void processLine(    String line){
+      if (line.contains("the cache image is used by another emulator")) {
+      }
+ else {
+        System.out.println(title + ": " + line);
+      }
+    }
+  }
+);
+  StreamPump errie=new StreamPump(p.getErrorStream(),"err: " + title);
+  errie.addTarget(new LineProcessor(){
+    public void processLine(    String line){
+      if (line.contains("This application, or a library it uses, is using NSQuickDrawView")) {
+      }
+ else {
+        System.err.println(title + ": " + line);
+      }
+    }
+  }
+);
   final CountDownLatch latch=new CountDownLatch(1);
   new Thread(new Runnable(){
     public void run(){
@@ -22,7 +42,6 @@
         while (state == State.WAITING_FOR_BOOT) {
           System.out.println("sleeping for 2 seconds " + new java.util.Date().toString());
           Thread.sleep(2000);
-          System.out.println("done sleeping");
           for (          final String device : AndroidEnvironment.listDevices()) {
             if (device.contains("emulator")) {
               setState(State.RUNNING);
