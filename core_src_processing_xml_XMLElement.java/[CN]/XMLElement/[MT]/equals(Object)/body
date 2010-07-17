@@ -1,8 +1,34 @@
 {
-  try {
-    return this.equalsXMLElement((XMLElement)rawElement);
-  }
- catch (  ClassCastException e) {
+  if (!(object instanceof XMLElement)) {
     return false;
   }
+  XMLElement rawElement=(XMLElement)object;
+  if (!this.name.equals(rawElement.getLocalName())) {
+    return false;
+  }
+  if (this.attributes.size() != rawElement.getAttributeCount()) {
+    return false;
+  }
+  Enumeration<XMLAttribute> en=this.attributes.elements();
+  while (en.hasMoreElements()) {
+    XMLAttribute attr=(XMLAttribute)en.nextElement();
+    if (!rawElement.hasAttribute(attr.getFullName())) {
+      return false;
+    }
+    String value=rawElement.getAttribute(attr.getFullName(),null);
+    if (!attr.getValue().equals(value)) {
+      return false;
+    }
+  }
+  if (this.children.size() != rawElement.getChildCount()) {
+    return false;
+  }
+  for (int i=0; i < this.children.size(); i++) {
+    XMLElement child1=this.getChildAtIndex(i);
+    XMLElement child2=rawElement.getChildAtIndex(i);
+    if (!child1.equals(child2)) {
+      return false;
+    }
+  }
+  return true;
 }
