@@ -1,7 +1,20 @@
 {
   super("Android Permissions Selector");
-  this.editor=editor;
   permissionList=new CheckBoxList();
+  permissionList.addMouseListener(new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
+      if (isEnabled()) {
+        int index=permissionList.locationToIndex(e.getPoint());
+        if (index == -1) {
+          descriptionLabel.setText("");
+        }
+ else {
+          descriptionLabel.setText("<html>" + description[index] + "</html>");
+        }
+      }
+    }
+  }
+);
   DefaultListModel model=new DefaultListModel();
   permissionList.setModel(model);
   for (  String item : title) {
@@ -14,15 +27,38 @@
   pain.setBorder(new EmptyBorder(13,13,13,13));
   outer.add(pain,BorderLayout.CENTER);
   pain.setLayout(new BoxLayout(pain,BoxLayout.Y_AXIS));
-  String labelText="<html><body>" + "Android applications must specifically ask for permission\n" + "to do things like connect to the internet, write a file,\n"+ "or make phone calls. When installing your application,\n"+ "users will be asked whether they want to allow such access.\n"+ "More about permissions can be found "+ "<a href=\"" + GUIDE_URL + "\">here</a>.</body></html>";
-  JTextArea textarea=new JTextArea(labelText);
+  String labelText="<html>" + "Android applications must specifically ask for permission\n" + "to do things like connect to the internet, write a file,\n"+ "or make phone calls. When installing your application,\n"+ "users will be asked whether they want to allow such access.\n"+ "More about permissions can be found "+ "<a href=\"" + GUIDE_URL + "\">here</a>.</body></html>";
+  JLabel textarea=new JLabel(labelText){
+    public Dimension getPreferredSize(){
+      return new Dimension(400,200);
+    }
+    public Dimension getMinimumSize(){
+      return getPreferredSize();
+    }
+    public Dimension getMaximumSize(){
+      return getPreferredSize();
+    }
+  }
+;
   textarea.setBorder(new EmptyBorder(13,8,13,8));
-  textarea.setBackground(null);
-  textarea.setEditable(false);
-  textarea.setHighlighter(null);
+  textarea.setBackground(Color.RED);
   textarea.setFont(new Font("Dialog",Font.PLAIN,12));
   pain.add(textarea);
   pain.add(permissionsScroller);
+  pain.add(Box.createVerticalStrut(8));
+  descriptionLabel=new JLabel(labelText){
+    public Dimension getPreferredSize(){
+      return new Dimension(400,200);
+    }
+    public Dimension getMinimumSize(){
+      return getPreferredSize();
+    }
+    public Dimension getMaximumSize(){
+      return getPreferredSize();
+    }
+  }
+;
+  pain.add(descriptionLabel);
   pain.add(Box.createVerticalStrut(8));
   JPanel buttons=new JPanel();
   JButton okButton=new JButton("OK");
@@ -50,5 +86,4 @@
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   Dimension windowSize=getSize();
   setLocation((screen.width - windowSize.width) / 2,(screen.height - windowSize.height) / 2);
-  setVisible(true);
 }

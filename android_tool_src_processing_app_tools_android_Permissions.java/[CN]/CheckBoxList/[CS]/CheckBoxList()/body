@@ -1,13 +1,16 @@
 {
   setCellRenderer(new CellRenderer());
+  checkboxWidth=new JCheckBox().getPreferredSize().width;
   addMouseListener(new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
       if (isEnabled()) {
         int index=locationToIndex(e.getPoint());
         if (index != -1) {
           JCheckBox checkbox=(JCheckBox)getModel().getElementAt(index);
-          checkbox.setSelected(!checkbox.isSelected());
-          repaint();
+          if (e.getX() < checkboxWidth) {
+            checkbox.setSelected(!checkbox.isSelected());
+            repaint();
+          }
         }
       }
     }
