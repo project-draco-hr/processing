@@ -22,7 +22,7 @@
   for (  String item : title) {
     model.addElement(new JCheckBox(item));
   }
-  permissionsScroller=new JScrollPane(permissionList,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+  permissionScroller=new JScrollPane(permissionList,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
   permissionList.setVisibleRowCount(12);
   permissionList.addKeyListener(new KeyAdapter(){
     public void keyTyped(    KeyEvent e){
@@ -36,43 +36,31 @@
   }
 );
   Container outer=getContentPane();
-  outer.setLayout(new BorderLayout());
-  JPanel pain=new JPanel();
+  Box pain=Box.createVerticalBox();
   pain.setBorder(new EmptyBorder(13,13,13,13));
-  outer.add(pain,BorderLayout.CENTER);
-  pain.setLayout(new BoxLayout(pain,BoxLayout.Y_AXIS));
+  outer.add(pain);
   String labelText="<html>" + "Android applications must specifically ask for permission\n" + "to do things like connect to the internet, write a file,\n"+ "or make phone calls. When installing your application,\n"+ "users will be asked whether they want to allow such access.\n"+ "More about permissions can be found "+ "<a href=\"" + GUIDE_URL + "\">here</a>.</body></html>";
-  JLabel textarea=new JLabel(labelText){
-    public Dimension getPreferredSize(){
-      return new Dimension(400,100);
-    }
-    public Dimension getMinimumSize(){
-      return getPreferredSize();
-    }
-    public Dimension getMaximumSize(){
-      return getPreferredSize();
+  JLabel textarea=new JLabel(labelText);
+  textarea.setPreferredSize(new Dimension(400,100));
+  textarea.addMouseListener(new MouseAdapter(){
+    public void mouseClicked(    MouseEvent e){
+      Base.openURL(GUIDE_URL);
     }
   }
-;
+);
+  textarea.setAlignmentX(LEFT_ALIGNMENT);
   pain.add(textarea);
-  pain.add(permissionsScroller);
+  permissionScroller.setAlignmentX(LEFT_ALIGNMENT);
+  pain.add(permissionScroller);
   pain.add(Box.createVerticalStrut(8));
-  descriptionLabel=new JLabel(){
-    public Dimension getPreferredSize(){
-      return new Dimension(400,100);
-    }
-    public Dimension getMinimumSize(){
-      return getPreferredSize();
-    }
-    public Dimension getMaximumSize(){
-      return getPreferredSize();
-    }
-  }
-;
+  descriptionLabel=new JLabel();
+  descriptionLabel.setPreferredSize(new Dimension(400,50));
   descriptionLabel.setVerticalAlignment(JLabel.TOP);
+  descriptionLabel.setAlignmentX(LEFT_ALIGNMENT);
   pain.add(descriptionLabel);
   pain.add(Box.createVerticalStrut(8));
   JPanel buttons=new JPanel();
+  buttons.setAlignmentX(LEFT_ALIGNMENT);
   JButton okButton=new JButton("OK");
   Dimension dim=new Dimension(Preferences.BUTTON_WIDTH,okButton.getPreferredSize().height);
   okButton.setPreferredSize(dim);
@@ -84,7 +72,23 @@
   }
 );
   okButton.setEnabled(true);
-  buttons.add(okButton);
+  JButton cancelButton=new JButton("Cancel");
+  cancelButton.setPreferredSize(dim);
+  cancelButton.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      setVisible(false);
+    }
+  }
+);
+  cancelButton.setEnabled(true);
+  if (Base.isMacOS()) {
+    buttons.add(cancelButton);
+    buttons.add(okButton);
+  }
+ else {
+    buttons.add(okButton);
+    buttons.add(cancelButton);
+  }
   pain.add(buttons);
   JRootPane root=getRootPane();
   root.setDefaultButton(okButton);
