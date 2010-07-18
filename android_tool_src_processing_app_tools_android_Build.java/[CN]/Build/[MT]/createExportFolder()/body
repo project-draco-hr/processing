@@ -2,8 +2,8 @@
   Sketch sketch=editor.getSketch();
   File androidFolder=new File(sketch.getFolder(),"android");
   if (androidFolder.exists()) {
-    Date mod=new Date(androidFolder.lastModified());
-    File dest=new File(sketch.getFolder(),"android." + dateFormat.format(mod));
+    String stamp=AndroidTool.getDateStamp(androidFolder.lastModified());
+    File dest=new File(sketch.getFolder(),"android." + stamp);
     boolean result=androidFolder.renameTo(dest);
     if (!result) {
       ProcessHelper mv;

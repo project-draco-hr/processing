@@ -9,7 +9,8 @@
   }
   final File srcFolder=new File(tempBuildFolder,"src");
   try {
-    final File javaFolder=mkdirs(srcFolder,getPackageName().replace('.','/'));
+    manifest=new Manifest(editor);
+    final File javaFolder=mkdirs(srcFolder,manifest.getPackageName().replace('.','/'));
     final String buildPath=javaFolder.getAbsolutePath();
     sketch.prepare();
     if (!calcSketchSize()) {
@@ -18,8 +19,6 @@
     }
     className=sketch.preprocess(buildPath,new Preproc(sketch.getName()));
     if (className != null) {
-      final File androidXML=new File(tempBuildFolder,"AndroidManifest.xml");
-      writeAndroidManifest(androidXML,sketch.getName(),className);
       writeBuildProps(new File(tempBuildFolder,"build.properties"));
       buildFile=new File(tempBuildFolder,"build.xml");
       writeBuildXML(buildFile,sketch.getName());
