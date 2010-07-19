@@ -1,9 +1,11 @@
 {
-  String p=xml.getString("package").trim();
+  save(file);
+  XMLElement mf=new XMLElement(new FileReader(file));
+  String p=mf.getString("package").trim();
   if (p.length() == 0) {
-    xml.setString("package",defaultPackageName());
+    mf.setString("package",defaultPackageName());
   }
-  XMLElement app=xml.getChild("application");
+  XMLElement app=mf.getChild("application");
   String label=app.getString("android:label");
   if (label.length() == 0) {
     app.setString("android:label",className);
@@ -16,6 +18,6 @@
     activity.setString("android:label",className);
   }
   PrintWriter writer=PApplet.createWriter(file);
-  xml.write(writer);
+  mf.write(writer);
   writer.close();
 }
