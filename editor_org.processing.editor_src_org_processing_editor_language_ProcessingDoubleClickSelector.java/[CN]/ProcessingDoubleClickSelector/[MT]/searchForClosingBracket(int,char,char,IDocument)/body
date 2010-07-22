@@ -1,0 +1,14 @@
+{
+  int stack=1;
+  int closePosition=startPosition + 1;
+  int length=document.getLength();
+  char nextChar;
+  while (closePosition < length && stack > 0) {
+    nextChar=document.getChar(closePosition);
+    if (nextChar == openBracket && nextChar != closeBracket)     stack++;
+ else     if (nextChar == closeBracket)     stack--;
+    closePosition++;
+  }
+  if (stack == 0)   return closePosition - 1;
+  return -1;
+}

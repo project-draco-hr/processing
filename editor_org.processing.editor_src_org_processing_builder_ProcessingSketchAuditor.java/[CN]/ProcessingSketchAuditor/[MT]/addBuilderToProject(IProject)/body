@@ -1,0 +1,27 @@
+{
+  if (!project.isOpen())   return;
+  IProjectDescription description;
+  try {
+    description=project.getDescription();
+  }
+ catch (  Exception e) {
+    ProcessingLog.logError(e);
+    return;
+  }
+  ICommand[] cmds=description.getBuildSpec();
+  for (int j=0; j < cmds.length; j++) {
+    if (cmds[j].getBuilderName().equals(BUILDER_ID))     return;
+  }
+  ICommand newCmd=description.newCommand();
+  newCmd.setBuilderName(BUILDER_ID);
+  List<ICommand> newCmds=new ArrayList<ICommand>();
+  newCmds.addAll(Arrays.asList(cmds));
+  newCmds.add(newCmd);
+  description.setBuildSpec((ICommand[])newCmds.toArray(new ICommand[newCmds.size()]));
+  try {
+    project.setDescription(description,null);
+  }
+ catch (  CoreException e) {
+    ProcessingLog.logError(e);
+  }
+}

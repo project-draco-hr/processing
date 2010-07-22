@@ -1,0 +1,83 @@
+{
+  monitor.beginTask("Full Project Build",4);
+  IProject proj=getProject();
+  if (checkCancel(monitor))   return;
+  if (!deleteProblemMarkers(proj))   return;
+  IResource[] folderContents=proj.members();
+  StringBuffer bigCode=new StringBuffer();
+  int bigCount=0;
+  int[] preprocOffsets=new int[folderContents.length];
+  for (int i=0; i < folderContents.length; i++) {
+    IResource file=folderContents[i];
+    if (file.getFileExtension() == "pde") {
+      String content=readFile((IFile)file);
+      preprocOffsets[i]=bigCount;
+      bigCode.append(content);
+      bigCode.append("\n");
+      bigCount+=getLineCount(content);
+    }
+  }
+  monitor.worked(1);
+  if (checkCancel(monitor))   return;
+  spoof_preferences();
+  PdePreprocessor preproc=new PdePreprocessor(proj.getName(),4);
+  IFolder outputFolder=proj.getFolder("bin");
+  if (!outputFolder.exists())   outputFolder.create(IResource.NONE,true,null);
+  PreprocessResult result=null;
+  try {
+    IFile outputFile=outputFolder.getFile(proj.getName() + ".java");
+    StringWriter outputFileContents=new StringWriter();
+    result=preproc.write(outputFileContents,bigCode.toString());
+    ByteArrayInputStream inStream=new ByteArrayInputStream(outputFileContents.toString().getBytes());
+    outputFile.create(inStream,true,monitor);
+    outputFile.setDerived(true);
+  }
+ catch (  antlr.RecognitionException re) {
+    int errorFile=0;
+    int errorLine=re.getLine() - 1;
+    for (int i=1; i < folderContents.length; i++) {
+      IResource file=folderContents[i];
+      if (file.getFileExtension() == "pde" && (preprocOffsets[i] < errorLine)) {
+        errorFile=i;
+      }
+    }
+    errorLine-=preprocOffsets[errorFile];
+    System.out.println("error line - error file - offset");
+    System.out.println(errorLine + " - " + errorFile+ " - "+ preprocOffsets[errorFile]);
+    String msg=re.getMessage();
+    if (msg.equals("expecting RCURLY, found 'null'")) {
+      msg="Found one too many { characters without a } to match it.";
+    }
+    if (msg.indexOf("expecting RBRACK") != -1) {
+      msg="Syntax error, maybe a missing right ] character?";
+    }
+    if (msg.indexOf("expecting SEMI") != -1) {
+      msg="Syntax error, maybe a missing semicolon?";
+    }
+    if (msg.indexOf("expecting RPAREN") != -1) {
+      msg="Syntax error, maybe a missing right parenthesis?";
+    }
+    if (msg.indexOf("preproc.web_colors") != -1) {
+      msg="A web color (such as #ffcc00) must be six digits.";
+    }
+    reportProblem(msg,(IFile)folderContents[errorFile],errorLine,true);
+  }
+catch (  Exception e) {
+    ProcessingLog.logError(e);
+  }
+  monitor.worked(1);
+  if (checkCancel(monitor))   return;
+  for (int i=0; i < folderContents.length; i++) {
+    IResource file=folderContents[i];
+    if (file.getFileExtension() == "java") {
+      folderContents[i].copy(outputFolder.getProjectRelativePath(),IResource.DERIVED,monitor);
+    }
+ else     if (file.getFileExtension() == "pde") {
+      preprocOffsets[i]+=result.headerOffset;
+    }
+  }
+  boolean foundMain=preproc.getFoundMain();
+  monitor.worked(1);
+  if (checkCancel(monitor))   return;
+  monitor.done();
+}

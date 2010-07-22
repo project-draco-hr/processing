@@ -1,0 +1,16 @@
+{
+  super.selectionChanged(event);
+  ISelection selection=event.getSelection();
+  if (selection.isEmpty())   fTextEditor.resetHighlightRange();
+ else {
+    Segment segment=(Segment)((IStructuredSelection)selection).getFirstElement();
+    int start=segment.position.getOffset();
+    int length=segment.position.getLength();
+    try {
+      fTextEditor.setHighlightRange(start,length,true);
+    }
+ catch (    IllegalArgumentException x) {
+      fTextEditor.resetHighlightRange();
+    }
+  }
+}

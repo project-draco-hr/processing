@@ -1,0 +1,16 @@
+{
+  super();
+  IToken keyword=new Token(new TextAttribute(provider.getColor(ProcessingColorProvider.JAVADOC_KEYWORD)));
+  IToken tag=new Token(new TextAttribute(provider.getColor(ProcessingColorProvider.JAVADOC_TAG)));
+  IToken link=new Token(new TextAttribute(provider.getColor(ProcessingColorProvider.JAVADOC_LINK)));
+  List list=new ArrayList();
+  list.add(new SingleLineRule("<",">",tag));
+  list.add(new SingleLineRule("{","}",link));
+  list.add(new WhitespaceRule(new ProcessingWhitespaceDetector()));
+  WordRule wordRule=new WordRule(new JavaDocWordDetector());
+  for (int i=0; i < fgKeywords.length; i++)   wordRule.addWord(fgKeywords[i],keyword);
+  list.add(wordRule);
+  IRule[] result=new IRule[list.size()];
+  list.toArray(result);
+  setRules(result);
+}
