@@ -1,0 +1,27 @@
+{
+  monitor.beginTask("Creating a new Sketch",500);
+  try {
+    proj.create(description,new SubProgressMonitor(monitor,100));
+    proj.open(IResource.BACKGROUND_REFRESH,new SubProgressMonitor(monitor,100));
+    if (monitor.isCanceled()) {
+      throw new OperationCanceledException();
+    }
+    IContainer container=(IContainer)proj;
+    IFolder dataFolder=container.getFolder(new Path("data"));
+    dataFolder.create(true,true,monitor);
+    monitor.worked(33);
+    IFolder codeFolder=container.getFolder(new Path("code"));
+    codeFolder.create(true,true,monitor);
+    monitor.worked(33);
+    IFolder binFolder=container.getFolder(new Path("bin"));
+    binFolder.create(true,true,monitor);
+    monitor.worked(34);
+    if (monitor.isCanceled()) {
+      throw new OperationCanceledException();
+    }
+    addFileToProject(container,new Path(project.getName() + ".pde"),null,new SubProgressMonitor(monitor,100));
+  }
+  finally {
+    monitor.done();
+  }
+}
