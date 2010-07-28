@@ -9,7 +9,8 @@
   int[] preprocOffsets=new int[folderContents.length];
   for (int i=0; i < folderContents.length; i++) {
     IResource file=folderContents[i];
-    if (file.getFileExtension() == "pde") {
+    if (file instanceof IFile && file.getFileExtension().equalsIgnoreCase("pde")) {
+      System.out.println("win");
       String content=readFile((IFile)file);
       preprocOffsets[i]=bigCount;
       bigCode.append(content);
@@ -37,7 +38,7 @@
     int errorLine=re.getLine() - 1;
     for (int i=1; i < folderContents.length; i++) {
       IResource file=folderContents[i];
-      if (file.getFileExtension() == "pde" && (preprocOffsets[i] < errorLine)) {
+      if (file instanceof IFile && file.getFileExtension().equalsIgnoreCase("pde") && (preprocOffsets[i] < errorLine)) {
         errorFile=i;
       }
     }
@@ -69,10 +70,10 @@ catch (  Exception e) {
   if (checkCancel(monitor))   return;
   for (int i=0; i < folderContents.length; i++) {
     IResource file=folderContents[i];
-    if (file.getFileExtension() == "java") {
+    if (file instanceof IFile && file.getFileExtension().equalsIgnoreCase("java")) {
       folderContents[i].copy(outputFolder.getProjectRelativePath(),IResource.DERIVED,monitor);
     }
- else     if (file.getFileExtension() == "pde") {
+ else     if (file instanceof IFile && file.getFileExtension().equalsIgnoreCase("pde")) {
       preprocOffsets[i]+=result.headerOffset;
     }
   }
