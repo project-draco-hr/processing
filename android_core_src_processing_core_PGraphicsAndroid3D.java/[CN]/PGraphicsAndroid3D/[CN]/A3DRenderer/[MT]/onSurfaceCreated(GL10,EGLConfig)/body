@@ -39,8 +39,14 @@
   if (-1 < extensions.indexOf("vertex_buffer_object") || -1 < OPENGL_VERSION.indexOf("1.1") || -1 < OPENGL_VERSION.indexOf("2.")) {
     vboSupported=true;
   }
-  if (-1 < extensions.indexOf("framebuffer_object")) {
-    fboSupported=true;
+  if (-1 < extensions.indexOf("framebuffer_object") && gl11xp != null) {
+    try {
+      gl11xp.glCheckFramebufferStatusOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES);
+      fboSupported=true;
+    }
+ catch (    UnsupportedOperationException e) {
+      fboSupported=false;
+    }
   }
   usingModelviewStack=gl11 == null || !matrixGetSupported;
   int maxTexSize[]=new int[1];
