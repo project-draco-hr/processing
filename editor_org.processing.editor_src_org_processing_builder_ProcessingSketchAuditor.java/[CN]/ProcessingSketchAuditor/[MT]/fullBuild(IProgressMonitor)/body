@@ -1,73 +1,81 @@
 {
-  monitor.beginTask("Full Project Build",4);
-  IProject proj=getProject();
-  if (!proj.isOpen()) {
+  monitor.beginTask("Full Project Build",400);
+  sketch=getProject();
+  if (!sketch.isOpen()) {
     return;
   }
   if (checkCancel(monitor)) {
     return;
   }
-  if (!deleteProblemMarkers(proj)) {
+  if (!deleteProblemMarkers(sketch)) {
     return;
   }
-  IResource[] folderContents=proj.members();
-  IFolder codeFolder=proj.getFolder("code");
-  IFolder dataFolder=proj.getFolder("data");
-  IFolder outputFolder=proj.getFolder("bin");
+  IResource[] folderContents=sketch.members();
+  codeFolder=sketch.getFolder("code");
+  dataFolder=sketch.getFolder("data");
+  outputFolder=sketch.getFolder("bin");
   if (!outputFolder.exists())   outputFolder.create(IResource.NONE,true,null);
-  String classPath="";
+  monitor.worked(100);
+  if (checkCancel(monitor)) {
+    return;
+  }
+  spoof_preferences();
+  PdePreprocessor preprocessor=new PdePreprocessor(sketch.getName(),4);
   String[] codeFolderPackages=null;
-  String libraryPath;
+  String classPath=outputFolder.getLocation().toOSString();
   if (codeFolder.exists()) {
     libraryPath=codeFolder.getLocationURI().toString();
     String codeFolderClassPath=Compiler.contentsToClassPath(codeFolder.getLocation().toFile());
     classPath+=File.pathSeparator + codeFolderClassPath;
     codeFolderPackages=Compiler.packageListFromClassPath(codeFolderClassPath);
-    for (    String s : codeFolderPackages) {
-      System.out.println(s);
-    }
   }
  else {
     libraryPath="";
   }
   StringBuffer bigCode=new StringBuffer();
   int bigCount=0;
-  int[] preprocOffsets=new int[folderContents.length];
   for (int i=0; i < folderContents.length; i++) {
     IResource file=folderContents[i];
     if (file instanceof IFile && file.getFileExtension().equalsIgnoreCase("pde")) {
+      setPreprocOffset((IFile)file,bigCount);
       String content=readFile((IFile)file);
-      preprocOffsets[i]=bigCount;
       bigCode.append(content);
       bigCode.append("\n");
       bigCount+=getLineCount(content);
     }
   }
-  monitor.worked(1);
+  monitor.worked(10);
   if (checkCancel(monitor)) {
     return;
   }
-  spoof_preferences();
-  PdePreprocessor preproc=new PdePreprocessor(proj.getName(),4);
-  final PreprocessResult result;
+  PreprocessResult result=null;
   try {
-    IFile outputFile=outputFolder.getFile(proj.getName() + ".java");
-    StringWriter outputFileContents=new StringWriter();
-    result=preproc.write(outputFileContents,bigCode.toString(),codeFolderPackages);
-    ByteArrayInputStream inStream=new ByteArrayInputStream(outputFileContents.toString().getBytes());
-    outputFile.create(inStream,true,monitor);
+    IFile outputFile=outputFolder.getFile(sketch.getName() + ".java");
+    StringWriter stream=new StringWriter();
+    result=preprocessor.write(stream,bigCode.toString(),codeFolderPackages);
+    ByteArrayInputStream inStream=new ByteArrayInputStream(stream.toString().getBytes());
+    if (outputFile.exists()) {
+      outputFile.setContents(inStream,true,false,monitor);
+    }
+ else {
+      outputFile.create(inStream,true,monitor);
+    }
     outputFile.setDerived(true);
   }
- catch (  antlr.RecognitionException re) {
+ catch (  CoreException e) {
+    ProcessingLog.logError(e);
+    return;
+  }
+catch (  antlr.RecognitionException re) {
     int errorFile=0;
     int errorLine=re.getLine() - 1;
     for (int i=1; i < folderContents.length; i++) {
       IResource file=folderContents[i];
-      if (file instanceof IFile && file.getFileExtension().equalsIgnoreCase("pde") && (preprocOffsets[i] < errorLine)) {
+      if (file instanceof IFile && file.getFileExtension().equalsIgnoreCase("pde") && (getPreprocOffset((IFile)file) < errorLine)) {
         errorFile=i;
       }
     }
-    errorLine-=preprocOffsets[errorFile];
+    errorLine-=getPreprocOffset((IFile)folderContents[errorFile]);
     String msg=re.getMessage();
     if (msg.equals("expecting RCURLY, found 'null'")) {
       msg="Found one too many { characters without a } to match it.";
@@ -85,11 +93,60 @@
       msg="A web color (such as #ffcc00) must be six digits.";
     }
     reportProblem(msg,(IFile)folderContents[errorFile],errorLine,true);
+    return;
+  }
+catch (  antlr.TokenStreamRecognitionException tsre) {
+    String mess="^line (\\d+):(\\d+):\\s";
+    String[] matches=PApplet.match(tsre.toString(),mess);
+    if (matches != null) {
+      int errorLine=Integer.parseInt(matches[1]) - 1;
+      int errorColumn=Integer.parseInt(matches[2]);
+      int errorFile=0;
+      for (int i=1; i < folderContents.length; i++) {
+        IResource file=folderContents[i];
+        if (file instanceof IFile && file.getFileExtension().equalsIgnoreCase("pde") && (getPreprocOffset((IFile)file) < errorLine)) {
+          errorFile=i;
+        }
+      }
+      errorLine-=getPreprocOffset((IFile)folderContents[errorFile]);
+      reportProblem(tsre.getMessage(),(IFile)folderContents[errorFile],errorLine,true);
+    }
+ else {
+      try {
+        reportProblem(tsre.toString(),sketch.getFile(sketch.getName() + ".pde"),0,true);
+      }
+ catch (      Exception e) {
+        ProcessingLog.logError(e);
+        return;
+      }
+    }
+    return;
   }
 catch (  Exception e) {
     ProcessingLog.logError(e);
+    return;
   }
-  monitor.worked(1);
+  monitor.worked(10);
+  if (checkCancel(monitor)) {
+    return;
+  }
+  importedLibraries=new ArrayList<File>();
+  for (  String item : result.extraImports) {
+    int dot=item.lastIndexOf('.');
+    String entry=(dot == -1) ? item : item.substring(0,dot);
+    File libFolder=null;
+    if (libFolder.exists()) {
+      importedLibraries.add(libFolder);
+      classPath+=Compiler.contentsToClassPath(libFolder);
+      libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
+    }
+  }
+  String javaClassPath=System.getProperty("java.class.path");
+  if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\"")) {
+    javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
+  }
+  classPath+=File.pathSeparator + javaClassPath;
+  monitor.worked(10);
   if (checkCancel(monitor)) {
     return;
   }
@@ -99,11 +156,12 @@ catch (  Exception e) {
       folderContents[i].copy(outputFolder.getProjectRelativePath(),IResource.DERIVED,monitor);
     }
  else     if (file instanceof IFile && file.getFileExtension().equalsIgnoreCase("pde")) {
-      preprocOffsets[i]+=result.headerOffset;
+      if (result == null)       System.out.println("Danger!");
+      addPreprocOffset((IFile)file,result.headerOffset);
     }
   }
-  boolean foundMain=preproc.getFoundMain();
-  monitor.worked(1);
+  boolean foundMain=preprocessor.getFoundMain();
+  monitor.worked(10);
   if (checkCancel(monitor)) {
     return;
   }
