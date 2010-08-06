@@ -6,15 +6,18 @@ synchronized (motionLock) {
         motionEventQueue[i]=new PMotionEvent();
       }
     }
-    if (motionEventCount + event.getHistorySize() >= motionEventQueue.length) {
-      PMotionEvent[] temp=new PMotionEvent[motionEventCount << 1];
+    int historyCount=event.getHistorySize();
+    if (motionEventCount + historyCount >= motionEventQueue.length) {
+      int atLeast=motionEventCount + historyCount + 1;
+      PMotionEvent[] temp=new PMotionEvent[max(atLeast,motionEventCount << 1)];
+      println("motion: " + motionEventCount + " "+ historyCount+ " "+ motionEventQueue.length);
+      println("allocating " + temp.length + " entries for motion events");
       System.arraycopy(motionEventQueue,0,temp,0,motionEventCount);
       motionEventQueue=temp;
       for (int i=motionEventCount; i < motionEventQueue.length; i++) {
         motionEventQueue[i]=new PMotionEvent();
       }
     }
-    int historyCount=event.getHistorySize();
     PMotionEvent pme=motionEventQueue[motionEventCount + historyCount];
     pme.action=event.getAction();
     pme.motionX=event.getX();
