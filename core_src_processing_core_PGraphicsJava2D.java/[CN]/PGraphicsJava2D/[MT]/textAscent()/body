@@ -3,9 +3,9 @@
     defaultFontOrDeath("textAscent");
   }
   Font font=textFont.getFont();
-  if (font == null) {
-    return super.textAscent();
+  if (font != null && (textFont.isStream() || hints[ENABLE_NATIVE_FONTS])) {
+    FontMetrics metrics=parent.getFontMetrics(font);
+    return metrics.getAscent();
   }
-  FontMetrics metrics=parent.getFontMetrics(font);
-  return metrics.getAscent();
+  return super.textAscent();
 }

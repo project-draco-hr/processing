@@ -1,19 +1,20 @@
 {
   Font font=textFont.getFont();
-  if (font == null) {
+  if (font != null && (textFont.isStream() || hints[ENABLE_NATIVE_FONTS])) {
+    Object antialias=g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+    if (antialias == null) {
+      antialias=RenderingHints.VALUE_ANTIALIAS_DEFAULT;
+    }
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,textFont.smooth ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
+    g2.setColor(fillColorObject);
+    int length=stop - start;
+    g2.drawChars(buffer,start,length,(int)(x + 0.5f),(int)(y + 0.5f));
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,antialias);
+    textX=x + textWidthImpl(buffer,start,stop);
+    textY=y;
+    textZ=0;
+  }
+ else {
     super.textLineImpl(buffer,start,stop,x,y);
-    return;
   }
-  Object antialias=g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
-  if (antialias == null) {
-    antialias=RenderingHints.VALUE_ANTIALIAS_DEFAULT;
-  }
-  g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,textFont.smooth ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
-  g2.setColor(fillColorObject);
-  int length=stop - start;
-  g2.drawChars(buffer,start,length,(int)(x + 0.5f),(int)(y + 0.5f));
-  g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,antialias);
-  textX=x + textWidthImpl(buffer,start,stop);
-  textY=y;
-  textZ=0;
 }
