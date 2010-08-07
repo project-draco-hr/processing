@@ -5,12 +5,7 @@
   }
   XMLElement top=(XMLElement)this.stack.peek();
   if (top.hasAttribute(fullName)) {
-    throw new XMLParseException(top.getSystemID(),top.getLineNr(),"Duplicate attribute: " + key);
+    throw new XMLParseException(top.getSystemID(),top.getLine(),"Duplicate attribute: " + key);
   }
-  if (nsPrefix != null) {
-    top.setAttribute(fullName,nsURI,value);
-  }
- else {
-    top.setAttribute(fullName,value);
-  }
+  top.setString(fullName,value);
 }
