@@ -1,0 +1,27 @@
+{
+  StringBuffer cf=new StringBuffer("<pre>\n");
+  int selStart=getSelectionStart();
+  int selStop=getSelectionStop();
+  int startLine=getSelectionStartLine();
+  int stopLine=getSelectionStopLine();
+  if (selStart == selStop) {
+    startLine=0;
+    stopLine=getLineCount() - 1;
+  }
+ else {
+    if (getLineStartOffset(stopLine) == selStop) {
+      stopLine--;
+    }
+  }
+  for (int i=startLine; i <= stopLine; i++) {
+    emitAsHTML(cf,i);
+  }
+  cf.append("\n</pre>");
+  StringSelection formatted=new StringSelection(cf.toString());
+  Clipboard clipboard=Toolkit.getDefaultToolkit().getSystemClipboard();
+  clipboard.setContents(formatted,new ClipboardOwner(){
+    public void lostOwnership(    Clipboard clipboard,    Transferable contents){
+    }
+  }
+);
+}

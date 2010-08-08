@@ -1,0 +1,61 @@
+{
+  Segment segment=new Segment();
+  getLineText(line,segment);
+  char[] segmentArray=segment.array;
+  int limit=segment.getEndIndex();
+  int segmentOffset=segment.offset;
+  int segmentCount=segment.count;
+  TokenMarker tokenMarker=getTokenMarker();
+  if (tokenMarker == null) {
+    for (int j=0; j < segmentCount; j++) {
+      char c=segmentArray[j + segmentOffset];
+      cf=cf.append(c);
+    }
+  }
+ else {
+    Token tokens;
+    if ((painter.getCurrentLineIndex() == line) && (painter.getCurrentLineTokens() != null)) {
+      tokens=painter.getCurrentLineTokens();
+    }
+ else {
+      painter.setCurrentLineIndex(line);
+      painter.setCurrentLineTokens(tokenMarker.markTokens(segment,line));
+      tokens=painter.getCurrentLineTokens();
+    }
+    int offset=0;
+    SyntaxStyle[] styles=painter.getStyles();
+    for (; ; ) {
+      byte id=tokens.id;
+      if (id == Token.END) {
+        char c=segmentArray[segmentOffset + offset];
+        if (segmentOffset + offset < limit) {
+          cf.append(c);
+        }
+ else {
+          cf.append('\n');
+        }
+        return;
+      }
+      if (id != Token.NULL) {
+        cf.append("<span style=\"color: #");
+        cf.append(PApplet.hex(styles[id].getColor().getRGB() & 0xFFFFFF,6));
+        cf.append(";\">");
+        if (styles[id].isBold())         cf.append("<b>");
+      }
+      int length=tokens.length;
+      for (int j=0; j < length; j++) {
+        char c=segmentArray[segmentOffset + offset + j];
+        if (offset == 0 && c == ' ') {
+          cf.append("&nbsp;");
+        }
+ else {
+          cf.append(c);
+        }
+        if (j == (length - 1) && id != Token.NULL && styles[id].isBold())         cf.append("</b>");
+        if (j == (length - 1) && id != Token.NULL)         cf.append("</span>");
+      }
+      offset+=length;
+      tokens=tokens.next;
+    }
+  }
+}
