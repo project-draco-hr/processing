@@ -1,7 +1,7 @@
 {
   final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(editor,"Building and exporting...","Creating project...");
   try {
-    File tempFolder=build.createProject("release");
+    File tempFolder=build.createProject(target);
     if (tempFolder == null) {
       return;
     }
@@ -10,9 +10,6 @@
         throw new MonitorCanceled();
       }
       monitor.setNote("Building release version...");
-      if (!build.antBuild("release")) {
-        return;
-      }
       if (monitor.isCanceled()) {
         throw new MonitorCanceled();
       }

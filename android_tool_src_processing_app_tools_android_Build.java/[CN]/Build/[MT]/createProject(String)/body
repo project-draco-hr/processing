@@ -8,17 +8,15 @@
     return null;
   }
   final File srcFolder=new File(tempBuildFolder,"src");
-  Base.openFolder(tempBuildFolder);
+  if (AndroidTool.DEBUG)   Base.openFolder(tempBuildFolder);
   try {
     manifest=new Manifest(editor);
-    final File javaFolder=mkdirs(srcFolder,manifest.getPackageName().replace('.','/'));
-    final String buildPath=javaFolder.getAbsolutePath();
     sketch.prepare();
     if (!calcSketchSize()) {
       editor.statusError("Could not parse the size() command.");
       return null;
     }
-    className=sketch.preprocess(buildPath,new Preproc(sketch.getName()));
+    className=sketch.preprocess(srcFolder.getAbsolutePath(),manifest.getPackageName(),new Preproc(sketch.getName()));
     if (className != null) {
       File tempManifest=new File(tempBuildFolder,"AndroidManifest.xml");
       manifest.writeBuild(tempManifest,className,target.equals("debug"));
