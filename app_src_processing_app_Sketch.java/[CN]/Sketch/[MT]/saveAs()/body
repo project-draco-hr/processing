@@ -42,22 +42,40 @@
   if (current.isModified()) {
     current.setProgram(editor.getText());
   }
+  File[] copyItems=folder.listFiles(new FileFilter(){
+    public boolean accept(    File file){
+      String name=file.getName();
+      if (name.equals(".") || name.equals("..")) {
+        return false;
+      }
+      for (      String ignorable : getIgnorable()) {
+        if (name.equals(ignorable)) {
+          return false;
+        }
+      }
+      for (      String ext : getExtensions()) {
+        if (name.endsWith(ext)) {
+          return false;
+        }
+      }
+      if (name.startsWith("screen-")) {
+        return false;
+      }
+      return true;
+    }
+  }
+);
+  for (  File copyable : copyItems) {
+    if (copyable.isDirectory()) {
+      Base.copyDir(copyable,new File(newFolder,copyable.getName()));
+    }
+ else {
+      Base.copyFile(copyable,new File(newFolder,copyable.getName()));
+    }
+  }
   for (int i=1; i < codeCount; i++) {
     File newFile=new File(newFolder,code[i].getFileName());
     code[i].saveAs(newFile);
-  }
-  if (dataFolder.exists()) {
-    File newDataFolder=new File(newFolder,"data");
-    Base.copyDir(dataFolder,newDataFolder);
-  }
-  if (codeFolder.exists()) {
-    File newCodeFolder=new File(newFolder,"code");
-    Base.copyDir(codeFolder,newCodeFolder);
-  }
-  File customHtml=new File(folder,"applet.html");
-  if (customHtml.exists()) {
-    File newHtml=new File(newFolder,"applet.html");
-    Base.copyFile(customHtml,newHtml);
   }
   File newFile=new File(newFolder,newName + ".pde");
   code[0].saveAs(newFile);

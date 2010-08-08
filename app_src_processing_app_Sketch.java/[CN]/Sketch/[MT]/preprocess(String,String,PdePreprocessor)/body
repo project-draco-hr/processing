@@ -23,7 +23,9 @@
   }
   final PreprocessResult result;
   try {
-    final File java=new File(buildPath,name + ".java");
+    final File outputFolder=new File(buildPath,packageName.replace('.','/'));
+    outputFolder.mkdirs();
+    final File java=new File(outputFolder,name + ".java");
     final PrintWriter stream=new PrintWriter(new FileWriter(java));
     try {
       result=preprocessor.write(stream,bigCode.toString(),codeFolderPackages);
@@ -115,7 +117,15 @@ catch (  Exception ex) {
     if (sc.isExtension("java")) {
       String filename=sc.getFileName();
       try {
-        Base.saveFile(sc.getProgram(),new File(buildPath,filename));
+        String program=sc.getProgram();
+        String[] pkg=PApplet.match(program,PACKAGE_REGEX);
+        if (pkg == null) {
+          pkg=new String[]{packageName};
+          program="package " + packageName + ";"+ program;
+        }
+        File packageFolder=new File(buildPath,pkg[0].replace('.','/'));
+        packageFolder.mkdirs();
+        Base.saveFile(program,new File(packageFolder,filename));
       }
  catch (      IOException e) {
         e.printStackTrace();
