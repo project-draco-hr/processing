@@ -1,6 +1,6 @@
 {
   super.onCreate(savedInstanceState);
-  println("onCreate() happening here: " + Thread.currentThread().getName());
+  if (DEBUG)   println("onCreate() happening here: " + Thread.currentThread().getName());
   Window window=getWindow();
   requestWindowFeature(Window.FEATURE_NO_TITLE);
   window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
@@ -9,7 +9,7 @@
   getWindowManager().getDefaultDisplay().getMetrics(dm);
   screenWidth=dm.widthPixels;
   screenHeight=dm.heightPixels;
-  println(dm);
+  if (DEBUG)   println("display metrics: " + dm);
   int sw=sketchWidth();
   int sh=sketchHeight();
   if (sketchRenderer().equals(A2D)) {
