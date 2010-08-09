@@ -1,5 +1,6 @@
 {
   super("Android Permissions Selector");
+  this.editor=editor;
   permissionList=new CheckBoxList();
   permissionList.addListSelectionListener(new ListSelectionListener(){
     public void valueChanged(    ListSelectionEvent e){
@@ -104,4 +105,7 @@
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   Dimension windowSize=getSize();
   setLocation((screen.width - windowSize.width) / 2,(screen.height - windowSize.height) / 2);
+  Manifest mf=new Manifest(editor);
+  setSelections(mf.getPermissions());
+  setVisible(true);
 }

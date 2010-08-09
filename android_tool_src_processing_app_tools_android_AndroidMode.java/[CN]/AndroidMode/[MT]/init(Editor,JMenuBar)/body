@@ -1,0 +1,48 @@
+{
+  this.editor=parent;
+  JMenu menu=new JMenu("Android");
+  JMenuItem item;
+  toggleItem=Base.newJCheckBoxMenuItem("Android Mode",'D');
+  toggleItem.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      System.out.println("maybe?");
+      updateMode();
+    }
+  }
+);
+  menu.add(toggleItem);
+  item=new JMenuItem("Wiki...");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.openURL("http://wiki.processing.org/w/Android");
+    }
+  }
+);
+  menu.add(item);
+  menu.addSeparator();
+  item=new JMenuItem("Options");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+    }
+  }
+);
+  menu.add(item);
+  item=new JMenuItem("Permissions");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      new Permissions(editor);
+    }
+  }
+);
+  menu.add(item);
+  menu.addSeparator();
+  item=new JMenuItem("Reset");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      AndroidEnvironment.killAdbServer();
+    }
+  }
+);
+  menu.add(item);
+  menubar.add(menu);
+}

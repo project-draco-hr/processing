@@ -6,13 +6,12 @@
  catch (  final Exception e) {
     Base.showWarning("Android Tools Error",e.getMessage(),null);
     editor.statusNotice("Android mode canceled.");
-    return;
+    return false;
   }
   if (!checkCore()) {
     editor.statusNotice("Android mode canceled.");
-    return;
+    return false;
   }
-  editor.setHandlers(new RunHandler(),new PresentHandler(),new StopHandler(),new ExportHandler(),new ExportAppHandler());
-  build=new Build(editor,sdk);
   editor.statusNotice("Done loading Android tools.");
+  return true;
 }

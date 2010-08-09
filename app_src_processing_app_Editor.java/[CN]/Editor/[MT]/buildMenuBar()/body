@@ -5,6 +5,17 @@
   menubar.add(buildEditMenu());
   menubar.add(buildSketchMenu());
   menubar.add(buildToolsMenu());
+  if (!Base.RELEASE) {
+    try {
+      Class clazz=Class.forName("processing.app.tools.android.AndroidMode");
+      Object mode=clazz.newInstance();
+      Method m=clazz.getMethod("init",new Class[]{Editor.class,JMenuBar.class});
+      m.invoke(mode,new Object[]{this,menubar});
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+  }
   menubar.add(buildHelpMenu());
   setJMenuBar(menubar);
 }

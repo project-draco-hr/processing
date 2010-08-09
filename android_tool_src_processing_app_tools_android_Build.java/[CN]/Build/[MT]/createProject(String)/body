@@ -8,7 +8,7 @@
     return null;
   }
   final File srcFolder=new File(tempBuildFolder,"src");
-  if (AndroidTool.DEBUG)   Base.openFolder(tempBuildFolder);
+  if (AndroidMode.DEBUG)   Base.openFolder(tempBuildFolder);
   try {
     manifest=new Manifest(editor);
     sketch.prepare();
@@ -28,7 +28,7 @@
       writeRes(new File(tempBuildFolder,"res"),className);
       final File libsFolder=mkdirs(tempBuildFolder,"libs");
       final File assetsFolder=mkdirs(tempBuildFolder,"assets");
-      final InputStream input=PApplet.createInput(AndroidTool.getCoreZipLocation());
+      final InputStream input=PApplet.createInput(AndroidMode.getCoreZipLocation());
       PApplet.saveStream(new File(libsFolder,"processing-core.jar"),input);
       try {
         writeLibraries(libsFolder,assetsFolder);
