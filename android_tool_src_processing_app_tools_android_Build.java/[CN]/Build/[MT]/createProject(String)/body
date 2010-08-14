@@ -14,11 +14,12 @@
   try {
     manifest=new Manifest(editor);
     sketch.prepare();
-    if (!calcSketchSize()) {
+    Preprocessor preproc=new Preprocessor(sketch,getPackageName());
+    if (!preproc.parseSketchSize()) {
       editor.statusError("Could not parse the size() command.");
       return null;
     }
-    className=sketch.preprocess(srcFolder.getAbsolutePath(),manifest.getPackageName(),new Preprocessor(sketch.getName(),this));
+    className=sketch.preprocess(srcFolder.getAbsolutePath(),manifest.getPackageName(),preproc);
     if (className != null) {
       File tempManifest=new File(tempBuildFolder,"AndroidManifest.xml");
       manifest.writeBuild(tempManifest,className,target.equals("debug"));
