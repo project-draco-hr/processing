@@ -1,4 +1,7 @@
 {
+  if (DEBUG) {
+    println("inside handleDraw() " + millis() + " changed="+ surfaceChanged+ " ready="+ surfaceReady+ " paused="+ paused+ " looping="+ looping+ " redraw="+ redraw);
+  }
   if (surfaceChanged) {
     int newWidth=surfaceView.getWidth();
     int newHeight=surfaceView.getHeight();
@@ -9,6 +12,9 @@
     }
     surfaceChanged=false;
     surfaceReady=true;
+    if (DEBUG) {
+      println("surfaceChanged true, resized to " + width + "x"+ height);
+    }
   }
   if (g != null && surfaceReady && !paused && (looping || redraw)) {
     g.beginDraw();
