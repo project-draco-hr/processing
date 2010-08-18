@@ -1,0 +1,12 @@
+{
+  ProcessingColorProvider provider=ProcessingPlugin.getDefault().getProcessingColorProvider();
+  PresentationReconciler reconciler=new PresentationReconciler();
+  reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+  DefaultDamagerRepairer dr=new DefaultDamagerRepairer(ProcessingPlugin.getDefault().getProcessingCodeScanner());
+  reconciler.setDamager(dr,IDocument.DEFAULT_CONTENT_TYPE);
+  reconciler.setRepairer(dr,IDocument.DEFAULT_CONTENT_TYPE);
+  dr=new DefaultDamagerRepairer(new SingleTokenScanner(new TextAttribute(provider.getColor(ProcessingColorProvider.COMMENT1))));
+  reconciler.setDamager(dr,ProcessingPartitionScanner.MULTILINE_COMMENT);
+  reconciler.setRepairer(dr,ProcessingPartitionScanner.MULTILINE_COMMENT);
+  return reconciler;
+}

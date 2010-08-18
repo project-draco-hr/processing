@@ -1,0 +1,16 @@
+{
+  if (!project.isOpen())   return;
+  try {
+    if (!project.hasNature(ProcessingCore.NATURE_ID))     return;
+    IProjectDescription description=project.getDescription();
+    List<String> newIds=new ArrayList<String>();
+    newIds.addAll(Arrays.asList(description.getNatureIds()));
+    newIds.remove(newIds.indexOf(ProcessingCore.NATURE_ID));
+    description.setNatureIds(newIds.toArray(new String[newIds.size()]));
+    project.setDescription(description,null);
+  }
+ catch (  CoreException e) {
+    ProcessingLog.logError(e);
+    return;
+  }
+}

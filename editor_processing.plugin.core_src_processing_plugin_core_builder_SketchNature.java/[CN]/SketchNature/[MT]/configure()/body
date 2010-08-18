@@ -1,0 +1,15 @@
+{
+  ProcessingCore.addBuilderToProject(project);
+  new Job("Build Sketch"){
+    protected IStatus run(    IProgressMonitor monitor){
+      try {
+        project.build(IncrementalProjectBuilder.FULL_BUILD,ProcessingCore.BUILDER_ID,null,monitor);
+      }
+ catch (      CoreException e) {
+        ProcessingLog.logError(e);
+      }
+      return Status.OK_STATUS;
+    }
+  }
+.schedule();
+}

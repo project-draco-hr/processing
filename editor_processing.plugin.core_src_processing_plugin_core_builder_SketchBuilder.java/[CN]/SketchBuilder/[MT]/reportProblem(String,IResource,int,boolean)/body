@@ -1,0 +1,12 @@
+{
+  try {
+    IMarker marker=file.createMarker(ProcessingCore.MARKER_ID);
+    marker.setAttribute(IMarker.MESSAGE,msg);
+    marker.setAttribute(IMarker.SEVERITY,isError ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING);
+    if (lineNumber != -1)     marker.setAttribute(IMarker.LINE_NUMBER,lineNumber);
+  }
+ catch (  CoreException e) {
+    ProcessingLog.logError(e);
+    return;
+  }
+}
