@@ -1,0 +1,34 @@
+{
+  while (Thread.currentThread() == runner) {
+    try {
+      Thread.sleep(1000 / fps);
+    }
+ catch (    InterruptedException e) {
+    }
+    if (play) {
+      available=true;
+      if (movieEventMethod == null) {
+        read();
+      }
+ else {
+        try {
+          movieEventMethod.invoke(parent,new Object[]{this});
+        }
+ catch (        Exception e) {
+          System.err.println("error, disabling movieEvent() for " + filename);
+          e.printStackTrace();
+          movieEventMethod=null;
+        }
+      }
+      try {
+        if (movie.isDone() && repeat) {
+          movie.goToBeginning();
+        }
+      }
+ catch (      StdQTException e) {
+        play=false;
+        errorMessage("rewinding",e);
+      }
+    }
+  }
+}

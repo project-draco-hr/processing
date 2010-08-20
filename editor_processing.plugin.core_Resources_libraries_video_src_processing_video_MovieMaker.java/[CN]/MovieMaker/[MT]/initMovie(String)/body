@@ -1,0 +1,36 @@
+{
+  try {
+    String path=parent.savePath(filename);
+    movFile=new QTFile(new File(path));
+    movie=Movie.createMovieFile(movFile,StdQTConstants.kMoviePlayer,StdQTConstants.createMovieFileDeleteCurFile);
+    int timeScale=TIME_SCALE;
+    videoTrack=movie.addTrack(width,height,0);
+    videoMedia=new VideoMedia(videoTrack,timeScale);
+    videoMedia.beginEdits();
+    bounds=new QDRect(0,0,width,height);
+    int rawImageSize=QTImage.getMaxCompressionSize(gw,bounds,gw.getPixMap().getPixelSize(),codecQuality,codecType,CodecComponent.anyCodec);
+    imageHandle=new QTHandle(rawImageSize,true);
+    imageHandle.lock();
+    compressedImage=RawEncodedImage.fromQTHandle(imageHandle);
+    seq=new CSequence(gw,bounds,gw.getPixMap().getPixelSize(),codecType,CodecComponent.bestFidelityCodec,codecQuality,codecQuality,keyFrameRate,null,0);
+    imgDesc=seq.getDescription();
+    readyForFrames=true;
+  }
+ catch (  QTException e) {
+    if (e.errorCode() == Errors.noCodecErr) {
+      if (imageHandle == null) {
+        System.err.println("The specified codec is not supported, " + "please ensure that the parameters are valid, " + "and in the correct order.");
+      }
+ else {
+        temporalSupported=false;
+        readyForFrames=true;
+      }
+    }
+ else     if (e.errorCode() == Errors.fBsyErr) {
+      System.err.println("The movie file already exists.  " + "Please delete it first.");
+    }
+ else {
+      e.printStackTrace();
+    }
+  }
+}

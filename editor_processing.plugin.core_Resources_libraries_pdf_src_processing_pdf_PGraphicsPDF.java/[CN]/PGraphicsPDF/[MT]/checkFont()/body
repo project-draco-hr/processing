@@ -1,0 +1,15 @@
+{
+  Font awtFont=textFont.getFont();
+  if (awtFont == null) {
+    throw new RuntimeException("Use createFont() instead of loadFont() " + "when drawing text using the PDF library.");
+  }
+ else   if (textMode != SHAPE) {
+    if (textFont.isStream()) {
+      throw new RuntimeException("Use textMode(SHAPE) with PDF when loading " + ".ttf and .otf files with createFont().");
+    }
+ else     if (mapper.getAliases().get(textFont.getName()) == null) {
+      System.err.println("Use PGraphicsPDF.listFonts() to get a list of " + "fonts that can be used with PDF.");
+      throw new RuntimeException("The font ???" + textFont.getName() + "??? "+ "cannot be used with PDF Export.");
+    }
+  }
+}

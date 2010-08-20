@@ -1,0 +1,31 @@
+{
+  this.parent=parent;
+  this.host=host;
+  this.port=port;
+  try {
+    socket=new Socket(this.host,this.port);
+    input=socket.getInputStream();
+    output=socket.getOutputStream();
+    thread=new Thread(this);
+    thread.start();
+    parent.registerDispose(this);
+    try {
+      clientEventMethod=parent.getClass().getMethod("clientEvent",new Class[]{Client.class});
+    }
+ catch (    Exception e) {
+    }
+    try {
+      disconnectEventMethod=parent.getClass().getMethod("disconnectEvent",new Class[]{Client.class});
+    }
+ catch (    Exception e) {
+    }
+  }
+ catch (  ConnectException ce) {
+    ce.printStackTrace();
+    dispose();
+  }
+catch (  IOException e) {
+    e.printStackTrace();
+    dispose();
+  }
+}

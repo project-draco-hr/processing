@@ -1,3 +1,39 @@
 {
-  return false;
+  if (folder == null)   return false;
+  if (!folder.isDirectory())   return false;
+  String list[]=folder.list(new FilenameFilter(){
+    public boolean accept(    File dir,    String name){
+      if (name.charAt(0) == '.')       return false;
+      if (name.equals("CVS"))       return false;
+      return (new File(dir,name).isDirectory());
+    }
+  }
+);
+  if (list == null)   return false;
+  Arrays.sort(list,String.CASE_INSENSITIVE_ORDER);
+  boolean ifound=false;
+  for (  String potentialName : list) {
+    File subfolder=new File(folder,potentialName);
+    File libraryFolder=new File(subfolder,"library");
+    File libraryJar=new File(libraryFolder,potentialName + ".jar");
+    if (libraryJar.exists()) {
+      String sanityCheck=Sketch.sanitizeName(potentialName);
+      if (!sanityCheck.equals(potentialName)) {
+        String mess="The library \"" + potentialName + "\" cannot be used.\n"+ "Library names must contain only basic letters and numbers.\n"+ "(ASCII only and no spaces, and it cannot start with a number)";
+        ProcessingLog.logInfo("Ignoring bad library name \n" + mess);
+        continue;
+      }
+      String libraryClassPath=Utilities.contentsToClassPath(libraryFolder);
+      String packages[]=Utilities.packageListFromClassPath(libraryClassPath);
+      for (      String pkg : packages) {
+        importToLibraryTable.put(pkg,libraryFolder);
+      }
+      ifound=true;
+    }
+ else {
+      boolean found=addLibraries(subfolder);
+      if (found)       ifound=true;
+    }
+  }
+  return ifound;
 }

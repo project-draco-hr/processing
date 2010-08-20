@@ -4,12 +4,10 @@
     System.out.println("Sketch is null!");
     return null;
   }
-  this.codeFolder=sketch.getFolder("code");
-  this.dataFolder=sketch.getFolder("data");
-  this.buildFolder=sketch.getFolder("bin");
-  this.appletFolder=sketch.getFolder("applet");
-  this.coreLibs=getCoreLibsFolder();
-  this.sketchBookLibs=getSketchBookLibsFolder();
+  codeFolder=sketch.getFolder("code");
+  dataFolder=sketch.getFolder("data");
+  buildFolder=sketch.getFolder("bin");
+  appletFolder=sketch.getFolder("applet");
   monitor.beginTask("Sketch Build",400);
   if (!sketch.isOpen()) {
     return null;
@@ -60,8 +58,8 @@
     IFile outputFile=buildFolder.getFile(sketch.getName() + ".java");
     StringWriter stream=new StringWriter();
     result=preproc.write(stream,bigCode.toString(),codeFolderPackages);
+    ByteArrayInputStream inStream=new ByteArrayInputStream(stream.toString().getBytes());
     try {
-      ByteArrayInputStream inStream=new ByteArrayInputStream(stream.toString().getBytes());
       if (outputFile.exists()) {
         outputFile.setContents(inStream,true,false,monitor);
       }
@@ -72,6 +70,7 @@
     }
   finally {
       stream.close();
+      inStream.close();
     }
   }
  catch (  antlr.RecognitionException re) {
@@ -128,7 +127,8 @@ catch (  antlr.TokenStreamRecognitionException tsre) {
     return null;
   }
 catch (  CoreException e) {
-    throw e;
+    ProcessingLog.logError(e);
+    return null;
   }
 catch (  Exception e) {
     ProcessingLog.logError(e);
@@ -139,14 +139,28 @@ catch (  Exception e) {
     return null;
   }
   importedLibraries=new ArrayList<File>();
+  coreLibs=getCoreLibsFolder();
+  sketchBookLibs=getSketchBookLibsFolder();
+  importToLibraryTable=new HashMap<String,File>();
+  try {
+    addLibraries(coreLibs);
+    addLibraries(sketchBookLibs);
+  }
+ catch (  IOException e) {
+    ProcessingLog.logError("Libraries could not be loaded.",e);
+  }
   for (  String item : result.extraImports) {
     int dot=item.lastIndexOf('.');
     String entry=(dot == -1) ? item : item.substring(0,dot);
+    File libFolder=importToLibraryTable.get(entry);
+    if (libFolder != null) {
+      importedLibraries.add(libFolder);
+      classPath+=Utilities.contentsToClassPath(libFolder);
+      libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
+    }
   }
   String javaClassPath=System.getProperty("java.class.path");
-  if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\"")) {
-    javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
-  }
+  if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\""))   javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
   classPath+=File.pathSeparator + javaClassPath;
   monitor.worked(10);
   if (checkCancel(monitor)) {
@@ -154,7 +168,34 @@ catch (  Exception e) {
   }
   for (  IResource file : sketch.members()) {
     if (file.getFileExtension() != null && file.getFileExtension().equalsIgnoreCase("java")) {
-      file.copy(buildFolder.getLocation(),IResource.DERIVED,monitor);
+      String filename=file.getName() + ".java";
+      try {
+        String program=Utilities.readFile((IFile)file);
+        String[] pkg=PApplet.match(program,Utilities.PACKAGE_REGEX);
+        if (pkg == null) {
+          pkg=new String[]{packageName};
+          program="package " + packageName + ";"+ program;
+        }
+        IFolder packageFolder=buildFolder.getFolder(pkg[0].replace('.','/'));
+        if (!packageFolder.exists())         packageFolder.create(IResource.NONE,true,null);
+        IFile modFile=packageFolder.getFile(file.getName() + ".java");
+        ByteArrayInputStream inStream=new ByteArrayInputStream(program.getBytes());
+        try {
+          if (modFile.exists()) {
+            modFile.setContents(inStream,true,false,monitor);
+          }
+ else {
+            modFile.create(inStream,true,monitor);
+          }
+          modFile.setDerived(true,monitor);
+        }
+  finally {
+          inStream.close();
+        }
+      }
+ catch (      Exception e) {
+        ProcessingLog.logError("Problem moving " + filename + " to the build folder.",e);
+      }
     }
  else     if (file.getFileExtension() != null && file.getFileExtension().equalsIgnoreCase("pde")) {
       file.setSessionProperty(new QualifiedName(ProcessingCore.BUILDER_ID,"preproc start"),result.headerOffset);

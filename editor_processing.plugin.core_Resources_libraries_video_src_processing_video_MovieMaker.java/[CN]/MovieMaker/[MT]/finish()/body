@@ -1,0 +1,17 @@
+{
+  try {
+    if (readyForFrames) {
+      readyForFrames=false;
+      videoMedia.endEdits();
+      videoTrack.insertMedia(0,0,videoMedia.getDuration(),1);
+      OpenMovieFile omf=OpenMovieFile.asWrite(movFile);
+      movie.addResource(omf,StdQTConstants.movieInDataForkResID,movFile.getName());
+    }
+  }
+ catch (  StdQTException se) {
+    se.printStackTrace();
+  }
+catch (  QTException qe) {
+    qe.printStackTrace();
+  }
+}

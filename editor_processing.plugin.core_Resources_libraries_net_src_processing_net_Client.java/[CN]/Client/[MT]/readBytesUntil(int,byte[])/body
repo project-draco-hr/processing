@@ -1,0 +1,26 @@
+{
+  if (bufferIndex == bufferLast)   return 0;
+  byte what=(byte)interesting;
+synchronized (buffer) {
+    int found=-1;
+    for (int k=bufferIndex; k < bufferLast; k++) {
+      if (buffer[k] == what) {
+        found=k;
+        break;
+      }
+    }
+    if (found == -1)     return 0;
+    int length=found - bufferIndex + 1;
+    if (length > byteBuffer.length) {
+      System.err.println("readBytesUntil() byte buffer is" + " too small for the " + length + " bytes up to and including char "+ interesting);
+      return -1;
+    }
+    System.arraycopy(buffer,bufferIndex,byteBuffer,0,length);
+    bufferIndex+=length;
+    if (bufferIndex == bufferLast) {
+      bufferIndex=0;
+      bufferLast=0;
+    }
+    return length;
+  }
+}

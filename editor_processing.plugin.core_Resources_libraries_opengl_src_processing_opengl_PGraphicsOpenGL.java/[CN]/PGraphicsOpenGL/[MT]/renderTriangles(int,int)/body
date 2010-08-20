@@ -1,0 +1,66 @@
+{
+  report("render_triangles in");
+  for (int i=start; i < stop; i++) {
+    float a[]=vertices[triangles[i][VERTEX1]];
+    float b[]=vertices[triangles[i][VERTEX2]];
+    float c[]=vertices[triangles[i][VERTEX3]];
+    float ar=clamp(triangleColors[i][0][TRI_DIFFUSE_R] + triangleColors[i][0][TRI_SPECULAR_R]);
+    float ag=clamp(triangleColors[i][0][TRI_DIFFUSE_G] + triangleColors[i][0][TRI_SPECULAR_G]);
+    float ab=clamp(triangleColors[i][0][TRI_DIFFUSE_B] + triangleColors[i][0][TRI_SPECULAR_B]);
+    float br=clamp(triangleColors[i][1][TRI_DIFFUSE_R] + triangleColors[i][1][TRI_SPECULAR_R]);
+    float bg=clamp(triangleColors[i][1][TRI_DIFFUSE_G] + triangleColors[i][1][TRI_SPECULAR_G]);
+    float bb=clamp(triangleColors[i][1][TRI_DIFFUSE_B] + triangleColors[i][1][TRI_SPECULAR_B]);
+    float cr=clamp(triangleColors[i][2][TRI_DIFFUSE_R] + triangleColors[i][2][TRI_SPECULAR_R]);
+    float cg=clamp(triangleColors[i][2][TRI_DIFFUSE_G] + triangleColors[i][2][TRI_SPECULAR_G]);
+    float cb=clamp(triangleColors[i][2][TRI_DIFFUSE_B] + triangleColors[i][2][TRI_SPECULAR_B]);
+    int textureIndex=triangles[i][TEXTURE_INDEX];
+    if (textureIndex != -1) {
+      report("before enable");
+      gl.glEnable(GL.GL_TEXTURE_2D);
+      report("after enable");
+      report("before bind");
+      PImage texture=textures[textureIndex];
+      bindTexture(texture);
+      report("after bind");
+      ImageCache cash=(ImageCache)texture.getCache(this);
+      float uscale=(float)texture.width / (float)cash.twidth;
+      float vscale=(float)texture.height / (float)cash.theight;
+      gl.glBegin(GL.GL_TRIANGLES);
+      gl.glColor4f(ar,ag,ab,a[A]);
+      gl.glTexCoord2f(a[U] * uscale,a[V] * vscale);
+      gl.glNormal3f(a[NX],a[NY],a[NZ]);
+      gl.glEdgeFlag(a[EDGE] == 1);
+      gl.glVertex3f(a[VX],a[VY],a[VZ]);
+      gl.glColor4f(br,bg,bb,b[A]);
+      gl.glTexCoord2f(b[U] * uscale,b[V] * vscale);
+      gl.glNormal3f(b[NX],b[NY],b[NZ]);
+      gl.glEdgeFlag(a[EDGE] == 1);
+      gl.glVertex3f(b[VX],b[VY],b[VZ]);
+      gl.glColor4f(cr,cg,cb,c[A]);
+      gl.glTexCoord2f(c[U] * uscale,c[V] * vscale);
+      gl.glNormal3f(c[NX],c[NY],c[NZ]);
+      gl.glEdgeFlag(a[EDGE] == 1);
+      gl.glVertex3f(c[VX],c[VY],c[VZ]);
+      gl.glEnd();
+      report("non-binding 6");
+      gl.glDisable(GL.GL_TEXTURE_2D);
+    }
+ else {
+      gl.glBegin(GL.GL_TRIANGLES);
+      gl.glColor4f(ar,ag,ab,a[A]);
+      gl.glNormal3f(a[NX],a[NY],a[NZ]);
+      gl.glEdgeFlag(a[EDGE] == 1);
+      gl.glVertex3f(a[VX],a[VY],a[VZ]);
+      gl.glColor4f(br,bg,bb,b[A]);
+      gl.glNormal3f(b[NX],b[NY],b[NZ]);
+      gl.glEdgeFlag(a[EDGE] == 1);
+      gl.glVertex3f(b[VX],b[VY],b[VZ]);
+      gl.glColor4f(cr,cg,cb,c[A]);
+      gl.glNormal3f(c[NX],c[NY],c[NZ]);
+      gl.glEdgeFlag(a[EDGE] == 1);
+      gl.glVertex3f(c[VX],c[VY],c[VZ]);
+      gl.glEnd();
+    }
+  }
+  report("render_triangles out");
+}

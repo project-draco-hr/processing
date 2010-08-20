@@ -1,0 +1,17 @@
+{
+  Font font=textFont.getFont();
+  if ((textMode != SHAPE) || (font == null)) {
+    return super.textWidthImpl(buffer,start,stop);
+  }
+  Graphics2D graphics=(Graphics2D)parent.getGraphics();
+  graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+  FontRenderContext frc=graphics.getFontRenderContext();
+  GlyphVector gv;
+  gv=font.createGlyphVector(frc,buffer);
+  float sum=0;
+  for (int i=start; i < stop; i++) {
+    GlyphMetrics gm=gv.getGlyphMetrics(i);
+    sum+=gm.getAdvance();
+  }
+  return sum;
+}

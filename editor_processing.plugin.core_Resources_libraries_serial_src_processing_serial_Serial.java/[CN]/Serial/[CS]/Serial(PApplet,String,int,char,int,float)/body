@@ -1,0 +1,39 @@
+{
+  this.parent=parent;
+  this.rate=irate;
+  parity=SerialPort.PARITY_NONE;
+  if (iparity == 'E')   parity=SerialPort.PARITY_EVEN;
+  if (iparity == 'O')   parity=SerialPort.PARITY_ODD;
+  this.databits=idatabits;
+  stopbits=SerialPort.STOPBITS_1;
+  if (istopbits == 1.5f)   stopbits=SerialPort.STOPBITS_1_5;
+  if (istopbits == 2)   stopbits=SerialPort.STOPBITS_2;
+  try {
+    Enumeration<?> portList=CommPortIdentifier.getPortIdentifiers();
+    while (portList.hasMoreElements()) {
+      CommPortIdentifier portId=(CommPortIdentifier)portList.nextElement();
+      if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+        if (portId.getName().equals(iname)) {
+          port=(SerialPort)portId.open("serial madness",2000);
+          input=port.getInputStream();
+          output=port.getOutputStream();
+          port.setSerialPortParams(rate,databits,stopbits,parity);
+          port.addEventListener(this);
+          port.notifyOnDataAvailable(true);
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    errorMessage("<init>",e);
+    port=null;
+    input=null;
+    output=null;
+  }
+  parent.registerDispose(this);
+  try {
+    serialEventMethod=parent.getClass().getMethod("serialEvent",new Class[]{Serial.class});
+  }
+ catch (  Exception e) {
+  }
+}
