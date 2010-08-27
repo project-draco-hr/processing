@@ -1,4 +1,6 @@
 {
+  eyeY=height - eyeY;
+  centerY=height - centerY;
   float z0=eyeX - centerX;
   float z1=eyeY - centerY;
   float z2=eyeZ - centerZ;
@@ -29,22 +31,34 @@
     y1/=mag;
     y2/=mag;
   }
-  glmodelview[0]=x0;
-  glmodelview[1]=y0;
-  glmodelview[2]=z0;
-  glmodelview[3]=0.0f;
-  glmodelview[4]=x1;
-  glmodelview[5]=y1;
-  glmodelview[6]=z1;
-  glmodelview[7]=0.0f;
-  glmodelview[8]=x2;
-  glmodelview[9]=y2;
-  glmodelview[10]=z2;
-  glmodelview[11]=0;
-  glmodelview[12]=-cameraX;
-  glmodelview[13]=cameraY;
-  glmodelview[14]=-cameraZ;
-  glmodelview[15]=1.0f;
+  float[] m=glmodelview;
+  m[0]=x0;
+  m[1]=y0;
+  m[2]=z0;
+  m[3]=0.0f;
+  m[4]=x1;
+  m[5]=y1;
+  m[6]=z1;
+  m[7]=0.0f;
+  m[8]=x2;
+  m[9]=y2;
+  m[10]=z2;
+  m[11]=0;
+  m[12]=0.0f;
+  m[13]=0.0f;
+  m[14]=0.0f;
+  m[15]=1.0f;
+  float tx=-eyeX;
+  float ty=-eyeY + height;
+  float tz=-eyeZ;
+  m[12]+=tx * m[0] + ty * m[4] + tz * m[8];
+  m[13]+=tx * m[1] + ty * m[5] + tz * m[9];
+  m[14]+=tx * m[2] + ty * m[6] + tz * m[10];
+  m[15]+=tx * m[3] + ty * m[7] + tz * m[11];
+  m[4]=-m[4];
+  m[5]=-m[5];
+  m[6]=-m[6];
+  m[7]=-m[7];
   gl.glMatrixMode(GL10.GL_MODELVIEW);
   gl.glLoadMatrixf(glmodelview,0);
   if (usingModelviewStack) {
