@@ -1,0 +1,19 @@
+{
+  if (!project.isOpen())   return;
+  if (SketchProject.isSketchProject(project)) {
+    IProjectDescription description=project.getDescription();
+    List<String> newIds=new ArrayList<String>();
+    newIds.addAll(Arrays.asList(description.getNatureIds()));
+    newIds.remove(NATURE_ID);
+    newIds.add(0,NATURE_ID);
+    description.setNatureIds(newIds.toArray(new String[newIds.size()]));
+    return;
+  }
+  IProjectDescription description=project.getDescription();
+  List<String> newIds=new ArrayList<String>();
+  newIds.add(NATURE_ID);
+  newIds.add(JavaCore.NATURE_ID);
+  newIds.addAll(Arrays.asList(description.getNatureIds()));
+  description.setNatureIds(newIds.toArray(new String[newIds.size()]));
+  project.setDescription(description,null);
+}

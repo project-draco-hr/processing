@@ -1,14 +1,11 @@
 {
-  Bundle bundle=ProcessingCore.getProcessingCore().getBundle();
-  URL fileLocation;
+  URL fileLocation=ProcessingCore.getProcessingCore().getPluginResource("libraries");
   try {
-    fileLocation=FileLocator.toFileURL(bundle.getEntry("/Resources" + File.pathSeparatorChar + "libraries"));
-    File folder=new File(fileLocation.getPath());
-    folder.isDirectory();
-    return folder;
+    File folder=new File(FileLocator.toFileURL(fileLocation).getPath());
+    if (folder.exists())     return folder;
   }
  catch (  Exception e) {
     ProcessingLog.logError(e);
-    return null;
   }
+  return null;
 }

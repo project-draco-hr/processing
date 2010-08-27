@@ -1,7 +1,7 @@
 {
   if (folder == null)   return false;
   if (!folder.isDirectory())   return false;
-  String list[]=folder.list(new FilenameFilter(){
+  File list[]=folder.listFiles(new FilenameFilter(){
     public boolean accept(    File dir,    String name){
       if (name.charAt(0) == '.')       return false;
       if (name.equals("CVS"))       return false;
@@ -10,19 +10,10 @@
   }
 );
   if (list == null)   return false;
-  Arrays.sort(list,String.CASE_INSENSITIVE_ORDER);
   boolean ifound=false;
-  for (  String potentialName : list) {
-    File subfolder=new File(folder,potentialName);
-    File libraryFolder=new File(subfolder,"library");
-    File libraryJar=new File(libraryFolder,potentialName + ".jar");
-    if (libraryJar.exists()) {
-      String sanityCheck=Sketch.sanitizeName(potentialName);
-      if (!sanityCheck.equals(potentialName)) {
-        String mess="The library \"" + potentialName + "\" cannot be used.\n"+ "Library names must contain only basic letters and numbers.\n"+ "(ASCII only and no spaces, and it cannot start with a number)";
-        ProcessingLog.logInfo("Ignoring bad library name \n" + mess);
-        continue;
-      }
+  for (  File potentialFile : list) {
+    if (ProcessingCore.isLibrary(potentialFile,true)) {
+      File libraryFolder=new File(potentialFile,"library");
       String libraryClassPath=Utilities.contentsToClassPath(libraryFolder);
       String packages[]=Utilities.packageListFromClassPath(libraryClassPath);
       for (      String pkg : packages) {
@@ -31,8 +22,7 @@
       ifound=true;
     }
  else {
-      boolean found=addLibraries(subfolder);
-      if (found)       ifound=true;
+      if (addLibraries(potentialFile))       ifound=true;
     }
   }
   return ifound;
