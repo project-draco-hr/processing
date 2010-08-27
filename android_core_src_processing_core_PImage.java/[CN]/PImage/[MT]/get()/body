@@ -1,6 +1,11 @@
 {
   try {
-    return (PImage)clone();
+    PImage img=(PImage)clone();
+    if (parent.g instanceof PGraphicsAndroid3D) {
+      img.format=ARGB;
+      img.loadTexture();
+    }
+    return img;
   }
  catch (  CloneNotSupportedException e) {
     return null;
