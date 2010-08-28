@@ -15,7 +15,17 @@
   textFont.currentTexID=textFont.texIDList[0];
   gl.glBindTexture(GL10.GL_TEXTURE_2D,textFont.currentTexID);
   gl.glColor4f(colorFloats[0],colorFloats[1],colorFloats[2],colorFloats[3]);
+  if (textMode == MODEL) {
+    if (textVertexBuffer == null) {
+      allocateTextModel();
+    }
+    gl.glNormal3f(0,0,1);
+    textVertexCount=0;
+  }
   super.textLineImpl(buffer,start,stop,x,y);
+  if (textMode == MODEL && 0 < textVertexCount) {
+    renderTextModel();
+  }
   if (blend) {
     blend(blendMode);
   }
