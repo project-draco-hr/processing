@@ -26,6 +26,8 @@
   g.setFont(font);
   metrics=g.getFontMetrics();
   fontAscent=metrics.getAscent();
+  Graphics2D g2=(Graphics2D)g;
+  g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
   g.setColor(backgroundColor);
   g.fillRect(0,0,imageW,imageH);
   int codeCount=sketch.getCodeCount();
@@ -38,7 +40,6 @@
     SketchCode code=sketch.getCode(i);
     String codeName=sketch.hideExtension(code.getExtension()) ? code.getPrettyName() : code.getFileName();
     String text="  " + codeName + (code.isModified() ? " \u00A7" : "  ");
-    Graphics2D g2=(Graphics2D)g;
     int textWidth=(int)font.getStringBounds(text,g2.getFontRenderContext()).getWidth();
     int pieceCount=2 + (textWidth / PIECE_WIDTH);
     int pieceWidth=pieceCount * PIECE_WIDTH;
