@@ -4,11 +4,14 @@
   IFolder dataFolder=project.getFolder("data");
   IFolder buildFolder=project.getFolder("bin");
   IFolder appletFolder=project.getFolder("applet");
+  IFolder javaBuildFolder=buildFolder.getFolder("compile");
   if (!codeFolder.exists())   buildFolder.create(IResource.NONE,true,null);
   if (!dataFolder.exists())   dataFolder.create(IResource.NONE,true,null);
   if (!buildFolder.exists())   buildFolder.create(IResource.NONE,true,null);
   if (!appletFolder.exists())   appletFolder.create(IResource.NONE,true,null);
-  jproject=JavaCore.create(project);
+  if (!javaBuildFolder.exists())   javaBuildFolder.create(IResource.NONE,true,null);
+  IJavaProject jproject=JavaCore.create(project);
+  jproject.setOutputLocation(javaBuildFolder.getFullPath(),new NullProgressMonitor());
   IProjectDescription description=this.project.getDescription();
   List<ICommand> newCmds=new ArrayList<ICommand>();
   newCmds.addAll(Arrays.asList(description.getBuildSpec()));

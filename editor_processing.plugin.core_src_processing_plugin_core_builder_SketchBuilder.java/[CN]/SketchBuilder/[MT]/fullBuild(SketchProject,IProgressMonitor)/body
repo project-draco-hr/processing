@@ -6,7 +6,6 @@
     return null;
   }
   codeFolder=sketch.getFolder("code");
-  dataFolder=sketch.getFolder("data");
   buildFolder=sketch.getFolder("bin");
   appletFolder=sketch.getFolder("applet");
   monitor.beginTask("Sketch Build",400);
@@ -24,7 +23,7 @@
   }
   PdePreprocessor preproc=new PdePreprocessor(sketch.getName(),4);
   String[] codeFolderPackages=null;
-  classPath=appletFolder.getLocation().toOSString();
+  classPath=buildFolder.getLocation().toOSString();
   if (codeFolder.exists()) {
     libraryPath=codeFolder.getLocation().toOSString();
     String codeFolderClassPath=Utilities.contentsToClassPath(codeFolder.getLocation().toFile());
@@ -99,7 +98,7 @@
   }
 catch (  antlr.TokenStreamRecognitionException tsre) {
     String mess="^line (\\d+):(\\d+):\\s";
-    String[] matches=PApplet.match(tsre.toString(),mess);
+    String[] matches=Utilities.match(tsre.toString(),mess);
     IResource errorFile=null;
     int errorLine=-1;
     if (matches != null) {
@@ -195,7 +194,7 @@ catch (  Exception e) {
       String filename=file.getName() + ".java";
       try {
         String program=Utilities.readFile((IFile)file);
-        String[] pkg=PApplet.match(program,Utilities.PACKAGE_REGEX);
+        String[] pkg=Utilities.match(program,Utilities.PACKAGE_REGEX);
         if (pkg == null) {
           pkg=new String[]{packageName};
           program="package " + packageName + ";"+ program;
@@ -232,14 +231,22 @@ catch (  Exception e) {
   IPath containerPath=new Path(JavaRuntime.JRE_CONTAINER);
   IVMInstall vm=JavaRuntime.getDefaultVMInstall();
   IPath vmPath=containerPath.append(vm.getVMInstallType().getId()).append(vm.getName());
+  ArrayList<IPath> paths=new ArrayList<IPath>();
   System.out.println("classPath entries:");
   for (  String s : classPath.split(File.pathSeparator)) {
-    if (!s.isEmpty())     System.out.println(s);
+    if (!s.isEmpty()) {
+      System.out.println(s);
+      paths.add(new Path(s));
+    }
   }
+  IClasspathEntry[] classpathEntries=new IClasspathEntry[paths.size() + 1];
   System.out.println("IClasspathEntry[] items:");
-  IClasspathEntry[] newClasspath={JavaCore.newSourceEntry(buildFolder.getFullPath()),JavaCore.newContainerEntry(vmPath)};
-  for (  IClasspathEntry s : newClasspath) {
-    System.out.println(s.toString());
+  for (int i=0; i < paths.size(); i++) {
+    System.out.println(paths.get(i).toString());
+    classpathEntries[i + 1]=JavaCore.newSourceEntry(paths.get(i));
   }
+  classpathEntries[0]=JavaCore.newContainerEntry(vmPath.makeAbsolute());
+  sketchProject.getJavaProject().getOutputLocation();
+  sketchProject.getJavaProject().setRawClasspath(classpathEntries,new NullProgressMonitor());
   return null;
 }
