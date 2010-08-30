@@ -20,7 +20,9 @@
   entries.add(JavaCore.newContainerEntry(vmPath.makeAbsolute()));
   entries.add(JavaCore.newSourceEntry(buildFolder.getFullPath().makeAbsolute()));
   entries.add(JavaCore.newContainerEntry(codeFolder.getFullPath().makeAbsolute()));
-  if (coreResources != null)   entries.add(JavaCore.newContainerEntry(new Path(coreResources.getAbsolutePath())));
+  if (coreResources != null) {
+    entries.add(JavaCore.newLibraryEntry(new Path(coreResources.getAbsolutePath()).append("lib/core.jar"),null,null,false));
+  }
   if (sketchbookLibs != null)   entries.add(JavaCore.newContainerEntry(new Path(sketchbookLibs.getAbsolutePath())));
   IClasspathEntry[] classpathEntries=new IClasspathEntry[entries.size()];
   for (int i=0; i < entries.size(); i++) {
