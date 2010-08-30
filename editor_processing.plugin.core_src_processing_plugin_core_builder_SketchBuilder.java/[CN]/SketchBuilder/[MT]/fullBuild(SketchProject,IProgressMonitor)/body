@@ -2,7 +2,7 @@
   this.clean(sketchProject,monitor);
   IProject sketch=sketchProject.getProject();
   if (sketch == null || !sketch.isAccessible()) {
-    System.out.println("Sketch is null!");
+    ProcessingLog.logError("Sketch is inaccessible!",null);
     return null;
   }
   codeFolder=sketch.getFolder("code");
@@ -161,27 +161,6 @@ catch (  Exception e) {
   if (checkCancel(monitor)) {
     return null;
   }
-  importedLibraries=new ArrayList<File>();
-  coreLibs=getCoreLibsFolder().getAbsoluteFile();
-  sketchBookLibs=getSketchBookLibsFolder(sketch).getAbsoluteFile();
-  importToLibraryTable=new HashMap<String,File>();
-  try {
-    addLibraries(coreLibs);
-    addLibraries(sketchBookLibs);
-  }
- catch (  IOException e) {
-    ProcessingLog.logError("Libraries could not be loaded.",e);
-  }
-  for (  String item : result.extraImports) {
-    int dot=item.lastIndexOf('.');
-    String entry=(dot == -1) ? item : item.substring(0,dot);
-    File libFolder=importToLibraryTable.get(entry);
-    if (libFolder != null) {
-      importedLibraries.add(libFolder);
-      classPath+=Utilities.contentsToClassPath(libFolder);
-      libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
-    }
-  }
   String javaClassPath=System.getProperty("java.class.path");
   if (javaClassPath.startsWith("\"") && javaClassPath.endsWith("\""))   javaClassPath=javaClassPath.substring(1,javaClassPath.length() - 1);
   classPath+=File.pathSeparator + javaClassPath;
@@ -228,25 +207,5 @@ catch (  Exception e) {
   if (checkCancel(monitor)) {
     return null;
   }
-  IPath containerPath=new Path(JavaRuntime.JRE_CONTAINER);
-  IVMInstall vm=JavaRuntime.getDefaultVMInstall();
-  IPath vmPath=containerPath.append(vm.getVMInstallType().getId()).append(vm.getName());
-  ArrayList<IPath> paths=new ArrayList<IPath>();
-  System.out.println("classPath entries:");
-  for (  String s : classPath.split(File.pathSeparator)) {
-    if (!s.isEmpty()) {
-      System.out.println(s);
-      paths.add(new Path(s));
-    }
-  }
-  IClasspathEntry[] classpathEntries=new IClasspathEntry[paths.size() + 1];
-  System.out.println("IClasspathEntry[] items:");
-  for (int i=0; i < paths.size(); i++) {
-    System.out.println(paths.get(i).toString());
-    classpathEntries[i + 1]=JavaCore.newSourceEntry(paths.get(i));
-  }
-  classpathEntries[0]=JavaCore.newContainerEntry(vmPath.makeAbsolute());
-  sketchProject.getJavaProject().getOutputLocation();
-  sketchProject.getJavaProject().setRawClasspath(classpathEntries,new NullProgressMonitor());
   return null;
 }

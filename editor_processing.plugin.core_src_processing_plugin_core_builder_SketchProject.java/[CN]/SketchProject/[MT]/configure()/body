@@ -4,14 +4,29 @@
   IFolder dataFolder=project.getFolder("data");
   IFolder buildFolder=project.getFolder("bin");
   IFolder appletFolder=project.getFolder("applet");
-  IFolder javaBuildFolder=buildFolder.getFolder("compile");
+  IFolder javaBuildFolder=project.getFolder("compile");
+  File coreResources=getCoreResourcesFolder();
+  File sketchbookLibs=getSketchBookLibsFolder(project);
   if (!codeFolder.exists())   buildFolder.create(IResource.NONE,true,null);
   if (!dataFolder.exists())   dataFolder.create(IResource.NONE,true,null);
   if (!buildFolder.exists())   buildFolder.create(IResource.NONE,true,null);
   if (!appletFolder.exists())   appletFolder.create(IResource.NONE,true,null);
   if (!javaBuildFolder.exists())   javaBuildFolder.create(IResource.NONE,true,null);
   IJavaProject jproject=JavaCore.create(project);
-  jproject.setOutputLocation(javaBuildFolder.getFullPath(),new NullProgressMonitor());
+  IPath containerPath=new Path(JavaRuntime.JRE_CONTAINER);
+  IVMInstall vm=JavaRuntime.getDefaultVMInstall();
+  IPath vmPath=containerPath.append(vm.getVMInstallType().getId()).append(vm.getName());
+  List<IClasspathEntry> entries=new ArrayList<IClasspathEntry>();
+  entries.add(JavaCore.newContainerEntry(vmPath.makeAbsolute()));
+  entries.add(JavaCore.newSourceEntry(buildFolder.getFullPath().makeAbsolute()));
+  entries.add(JavaCore.newContainerEntry(codeFolder.getFullPath().makeAbsolute()));
+  if (coreResources != null)   entries.add(JavaCore.newContainerEntry(new Path(coreResources.getAbsolutePath())));
+  if (sketchbookLibs != null)   entries.add(JavaCore.newContainerEntry(new Path(sketchbookLibs.getAbsolutePath())));
+  IClasspathEntry[] classpathEntries=new IClasspathEntry[entries.size()];
+  for (int i=0; i < entries.size(); i++) {
+    classpathEntries[i]=entries.get(i);
+  }
+  jproject.setRawClasspath(classpathEntries,javaBuildFolder.getFullPath(),null);
   IProjectDescription description=this.project.getDescription();
   List<ICommand> newCmds=new ArrayList<ICommand>();
   newCmds.addAll(Arrays.asList(description.getBuildSpec()));
