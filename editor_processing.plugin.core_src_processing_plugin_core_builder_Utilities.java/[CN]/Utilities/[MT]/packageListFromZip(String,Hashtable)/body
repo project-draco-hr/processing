@@ -1,0 +1,23 @@
+{
+  try {
+    ZipFile file=new ZipFile(filename);
+    Enumeration entries=file.entries();
+    while (entries.hasMoreElements()) {
+      ZipEntry entry=(ZipEntry)entries.nextElement();
+      if (!entry.isDirectory()) {
+        String name=entry.getName();
+        if (name.endsWith(".class")) {
+          int slash=name.lastIndexOf('/');
+          if (slash == -1)           continue;
+          String pname=name.substring(0,slash);
+          if (table.get(pname) == null) {
+            table.put(pname,new Object());
+          }
+        }
+      }
+    }
+  }
+ catch (  IOException e) {
+    ProcessingLog.logInfo("Ignoring " + filename + " ("+ e.getMessage()+ ")");
+  }
+}
