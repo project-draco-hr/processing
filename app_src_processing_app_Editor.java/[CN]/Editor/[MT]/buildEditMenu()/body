@@ -4,7 +4,12 @@
   undoItem=Base.newJMenuItem("Undo",'Z');
   undoItem.addActionListener(undoAction=new UndoAction());
   menu.add(undoItem);
-  redoItem=Base.newJMenuItem("Redo",'Y');
+  if (Base.isWindows()) {
+    redoItem=Base.newJMenuItem("Redo",'Y');
+  }
+ else {
+    redoItem=Base.newJMenuItemShift("Redo",'Z');
+  }
   redoItem.addActionListener(redoAction=new RedoAction());
   menu.add(redoItem);
   menu.addSeparator();
