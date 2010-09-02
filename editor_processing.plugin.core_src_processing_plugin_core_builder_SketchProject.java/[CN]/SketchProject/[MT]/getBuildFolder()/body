@@ -1,7 +1,8 @@
 {
-  File tempBuildFolder=new File(ProcessingCore.getProcessingCore().getPluginTempFolder(),project.getName());
-  tempBuildFolder.mkdirs();
-  if (tempBuildFolder.exists())   return tempBuildFolder;
-  ProcessingLog.logError("Could not create the temporary build (preprocess) folder.",null);
+  File tempBuildFolder=project.getFolder("generated").getFullPath().toFile();
+  File preprocBuildFolder=new File(tempBuildFolder,"preproc");
+  preprocBuildFolder.mkdirs();
+  if (preprocBuildFolder.exists())   return preprocBuildFolder;
+  ProcessingLog.logError("Could not create " + preprocBuildFolder.getPath() + " folder.",null);
   return null;
 }

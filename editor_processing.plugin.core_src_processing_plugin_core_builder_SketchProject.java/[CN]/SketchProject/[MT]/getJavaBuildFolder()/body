@@ -1,10 +1,10 @@
 {
-  File build=getBuildFolder();
-  if (build != null) {
-    File compile=new File(build,"compile");
+  File preproc=getBuildFolder();
+  if (preproc != null) {
+    File compile=new File(preproc.getParent(),"compiler");
     compile.mkdirs();
     if (compile.exists())     return compile;
   }
-  ProcessingLog.logError("Could not create the temporary build (compile) folder.",null);
+  ProcessingLog.logError("Could not create " + preproc.getParent() + File.separator+ "compiler"+ " folder.",null);
   return null;
 }

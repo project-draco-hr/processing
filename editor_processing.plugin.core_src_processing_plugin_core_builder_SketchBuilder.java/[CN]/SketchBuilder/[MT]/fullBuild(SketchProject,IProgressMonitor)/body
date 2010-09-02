@@ -1,12 +1,12 @@
 {
-  this.clean(sketchProject,monitor);
+  clean(sketchProject,monitor);
   IProject sketch=sketchProject.getProject();
   if (sketch == null || !sketch.isAccessible()) {
     ProcessingLog.logError("Sketch is inaccessible!",null);
     return null;
   }
-  codeFolder=sketchProject.getCodeFolder();
-  buildFolder=sketchProject.getBuildFolder();
+  IFolder codeFolder=sketchProject.getCodeFolder();
+  File buildFolder=sketchProject.getBuildFolder();
   if (buildFolder == null) {
     ProcessingLog.logError("Build folder could not be accessed.",null);
     return null;
@@ -20,13 +20,12 @@
   }
   PdePreprocessor preproc=new PdePreprocessor(sketch.getName(),4);
   String[] codeFolderPackages=null;
-  if (codeFolder.exists()) {
+  if (codeFolder != null && codeFolder.exists()) {
     String codeFolderClassPath=Utilities.contentsToClassPath(codeFolder.getLocation().toFile());
     for (    String s : codeFolderClassPath.split(File.separator)) {
-      libraryJarPathList.add(new Path(s));
+      libraryJarPathList.add(new Path(s).makeAbsolute());
     }
     codeFolderPackages=Utilities.packageListFromClassPath(codeFolderClassPath);
-    srcFolderPathList.add(codeFolder.getFullPath());
   }
   StringBuffer bigCode=new StringBuffer();
   int bigCount=0;
@@ -160,7 +159,7 @@ catch (  Exception e) {
     String entry=(dot == -1) ? item : item.substring(0,dot);
     IPath libPath=importToLibraryTable.get(entry);
     if (libPath != null) {
-      libraryJarPathList.add(libPath);
+      libraryJarPathList.add(libPath.makeAbsolute());
     }
  else {
       reportProblem("Library import " + entry + " could not be found. Check the library folder in your sketchbook.",sketch.getFile(sketch.getName() + ".pde"),i + 1,true);

@@ -7,19 +7,25 @@
   entries.add(JavaCore.newContainerEntry(vmPath.makeAbsolute()));
   if (srcFolderPathList != null) {
     for (    IPath p : srcFolderPathList) {
-      entries.add(JavaCore.newSourceEntry(p.makeAbsolute()));
+      if (p != null)       entries.add(JavaCore.newSourceEntry(p.makeAbsolute()));
     }
   }
   if (libraryJarPathList != null) {
     for (    IPath p : libraryJarPathList) {
-      entries.add(JavaCore.newLibraryEntry(p.makeAbsolute(),null,null,false));
+      if (p != null) {
+        entries.add(JavaCore.newLibraryEntry(p.makeAbsolute(),null,null,false));
+      }
     }
   }
   IClasspathEntry[] classpathEntries=new IClasspathEntry[entries.size()];
   int i=0;
-  for (  IClasspathEntry cpe : entries)   classpathEntries[i++]=cpe;
+  for (  IClasspathEntry cpe : entries) {
+    classpathEntries[i++]=cpe;
+    System.out.println(cpe.toString());
+  }
   try {
-    jproject.setRawClasspath(classpathEntries,new Path(this.getJavaBuildFolder().getCanonicalPath()),null);
+    jproject.setOutputLocation(new Path(getJavaBuildFolder().getCanonicalPath()),null);
+    jproject.setRawClasspath(classpathEntries,null);
   }
  catch (  Exception e) {
     ProcessingLog.logError("There was a problem setting the compiler class path.",e);
