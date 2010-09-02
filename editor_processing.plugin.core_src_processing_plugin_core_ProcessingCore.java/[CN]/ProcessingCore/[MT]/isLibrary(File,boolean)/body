@@ -1,21 +1,21 @@
 {
-  if (rootFolder != null) {
-    String name=rootFolder.getName();
-    try {
-      File libraryJar=new File(rootFolder.getCanonicalPath() + File.separatorChar + "library"+ File.separatorChar+ name+ ".jar");
-      if (libraryJar.exists())       if (Utilities.sanitizeName(name).equals(name)) {
-        return true;
-      }
+  if (rootFolder == null)   return false;
+  if (!rootFolder.isDirectory())   return false;
+  String name=rootFolder.getName();
+  try {
+    File libraryJar=new File(rootFolder.getCanonicalPath() + File.separatorChar + "library"+ File.separatorChar+ name+ ".jar");
+    if (libraryJar.exists())     if (Utilities.sanitizeName(name).equals(name)) {
+      return true;
+    }
  else {
-        if (complain) {
-          String mess="The library \"" + name + "\" cannot be used.\n"+ "Library names must contain only basic letters and numbers.\n"+ "(ASCII only and no spaces, and it cannot start with a number)";
-          ProcessingLog.logInfo("Ignoring bad library " + name + "\n"+ mess);
-        }
+      if (complain) {
+        String mess="The library \"" + name + "\" cannot be used.\n"+ "Library names must contain only basic letters and numbers.\n"+ "(ASCII only and no spaces, and it cannot start with a number)";
+        ProcessingLog.logInfo("Ignoring bad library " + name + "\n"+ mess);
       }
     }
- catch (    IOException e) {
-      ProcessingLog.logError("Problem checking librarary " + name + ", could not resolve canonical path.",e);
-    }
+  }
+ catch (  IOException e) {
+    ProcessingLog.logError("Problem checking library " + name + ", could not resolve canonical path.",e);
   }
   return false;
 }
