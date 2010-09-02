@@ -1,25 +1,27 @@
 {
+  if (screenFb)   return;
   if (width == 0 || height == 0) {
     throw new RuntimeException("PFramebuffer: size undefined.");
   }
-  if (!PGraphicsAndroid3D.fboSupported)   return;
-  a3d.pushFramebuffer();
-  a3d.setFramebuffer(this);
-  int[] tmp=new int[1];
-  gl.glGenRenderbuffersOES(1,tmp,0);
-  glDepthBufferID=tmp[0];
-  gl.glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glDepthBufferID);
-  int glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT16;
-  if (bits == 16) {
-    glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT16;
+  if (FboMode) {
+    a3d.pushFramebuffer();
+    a3d.setFramebuffer(this);
+    int[] tmp=new int[1];
+    gl11xp.glGenRenderbuffersOES(1,tmp,0);
+    glDepthBufferID=tmp[0];
+    gl11xp.glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glDepthBufferID);
+    int glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT16;
+    if (bits == 16) {
+      glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT16;
+    }
+ else     if (bits == 24) {
+      glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT24;
+    }
+ else     if (bits == 32) {
+      glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT32;
+    }
+    gl11xp.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glConst,width,height);
+    gl11xp.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,GL11ExtensionPack.GL_DEPTH_ATTACHMENT_OES,GL11ExtensionPack.GL_RENDERBUFFER_OES,glDepthBufferID);
+    a3d.popFramebuffer();
   }
- else   if (bits == 24) {
-    glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT24;
-  }
- else   if (bits == 32) {
-    glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT32;
-  }
-  gl.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glConst,width,height);
-  gl.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,GL11ExtensionPack.GL_DEPTH_ATTACHMENT_OES,GL11ExtensionPack.GL_RENDERBUFFER_OES,glDepthBufferID);
-  a3d.popFramebuffer();
 }

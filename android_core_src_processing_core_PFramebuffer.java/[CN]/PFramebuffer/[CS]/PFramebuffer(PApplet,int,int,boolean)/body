@@ -1,14 +1,19 @@
 {
   this.parent=parent;
   a3d=(PGraphicsAndroid3D)parent.g;
-  gl=a3d.gl11xp;
-  if (gl == null) {
+  screenFb=screen;
+  noDepth=false;
+  FboMode=PGraphicsAndroid3D.fboSupported;
+  gl=a3d.gl;
+  gl11xp=a3d.gl11xp;
+  if (gl11xp == null) {
     throw new RuntimeException("PFramebuffer: OpenGL ES 1.1 Extension Pack required");
   }
-  if (!PGraphicsAndroid3D.fboSupported && !onscreen) {
-    throw new RuntimeException("PFramebuffer: Frame Buffer Objects are not available");
+  initFramebuffer(w,h);
+  if (!screenFb && !FboMode) {
+    backupTexture=new PTexture(parent,width,height,new PTexture.Parameters(ARGB,NEAREST));
+    pixelBuffer=BufferUtil.newIntBuffer(width * height);
   }
-  initFramebuffer(w,h,onscreen);
   try {
     Method meth=this.getClass().getMethod("recreateResource",new Class[]{PGraphicsAndroid3D.class});
     recreateResourceIdx=a3d.addRecreateResourceMethod(this,meth);
