@@ -1,5 +1,5 @@
 {
-  monitor.beginTask("Creating a new Sketch",500);
+  monitor.beginTask("Creating a new Sketch",400);
   try {
     proj.create(description,new SubProgressMonitor(monitor,100));
     proj.open(IResource.BACKGROUND_REFRESH,new SubProgressMonitor(monitor,100));
@@ -7,10 +7,6 @@
       throw new OperationCanceledException();
     }
     IContainer container=(IContainer)proj;
-    monitor.worked(34);
-    if (monitor.isCanceled()) {
-      throw new OperationCanceledException();
-    }
     addFileToContainer(container,new Path(project.getName() + ".pde"),null,new SubProgressMonitor(monitor,100));
   }
   finally {
