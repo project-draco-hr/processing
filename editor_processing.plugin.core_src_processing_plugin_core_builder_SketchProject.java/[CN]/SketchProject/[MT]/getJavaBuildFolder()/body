@@ -1,10 +1,15 @@
 {
-  File preproc=getBuildFolder();
-  if (preproc != null) {
-    File compile=new File(preproc.getParent(),"compiler");
-    compile.mkdirs();
-    if (compile.exists())     return compile;
+  try {
+    IFolder preproc=getBuildFolder();
+    if (preproc != null) {
+      IFolder parent=(IFolder)preproc.getParent();
+      IFolder compile=parent.getFolder("compiler");
+      if (!compile.exists())       compile.create(IResource.NONE,true,null);
+      return compile;
+    }
   }
-  ProcessingLog.logError("Could not create " + preproc.getParent() + File.separator+ "compiler"+ " folder.",null);
+ catch (  Exception e) {
+    ProcessingLog.logError("Compiler folder could not be created.",e);
+  }
   return null;
 }

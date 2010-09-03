@@ -1,10 +1,6 @@
 {
   IJavaProject jproject=this.getJavaProject();
-  IPath containerPath=new Path(JavaRuntime.JRE_CONTAINER);
-  IVMInstall vm=JavaRuntime.getDefaultVMInstall();
-  IPath vmPath=containerPath.append(vm.getVMInstallType().getId()).append(vm.getName());
   HashSet<IClasspathEntry> entries=new HashSet<IClasspathEntry>();
-  entries.add(JavaCore.newContainerEntry(vmPath.makeAbsolute()));
   if (srcFolderPathList != null) {
     for (    IPath p : srcFolderPathList) {
       if (p != null)       entries.add(JavaCore.newSourceEntry(p.makeAbsolute()));
@@ -24,7 +20,7 @@
     System.out.println(cpe.toString());
   }
   try {
-    jproject.setOutputLocation(new Path(getJavaBuildFolder().getCanonicalPath()),null);
+    jproject.setOutputLocation(getJavaBuildFolder().getFullPath(),null);
     jproject.setRawClasspath(classpathEntries,null);
   }
  catch (  Exception e) {

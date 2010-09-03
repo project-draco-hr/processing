@@ -2,5 +2,6 @@
   deleteP5ProblemMarkers(sketch);
   srcFolderPathList=new ArrayList<IPath>();
   libraryJarPathList=new ArrayList<IPath>();
-  Utilities.deleteFolderContents(sketch.getBuildFolder());
+  IFolder build=sketch.getBuildFolder();
+  if (build != null)   for (  IResource r : build.members())   r.delete(true,monitor);
 }

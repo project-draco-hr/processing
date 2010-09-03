@@ -1,8 +1,13 @@
 {
-  File tempBuildFolder=project.getFolder("generated").getFullPath().toFile();
-  File preprocBuildFolder=new File(tempBuildFolder,"preproc");
-  preprocBuildFolder.mkdirs();
-  if (preprocBuildFolder.exists())   return preprocBuildFolder;
-  ProcessingLog.logError("Could not create " + preprocBuildFolder.getPath() + " folder.",null);
+  try {
+    IFolder tempBuildFolder=project.getFolder("generated");
+    if (!tempBuildFolder.exists())     tempBuildFolder.create(IResource.NONE,true,null);
+    IFolder preprocBuildFolder=tempBuildFolder.getFolder("preproc");
+    if (!preprocBuildFolder.exists())     preprocBuildFolder.create(IResource.NONE,true,null);
+    return preprocBuildFolder;
+  }
+ catch (  Exception e) {
+    ProcessingLog.logError("Preproc folder could not be created.",e);
+  }
   return null;
 }
