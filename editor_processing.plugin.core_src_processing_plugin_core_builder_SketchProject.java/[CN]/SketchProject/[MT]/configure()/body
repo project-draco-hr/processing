@@ -7,17 +7,14 @@
   IProjectDescription description=project.getDescription();
   List<ICommand> newCmds=new ArrayList<ICommand>();
   newCmds.addAll(Arrays.asList(description.getBuildSpec()));
-  int ploc=0;
-  while (ploc > -1) {
-    ploc=-1;
-    for (int i=0; i < newCmds.size(); i++) {
-      if (newCmds.get(i).getBuilderName().equals(SketchBuilder.BUILDER_ID))       ploc=i;
-    }
-    if (ploc > -1)     newCmds.remove(ploc);
-  }
   ICommand command=description.newCommand();
   command.setBuilderName(SketchBuilder.BUILDER_ID);
+  int ploc=newCmds.lastIndexOf(SketchBuilder.BUILDER_ID);
+  if (ploc != -1)   newCmds.remove(ploc);
   newCmds.add(0,command);
+  for (  ICommand c : newCmds) {
+    System.out.println(c.toString());
+  }
   description.setBuildSpec((ICommand[])newCmds.toArray(new ICommand[newCmds.size()]));
   project.setDescription(description,null);
   updateClasspathEntries(null,null);

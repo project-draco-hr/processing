@@ -1,30 +1,11 @@
 {
   if (!project.isOpen())   return;
-  if (SketchProject.isSketchProject(project)) {
-    IProjectDescription description=project.getDescription();
-    List<String> newIds=new ArrayList<String>();
-    newIds.addAll(Arrays.asList(description.getNatureIds()));
-    newIds.remove(NATURE_ID);
-    newIds.add(0,NATURE_ID);
-    description.setNatureIds(newIds.toArray(new String[newIds.size()]));
-    return;
-  }
+  if (SketchProject.isSketchProject(project))   return;
   IProjectDescription description=project.getDescription();
   List<String> newIds=new ArrayList<String>();
-  newIds.add(NATURE_ID);
   newIds.add(JavaCore.NATURE_ID);
+  newIds.add(SketchProject.NATURE_ID);
   newIds.addAll(Arrays.asList(description.getNatureIds()));
   description.setNatureIds(newIds.toArray(new String[newIds.size()]));
-  List<ICommand> newCmds=new ArrayList<ICommand>();
-  newCmds.addAll(Arrays.asList(description.getBuildSpec()));
-  int ploc=-1;
-  for (int i=0; i < newCmds.size(); i++) {
-    if (newCmds.get(i).getBuilderName().equals(SketchBuilder.BUILDER_ID))     ploc=i;
-  }
-  if (ploc > 0) {
-    ICommand command=newCmds.remove(ploc);
-    newCmds.add(0,command);
-    description.setBuildSpec((ICommand[])newCmds.toArray(new ICommand[newCmds.size()]));
-  }
   project.setDescription(description,null);
 }
