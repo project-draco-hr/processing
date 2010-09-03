@@ -23,7 +23,9 @@
   if (codeFolder != null && codeFolder.exists()) {
     String codeFolderClassPath=Utilities.contentsToClassPath(codeFolder.getLocation().toFile());
     for (    String s : codeFolderClassPath.split(File.separator)) {
-      libraryJarPathList.add(new Path(s).makeAbsolute());
+      if (!s.isEmpty()) {
+        libraryJarPathList.add(new Path(s).makeAbsolute());
+      }
     }
     codeFolderPackages=Utilities.packageListFromClassPath(codeFolderClassPath);
   }
