@@ -2,5 +2,9 @@
   double dot=v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
   double v1mag=Math.sqrt(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z);
   double v2mag=Math.sqrt(v2.x * v2.x + v2.y * v2.y + v2.z * v2.z);
-  return (float)Math.acos(dot / (v1mag * v2mag));
+  double amt=dot / (v1mag * v2mag);
+  if (amt <= -1 || amt >= 1) {
+    return PConstants.PI;
+  }
+  return (float)Math.acos(amt);
 }
