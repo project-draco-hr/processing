@@ -1,0 +1,22 @@
+{
+  if (selection instanceof IStructuredSelection) {
+    Object element=((IStructuredSelection)selection).getFirstElement();
+    if (element instanceof IResource) {
+      IProject proj=((IResource)element).getProject();
+      try {
+        if (proj.hasNature("processing.plugin.core.sketchNature")) {
+          launch(createConfiguration(proj),mode);
+        }
+ else {
+          ProcessingLog.logInfo("Sketch could not be launched. The selected project does not have the required Sketch nature.");
+        }
+      }
+ catch (      CoreException e) {
+        ProcessingLog.logError("Launch aborted.",e);
+      }
+    }
+ else {
+      ProcessingLog.logInfo("Sketch could not be launched. Launcher was provided with a non-resource selection.");
+    }
+  }
+}

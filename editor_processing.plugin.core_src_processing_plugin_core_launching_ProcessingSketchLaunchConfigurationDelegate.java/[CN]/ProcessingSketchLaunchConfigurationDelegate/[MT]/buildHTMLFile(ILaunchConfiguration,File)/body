@@ -1,0 +1,52 @@
+{
+  FileWriter writer=null;
+  File tempFile=null;
+  try {
+    String name=getAppletMainTypeName(configuration);
+    tempFile=new File(dir,name + System.currentTimeMillis() + ".html");
+    writer=new FileWriter(tempFile);
+    writer.write("<html>\n");
+    writer.write("<body>\n");
+    writer.write("<applet code=");
+    writer.write(name);
+    writer.write(".class ");
+    String appletName=configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_APPLET_NAME,"");
+    if (appletName.length() != 0) {
+      writer.write("NAME =\"" + appletName + "\" ");
+    }
+    writer.write("width=\"");
+    writer.write(Integer.toString(configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_APPLET_WIDTH,200)));
+    writer.write("\" height=\"");
+    writer.write(Integer.toString(configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_APPLET_HEIGHT,200)));
+    writer.write("\" >\n");
+    Map parameters=configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_APPLET_PARAMETERS,new HashMap());
+    if (parameters.size() != 0) {
+      Iterator iterator=parameters.entrySet().iterator();
+      while (iterator.hasNext()) {
+        Map.Entry next=(Map.Entry)iterator.next();
+        writer.write("<param name=");
+        writer.write(getQuotedString((String)next.getKey()));
+        writer.write(" value=");
+        writer.write(getQuotedString((String)next.getValue()));
+        writer.write(">\n");
+      }
+    }
+    writer.write("</applet>\n");
+    writer.write("</body>\n");
+    writer.write("</html>\n");
+  }
+ catch (  IOException e) {
+  }
+catch (  CoreException e) {
+  }
+ finally {
+    if (writer != null) {
+      try {
+        writer.close();
+      }
+ catch (      IOException e) {
+      }
+    }
+  }
+  return tempFile;
+}

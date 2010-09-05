@@ -1,0 +1,20 @@
+{
+  IFile file=ResourceUtil.getFile(editor.getEditorInput());
+  if (file != null) {
+    IProject proj=file.getProject();
+    try {
+      if (proj.hasNature("processing.plugin.core.sketchNature")) {
+        launch(createConfiguration(proj),mode);
+      }
+ else {
+        ProcessingLog.logInfo("Sketch could not be launched. The editor contains a file that is not part of a project with a Sketch nature.");
+      }
+    }
+ catch (    CoreException e) {
+      ProcessingLog.logError("Launch aborted.",e);
+    }
+  }
+ else {
+    ProcessingLog.logInfo("Launch aborted. Editor contents are not part of a Sketch Project in the workspace");
+  }
+}
