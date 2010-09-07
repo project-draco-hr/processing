@@ -1,6 +1,7 @@
 {
   if (mode.equals(ILaunchManager.RUN_MODE)) {
-    return true;
+    if (configuration.getAttribute("wasLastBuildSuccessful",false))     return true;
+    ProcessingLog.logInfo("Aborting launch -- Sketch has unresolved build problems.");
   }
   return false;
 }

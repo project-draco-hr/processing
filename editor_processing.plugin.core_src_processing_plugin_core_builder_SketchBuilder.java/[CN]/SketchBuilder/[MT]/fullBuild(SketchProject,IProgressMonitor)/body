@@ -2,23 +2,20 @@
   clean(sketchProject,monitor);
   IProject sketch=sketchProject.getProject();
   if (sketch == null || !sketch.isAccessible()) {
-    ProcessingLog.logError("Sketch is inaccessible!",null);
+    ProcessingLog.logError("Sketch is inaccessible. Aborting build process.",null);
     return null;
   }
-  IFolder codeFolder=sketchProject.getCodeFolder();
+  sketchProject.wasLastBuildSuccessful=false;
   IFolder buildFolder=sketchProject.getBuildFolder();
   if (buildFolder == null) {
     ProcessingLog.logError("Build folder could not be accessed.",null);
     return null;
   }
-  monitor.beginTask("Sketch Build",400);
-  if (!sketch.isOpen()) {
-    return null;
-  }
+  monitor.beginTask("Sketch Build",40);
   if (checkCancel(monitor)) {
     return null;
   }
-  PdePreprocessor preproc=new PdePreprocessor(sketch.getName(),4);
+  IFolder codeFolder=sketchProject.getCodeFolder();
   String[] codeFolderPackages=null;
   if (codeFolder != null && codeFolder.exists()) {
     String codeFolderClassPath=Utilities.contentsToClassPath(codeFolder.getLocation().toFile());
@@ -28,6 +25,10 @@
       }
     }
     codeFolderPackages=Utilities.packageListFromClassPath(codeFolderClassPath);
+  }
+  monitor.worked(10);
+  if (checkCancel(monitor)) {
+    return null;
   }
   StringBuffer bigCode=new StringBuffer();
   int bigCount=0;
@@ -45,34 +46,25 @@
   if (checkCancel(monitor)) {
     return null;
   }
+  PdePreprocessor preproc=new PdePreprocessor(sketch.getName(),4);
   PreprocessResult result=null;
   try {
     IFile output=buildFolder.getFile(sketch.getName() + ".java");
     StringWriter stream=new StringWriter();
     result=preproc.write(stream,bigCode.toString(),codeFolderPackages);
+    sketchProject.sketch_width=-1;
+    sketchProject.sketch_height=-1;
     String scrubbed=Utilities.scrubComments(stream.toString());
     String[] matches=Utilities.match(scrubbed,Utilities.SIZE_REGEX);
     if (matches != null) {
       try {
         int wide=Integer.parseInt(matches[1]);
         int high=Integer.parseInt(matches[2]);
-        if (high > 0) {
-          SketchProject.sketch_height=high;
-        }
- else {
-          SketchProject.sketch_height=-1;
-        }
-        if (wide > 0) {
-          SketchProject.sketch_width=wide;
-        }
- else {
-          SketchProject.sketch_width=-1;
-        }
+        if (wide > 0)         sketchProject.sketch_width=wide;
+        if (high > 0)         sketchProject.sketch_height=high;
       }
  catch (      NumberFormatException e) {
-        SketchProject.sketch_height=-1;
-        SketchProject.sketch_width=-1;
-        ProcessingLog.logInfo("Could not find applet size");
+        ProcessingLog.logInfo("Found a reference to size, but it didn't seem to contain numbers. " + "Will use default sizes instead.");
       }
     }
     ByteArrayInputStream inStream=new ByteArrayInputStream(stream.toString().getBytes());
@@ -108,13 +100,7 @@
       errorFile=sketch;
       errorLine=-1;
     }
-    String msg=re.getMessage();
-    if (msg.equals("expecting RCURLY, found 'null'"))     msg="Found one too many { characters without a } to match it.";
-    if (msg.indexOf("expecting RBRACK") != -1)     msg="Syntax error, maybe a missing right ] character?";
-    if (msg.indexOf("expecting SEMI") != -1)     msg="Syntax error, maybe a missing semicolon?";
-    if (msg.indexOf("expecting RPAREN") != -1)     msg="Syntax error, maybe a missing right parenthesis?";
-    if (msg.indexOf("preproc.web_colors") != -1)     msg="A web color (such as #ffcc00) must be six digits.";
-    reportProblem(msg,errorFile,errorLine,true);
+    reportProblem(re.getMessage(),errorFile,errorLine,true);
     return null;
   }
 catch (  antlr.TokenStreamRecognitionException tsre) {
@@ -161,13 +147,7 @@ catch (  RunnerException re) {
       errorFile=sketch;
       errorLine=-1;
     }
-    String msg=re.getMessage();
-    if (msg.equals("expecting RCURLY, found 'null'"))     msg="Found one too many { characters without a } to match it.";
-    if (msg.indexOf("expecting RBRACK") != -1)     msg="Syntax error, maybe a missing right ] character?";
-    if (msg.indexOf("expecting SEMI") != -1)     msg="Syntax error, maybe a missing semicolon?";
-    if (msg.indexOf("expecting RPAREN") != -1)     msg="Syntax error, maybe a missing right parenthesis?";
-    if (msg.indexOf("preproc.web_colors") != -1)     msg="A web color (such as #ffcc00) must be six digits.";
-    reportProblem(msg,errorFile,errorLine,true);
+    reportProblem(re.getMessage(),errorFile,errorLine,true);
     return null;
   }
 catch (  Exception e) {
@@ -178,32 +158,29 @@ catch (  Exception e) {
   if (checkCancel(monitor)) {
     return null;
   }
-  ArrayList<String> libs=new ArrayList<String>();
-  libs.addAll(Utilities.getLibraryJars(ProcessingCore.getProcessingCore().getCoreLibsFolder()));
-  libs.addAll(Utilities.getLibraryJars(Utilities.getSketchBookLibsFolder(sketch)));
-  HashMap<String,IPath> importToLibraryTable=new HashMap<String,IPath>();
-  for (  String s : libs) {
-    String[] packages=Utilities.packageListFromClassPath(s);
-    for (    String pkg : packages) {
-      importToLibraryTable.put(pkg,new Path(s));
-    }
+  ArrayList<String> allFoundLibraries=new ArrayList<String>();
+  allFoundLibraries.addAll(Utilities.getLibraryJars(ProcessingCore.getProcessingCore().getCoreLibsFolder()));
+  allFoundLibraries.addAll(Utilities.getLibraryJars(Utilities.getSketchBookLibsFolder(sketch)));
+  HashMap<String,IPath> libraryImportToPathTable=new HashMap<String,IPath>();
+  for (  String libraryPath : allFoundLibraries) {
+    String[] packages=Utilities.packageListFromClassPath(libraryPath);
+    for (    String pkg : packages)     libraryImportToPathTable.put(pkg,new Path(libraryPath));
   }
+  boolean importProblems=false;
   for (int i=0; i < result.extraImports.size(); i++) {
-    String item=result.extraImports.get(i);
-    int dot=item.lastIndexOf('.');
-    String entry=(dot == -1) ? item : item.substring(0,dot);
-    IPath libPath=importToLibraryTable.get(entry);
+    String importPackage=result.extraImports.get(i);
+    int dot=importPackage.lastIndexOf('.');
+    String entry=(dot == -1) ? importPackage : importPackage.substring(0,dot);
+    IPath libPath=libraryImportToPathTable.get(entry);
     if (libPath != null) {
       libraryJarPathList.add(libPath.makeAbsolute());
     }
  else {
       reportProblem("Library import " + entry + " could not be found. Check the library folder in your sketchbook.",sketch.getFile(sketch.getName() + ".pde"),i + 1,true);
+      importProblems=true;
     }
   }
-  monitor.worked(10);
-  if (checkCancel(monitor)) {
-    return null;
-  }
+  if (importProblems)   return null;
   monitor.worked(10);
   if (checkCancel(monitor)) {
     return null;
@@ -214,6 +191,13 @@ catch (  Exception e) {
   IPath[] srcPaths=new IPath[srcFolderPathList.size()];
   i=0;
   for (  IPath path : srcFolderPathList)   srcPaths[i++]=path;
-  sketchProject.updateClasspathEntries(srcPaths,libPaths);
+  try {
+    sketchProject.updateClasspathEntries(srcPaths,libPaths);
+  }
+ catch (  JavaModelException e) {
+    ProcessingLog.logError("There was a problem setting the compiler class path.",e);
+    return null;
+  }
+  sketchProject.wasLastBuildSuccessful=true;
   return null;
 }
