@@ -1,0 +1,19 @@
+{
+  workbench.getActiveWorkbenchWindow().getActivePage();
+  Iterator iter=selection.iterator();
+  while (iter.hasNext()) {
+    Object selectedElement=iter.next();
+    if (selectedElement instanceof IProject) {
+      IProject proj=(IProject)selectedElement;
+      if (SketchProject.isSketchProject(proj)) {
+      }
+    }
+ else     if (selectedElement instanceof IResource) {
+      IProject proj=((IResource)selectedElement).getProject();
+      if (SketchProject.isSketchProject(proj)) {
+        setProject(proj);
+        break;
+      }
+    }
+  }
+}
