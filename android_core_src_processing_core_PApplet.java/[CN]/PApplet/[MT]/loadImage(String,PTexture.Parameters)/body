@@ -1,0 +1,26 @@
+{
+  InputStream stream=createInput(filename);
+  if (stream == null) {
+    System.err.println("Could not find the image " + filename + ".");
+    return null;
+  }
+  Bitmap bitmap=null;
+  try {
+    bitmap=BitmapFactory.decodeStream(stream);
+  }
+  finally {
+    try {
+      stream.close();
+      stream=null;
+    }
+ catch (    IOException e) {
+    }
+  }
+  PImage image=new PImage(bitmap);
+  image.parent=this;
+  if (g instanceof PGraphicsAndroid3D) {
+    image.format=ARGB;
+    image.loadTexture(params);
+  }
+  return image;
+}

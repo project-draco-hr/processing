@@ -6,15 +6,16 @@
     createTexture(width,height);
   }
   int[] convArray=new int[glWidth * glHeight];
-  convertToRGBA(intArray,convArray,arrayFormat);
   gl.glEnable(glTarget);
   gl.glBindTexture(glTarget,glTextureID);
   if (usingMipmaps) {
     if (a3d.gl11 != null && PGraphicsAndroid3D.mipmapSupported) {
+      convertToRGBA(intArray,convArray,arrayFormat);
       gl.glTexParameterf(GL11.GL_TEXTURE_2D,GL11.GL_GENERATE_MIPMAP,GL11.GL_TRUE);
       gl.glTexSubImage2D(glTarget,0,0,0,glWidth,glHeight,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(convArray));
     }
  else {
+      copyARGB(intArray,convArray);
       int level=0;
       int w=glWidth;
       int h=glHeight;
@@ -35,6 +36,7 @@
     }
   }
  else {
+    convertToRGBA(intArray,convArray,arrayFormat);
     gl.glTexSubImage2D(glTarget,0,0,0,glWidth,glHeight,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(convArray));
   }
   gl.glDisable(glTarget);
