@@ -1,4 +1,14 @@
 {
-  SketchProject sketch=SketchProject.forProject(this.getProject());
-  return this.fullBuild(sketch,monitor);
+  IProject project=this.getProject();
+  SketchProject sketch=SketchProject.forProject(project);
+switch (kind) {
+case FULL_BUILD:
+    return this.fullBuild(sketch,monitor);
+case AUTO_BUILD:
+  return (fullBuildRequired(project)) ? this.fullBuild(sketch,monitor) : null;
+case INCREMENTAL_BUILD:
+return (fullBuildRequired(project)) ? this.fullBuild(sketch,monitor) : null;
+default :
+return null;
+}
 }
