@@ -13,7 +13,8 @@
   initFramebuffer(w,h);
   if (!screenFb && !FboMode) {
     backupTexture=new PTexture(parent,width,height,new PTexture.Parameters(ARGB,NEAREST));
-    pixelBuffer=BufferUtil.newIntBuffer(width * height);
+    pixelBuffer=IntBuffer.allocate(width * height);
+    pixelBuffer.rewind();
   }
   try {
     Method meth=this.getClass().getMethod("recreateResource",new Class[]{PGraphicsAndroid3D.class});

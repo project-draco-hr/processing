@@ -5,7 +5,8 @@
   }
   if ((pixels == null) || (pixels.length != width * height)) {
     pixels=new int[width * height];
-    pixelBuffer=BufferUtil.newIntBuffer(pixels.length);
+    pixelBuffer=IntBuffer.allocate(pixels.length);
+    pixelBuffer.rewind();
   }
   gl.glReadPixels(0,0,width,height,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,pixelBuffer);
   copyToScreenTexture(pixelBuffer);

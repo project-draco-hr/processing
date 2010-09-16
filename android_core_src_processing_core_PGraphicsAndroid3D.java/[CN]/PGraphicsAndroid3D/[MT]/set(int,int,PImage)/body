@@ -2,7 +2,8 @@
   int[] backup=new int[source.pixels.length];
   System.arraycopy(source.pixels,0,backup,0,source.pixels.length);
   javaToNativeARGB(source);
-  IntBuffer setBuffer=BufferUtil.newIntBuffer(source.pixels.length);
+  IntBuffer setBuffer=IntBuffer.allocate(source.pixels.length);
+  setBuffer.rewind();
   setBuffer.put(source.pixels);
   setBuffer.rewind();
   setRasterPos(x,(height - y) - source.height);
