@@ -1,0 +1,22 @@
+{
+  Composite container=new Composite(parent,SWT.NULL);
+  container.setLayout(new FormLayout());
+  setControl(container);
+  projectTable=CheckboxTableViewer.newCheckList(container,SWT.BORDER);
+  projectTable.setContentProvider(new ProjectTableContentProvider());
+  projectTable.setLabelProvider(new ProjectTableLabelProvider());
+  final FormData formData=new FormData();
+  formData.bottom=new FormAttachment(100,0);
+  formData.right=new FormAttachment(100,0);
+  formData.top=new FormAttachment(0,0);
+  formData.left=new FormAttachment(0,0);
+  final Table table=projectTable.getTable();
+  table.setLayoutData(formData);
+  table.setHeaderVisible(true);
+  final TableColumn rightTableColumn=new TableColumn(table,SWT.NONE);
+  rightTableColumn.setWidth(200);
+  rightTableColumn.setText("Name");
+  final TableColumn leftTableColumn=new TableColumn(table,SWT.NONE);
+  leftTableColumn.setWidth(250);
+  leftTableColumn.setText("Notes");
+}
