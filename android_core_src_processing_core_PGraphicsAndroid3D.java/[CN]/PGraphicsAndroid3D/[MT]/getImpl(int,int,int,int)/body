@@ -1,8 +1,9 @@
 {
-  PImage newbie=new PImage(w,h);
+  PImage newbie=parent.createImage(w,h,ARGB);
+  PTexture newbieTex=newbie.getTexture();
   IntBuffer newbieBuffer=IntBuffer.allocate(w * h);
-  gl.glReadPixels(x,y,w,h,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,newbieBuffer);
-  newbieBuffer.get(newbie.pixels);
-  nativeToJavaARGB(newbie);
+  gl.glReadPixels(x,height - y,w,-h,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,newbieBuffer);
+  copyToTexture(newbieTex,newbieBuffer,0,0,w,h);
+  newbie.textureToPixels();
   return newbie;
 }

@@ -8,6 +8,9 @@
   }
   getsetBuffer.put(0,getset);
   getsetBuffer.rewind();
-  copyToTexture(getsetTex,getsetBuffer,0,0,1,1);
-  drawTexture(getsetTex,0,0,1,1,x,y,1,1);
+  if (getsetTexture == null) {
+    getsetTexture=new PTexture(parent,1,1,new PTexture.Parameters(ARGB,NEAREST));
+  }
+  copyToTexture(getsetTexture,getsetBuffer,0,0,1,1);
+  drawTexture(getsetTexture,0,0,1,1,x,height - y,1,1);
 }
