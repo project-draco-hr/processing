@@ -48,6 +48,18 @@
       fboSupported=false;
     }
   }
+  if (gl11xp != null) {
+    try {
+      gl11xp.glBlendEquation(GL11ExtensionPack.GL_FUNC_ADD);
+      blendEqSupported=true;
+    }
+ catch (    UnsupportedOperationException e) {
+      blendEqSupported=false;
+    }
+  }
+ else {
+    blendEqSupported=false;
+  }
   usingModelviewStack=gl11 == null || !matrixGetSupported;
   int temp[]=new int[2];
   gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE,temp,0);
