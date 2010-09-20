@@ -185,6 +185,10 @@ catch (  Exception e) {
   if (checkCancel(monitor)) {
     return null;
   }
+  IFolder dataFolder=sketchProject.getDataFolder();
+  if (dataFolder.isAccessible()) {
+    if (dataFolder.members().length > 0)     srcFolderPathList.add(dataFolder.getFullPath());
+  }
   IPath[] libPaths=new IPath[libraryJarPathList.size()];
   int i=0;
   for (  IPath path : libraryJarPathList)   libPaths[i++]=path;
