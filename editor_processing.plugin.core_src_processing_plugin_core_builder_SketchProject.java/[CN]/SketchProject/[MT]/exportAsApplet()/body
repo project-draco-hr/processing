@@ -2,24 +2,20 @@
   if (!wasLastBuildSuccessful)   return false;
   if (!project.isAccessible())   return false;
   IFile code=this.getMainFile();
-  if (!code.isAccessible())   return false;
-  HashMap<String,Object> zipFileContents=new HashMap<String,Object>();
-  int wide=this.getWidth();
-  int high=this.getHeight();
-  String codeContents=Utilities.readFile(code);
-  String description="";
-  String[] javadoc=Utilities.match(codeContents,"/\\*{2,}(.*)\\*+/");
-  if (javadoc != null) {
-    StringBuffer dbuffer=new StringBuffer();
-    String[] pieces=Utilities.split(javadoc[1],'\n');
-    for (    String line : pieces) {
-      String[] m=Utilities.match(line,"^\\s*\\*+(.*)");
-      dbuffer.append(m != null ? m[1] : line);
-      dbuffer.append('\n');
+  if (code == null)   return false;
+  IFolder exportFolder=getAppletFolder(true);
+  try {
+    IFolder codeFolder=getCodeFolder();
+    if (codeFolder != null) {
+      if (codeFolder.members().length > 0) {
+        for (        IResource r : codeFolder.members()) {
+        }
+      }
     }
-    description=dbuffer.toString();
-    ProcessingLog.logInfo(description);
   }
-  IJavaProject jproject=this.getJavaProject();
+ catch (  CoreException e) {
+    ProcessingLog.logError("Could not export. CoreException while getting code folder.",e);
+    return false;
+  }
   return false;
 }

@@ -1,3 +1,8 @@
 {
-  return false;
+  ArrayList<String> couldNotExport=new ArrayList<String>();
+  for (  SketchProject sp : page.getSelectedProjects()) {
+    if (!sp.exportAsApplet())     couldNotExport.add(sp.getProject().getName());
+  }
+  if (couldNotExport.size() > 0)   for (  String s : couldNotExport)   ProcessingLog.logInfo("Unable to export " + s + ".");
+  return true;
 }
