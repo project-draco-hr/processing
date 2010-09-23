@@ -1,12 +1,11 @@
 {
   if (folder == null)   return "";
+  if (!folder.isDirectory())   return "";
   StringBuffer abuffer=new StringBuffer();
   String sep=System.getProperty("path.separator");
   try {
     String path=folder.getCanonicalPath();
-    if (!path.endsWith(File.separator)) {
-      path+=File.separator;
-    }
+    if (!path.endsWith(File.separator))     path+=File.separator;
     String list[]=folder.list();
     for (int i=0; i < list.length; i++) {
       if (list[i].startsWith("."))       continue;
