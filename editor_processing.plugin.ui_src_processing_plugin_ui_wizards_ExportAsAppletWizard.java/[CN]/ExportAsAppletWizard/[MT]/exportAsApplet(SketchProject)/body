@@ -7,22 +7,16 @@
   IFolder codeFolder=sp.getCodeFolder();
   if (codeFolder != null) {
     try {
-      String includes=Utilities.contentsToClassPath(codeFolder.getFullPath().toFile());
-      String[] codeList=Utilities.splitTokens(includes,File.separator);
-      for (      String path : codeList) {
-        System.out.println("Found file: " + path + ".");
-        if (path.toLowerCase().endsWith(".jar") || path.toLowerCase().endsWith(".zip")) {
-          IFile exportFile=codeFolder.getFile(new Path(path));
-          if (exportFile.isAccessible()) {
-            exportFile.copy(exportFolder.getFullPath(),true,null);
-            System.out.println("Copied the file to " + exportFolder.getFullPath().toString() + " .");
-          }
+      for (      IResource r : codeFolder.members()) {
+        if (!(r instanceof IFile))         continue;
+        if (r.getName().startsWith("."))         continue;
+        if ("jar".equalsIgnoreCase(r.getFileExtension()) || "zip".equalsIgnoreCase(r.getFileExtension())) {
+          r.copy(exportFolder.getFullPath().append(r.getName()),true,null);
         }
       }
     }
  catch (    CoreException e) {
-      ProcessingLog.logError("Could not export. CoreException while packaging the code folder.",e);
-      return false;
+      ProcessingLog.logError("Code Folder entries could not be included in export." + "Export for " + sp.getProject().getName() + " may not function properly.",e);
     }
   }
   ProcessingLog.logError("Could not export " + sp.getProject().getName() + " because the exporter is not finished.",null);
