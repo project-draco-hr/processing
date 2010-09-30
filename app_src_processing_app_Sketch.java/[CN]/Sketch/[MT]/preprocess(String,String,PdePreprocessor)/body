@@ -103,9 +103,11 @@ catch (  Exception ex) {
     String entry=(dot == -1) ? item : item.substring(0,dot);
     File libFolder=(File)Base.importToLibraryTable.get(entry);
     if (libFolder != null) {
-      importedLibraries.add(libFolder);
-      classPath+=Compiler.contentsToClassPath(libFolder);
-      libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
+      if (!importedLibraries.contains(libFolder)) {
+        importedLibraries.add(libFolder);
+        classPath+=Compiler.contentsToClassPath(libFolder);
+        libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
+      }
     }
   }
   String javaClassPath=System.getProperty("java.class.path");
