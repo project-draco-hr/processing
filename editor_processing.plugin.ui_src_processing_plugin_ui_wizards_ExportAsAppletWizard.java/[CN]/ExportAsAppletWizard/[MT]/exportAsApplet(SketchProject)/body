@@ -1,9 +1,57 @@
 {
+  if (sp == null)   return false;
   if (!sp.wasLastBuildSuccessful())   return false;
   if (!sp.getProject().isAccessible())   return false;
   IFile code=sp.getMainFile();
   if (code == null)   return false;
+  String codeContents=Utilities.readFile(code);
   IFolder exportFolder=sp.getAppletFolder(true);
+  int wide=sp.getWidth();
+  int high=sp.getHeight();
+  String renderer=sp.getRenderer();
+  String description="";
+  String[] javadoc=Utilities.match(codeContents,"/\\*{2,}(.*)\\*+/");
+  if (javadoc != null) {
+    StringBuffer dbuffer=new StringBuffer();
+    String[] pieces=Utilities.split(javadoc[1],'\n');
+    for (    String line : pieces) {
+      String[] m=Utilities.match(line,"^\\s*\\*+(.*)");
+      dbuffer.append(m != null ? m[1] : line);
+      dbuffer.append('\n');
+    }
+    description=dbuffer.toString();
+    System.out.println(description);
+  }
+  try {
+    for (    IResource r : sp.getProject().members()) {
+      if (!(r instanceof IFile))       continue;
+      if (r.getName().startsWith("."))       continue;
+      if ("pde".equalsIgnoreCase(r.getFileExtension())) {
+        r.copy(exportFolder.getFullPath().append(r.getName()),true,null);
+        System.out.println("Copied the source file " + r.getName() + " to "+ exportFolder.getFullPath().toString());
+      }
+    }
+  }
+ catch (  CoreException e) {
+    ProcessingLog.logError("Sketch source files could not be included in export of " + sp.getProject().getName() + ". Trying to continue export anyway. ",e);
+  }
+  String LOADING_IMAGE="loading.gif";
+  IFile loadingImage=sp.getProject().getFile(LOADING_IMAGE);
+  try {
+    loadingImage.copy(exportFolder.getFullPath().append(LOADING_IMAGE),true,null);
+  }
+ catch (  CoreException e) {
+    File resourceFolder=ProcessingCore.getProcessingCore().getPluginResourceFolder();
+    try {
+      File exportResourcesFolder=new File(resourceFolder,"export");
+      File loadingImageCoreResource=new File(exportResourcesFolder,LOADING_IMAGE);
+      Utilities.copyFile(loadingImageCoreResource,new File(exportFolder.getFullPath().toString(),LOADING_IMAGE));
+    }
+ catch (    Exception ex) {
+      ProcessingLog.logError("Could not access the Processing Plug-in Core resources. " + "Export aborted.",ex);
+      return false;
+    }
+  }
   IFolder codeFolder=sp.getCodeFolder();
   if (codeFolder != null) {
     try {
@@ -18,6 +66,12 @@
  catch (    CoreException e) {
       ProcessingLog.logError("Code Folder entries could not be included in export." + "Export for " + sp.getProject().getName() + " may not function properly.",e);
     }
+  }
+  try {
+    sp.getProject().refreshLocal(IResource.DEPTH_INFINITE,null);
+  }
+ catch (  CoreException e) {
+    ProcessingLog.logError("The workspace could not refresh after the export wizard ran. " + "You may need to manually refresh the workspace to continue.",e);
   }
   ProcessingLog.logError("Could not export " + sp.getProject().getName() + " because the exporter is not finished.",null);
   return false;
