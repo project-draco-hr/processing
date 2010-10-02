@@ -2,6 +2,12 @@
   importMenu.removeAll();
   importToLibraryTable=new HashMap<String,File>();
   try {
+    pw=new PrintWriter(new FileWriter(System.getProperty("user.home") + "/Desktop/libs.csv"));
+  }
+ catch (  IOException e1) {
+    e1.printStackTrace();
+  }
+  try {
     addLibraries(importMenu,librariesFolder);
   }
  catch (  IOException e) {
@@ -21,4 +27,6 @@
  catch (  IOException e) {
     e.printStackTrace();
   }
+  pw.flush();
+  pw.close();
 }

@@ -42,7 +42,14 @@
       String libraryClassPath=Compiler.contentsToClassPath(libraryFolder);
       String packages[]=Compiler.packageListFromClassPath(libraryClassPath);
       for (      String pkg : packages) {
-        importToLibraryTable.put(pkg,libraryFolder);
+        pw.println(pkg + "\t" + libraryFolder.getAbsolutePath());
+        File already=importToLibraryTable.get(pkg);
+        if (already != null) {
+          Base.showWarning("Library Calling","The library found in\n" + libraryFolder.getAbsolutePath() + "\n"+ "conflicts with the library found in\n"+ already.getAbsolutePath()+ "\n"+ "which already defines the package "+ pkg,null);
+        }
+ else {
+          importToLibraryTable.put(pkg,libraryFolder);
+        }
       }
       JMenuItem item=new JMenuItem(libraryName);
       item.addActionListener(listener);
