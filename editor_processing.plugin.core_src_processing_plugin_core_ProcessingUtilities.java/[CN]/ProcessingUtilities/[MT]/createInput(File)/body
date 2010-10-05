@@ -1,0 +1,16 @@
+{
+  if (file == null) {
+    throw new IllegalArgumentException("File passed to createInput() was null");
+  }
+  try {
+    InputStream input=new FileInputStream(file);
+    if (file.getName().toLowerCase().endsWith(".gz")) {
+      return new GZIPInputStream(input);
+    }
+    return input;
+  }
+ catch (  IOException e) {
+    ProcessingLog.logError("Could not createInput() for " + file,e);
+    return null;
+  }
+}

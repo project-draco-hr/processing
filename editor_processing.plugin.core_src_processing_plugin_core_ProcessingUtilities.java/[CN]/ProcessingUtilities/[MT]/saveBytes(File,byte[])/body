@@ -1,0 +1,21 @@
+{
+  File tempFile=null;
+  try {
+    File parentDir=file.getParentFile();
+    tempFile=File.createTempFile(file.getName(),null,parentDir);
+    OutputStream output=createOutput(tempFile);
+    saveBytes(output,buffer);
+    output.close();
+    output=null;
+    if (!tempFile.renameTo(file)) {
+      ProcessingLog.logError("Could not rename temporary file " + tempFile.getAbsolutePath(),null);
+    }
+  }
+ catch (  IOException e) {
+    ProcessingLog.logError("error saving bytes to " + file,e);
+    if (tempFile != null) {
+      tempFile.delete();
+    }
+    e.printStackTrace();
+  }
+}

@@ -23,13 +23,13 @@
   IFolder codeFolder=sketchProject.getCodeFolder();
   String[] codeFolderPackages=null;
   if (codeFolder != null && codeFolder.exists()) {
-    String codeFolderClassPath=Utilities.contentsToClassPath(codeFolder.getLocation().toFile());
+    String codeFolderClassPath=ProcessingUtilities.contentsToClassPath(codeFolder.getLocation().toFile());
     for (    String s : codeFolderClassPath.split(File.pathSeparator)) {
       if (!s.isEmpty()) {
         libraryJarPathList.add(new Path(s).makeAbsolute());
       }
     }
-    codeFolderPackages=Utilities.packageListFromClassPath(codeFolderClassPath);
+    codeFolderPackages=ProcessingUtilities.packageListFromClassPath(codeFolderClassPath);
   }
   monitor.worked(10);
   if (checkCancel(monitor)) {
@@ -40,10 +40,10 @@
   for (  IResource file : sketch.members()) {
     if ("pde".equalsIgnoreCase(file.getFileExtension())) {
       file.setSessionProperty(new QualifiedName(BUILDER_ID,"preproc start"),bigCount);
-      String content=Utilities.readFile((IFile)file);
+      String content=ProcessingUtilities.readFile((IFile)file);
       bigCode.append(content);
       bigCode.append("\n");
-      bigCount+=Utilities.getLineCount(content);
+      bigCount+=ProcessingUtilities.getLineCount(content);
       file.setSessionProperty(new QualifiedName(BUILDER_ID,"preproc end"),bigCount);
     }
   }
@@ -60,8 +60,8 @@
     sketchProject.sketch_width=-1;
     sketchProject.sketch_height=-1;
     sketchProject.renderer="";
-    String scrubbed=Utilities.scrubComments(stream.toString());
-    String[] matches=Utilities.match(scrubbed,Utilities.SIZE_REGEX);
+    String scrubbed=ProcessingUtilities.scrubComments(stream.toString());
+    String[] matches=ProcessingUtilities.match(scrubbed,ProcessingUtilities.SIZE_REGEX);
     if (matches != null) {
       try {
         int wide=Integer.parseInt(matches[1]);
@@ -114,7 +114,7 @@
   }
 catch (  antlr.TokenStreamRecognitionException tsre) {
     String mess="^line (\\d+):(\\d+):\\s";
-    String[] matches=Utilities.match(tsre.toString(),mess);
+    String[] matches=ProcessingUtilities.match(tsre.toString(),mess);
     IResource errorFile=null;
     int errorLine=-1;
     if (matches != null) {
@@ -168,14 +168,15 @@ catch (  Exception e) {
     return null;
   }
   ArrayList<String> allFoundLibraries=new ArrayList<String>();
-  allFoundLibraries.addAll(Utilities.getLibraryJars(ProcessingCore.getProcessingCore().getCoreLibsFolder()));
-  allFoundLibraries.addAll(Utilities.getLibraryJars(Utilities.getSketchBookLibsFolder(sketch)));
+  allFoundLibraries.addAll(ProcessingUtilities.getLibraryJars(ProcessingCore.getProcessingCore().getCoreLibsFolder()));
+  allFoundLibraries.addAll(ProcessingUtilities.getLibraryJars(ProcessingUtilities.getSketchBookLibsFolder(sketch)));
   HashMap<String,IPath> libraryImportToPathTable=new HashMap<String,IPath>();
   for (  String libraryPath : allFoundLibraries) {
-    String[] packages=Utilities.packageListFromClassPath(libraryPath);
+    String[] packages=ProcessingUtilities.packageListFromClassPath(libraryPath);
     for (    String pkg : packages)     libraryImportToPathTable.put(pkg,new Path(libraryPath));
   }
   boolean importProblems=false;
+  sketchProject.libraryPaths=null;
   for (int i=0; i < result.extraImports.size(); i++) {
     String importPackage=result.extraImports.get(i);
     int dot=importPackage.lastIndexOf('.');
@@ -183,6 +184,7 @@ catch (  Exception e) {
     IPath libPath=libraryImportToPathTable.get(entry);
     if (libPath != null) {
       libraryJarPathList.add(libPath.makeAbsolute());
+      sketchProject.libraryPaths.add(libPath.makeAbsolute());
     }
  else {
       reportProblem("Library import " + entry + " could not be found. Check the library folder in your sketchbook.",sketch.getFile(sketch.getName() + ".pde"),i + 1,true);

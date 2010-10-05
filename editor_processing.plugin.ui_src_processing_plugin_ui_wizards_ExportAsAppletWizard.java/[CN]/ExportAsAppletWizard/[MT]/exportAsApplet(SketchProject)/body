@@ -4,18 +4,18 @@
   if (!sp.getProject().isAccessible())   return false;
   IFile code=sp.getMainFile();
   if (code == null)   return false;
-  String codeContents=Utilities.readFile(code);
+  String codeContents=ProcessingUtilities.readFile(code);
   IFolder exportFolder=sp.getAppletFolder(true);
   int wide=sp.getWidth();
   int high=sp.getHeight();
   String renderer=sp.getRenderer();
   String description="";
-  String[] javadoc=Utilities.match(codeContents,"/\\*{2,}(.*)\\*+/");
+  String[] javadoc=ProcessingUtilities.match(codeContents,"/\\*{2,}(.*)\\*+/");
   if (javadoc != null) {
     StringBuffer dbuffer=new StringBuffer();
-    String[] pieces=Utilities.split(javadoc[1],'\n');
+    String[] pieces=ProcessingUtilities.split(javadoc[1],'\n');
     for (    String line : pieces) {
-      String[] m=Utilities.match(line,"^\\s*\\*+(.*)");
+      String[] m=ProcessingUtilities.match(line,"^\\s*\\*+(.*)");
       dbuffer.append(m != null ? m[1] : line);
       dbuffer.append('\n');
     }
@@ -44,7 +44,7 @@
     try {
       File exportResourcesFolder=new File(ProcessingCore.getProcessingCore().getPluginResourceFolder().getCanonicalPath(),"export");
       File loadingImageCoreResource=new File(exportResourcesFolder,LOADING_IMAGE);
-      Utilities.copyFile(loadingImageCoreResource,new File(exportFolder.getFullPath().toString(),LOADING_IMAGE));
+      ProcessingUtilities.copyFile(loadingImageCoreResource,new File(exportFolder.getFullPath().toString(),LOADING_IMAGE));
     }
  catch (    Exception ex) {
       ProcessingLog.logError("Could not access the Processing Plug-in Core resources. " + "Export aborted.",ex);
@@ -64,6 +64,40 @@
     }
  catch (    CoreException e) {
       ProcessingLog.logError("Code Folder entries could not be included in export." + "Export for " + sp.getProject().getName() + " may not function properly.",e);
+    }
+  }
+  File openglLibraryFolder=new File(ProcessingCore.getProcessingCore().getCoreLibsFolder(),"opengl/library");
+  String openglLibraryPath=openglLibraryFolder.getAbsolutePath();
+  boolean openglApplet=false;
+  ArrayList<IPath> sketchLibraryImportPaths=sp.getLibraryPaths();
+  if (sketchLibraryImportPaths != null) {
+    for (    IPath path : sketchLibraryImportPaths) {
+      File libraryFolder=new File(path.toOSString());
+      if (path.toOSString().equalsIgnoreCase(openglLibraryPath))       openglApplet=true;
+      File exportSettings=new File(libraryFolder,"export.txt");
+      HashMap<String,String> exportTable=ProcessingUtilities.readSettings(exportSettings);
+      String appletList=(String)exportTable.get("applet");
+      String exportList[]=null;
+      if (appletList != null) {
+        exportList=ProcessingUtilities.splitTokens(appletList,", ");
+      }
+ else {
+        exportList=libraryFolder.list();
+      }
+      for (      String s : exportList) {
+        if (s.equals(".") || s.equals(".."))         continue;
+        s=ProcessingUtilities.trim(s);
+        if (s.equals(""))         continue;
+        File exportFile=new File(libraryFolder,s);
+        if (!exportFile.exists()) {
+          ProcessingLog.logError("Export File " + s + " does not exist.",null);
+        }
+ else         if (exportFile.isDirectory()) {
+          ProcessingLog.logInfo("Ignoring sub-folder \"" + s + "\"");
+        }
+ else         if (exportFile.getName().toLowerCase().endsWith(".zip") || exportFile.getName().toLowerCase().endsWith(".jar")) {
+        }
+      }
     }
   }
   try {
