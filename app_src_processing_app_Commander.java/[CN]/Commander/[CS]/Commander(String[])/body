@@ -4,6 +4,7 @@
   String outputPath=null;
   String preferencesPath=null;
   int platformIndex=PApplet.platform;
+  int platformBits=0;
   int mode=HELP;
   for (  String arg : args) {
     if (arg.length() == 0) {
@@ -106,11 +107,11 @@
       }
  else       if (mode == EXPORT_APPLICATION) {
         if (outputPath != null) {
-          success=sketch.exportApplication(outputPath,platformIndex);
+          success=sketch.exportApplication(outputPath,platformIndex,platformBits);
         }
  else {
           outputPath=sketchFolder + File.separatorChar + "application."+ Base.getPlatformName(platformIndex);
-          success=sketch.exportApplication(outputPath,platformIndex);
+          success=sketch.exportApplication(outputPath,platformIndex,platformBits);
         }
       }
       System.exit(success ? 0 : 1);

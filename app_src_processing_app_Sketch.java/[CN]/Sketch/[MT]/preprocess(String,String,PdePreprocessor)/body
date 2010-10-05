@@ -97,17 +97,20 @@ catch (  Exception ex) {
     ex.printStackTrace();
     throw new RunnerException(ex.toString());
   }
-  importedLibraries=new ArrayList<File>();
+  importedLibraries=new ArrayList<LibraryFolder>();
   for (  String item : result.extraImports) {
     int dot=item.lastIndexOf('.');
     String entry=(dot == -1) ? item : item.substring(0,dot);
-    File libFolder=Base.importToLibraryTable.get(entry);
-    if (libFolder != null) {
-      if (!importedLibraries.contains(libFolder)) {
-        importedLibraries.add(libFolder);
-        classPath+=Compiler.contentsToClassPath(libFolder);
-        libraryPath+=File.pathSeparator + libFolder.getAbsolutePath();
+    LibraryFolder library=Base.importToLibraryTable.get(entry);
+    if (library != null) {
+      if (!importedLibraries.contains(library)) {
+        importedLibraries.add(library);
+        classPath+=library.getClassPath();
+        libraryPath+=File.pathSeparator + library.getNativePath();
       }
+    }
+ else {
+      PApplet.println("no library found for " + entry);
     }
   }
   String javaClassPath=System.getProperty("java.class.path");

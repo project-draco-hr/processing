@@ -1,32 +1,27 @@
 {
   importMenu.removeAll();
-  importToLibraryTable=new HashMap<String,File>();
-  try {
-    pw=new PrintWriter(new FileWriter(System.getProperty("user.home") + "/Desktop/libs.csv"));
-  }
- catch (  IOException e1) {
-    e1.printStackTrace();
-  }
-  try {
-    addLibraries(importMenu,librariesFolder);
-  }
- catch (  IOException e) {
-    e.printStackTrace();
-  }
-  int separatorIndex=importMenu.getItemCount();
-  try {
-    File sketchbookLibraries=getSketchbookLibrariesFolder();
-    boolean found=addLibraries(importMenu,sketchbookLibraries);
-    if (found) {
-      JMenuItem contrib=new JMenuItem("Contributed");
-      contrib.setEnabled(false);
-      importMenu.insert(contrib,separatorIndex);
-      importMenu.insertSeparator(separatorIndex);
+  rebuildLibraryList();
+  ActionListener listener=new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      activeEditor.getSketch().importLibrary(e.getActionCommand());
     }
   }
- catch (  IOException e) {
-    e.printStackTrace();
+;
+  for (  LibraryFolder library : coreLibraries) {
+    JMenuItem item=new JMenuItem(library.getName());
+    item.addActionListener(listener);
+    item.setActionCommand(library.getJarPath());
+    importMenu.add(item);
   }
-  pw.flush();
-  pw.close();
+  if (contribLibraries.size() != 0) {
+    importMenu.addSeparator();
+    JMenuItem contrib=new JMenuItem("Contributed");
+    contrib.setEnabled(false);
+    for (    LibraryFolder library : contribLibraries) {
+      JMenuItem item=new JMenuItem(library.getName());
+      item.addActionListener(listener);
+      item.setActionCommand(library.getJarPath());
+      importMenu.add(item);
+    }
+  }
 }

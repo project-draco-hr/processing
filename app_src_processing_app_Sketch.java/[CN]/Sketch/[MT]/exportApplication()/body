@@ -1,20 +1,18 @@
 {
-  if (Preferences.getBoolean("export.application.platform.windows")) {
-    String windowsPath=new File(folder,"application.windows").getAbsolutePath();
-    if (!exportApplication(windowsPath,PConstants.WINDOWS)) {
-      return false;
-    }
-  }
-  if (Preferences.getBoolean("export.application.platform.macosx")) {
-    String macosxPath=new File(folder,"application.macosx").getAbsolutePath();
-    if (!exportApplication(macosxPath,PConstants.MACOSX)) {
-      return false;
-    }
-  }
-  if (Preferences.getBoolean("export.application.platform.linux")) {
-    String linuxPath=new File(folder,"application.linux").getAbsolutePath();
-    if (!exportApplication(linuxPath,PConstants.LINUX)) {
-      return false;
+  String path=null;
+  for (  String platformName : PConstants.platformNames) {
+    int platform=Base.getPlatformIndex(platformName);
+    if (Preferences.getBoolean("export.application.platform." + platformName)) {
+      if (LibraryFolder.hasMultipleArch(platform,importedLibraries)) {
+        path=new File(folder,"application." + platformName + "32").getAbsolutePath();
+        if (!exportApplication(path,platform,32)) {
+          return false;
+        }
+        path=new File(folder,"application." + platformName + "64").getAbsolutePath();
+        if (!exportApplication(path,platform,64)) {
+          return false;
+        }
+      }
     }
   }
   return true;
