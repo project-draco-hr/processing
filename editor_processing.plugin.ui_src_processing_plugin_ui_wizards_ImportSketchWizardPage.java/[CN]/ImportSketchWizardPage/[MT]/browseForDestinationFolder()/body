@@ -1,0 +1,7 @@
+{
+  IPath path=browse(getSketchPath());
+  if (path == null)   return;
+  IPath rootLoc=ResourcesPlugin.getWorkspace().getRoot().getLocation();
+  if (rootLoc.isPrefixOf(path))   path=path.setDevice(null).removeFirstSegments(rootLoc.segmentCount());
+  sketchPathField.setText(path.toString());
+}

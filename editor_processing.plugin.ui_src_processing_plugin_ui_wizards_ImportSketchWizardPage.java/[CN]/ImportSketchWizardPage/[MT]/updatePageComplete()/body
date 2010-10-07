@@ -1,0 +1,20 @@
+{
+  setPageComplete(false);
+  IPath sketchLoc=getSketchPath();
+  IPath sketchbook=ProcessingCorePreferences.current().getSketchbookPath();
+  if (sketchLoc == null || !sketchLoc.toFile().exists() || (sketchbook != null && sketchLoc.makeAbsolute().equals(sketchbook.makeAbsolute()))) {
+    setErrorMessage(null);
+    setMessage("Please specify a folder containing a sketch.");
+    return;
+  }
+  String sketchName=sketchLoc.lastSegment();
+  File mainFile=new File(sketchLoc.toFile(),sketchName + ".pde");
+  if (!mainFile.exists()) {
+    setMessage(null);
+    setErrorMessage("The sketch folder does not appear to be valid. " + "Could not find " + sketchName + ".pde");
+    return;
+  }
+  setPageComplete(true);
+  setMessage("Press Finish to import the sketch");
+  setErrorMessage(null);
+}

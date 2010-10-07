@@ -7,14 +7,13 @@
     return;
   }
   String sketchName=getSketchName();
-  for (  File child : sketchbookLoc.toFile().listFiles()) {
-    if (child.isDirectory() && child.getName().equals(sketchName)) {
-      setMessage(null);
-      setErrorMessage("A sketch with that name already exists. Please choose another.");
-      return;
-    }
+  File child=(sketchName == null) ? null : new File(sketchbookLoc.toFile(),sketchName);
+  if (child != null && child.exists() && child.isDirectory()) {
+    setMessage(null);
+    setErrorMessage("A sketch with that name already exists in that location. Please choose another.");
+    return;
   }
   setPageComplete(true);
-  setMessage(null);
+  setMessage("Press finish to create a new sketch");
   setErrorMessage(null);
 }
