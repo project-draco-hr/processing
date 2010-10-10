@@ -6,6 +6,10 @@
     bitmap.getPixels(pixels,0,width,0,0,width,height);
   }
   if (parent.g.is3D()) {
-    loadTexture();
+    if (texture == null) {
+      texture=new PTexture(parent,width,height,new PTexture.Parameters(format));
+      texUpdated=false;
+    }
+    pixelsToTexture();
   }
 }
