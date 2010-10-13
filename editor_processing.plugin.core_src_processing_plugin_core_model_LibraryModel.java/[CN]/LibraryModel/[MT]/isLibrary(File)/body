@@ -1,0 +1,13 @@
+{
+  if (rootFolder == null)   return false;
+  if (!rootFolder.isDirectory())   return false;
+  String name=rootFolder.getName();
+  File libraryFolder=new File(rootFolder,"library");
+  File libraryJar=new File(libraryFolder,name + ".jar");
+  if (!libraryJar.exists())   return false;
+  if (!ProcessingUtilities.sanitizeName(name).equals(name)) {
+    ProcessingLog.logInfo("The library \"" + name + "\" is being ignored. "+ "Library names must contain only basic letters and numbers. "+ "(ASCII only and no spaces, and it cannot start with a number)");
+    return false;
+  }
+  return true;
+}

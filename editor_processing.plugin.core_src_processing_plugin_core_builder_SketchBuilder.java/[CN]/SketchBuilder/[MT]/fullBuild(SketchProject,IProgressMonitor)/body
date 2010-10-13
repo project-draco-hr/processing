@@ -167,29 +167,19 @@ catch (  Exception e) {
   if (checkCancel(monitor)) {
     return null;
   }
-  ArrayList<String> allFoundLibraries=new ArrayList<String>();
-  allFoundLibraries.addAll(ProcessingUtilities.getLibraryJars(ProcessingCore.getProcessingCore().getCoreLibsFolder()));
-  allFoundLibraries.addAll(ProcessingUtilities.getLibraryJars(ProcessingUtilities.getSketchBookLibsFolder(sketch)));
-  HashMap<String,IPath> libraryImportToPathTable=new HashMap<String,IPath>();
-  for (  String libraryPath : allFoundLibraries) {
-    String[] packages=ProcessingUtilities.packageListFromClassPath(libraryPath);
-    for (    String pkg : packages)     libraryImportToPathTable.put(pkg,new Path(libraryPath));
-  }
   boolean importProblems=false;
   sketchProject.libraryPaths.clear();
-  for (int i=0; i < result.extraImports.size(); i++) {
-    String importPackage=result.extraImports.get(i);
+  for (  String importPackage : result.extraImports) {
     int dot=importPackage.lastIndexOf('.');
     String entry=(dot == -1) ? importPackage : importPackage.substring(0,dot);
-    IPath libPath=libraryImportToPathTable.get(entry);
-    if (libPath != null) {
-      libraryJarPathList.add(libPath.makeAbsolute());
-      sketchProject.libraryPaths.add(libPath.makeAbsolute());
-    }
- else {
-      reportProblem("Library import " + entry + " could not be found. Check the library folder in your sketchbook.",sketch.getFile(sketch.getName() + ".pde"),i + 1,true);
+    LibraryFolder libFolder=ProcessingCore.getCore().getLibraryModel().getLibraryFolder(entry);
+    if (libFolder == null) {
+      reportProblem("Library import \"" + entry + "\" could not be found. Check the library folder in your sketchbook.",sketch,-1,true);
       importProblems=true;
+      continue;
     }
+    libraryJarPathList.add(new Path(libFolder.getJarPath()));
+    sketchProject.libraryPaths.add(new Path(libFolder.getJarPath()));
   }
   if (importProblems)   return null;
   monitor.worked(10);

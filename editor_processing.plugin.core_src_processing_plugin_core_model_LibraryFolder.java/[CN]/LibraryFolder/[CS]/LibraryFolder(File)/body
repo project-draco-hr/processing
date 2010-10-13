@@ -1,0 +1,67 @@
+{
+  this.folder=folder;
+  libraryFolder=new File(folder,"library");
+  examplesFolder=new File(folder,"examples");
+  File exportSettings=new File(libraryFolder,"export.txt");
+  HashMap<String,String> exportTable=ProcessingUtilities.readSettings(exportSettings);
+  name=exportTable.get("name");
+  if (name == null)   name=folder.getName();
+  exportList=new HashMap<String,String[]>();
+  String[] baseList=folder.list(simpleFilter);
+  String appletExportStr=exportTable.get("applet");
+  if (appletExportStr != null) {
+    appletExportList=ProcessingUtilities.splitTokens(appletExportStr,", ");
+  }
+ else {
+    appletExportList=baseList;
+  }
+  File nativeLibraryFolder=libraryFolder;
+  String hostPlatform=platformNames[ProcessingUtilities.platform];
+  File hostLibrary=new File(libraryFolder,hostPlatform);
+  if (hostLibrary.exists())   nativeLibraryFolder=hostLibrary;
+  hostLibrary=new File(libraryFolder,hostPlatform + nativeBits);
+  if (hostLibrary.exists())   nativeLibraryFolder=hostLibrary;
+  nativeLibraryPath=nativeLibraryFolder.getAbsolutePath();
+  for (int i=1; i < platformNames.length; i++) {
+    String platformName=platformNames[i];
+    String platformName32=platformName + "32";
+    String platformName64=platformName + "64";
+    String platformAll=exportTable.get("application." + platformName);
+    String[] platformList=platformAll == null ? null : ProcessingUtilities.splitTokens(platformAll,", ");
+    String platform32=exportTable.get("application." + platformName + "32");
+    String[] platformList32=platform32 == null ? null : ProcessingUtilities.splitTokens(platform32,", ");
+    String platform64=exportTable.get("application." + platformName + "64");
+    String[] platformList64=platform64 == null ? null : ProcessingUtilities.splitTokens(platform64,", ");
+    if (platformAll == null) {
+      File folderAll=new File(libraryFolder,platformName);
+      if (folderAll.exists())       platformList=ProcessingUtilities.concat(baseList,folderAll.list(simpleFilter));
+    }
+    if (platform32 == null) {
+      File folder32=new File(libraryFolder,platformName32);
+      if (folder32.exists())       platformList32=ProcessingUtilities.concat(baseList,folder32.list(simpleFilter));
+    }
+    if (platform64 == null) {
+      File folder64=new File(libraryFolder,platformName64);
+      if (folder64.exists())       platformList64=ProcessingUtilities.concat(baseList,folder64.list(simpleFilter));
+    }
+    if (platformList32 != null || platformList64 != null)     multipleArch[i]=true;
+    if (platformList == null && platformList32 == null && platformList64 == null) {
+      exportList.put(platformName,baseList);
+    }
+ else {
+      if (platformList != null)       exportList.put(platformName,platformList);
+      if (platformList32 != null)       exportList.put(platformName32,platformList32);
+      if (platformList64 != null)       exportList.put(platformName64,platformList64);
+    }
+  }
+  String[] packages=ProcessingUtilities.packageListFromClassPath(getClassPath());
+  for (  String pkg : packages) {
+    LibraryFolder library=LibraryModel.importToLibraryTable.get(pkg);
+    if (library != null) {
+      ProcessingLog.logInfo("The library found in " + getPath() + "conflicts with "+ library.getPath()+ "which already defines the package "+ pkg+ " -- "+ "the original library will be used.");
+    }
+ else {
+      LibraryModel.importToLibraryTable.put(pkg,this);
+    }
+  }
+}
