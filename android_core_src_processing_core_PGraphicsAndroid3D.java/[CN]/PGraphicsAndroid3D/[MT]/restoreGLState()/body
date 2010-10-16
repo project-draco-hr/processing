@@ -44,12 +44,16 @@
     for (int i=0; i < lightCount; i++) {
       glLightEnable(i);
       if (lightType[i] == AMBIENT) {
+        glLightEnable(i);
         glLightAmbient(i);
         glLightPosition(i);
         glLightFalloff(i);
         glLightNoSpot(i);
+        glLightNoDiffuse(i);
+        glLightNoSpecular(i);
       }
  else       if (lightType[i] == DIRECTIONAL) {
+        glLightEnable(i);
         glLightNoAmbient(i);
         glLightDirection(i);
         glLightDiffuse(i);
@@ -58,6 +62,7 @@
         glLightNoSpot(i);
       }
  else       if (lightType[i] == POINT) {
+        glLightEnable(i);
         glLightNoAmbient(i);
         glLightPosition(i);
         glLightDiffuse(i);
@@ -66,6 +71,7 @@
         glLightNoSpot(i);
       }
  else       if (lightType[i] == SPOT) {
+        glLightEnable(i);
         glLightNoAmbient(i);
         glLightPosition(i);
         glLightDirection(i);
@@ -80,4 +86,12 @@
  else {
     noLights();
   }
+  gl.glShadeModel(GL10.GL_SMOOTH);
+  gl.glFrontFace(GL10.GL_CW);
+  gl.glDepthFunc(GL10.GL_LEQUAL);
+  gl.glEnable(GL10.GL_COLOR_MATERIAL);
+  gl.glEnable(GL10.GL_NORMALIZE);
+  gl.glEnable(GL10.GL_RESCALE_NORMAL);
+  gl.glLightModelfv(GL10.GL_LIGHT_MODEL_AMBIENT,baseLight,0);
+  gl.glLightModelx(GL10.GL_LIGHT_MODEL_TWO_SIDE,0);
 }
