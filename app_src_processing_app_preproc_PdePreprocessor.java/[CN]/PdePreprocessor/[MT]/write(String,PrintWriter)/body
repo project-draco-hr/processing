@@ -1,32 +1,19 @@
 {
-  PdeLexer lexer=new PdeLexer(new StringReader(program));
-  lexer.setTokenObjectClass("antlr.CommonHiddenStreamToken");
-  filter=new TokenStreamCopyingHiddenTokenFilter(lexer);
-  filter.hide(PdeRecognizer.SL_COMMENT);
-  filter.hide(PdeRecognizer.ML_COMMENT);
-  filter.hide(PdeRecognizer.WS);
-  filter.copy(PdeRecognizer.SEMI);
-  filter.copy(PdeRecognizer.LPAREN);
-  filter.copy(PdeRecognizer.RPAREN);
-  filter.copy(PdeRecognizer.LCURLY);
-  filter.copy(PdeRecognizer.RCURLY);
-  filter.copy(PdeRecognizer.COMMA);
-  filter.copy(PdeRecognizer.RBRACK);
-  filter.copy(PdeRecognizer.LBRACK);
-  filter.copy(PdeRecognizer.COLON);
-  filter.copy(PdeRecognizer.TRIPLE_DOT);
-  filter.copy(PdeRecognizer.LT);
-  filter.copy(PdeRecognizer.GT);
-  filter.copy(PdeRecognizer.SR);
-  filter.copy(PdeRecognizer.BSR);
-  PdeRecognizer parser=new PdeRecognizer(this,filter);
-  parser.setASTNodeClass("antlr.ExtendedCommonASTWithHiddenTokens");
+  PdeRecognizer parser=createParser(program);
   if (PUBLIC_CLASS.matcher(program).find()) {
     try {
-      parser.javaProgram();
+      final PrintStream saved=System.err;
+      try {
+        System.setErr(new PrintStream(new ByteArrayOutputStream()));
+        parser.javaProgram();
+      }
+  finally {
+        System.setErr(saved);
+      }
       setMode(Mode.JAVA);
     }
  catch (    Exception e) {
+      parser=createParser(program);
       parser.pdeProgram();
     }
   }
