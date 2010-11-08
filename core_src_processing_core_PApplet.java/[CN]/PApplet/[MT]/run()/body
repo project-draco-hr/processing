@@ -4,6 +4,13 @@
   int noDelays=0;
   final int NO_DELAYS_PER_YIELD=15;
   while ((Thread.currentThread() == thread) && !finished) {
+    while (paused) {
+      try {
+        thread.sleep(100L);
+      }
+ catch (      InterruptedException e) {
+      }
+    }
     if (resizeRequest) {
       resizeRenderer(resizeWidth,resizeHeight);
       resizeRequest=false;
@@ -33,7 +40,7 @@
     }
     beforeTime=System.nanoTime();
   }
-  stop();
+  dispose();
   if (exitCalled) {
     exit2();
   }
