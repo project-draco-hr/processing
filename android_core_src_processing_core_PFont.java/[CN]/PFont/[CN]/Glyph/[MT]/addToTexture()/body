@@ -1,4 +1,5 @@
 {
+  GL10 gl=((PGraphicsAndroid3D)parent.g).gl;
   int[] rgba=new int[width * height];
   int t=0;
   int p=0;
@@ -16,26 +17,25 @@
       }
     }
   }
-  if (offsetX + width > texWidth) {
+  if (offsetX + width > textures[currentTex].glWidth) {
     offsetX=0;
     offsetY+=lineHeight;
     lineHeight=0;
   }
   lineHeight=Math.max(lineHeight,height);
-  if (offsetY + lineHeight > texHeight) {
-    lastTexID=addTexture(gl);
+  if (offsetY + lineHeight > textures[currentTex].glHeight) {
+    lastTex=addTexture();
     offsetX=0;
     offsetY=0;
     lineHeight=0;
   }
-  if (lastTexID == -1) {
-    lastTexID=texIDList[0];
+  if (lastTex == -1) {
+    lastTex=0;
   }
-  if (currentTexID != lastTexID) {
-    gl.glBindTexture(GL10.GL_TEXTURE_2D,lastTexID);
-    currentTexID=lastTexID;
+  if (currentTex != lastTex) {
+    setTexture(lastTex);
   }
-  gl.glTexSubImage2D(GL10.GL_TEXTURE_2D,0,offsetX,offsetY,width,height,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(rgba));
-  texture=new TextureInfo(currentTexID,offsetX,offsetY + height,width,-height);
+  gl.glTexSubImage2D(textures[currentTex].glTarget,0,offsetX,offsetY,width,height,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(rgba));
+  texture=new TextureInfo(currentTex,offsetX,offsetY + height,width,-height);
   offsetX+=width;
 }

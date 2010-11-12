@@ -16,16 +16,16 @@
   gl.glEnable(glTarget);
   int[] tmp=new int[1];
   gl.glGenTextures(1,tmp,0);
-  glTextureID=tmp[0];
-  gl.glBindTexture(glTarget,glTextureID);
+  glID=tmp[0];
+  gl.glBindTexture(glTarget,glID);
   gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_MIN_FILTER,glMinFilter);
   gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_MAG_FILTER,glMagFilter);
-  gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_S,GL10.GL_CLAMP_TO_EDGE);
-  gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_T,GL10.GL_CLAMP_TO_EDGE);
-  gl.glTexImage2D(glTarget,0,glInternalFormat,glWidth,glHeight,0,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,null);
+  gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_S,glWrapS);
+  gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_T,glWrapT);
+  gl.glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,null);
   gl.glDisable(glTarget);
   flippedX=false;
   flippedY=false;
-  maxTexCoordS=(float)w / glWidth;
-  maxTexCoordT=(float)h / glHeight;
+  maxTexCoordU=(float)w / glWidth;
+  maxTexCoordV=(float)h / glHeight;
 }

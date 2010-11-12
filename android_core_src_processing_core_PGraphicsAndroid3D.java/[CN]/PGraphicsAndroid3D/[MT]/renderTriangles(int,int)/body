@@ -12,7 +12,7 @@
       tex=faceTexture[j].getTexture();
       if (tex != null) {
         gl.glEnable(tex.getGLTarget());
-        gl.glBindTexture(tex.getGLTarget(),tex.getGLTextureID());
+        gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         texturing=true;
       }
@@ -49,8 +49,8 @@
       float cy=0.0f;
       float sy=+1.0f;
       if (texturing) {
-        uscale*=tex.getMaxTextureCoordS();
-        vscale*=tex.getMaxTextureCoordT();
+        uscale*=tex.getMaxTexCoordU();
+        vscale*=tex.getMaxTexCoordV();
         if (tex.isFlippedX()) {
           cx=1.0f;
           sx=-1.0f;

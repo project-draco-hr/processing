@@ -1,0 +1,17 @@
+{
+  int w=maxTexWidth;
+  int h=maxTexHeight;
+  PTexture tex=new PTexture(parent,w,h,new PTexture.Parameters(ARGB,NEAREST));
+  if (textures == null) {
+    textures=new PTexture[1];
+    textures[0]=tex;
+  }
+ else {
+    PTexture[] tmp=textures;
+    textures=new PTexture[textures.length + 1];
+    PApplet.arrayCopy(tmp,textures,tmp.length);
+    textures[tmp.length]=tex;
+  }
+  currentTex=textures.length - 1;
+  return currentTex;
+}

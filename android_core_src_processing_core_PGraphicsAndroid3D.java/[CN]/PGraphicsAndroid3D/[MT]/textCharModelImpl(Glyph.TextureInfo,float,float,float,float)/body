@@ -1,11 +1,10 @@
 {
-  if (textFont.currentTexID != tex.glid) {
+  if (textFont.currentTex != info.tex) {
     if (0 < textVertexCount) {
       renderTextModel();
       textVertexCount=0;
     }
-    gl.glBindTexture(GL10.GL_TEXTURE_2D,tex.glid);
-    textFont.currentTexID=tex.glid;
+    textFont.setTexture(info.tex);
   }
   if (textVertexBuffer.capacity() < textVertexCount + 6) {
     expandTextBuffers();
@@ -14,38 +13,38 @@
   textVertexArray[3 * n + 0]=toFixed32(x1);
   textVertexArray[3 * n + 1]=toFixed32(y1);
   textVertexArray[3 * n + 2]=toFixed32(0);
-  textTexCoordArray[2 * n + 0]=toFixed32(tex.u0);
-  textTexCoordArray[2 * n + 1]=toFixed32(tex.v0);
+  textTexCoordArray[2 * n + 0]=toFixed32(info.u0);
+  textTexCoordArray[2 * n + 1]=toFixed32(info.v0);
   n++;
   textVertexArray[3 * n + 0]=toFixed32(x2);
   textVertexArray[3 * n + 1]=toFixed32(y2);
   textVertexArray[3 * n + 2]=toFixed32(0);
-  textTexCoordArray[2 * n + 0]=toFixed32(tex.u1);
-  textTexCoordArray[2 * n + 1]=toFixed32(tex.v1);
+  textTexCoordArray[2 * n + 0]=toFixed32(info.u1);
+  textTexCoordArray[2 * n + 1]=toFixed32(info.v1);
   n++;
   textVertexArray[3 * n + 0]=toFixed32(x1);
   textVertexArray[3 * n + 1]=toFixed32(y2);
   textVertexArray[3 * n + 2]=toFixed32(0);
-  textTexCoordArray[2 * n + 0]=toFixed32(tex.u0);
-  textTexCoordArray[2 * n + 1]=toFixed32(tex.v1);
+  textTexCoordArray[2 * n + 0]=toFixed32(info.u0);
+  textTexCoordArray[2 * n + 1]=toFixed32(info.v1);
   n++;
   textVertexArray[3 * n + 0]=toFixed32(x1);
   textVertexArray[3 * n + 1]=toFixed32(y1);
   textVertexArray[3 * n + 2]=toFixed32(0);
-  textTexCoordArray[2 * n + 0]=toFixed32(tex.u0);
-  textTexCoordArray[2 * n + 1]=toFixed32(tex.v0);
+  textTexCoordArray[2 * n + 0]=toFixed32(info.u0);
+  textTexCoordArray[2 * n + 1]=toFixed32(info.v0);
   n++;
   textVertexArray[3 * n + 0]=toFixed32(x2);
   textVertexArray[3 * n + 1]=toFixed32(y1);
   textVertexArray[3 * n + 2]=toFixed32(0);
-  textTexCoordArray[2 * n + 0]=toFixed32(tex.u1);
-  textTexCoordArray[2 * n + 1]=toFixed32(tex.v0);
+  textTexCoordArray[2 * n + 0]=toFixed32(info.u1);
+  textTexCoordArray[2 * n + 1]=toFixed32(info.v0);
   n++;
   textVertexArray[3 * n + 0]=toFixed32(x2);
   textVertexArray[3 * n + 1]=toFixed32(y2);
   textVertexArray[3 * n + 2]=toFixed32(0);
-  textTexCoordArray[2 * n + 0]=toFixed32(tex.u1);
-  textTexCoordArray[2 * n + 1]=toFixed32(tex.v1);
+  textTexCoordArray[2 * n + 0]=toFixed32(info.u1);
+  textTexCoordArray[2 * n + 1]=toFixed32(info.v1);
   n++;
   textVertexCount=n;
 }

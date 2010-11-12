@@ -6,13 +6,13 @@
     throw new RuntimeException("GTexture: Unknown texture target");
   }
   if (params.format == RGB) {
-    glInternalFormat=GL10.GL_RGB;
+    glFormat=GL10.GL_RGB;
   }
  else   if (params.format == ARGB) {
-    glInternalFormat=GL10.GL_RGBA;
+    glFormat=GL10.GL_RGBA;
   }
  else   if (params.format == ALPHA) {
-    glInternalFormat=GL10.GL_ALPHA;
+    glFormat=GL10.GL_ALPHA;
   }
  else {
     throw new RuntimeException("GTexture: Unknown texture format");
@@ -46,5 +46,23 @@
   }
  else {
     throw new RuntimeException("GTexture: Unknown magnification filter");
+  }
+  if (params.wrapU == CLAMP) {
+    glWrapS=GL10.GL_CLAMP_TO_EDGE;
+  }
+ else   if (params.wrapU == REPEAT) {
+    glWrapS=GL10.GL_REPEAT;
+  }
+ else {
+    throw new RuntimeException("GTexture: Unknown wrapping mode");
+  }
+  if (params.wrapV == CLAMP) {
+    glWrapT=GL10.GL_CLAMP_TO_EDGE;
+  }
+ else   if (params.wrapV == REPEAT) {
+    glWrapT=GL10.GL_REPEAT;
+  }
+ else {
+    throw new RuntimeException("GTexture: Unknown wrapping mode");
   }
 }

@@ -12,7 +12,7 @@
       tex0=group.texture.getTexture();
     }
     PTexture tex1=tex.getTexture();
-    boolean diff=tex0 == null || tex.width != group.texture.width || tex.height != group.texture.height || tex1.flippedX != tex0.flippedX || tex1.flippedY != tex0.flippedY || tex1.maxTexCoordS != tex0.maxTexCoordS || tex1.maxTexCoordT != tex0.maxTexCoordT;
+    boolean diff=tex0 == null || tex.width != group.texture.width || tex.height != group.texture.height || tex1.flippedX != tex0.flippedX || tex1.flippedY != tex0.flippedY || tex1.maxTexCoordU != tex0.maxTexCoordU || tex1.maxTexCoordV != tex0.maxTexCoordV;
     if (diff) {
       float uscale=1.0f;
       float vscale=1.0f;
@@ -36,8 +36,8 @@
             cy=1.0f;
             sy=-1.0f;
           }
-          uscale*=tex0.getMaxTextureCoordS();
-          vscale*=tex0.getMaxTextureCoordT();
+          uscale*=tex0.getMaxTexCoordU();
+          vscale*=tex0.getMaxTexCoordV();
           u=(u / uscale - cx) / sx;
           v=(v / vscale - cy) / sy;
           if (a3d.imageMode == IMAGE) {
@@ -53,8 +53,8 @@
           cy=1.0f;
           sy=-1.0f;
         }
-        uscale*=tex1.getMaxTextureCoordS();
-        vscale*=tex1.getMaxTextureCoordT();
+        uscale*=tex1.getMaxTexCoordU();
+        vscale*=tex1.getMaxTexCoordV();
         u=(cx + sx * u) * uscale;
         v=(cy + sy * v) * vscale;
         if (a3d.imageMode == IMAGE) {
