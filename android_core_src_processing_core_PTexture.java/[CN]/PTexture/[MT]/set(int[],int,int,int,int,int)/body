@@ -18,9 +18,29 @@
       setTexels(x,y,w,h,rgbaPixels);
     }
  else {
-      int[] rgbaPixels=new int[w * h];
-      convertToRGBA(pixels,rgbaPixels,format);
-      setTexels(x,y,w,h,rgbaPixels);
+      if (w != width || h != height) {
+        System.err.println("Sorry but I don't know how to generate mipmaps for a subregion.");
+        return;
+      }
+      int w0=glWidth;
+      int h0=glHeight;
+      int[] argbPixels=new int[w0 * h0];
+      copyARGB(pixels,argbPixels);
+      int level=0;
+      Bitmap bitmap=Bitmap.createBitmap(w0,h0,Config.ARGB_8888);
+      bitmap.setPixels(argbPixels,0,w0,0,0,w0,h0);
+      while (w0 >= 1 || h0 >= 1) {
+        GLUtils.texImage2D(glTarget,level,bitmap,0);
+        if (w0 == 1 || h0 == 1) {
+          break;
+        }
+        level++;
+        h0/=2;
+        w0/=2;
+        Bitmap bitmap2=Bitmap.createScaledBitmap(bitmap,w0,h0,true);
+        bitmap.recycle();
+        bitmap=bitmap2;
+      }
     }
   }
  else {
