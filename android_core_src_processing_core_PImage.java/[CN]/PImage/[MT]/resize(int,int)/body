@@ -16,11 +16,15 @@
       high=(int)(height * diff);
     }
     PImage temp=new PImage(wide,high,this.format);
+    temp.parent=parent;
     temp.copy(this,0,0,width,height,0,0,wide,high);
     this.width=wide;
     this.height=high;
     this.pixels=temp.pixels;
     this.bitmap=null;
+    if (parent.g.is3D()) {
+      reloadTexture();
+    }
   }
   updatePixels();
 }

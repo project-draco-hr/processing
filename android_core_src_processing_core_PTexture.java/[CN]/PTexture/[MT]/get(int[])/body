@@ -3,30 +3,28 @@
     pixels=new int[width * height];
   }
   int size=glWidth * glHeight;
-  int[] tmp=new int[size];
-  IntBuffer buffer;
-  PFramebuffer fbo;
+  if (tmpFbo == null) {
+    tmpFbo=new PFramebuffer(parent,glWidth,glHeight);
+  }
   if (PGraphicsAndroid3D.fboSupported) {
-    buffer=IntBuffer.allocate(size);
-    buffer.rewind();
-    fbo=new PFramebuffer(parent,glWidth,glHeight);
-    fbo.setColorBuffer(this);
+    tmpFbo.setColorBuffer(this);
     a3d.pushFramebuffer();
-    a3d.setFramebuffer(fbo);
-    gl.glReadPixels(0,0,glWidth,glHeight,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,buffer);
+    a3d.setFramebuffer(tmpFbo);
+    tmpFbo.readPixels();
     a3d.popFramebuffer();
   }
  else {
-    fbo=new PFramebuffer(parent,glWidth,glHeight);
     a3d.pushFramebuffer();
-    a3d.setFramebuffer(fbo);
+    a3d.setFramebuffer(tmpFbo);
     a3d.drawTexture(this,0,0,glWidth,glHeight,0,0,glWidth,glHeight);
-    buffer=fbo.getPixelBuffer();
+    tmpFbo.readPixels();
     a3d.popFramebuffer();
   }
-  buffer.get(tmp);
-  buffer.rewind();
-  convertToARGB(tmp,pixels);
+  if (tmpPixels == null) {
+    tmpPixels=new int[size];
+  }
+  tmpFbo.getPixels(tmpPixels);
+  convertToARGB(tmpPixels,pixels);
   if (flippedX)   flipArrayOnX(pixels,1);
   if (flippedY)   flipArrayOnY(pixels,1);
 }

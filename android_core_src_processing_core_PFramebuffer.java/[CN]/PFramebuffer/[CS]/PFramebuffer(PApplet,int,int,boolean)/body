@@ -11,10 +11,10 @@
     throw new RuntimeException("PFramebuffer: OpenGL ES 1.1 Extension Pack required");
   }
   initFramebuffer(w,h);
+  pixelBuffer=IntBuffer.allocate(width * height);
+  pixelBuffer.rewind();
   if (!screenFb && !FboMode) {
     backupTexture=new PTexture(parent,width,height,new PTexture.Parameters(ARGB,NEAREST));
-    pixelBuffer=IntBuffer.allocate(width * height);
-    pixelBuffer.rewind();
   }
   try {
     Method meth=this.getClass().getMethod("recreateResource",new Class[]{PGraphicsAndroid3D.class});
