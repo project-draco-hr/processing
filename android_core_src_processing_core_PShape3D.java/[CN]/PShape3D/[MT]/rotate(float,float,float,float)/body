@@ -1,7 +1,7 @@
 {
-  float[] tmpVertexArray=new float[numVertices * 3];
+  float[] tempVertexArray=new float[numVertices * 3];
   beginUpdate(VERTICES);
-  getVertexArrayImpl(tmpVertexArray,0,numVertices,0);
+  getVertexArrayImpl(tempVertexArray,0,numVertices,0);
   endUpdate();
   float c=PApplet.cos(angle);
   float s=PApplet.sin(angle);
@@ -18,14 +18,14 @@
   m[8]=(t * v2 * v2) + c;
   float x, y, z;
   for (int i=0; i < numVertices; i++) {
-    x=tmpVertexArray[3 * i + 0] - xmin;
-    y=tmpVertexArray[3 * i + 1] - ymin;
-    z=tmpVertexArray[3 * i + 2] - zmin;
-    tmpVertexArray[3 * i + 0]=m[0] * x + m[1] * y + m[2] * z + xmin;
-    tmpVertexArray[3 * i + 1]=m[3] * x + m[4] * y + m[5] * z + ymin;
-    tmpVertexArray[3 * i + 2]=m[6] * x + m[7] * y + m[8] * z + zmin;
+    x=tempVertexArray[3 * i + 0] - xmin;
+    y=tempVertexArray[3 * i + 1] - ymin;
+    z=tempVertexArray[3 * i + 2] - zmin;
+    tempVertexArray[3 * i + 0]=m[0] * x + m[1] * y + m[2] * z + xmin;
+    tempVertexArray[3 * i + 1]=m[3] * x + m[4] * y + m[5] * z + ymin;
+    tempVertexArray[3 * i + 2]=m[6] * x + m[7] * y + m[8] * z + zmin;
   }
   beginUpdateImpl(VERTICES,0,numVertices - 1);
-  setVertex(tmpVertexArray);
+  setVertex(tempVertexArray);
   endUpdate();
 }

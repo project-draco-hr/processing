@@ -31,8 +31,12 @@
     normalBuffer.rewind();
     normalBuffer.get(normalArray,offset,size);
   }
- else   if (updateElement == TEXTURES) {
-    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[0]);
+ else   if (TEXTURES1 <= updateElement && updateElement <= TEXTURES4) {
+    int n=updateElement - TEXTURES1;
+    if (numTexUnits <= n) {
+      throw new RuntimeException("PShape3D: not enought texture units in use by his shape.");
+    }
+    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[n]);
     int offset=first * 2;
     int size=(last - first + 1) * 2;
     texCoordBuffer.limit(texCoordBuffer.capacity());
