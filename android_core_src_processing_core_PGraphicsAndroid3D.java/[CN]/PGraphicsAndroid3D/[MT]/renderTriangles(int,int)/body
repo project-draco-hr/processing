@@ -7,7 +7,6 @@
   gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
   for (int j=start; j < stop; j++) {
     int i=faceOffset[j];
-    FACECOUNT++;
     if (faceTexture[j] != null) {
       tex=faceTexture[j].getTexture();
       if (tex != null) {
@@ -38,7 +37,6 @@
     texCoordBuffer.position(0);
     int n=0;
     for (int k=0; k < faceLength[j]; k++) {
-      TRIANGLECOUNT++;
       float a[]=vertices[triangles[i][VERTEX1]];
       float b[]=vertices[triangles[i][VERTEX2]];
       float c[]=vertices[triangles[i][VERTEX3]];
@@ -99,7 +97,6 @@
         texCoordArray[2 * n + 0]=toFixed32((cx + sx * a[U]) * uscale);
         texCoordArray[2 * n + 1]=toFixed32((cy + sy * a[V]) * vscale);
         n++;
-        VERTEXCOUNT++;
       }
       if (recordingShape) {
         recordedVertices.add(new PVector(b[X],b[Y],b[Z]));
@@ -121,7 +118,6 @@
         texCoordArray[2 * n + 0]=toFixed32((cx + sx * b[U]) * uscale);
         texCoordArray[2 * n + 1]=toFixed32((cy + sy * b[V]) * vscale);
         n++;
-        VERTEXCOUNT++;
       }
       if (recordingShape) {
         recordedVertices.add(new PVector(c[X],c[Y],c[Z]));
@@ -143,7 +139,6 @@
         texCoordArray[2 * n + 0]=toFixed32((cx + sx * c[U]) * uscale);
         texCoordArray[2 * n + 1]=toFixed32((cy + sy * c[V]) * vscale);
         n++;
-        VERTEXCOUNT++;
       }
       i++;
     }
