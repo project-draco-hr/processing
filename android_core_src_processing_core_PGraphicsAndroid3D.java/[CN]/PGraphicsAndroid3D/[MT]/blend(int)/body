@@ -14,26 +14,22 @@
     if (blendEqSupported)     gl11xp.glBlendEquation(GL11ExtensionPack.GL_FUNC_ADD);
     gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_ONE);
   }
- else   if (mode == MULTIPLY) {
-    if (blendEqSupported)     gl11xp.glBlendEquation(GL11ExtensionPack.GL_FUNC_ADD);
-    gl.glBlendFunc(GL10.GL_DST_COLOR,GL10.GL_SRC_COLOR);
-  }
  else   if (mode == SUBTRACT) {
     if (blendEqSupported)     gl11xp.glBlendEquation(GL11ExtensionPack.GL_FUNC_ADD);
     gl.glBlendFunc(GL10.GL_ONE_MINUS_DST_COLOR,GL10.GL_ZERO);
   }
- else   if (mode == DARKEST) {
+ else   if (mode == LIGHTEST) {
     if (blendEqSupported) {
-      gl11xp.glBlendEquation(GL_MIN_EXT);
+      gl11xp.glBlendEquation(GL_MAX_EXT);
       gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_DST_ALPHA);
     }
  else {
       PGraphics.showWarning("A3D: This blend mode is currently unsupported.");
     }
   }
- else   if (mode == LIGHTEST) {
+ else   if (mode == DARKEST) {
     if (blendEqSupported) {
-      gl11xp.glBlendEquation(GL_MAX_EXT);
+      gl11xp.glBlendEquation(GL_MIN_EXT);
       gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_DST_ALPHA);
     }
  else {
@@ -48,5 +44,17 @@
  else {
       PGraphics.showWarning("A3D: This blend mode is currently unsupported.");
     }
+  }
+ else   if (mode == EXCLUSION) {
+    if (blendEqSupported)     gl11xp.glBlendEquation(GL11ExtensionPack.GL_FUNC_ADD);
+    gl.glBlendFunc(GL10.GL_ONE_MINUS_DST_COLOR,GL10.GL_ONE_MINUS_SRC_COLOR);
+  }
+ else   if (mode == MULTIPLY) {
+    if (blendEqSupported)     gl11xp.glBlendEquation(GL11ExtensionPack.GL_FUNC_ADD);
+    gl.glBlendFunc(GL10.GL_DST_COLOR,GL10.GL_SRC_COLOR);
+  }
+ else   if (mode == SCREEN) {
+    if (blendEqSupported)     gl11xp.glBlendEquation(GL11ExtensionPack.GL_FUNC_ADD);
+    gl.glBlendFunc(GL10.GL_ONE_MINUS_DST_COLOR,GL10.GL_ONE);
   }
 }

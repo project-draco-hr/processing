@@ -13,7 +13,7 @@
   if (usingMipmaps) {
     if (a3d.gl11 != null && PGraphicsAndroid3D.mipmapSupported) {
       int[] rgbaPixels=new int[w * h];
-      convertToRGBA(pixels,rgbaPixels,format);
+      convertToRGBA(pixels,rgbaPixels,format,w,h);
       gl.glTexParameterf(GL11.GL_TEXTURE_2D,GL11.GL_GENERATE_MIPMAP,GL11.GL_TRUE);
       setTexels(x,y,w,h,rgbaPixels);
     }
@@ -25,7 +25,7 @@
       int w0=glWidth;
       int h0=glHeight;
       int[] argbPixels=new int[w0 * h0];
-      copyARGB(pixels,argbPixels);
+      convertToARGB(pixels,argbPixels,format);
       int level=0;
       Bitmap bitmap=Bitmap.createBitmap(w0,h0,Config.ARGB_8888);
       bitmap.setPixels(argbPixels,0,w0,0,0,w0,h0);
@@ -45,7 +45,7 @@
   }
  else {
     int[] rgbaPixels=new int[w * h];
-    convertToRGBA(pixels,rgbaPixels,format);
+    convertToRGBA(pixels,rgbaPixels,format,w,h);
     setTexels(x,y,w,h,rgbaPixels);
   }
   gl.glDisable(glTarget);
