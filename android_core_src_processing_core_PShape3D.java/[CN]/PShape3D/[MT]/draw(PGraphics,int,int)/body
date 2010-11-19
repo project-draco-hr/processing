@@ -1,7 +1,6 @@
 {
-  int texTarget=GL11.GL_TEXTURE_2D;
-  PImage img;
-  PTexture tex;
+  PImage[] imgs=null;
+  boolean textured=false;
   float pointSize;
   pointSize=PApplet.min(g.strokeWeight,PGraphicsAndroid3D.maxPointSize);
   gl.glPointSize(pointSize);
@@ -19,14 +18,18 @@
   VertexGroup group;
   for (int i=gr0; i <= gr1; i++) {
     group=(VertexGroup)groups.get(i);
-    img=group.texture;
-    tex=null;
-    if (img != null && img.getTexture() != null) {
-      tex=img.getTexture();
-      texTarget=tex.getGLTarget();
-      gl.glEnable(texTarget);
-      gl.glActiveTexture(GL11.GL_TEXTURE0);
-      gl.glBindTexture(texTarget,tex.getGLID());
+    if (group.hasTexture()) {
+      textured=true;
+      imgs=group.textures;
+      for (int n=0; n < imgs.length; n++) {
+        if (imgs[n] != null && imgs[n].getTexture() != null) {
+          PTexture tex=imgs[n].getTexture();
+          int texTarget=tex.getGLTarget();
+          gl.glEnable(texTarget);
+          gl.glActiveTexture(GL10.GL_TEXTURE0 + n);
+          gl.glBindTexture(texTarget,tex.getGLID());
+        }
+      }
       if (pointSprites) {
         gl.glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION,ptDistAtt,0);
         gl.glPointParameterf(GL11.GL_POINT_FADE_THRESHOLD_SIZE,0.6f * pointSize);
@@ -37,22 +40,24 @@
       }
  else {
         gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-        gl.glClientActiveTexture(GL11.GL_TEXTURE0);
-        gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[0]);
-        gl.glTexCoordPointer(2,GL11.GL_FLOAT,0,0);
+        for (int n=0; n < numTexUnits; n++) {
+          gl.glClientActiveTexture(GL11.GL_TEXTURE0 + n);
+          gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[n]);
+          gl.glTexCoordPointer(2,GL11.GL_FLOAT,0,0);
+        }
       }
     }
     if (!vertexColor) {
-      if (tex == null) {
-        gl.glColor4f(g.fillR,g.fillG,g.fillB,g.fillA);
-      }
- else {
+      if (textured) {
         if (g.tint) {
           gl.glColor4f(g.tintR,g.tintG,g.tintB,g.tintA);
         }
  else {
           gl.glColor4f(1,1,1,1);
         }
+      }
+ else {
+        gl.glColor4f(g.fillR,g.fillG,g.fillB,g.fillA);
       }
     }
     if (0 < group.sw) {
@@ -67,14 +72,20 @@
  else {
       gl.glDrawArrays(glMode,group.first,group.last - group.first + 1);
     }
-    if (tex != null) {
+    if (textured) {
       if (pointSprites) {
         gl.glDisable(GL11.GL_POINT_SPRITE_OES);
       }
  else {
         gl.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
       }
-      gl.glDisable(texTarget);
+      for (int n=0; n < numTexUnits; n++) {
+        if (imgs[n] != null && imgs[n].getTexture() != null) {
+          PTexture tex=imgs[n].getTexture();
+          int texTarget=tex.getGLTarget();
+          gl.glDisable(texTarget);
+        }
+      }
     }
   }
   gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);

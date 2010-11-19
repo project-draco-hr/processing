@@ -33,8 +33,11 @@
   }
  else   if (TEXTURES1 <= updateElement && updateElement <= TEXTURES4) {
     int n=updateElement - TEXTURES1;
-    if (numTexUnits <= n) {
-      throw new RuntimeException("PShape3D: not enought texture units in use by his shape.");
+    for (int i=0; i < n - numTexUnits; i++) {
+      boolean res=addTexUnit();
+      if (!res) {
+        return;
+      }
     }
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[n]);
     int offset=first * 2;
