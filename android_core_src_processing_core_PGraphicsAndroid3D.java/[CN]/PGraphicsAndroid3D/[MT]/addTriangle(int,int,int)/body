@@ -7,14 +7,14 @@
   triangles[triangleCount][VERTEX1]=a;
   triangles[triangleCount][VERTEX2]=b;
   triangles[triangleCount][VERTEX3]=c;
-  PImage tex=verticesTexture[a];
+  MultiImage tex=vertTexImages[a];
   boolean firstFace=triangleCount == 0;
-  if (tex != textureImagePrev || firstFace) {
+  if (textureImagesPrev.equals(tex) || firstFace) {
     addNewFace(firstFace,tex);
   }
  else {
     faceLength[faceCount - 1]++;
   }
   triangleCount++;
-  textureImagePrev=tex;
+  textureImagesPrev.set(tex);
 }

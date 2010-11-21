@@ -14,8 +14,9 @@
   vertex[Y]=y;
   vertex[Z]=z;
   vertex[EDGE]=edge ? 1 : 0;
-  if (fill || textureImage != null) {
-    if (textureImage == null) {
+  boolean textured=textureImages.hasImages();
+  if (fill || textured) {
+    if (textured) {
       vertex[R]=fillR;
       vertex[G]=fillG;
       vertex[B]=fillB;
@@ -35,16 +36,6 @@
         vertex[A]=1;
       }
     }
-    vertex[AR]=ambientR;
-    vertex[AG]=ambientG;
-    vertex[AB]=ambientB;
-    vertex[SPR]=specularR;
-    vertex[SPG]=specularG;
-    vertex[SPB]=specularB;
-    vertex[SHINE]=shininess;
-    vertex[ER]=emissiveR;
-    vertex[EG]=emissiveG;
-    vertex[EB]=emissiveB;
   }
   if (stroke) {
     vertex[SR]=strokeR;
@@ -53,9 +44,11 @@
     vertex[SA]=strokeA;
     vertex[SW]=strokeWeight;
   }
-  if (textureImage != null) {
-    vertex[U]=textureU;
-    vertex[V]=textureV;
+  for (int i=0; i < textureImages.size(); i++) {
+    if (textureImages.get(i) != null) {
+      vertex[U0 + i]=textureU[i];
+      vertex[V0 + i]=textureV[i];
+    }
   }
   float norm2=normalX * normalX + normalY * normalY + normalZ * normalZ;
   if (norm2 < EPSILON) {
@@ -73,6 +66,6 @@
   vertex[NX]=normalX;
   vertex[NY]=normalY;
   vertex[NZ]=normalZ;
-  verticesTexture[vertexCount]=textureImage;
+  setVertTexImages(vertexCount);
   vertexCount++;
 }
