@@ -70,14 +70,7 @@
   pain.setTransferHandler(new FileDropHandler());
   pack();
   setPlacement(location);
-  final int minW=Preferences.getInteger("editor.window.width.min");
-  final int minH=Preferences.getInteger("editor.window.height.min");
-  addComponentListener(new java.awt.event.ComponentAdapter(){
-    public void componentResized(    ComponentEvent event){
-      setSize((getWidth() < minW) ? minW : getWidth(),(getHeight() < minH) ? minH : getHeight());
-    }
-  }
-);
+  setMinimumSize(new Dimension(Preferences.getInteger("editor.window.width.min"),Preferences.getInteger("editor.window.height.min")));
   applyPreferences();
   boolean loaded=handleOpenInternal(path);
   if (!loaded)   sketch=null;
