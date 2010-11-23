@@ -1,12 +1,12 @@
 {
-  if (updateElement < TEXTURES0 || TEXTURES3 < updateElement) {
+  if (TEXTURES0 <= updateElement && updateElement < TEXTURESMAX) {
     throw new RuntimeException("PShape3D: update mode is not set to TEXTURES");
   }
-  int n=updateElement - TEXTURES0;
+  int t=updateElement - TEXTURES0;
   float u=texCoordArray[2 * idx + 0];
   float v=texCoordArray[2 * idx + 1];
-  if (vertGroup[idx] != null && vertGroup[idx].textures[n] != null) {
-    PTexture tex=vertGroup[idx].textures[n].getTexture();
+  if (vertGroup[idx] != null && vertGroup[idx].textures[t] != null) {
+    PTexture tex=vertGroup[idx].textures[t].getTexture();
     float uscale=1.0f;
     float vscale=1.0f;
     float cx=0.0f;
@@ -26,8 +26,8 @@
     u=(u / uscale - cx) / sx;
     v=(v / vscale - cy) / sy;
     if (a3d.imageMode == IMAGE) {
-      u*=vertGroup[idx].textures[n].width;
-      v*=vertGroup[idx].textures[n].height;
+      u*=tex.width;
+      v*=tex.height;
     }
   }
   PVector res=new PVector(u,v,0);

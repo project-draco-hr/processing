@@ -1,8 +1,9 @@
 {
-  if (idx < 0 || PGraphicsAndroid3D.maxTextureUnits <= idx) {
-    PGraphics.showWarning("PShape3D: Wrong texture index.");
+  if (unit < 0 || PGraphicsAndroid3D.maxTextureUnits <= unit) {
+    System.err.println("PShape3D: Wrong texture index.");
+    return;
   }
-  for (int i=0; i < idx - numTexUnits; i++) {
+  for (int i=0; i < unit - numTextures; i++) {
     boolean res=addTexUnit();
     if (!res) {
       return;
@@ -12,16 +13,16 @@
     throw new RuntimeException("PShape3D: trying to set null texture.");
   }
   VertexGroup group=(VertexGroup)groups.get(gr);
-  if (updateElement == -1 && texCoordSet[idx]) {
+  if (updateElement == -1 && texCoordSet[unit]) {
     PTexture tex0;
-    if (group.textures[idx] == null) {
+    if (group.textures[unit] == null) {
       tex0=null;
     }
  else {
-      tex0=group.textures[idx].getTexture();
+      tex0=group.textures[unit].getTexture();
     }
     PTexture tex1=tex.getTexture();
-    boolean diff=tex0 == null || tex.width != group.textures[idx].width || tex.height != group.textures[idx].height || tex1.flippedX != tex0.flippedX || tex1.flippedY != tex0.flippedY || tex1.maxTexCoordU != tex0.maxTexCoordU || tex1.maxTexCoordV != tex0.maxTexCoordV;
+    boolean diff=tex0 == null || tex.width != group.textures[unit].width || tex.height != group.textures[unit].height || tex1.flippedX != tex0.flippedX || tex1.flippedY != tex0.flippedY || tex1.maxTexCoordU != tex0.maxTexCoordU || tex1.maxTexCoordV != tex0.maxTexCoordV;
     if (diff) {
       float uscale=1.0f;
       float vscale=1.0f;
@@ -30,7 +31,7 @@
       float cy=0.0f;
       float sy=+1.0f;
       float u, v;
-      beginUpdateImpl(TEXTURES0 + idx,group.first,group.last);
+      beginUpdateImpl(TEXTURES0 + unit,group.first,group.last);
       firstUpdateIdx=group.first;
       lastUpdateIdx=group.last;
       for (int i=group.first; i <= group.last; i++) {
@@ -50,8 +51,8 @@
           u=(u / uscale - cx) / sx;
           v=(v / vscale - cy) / sy;
           if (a3d.imageMode == IMAGE) {
-            u*=group.textures[idx].width;
-            v*=group.textures[idx].height;
+            u*=group.textures[unit].width;
+            v*=group.textures[unit].height;
           }
         }
         if (tex1.isFlippedX()) {
@@ -79,9 +80,9 @@
       }
       endUpdate();
     }
-    group.textures[idx]=tex;
+    group.textures[unit]=tex;
   }
  else {
-    group.textures[idx]=tex;
+    group.textures[unit]=tex;
   }
 }

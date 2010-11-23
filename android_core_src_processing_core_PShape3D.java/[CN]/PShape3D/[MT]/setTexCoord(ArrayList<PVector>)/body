@@ -1,13 +1,13 @@
 {
-  if (updateElement < TEXTURES0 || TEXTURES3 < updateElement) {
+  if (TEXTURES0 <= updateElement && updateElement < TEXTURESMAX) {
     throw new RuntimeException("PShape3D: update mode is not set to TEXTURES");
   }
-  int n=updateElement - TEXTURES0;
+  int t=updateElement - TEXTURES0;
   firstUpdateIdx=0;
   lastUpdateIdx=numVertices - 1;
   boolean textured=false;
   for (int i=0; i < vertGroup.length; i++) {
-    if (vertGroup[i].textures != null) {
+    if (vertGroup[i].textures[t] != null) {
       textured=true;
       break;
     }
@@ -24,16 +24,16 @@
   float u, v;
   PVector vec;
   for (int i=0; i < numVertices; i++) {
-    if (vertGroup[i] != null && vertGroup[i].textures[n] != img) {
-      PTexture tex=vertGroup[i].textures[n].getTexture();
+    if (vertGroup[i] != null && vertGroup[i].textures[t] != img) {
+      PTexture tex=vertGroup[i].textures[t].getTexture();
       uscale=1.0f;
       vscale=1.0f;
       cx=0.0f;
       sx=+1.0f;
       cy=0.0f;
       sy=+1.0f;
-      w=vertGroup[i].textures[n].width;
-      h=vertGroup[i].textures[n].height;
+      w=tex.width;
+      h=tex.height;
       if (tex.isFlippedX()) {
         cx=1.0f;
         sx=-1.0f;
@@ -44,7 +44,7 @@
       }
       uscale*=tex.getMaxTexCoordU();
       vscale*=tex.getMaxTexCoordV();
-      img=vertGroup[i].textures[n];
+      img=vertGroup[i].textures[t];
     }
     vec=(PVector)data.get(i);
     if (textured) {

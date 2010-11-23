@@ -36,7 +36,7 @@
     gl.glBufferSubData(GL11.GL_ARRAY_BUFFER,offset * SIZEOF_FLOAT,size * SIZEOF_FLOAT,normalBuffer);
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
   }
- else   if (TEXTURES0 <= updateElement && updateElement <= TEXTURES3) {
+ else   if (TEXTURES0 <= updateElement && updateElement < TEXTURESMAX) {
     int offset=firstUpdateIdx * 2;
     int size=(lastUpdateIdx - firstUpdateIdx + 1) * 2;
     texCoordBuffer.position(0);
@@ -44,8 +44,8 @@
     texCoordBuffer.flip();
     gl.glBufferSubData(GL11.GL_ARRAY_BUFFER,offset * SIZEOF_FLOAT,size * SIZEOF_FLOAT,texCoordBuffer);
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
-    int n=updateElement - TEXTURES0;
-    texCoordSet[n]=true;
+    int t=updateElement - TEXTURES0;
+    texCoordSet[t]=true;
   }
  else   if (updateElement == GROUPS) {
   }

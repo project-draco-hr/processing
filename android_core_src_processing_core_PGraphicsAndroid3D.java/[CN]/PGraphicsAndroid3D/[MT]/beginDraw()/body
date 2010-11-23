@@ -19,11 +19,14 @@
   report("top beginDraw()");
   vertexBuffer.rewind();
   colorBuffer.rewind();
-  texCoordBuffer.rewind();
   normalBuffer.rewind();
-  initTextures();
-  textureImages.clear();
-  textureImagesPrev.clear();
+  for (int t=0; t < numTexBuffers; t++) {
+    texCoordBuffer[t].rewind();
+  }
+  usingMultitexturing=false;
+  textureUnit=0;
+  clearMultitextures();
+  clearMultitextures0();
   gl.glShadeModel(GL10.GL_SMOOTH);
   blend(BLEND);
   if (hints[DISABLE_DEPTH_TEST]) {
@@ -63,7 +66,7 @@
       }
  else {
         if (gl11 == null || gl11x == null) {
-          throw new RuntimeException("PGraphicsAndroid3D:  no clear mode with no FBOs requires OpenGL ES 1.1");
+          throw new RuntimeException("A3D:  no clear mode with no FBOs requires OpenGL ES 1.1");
         }
         if (texture == null) {
           createScreenTexture();

@@ -10,15 +10,22 @@
     shape.beginUpdate(NORMALS);
     shape.setNormal(recordedNormals);
     shape.endUpdate();
-    shape.beginUpdate(TEXTURES);
-    shape.setTexCoord(recordedTexCoords);
-    shape.endUpdate();
+    int tu0=textureUnit;
+    for (int t=0; t < numRecordedTextures; t++) {
+      textureUnit=t;
+      shape.beginUpdate(TEXTURES);
+      shape.setTexCoord(recordedTexCoords[t]);
+      shape.endUpdate();
+    }
+    textureUnit=tu0;
     shape.setGroups(recordedGroups);
     shape.optimizeGroups();
     recordedVertices.clear();
     recordedColors.clear();
     recordedNormals.clear();
-    recordedTexCoords.clear();
+    for (int t=0; t < maxTextureUnits; t++) {
+      recordedTexCoords[t].clear();
+    }
     recordedGroups.clear();
   }
 }

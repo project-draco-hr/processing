@@ -31,15 +31,15 @@
     normalBuffer.rewind();
     normalBuffer.get(normalArray,offset,size);
   }
- else   if (TEXTURES0 <= updateElement && updateElement <= TEXTURES3) {
-    int n=updateElement - TEXTURES0;
-    for (int i=0; i < n - numTexUnits; i++) {
+ else   if (TEXTURES0 <= updateElement && updateElement < TEXTURESMAX) {
+    int t=updateElement - TEXTURES0;
+    for (int i=0; i < t - numTextures; i++) {
       boolean res=addTexUnit();
       if (!res) {
         return;
       }
     }
-    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[n]);
+    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[t]);
     int offset=first * 2;
     int size=(last - first + 1) * 2;
     texCoordBuffer.limit(texCoordBuffer.capacity());

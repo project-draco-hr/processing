@@ -1,32 +1,54 @@
 {
   report("render_triangles in");
-  PTexture tex=null;
-  boolean texturing=false;
+  int numTextures=0;
   gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
   gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
   gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
   for (int j=start; j < stop; j++) {
     int i=faceOffset[j];
-    PImage img=faceTexture[j].get(0);
-    if (img != null) {
-      tex=img.getTexture();
+    PImage[] images=faceTextures[j];
+    if (usingMultitexturing) {
+      for (int t=0; t < maxTextureUnits; t++)       if (images[t] != null) {
+        PTexture tex=images[t].getTexture();
+        if (tex != null) {
+          gl.glEnable(tex.getGLTarget());
+          gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
+          gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
+          renderTextures[numTextures]=tex;
+          numTextures++;
+        }
+ else {
+          throw new RuntimeException("A3D: missing image texture");
+        }
+      }
+ else {
+        break;
+      }
+    }
+ else     if (images[0] != null) {
+      PTexture tex=images[0].getTexture();
       if (tex != null) {
         gl.glEnable(tex.getGLTarget());
+        gl.glActiveTexture(GL10.GL_TEXTURE0);
         gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
-        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-        texturing=true;
+        renderTextures[0]=tex;
+        numTextures=1;
       }
  else {
-        texturing=false;
+        throw new RuntimeException("A3D: missing image texture");
       }
     }
- else {
-      texturing=false;
+    if (0 < numTextures) {
+      if (numTexBuffers < numTextures) {
+        addTextureBuffers();
+      }
+      gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
     }
     if (recordingShape) {
+      numRecordedTextures=PApplet.max(numRecordedTextures,numTextures);
       int n0=recordedVertices.size();
       int n1=n0 + 3 * faceLength[j] - 1;
-      VertexGroup group=PShape3D.newVertexGroup(n0,n1,TRIANGLES,0,new PImage[]{img});
+      VertexGroup group=PShape3D.newVertexGroup(n0,n1,TRIANGLES,0,images);
       recordedGroups.add(group);
     }
     if (vertexBuffer.capacity() / 3 < 3 * faceLength[j]) {
@@ -35,7 +57,9 @@
     vertexBuffer.position(0);
     colorBuffer.position(0);
     normalBuffer.position(0);
-    texCoordBuffer.position(0);
+    for (int t=0; t < numTextures; t++) {
+      texCoordBuffer[t].position(0);
+    }
     int n=0;
     for (int k=0; k < faceLength[j]; k++) {
       float a[]=vertices[triangles[i][VERTEX1]];
@@ -60,13 +84,14 @@
         a[NZ]=b[NZ]=c[NZ]=cz;
         a[HAS_NORMAL]=b[HAS_NORMAL]=c[HAS_NORMAL]=1;
       }
-      float uscale=1.0f;
-      float vscale=1.0f;
-      float cx=0.0f;
-      float sx=+1.0f;
-      float cy=0.0f;
-      float sy=+1.0f;
-      if (texturing) {
+      for (int t=0; t < numTextures; t++) {
+        float uscale=1.0f;
+        float vscale=1.0f;
+        float cx=0.0f;
+        float sx=+1.0f;
+        float cy=0.0f;
+        float sy=+1.0f;
+        PTexture tex=renderTextures[t];
         uscale*=tex.getMaxTexCoordU();
         vscale*=tex.getMaxTexCoordV();
         if (tex.isFlippedX()) {
@@ -77,12 +102,23 @@
           cy=1.0f;
           sy=-1.0f;
         }
+        renderUa[t]=(cx + sx * a[U]) * uscale;
+        renderVa[t]=(cy + sy * a[V]) * vscale;
+        renderUb[t]=(cx + sx * b[U]) * uscale;
+        renderVb[t]=(cy + sy * b[V]) * vscale;
+        renderUc[t]=(cx + sx * c[U]) * uscale;
+        renderVc[t]=(cy + sy * c[V]) * vscale;
       }
       if (recordingShape) {
         recordedVertices.add(new PVector(a[X],a[Y],a[Z]));
         recordedColors.add(new float[]{a[R],a[G],a[B],a[A]});
         recordedNormals.add(new PVector(a[NX],a[NY],a[NZ]));
-        recordedTexCoords.add(new PVector((cx + sx * a[U]) * uscale,(cy + sy * a[V]) * vscale,0.0f));
+        for (int t=0; t < numTextures; t++) {
+          recordedTexCoords[t].add(new PVector(renderUa[t],renderVa[t],0.0f));
+        }
+        for (int t=numTextures; t < maxTextureUnits; t++) {
+          recordedTexCoords[t].add(new PVector(0.0f,0.0f,0.0f));
+        }
       }
  else {
         vertexArray[3 * n + 0]=toFixed32(a[X]);
@@ -95,15 +131,22 @@
         normalArray[3 * n + 0]=toFixed32(a[NX]);
         normalArray[3 * n + 1]=toFixed32(a[NY]);
         normalArray[3 * n + 2]=toFixed32(a[NZ]);
-        texCoordArray[2 * n + 0]=toFixed32((cx + sx * a[U]) * uscale);
-        texCoordArray[2 * n + 1]=toFixed32((cy + sy * a[V]) * vscale);
+        for (int t=0; t < numTextures; t++) {
+          texCoordArray[t][2 * n + 0]=toFixed32(renderUa[t]);
+          texCoordArray[t][2 * n + 1]=toFixed32(renderVa[t]);
+        }
         n++;
       }
       if (recordingShape) {
         recordedVertices.add(new PVector(b[X],b[Y],b[Z]));
         recordedColors.add(new float[]{b[R],b[G],b[B],b[A]});
         recordedNormals.add(new PVector(b[NX],b[NY],b[NZ]));
-        recordedTexCoords.add(new PVector((cx + sx * b[U]) * uscale,(cy + sy * b[V]) * vscale,0.0f));
+        for (int t=0; t < numTextures; t++) {
+          recordedTexCoords[t].add(new PVector(renderUb[t],renderVb[t],0.0f));
+        }
+        for (int t=numTextures; t < maxTextureUnits; t++) {
+          recordedTexCoords[t].add(new PVector(0.0f,0.0f,0.0f));
+        }
       }
  else {
         vertexArray[3 * n + 0]=toFixed32(b[X]);
@@ -116,15 +159,22 @@
         normalArray[3 * n + 0]=toFixed32(b[NX]);
         normalArray[3 * n + 1]=toFixed32(b[NY]);
         normalArray[3 * n + 2]=toFixed32(b[NZ]);
-        texCoordArray[2 * n + 0]=toFixed32((cx + sx * b[U]) * uscale);
-        texCoordArray[2 * n + 1]=toFixed32((cy + sy * b[V]) * vscale);
+        for (int t=0; t < numTextures; t++) {
+          texCoordArray[t][2 * n + 0]=toFixed32(renderUb[t]);
+          texCoordArray[t][2 * n + 1]=toFixed32(renderVb[t]);
+        }
         n++;
       }
       if (recordingShape) {
         recordedVertices.add(new PVector(c[X],c[Y],c[Z]));
         recordedColors.add(new float[]{c[R],c[G],c[B],c[A]});
         recordedNormals.add(new PVector(c[NX],c[NY],c[NZ]));
-        recordedTexCoords.add(new PVector((cx + sx * c[U]) * uscale,(cy + sy * c[V]) * vscale,0.0f));
+        for (int t=0; t < numTextures; t++) {
+          recordedTexCoords[t].add(new PVector(renderUc[t],renderVc[t],0.0f));
+        }
+        for (int t=numTextures; t < maxTextureUnits; t++) {
+          recordedTexCoords[t].add(new PVector(0.0f,0.0f,0.0f));
+        }
       }
  else {
         vertexArray[3 * n + 0]=toFixed32(c[X]);
@@ -137,8 +187,10 @@
         normalArray[3 * n + 0]=toFixed32(c[NX]);
         normalArray[3 * n + 1]=toFixed32(c[NY]);
         normalArray[3 * n + 2]=toFixed32(c[NZ]);
-        texCoordArray[2 * n + 0]=toFixed32((cx + sx * c[U]) * uscale);
-        texCoordArray[2 * n + 1]=toFixed32((cy + sy * c[V]) * vscale);
+        for (int t=0; t < numTextures; t++) {
+          texCoordArray[t][2 * n + 0]=toFixed32(renderUc[t]);
+          texCoordArray[t][2 * n + 1]=toFixed32(renderVc[t]);
+        }
         n++;
       }
       i++;
@@ -147,23 +199,29 @@
       vertexBuffer.put(vertexArray);
       colorBuffer.put(colorArray);
       normalBuffer.put(normalArray);
-      if (texturing) {
-        texCoordBuffer.put(texCoordArray);
+      for (int t=0; t < numTextures; t++) {
+        texCoordBuffer[t].put(texCoordArray[t]);
       }
       vertexBuffer.position(0);
       colorBuffer.position(0);
       normalBuffer.position(0);
-      texCoordBuffer.position(0);
+      for (int t=0; t < numTextures; t++) {
+        texCoordBuffer[t].position(0);
+      }
       gl.glVertexPointer(3,GL10.GL_FIXED,0,vertexBuffer);
       gl.glColorPointer(4,GL10.GL_FIXED,0,colorBuffer);
       gl.glNormalPointer(GL10.GL_FIXED,0,normalBuffer);
-      if (texturing) {
-        gl.glTexCoordPointer(2,GL10.GL_FIXED,0,texCoordBuffer);
+      for (int t=0; n < numTextures; n++) {
+        gl.glClientActiveTexture(GL11.GL_TEXTURE0 + t);
+        gl.glTexCoordPointer(2,GL10.GL_FIXED,0,texCoordBuffer[t]);
       }
       gl.glDrawArrays(GL10.GL_TRIANGLES,0,3 * faceLength[j]);
     }
-    if (texturing) {
-      gl.glDisable(tex.getGLTarget());
+    if (0 < numTextures) {
+      for (int t=0; t < numTextures; t++) {
+        PTexture tex=renderTextures[t];
+        gl.glDisable(tex.getGLTarget());
+      }
       gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
     }
   }

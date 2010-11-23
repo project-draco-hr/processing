@@ -1,14 +1,14 @@
 {
-  if (numTexUnits < PGraphicsAndroid3D.maxTextureUnits) {
-    deleteTexCoordBuffer(numTexUnits);
+  if (numTextures < PGraphicsAndroid3D.maxTextureUnits) {
+    deleteTexCoordBuffer(numTextures);
     int[] temp={0};
     gl.glGenBuffers(1,temp,0);
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,temp[0]);
     final int bufferSize=texCoordBuffer.capacity() * SIZEOF_FLOAT;
     gl.glBufferData(GL11.GL_ARRAY_BUFFER,bufferSize,texCoordBuffer,glUsage);
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
-    glTexCoordBufferID[numTexUnits]=temp[0];
-    numTexUnits++;
+    glTexCoordBufferID[numTextures]=temp[0];
+    numTextures++;
     return true;
   }
  else {

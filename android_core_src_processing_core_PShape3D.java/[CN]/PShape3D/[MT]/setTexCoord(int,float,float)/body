@@ -1,20 +1,20 @@
 {
-  if (updateElement < TEXTURES0 || TEXTURES3 < updateElement) {
+  if (TEXTURES0 <= updateElement && updateElement < TEXTURESMAX) {
     throw new RuntimeException("PShape3D: update mode is not set to TEXTURES");
   }
-  int n=updateElement - TEXTURES0;
+  int t=updateElement - TEXTURES0;
   if (idx < firstUpdateIdx)   firstUpdateIdx=idx;
   if (lastUpdateIdx < idx)   lastUpdateIdx=idx;
-  if (vertGroup[idx] != null && vertGroup[idx].textures[n] != null) {
-    PTexture tex=vertGroup[idx].textures[n].getTexture();
+  if (vertGroup[idx] != null && vertGroup[idx].textures[t] != null) {
+    PTexture tex=vertGroup[idx].textures[t].getTexture();
     float uscale=1.0f;
     float vscale=1.0f;
     float cx=0.0f;
     float sx=+1.0f;
     float cy=0.0f;
     float sy=+1.0f;
-    int w=vertGroup[idx].textures[n].width;
-    int h=vertGroup[idx].textures[n].height;
+    int w=tex.width;
+    int h=tex.height;
     if (tex.isFlippedX()) {
       cx=1.0f;
       sx=-1.0f;

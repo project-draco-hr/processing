@@ -1,14 +1,14 @@
 {
-  if (updateElement < TEXTURES0 || TEXTURES3 < updateElement) {
+  if (TEXTURES0 <= updateElement && updateElement < TEXTURESMAX) {
     throw new RuntimeException("PShape3D: update mode is not set to TEXTURES");
   }
-  int n=updateElement - TEXTURES0;
+  int t=updateElement - TEXTURES0;
   float[] res=new float[numVertices * 2];
   getTexCoordArrayImpl(res,0,numVertices,0);
   PApplet.arrayCopy(texCoordArray,res);
   boolean textured=false;
   for (int i=0; i < vertGroup.length; i++) {
-    if (vertGroup[i].textures[n] != null) {
+    if (vertGroup[i].textures[t] != null) {
       textured=true;
       break;
     }
@@ -27,8 +27,8 @@
   int h=1;
   float u, v;
   for (int i=0; i < numVertices; i++) {
-    if (vertGroup[i] != null && vertGroup[i].textures[n] != img) {
-      PTexture tex=vertGroup[i].textures[n].getTexture();
+    if (vertGroup[i] != null && vertGroup[i].textures[t] != img) {
+      PTexture tex=vertGroup[i].textures[t].getTexture();
       uscale=1.0f;
       vscale=1.0f;
       cx=0.0f;
@@ -45,9 +45,9 @@
       }
       uscale*=tex.getMaxTexCoordU();
       vscale*=tex.getMaxTexCoordV();
-      w=vertGroup[i].textures[n].width;
-      h=vertGroup[i].textures[n].height;
-      img=vertGroup[i].textures[n];
+      w=tex.width;
+      h=tex.height;
+      img=vertGroup[i].textures[t];
     }
     u=(res[2 * i + 0] / uscale - cx) / sx;
     v=(res[2 * i + 1] / vscale - cy) / sy;

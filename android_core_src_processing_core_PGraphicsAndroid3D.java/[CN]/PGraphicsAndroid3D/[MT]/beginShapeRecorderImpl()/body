@@ -1,8 +1,34 @@
 {
   recordingShape=true;
-  recordedVertices=new ArrayList<PVector>(vertexBuffer.capacity() / 3);
-  recordedColors=new ArrayList<float[]>(colorBuffer.capacity() / 4);
-  recordedNormals=new ArrayList<PVector>(normalBuffer.capacity() / 4);
-  recordedTexCoords=new ArrayList<PVector>(texCoordBuffer.capacity() / 2);
-  recordedGroups=new ArrayList<VertexGroup>();
+  if (recordedVertices == null) {
+    recordedVertices=new ArrayList<PVector>(vertexBuffer.capacity() / 3);
+  }
+ else {
+    recordedVertices.ensureCapacity(vertexBuffer.capacity() / 3);
+  }
+  if (recordedColors == null) {
+    recordedColors=new ArrayList<float[]>(colorBuffer.capacity() / 4);
+  }
+ else {
+    recordedColors.ensureCapacity(colorBuffer.capacity() / 4);
+  }
+  if (recordedNormals == null) {
+    recordedNormals=new ArrayList<PVector>(normalBuffer.capacity() / 3);
+  }
+ else {
+    recordedNormals.ensureCapacity(normalBuffer.capacity() / 3);
+  }
+  if (recordedTexCoords == null) {
+    recordedTexCoords=new ArrayList[MAX_TEXTURES];
+    for (int t=0; t < maxTextureUnits; t++) {
+      recordedTexCoords[t]=new ArrayList<PVector>(texCoordBuffer[t].capacity() / 2);
+    }
+  }
+ else {
+    for (int t=0; t < maxTextureUnits; t++) {
+      recordedTexCoords[t].ensureCapacity(texCoordBuffer[t].capacity() / 2);
+    }
+  }
+  numRecordedTextures=0;
+  recordedGroups=new ArrayList<VertexGroup>(64);
 }
