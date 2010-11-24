@@ -6,11 +6,28 @@
   vertex[Y]=y;
   vertex[Z]=0;
   vertex[EDGE]=edge ? 1 : 0;
-  if (fill) {
-    vertex[R]=fillR;
-    vertex[G]=fillG;
-    vertex[B]=fillB;
-    vertex[A]=fillA;
+  boolean textured=textureImage != null;
+  if (fill || textured) {
+    if (textured) {
+      vertex[R]=fillR;
+      vertex[G]=fillG;
+      vertex[B]=fillB;
+      vertex[A]=fillA;
+    }
+ else {
+      if (tint) {
+        vertex[R]=tintR;
+        vertex[G]=tintG;
+        vertex[B]=tintB;
+        vertex[A]=tintA;
+      }
+ else {
+        vertex[R]=1;
+        vertex[G]=1;
+        vertex[B]=1;
+        vertex[A]=1;
+      }
+    }
   }
   if (stroke) {
     vertex[SR]=strokeR;
@@ -21,5 +38,26 @@
   }
   vertex[U]=textureU;
   vertex[V]=textureV;
+  if (autoNormal) {
+    float norm2=normalX * normalX + normalY * normalY + normalZ * normalZ;
+    if (norm2 < EPSILON) {
+      vertex[HAS_NORMAL]=0;
+    }
+ else {
+      if (Math.abs(norm2 - 1) > EPSILON) {
+        float norm=PApplet.sqrt(norm2);
+        normalX/=norm;
+        normalY/=norm;
+        normalZ/=norm;
+      }
+      vertex[HAS_NORMAL]=1;
+    }
+  }
+ else {
+    vertex[HAS_NORMAL]=1;
+  }
+  vertex[NX]=normalX;
+  vertex[NY]=normalY;
+  vertex[NZ]=normalZ;
   vertexCount++;
 }
