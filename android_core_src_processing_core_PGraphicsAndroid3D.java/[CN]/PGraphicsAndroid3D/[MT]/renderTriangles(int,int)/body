@@ -7,7 +7,7 @@
   for (int j=start; j < stop; j++) {
     int i=faceOffset[j];
     PImage[] images=faceTextures[j];
-    if (usingMultitexturing) {
+    if (usingMultitexture) {
       for (int t=0; t < maxTextureUnits; t++)       if (images[t] != null) {
         PTexture tex=images[t].getTexture();
         if (tex != null) {
@@ -40,7 +40,7 @@
     }
     if (0 < numTextures) {
       if (numTexBuffers < numTextures) {
-        addTextureBuffers(numTextures - numTexBuffers);
+        addTexBuffers(numTextures - numTexBuffers);
       }
       gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
     }
@@ -62,9 +62,12 @@
     }
     int n=0;
     for (int k=0; k < faceLength[j]; k++) {
-      float a[]=vertices[triangles[i][VERTEX1]];
-      float b[]=vertices[triangles[i][VERTEX2]];
-      float c[]=vertices[triangles[i][VERTEX3]];
+      int na=triangles[i][VERTEX1];
+      int nb=triangles[i][VERTEX2];
+      int nc=triangles[i][VERTEX3];
+      float a[]=vertices[na];
+      float b[]=vertices[nb];
+      float c[]=vertices[nc];
       if (autoNormal && (a[HAS_NORMAL] == 0 || b[HAS_NORMAL] == 0 || c[HAS_NORMAL] == 0)) {
         float x1=b[X] - a[X];
         float y1=b[Y] - a[Y];
@@ -84,14 +87,14 @@
         a[NZ]=b[NZ]=c[NZ]=cz;
         a[HAS_NORMAL]=b[HAS_NORMAL]=c[HAS_NORMAL]=1;
       }
-      for (int t=0; t < numTextures; t++) {
+      if (numTextures == 1) {
         float uscale=1.0f;
         float vscale=1.0f;
         float cx=0.0f;
         float sx=+1.0f;
         float cy=0.0f;
         float sy=+1.0f;
-        PTexture tex=renderTextures[t];
+        PTexture tex=renderTextures[0];
         uscale*=tex.getMaxTexCoordU();
         vscale*=tex.getMaxTexCoordV();
         if (tex.isFlippedX()) {
@@ -102,12 +105,39 @@
           cy=1.0f;
           sy=-1.0f;
         }
-        renderUa[t]=(cx + sx * a[U]) * uscale;
-        renderVa[t]=(cy + sy * a[V]) * vscale;
-        renderUb[t]=(cx + sx * b[U]) * uscale;
-        renderVb[t]=(cy + sy * b[V]) * vscale;
-        renderUc[t]=(cx + sx * c[U]) * uscale;
-        renderVc[t]=(cy + sy * c[V]) * vscale;
+        renderUa[0]=(cx + sx * a[U]) * uscale;
+        renderVa[0]=(cy + sy * a[V]) * vscale;
+        renderUb[0]=(cx + sx * b[U]) * uscale;
+        renderVb[0]=(cy + sy * b[V]) * vscale;
+        renderUc[0]=(cx + sx * c[U]) * uscale;
+        renderVc[0]=(cy + sy * c[V]) * vscale;
+      }
+ else       if (1 < numTextures) {
+        for (int t=0; t < numTextures; t++) {
+          float uscale=1.0f;
+          float vscale=1.0f;
+          float cx=0.0f;
+          float sx=+1.0f;
+          float cy=0.0f;
+          float sy=+1.0f;
+          PTexture tex=renderTextures[t];
+          uscale*=tex.getMaxTexCoordU();
+          vscale*=tex.getMaxTexCoordV();
+          if (tex.isFlippedX()) {
+            cx=1.0f;
+            sx=-1.0f;
+          }
+          if (tex.isFlippedY()) {
+            cy=1.0f;
+            sy=-1.0f;
+          }
+          renderUa[t]=(cx + sx * vertexU[na][t]) * uscale;
+          renderVa[t]=(cy + sy * vertexV[na][t]) * vscale;
+          renderUb[t]=(cx + sx * vertexU[nb][t]) * uscale;
+          renderVb[t]=(cy + sy * vertexV[nb][t]) * vscale;
+          renderUc[t]=(cx + sx * vertexU[nc][t]) * uscale;
+          renderVc[t]=(cy + sy * vertexV[nc][t]) * vscale;
+        }
       }
       if (recordingShape) {
         recordedVertices.add(new PVector(a[X],a[Y],a[Z]));
@@ -211,8 +241,8 @@
       gl.glVertexPointer(3,GL10.GL_FIXED,0,vertexBuffer);
       gl.glColorPointer(4,GL10.GL_FIXED,0,colorBuffer);
       gl.glNormalPointer(GL10.GL_FIXED,0,normalBuffer);
-      for (int t=0; n < numTextures; n++) {
-        gl.glClientActiveTexture(GL11.GL_TEXTURE0 + t);
+      for (int t=0; t < numTextures; t++) {
+        gl.glClientActiveTexture(GL10.GL_TEXTURE0 + t);
         gl.glTexCoordPointer(2,GL10.GL_FIXED,0,texCoordBuffer[t]);
       }
       gl.glDrawArrays(GL10.GL_TRIANGLES,0,3 * faceLength[j]);

@@ -1,16 +1,19 @@
 {
   super.vertexCheck();
-  if (vertexCount == vertices.length) {
-    float tempf[][];
+  if (vertexCount == vertexTex.length) {
+    float tempu[][];
+    float tempv[][];
     PImage tempi[][];
-    tempf=new float[vertexCount << 1][MAX_TEXTURES];
-    System.arraycopy(vertexU,0,tempf,0,vertexCount);
-    vertexU=tempf;
-    tempf=new float[vertexCount << 1][MAX_TEXTURES];
-    System.arraycopy(vertexV,0,tempf,0,vertexCount);
-    vertexV=tempf;
-    tempi=new PImage[vertexCount << 1][MAX_TEXTURES];
-    System.arraycopy(vertexTex,0,tempi,0,vertexCount);
+    tempu=new float[vertexCount << 1][numTexBuffers];
+    tempv=new float[vertexCount << 1][numTexBuffers];
+    tempi=new PImage[vertexCount << 1][numTexBuffers];
+    for (int i=0; i < vertexCount; i++) {
+      System.arraycopy(vertexU[i],0,tempu[i],0,numTexBuffers);
+      System.arraycopy(vertexV[i],0,tempv[i],0,numTexBuffers);
+      System.arraycopy(vertexTex[i],0,tempi[i],0,numTexBuffers);
+    }
+    vertexU=tempu;
+    vertexV=tempv;
     vertexTex=tempi;
   }
 }

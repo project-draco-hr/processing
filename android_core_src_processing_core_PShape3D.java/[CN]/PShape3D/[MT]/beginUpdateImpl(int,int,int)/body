@@ -33,11 +33,8 @@
   }
  else   if (TEXTURES0 <= updateElement && updateElement < TEXTURESMAX) {
     int t=updateElement - TEXTURES0;
-    for (int i=0; i < t - numTextures; i++) {
-      boolean res=addTexUnit();
-      if (!res) {
-        return;
-      }
+    if (numTexBuffers <= t) {
+      addTexBuffers(t - numTexBuffers + 1);
     }
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[t]);
     int offset=first * 2;

@@ -1,0 +1,23 @@
+{
+  if (t == 0) {
+    super.vertexTexture(u,v);
+    multitextureU[0]=textureU;
+    multitextureV[0]=textureV;
+  }
+ else {
+    PImage img=multitextureImages[t];
+    if (img == null) {
+      throw new RuntimeException("You must first call texture() before " + "using u and v coordinates with vertex()");
+    }
+    if (textureMode == IMAGE) {
+      u/=(float)img.width;
+      v/=(float)img.height;
+    }
+    multitextureU[t]=u;
+    multitextureV[t]=v;
+    if (multitextureU[t] < 0)     multitextureU[t]=0;
+ else     if (multitextureU[t] > 1)     multitextureU[t]=1;
+    if (multitextureV[t] < 0)     multitextureV[t]=0;
+ else     if (multitextureV[t] > 1)     multitextureV[t]=1;
+  }
+}

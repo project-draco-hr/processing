@@ -1,13 +1,10 @@
 {
   if (unit < 0 || PGraphicsAndroid3D.maxTextureUnits <= unit) {
-    System.err.println("PShape3D: Wrong texture index.");
+    System.err.println("PShape3D: Wrong texture unit.");
     return;
   }
-  for (int i=0; i < unit - numTextures; i++) {
-    boolean res=addTexUnit();
-    if (!res) {
-      return;
-    }
+  if (numTexBuffers <= unit) {
+    addTexBuffers(unit - numTexBuffers + 1);
   }
   if (tex == null || tex.getTexture() == null) {
     throw new RuntimeException("PShape3D: trying to set null texture.");
