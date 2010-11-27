@@ -1,6 +1,9 @@
 {
   this.parent=parent;
   a3d=(PGraphicsAndroid3D)parent.g;
+  glFboID=0;
+  glDepthBufferID=0;
+  glStencilBufferID=0;
   screenFb=screen;
   noDepth=false;
   FboMode=PGraphicsAndroid3D.fboSupported;
@@ -10,17 +13,10 @@
   if (gl11xp == null) {
     throw new RuntimeException("PFramebuffer: OpenGL ES 1.1 Extension Pack required");
   }
-  initFramebuffer(w,h);
+  createFramebuffer(w,h);
   pixelBuffer=IntBuffer.allocate(width * height);
   pixelBuffer.rewind();
   if (!screenFb && !FboMode) {
     backupTexture=new PTexture(parent,width,height,new PTexture.Parameters(ARGB,NEAREST));
-  }
-  try {
-    Method meth=this.getClass().getMethod("recreateResource",new Class[]{PGraphicsAndroid3D.class});
-    recreateResourceIdx=a3d.addRecreateResourceMethod(this,meth);
-  }
- catch (  Exception e) {
-    recreateResourceIdx=-1;
   }
 }

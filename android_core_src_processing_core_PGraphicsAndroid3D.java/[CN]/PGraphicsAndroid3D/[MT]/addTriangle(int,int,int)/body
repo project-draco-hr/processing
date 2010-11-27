@@ -7,14 +7,28 @@
   triangles[triangleCount][VERTEX1]=a;
   triangles[triangleCount][VERTEX2]=b;
   triangles[triangleCount][VERTEX3]=c;
-  PImage[] images=vertexTex[a];
-  boolean firstFace=triangleCount == 0;
-  if (diffFromMultitextures0(images) || firstFace) {
-    addNewFace(firstFace,images);
+  if (usingMultitexture) {
+    PImage[] images=vertexTex[a];
+    boolean firstFace=triangleCount == 0;
+    if (diffFromMultitextures0(images) || firstFace) {
+      addNewFace(firstFace,images);
+    }
+ else {
+      faceLength[faceCount - 1]++;
+    }
+    triangleCount++;
+    setMultitextures0(images);
   }
  else {
-    faceLength[faceCount - 1]++;
+    PImage image=textureImage;
+    boolean firstFace=triangleCount == 0;
+    if (image != textureImage0 || firstFace) {
+      addNewFace(firstFace,image);
+    }
+ else {
+      faceLength[faceCount - 1]++;
+    }
+    triangleCount++;
+    textureImage0=textureImage;
   }
-  triangleCount++;
-  setMultitextures0(images);
 }

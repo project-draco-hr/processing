@@ -1,6 +1,10 @@
 {
   this.parent=parent;
   a3d=(PGraphicsAndroid3D)parent.g;
+  glVertexBufferID=0;
+  glColorBufferID=0;
+  glNormalBufferID=0;
+  java.util.Arrays.fill(glTexCoordBufferID,0);
   TEXTURESMAX=TEXTURES0 + PGraphicsAndroid3D.maxTextureUnits;
   gl=a3d.gl11;
   if (gl == null) {
@@ -23,11 +27,4 @@
   parseOBJ(reader,vertices,normals,textures,faces,materials);
   recordOBJ(vertices,normals,textures,faces,materials);
   centerAt(0,0,0);
-  try {
-    Method meth=this.getClass().getMethod("recreateResource",new Class[]{PGraphicsAndroid3D.class});
-    recreateResourceIdx=a3d.addRecreateResourceMethod(this,meth);
-  }
- catch (  Exception e) {
-    recreateResourceIdx=-1;
-  }
 }
