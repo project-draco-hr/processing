@@ -43,6 +43,9 @@
         addTexBuffers(numTextures - numTexBuffers);
       }
       gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+      if (1 < numTextures) {
+        setMultitextureBlend(renderTextures,numTextures);
+      }
     }
     if (recordingShape) {
       numRecordedTextures=PApplet.max(numRecordedTextures,numTextures);
@@ -248,6 +251,9 @@
       gl.glDrawArrays(GL10.GL_TRIANGLES,0,3 * faceLength[j]);
     }
     if (0 < numTextures) {
+      if (1 < numTextures) {
+        clearMultitextureBlend(numTextures);
+      }
       for (int t=0; t < numTextures; t++) {
         PTexture tex=renderTextures[t];
         gl.glDisable(tex.getGLTarget());
