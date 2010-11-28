@@ -22,7 +22,8 @@
         VertexGroup group=PShape3D.newVertexGroup(n0,n1,LINE_STRIP,sw,null);
         recordedGroups.add(group);
       }
-      if (vertexBuffer.capacity() / 3 <= 3 * (pathLength[j] + 1)) {
+      int size=3 * (pathLength[j] + 1);
+      while (vertexBuffer.capacity() / 3 < size) {
         expandBuffers();
       }
       vertexBuffer.position(0);
