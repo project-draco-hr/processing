@@ -1,0 +1,12 @@
+{
+  if (goldenFile.exists()) {
+    final String expected=ProcessingTestUtil.read(goldenFile);
+    assertEquals(expected,expectedText);
+  }
+ else {
+    System.err.println("WARN: golden file " + goldenFile + " does not exist. Generating.");
+    final FileWriter sug=new FileWriter(goldenFile);
+    sug.write(ProcessingTestUtil.normalize(expectedText));
+    sug.close();
+  }
+}
