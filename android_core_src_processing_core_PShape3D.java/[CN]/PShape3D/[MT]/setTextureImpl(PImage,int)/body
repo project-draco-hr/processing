@@ -1,0 +1,21 @@
+{
+  if (unit < 0 || PGraphicsAndroid3D.maxTextureUnits <= unit) {
+    System.err.println("PShape3D: Wrong texture unit.");
+    return;
+  }
+  PShape3D p3d=(PShape3D)parent;
+  if (p3d.numTexBuffers <= unit) {
+    p3d.addTexBuffers(unit - p3d.numTexBuffers + 1);
+  }
+  if (tex == null || tex.getTexture() == null) {
+    throw new RuntimeException("PShape3D: trying to set null texture.");
+  }
+  if (p3d.texCoordSet[unit]) {
+    p3d.loadTexcoords(unit,firstVertex,lastVertex);
+    textures[unit]=tex;
+    p3d.updateTexcoords();
+  }
+ else {
+    textures[unit]=tex;
+  }
+}

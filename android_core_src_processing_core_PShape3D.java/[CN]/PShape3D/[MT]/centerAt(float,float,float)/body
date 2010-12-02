@@ -1,15 +1,12 @@
 {
-  float[] tempVertexArray=new float[numVertices * 3];
-  beginUpdate(VERTICES);
-  getVertexArrayImpl(tempVertexArray,0,numVertices,0);
-  endUpdate();
+  loadVertices();
   float dx=cx - 0.5f * (xmin + xmax);
   float dy=cy - 0.5f * (ymin + ymax);
   float dz=cz - 0.5f * (zmin + zmax);
-  for (int i=0; i < numVertices; i++) {
-    tempVertexArray[3 * i + 0]+=dx;
-    tempVertexArray[3 * i + 1]+=dy;
-    tempVertexArray[3 * i + 2]+=dz;
+  for (int i=0; i < vertexCount; i++) {
+    vertices[3 * i + 0]+=dx;
+    vertices[3 * i + 1]+=dy;
+    vertices[3 * i + 2]+=dz;
   }
   xmin+=dx;
   xmax+=dx;
@@ -17,7 +14,5 @@
   ymax+=dy;
   zmin+=dz;
   zmax+=dz;
-  beginUpdateImpl(VERTICES,0,numVertices - 1);
-  setVertex(tempVertexArray);
-  endUpdate();
+  updateVertices();
 }

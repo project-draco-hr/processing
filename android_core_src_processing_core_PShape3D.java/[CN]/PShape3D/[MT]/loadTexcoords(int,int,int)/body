@@ -1,0 +1,29 @@
+{
+  if (last < first || first < 0 || vertexCount <= last) {
+    PGraphics.showWarning("PShape3D: wrong vertex index");
+    updateElement=-1;
+    return;
+  }
+  if (updateElement != -1) {
+    PGraphics.showWarning("PShape3D: can load only one type of data at the time");
+    return;
+  }
+  if (PGraphicsAndroid3D.maxTextureUnits <= unit) {
+    PGraphics.showWarning("PShape3D: wrong texture unit");
+    return;
+  }
+  updateElement=TEXCOORDS;
+  firstUpdateIdx=first;
+  lastUpdateIdx=last;
+  if (numTexBuffers <= unit) {
+    addTexBuffers(unit - numTexBuffers + 1);
+  }
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[unit]);
+  int offset=first * 2;
+  int size=(last - first + 1) * 2;
+  texCoordBuffer.limit(texCoordBuffer.capacity());
+  texCoordBuffer.rewind();
+  texCoordBuffer.get(texcoords,offset,size);
+  normalizeTexcoords(unit);
+  updateTexunit=unit;
+}

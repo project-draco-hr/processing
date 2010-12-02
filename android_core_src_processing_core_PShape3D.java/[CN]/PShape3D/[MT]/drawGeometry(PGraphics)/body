@@ -1,0 +1,102 @@
+{
+  PShape3D p3d=(PShape3D)parent;
+  int numTextures;
+  float pointSize;
+  pointSize=PApplet.min(g.strokeWeight,PGraphicsAndroid3D.maxPointSize);
+  gl.glPointSize(pointSize);
+  gl.glEnableClientState(GL11.GL_NORMAL_ARRAY);
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glNormalBufferID);
+  gl.glNormalPointer(GL11.GL_FLOAT,0,0);
+  if (p3d.vertexColor) {
+    gl.glEnableClientState(GL11.GL_COLOR_ARRAY);
+    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glColorBufferID);
+    gl.glColorPointer(4,GL11.GL_FLOAT,0,0);
+  }
+  gl.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glVertexBufferID);
+  gl.glVertexPointer(3,GL11.GL_FLOAT,0,0);
+  numTextures=0;
+  for (int t=0; t < textures.length; t++) {
+    if (textures[t] != null) {
+      PTexture tex=textures[t].getTexture();
+      if (tex != null) {
+        gl.glEnable(tex.getGLTarget());
+        gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
+        gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
+        renderTextures[numTextures]=tex;
+        numTextures++;
+      }
+ else {
+        throw new RuntimeException("A3D: missing image texture");
+      }
+    }
+ else {
+      break;
+    }
+  }
+  if (0 < numTextures) {
+    if (pointSprites) {
+      gl.glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION,ptDistAtt,0);
+      gl.glPointParameterf(GL11.GL_POINT_FADE_THRESHOLD_SIZE,0.6f * pointSize);
+      gl.glPointParameterf(GL11.GL_POINT_SIZE_MIN,1.0f);
+      gl.glPointParameterf(GL11.GL_POINT_SIZE_MAX,PGraphicsAndroid3D.maxPointSize);
+      gl.glTexEnvf(GL11.GL_POINT_SPRITE_OES,GL11.GL_COORD_REPLACE_OES,GL11.GL_TRUE);
+      gl.glEnable(GL11.GL_POINT_SPRITE_OES);
+    }
+ else {
+      gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+      for (int t=0; t < numTextures; t++) {
+        gl.glClientActiveTexture(GL11.GL_TEXTURE0 + t);
+        gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glTexCoordBufferID[t]);
+        gl.glTexCoordPointer(2,GL11.GL_FLOAT,0,0);
+      }
+      if (1 < numTextures) {
+        a3d.setMultitextureBlend(renderTextures,numTextures);
+      }
+    }
+  }
+  if (!p3d.vertexColor) {
+    if (0 < numTextures) {
+      if (g.tint) {
+        gl.glColor4f(g.tintR,g.tintG,g.tintB,g.tintA);
+      }
+ else {
+        gl.glColor4f(1,1,1,1);
+      }
+    }
+ else {
+      gl.glColor4f(g.fillR,g.fillG,g.fillB,g.fillA);
+    }
+  }
+  if (0 < strokeWeight) {
+    gl.glLineWidth(strokeWeight);
+  }
+ else {
+    gl.glLineWidth(g.strokeWeight);
+  }
+  if (0 < glMode && !pointSprites) {
+    gl.glDrawArrays(glMode,firstVertex,lastVertex - firstVertex + 1);
+  }
+ else {
+    gl.glDrawArrays(glMode,firstVertex,lastVertex - firstVertex + 1);
+  }
+  if (0 < numTextures) {
+    if (1 < numTextures) {
+      a3d.clearMultitextureBlend(numTextures);
+    }
+    if (pointSprites) {
+      gl.glDisable(GL11.GL_POINT_SPRITE_OES);
+    }
+ else {
+      gl.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+    }
+    for (int t=0; t < numTextures; t++) {
+      PTexture tex=renderTextures[t];
+      gl.glDisable(tex.getGLTarget());
+    }
+  }
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);
+  gl.glDisableClientState(GL11.GL_VERTEX_ARRAY);
+  gl.glDisableClientState(GL11.GL_COLOR_ARRAY);
+  gl.glDisableClientState(GL11.GL_NORMAL_ARRAY);
+}

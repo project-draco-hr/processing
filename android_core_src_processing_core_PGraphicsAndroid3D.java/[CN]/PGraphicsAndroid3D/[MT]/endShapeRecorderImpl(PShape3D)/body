@@ -1,28 +1,20 @@
 {
   recordingShape=false;
   if (0 < recordedVertices.size() && shape != null) {
-    shape.beginUpdate(VERTICES);
-    shape.setVertex(recordedVertices);
-    shape.endUpdate();
-    shape.beginUpdate(COLORS);
-    shape.setColor(recordedColors);
-    shape.endUpdate();
-    shape.beginUpdate(NORMALS);
-    shape.setNormal(recordedNormals);
-    shape.endUpdate();
+    shape.setVertices(recordedVertices);
+    shape.setColors(recordedColors);
+    shape.setNormals(recordedNormals);
     for (int t=0; t < numRecordedTextures; t++) {
-      shape.beginUpdate(TEXTURES0 + t);
-      shape.setTexCoord(recordedTexCoords[t]);
-      shape.endUpdate();
+      shape.setTexcoords(t,recordedTexCoords[t]);
     }
-    shape.setGroups(recordedGroups);
-    shape.optimizeGroups();
+    shape.setChildren(recordedChildren);
+    shape.optimizeChildren();
     recordedVertices.clear();
     recordedColors.clear();
     recordedNormals.clear();
     for (int t=0; t < maxTextureUnits; t++) {
       recordedTexCoords[t].clear();
     }
-    recordedGroups.clear();
+    recordedChildren.clear();
   }
 }

@@ -1,4 +1,11 @@
 {
-  super.delete();
-  deleteAllGLResources();
+  if (primarySurface) {
+    PGraphics.showWarning("You cannot delete the primary rendering surface!");
+  }
+ else {
+    super.delete();
+    if (offscreenFramebuffer != null) {
+      offscreenFramebuffer.delete();
+    }
+  }
 }

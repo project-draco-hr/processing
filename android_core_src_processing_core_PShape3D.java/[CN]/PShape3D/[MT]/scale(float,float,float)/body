@@ -1,14 +1,9 @@
 {
-  float[] tempVertexArray=new float[numVertices * 3];
-  beginUpdate(VERTICES);
-  getVertexArrayImpl(tempVertexArray,0,numVertices,0);
-  endUpdate();
-  for (int i=0; i < numVertices; i++) {
-    tempVertexArray[3 * i + 0]*=x;
-    tempVertexArray[3 * i + 1]*=y;
-    tempVertexArray[3 * i + 2]*=z;
+  loadVertices();
+  for (int i=0; i < vertexCount; i++) {
+    vertices[3 * i + 0]*=x;
+    vertices[3 * i + 1]*=y;
+    vertices[3 * i + 2]*=z;
   }
-  beginUpdateImpl(VERTICES,0,numVertices - 1);
-  setVertex(tempVertexArray);
-  endUpdate();
+  updateVertices();
 }
