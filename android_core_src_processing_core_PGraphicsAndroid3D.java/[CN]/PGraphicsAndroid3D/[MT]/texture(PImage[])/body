@@ -1,13 +1,12 @@
 {
-  if (images.length <= maxTextureUnits) {
+  int len=images.length;
+  if (len <= maxTextureUnits) {
     super.texture(images[0]);
-    PApplet.arrayCopy(images,0,multitextureImages,0,images.length);
-    usingMultitexture=true;
-    if (numTexBuffers < images.length) {
-      addTexBuffers(images.length - numTexBuffers);
-    }
-    for (int t=images.length; t < maxTextureUnits; t++) {
-      multitextureImages[t]=null;
+    PApplet.arrayCopy(images,0,multitextureImages,0,len);
+    java.util.Arrays.fill(multitextureImages,len,maxTextureUnits,null);
+    numMultitextures=len;
+    if (numTexBuffers < len) {
+      addTexBuffers(len - numTexBuffers);
     }
   }
  else {
