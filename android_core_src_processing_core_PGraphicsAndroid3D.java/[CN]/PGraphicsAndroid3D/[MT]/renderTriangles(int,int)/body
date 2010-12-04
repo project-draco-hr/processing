@@ -8,21 +8,23 @@
     int i=faceOffset[j];
     PImage[] images=faceTextures[j];
     if (1 < numMultitextures) {
-      for (int t=0; t < numMultitextures; t++)       if (images[t] != null) {
-        PTexture tex=images[t].getTexture();
-        if (tex != null) {
-          gl.glEnable(tex.getGLTarget());
-          gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
-          gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
-          renderTextures[numTextures]=tex;
-          numTextures++;
+      for (int t=0; t < numMultitextures; t++) {
+        if (images[t] != null) {
+          PTexture tex=images[t].getTexture();
+          if (tex != null) {
+            gl.glEnable(tex.getGLTarget());
+            gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
+            gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
+            renderTextures[numTextures]=tex;
+            numTextures++;
+          }
+ else {
+            break;
+          }
         }
  else {
-          throw new RuntimeException("A3D: missing image texture");
+          break;
         }
-      }
- else {
-        break;
       }
     }
  else     if (images[0] != null) {
@@ -33,9 +35,6 @@
         gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
         renderTextures[0]=tex;
         numTextures=1;
-      }
- else {
-        throw new RuntimeException("A3D: missing image texture");
       }
     }
     if (0 < numTextures) {
