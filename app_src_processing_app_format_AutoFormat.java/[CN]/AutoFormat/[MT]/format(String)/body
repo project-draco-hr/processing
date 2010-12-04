@@ -265,9 +265,16 @@ ind[level]=0;
 break;
 case '(':
 castFlags.push(Pattern.matches("^.*?(?:int|color|float)\\s*$",buf));
+final boolean isFor=lookup("for");
+final boolean isIf=lookup("if");
+if (isFor || isIf || lookup("while")) {
+if (!Character.isWhitespace(buf.charAt(buf.length() - 1))) {
+buf.append(' ');
+}
+}
 buf.append(c);
 paren++;
-if ((lookup("for"))) {
+if (isFor) {
 c=get_string();
 while (c != ';' && c != ':') {
 c=get_string();
@@ -302,7 +309,7 @@ ind[level]=0;
 }
 break;
 }
-if (lookup("if")) {
+ else if (isIf) {
 writeIndentedLine();
 s_tabs[c_level][if_lev]=tabs;
 sp_flg[c_level][if_lev]=p_flg[level];
