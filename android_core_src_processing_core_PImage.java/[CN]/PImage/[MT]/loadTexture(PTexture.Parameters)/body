@@ -1,7 +1,11 @@
 {
   if (width == 0 || height == 0)   return;
   if (texture == null) {
-    texture=new PTexture(parent,width,height,params);
+    if (texParams == null) {
+      texParams=PTexture.newParameters();
+    }
+    texParams.set(params);
+    texture=new PTexture(parent,width,height,texParams);
   }
   if (pixels == null) {
     loadPixels();

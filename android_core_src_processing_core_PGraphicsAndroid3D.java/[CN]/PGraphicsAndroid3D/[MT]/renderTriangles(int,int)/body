@@ -11,16 +11,17 @@
       for (int t=0; t < numMultitextures; t++) {
         if (images[t] != null) {
           PTexture tex=images[t].getTexture();
-          if (tex != null) {
-            gl.glEnable(tex.getGLTarget());
-            gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
-            gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
-            renderTextures[numTextures]=tex;
-            numTextures++;
+          if (tex == null) {
+            tex=images[t].createTexture();
+            if (tex == null) {
+              break;
+            }
           }
- else {
-            break;
-          }
+          gl.glEnable(tex.getGLTarget());
+          gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
+          gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
+          renderTextures[numTextures]=tex;
+          numTextures++;
         }
  else {
           break;
@@ -29,6 +30,9 @@
     }
  else     if (images[0] != null) {
       PTexture tex=images[0].getTexture();
+      if (tex == null) {
+        tex=images[0].createTexture();
+      }
       if (tex != null) {
         gl.glEnable(tex.getGLTarget());
         gl.glActiveTexture(GL10.GL_TEXTURE0);

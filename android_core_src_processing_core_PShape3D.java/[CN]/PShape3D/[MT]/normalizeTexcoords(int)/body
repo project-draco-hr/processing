@@ -11,23 +11,28 @@
   for (int i=firstUpdateIdx; i <= lastUpdateIdx; i++) {
     if (vertexChild[i] != null && vertexChild[i].textures[unit] != null) {
       tex=vertexChild[i].textures[unit].getTexture();
-      if (tex != tex0) {
+      if (tex == null) {
+        tex=vertexChild[i].textures[unit].createTexture();
+      }
+      if (tex != null && tex != tex0) {
         uscale=1.0f;
         vscale=1.0f;
         cx=0.0f;
         sx=+1.0f;
         cy=0.0f;
         sy=+1.0f;
-        if (tex.isFlippedX()) {
-          cx=1.0f;
-          sx=-1.0f;
+        if (tex != null) {
+          if (tex.isFlippedX()) {
+            cx=1.0f;
+            sx=-1.0f;
+          }
+          if (tex.isFlippedY()) {
+            cy=1.0f;
+            sy=-1.0f;
+          }
+          uscale*=tex.getMaxTexCoordU();
+          vscale*=tex.getMaxTexCoordV();
         }
-        if (tex.isFlippedY()) {
-          cy=1.0f;
-          sy=-1.0f;
-        }
-        uscale*=tex.getMaxTexCoordU();
-        vscale*=tex.getMaxTexCoordV();
         tex0=tex;
       }
       u=texcoords[2 * i + 0];

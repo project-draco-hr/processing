@@ -1,7 +1,12 @@
 {
   if (width == 0 || height == 0)   return;
   if (texture == null) {
-    texture=new PTexture(parent,width,height,new PTexture.Parameters(format,filter));
+    if (texParams == null) {
+      texParams=PTexture.newParameters();
+    }
+    texParams.magFilter=filter;
+    texParams.minFilter=filter;
+    texture=new PTexture(parent,width,height,texParams);
   }
   if (pixels == null) {
     loadPixels();

@@ -19,16 +19,17 @@
   for (int t=0; t < textures.length; t++) {
     if (textures[t] != null) {
       PTexture tex=textures[t].getTexture();
-      if (tex != null) {
-        gl.glEnable(tex.getGLTarget());
-        gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
-        gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
-        renderTextures[numTextures]=tex;
-        numTextures++;
+      if (tex == null) {
+        tex=textures[t].createTexture();
+        if (tex == null) {
+          break;
+        }
       }
- else {
-        break;
-      }
+      gl.glEnable(tex.getGLTarget());
+      gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
+      gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
+      renderTextures[numTextures]=tex;
+      numTextures++;
     }
  else {
       break;
