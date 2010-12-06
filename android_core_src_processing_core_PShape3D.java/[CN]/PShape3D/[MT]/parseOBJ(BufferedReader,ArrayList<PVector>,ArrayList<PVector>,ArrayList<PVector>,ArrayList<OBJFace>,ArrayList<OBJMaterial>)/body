@@ -1,5 +1,5 @@
 {
-  Hashtable<String,Integer> materialsHash=new Hashtable<String,Integer>();
+  Hashtable<String,Integer> mtlTable=new Hashtable<String,Integer>();
   int mtlIdxCur=-1;
   boolean readv, readvn, readvt;
   try {
@@ -32,7 +32,7 @@
         }
  else         if (elements[0].equals("mtllib")) {
           if (elements[1] != null) {
-            parseMTL(getBufferedReader(elements[1]),materials,materialsHash);
+            parseMTL(getBufferedReader(elements[1]),materials,mtlTable);
           }
         }
  else         if (elements[0].equals("g")) {
@@ -40,8 +40,8 @@
  else         if (elements[0].equals("usemtl")) {
           if (elements[1] != null) {
             String mtlname=elements[1];
-            if (materialsHash.containsKey(mtlname)) {
-              Integer tempInt=materialsHash.get(mtlname);
+            if (mtlTable.containsKey(mtlname)) {
+              Integer tempInt=mtlTable.get(mtlname);
               mtlIdxCur=tempInt.intValue();
             }
  else {
