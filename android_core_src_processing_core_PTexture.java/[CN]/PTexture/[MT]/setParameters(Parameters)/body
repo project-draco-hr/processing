@@ -17,35 +17,20 @@
  else {
     throw new RuntimeException("GTexture: Unknown texture format");
   }
-  if (params.minFilter == NEAREST) {
+  if (params.sampling == POINT) {
+    glMagFilter=GL10.GL_NEAREST;
     glMinFilter=GL10.GL_NEAREST;
   }
- else   if (params.minFilter == LINEAR) {
+ else   if (params.sampling == BILINEAR) {
+    glMagFilter=GL10.GL_LINEAR;
     glMinFilter=GL10.GL_LINEAR;
   }
- else   if (params.minFilter == NEAREST_MIPMAP_NEAREST) {
-    glMinFilter=GL10.GL_NEAREST_MIPMAP_NEAREST;
-  }
- else   if (params.minFilter == LINEAR_MIPMAP_NEAREST) {
-    glMinFilter=GL10.GL_LINEAR_MIPMAP_NEAREST;
-  }
- else   if (params.minFilter == NEAREST_MIPMAP_LINEAR) {
-    glMinFilter=GL10.GL_NEAREST_MIPMAP_LINEAR;
-  }
- else   if (params.minFilter == LINEAR_MIPMAP_LINEAR) {
+ else   if (params.sampling == TRILINEAR) {
+    glMagFilter=GL10.GL_LINEAR;
     glMinFilter=GL10.GL_LINEAR_MIPMAP_LINEAR;
   }
  else {
-    throw new RuntimeException("GTexture: Unknown minimization filter");
-  }
-  if (params.magFilter == NEAREST) {
-    glMagFilter=GL10.GL_NEAREST;
-  }
- else   if (params.magFilter == LINEAR) {
-    glMagFilter=GL10.GL_LINEAR;
-  }
- else {
-    throw new RuntimeException("GTexture: Unknown magnification filter");
+    throw new RuntimeException("GTexture: Unknown texture sampling mode");
   }
   if (params.wrapU == CLAMP) {
     glWrapS=GL10.GL_CLAMP_TO_EDGE;
