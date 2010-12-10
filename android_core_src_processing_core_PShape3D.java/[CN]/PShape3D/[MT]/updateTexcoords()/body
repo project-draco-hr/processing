@@ -2,9 +2,9 @@
   if (updateElement == TEXCOORDS) {
     int offset=firstUpdateIdx * 2;
     int size=(lastUpdateIdx - firstUpdateIdx + 1) * 2;
-    unnormalizeTexcoords(updateTexunit);
+    convertTexcoords();
     texCoordBuffer.position(0);
-    texCoordBuffer.put(texcoords,offset,size);
+    texCoordBuffer.put(convTexcoords,offset,size);
     texCoordBuffer.flip();
     gl.glBufferSubData(GL11.GL_ARRAY_BUFFER,offset * PGraphicsAndroid3D.SIZEOF_FLOAT,size * PGraphicsAndroid3D.SIZEOF_FLOAT,texCoordBuffer);
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);

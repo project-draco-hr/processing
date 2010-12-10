@@ -15,15 +15,10 @@
   updateElement=TEXCOORDS;
   firstUpdateIdx=first;
   lastUpdateIdx=last;
+  updateTexunit=unit;
   if (numTexBuffers <= unit) {
     addTexBuffers(unit - numTexBuffers + 1);
   }
   gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[unit]);
-  int offset=first * 2;
-  int size=(last - first + 1) * 2;
-  texCoordBuffer.limit(texCoordBuffer.capacity());
-  texCoordBuffer.rewind();
-  texCoordBuffer.get(texcoords,offset,size);
-  normalizeTexcoords(unit);
-  updateTexunit=unit;
+  texcoords=allTexcoords[unit];
 }

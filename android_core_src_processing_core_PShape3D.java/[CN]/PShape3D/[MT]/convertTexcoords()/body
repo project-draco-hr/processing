@@ -9,12 +9,12 @@
   float cy=0.0f;
   float sy=+1.0f;
   for (int i=firstUpdateIdx; i <= lastUpdateIdx; i++) {
-    if (vertexChild[i] != null && vertexChild[i].textures[unit] != null) {
-      tex=vertexChild[i].textures[unit].getTexture();
+    if (vertexChild[i] != null && vertexChild[i].textures[updateTexunit] != null) {
+      tex=vertexChild[i].textures[updateTexunit].getTexture();
       if (tex == null) {
-        tex=vertexChild[i].textures[unit].createTexture();
+        tex=vertexChild[i].textures[updateTexunit].createTexture();
       }
-      if (tex != null && tex != tex0) {
+      if (tex != tex0) {
         uscale=1.0f;
         vscale=1.0f;
         cx=0.0f;
@@ -37,10 +37,10 @@
       }
       u=texcoords[2 * i + 0];
       v=texcoords[2 * i + 1];
-      u=(u / uscale - cx) / sx;
-      v=(v / vscale - cy) / sy;
-      texcoords[2 * i + 0]=u;
-      texcoords[2 * i + 1]=v;
+      u=(cx + sx * u) * uscale;
+      v=(cy + sy * v) * vscale;
+      convTexcoords[2 * i + 0]=u;
+      convTexcoords[2 * i + 1]=v;
     }
   }
 }

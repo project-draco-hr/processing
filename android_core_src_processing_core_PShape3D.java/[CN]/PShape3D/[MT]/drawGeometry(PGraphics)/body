@@ -2,7 +2,14 @@
   PShape3D p3d=(PShape3D)parent;
   int numTextures;
   float pointSize;
-  pointSize=PApplet.min(g.strokeWeight,PGraphicsAndroid3D.maxPointSize);
+  if (0 < strokeWeight && useOwnStrokeWeigth) {
+    gl.glLineWidth(strokeWeight);
+    pointSize=PApplet.min(strokeWeight,PGraphicsAndroid3D.maxPointSize);
+  }
+ else {
+    gl.glLineWidth(g.strokeWeight);
+    pointSize=PApplet.min(g.strokeWeight,PGraphicsAndroid3D.maxPointSize);
+  }
   gl.glPointSize(pointSize);
   gl.glEnableClientState(GL11.GL_NORMAL_ARRAY);
   gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glNormalBufferID);
@@ -70,12 +77,6 @@
  else {
       gl.glColor4f(g.fillR,g.fillG,g.fillB,g.fillA);
     }
-  }
-  if (0 < strokeWeight && useOwnStrokeWeigth) {
-    gl.glLineWidth(strokeWeight);
-  }
- else {
-    gl.glLineWidth(g.strokeWeight);
   }
   gl.glDrawArrays(glMode,firstVertex,lastVertex - firstVertex + 1);
   if (0 < numTextures) {
