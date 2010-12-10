@@ -2,7 +2,7 @@
   PShape3D p3d=(PShape3D)parent;
   int numTextures;
   float pointSize;
-  if (0 < strokeWeight && useOwnStrokeWeigth) {
+  if (0 < strokeWeight && style) {
     gl.glLineWidth(strokeWeight);
     pointSize=PApplet.min(strokeWeight,PGraphicsAndroid3D.maxPointSize);
   }
@@ -10,11 +10,13 @@
     gl.glLineWidth(g.strokeWeight);
     pointSize=PApplet.min(g.strokeWeight,PGraphicsAndroid3D.maxPointSize);
   }
-  gl.glPointSize(pointSize);
+  if (!pointSprites) {
+    gl.glPointSize(pointSize);
+  }
   gl.glEnableClientState(GL11.GL_NORMAL_ARRAY);
   gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glNormalBufferID);
   gl.glNormalPointer(GL11.GL_FLOAT,0,0);
-  if (vertexColor) {
+  if (style) {
     gl.glEnableClientState(GL11.GL_COLOR_ARRAY);
     gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glColorBufferID);
     gl.glColorPointer(4,GL11.GL_FLOAT,0,0);
@@ -23,7 +25,7 @@
   gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glVertexBufferID);
   gl.glVertexPointer(3,GL11.GL_FLOAT,0,0);
   numTextures=0;
-  if (useTextures) {
+  if (style) {
     for (int t=0; t < textures.length; t++) {
       if (textures[t] != null) {
         PTexture tex=textures[t].getTexture();
@@ -46,7 +48,8 @@
   }
   if (0 < numTextures) {
     if (pointSprites) {
-      gl.glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION,ptDistAtt,0);
+      gl.glPointSize(PGraphicsAndroid3D.maxPointSize);
+      gl.glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION,spriteDistAtt,0);
       gl.glPointParameterf(GL11.GL_POINT_FADE_THRESHOLD_SIZE,0.6f * pointSize);
       gl.glPointParameterf(GL11.GL_POINT_SIZE_MIN,1.0f);
       gl.glPointParameterf(GL11.GL_POINT_SIZE_MAX,PGraphicsAndroid3D.maxPointSize);
@@ -65,7 +68,7 @@
       }
     }
   }
-  if (!vertexColor) {
+  if (!style) {
     if (0 < numTextures) {
       if (g.tint) {
         gl.glColor4f(g.tintR,g.tintG,g.tintB,g.tintA);
