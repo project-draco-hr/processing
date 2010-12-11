@@ -1,6 +1,15 @@
 {
   init();
-  loadVertices();
+  float norm2=v0 * v0 + v1 * v1 + v2 * v2;
+  if (Math.abs(norm2 - 1) > EPSILON) {
+    float norm=PApplet.sqrt(norm2);
+    v0/=norm;
+    v1/=norm;
+    v2/=norm;
+  }
+  float cx=0.5f * (xmin + xmax);
+  float cy=0.5f * (ymin + ymax);
+  float cz=0.5f * (zmin + zmax);
   float c=PApplet.cos(angle);
   float s=PApplet.sin(angle);
   float t=1.0f - c;
@@ -15,13 +24,25 @@
   m[7]=(t * v1 * v2) + (s * v0);
   m[8]=(t * v2 * v2) + c;
   float x, y, z;
+  loadVertices();
   for (int i=0; i < vertexCount; i++) {
-    x=vertices[3 * i + 0] - xmin;
-    y=vertices[3 * i + 1] - ymin;
-    z=vertices[3 * i + 2] - zmin;
-    vertices[3 * i + 0]=m[0] * x + m[1] * y + m[2] * z + xmin;
-    vertices[3 * i + 1]=m[3] * x + m[4] * y + m[5] * z + ymin;
-    vertices[3 * i + 2]=m[6] * x + m[7] * y + m[8] * z + zmin;
+    x=vertices[3 * i + 0] - cx;
+    y=vertices[3 * i + 1] - cy;
+    z=vertices[3 * i + 2] - cz;
+    vertices[3 * i + 0]=m[0] * x + m[1] * y + m[2] * z + cx;
+    vertices[3 * i + 1]=m[3] * x + m[4] * y + m[5] * z + cy;
+    vertices[3 * i + 2]=m[6] * x + m[7] * y + m[8] * z + cz;
   }
   updateVertices();
+  centerAt(cx,cy,cz);
+  loadNormals();
+  for (int i=0; i < vertexCount; i++) {
+    x=normals[3 * i + 0];
+    y=normals[3 * i + 1];
+    z=normals[3 * i + 2];
+    normals[3 * i + 0]=m[0] * x + m[1] * y + m[2] * z + cx;
+    normals[3 * i + 1]=m[3] * x + m[4] * y + m[5] * z + cy;
+    normals[3 * i + 2]=m[6] * x + m[7] * y + m[8] * z + cz;
+  }
+  updateNormals();
 }
