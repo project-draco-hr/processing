@@ -1,6 +1,10 @@
 {
+  y=-1 * y;
   if (!modelviewUpdated) {
     getModelviewMatrix();
+  }
+  if (!projectionUpdated) {
+    getProjectionMatrix();
   }
   float ax=glmodelview[0] * x + glmodelview[4] * y + glmodelview[8] * z + glmodelview[12];
   float ay=glmodelview[1] * x + glmodelview[5] * y + glmodelview[9] * z + glmodelview[13];
@@ -8,6 +12,8 @@
   float aw=glmodelview[3] * x + glmodelview[7] * y + glmodelview[11] * z + glmodelview[15];
   float oz=glprojection[2] * ax + glprojection[6] * ay + glprojection[10] * az + glprojection[14] * aw;
   float ow=glprojection[3] * ax + glprojection[7] * ay + glprojection[11] * az + glprojection[15] * aw;
-  if (ow != 0)   oz/=ow;
+  if (ow != 0) {
+    oz/=ow;
+  }
   return (oz + 1) / 2.0f;
 }

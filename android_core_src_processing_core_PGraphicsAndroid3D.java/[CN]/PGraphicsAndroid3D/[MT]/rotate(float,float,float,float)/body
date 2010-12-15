@@ -1,7 +1,13 @@
 {
   gl.glRotatef(PApplet.degrees(angle),v0,v1,v2);
-  if (usingModelviewStack) {
-    modelviewStack.rotate(angle,v0,v1,v2);
+  if (usingGLMatrixStack) {
+    if (projectionMode) {
+      projectionStack.rotate(angle,v0,v1,v2);
+      projectionUpdated=false;
+    }
+ else {
+      modelviewStack.rotate(angle,v0,v1,v2);
+      modelviewUpdated=false;
+    }
   }
-  modelviewUpdated=false;
 }

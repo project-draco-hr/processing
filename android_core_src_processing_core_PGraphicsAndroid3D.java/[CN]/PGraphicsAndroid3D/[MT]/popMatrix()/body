@@ -1,7 +1,13 @@
 {
   gl.glPopMatrix();
-  if (usingModelviewStack) {
-    modelviewStack.pop();
+  if (usingGLMatrixStack) {
+    if (projectionMode) {
+      projectionStack.pop();
+      projectionUpdated=false;
+    }
+ else {
+      modelviewStack.pop();
+      modelviewUpdated=false;
+    }
   }
-  modelviewUpdated=false;
 }

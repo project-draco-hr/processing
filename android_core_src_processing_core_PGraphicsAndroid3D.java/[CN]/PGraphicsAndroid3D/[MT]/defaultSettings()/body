@@ -8,8 +8,13 @@
     screenFramebuffer=new PFramebuffer(parent,width,height,true);
     setFramebuffer(screenFramebuffer);
   }
-  if (usingModelviewStack && modelviewStack == null) {
-    modelviewStack=new A3DMatrixStack();
+  if (usingGLMatrixStack) {
+    if (modelviewStack == null) {
+      modelviewStack=new A3DMatrixStack();
+    }
+    if (projectionStack == null) {
+      projectionStack=new A3DMatrixStack();
+    }
   }
   textureMode(IMAGE);
 }

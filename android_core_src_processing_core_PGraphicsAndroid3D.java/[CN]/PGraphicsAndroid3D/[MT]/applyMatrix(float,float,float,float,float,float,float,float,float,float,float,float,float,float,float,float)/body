@@ -17,9 +17,19 @@
   mat[14]=n23;
   mat[15]=n33;
   gl.glMultMatrixf(mat,0);
-  if (usingModelviewStack) {
-    modelviewStack.mult(mat);
+  if (usingGLMatrixStack) {
+    if (projectionMode) {
+      projectionStack.mult(mat);
+    }
+ else {
+      modelviewStack.mult(mat);
+    }
   }
-  getModelviewMatrix();
-  calculateModelviewInverse();
+  if (projectionMode) {
+    getProjectionMatrix();
+  }
+ else {
+    getModelviewMatrix();
+    calculateModelviewInverse();
+  }
 }

@@ -1,7 +1,13 @@
 {
   gl.glTranslatef(tx,ty,tz);
-  if (usingModelviewStack) {
-    modelviewStack.translate(tx,ty,tz);
+  if (usingGLMatrixStack) {
+    if (projectionMode) {
+      projectionStack.translate(tx,ty,tz);
+      projectionUpdated=false;
+    }
+ else {
+      modelviewStack.translate(tx,ty,tz);
+      modelviewUpdated=false;
+    }
   }
-  modelviewUpdated=false;
 }
