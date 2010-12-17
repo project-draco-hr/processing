@@ -1,5 +1,5 @@
 {
-  PShape3D p3d=(PShape3D)parent;
+  PShape3D p=(PShape3D)root;
   int numTextures;
   float pointSize;
   if (0 < strokeWeight && style) {
@@ -14,15 +14,15 @@
     gl.glPointSize(pointSize);
   }
   gl.glEnableClientState(GL11.GL_NORMAL_ARRAY);
-  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glNormalBufferID);
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p.glNormalBufferID);
   gl.glNormalPointer(GL11.GL_FLOAT,0,0);
   if (style) {
     gl.glEnableClientState(GL11.GL_COLOR_ARRAY);
-    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glColorBufferID);
+    gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p.glColorBufferID);
     gl.glColorPointer(4,GL11.GL_FLOAT,0,0);
   }
   gl.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glVertexBufferID);
+  gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p.glVertexBufferID);
   gl.glVertexPointer(3,GL11.GL_FLOAT,0,0);
   numTextures=0;
   if (style) {
@@ -60,7 +60,7 @@
       gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
       for (int t=0; t < numTextures; t++) {
         gl.glClientActiveTexture(GL11.GL_TEXTURE0 + t);
-        gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p3d.glTexCoordBufferID[t]);
+        gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,p.glTexCoordBufferID[t]);
         gl.glTexCoordPointer(2,GL11.GL_FLOAT,0,0);
       }
       if (1 < numTextures) {
