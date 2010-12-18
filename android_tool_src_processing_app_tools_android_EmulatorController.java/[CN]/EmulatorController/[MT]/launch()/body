@@ -11,6 +11,7 @@
   final String[] cmd=new String[]{"emulator","-avd",AVD.defaultAVD.name,"-port",portString,"-no-boot-anim"};
   final Process p=Runtime.getRuntime().exec(cmd);
   ProcessRegistry.watch(p);
+  new StreamPump(p.getInputStream(),"emulator: ").addTarget(System.out).start();
   setState(State.WAITING_FOR_BOOT);
   final String title=PApplet.join(cmd,' ');
   StreamPump outie=new StreamPump(p.getInputStream(),"out: " + title);

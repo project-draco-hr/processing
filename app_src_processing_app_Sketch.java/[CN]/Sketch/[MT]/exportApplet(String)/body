@@ -77,17 +77,17 @@
   addManifest(zos);
   if (codeFolder.exists()) {
     String includes=Compiler.contentsToClassPath(codeFolder);
-    String[] codeList=PApplet.splitTokens(includes,File.separator);
+    String[] codeList=PApplet.splitTokens(includes,File.pathSeparator);
     String cp="";
     for (int i=0; i < codeList.length; i++) {
       if (codeList[i].toLowerCase().endsWith(".jar") || codeList[i].toLowerCase().endsWith(".zip")) {
         if (separateJar) {
-          File exportFile=new File(codeFolder,codeList[i]);
+          File exportFile=new File(codeList[i]);
           String exportFilename=exportFile.getName();
           Base.copyFile(exportFile,new File(appletFolder,exportFilename));
         }
  else {
-          cp+=codeList[i] + File.pathSeparatorChar;
+          cp+=codeList[i] + File.pathSeparator;
         }
       }
     }
