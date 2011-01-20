@@ -1,2 +1,16 @@
 {
+  ensureExistence();
+  current.setProgram(editor.getText());
+  if (Preferences.getBoolean("editor.external")) {
+    current=null;
+    if (editor != null) {
+      load();
+    }
+  }
+  if (targetFolder != null) {
+    if (Preferences.getBoolean("export.delete_target_folder")) {
+      Base.removeDir(targetFolder);
+    }
+    targetFolder.mkdirs();
+  }
 }
