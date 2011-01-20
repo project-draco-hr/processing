@@ -1,39 +1,6 @@
 {
   if (!isEnabled())   return;
-  final int x=e.getX();
-  final int y=e.getY();
-  int sel=findSelection(x,y);
-  if (sel == -1)   return;
-  currentRollover=-1;
-switch (sel) {
-case RUN:
-    editor.handleRun(e.isShiftDown());
-  break;
-case STOP:
-editor.handleStop();
-break;
-case OPEN:
-popup=menu.getPopupMenu();
-popup.show(EditorToolbar.this,x,y);
-break;
-case NEW:
-if (shiftPressed) {
-editor.base.handleNew();
-}
- else {
-editor.base.handleNewReplace();
-}
-break;
-case SAVE:
-editor.handleSave(false);
-break;
-case EXPORT:
-if (e.isShiftDown()) {
-editor.handleExportApplication();
-}
- else {
-editor.handleExport();
-}
-break;
-}
+  if (rollover != null) {
+    handlePressed(rollover);
+  }
 }

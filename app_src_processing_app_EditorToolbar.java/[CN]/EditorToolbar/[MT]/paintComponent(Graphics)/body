@@ -1,29 +1,17 @@
 {
-  if (buttonImages == null) {
-    loadButtons();
-  }
-  if (stateImage == null) {
-    state=new int[buttonCount];
-    stateImage=new Image[buttonCount];
-    for (int i=0; i < buttonCount; i++) {
-      setState(i,INACTIVE,false);
-    }
-    y1=0;
-    y2=BUTTON_HEIGHT;
-    x1=new int[buttonCount];
-    x2=new int[buttonCount];
-  }
   Dimension size=getSize();
   if ((offscreen == null) || (size.width != width) || (size.height != height)) {
     offscreen=createImage(size.width,size.height);
     width=size.width;
     height=size.height;
     int offsetX=3;
-    for (int i=0; i < buttonCount; i++) {
-      x1[i]=offsetX;
-      if (i == 2)       x1[i]+=BUTTON_GAP;
-      x2[i]=x1[i] + BUTTON_WIDTH;
-      offsetX=x2[i];
+    for (    Button b : buttons) {
+      b.left=offsetX;
+      if (b.gap) {
+        b.left+=BUTTON_GAP;
+      }
+      b.right=b.left + BUTTON_WIDTH;
+      offsetX=b.right;
     }
   }
   Graphics g=offscreen.getGraphics();
@@ -31,16 +19,29 @@
   g.fillRect(0,0,width,height);
   Graphics2D g2=(Graphics2D)g;
   g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-  for (int i=0; i < buttonCount; i++) {
-    g.drawImage(stateImage[i],x1[i],y1,null);
+  for (  Button b : buttons) {
+    g.drawImage(b.stateImage,b.left,TOP,null);
   }
   g.setColor(statusColor);
   g.setFont(statusFont);
-  if (currentRollover != -1) {
+  if (rollover != null) {
     int statusY=(BUTTON_HEIGHT + g.getFontMetrics().getAscent()) / 2;
-    String status=shiftPressed ? titleShift[currentRollover] : title[currentRollover];
-    g.drawString(status,buttonCount * BUTTON_WIDTH + 3 * BUTTON_GAP,statusY);
+    String status=shiftPressed ? rollover.titleShift : rollover.title;
+    g.drawString(status,buttons.size() * BUTTON_WIDTH + 3 * BUTTON_GAP,statusY);
   }
+  g.setFont(modeTextFont);
+  FontMetrics metrics=g.getFontMetrics();
+  int modeH=metrics.getAscent();
+  int modeW=metrics.stringWidth(modeTitle);
+  final int modeGapH=6;
+  final int modeGapV=3;
+  modeX2=getWidth() - 16;
+  modeX1=modeX2 - (modeGapH + modeW + modeGapH);
+  modeY1=(getHeight() - modeH) / 2 - modeGapV;
+  modeY2=modeY1 + modeH + modeGapV * 2;
+  g.setColor(modeButtonColor);
+  g.drawRect(modeX1,modeY1,modeX2 - modeX1,modeY2 - modeY1);
+  g.drawString(modeTitle,modeX1 + modeGapH,modeY2 - modeGapV);
   screen.drawImage(offscreen,0,0,null);
   if (!isEnabled()) {
     screen.setColor(new Color(0,0,0,100));

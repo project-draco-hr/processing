@@ -1,0 +1,42 @@
+{
+  try {
+    menu.removeAll();
+    File[] subfolders=examplesFolder.listFiles(new FilenameFilter(){
+      public boolean accept(      File dir,      String name){
+        return dir.isDirectory() && name.charAt(0) != '.';
+      }
+    }
+);
+    for (    File sub : subfolders) {
+      Base.addDisabledItem(menu,sub.getName());
+      base.addSketches(menu,sub,false);
+    }
+    Base.addDisabledItem(menu,"Libraries");
+    for (    Library lib : coreLibraries) {
+      if (lib.hasExamples()) {
+        JMenu libMenu=new JMenu(lib.getName());
+        base.addSketches(libMenu,lib.getExamplesFolder(),false);
+        menu.add(libMenu);
+      }
+    }
+    boolean any=false;
+    for (    Library lib : contribLibraries) {
+      if (lib.hasExamples()) {
+        any=true;
+      }
+    }
+    if (any) {
+      Base.addDisabledItem(menu,"Contributed");
+      for (      Library lib : contribLibraries) {
+        if (lib.hasExamples()) {
+          JMenu libMenu=new JMenu(lib.getName());
+          base.addSketches(libMenu,lib.getExamplesFolder(),false);
+          menu.add(libMenu);
+        }
+      }
+    }
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+}

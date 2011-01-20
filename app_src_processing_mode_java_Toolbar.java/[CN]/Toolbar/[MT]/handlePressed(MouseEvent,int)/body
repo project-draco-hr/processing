@@ -1,0 +1,40 @@
+{
+  boolean shift=e.isShiftDown();
+  JavaEditor jeditor=(JavaEditor)editor;
+switch (sel) {
+case RUN:
+    if (shift) {
+      jeditor.handlePresent();
+    }
+ else {
+      jeditor.handleRun();
+    }
+  break;
+case STOP:
+jeditor.handleStop();
+break;
+case OPEN:
+JPopupMenu popup=editor.getMode().getToolbarMenu().getPopupMenu();
+popup.show(this,e.getX(),e.getY());
+break;
+case NEW:
+if (shift) {
+base.handleNew();
+}
+ else {
+base.handleNewReplace();
+}
+break;
+case SAVE:
+jeditor.handleSaveRequest(false);
+break;
+case EXPORT:
+if (shift) {
+jeditor.handleExportApplication();
+}
+ else {
+jeditor.handleExportApplet();
+}
+break;
+}
+}

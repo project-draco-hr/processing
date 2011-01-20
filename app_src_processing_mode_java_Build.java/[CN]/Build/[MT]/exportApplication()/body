@@ -1,0 +1,19 @@
+{
+  String path=null;
+  for (  String platformName : PConstants.platformNames) {
+    int platform=Base.getPlatformIndex(platformName);
+    if (Preferences.getBoolean("export.application.platform." + platformName)) {
+      if (Library.hasMultipleArch(platform,importedLibraries)) {
+        path=new File(sketch.getFolder(),"application." + platformName + "32").getAbsolutePath();
+        if (!exportApplication(path,platform,32)) {
+          return false;
+        }
+        path=new File(sketch.getFolder(),"application." + platformName + "64").getAbsolutePath();
+        if (!exportApplication(path,platform,64)) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}

@@ -1,23 +1,7 @@
 {
-  examplesFolder=getContentFile("examples");
-  librariesFolder=getContentFile("libraries");
-  toolsFolder=getContentFile("tools");
   platform.init(this);
-  String sketchbookPath=Preferences.get("sketchbook.path");
-  if (sketchbookPath != null) {
-    File skechbookFolder=new File(sketchbookPath);
-    if (!skechbookFolder.exists()) {
-      Base.showWarning("Sketchbook folder disappeared","The sketchbook folder no longer exists.\n" + "Processing will switch to the default sketchbook\n" + "location, and create a new sketchbook folder if\n"+ "necessary. Procesing will then stop talking about\n"+ "himself in the third person.",null);
-      sketchbookPath=null;
-    }
-  }
-  if (sketchbookPath == null) {
-    File defaultFolder=getDefaultSketchbookFolder();
-    Preferences.set("sketchbook.path",defaultFolder.getAbsolutePath());
-    if (!defaultFolder.exists()) {
-      defaultFolder.mkdirs();
-    }
-  }
+  toolsFolder=getContentFile("tools");
+  determineSketchbookFolder();
   boolean opened=restoreSketches();
   for (int i=0; i < args.length; i++) {
     String path=args[i];
@@ -35,7 +19,11 @@
     }
   }
   if (!opened) {
+    System.out.println("opening a new window");
     handleNew();
+  }
+ else {
+    System.out.println("something else was opened");
   }
   if (Preferences.getBoolean("update.check")) {
     new UpdateCheck(this);

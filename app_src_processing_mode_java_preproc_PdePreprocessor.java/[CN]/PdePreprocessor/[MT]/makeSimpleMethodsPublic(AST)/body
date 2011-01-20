@@ -1,0 +1,27 @@
+{
+  if (node.getType() == PdeTokenTypes.METHOD_DEF) {
+    final AST mods=node.getFirstChild();
+    final AST oldFirstMod=mods.getFirstChild();
+    for (AST mod=oldFirstMod; mod != null; mod=mod.getNextSibling()) {
+      final int t=mod.getType();
+      if (t == PdeTokenTypes.LITERAL_private || t == PdeTokenTypes.LITERAL_protected || t == PdeTokenTypes.LITERAL_public) {
+        return;
+      }
+    }
+    if (mods.getNextSibling().getType() == PdeTokenTypes.TYPE_PARAMETERS) {
+      return;
+    }
+    final CommonHiddenStreamToken publicToken=new CommonHiddenStreamToken(PdeTokenTypes.LITERAL_public,"public"){
+{
+        setHiddenAfter(new CommonHiddenStreamToken(PdeTokenTypes.WS," "));
+      }
+    }
+;
+    final AST publicNode=new CommonASTWithHiddenTokens(publicToken);
+    publicNode.setNextSibling(oldFirstMod);
+    mods.setFirstChild(publicNode);
+  }
+ else {
+    for (AST kid=node.getFirstChild(); kid != null; kid=kid.getNextSibling())     makeSimpleMethodsPublic(kid);
+  }
+}

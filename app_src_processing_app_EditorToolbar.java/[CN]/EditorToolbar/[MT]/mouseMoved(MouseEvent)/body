@@ -1,8 +1,22 @@
 {
   if (!isEnabled())   return;
-  if (state == null)   return;
-  if (state[OPEN] != INACTIVE) {
-    setState(OPEN,INACTIVE,false);
+  if (offscreen == null)   return;
+  int x=e.getX();
+  int y=e.getY();
+  if (rollover != null) {
+    if (y > TOP && y < BOTTOM && x > rollover.left && x < rollover.right) {
+      return;
+    }
+ else {
+      rollover.setState(INACTIVE,true);
+      rollover=null;
+    }
   }
-  handleMouse(e);
+  Button over=findSelection(x,y);
+  if (over != null) {
+    if (over.state != ACTIVE) {
+      over.setState(ROLLOVER,true);
+      rollover=over;
+    }
+  }
 }

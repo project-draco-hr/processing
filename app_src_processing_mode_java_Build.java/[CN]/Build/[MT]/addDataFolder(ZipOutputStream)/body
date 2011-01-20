@@ -1,0 +1,20 @@
+{
+  if (sketch.hasDataFolder()) {
+    String[] dataFiles=Base.listFiles(sketch.getDataFolder(),false);
+    int offset=sketch.getFolder().getAbsolutePath().length() + 1;
+    for (    String path : dataFiles) {
+      if (Base.isWindows()) {
+        path=path.replace('\\','/');
+      }
+      File dataFile=new File(path);
+      if (!dataFile.isDirectory()) {
+        if (dataFile.getName().charAt(0) != '.') {
+          ZipEntry entry=new ZipEntry(dataFile.getAbsolutePath().substring(offset));
+          zos.putNextEntry(entry);
+          zos.write(Base.loadBytesRaw(dataFile));
+          zos.closeEntry();
+        }
+      }
+    }
+  }
+}

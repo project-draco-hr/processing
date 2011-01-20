@@ -1,14 +1,13 @@
 {
-  File folder=null;
-  folder=new File(System.getProperty("user.home"),"sketchbook");
+  File folder=new File(System.getProperty("user.home"),"sketchbook");
+  String prompt="Select (or create new) folder for sketches...";
+  folder=Base.selectFolder(prompt,folder,null);
+  if (folder == null) {
+    System.exit(0);
+  }
   if (!folder.exists()) {
     folder.mkdirs();
     return folder;
-  }
-  String prompt="Select (or create new) folder for sketches...";
-  folder=Base.selectFolder(prompt,null,null);
-  if (folder == null) {
-    System.exit(0);
   }
   return folder;
 }

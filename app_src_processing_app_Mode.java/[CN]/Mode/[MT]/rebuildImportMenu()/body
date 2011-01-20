@@ -1,0 +1,27 @@
+{
+  importMenu.removeAll();
+  rebuildLibraryList();
+  ActionListener listener=new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      base.activeEditor.handleImportLibrary(e.getActionCommand());
+    }
+  }
+;
+  for (  Library library : coreLibraries) {
+    JMenuItem item=new JMenuItem(library.getName());
+    item.addActionListener(listener);
+    item.setActionCommand(library.getJarPath());
+    importMenu.add(item);
+  }
+  if (contribLibraries.size() != 0) {
+    importMenu.addSeparator();
+    JMenuItem contrib=new JMenuItem("Contributed");
+    contrib.setEnabled(false);
+    for (    Library library : contribLibraries) {
+      JMenuItem item=new JMenuItem(library.getName());
+      item.addActionListener(listener);
+      item.setActionCommand(library.getJarPath());
+      importMenu.add(item);
+    }
+  }
+}

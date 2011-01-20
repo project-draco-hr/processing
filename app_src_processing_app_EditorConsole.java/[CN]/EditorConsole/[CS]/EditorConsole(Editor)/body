@@ -4,35 +4,8 @@
   consoleDoc=new BufferedStyledDocument(10000,maxLineCount);
   consoleTextPane=new JTextPane(consoleDoc);
   consoleTextPane.setEditable(false);
-  MutableAttributeSet standard=new SimpleAttributeSet();
-  StyleConstants.setAlignment(standard,StyleConstants.ALIGN_LEFT);
-  consoleDoc.setParagraphAttributes(0,0,standard,true);
-  Color bgColor=Theme.getColor("console.color");
-  Color fgColorOut=Theme.getColor("console.output.color");
-  Color fgColorErr=Theme.getColor("console.error.color");
-  Font font=Theme.getFont("console.font");
-  stdStyle=new SimpleAttributeSet();
-  StyleConstants.setForeground(stdStyle,fgColorOut);
-  StyleConstants.setBackground(stdStyle,bgColor);
-  StyleConstants.setFontSize(stdStyle,font.getSize());
-  StyleConstants.setFontFamily(stdStyle,font.getFamily());
-  StyleConstants.setBold(stdStyle,font.isBold());
-  StyleConstants.setItalic(stdStyle,font.isItalic());
-  errStyle=new SimpleAttributeSet();
-  StyleConstants.setForeground(errStyle,fgColorErr);
-  StyleConstants.setBackground(errStyle,bgColor);
-  StyleConstants.setFontSize(errStyle,font.getSize());
-  StyleConstants.setFontFamily(errStyle,font.getFamily());
-  StyleConstants.setBold(errStyle,font.isBold());
-  StyleConstants.setItalic(errStyle,font.isItalic());
-  consoleTextPane.setBackground(bgColor);
+  updateMode();
   this.setViewportView(consoleTextPane);
-  FontMetrics metrics=this.getFontMetrics(font);
-  int height=metrics.getAscent() + metrics.getDescent();
-  int lines=Preferences.getInteger("console.lines");
-  int sizeFudge=6;
-  setPreferredSize(new Dimension(1024,(height * lines) + sizeFudge));
-  setMinimumSize(new Dimension(1024,(height * 4) + sizeFudge));
   if (Base.isMacOS()) {
     setBorder(null);
   }

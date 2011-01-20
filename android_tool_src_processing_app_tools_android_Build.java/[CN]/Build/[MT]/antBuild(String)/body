@@ -35,14 +35,13 @@
       final String javacPrefix="[javac]";
       final int javacIndex=line.indexOf(javacPrefix);
       if (javacIndex != -1) {
-        final Sketch sketch=editor.getSketch();
-        final int offset=javacIndex + javacPrefix.length() + 1;
-        final String[] pieces=PApplet.match(line.substring(offset),"^(.+):([0-9]+):\\s+(.+)$");
+        int offset=javacIndex + javacPrefix.length() + 1;
+        String[] pieces=PApplet.match(line.substring(offset),"^(.+):([0-9]+):\\s+(.+)$");
         if (pieces != null) {
           String fileName=pieces[1];
           fileName=fileName.substring(fileName.lastIndexOf('/') + 1);
           final int lineNumber=PApplet.parseInt(pieces[2]) - 1;
-          final RunnerException rex=sketch.placeException(pieces[3],fileName,lineNumber);
+          final SketchException rex=placeException(pieces[3],fileName,lineNumber);
           if (rex != null) {
             rex.hideStackTrace();
             editor.statusError(rex);

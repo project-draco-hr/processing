@@ -1,0 +1,28 @@
+{
+  try {
+    List<StackFrame> frames=thread.frames();
+    for (    StackFrame frame : frames) {
+      try {
+        Location location=frame.location();
+        String filename=null;
+        filename=location.sourceName();
+        int lineNumber=location.lineNumber() - 1;
+        SketchException rex=build.placeException(message,filename,lineNumber);
+        if (rex != null) {
+          return rex;
+        }
+      }
+ catch (      AbsentInformationException e) {
+        exception=new SketchException(message);
+        exception.hideStackTrace();
+        listener.statusError(exception);
+      }
+    }
+  }
+ catch (  IncompatibleThreadStateException e) {
+    e.printStackTrace();
+  }
+  SketchException rex=new SketchException(message);
+  rex.hideStackTrace();
+  return rex;
+}

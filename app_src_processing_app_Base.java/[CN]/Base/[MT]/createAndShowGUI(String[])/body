@@ -16,7 +16,6 @@
   JPopupMenu.setDefaultLightWeightPopupEnabled(false);
   initRequirements();
   Preferences.init(null);
-  Theme.init();
   try {
     platform.setLookAndFeel();
   }
@@ -28,7 +27,12 @@
       System.err.println(mess);
     }
   }
-  untitledFolder=createTempFolder("untitled");
-  untitledFolder.deleteOnExit();
+  try {
+    untitledFolder=Base.createTempFolder("untitled","sketches");
+    untitledFolder.deleteOnExit();
+  }
+ catch (  IOException e) {
+    Base.showError("Trouble without a name","Could not create a place to store untitled sketches.\n" + "That's gonna prevent us from continuing.",e);
+  }
   new Base(args);
 }

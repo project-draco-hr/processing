@@ -1,0 +1,22 @@
+{
+  final String source=getText();
+  try {
+    final String formattedText=createFormatter().format(source);
+    int selectionEnd=getSelectionStop();
+    if (formattedText.length() < selectionEnd - 1) {
+      selectionEnd=formattedText.length() - 1;
+    }
+    if (formattedText.equals(source)) {
+      statusNotice("No changes necessary for Auto Format.");
+    }
+ else {
+      setText(formattedText);
+      setSelection(selectionEnd,selectionEnd);
+      getSketch().setModified(true);
+      statusNotice("Auto Format finished.");
+    }
+  }
+ catch (  final Exception e) {
+    statusError(e);
+  }
+}

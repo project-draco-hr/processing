@@ -20,9 +20,6 @@
     offscreen=createImage(imageW,imageH);
   }
   Graphics g=offscreen.getGraphics();
-  if (font == null) {
-    font=Theme.getFont("header.text.font");
-  }
   g.setFont(font);
   metrics=g.getFontMetrics();
   fontAscent=metrics.getAscent();
@@ -38,7 +35,8 @@
   int x=6;
   for (int i=0; i < sketch.getCodeCount(); i++) {
     SketchCode code=sketch.getCode(i);
-    String codeName=sketch.hideExtension(code.getExtension()) ? code.getPrettyName() : code.getFileName();
+    boolean hide=editor.getMode().hideExtension(code.getExtension());
+    String codeName=hide ? code.getPrettyName() : code.getFileName();
     String text="  " + codeName + (code.isModified() ? " \u00A7" : "  ");
     int textWidth=(int)font.getStringBounds(text,g2.getFontRenderContext()).getWidth();
     int pieceCount=2 + (textWidth / PIECE_WIDTH);

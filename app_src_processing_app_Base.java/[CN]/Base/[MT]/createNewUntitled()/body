@@ -1,7 +1,6 @@
 {
   File newbieDir=null;
   String newbieName=null;
-  File sketchbookDir=getSketchbookFolder();
   File newbieParentDir=untitledFolder;
   String prefix=Preferences.get("editor.untitled.prefix");
   int index=0;
@@ -33,9 +32,9 @@
     newbieDir=new File(newbieParentDir,newbieName);
     index++;
   }
- while (newbieDir.exists() || new File(sketchbookDir,newbieName).exists());
+ while (newbieDir.exists() || new File(sketchbookFolder,newbieName).exists());
   newbieDir.mkdirs();
-  File newbieFile=new File(newbieDir,newbieName + ".pde");
+  File newbieFile=new File(newbieDir,newbieName + getExtension());
   new FileOutputStream(newbieFile);
   return newbieFile.getAbsolutePath();
 }

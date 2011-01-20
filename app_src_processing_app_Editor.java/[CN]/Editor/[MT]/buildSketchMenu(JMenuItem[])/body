@@ -1,0 +1,27 @@
+{
+  JMenuItem item;
+  sketchMenu=new JMenu("Sketch");
+  for (  JMenuItem mi : runItems) {
+    sketchMenu.add(mi);
+  }
+  sketchMenu.addSeparator();
+  sketchMenu.add(mode.getImportMenu());
+  item=Base.newJMenuItem("Show Sketch Folder",'K');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.openFolder(sketch.getFolder());
+    }
+  }
+);
+  sketchMenu.add(item);
+  item.setEnabled(Base.openFolderAvailable());
+  item=new JMenuItem("Add File...");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      sketch.handleAddFile();
+    }
+  }
+);
+  sketchMenu.add(item);
+  return sketchMenu;
+}

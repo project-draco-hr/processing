@@ -1,0 +1,91 @@
+{
+  JMenuItem item;
+  JMenu fileMenu=new JMenu("File");
+  item=Base.newJMenuItem("New",'N');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      base.handleNew();
+    }
+  }
+);
+  fileMenu.add(item);
+  item=Base.newJMenuItem("Open...",'O');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      base.handleOpenPrompt();
+    }
+  }
+);
+  fileMenu.add(item);
+  fileMenu.add(base.getSketchbookMenu());
+  fileMenu.add(mode.getExamplesMenu());
+  item=Base.newJMenuItem("Close",'W');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      base.handleClose(Editor.this);
+    }
+  }
+);
+  fileMenu.add(item);
+  item=Base.newJMenuItem("Save",'S');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleSaveRequest(false);
+    }
+  }
+);
+  saveMenuItem=item;
+  fileMenu.add(item);
+  item=Base.newJMenuItemShift("Save As...",'S');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleSaveAs();
+    }
+  }
+);
+  saveAsMenuItem=item;
+  fileMenu.add(item);
+  if (exportItems != null) {
+    for (    JMenuItem ei : exportItems) {
+      fileMenu.add(ei);
+    }
+  }
+  fileMenu.addSeparator();
+  item=Base.newJMenuItemShift("Page Setup",'P');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handlePageSetup();
+    }
+  }
+);
+  fileMenu.add(item);
+  item=Base.newJMenuItem("Print",'P');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handlePrint();
+    }
+  }
+);
+  fileMenu.add(item);
+  if (!Base.isMacOS()) {
+    fileMenu.addSeparator();
+    item=Base.newJMenuItem("Preferences",',');
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        base.handlePrefs();
+      }
+    }
+);
+    fileMenu.add(item);
+    fileMenu.addSeparator();
+    item=Base.newJMenuItem("Quit",'Q');
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        base.handleQuit();
+      }
+    }
+);
+    fileMenu.add(item);
+  }
+  return fileMenu;
+}

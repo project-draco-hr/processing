@@ -1,0 +1,31 @@
+{
+  Mode mode=editor.getMode();
+  MutableAttributeSet standard=new SimpleAttributeSet();
+  StyleConstants.setAlignment(standard,StyleConstants.ALIGN_LEFT);
+  consoleDoc.setParagraphAttributes(0,0,standard,true);
+  Font font=Preferences.getFont("console.font");
+  Color bgColor=mode.getColor("console.color");
+  Color fgColorOut=mode.getColor("console.output.color");
+  Color fgColorErr=mode.getColor("console.error.color");
+  stdStyle=new SimpleAttributeSet();
+  StyleConstants.setForeground(stdStyle,fgColorOut);
+  StyleConstants.setBackground(stdStyle,bgColor);
+  StyleConstants.setFontSize(stdStyle,font.getSize());
+  StyleConstants.setFontFamily(stdStyle,font.getFamily());
+  StyleConstants.setBold(stdStyle,font.isBold());
+  StyleConstants.setItalic(stdStyle,font.isItalic());
+  errStyle=new SimpleAttributeSet();
+  StyleConstants.setForeground(errStyle,fgColorErr);
+  StyleConstants.setBackground(errStyle,bgColor);
+  StyleConstants.setFontSize(errStyle,font.getSize());
+  StyleConstants.setFontFamily(errStyle,font.getFamily());
+  StyleConstants.setBold(errStyle,font.isBold());
+  StyleConstants.setItalic(errStyle,font.isItalic());
+  consoleTextPane.setBackground(bgColor);
+  FontMetrics metrics=this.getFontMetrics(font);
+  int height=metrics.getAscent() + metrics.getDescent();
+  int lines=Preferences.getInteger("console.lines");
+  int sizeFudge=6;
+  setPreferredSize(new Dimension(1024,(height * lines) + sizeFudge));
+  setMinimumSize(new Dimension(1024,(height * 4) + sizeFudge));
+}

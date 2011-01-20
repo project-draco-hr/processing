@@ -1,7 +1,7 @@
 {
   ensureExistence();
   if (newName.indexOf('.') == -1) {
-    newName+="." + getDefaultExtension();
+    newName+="." + mode.getDefaultExtension();
   }
   if (renamingCode) {
     if (newName.equalsIgnoreCase(current.getFileName())) {
@@ -16,11 +16,11 @@
     return;
   }
   String newExtension=newName.substring(dot + 1).toLowerCase();
-  if (!validExtension(newExtension)) {
+  if (!mode.validExtension(newExtension)) {
     Base.showWarning("Problem with rename","\"." + newExtension + "\""+ "is not a valid extension.",null);
     return;
   }
-  if (!isDefaultExtension(newExtension)) {
+  if (!mode.isDefaultExtension(newExtension)) {
     if (renamingCode) {
       if (current == code[0]) {
         Base.showWarning("Problem with rename","The main .pde file cannot be .java file.\n" + "(It may be time for your to graduate to a\n" + "\"real\" programming environment)",null);

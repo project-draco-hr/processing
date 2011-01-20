@@ -1,0 +1,28 @@
+{
+  JMenuItem item;
+  toolbarMenu.removeAll();
+  item=Base.newJMenuItem("Open...",'O');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      base.handleOpenPrompt();
+    }
+  }
+);
+  toolbarMenu.add(item);
+  toolbarMenu.addSeparator();
+  try {
+    boolean sketches=base.addSketches(toolbarMenu,base.getSketchbookFolder(),true);
+    if (sketches) {
+      toolbarMenu.addSeparator();
+    }
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+  try {
+    base.addSketches(toolbarMenu,examplesFolder,true);
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+}

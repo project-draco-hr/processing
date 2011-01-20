@@ -1,0 +1,17 @@
+{
+  String sketchbookPath=Preferences.get("sketchbook.path");
+  if (sketchbookPath != null) {
+    sketchbookFolder=new File(sketchbookPath);
+    if (!sketchbookFolder.exists()) {
+      Base.showWarning("Sketchbook folder disappeared","The sketchbook folder no longer exists.\n" + "Processing will switch to the default sketchbook\n" + "location, and create a new sketchbook folder if\n"+ "necessary. Procesing will then stop talking about\n"+ "himself in the third person.",null);
+      sketchbookFolder=null;
+    }
+  }
+  if (sketchbookFolder == null) {
+    sketchbookFolder=getDefaultSketchbookFolder();
+    Preferences.set("sketchbook.path",sketchbookFolder.getAbsolutePath());
+    if (!sketchbookFolder.exists()) {
+      sketchbookFolder.mkdirs();
+    }
+  }
+}

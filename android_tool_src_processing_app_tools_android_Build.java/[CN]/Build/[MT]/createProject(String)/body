@@ -1,5 +1,4 @@
 {
-  final Sketch sketch=editor.getSketch();
   try {
     tempBuildFolder=createTempBuildFolder(sketch);
   }
@@ -19,7 +18,7 @@
       editor.statusError("Could not parse the size() command.");
       return null;
     }
-    className=sketch.preprocess(srcFolder.getAbsolutePath(),manifest.getPackageName(),preproc);
+    className=preprocess(srcFolder.getAbsolutePath(),manifest.getPackageName(),preproc);
     if (className != null) {
       File tempManifest=new File(tempBuildFolder,"AndroidManifest.xml");
       manifest.writeBuild(tempManifest,className,target.equals("debug"));
@@ -42,11 +41,11 @@
       }
  catch (      final IOException e) {
         e.printStackTrace();
-        throw new RunnerException(e.getMessage());
+        throw new SketchException(e.getMessage());
       }
     }
   }
- catch (  final RunnerException e) {
+ catch (  final SketchException e) {
     editor.statusError(e);
     return null;
   }

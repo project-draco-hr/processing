@@ -1,0 +1,14 @@
+{
+  try {
+    preprocess(id,res(id + ".pde"));
+    fail("Expected to fail with \"" + expectedMessage + "\" on line "+ expectedLine);
+  }
+ catch (  SketchException e) {
+    assertEquals(expectedMessage,e.getMessage());
+    assertEquals(expectedLine,e.getCodeLine());
+  }
+catch (  Exception e) {
+    if (!e.equals(e.getCause()) && e.getCause() != null)     fail(e.getCause().toString());
+ else     fail(e.toString());
+  }
+}

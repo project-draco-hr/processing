@@ -5,24 +5,17 @@
   saveAsMenuItem.setEnabled(!external);
   TextAreaPainter painter=textarea.getPainter();
   if (external) {
-    Color color=Theme.getColor("editor.external.bgcolor");
+    Color color=mode.getColor("editor.external.bgcolor");
     painter.setBackground(color);
     painter.setLineHighlightEnabled(false);
     textarea.setCaretVisible(false);
-    splitPane.setDividerLocation(toolbar.getHeight() + header.getHeight());
-    splitPane.setResizeWeight(0D);
-    textarea.setMinimumSize(new Dimension(textarea.getWidth(),0));
   }
  else {
-    Color color=Theme.getColor("editor.bgcolor");
+    Color color=mode.getColor("editor.bgcolor");
     painter.setBackground(color);
     boolean highlight=Preferences.getBoolean("editor.linehighlight");
     painter.setLineHighlightEnabled(highlight);
     textarea.setCaretVisible(true);
-    splitPane.setDividerLocation(-1);
-    splitPane.setResizeWeight(1D);
-    textarea.setMinimumSize(null);
   }
   painter.setFont(Preferences.getFont("editor.font"));
-  listener.applyPreferences();
 }

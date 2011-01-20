@@ -1,0 +1,32 @@
+{
+  ArrayList<String> params=new ArrayList<String>();
+  if (build.getFoundMain()) {
+    params.add(build.getSketchClassName());
+  }
+ else {
+    params.add("processing.core.PApplet");
+    if (editor != null) {
+      Point windowLocation=editor.getSketchLocation();
+      if (windowLocation != null) {
+        params.add(PApplet.ARGS_LOCATION + "=" + windowLocation.x+ ","+ windowLocation.y);
+      }
+ else {
+        Point editorLocation=editor.getLocation();
+        params.add(PApplet.ARGS_EDITOR_LOCATION + "=" + editorLocation.x+ ","+ editorLocation.y);
+      }
+      params.add(PApplet.ARGS_EXTERNAL);
+    }
+    params.add(PApplet.ARGS_DISPLAY + "=" + Preferences.get("run.display"));
+    params.add(PApplet.ARGS_SKETCH_FOLDER + "=" + build.getSketchPath());
+    if (presenting) {
+      params.add(PApplet.ARGS_PRESENT);
+      if (Preferences.getBoolean("run.present.exclusive")) {
+        params.add(PApplet.ARGS_EXCLUSIVE);
+      }
+      params.add(PApplet.ARGS_STOP_COLOR + "=" + Preferences.get("run.present.stop.color"));
+      params.add(PApplet.ARGS_BGCOLOR + "=" + Preferences.get("run.present.bgcolor"));
+    }
+    params.add(build.getSketchClassName());
+  }
+  return (String[])params.toArray(new String[0]);
+}
