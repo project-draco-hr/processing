@@ -1,20 +1,20 @@
 {
-  sdk=new File(sdkPath);
-  if (!sdk.exists()) {
-    throw new BadSDKException(sdk + " does not exist");
+  folder=new File(sdkPath);
+  if (!folder.exists()) {
+    throw new BadSDKException(folder + " does not exist");
   }
-  tools=new File(sdk,"tools");
+  tools=new File(folder,"tools");
   if (!tools.exists()) {
-    throw new BadSDKException("There is no tools folder in " + sdk);
+    throw new BadSDKException("There is no tools folder in " + folder);
   }
-  platformTools=new File(sdk,"platform-tools");
+  platformTools=new File(folder,"platform-tools");
   if (!platformTools.exists()) {
-    throw new BadSDKException("There is no platform-tools folder in " + sdk);
+    throw new BadSDKException("There is no platform-tools folder in " + folder);
   }
   androidTool=findAndroidTool(tools);
   final Platform p=Base.getPlatform();
   String path=p.getenv("PATH");
-  p.setenv("ANDROID_SDK",sdk.getCanonicalPath());
+  p.setenv("ANDROID_SDK",folder.getCanonicalPath());
   path=platformTools.getCanonicalPath() + File.pathSeparator + tools.getCanonicalPath()+ File.pathSeparator+ path;
   final String javaHomeProp=System.getProperty("java.home");
   if (javaHomeProp == null) {

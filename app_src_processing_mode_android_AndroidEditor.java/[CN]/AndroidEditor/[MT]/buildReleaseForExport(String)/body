@@ -1,9 +1,18 @@
 {
   final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(this,"Building and exporting...","Creating project...");
   try {
-    File tempFolder=build.createProject(target);
-    if (tempFolder == null) {
-      return;
+    File tempFolder=null;
+    try {
+      tempFolder=build.createProject(target,amode.getCoreZipLocation());
+      if (tempFolder == null) {
+        return;
+      }
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+catch (    SketchException se) {
+      se.printStackTrace();
     }
     try {
       if (monitor.isCanceled()) {

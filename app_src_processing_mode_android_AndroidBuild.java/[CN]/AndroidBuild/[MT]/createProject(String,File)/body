@@ -1,0 +1,39 @@
+{
+  tmpFolder=createTempBuildFolder(sketch);
+  final File srcFolder=new File(tmpFolder,"src");
+  if (processing.app.Base.DEBUG) {
+    Base.openFolder(tmpFolder);
+  }
+  manifest=new Manifest(sketch);
+  sketch.prepareBuild(null);
+  AndroidPreprocessor preproc=new AndroidPreprocessor(sketch,getPackageName());
+  if (!preproc.parseSketchSize()) {
+    throw new SketchException("Could not parse the size() command.");
+  }
+  sketchClassName=preprocess(srcFolder,manifest.getPackageName(),preproc);
+  if (sketchClassName != null) {
+    File tempManifest=new File(tmpFolder,"AndroidManifest.xml");
+    manifest.writeBuild(tempManifest,sketchClassName,target.equals("debug"));
+    writeBuildProps(new File(tmpFolder,"build.properties"));
+    buildFile=new File(tmpFolder,"build.xml");
+    writeBuildXML(buildFile,sketch.getName());
+    writeDefaultProps(new File(tmpFolder,"default.properties"));
+    writeLocalProps(new File(tmpFolder,"local.properties"));
+    writeRes(new File(tmpFolder,"res"),sketchClassName);
+    final File libsFolder=mkdirs(tmpFolder,"libs");
+    final File assetsFolder=mkdirs(tmpFolder,"assets");
+    Base.copyFile(coreZipFile,new File(libsFolder,"processing-core.jar"));
+    try {
+      writeLibraries(libsFolder,assetsFolder);
+      final File sketchDataFolder=sketch.getDataFolder();
+      if (sketchDataFolder.exists()) {
+        Base.copyDir(sketchDataFolder,assetsFolder);
+      }
+    }
+ catch (    final IOException e) {
+      e.printStackTrace();
+      throw new SketchException(e.getMessage());
+    }
+  }
+  return tmpFolder;
+}

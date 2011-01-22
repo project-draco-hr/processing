@@ -17,14 +17,12 @@
   errorLogger.setMessageOutputLevel(Project.MSG_INFO);
   p.addBuildListener(errorLogger);
   try {
-    editor.statusNotice("Building sketch for Android...");
     p.fireBuildStarted();
     p.init();
     final ProjectHelper helper=ProjectHelper.getProjectHelper();
     p.addReference("ant.projectHelper",helper);
     helper.parse(p,buildFile);
     p.executeTarget(target);
-    editor.statusNotice("Finished building sketch.");
     return true;
   }
  catch (  final BuildException e) {
@@ -41,16 +39,15 @@
           String fileName=pieces[1];
           fileName=fileName.substring(fileName.lastIndexOf('/') + 1);
           final int lineNumber=PApplet.parseInt(pieces[2]) - 1;
-          final SketchException rex=placeException(pieces[3],fileName,lineNumber);
+          SketchException rex=placeException(pieces[3],fileName,lineNumber);
           if (rex != null) {
-            rex.hideStackTrace();
-            editor.statusError(rex);
-            return false;
+            throw rex;
           }
         }
       }
     }
-    editor.statusError(e);
+    System.err.println("Problem during build:");
+    e.printStackTrace();
   }
   return false;
 }

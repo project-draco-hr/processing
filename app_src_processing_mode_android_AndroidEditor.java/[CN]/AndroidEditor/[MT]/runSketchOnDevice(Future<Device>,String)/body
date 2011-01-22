@@ -1,16 +1,29 @@
 {
   final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(this,"Building and launching...","Creating project...");
   try {
-    if (build.createProject(target) == null) {
-      return;
+    try {
+      if (build.createProject(target,amode.getCoreZipLocation()) == null) {
+        return;
+      }
+    }
+ catch (    SketchException se) {
+      statusError(se);
+    }
+catch (    IOException e) {
+      statusError(e);
     }
     try {
       if (monitor.isCanceled()) {
         throw new MonitorCanceled();
       }
       monitor.setNote("Building...");
-      if (!build.antBuild(target)) {
-        return;
+      try {
+        if (!build.antBuild(target)) {
+          return;
+        }
+      }
+ catch (      SketchException se) {
+        statusError(se);
       }
       if (monitor.isCanceled()) {
         throw new MonitorCanceled();
