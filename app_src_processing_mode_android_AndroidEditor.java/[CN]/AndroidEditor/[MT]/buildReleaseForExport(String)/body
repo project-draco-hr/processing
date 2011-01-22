@@ -1,5 +1,5 @@
 {
-  final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(editor,"Building and exporting...","Creating project...");
+  final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(this,"Building and exporting...","Creating project...");
   try {
     File tempFolder=build.createProject(target);
     if (tempFolder == null) {
@@ -16,15 +16,15 @@
       File exportFolder=build.createExportFolder();
       if (exportFolder != null) {
         Base.copyDir(tempFolder,exportFolder);
-        editor.statusNotice("Done with export.");
+        statusNotice("Done with export.");
         Base.openFolder(exportFolder);
       }
  else {
-        editor.statusError("Could not copy files to export folder.");
+        statusError("Could not copy files to export folder.");
       }
     }
  catch (    IOException e) {
-      editor.statusError(e);
+      statusError(e);
     }
  finally {
       build.cleanup();

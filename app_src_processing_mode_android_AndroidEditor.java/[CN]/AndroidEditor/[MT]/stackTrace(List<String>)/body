@@ -5,11 +5,11 @@
   if (!m.matches()) {
     System.err.println("Can't parse this exception line:");
     System.err.println(exceptionLine);
-    editor.statusError("Unknown exception");
+    statusError("Unknown exception");
     return;
   }
   final String exceptionClass=m.group(1);
-  if (Runner.handleCommonErrors(exceptionClass,exceptionLine,editor)) {
+  if (Runner.handleCommonErrors(exceptionClass,exceptionLine,this)) {
     return;
   }
   while (frames.hasNext()) {
@@ -19,8 +19,8 @@
       if (lm.find()) {
         final String filename=lm.group(1);
         final int lineNumber=Integer.parseInt(lm.group(2)) - 1;
-        final SketchException rex=editor.getSketch().placeException(exceptionLine,filename,lineNumber);
-        editor.statusError(rex == null ? new SketchException(exceptionLine,false) : rex);
+        final SketchException rex=sketch.placeException(exceptionLine,filename,lineNumber);
+        statusError(rex == null ? new SketchException(exceptionLine,false) : rex);
         return;
       }
     }
