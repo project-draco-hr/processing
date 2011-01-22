@@ -1,0 +1,34 @@
+{
+  Device emu=find(true);
+  if (emu != null) {
+    return emu;
+  }
+  final EmulatorController emuController=EmulatorController.getInstance();
+  if (emuController.getState() == State.NOT_RUNNING) {
+    try {
+      emuController.launch();
+    }
+ catch (    final IOException e) {
+      e.printStackTrace(System.err);
+      return null;
+    }
+  }
+  while (!Thread.currentThread().isInterrupted()) {
+    if (emuController.getState() == State.NOT_RUNNING) {
+      System.err.println("Ouch. Emulator got killed, I think.");
+      return null;
+    }
+    emu=find(true);
+    if (emu != null) {
+      return emu;
+    }
+    try {
+      Thread.sleep(2000);
+    }
+ catch (    final InterruptedException e) {
+      System.err.println("AndroidEnvironment: interrupted in loop.");
+      return null;
+    }
+  }
+  return null;
+}

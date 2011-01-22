@@ -1,0 +1,52 @@
+{
+  final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(editor,"Building and launching...","Creating project...");
+  try {
+    if (build.createProject(target) == null) {
+      return;
+    }
+    try {
+      if (monitor.isCanceled()) {
+        throw new MonitorCanceled();
+      }
+      monitor.setNote("Building...");
+      if (!build.antBuild(target)) {
+        return;
+      }
+      if (monitor.isCanceled()) {
+        throw new MonitorCanceled();
+      }
+      monitor.setNote("Waiting for device to become available...");
+      final Device device=waitForDevice(deviceFuture,monitor);
+      if (device == null || !device.isAlive()) {
+        editor.statusError("Device killed or disconnected.");
+        return;
+      }
+      device.addListener(this);
+      if (monitor.isCanceled()) {
+        throw new MonitorCanceled();
+      }
+      monitor.setNote("Installing sketch on " + device.getId());
+      if (!device.installApp(build.getPathForAPK(target),editor)) {
+        editor.statusError("Device killed or disconnected.");
+        return;
+      }
+      if (monitor.isCanceled()) {
+        throw new MonitorCanceled();
+      }
+      monitor.setNote("Starting sketch on " + device.getId());
+      if (startSketch(device)) {
+        editor.statusNotice("Sketch launched on the " + (device.isEmulator() ? "emulator" : "phone") + ".");
+      }
+ else {
+        editor.statusError("Could not start the sketch.");
+      }
+      lastRunDevice=device;
+    }
+  finally {
+      build.cleanup();
+    }
+  }
+  finally {
+    monitor.close();
+  }
+}

@@ -1,0 +1,57 @@
+{
+  try {
+    tempBuildFolder=createTempBuildFolder(sketch);
+  }
+ catch (  final IOException e) {
+    editor.statusError(e);
+    return null;
+  }
+  final File srcFolder=new File(tempBuildFolder,"src");
+  if (processing.app.Base.DEBUG) {
+    Base.openFolder(tempBuildFolder);
+  }
+  try {
+    manifest=new Manifest(editor);
+    sketch.prepare();
+    AndroidPreprocessor preproc=new AndroidPreprocessor(sketch,getPackageName());
+    if (!preproc.parseSketchSize()) {
+      editor.statusError("Could not parse the size() command.");
+      return null;
+    }
+    className=preprocess(srcFolder.getAbsolutePath(),manifest.getPackageName(),preproc);
+    if (className != null) {
+      File tempManifest=new File(tempBuildFolder,"AndroidManifest.xml");
+      manifest.writeBuild(tempManifest,className,target.equals("debug"));
+      writeBuildProps(new File(tempBuildFolder,"build.properties"));
+      buildFile=new File(tempBuildFolder,"build.xml");
+      writeBuildXML(buildFile,sketch.getName());
+      writeDefaultProps(new File(tempBuildFolder,"default.properties"));
+      writeLocalProps(new File(tempBuildFolder,"local.properties"));
+      writeRes(new File(tempBuildFolder,"res"),className);
+      final File libsFolder=mkdirs(tempBuildFolder,"libs");
+      final File assetsFolder=mkdirs(tempBuildFolder,"assets");
+      final InputStream input=PApplet.createInput(AndroidEditor.getCoreZipLocation());
+      PApplet.saveStream(new File(libsFolder,"processing-core.jar"),input);
+      try {
+        writeLibraries(libsFolder,assetsFolder);
+        final File sketchDataFolder=sketch.getDataFolder();
+        if (sketchDataFolder.exists()) {
+          Base.copyDir(sketchDataFolder,assetsFolder);
+        }
+      }
+ catch (      final IOException e) {
+        e.printStackTrace();
+        throw new SketchException(e.getMessage());
+      }
+    }
+  }
+ catch (  final SketchException e) {
+    editor.statusError(e);
+    return null;
+  }
+catch (  final IOException e) {
+    editor.statusError(e);
+    return null;
+  }
+  return tempBuildFolder;
+}

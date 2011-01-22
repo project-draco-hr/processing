@@ -1,0 +1,11 @@
+{
+  final Callable<Device> androidFinder=new Callable<Device>(){
+    public Device call() throws Exception {
+      return blockingGetEmulator();
+    }
+  }
+;
+  final FutureTask<Device> task=new FutureTask<Device>(androidFinder);
+  deviceLaunchThread.execute(task);
+  return task;
+}
