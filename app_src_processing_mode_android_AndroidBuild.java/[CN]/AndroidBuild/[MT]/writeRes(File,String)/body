@@ -10,23 +10,28 @@
   File buildIcon36=new File(resFolder,"drawable-ldpi/icon.png");
   File buildIcon72=new File(resFolder,"drawable-hdpi/icon.png");
   if (!localIcon36.exists() && !localIcon48.exists() && !localIcon72.exists()) {
-    if (new File(resFolder,"drawable-ldpi").mkdirs()) {
-      PApplet.saveStream(buildIcon36,getClass().getResourceAsStream("data/icon-36.png"));
-    }
+    try {
+      if (buildIcon36.getParentFile().mkdirs()) {
+        Base.copyFile(mode.getContentFile("icons/" + ICON_36),buildIcon36);
+      }
  else {
-      System.err.println("Could not create \"drawable-ldpi\" folder.");
-    }
-    if (new File(resFolder,"drawable").mkdirs()) {
-      PApplet.saveStream(buildIcon48,getClass().getResourceAsStream("data/icon-48.png"));
-    }
+        System.err.println("Could not create \"drawable-ldpi\" folder.");
+      }
+      if (buildIcon48.getParentFile().mkdirs()) {
+        Base.copyFile(mode.getContentFile("icons/" + ICON_48),buildIcon48);
+      }
  else {
-      System.err.println("Could not create \"drawable\" folder.");
-    }
-    if (new File(resFolder,"drawable-hdpi").mkdirs()) {
-      PApplet.saveStream(buildIcon72,getClass().getResourceAsStream("data/icon-72.png"));
-    }
+        System.err.println("Could not create \"drawable\" folder.");
+      }
+      if (buildIcon72.getParentFile().mkdirs()) {
+        Base.copyFile(mode.getContentFile("icons/" + ICON_72),buildIcon72);
+      }
  else {
-      System.err.println("Could not create \"drawable-hdpi\" folder.");
+        System.err.println("Could not create \"drawable-hdpi\" folder.");
+      }
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
     }
   }
  else {
