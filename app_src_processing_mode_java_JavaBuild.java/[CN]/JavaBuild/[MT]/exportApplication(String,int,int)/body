@@ -10,12 +10,11 @@
     return false;
   }
   File jarFolder=new File(destFolder,"lib");
-  File skeletonFolder=new File(Base.getContentFile("lib"),"export");
+  Mode mode=sketch.getMode();
   File dotAppFolder=null;
   if (exportPlatform == PConstants.MACOSX) {
     dotAppFolder=new File(destFolder,sketch.getName() + ".app");
-    String APP_SKELETON="skeleton.app";
-    File dotAppSkeleton=new File(skeletonFolder,APP_SKELETON);
+    File dotAppSkeleton=mode.getContentFile("application/template.app");
     Base.copyDir(dotAppSkeleton,dotAppFolder);
     String stubName="Contents/MacOS/JavaApplicationStub";
     if (Base.isWindows()) {
@@ -41,7 +40,7 @@
   }
   if (!jarFolder.exists())   jarFolder.mkdirs();
   if (exportPlatform == PConstants.WINDOWS) {
-    Base.copyFile(new File(skeletonFolder,"application.exe"),new File(destFolder,sketch.getName() + ".exe"));
+    Base.copyFile(mode.getContentFile("application/template.exe"),new File(destFolder,sketch.getName() + ".exe"));
   }
   Vector<String> jarListVector=new Vector<String>();
   HashMap<String,Object> zipFileContents=new HashMap<String,Object>();
@@ -129,7 +128,7 @@
     String PLIST_TEMPLATE="template.plist";
     File plistTemplate=new File(sketch.getFolder(),PLIST_TEMPLATE);
     if (!plistTemplate.exists()) {
-      plistTemplate=new File(skeletonFolder,PLIST_TEMPLATE);
+      plistTemplate=mode.getContentFile("application/template.plist");
     }
     File plistFile=new File(dotAppFolder,"Contents/Info.plist");
     PrintWriter pw=PApplet.createWriter(plistFile);
