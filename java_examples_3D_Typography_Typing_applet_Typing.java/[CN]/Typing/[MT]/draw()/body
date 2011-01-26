@@ -1,0 +1,29 @@
+{
+  background(176);
+  if ((millis() % 500) < 250) {
+    noFill();
+  }
+ else {
+    fill(255);
+    stroke(0);
+  }
+  float rPos;
+  rPos=textWidth(buff) + leftmargin;
+  rect(rPos + 1,19,10,21);
+  if (didntTypeYet) {
+    fill(0);
+  }
+  fill(0);
+  pushMatrix();
+  translate(rPos,10 + 25);
+  char k;
+  for (int i=0; i < buff.length(); i++) {
+    k=buff.charAt(i);
+    translate(-textWidth(k),0);
+    rotateY(-textWidth(k) / 70.0f);
+    rotateX(textWidth(k) / 70.0f);
+    scale(1.1f);
+    text(k,0,0);
+  }
+  popMatrix();
+}

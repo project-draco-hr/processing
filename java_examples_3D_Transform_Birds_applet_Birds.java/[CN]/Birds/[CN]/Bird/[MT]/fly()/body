@@ -1,0 +1,33 @@
+{
+  pushMatrix();
+  float px, py, pz;
+  px=sin(radians(ang3)) * radiusX;
+  py=cos(radians(ang3)) * radiusY;
+  pz=sin(radians(ang4)) * radiusZ;
+  translate(width / 2 + offsetX + px,height / 2 + offsetY + py,-700 + offsetZ + pz);
+  rotateX(sin(radians(ang2)) * rotX);
+  rotateY(sin(radians(ang2)) * rotY);
+  rotateZ(sin(radians(ang2)) * rotZ);
+  fill(bodyFill);
+  box(w / 5,h,w / 5);
+  fill(wingFill);
+  pushMatrix();
+  rotateY(sin(radians(ang)) * 20);
+  rect(0,-h / 2,w,h);
+  popMatrix();
+  pushMatrix();
+  rotateY(sin(radians(ang)) * -20);
+  rect(-w,-h / 2,w,h);
+  popMatrix();
+  ang+=flapSpeed;
+  if (ang > 3) {
+    flapSpeed*=-1;
+  }
+  if (ang < -3) {
+    flapSpeed*=-1;
+  }
+  ang2+=rotSpeed;
+  ang3+=1.25f;
+  ang4+=0.55f;
+  popMatrix();
+}

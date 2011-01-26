@@ -1,0 +1,23 @@
+{
+  background(0xff666666);
+  int axvel=mouseX - pmouseX;
+  int ayvel=mouseY - pmouseY;
+  mouseXvel=(axvel != mouseXvel) ? axvel : 0;
+  mouseYvel=(ayvel != mouseYvel) ? ayvel : 0;
+  for (int i=0; i < lwidth; i++) {
+    for (int u=0; u < lheight; u++) {
+      vbuf[i][u].updatebuf(i,u);
+      v[i][u].col=32;
+    }
+  }
+  for (int i=0; i < pnum - 1; i++) {
+    p[i].updatepos();
+  }
+  for (int i=0; i < lwidth; i++) {
+    for (int u=0; u < lheight; u++) {
+      v[i][u].addbuffer(i,u);
+      v[i][u].updatevels(mouseXvel,mouseYvel);
+      v[i][u].display(i,u);
+    }
+  }
+}

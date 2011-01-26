@@ -1,0 +1,20 @@
+{
+  if (move) {
+    rest_posy=mouseY;
+    rest_posx=mouseX;
+  }
+  force=-k * (tempypos - rest_posy);
+  accel=force / mass;
+  vely=damp * (vely + accel);
+  tempypos=tempypos + vely;
+  force=-k * (tempxpos - rest_posx);
+  accel=force / mass;
+  velx=damp * (velx + accel);
+  tempxpos=tempxpos + velx;
+  if ((over() || move) && !otherOver()) {
+    over=true;
+  }
+ else {
+    over=false;
+  }
+}

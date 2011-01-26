@@ -1,0 +1,39 @@
+{
+  PVector bVect=new PVector();
+  bVect.x=b[1].x - b[0].x;
+  bVect.y=b[1].y - b[0].y;
+  float bVectMag=sqrt(bVect.x * bVect.x + bVect.y * bVect.y);
+  if (bVectMag < b[0].r + b[1].r) {
+    float theta=atan2(bVect.y,bVect.x);
+    float sine=sin(theta);
+    float cosine=cos(theta);
+    Ball[] bTemp={new Ball(),new Ball()};
+    bTemp[1].x=cosine * bVect.x + sine * bVect.y;
+    bTemp[1].y=cosine * bVect.y - sine * bVect.x;
+    PVector[] vTemp={new PVector(),new PVector()};
+    vTemp[0].x=cosine * v[0].x + sine * v[0].y;
+    vTemp[0].y=cosine * v[0].y - sine * v[0].x;
+    vTemp[1].x=cosine * v[1].x + sine * v[1].y;
+    vTemp[1].y=cosine * v[1].y - sine * v[1].x;
+    PVector[] vFinal={new PVector(),new PVector()};
+    vFinal[0].x=((b[0].m - b[1].m) * vTemp[0].x + 2 * b[1].m * vTemp[1].x) / (b[0].m + b[1].m);
+    vFinal[0].y=vTemp[0].y;
+    vFinal[1].x=((b[1].m - b[0].m) * vTemp[1].x + 2 * b[0].m * vTemp[0].x) / (b[0].m + b[1].m);
+    vFinal[1].y=vTemp[1].y;
+    bTemp[0].x+=vFinal[0].x;
+    bTemp[1].x+=vFinal[1].x;
+    Ball[] bFinal={new Ball(),new Ball()};
+    bFinal[0].x=cosine * bTemp[0].x - sine * bTemp[0].y;
+    bFinal[0].y=cosine * bTemp[0].y + sine * bTemp[0].x;
+    bFinal[1].x=cosine * bTemp[1].x - sine * bTemp[1].y;
+    bFinal[1].y=cosine * bTemp[1].y + sine * bTemp[1].x;
+    b[1].x=b[0].x + bFinal[1].x;
+    b[1].y=b[0].y + bFinal[1].y;
+    b[0].x=b[0].x + bFinal[0].x;
+    b[0].y=b[0].y + bFinal[0].y;
+    v[0].x=cosine * vFinal[0].x - sine * vFinal[0].y;
+    v[0].y=cosine * vFinal[0].y + sine * vFinal[0].x;
+    v[1].x=cosine * vFinal[1].x - sine * vFinal[1].y;
+    v[1].y=cosine * vFinal[1].y + sine * vFinal[1].x;
+  }
+}

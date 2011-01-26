@@ -1,0 +1,19 @@
+{
+  if ((xx + dx + lensD > lensEffect.width) || (xx + dx < 0)) {
+    dx=-dx;
+  }
+  if ((yy + dy + lensD > lensEffect.height) || (yy + dy < 0)) {
+    dy=-dy;
+  }
+  xx+=dx;
+  yy+=dy;
+  lensImage=createGraphics(lensD,lensD,JAVA2D);
+  lensImage2.copy(lensEffect,xx,yy,lensD,lensD,0,0,lensD,lensD);
+  lensImage.loadPixels();
+  for (int i=0; i < lensImage.pixels.length; i++) {
+    lensImage.pixels[i]=lensImage2.pixels[lensArray[i]];
+  }
+  lensImage.updatePixels();
+  image(lensEffect,0,0,width,height);
+  image(lensImage,xx,yy,lensD,lensD);
+}

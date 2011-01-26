@@ -1,0 +1,22 @@
+{
+  background(255);
+  translate(width / 2,height / 2,-depth);
+  rotateY(frameCount * 0.01f);
+  rotateX(frameCount * 0.01f);
+  for (float i=-depth / 2 + margin; i <= depth / 2 - margin; i+=boxSize) {
+    pushMatrix();
+    for (float j=-height + margin; j <= height - margin; j+=boxSize) {
+      pushMatrix();
+      for (float k=-width + margin; k <= width - margin; k+=boxSize) {
+        boxFill=color(abs(i),abs(j),abs(k),50);
+        pushMatrix();
+        translate(k,j,i);
+        fill(boxFill);
+        box(boxSize,boxSize,boxSize);
+        popMatrix();
+      }
+      popMatrix();
+    }
+    popMatrix();
+  }
+}

@@ -1,0 +1,24 @@
+{
+  noStroke();
+  fill(0,15);
+  rect(0,0,width,height);
+  orb.x+=velocity.x;
+  velocity.y+=gravity;
+  orb.y+=velocity.y;
+  fill(127);
+  beginShape();
+  for (int i=0; i < segments; i++) {
+    vertex(ground[i].x1,ground[i].y1);
+    vertex(ground[i].x2,ground[i].y2);
+  }
+  vertex(ground[segments - 1].x2,height);
+  vertex(ground[0].x1,height);
+  endShape(CLOSE);
+  noStroke();
+  fill(200);
+  ellipse(orb.x,orb.y,orb.r * 2,orb.r * 2);
+  checkWallCollision();
+  for (int i=0; i < segments; i++) {
+    checkGroundCollision(ground[i]);
+  }
+}

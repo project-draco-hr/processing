@@ -1,0 +1,21 @@
+{
+  nmx=mouseX;
+  nmy=mouseY;
+  if ((abs(mx - nmx) > 1.0f) || (abs(my - nmy) > 1.0f)) {
+    mx=mx - (mx - nmx) / 20.0f;
+    my=my - (my - nmy) / 20.0f;
+    currentValue+=1 * valdir;
+    if (currentValue > 255 || currentValue <= 0) {
+      valdir*=-1;
+    }
+  }
+  iKinematics();
+  kinematics();
+  pushMatrix();
+  translate(width / 2,height / 2);
+  stroke(currentValue);
+  line(thighX,thighY,legX,legY);
+  popMatrix();
+  stroke(255);
+  point(legX + width / 2,legY + height / 2);
+}

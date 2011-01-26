@@ -1,0 +1,45 @@
+{
+  background(102);
+  lights();
+  translate(width / 2,height / 2,0);
+  rotateX(frameCount * 0.006f);
+  rotateY(frameCount * 0.006f);
+  rotateZ(frameCount * 0.006f);
+  vertices=new Point3D[2][pts + 1];
+  for (int i=0; i < 2; i++) {
+    angle=0;
+    for (int j=0; j <= pts; j++) {
+      vertices[i][j]=new Point3D();
+      if (isPyramid) {
+        if (i == 1) {
+          vertices[i][j].x=0;
+          vertices[i][j].y=0;
+        }
+ else {
+          vertices[i][j].x=cos(radians(angle)) * radius;
+          vertices[i][j].y=sin(radians(angle)) * radius;
+        }
+      }
+ else {
+        vertices[i][j].x=cos(radians(angle)) * radius;
+        vertices[i][j].y=sin(radians(angle)) * radius;
+      }
+      vertices[i][j].z=cylinderLength;
+      angle+=360.0f / pts;
+    }
+    cylinderLength*=-1;
+  }
+  beginShape(QUAD_STRIP);
+  for (int j=0; j <= pts; j++) {
+    vertex(vertices[0][j].x,vertices[0][j].y,vertices[0][j].z);
+    vertex(vertices[1][j].x,vertices[1][j].y,vertices[1][j].z);
+  }
+  endShape();
+  for (int i=0; i < 2; i++) {
+    beginShape();
+    for (int j=0; j < pts; j++) {
+      vertex(vertices[i][j].x,vertices[i][j].y,vertices[i][j].z);
+    }
+    endShape(CLOSE);
+  }
+}

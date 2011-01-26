@@ -1,0 +1,26 @@
+{
+  if (signal > width - 1 || signal < 0) {
+    direction=direction * -1;
+  }
+  if (mousePressed) {
+    signal=abs(mouseY % height);
+  }
+ else {
+    signal+=(0.3f * direction);
+  }
+  if (keyPressed) {
+    loadPixels();
+    for (int i=0; i < width * height; i++) {
+      pixels[i]=aPixels[i];
+    }
+    updatePixels();
+    line(0,signal,width,signal);
+  }
+ else {
+    loadPixels();
+    for (int i=0; i < width * height; i++) {
+      pixels[i]=aPixels[PApplet.parseInt((width * PApplet.parseInt(signal)) + (i % width))];
+    }
+    updatePixels();
+  }
+}
