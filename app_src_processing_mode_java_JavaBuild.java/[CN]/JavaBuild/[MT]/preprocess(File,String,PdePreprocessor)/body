@@ -95,10 +95,13 @@ catch (  Exception ex) {
     throw new SketchException(ex.toString());
   }
   importedLibraries=new ArrayList<Library>();
+  System.out.println("extra imports: " + result.extraImports);
   for (  String item : result.extraImports) {
     int dot=item.lastIndexOf('.');
     String entry=(dot == -1) ? item : item.substring(0,dot);
+    System.out.println("library searching for " + entry);
     Library library=mode.getLibrary(entry);
+    System.out.println("  found " + library);
     if (library != null) {
       if (!importedLibraries.contains(library)) {
         importedLibraries.add(library);
