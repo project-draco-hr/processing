@@ -1,0 +1,36 @@
+{
+  if (!nativeLoaded) {
+    String platform="macosx";
+    try {
+      File folder=File.createTempFile("processing","opengl");
+      folder.delete();
+      folder.mkdirs();
+      folder.deleteOnExit();
+      PApplet.open(folder.getAbsolutePath());
+      addDir(folder.getAbsolutePath());
+      for (      String n : nativeList) {
+        String who="lib" + n + ".jnilib";
+        InputStream input=getClass().getResourceAsStream("/natives/" + platform + "/"+ who);
+        File targetFile=new File(folder,who);
+        System.out.println("natives to " + targetFile);
+        PApplet.saveStream(targetFile,input);
+        System.load(targetFile.getAbsolutePath());
+      }
+      System.out.println("trying my own loadLibrary() hmmm...");
+      try {
+        System.loadLibrary("jogl");
+      }
+ catch (      RuntimeException e) {
+        e.printStackTrace();
+        System.out.println("did not go well");
+      }
+      System.out.println("done with that.");
+      com.sun.opengl.impl.NativeLibLoader.disableLoading();
+      nativeLoaded=true;
+      System.out.println("native loaded " + nativeLoaded);
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+  }
+}
