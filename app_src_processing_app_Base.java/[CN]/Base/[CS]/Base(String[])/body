@@ -1,4 +1,18 @@
 {
+  defaultMode=new JavaMode(this,getContentFile("modes/java"));
+  Mode androidMode=new AndroidMode(this,getContentFile("modes/android"));
+  modeList=new Mode[]{defaultMode,androidMode};
+  modeMenu=new JMenu();
+  for (  final Mode mode : modeList) {
+    JMenuItem item=new JMenuItem(mode.getTitle());
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        changeMode(mode);
+      }
+    }
+);
+    modeMenu.add(item);
+  }
   determineSketchbookFolder();
   defaultMode.rebuildLibraryList();
   platform.init(this);

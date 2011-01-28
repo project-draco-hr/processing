@@ -1,6 +1,13 @@
 {
-  if (!isEnabled())   return;
-  if (rollover != null) {
-    handlePressed(e,buttons.indexOf(rollover));
+  if (isEnabled()) {
+    int x=e.getX();
+    int y=e.getY();
+    if (x > modeX1 && x < modeX2 && y > modeY1 && y < modeY2) {
+      JPopupMenu popup=base.getModeMenu().getPopupMenu();
+      popup.show(this,x,y);
+    }
+    if (rollover != null) {
+      handlePressed(e,buttons.indexOf(rollover));
+    }
   }
 }

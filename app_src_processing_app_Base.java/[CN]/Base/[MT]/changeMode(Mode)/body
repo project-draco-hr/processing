@@ -1,0 +1,19 @@
+{
+  if (activeEditor.getMode() != mode) {
+    Sketch sketch=activeEditor.getSketch();
+    if (sketch.isModified()) {
+      Base.showWarning("Save","Please save the sketch before changing the mode.",null);
+    }
+ else {
+      String mainPath=sketch.getMainFilePath();
+      File sketchProps=new File(sketch.getFolder(),"sketch.properties");
+      PrintWriter writer=PApplet.createWriter(sketchProps);
+      writer.println("mode=" + mode.getTitle());
+      writer.flush();
+      writer.close();
+      int[] where=activeEditor.getPlacement();
+      handleClose(activeEditor);
+      handleOpen(mainPath,where);
+    }
+  }
+}

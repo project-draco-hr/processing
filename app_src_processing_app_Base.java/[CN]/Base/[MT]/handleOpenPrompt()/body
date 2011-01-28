@@ -1,8 +1,18 @@
 {
   FileDialog fd=new FileDialog(activeEditor,"Open a Processing sketch...",FileDialog.LOAD);
+  final ArrayList<String> extensions=new ArrayList<String>();
+  for (  Mode mode : modeList) {
+    extensions.add(mode.getDefaultExtension());
+  }
   fd.setFilenameFilter(new FilenameFilter(){
     public boolean accept(    File dir,    String name){
-      return name.toLowerCase().endsWith(getExtension());
+      System.out.println("check filter on " + dir + " "+ name);
+      for (      String ext : extensions) {
+        if (name.toLowerCase().endsWith("." + ext)) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 );

@@ -11,7 +11,26 @@
       return editor;
     }
   }
-  Editor editor=defaultMode.createEditor(this,path,location);
+  Mode nextMode=nextEditorMode();
+  try {
+    File sketchFolder=new File(path).getParentFile();
+    File sketchProps=new File(sketchFolder,"sketch.properties");
+    if (sketchProps.exists()) {
+      Settings props=new Settings(sketchProps);
+      String modeTitle=props.get("mode");
+      if (modeTitle != null) {
+        nextMode=findMode(modeTitle);
+        if (nextMode == null) {
+          Base.showWarning("Depeche Mode","This sketch was last used in ???" + modeTitle + "??? mode,\n"+ "which does not appear to be installed. The sketch will\n"+ "be opened in ???"+ defaultMode.getTitle()+ "??? mode instead.",null);
+          nextMode=defaultMode;
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  Editor editor=nextMode.createEditor(this,path,location);
   if (editor.getSketch() == null) {
     return null;
   }
