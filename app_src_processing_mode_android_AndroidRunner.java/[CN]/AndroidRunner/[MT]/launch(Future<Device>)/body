@@ -1,0 +1,22 @@
+{
+  listener.statusNotice("Waiting for device to become available...");
+  final Device device=waitForDevice(deviceFuture,listener);
+  if (device == null || !device.isAlive()) {
+    listener.statusError("Device killed or disconnected.");
+    return;
+  }
+  device.addListener(this);
+  listener.statusNotice("Installing sketch on " + device.getId());
+  if (!device.installApp(build.getPathForAPK(),listener)) {
+    listener.statusError("Device killed or disconnected.");
+    return;
+  }
+  listener.statusNotice("Starting sketch on " + device.getId());
+  if (startSketch(build,device)) {
+    listener.statusNotice("Sketch launched on the " + (device.isEmulator() ? "emulator" : "phone") + ".");
+  }
+ else {
+    listener.statusError("Could not start the sketch.");
+  }
+  lastRunDevice=device;
+}

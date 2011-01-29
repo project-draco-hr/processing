@@ -2,13 +2,14 @@
   new Thread(){
     public void run(){
       prepareRun();
-      AVD.ensureEclairAVD(amode.getSDK());
       try {
-        runSketchOnDevice(Environment.getInstance().getEmulator(),"debug",AndroidEditor.this);
+        amode.handleRunEmulator(sketch,AndroidEditor.this);
       }
- catch (      final MonitorCanceled ok) {
-        sketchStopped();
-        statusNotice("Canceled.");
+ catch (      SketchException e) {
+        statusError(e);
+      }
+catch (      IOException e) {
+        statusError(e);
       }
     }
   }

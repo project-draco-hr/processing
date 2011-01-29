@@ -1,9 +1,17 @@
 {
-  try {
-    runSketchOnDevice(Environment.getInstance().getHardware(),"debug",this);
+  new Thread(){
+    public void run(){
+      prepareRun();
+      try {
+        amode.handleRunDevice(sketch,AndroidEditor.this);
+      }
+ catch (      SketchException e) {
+        statusError(e);
+      }
+catch (      IOException e) {
+        statusError(e);
+      }
+    }
   }
- catch (  final MonitorCanceled ok) {
-    sketchStopped();
-    statusNotice("Canceled.");
-  }
+.start();
 }

@@ -1,11 +1,14 @@
 {
+  AndroidBuild build=new AndroidBuild(sketch,amode);
   try {
-    buildReleaseForExport("debug");
+    if (build.exportProject()) {
+      statusNotice("Done with export.");
+    }
   }
- catch (  final MonitorCanceled ok) {
-    statusNotice("Canceled.");
+ catch (  IOException e) {
+    statusError(e);
   }
- finally {
-    deactivateExport();
+catch (  SketchException e) {
+    statusError(e);
   }
 }
