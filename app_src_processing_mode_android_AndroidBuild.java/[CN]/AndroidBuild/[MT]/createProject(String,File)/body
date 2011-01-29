@@ -23,17 +23,11 @@
     final File libsFolder=mkdirs(tmpFolder,"libs");
     final File assetsFolder=mkdirs(tmpFolder,"assets");
     Base.copyFile(coreZipFile,new File(libsFolder,"processing-core.jar"));
-    try {
-      copyLibraries(libsFolder,assetsFolder);
-      copyCodeFolder(libsFolder);
-      final File sketchDataFolder=sketch.getDataFolder();
-      if (sketchDataFolder.exists()) {
-        Base.copyDir(sketchDataFolder,assetsFolder);
-      }
-    }
- catch (    final IOException e) {
-      e.printStackTrace();
-      throw new SketchException(e.getMessage());
+    copyLibraries(libsFolder,assetsFolder);
+    copyCodeFolder(libsFolder);
+    final File sketchDataFolder=sketch.getDataFolder();
+    if (sketchDataFolder.exists()) {
+      Base.copyDir(sketchDataFolder,assetsFolder);
     }
   }
   return tmpFolder;

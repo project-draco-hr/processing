@@ -1,7 +1,6 @@
 {
-  final IndeterminateProgressMonitor monitor=new IndeterminateProgressMonitor(this,"Building and launching...","Creating project...");
   listener.startIndeterminate();
-  listener.statusNotice("Building and launching...");
+  listener.statusNotice("Creating project...");
   build=new AndroidBuild(sketch,amode.getSDK());
   try {
     try {
@@ -16,10 +15,7 @@ catch (    IOException e) {
       statusError(e);
     }
     try {
-      if (monitor.isCanceled()) {
-        throw new MonitorCanceled();
-      }
-      monitor.setNote("Building...");
+      listener.statusNotice("Building...");
       try {
         if (!build.antBuild(target)) {
           return;
@@ -28,28 +24,22 @@ catch (    IOException e) {
  catch (      SketchException se) {
         statusError(se);
       }
-      if (monitor.isCanceled()) {
-        throw new MonitorCanceled();
-      }
-      monitor.setNote("Waiting for device to become available...");
-      final Device device=waitForDevice(deviceFuture,monitor);
+      listener.statusNotice("Waiting for device to become available...");
+      final Device device=waitForDevice(deviceFuture,listener);
       if (device == null || !device.isAlive()) {
         statusError("Device killed or disconnected.");
         return;
       }
       device.addListener(this);
-      if (monitor.isCanceled()) {
+      if (listener.isHalted()) {
         throw new MonitorCanceled();
       }
-      monitor.setNote("Installing sketch on " + device.getId());
+      statusNotice("Installing sketch on " + device.getId());
       if (!device.installApp(build.getPathForAPK(target),this)) {
         statusError("Device killed or disconnected.");
         return;
       }
-      if (monitor.isCanceled()) {
-        throw new MonitorCanceled();
-      }
-      monitor.setNote("Starting sketch on " + device.getId());
+      listener.statusNotice("Starting sketch on " + device.getId());
       if (startSketch(device)) {
         statusNotice("Sketch launched on the " + (device.isEmulator() ? "emulator" : "phone") + ".");
       }
@@ -63,6 +53,6 @@ catch (    IOException e) {
     }
   }
   finally {
-    monitor.close();
+    listener.stopIndeterminate();
   }
 }
