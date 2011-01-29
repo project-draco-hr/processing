@@ -19,7 +19,10 @@
       }
     }
     public void mouseExited(    MouseEvent e){
-      editor.statusEmpty();
+      if (lastNoticeName != null) {
+        editor.clearNotice(lastNoticeName);
+        lastNoticeName=null;
+      }
     }
   }
 );
@@ -28,7 +31,8 @@
       int x=e.getX();
       for (      Tab tab : tabs) {
         if (tab.contains(x) && !tab.textVisible) {
-          editor.statusNotice(editor.getSketch().getCode(tab.index).getPrettyName());
+          lastNoticeName=editor.getSketch().getCode(tab.index).getPrettyName();
+          editor.statusNotice(lastNoticeName);
         }
       }
     }
