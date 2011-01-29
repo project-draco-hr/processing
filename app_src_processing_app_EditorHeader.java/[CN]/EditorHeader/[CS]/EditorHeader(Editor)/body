@@ -10,11 +10,25 @@
       }
  else {
         Sketch sketch=editor.getSketch();
-        for (int i=0; i < sketch.getCodeCount(); i++) {
-          if ((x > tabLeft[i]) && (x < tabRight[i])) {
-            sketch.setCurrentCode(i);
+        for (        Tab tab : tabs) {
+          if (tab.contains(x)) {
+            sketch.setCurrentCode(tab.index);
             repaint();
           }
+        }
+      }
+    }
+    public void mouseExited(    MouseEvent e){
+      editor.statusEmpty();
+    }
+  }
+);
+  addMouseMotionListener(new MouseMotionAdapter(){
+    public void mouseMoved(    MouseEvent e){
+      int x=e.getX();
+      for (      Tab tab : tabs) {
+        if (tab.contains(x) && !tab.textVisible) {
+          editor.statusNotice(editor.getSketch().getCode(tab.index).getPrettyName());
         }
       }
     }
