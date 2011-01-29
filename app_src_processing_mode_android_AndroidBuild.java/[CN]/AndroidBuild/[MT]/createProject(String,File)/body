@@ -1,7 +1,7 @@
 {
   tmpFolder=createTempBuildFolder(sketch);
   srcFolder=new File(tmpFolder,"src");
-  binFolder=new File(tmpFolder,"bin");
+  binFolder=srcFolder;
   if (processing.app.Base.DEBUG) {
     Base.openFolder(tmpFolder);
   }
@@ -24,7 +24,8 @@
     final File assetsFolder=mkdirs(tmpFolder,"assets");
     Base.copyFile(coreZipFile,new File(libsFolder,"processing-core.jar"));
     try {
-      writeLibraries(libsFolder,assetsFolder);
+      copyLibraries(libsFolder,assetsFolder);
+      copyCodeFolder(libsFolder);
       final File sketchDataFolder=sketch.getDataFolder();
       if (sketchDataFolder.exists()) {
         Base.copyDir(sketchDataFolder,assetsFolder);
