@@ -1,5 +1,5 @@
 {
-  folder=new File(sdkPath);
+  this.folder=folder;
   if (!folder.exists()) {
     throw new BadSDKException(folder + " does not exist");
   }
@@ -16,11 +16,8 @@
   String path=p.getenv("PATH");
   p.setenv("ANDROID_SDK",folder.getCanonicalPath());
   path=platformTools.getCanonicalPath() + File.pathSeparator + tools.getCanonicalPath()+ File.pathSeparator+ path;
-  final String javaHomeProp=System.getProperty("java.home");
-  if (javaHomeProp == null) {
-    throw new RuntimeException("I don't know how to deal with " + "a null java.home proprty, to be quite frank.");
-  }
-  final File javaHome=new File(javaHomeProp).getCanonicalFile();
+  String javaHomeProp=System.getProperty("java.home");
+  File javaHome=new File(javaHomeProp).getCanonicalFile();
   p.setenv("JAVA_HOME",javaHome.getCanonicalPath());
   path=new File(javaHome,"bin").getCanonicalPath() + File.pathSeparator + path;
   p.setenv("PATH",path);

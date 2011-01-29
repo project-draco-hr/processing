@@ -1,15 +1,16 @@
 {
   super(base,path,location,mode);
   amode=(AndroidMode)mode;
-  statusNotice("Loading Android tools.");
-  if (sdk == null) {
-    try {
-      sdk=AndroidSDK.find(this);
-      statusNotice("Done loading Android tools.");
+  try {
+    AndroidSDK sdk=amode.loadSDK();
+    if (sdk == null) {
+      sdk=AndroidSDK.locate(this);
     }
- catch (    Exception e) {
-      Base.showWarning("Android Tools Error",e.getMessage(),null);
-      statusError("Android Mode is disabled.");
-    }
+  }
+ catch (  BadSDKException bse) {
+    statusError(bse);
+  }
+catch (  IOException e) {
+    statusError(e);
   }
 }
