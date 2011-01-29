@@ -1,14 +1,28 @@
 {
-  AndroidBuild build=new AndroidBuild(sketch,amode);
-  try {
-    if (build.exportProject()) {
-      statusNotice("Done with export.");
+  if (handleExportCheckModified()) {
+    new Thread(){
+      public void run(){
+        toolbar.activate(AndroidToolbar.EXPORT);
+        startIndeterminate();
+        statusNotice("Exporting a debug version of the sketch...");
+        AndroidBuild build=new AndroidBuild(sketch,amode);
+        try {
+          File exportFolder=build.exportProject();
+          if (exportFolder != null) {
+            Base.openFolder(exportFolder);
+            statusNotice("Done with export.");
+          }
+        }
+ catch (        IOException e) {
+          statusError(e);
+        }
+catch (        SketchException e) {
+          statusError(e);
+        }
+        stopIndeterminate();
+        toolbar.deactivate(AndroidToolbar.EXPORT);
+      }
     }
-  }
- catch (  IOException e) {
-    statusError(e);
-  }
-catch (  SketchException e) {
-    statusError(e);
+.start();
   }
 }
