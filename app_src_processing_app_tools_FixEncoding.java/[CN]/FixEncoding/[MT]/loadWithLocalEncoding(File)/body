@@ -1,6 +1,13 @@
 {
-  FileReader fr=new FileReader(file);
-  BufferedReader reader=new BufferedReader(fr);
+  String encoding=System.getProperty("file.encoding");
+  if (Base.isMacOS()) {
+    if (encoding.equals("UTF-8")) {
+      encoding="MacRoman";
+    }
+  }
+  FileInputStream fis=new FileInputStream(file);
+  InputStreamReader isr=new InputStreamReader(fis,encoding);
+  BufferedReader reader=new BufferedReader(isr);
   StringBuffer buffer=new StringBuffer();
   String line=null;
   while ((line=reader.readLine()) != null) {
