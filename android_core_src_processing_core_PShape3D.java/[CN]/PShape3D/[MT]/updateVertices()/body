@@ -2,7 +2,9 @@
   if (updateElement == VERTICES) {
     int offset=firstUpdateIdx * 3;
     int size=(lastUpdateIdx - firstUpdateIdx + 1) * 3;
-    updateBounds();
+    if (root.autoBounds) {
+      updateBounds(firstUpdateIdx,lastUpdateIdx);
+    }
     vertexBuffer.position(0);
     vertexBuffer.put(vertices,offset,size);
     vertexBuffer.flip();

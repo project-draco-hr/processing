@@ -5,6 +5,7 @@
   try {
     readv=readvn=readvt=false;
     String line;
+    String gname="object";
     while ((line=reader.readLine()) != null) {
       while (line.contains("\\")) {
         line=line.split("\\\\")[0];
@@ -36,6 +37,7 @@
           }
         }
  else         if (elements[0].equals("g")) {
+          gname=elements[1];
         }
  else         if (elements[0].equals("usemtl")) {
           if (elements[1] != null) {
@@ -52,6 +54,7 @@
  else         if (elements[0].equals("f")) {
           OBJFace face=new OBJFace();
           face.matIdx=mtlIdxCur;
+          face.name=gname;
           for (int i=1; i < elements.length; i++) {
             String seg=elements[i];
             if (seg.indexOf("/") > 0) {

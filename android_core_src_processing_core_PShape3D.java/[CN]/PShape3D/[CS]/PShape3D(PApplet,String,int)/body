@@ -2,29 +2,11 @@
   this.papplet=parent;
   a3d=(PGraphicsAndroid3D)parent.g;
   this.family=PShape.GROUP;
+  this.name="root";
+  this.root=this;
   glVertexBufferID=0;
   glColorBufferID=0;
   glNormalBufferID=0;
-  java.util.Arrays.fill(glTexCoordBufferID,0);
-  gl=a3d.gl11;
-  if (gl == null) {
-    throw new RuntimeException("PShape3D: OpenGL ES 1.1 required");
-  }
-  if (!PGraphicsAndroid3D.vboSupported) {
-    throw new RuntimeException("PShape3D: Vertex Buffer Objects are not available");
-  }
-  readFromOBJ=true;
-  objVertices=new ArrayList<PVector>();
-  objNormal=new ArrayList<PVector>();
-  objTexCoords=new ArrayList<PVector>();
-  objFaces=new ArrayList<OBJFace>();
-  objMaterials=new ArrayList<OBJMaterial>();
-  BufferedReader reader=getBufferedReader(filename);
-  if (reader == null) {
-    throw new RuntimeException("PShape3D: Cannot read source file");
-  }
-  Parameters params=PShape3D.newParameters(TRIANGLES,mode);
-  setParameters(params);
-  parseOBJ(reader,objVertices,objNormal,objTexCoords,objFaces,objMaterials);
-  vertexCount=objVertices.size();
+  glTexCoordBufferID=null;
+  initShapeOBJ(filename,mode);
 }

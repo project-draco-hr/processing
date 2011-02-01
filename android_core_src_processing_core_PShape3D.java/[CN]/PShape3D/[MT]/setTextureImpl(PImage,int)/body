@@ -3,17 +3,16 @@
     System.err.println("PShape3D: Wrong texture unit.");
     return;
   }
-  PShape3D p=(PShape3D)root;
-  if (p.numTexBuffers <= unit) {
-    p.addTexBuffers(unit - p.numTexBuffers + 1);
+  if (numTexBuffers <= unit) {
+    root.addTexBuffers(unit - numTexBuffers + 1);
   }
   if (tex == null) {
     throw new RuntimeException("PShape3D: trying to set null texture.");
   }
-  if (p.texCoordSet[unit] && isTexturable()) {
-    p.loadTexcoords(unit,firstVertex,lastVertex);
+  if (texCoordSet[unit] && isTexturable()) {
+    loadTexcoords(unit);
     textures[unit]=tex;
-    p.updateTexcoords();
+    updateTexcoords();
   }
  else {
     textures[unit]=tex;

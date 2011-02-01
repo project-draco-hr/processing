@@ -9,6 +9,8 @@
   a3d.stroke=false;
   int cMode0=a3d.colorMode;
   a3d.colorMode=RGB;
+  boolean merge0=a3d.mergeRecShapes;
+  a3d.mergeRecShapes=false;
   float specularR0, specularG0, specularB0;
   specularR0=a3d.specularR;
   specularG0=a3d.specularG;
@@ -75,6 +77,7 @@
  else {
       a3d.beginShape();
     }
+    a3d.shapeName(face.name);
     for (int j=0; j < face.vertIdx.size(); j++) {
       int vertIdx, normIdx;
       PVector vert, norms;
@@ -120,8 +123,7 @@
     }
     a3d.endShape(CLOSE);
   }
-  createShape(a3d.recordedVertices.size());
-  initChildren();
+  allocateShape(a3d.recordedVertices.size());
   updateElement=-1;
   width=height=depth=0;
   xmin=ymin=zmin=10000;
@@ -131,6 +133,7 @@
   a3d.colorMode=cMode0;
   a3d.autoNormal=auto0;
   a3d.stroke=stroke0;
+  a3d.mergeRecShapes=merge0;
   a3d.calcR=specularR0;
   a3d.calcG=specularG0;
   a3d.calcB=specularB0;
