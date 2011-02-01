@@ -14,7 +14,8 @@
   vertex[Y]=y;
   vertex[Z]=z;
   vertex[EDGE]=edge ? 1 : 0;
-  if (fill || textureImage != null) {
+  boolean textured=textureImage != null;
+  if (fill || textured) {
     if (textureImage == null) {
       vertex[R]=fillR;
       vertex[G]=fillG;
@@ -53,9 +54,27 @@
     vertex[SA]=strokeA;
     vertex[SW]=strokeWeight;
   }
-  if (textureImage != null) {
+  if (textured) {
     vertex[U]=textureU;
     vertex[V]=textureV;
+  }
+  if (autoNormal) {
+    float norm2=normalX * normalX + normalY * normalY + normalZ * normalZ;
+    if (norm2 < EPSILON) {
+      vertex[HAS_NORMAL]=0;
+    }
+ else {
+      if (Math.abs(norm2 - 1) > EPSILON) {
+        float norm=PApplet.sqrt(norm2);
+        normalX/=norm;
+        normalY/=norm;
+        normalZ/=norm;
+      }
+      vertex[HAS_NORMAL]=1;
+    }
+  }
+ else {
+    vertex[HAS_NORMAL]=1;
   }
   vertex[NX]=normalX;
   vertex[NY]=normalY;

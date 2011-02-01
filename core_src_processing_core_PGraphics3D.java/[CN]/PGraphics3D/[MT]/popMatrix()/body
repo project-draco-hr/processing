@@ -1,8 +1,17 @@
 {
-  if (matrixStackDepth == 0) {
-    throw new RuntimeException(ERROR_PUSHMATRIX_UNDERFLOW);
+  if (projectionMode) {
+    if (pmatrixStackDepth == 0) {
+      throw new RuntimeException(ERROR_PUSHMATRIX_UNDERFLOW);
+    }
+    pmatrixStackDepth--;
+    projection.set(pmatrixStack[pmatrixStackDepth]);
   }
-  matrixStackDepth--;
-  modelview.set(matrixStack[matrixStackDepth]);
-  modelviewInv.set(matrixInvStack[matrixStackDepth]);
+ else {
+    if (matrixStackDepth == 0) {
+      throw new RuntimeException(ERROR_PUSHMATRIX_UNDERFLOW);
+    }
+    matrixStackDepth--;
+    modelview.set(matrixStack[matrixStackDepth]);
+    modelviewInv.set(matrixInvStack[matrixStackDepth]);
+  }
 }
