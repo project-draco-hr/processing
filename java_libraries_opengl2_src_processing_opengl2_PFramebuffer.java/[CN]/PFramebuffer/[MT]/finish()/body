@@ -1,0 +1,18 @@
+{
+  if (noDepth) {
+    if (pgl.hintEnabled(DISABLE_DEPTH_TEST)) {
+      gl.glDisable(GL.GL_DEPTH_TEST);
+    }
+ else {
+      gl.glEnable(GL.GL_DEPTH_TEST);
+    }
+  }
+  if (!screenFb && !fboMode) {
+    copyToColorBuffers();
+    restoreBackup();
+    if (!noDepth) {
+      gl.glClearColor(0,0,0,0);
+      gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+    }
+  }
+}

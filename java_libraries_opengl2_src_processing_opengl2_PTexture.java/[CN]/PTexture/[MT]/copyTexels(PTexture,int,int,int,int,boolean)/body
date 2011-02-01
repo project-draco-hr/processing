@@ -1,0 +1,19 @@
+{
+  if (tex == null) {
+    throw new RuntimeException("PTexture: source texture is null");
+  }
+  if (tempFbo == null) {
+    tempFbo=new PFramebuffer(parent,glWidth,glHeight);
+  }
+  tempFbo.setColorBuffer(this);
+  tempFbo.disableDepthTest();
+  pgl.pushFramebuffer();
+  pgl.setFramebuffer(tempFbo);
+  if (scale) {
+    pgl.drawTexture(tex,x,y,w,h,0,0,width,height);
+  }
+ else {
+    pgl.drawTexture(tex,x,y,w,h,x,y,w,h);
+  }
+  pgl.popFramebuffer();
+}

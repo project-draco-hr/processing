@@ -1,0 +1,22 @@
+{
+  report("top endDraw()");
+  super.endDraw();
+  if (hints[ENABLE_DEPTH_SORT]) {
+    flush();
+  }
+  if (primarySurface) {
+    gl.glFlush();
+    if (drawable != null) {
+      drawable.swapBuffers();
+      releaseContext();
+    }
+  }
+ else {
+    if (offscreenMultisample) {
+      offscreenFramebufferMultisample.copy(offscreenFramebuffer);
+    }
+    popFramebuffer();
+    pgl.restoreGLState();
+  }
+  report("bot endDraw()");
+}

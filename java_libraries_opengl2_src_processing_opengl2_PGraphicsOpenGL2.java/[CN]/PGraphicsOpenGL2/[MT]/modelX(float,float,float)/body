@@ -1,0 +1,12 @@
+{
+  if (!modelviewUpdated) {
+    getModelviewMatrix();
+  }
+  float ax=glmodelview[0] * x + glmodelview[4] * y + glmodelview[8] * z + glmodelview[12];
+  float ay=glmodelview[1] * x + glmodelview[5] * y + glmodelview[9] * z + glmodelview[13];
+  float az=glmodelview[2] * x + glmodelview[6] * y + glmodelview[10] * z + glmodelview[14];
+  float aw=glmodelview[3] * x + glmodelview[7] * y + glmodelview[11] * z + glmodelview[15];
+  float ox=pcameraInv[0] * ax + pcameraInv[4] * ay + pcameraInv[8] * az + pcameraInv[12] * aw;
+  float ow=pcameraInv[3] * ax + pcameraInv[7] * ay + pcameraInv[11] * az + pcameraInv[15] * aw;
+  return (ow != 0) ? ox / ow : ox;
+}

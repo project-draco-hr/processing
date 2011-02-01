@@ -1,0 +1,14 @@
+{
+  if (glTexCoordBufferID == null) {
+    glTexCoordBufferID=new int[PGraphicsOpenGL2.MAX_TEXTURES];
+    java.util.Arrays.fill(glTexCoordBufferID,0);
+  }
+ else {
+    deleteTexCoordBuffer();
+  }
+  glTexCoordBufferID[0]=pgl.createGLResource(PGraphicsOpenGL2.GL_VERTEX_BUFFER);
+  gl.glBindBuffer(GL.GL_ARRAY_BUFFER,glTexCoordBufferID[0]);
+  final int bufferSize=texCoordBuffer.capacity() * PGraphicsOpenGL2.SIZEOF_FLOAT;
+  gl.glBufferData(GL.GL_ARRAY_BUFFER,bufferSize,texCoordBuffer,glUsage);
+  gl.glBindBuffer(GL.GL_ARRAY_BUFFER,0);
+}

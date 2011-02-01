@@ -1,0 +1,30 @@
+{
+  if (screenFb)   return;
+  if (width == 0 || height == 0) {
+    throw new RuntimeException("PFramebuffer: size undefined.");
+  }
+  if (fboMode) {
+    pgl.pushFramebuffer();
+    pgl.setFramebuffer(this);
+    glDepthBufferID=pgl.createGLResource(PGraphicsOpenGL2.GL_RENDER_BUFFER);
+    gl.glBindRenderbuffer(GL.GL_RENDERBUFFER,glDepthBufferID);
+    int glConst=GL.GL_DEPTH_COMPONENT16;
+    if (bits == 16) {
+      glConst=GL.GL_DEPTH_COMPONENT16;
+    }
+ else     if (bits == 24) {
+      glConst=GL.GL_DEPTH_COMPONENT24;
+    }
+ else     if (bits == 32) {
+      glConst=GL.GL_DEPTH_COMPONENT32;
+    }
+    if (multisample) {
+      gl2.glRenderbufferStorageMultisample(GL.GL_RENDERBUFFER,nsamples,glConst,width,height);
+    }
+ else {
+      gl.glRenderbufferStorage(GL.GL_RENDERBUFFER,glConst,width,height);
+    }
+    gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,GL.GL_DEPTH_ATTACHMENT,GL.GL_RENDERBUFFER,glDepthBufferID);
+    pgl.popFramebuffer();
+  }
+}

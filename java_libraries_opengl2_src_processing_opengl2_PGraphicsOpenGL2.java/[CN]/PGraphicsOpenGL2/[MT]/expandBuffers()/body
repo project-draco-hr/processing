@@ -1,0 +1,23 @@
+{
+  int newSize=vertexBuffer.capacity() / 3 << 1;
+  ByteBuffer vbb=ByteBuffer.allocateDirect(newSize * 3 * SIZEOF_FLOAT);
+  vbb.order(ByteOrder.nativeOrder());
+  vertexBuffer=vbb.asFloatBuffer();
+  ByteBuffer cbb=ByteBuffer.allocateDirect(newSize * 4 * SIZEOF_FLOAT);
+  cbb.order(ByteOrder.nativeOrder());
+  colorBuffer=cbb.asFloatBuffer();
+  ByteBuffer nbb=ByteBuffer.allocateDirect(newSize * 3 * SIZEOF_FLOAT);
+  nbb.order(ByteOrder.nativeOrder());
+  normalBuffer=nbb.asFloatBuffer();
+  for (int t=0; t < numTexBuffers; t++) {
+    ByteBuffer tbb=ByteBuffer.allocateDirect(newSize * 2 * SIZEOF_FLOAT);
+    tbb.order(ByteOrder.nativeOrder());
+    texCoordBuffer[t]=tbb.asFloatBuffer();
+  }
+  vertexArray=new float[newSize * 3];
+  colorArray=new float[newSize * 4];
+  normalArray=new float[newSize * 3];
+  for (int t=0; t < numTexBuffers; t++) {
+    texCoordArray[t]=new float[newSize * 2];
+  }
+}

@@ -1,0 +1,34 @@
+{
+  if (screenFb)   return;
+  if (fboMode) {
+    pgl.pushFramebuffer();
+    pgl.setFramebuffer(this);
+    for (int i=0; i < numColorBuffers; i++) {
+      gl.glFramebufferTexture2D(GL.GL_FRAMEBUFFER,GL.GL_COLOR_ATTACHMENT0 + i,GL.GL_TEXTURE_2D,0,0);
+    }
+    numColorBuffers=PApplet.min(n,textures.length);
+    colorBufferAttchPoints=new int[numColorBuffers];
+    glColorBufferTargets=new int[numColorBuffers];
+    glColorBufferIDs=new int[numColorBuffers];
+    for (int i=0; i < numColorBuffers; i++) {
+      colorBufferAttchPoints[i]=GL.GL_COLOR_ATTACHMENT0 + i;
+      glColorBufferTargets[i]=textures[i].getGLTarget();
+      glColorBufferIDs[i]=textures[i].getGLID();
+      gl.glFramebufferTexture2D(GL.GL_FRAMEBUFFER,colorBufferAttchPoints[i],glColorBufferTargets[i],glColorBufferIDs[i],0);
+    }
+    if (validFbo() && textures != null && 0 < textures.length) {
+      width=textures[0].getGLWidth();
+      height=textures[0].getGLHeight();
+    }
+    pgl.popFramebuffer();
+  }
+ else {
+    numColorBuffers=PApplet.min(n,textures.length);
+    glColorBufferTargets=new int[numColorBuffers];
+    glColorBufferIDs=new int[numColorBuffers];
+    for (int i=0; i < numColorBuffers; i++) {
+      glColorBufferTargets[i]=textures[i].getGLTarget();
+      glColorBufferIDs[i]=textures[i].getGLID();
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  if (screenFb)   return;
+  if (fboMode) {
+    pgl.pushFramebuffer();
+    pgl.setFramebuffer(this);
+    multisample=true;
+    nsamples=samples;
+    numColorBuffers=1;
+    colorBufferAttchPoints=new int[numColorBuffers];
+    colorBufferAttchPoints[0]=GL.GL_COLOR_ATTACHMENT0;
+    glColorBufferMultisampleID=pgl.createGLResource(PGraphicsOpenGL2.GL_RENDER_BUFFER);
+    gl.glBindRenderbuffer(GL.GL_RENDERBUFFER,glColorBufferMultisampleID);
+    gl2.glRenderbufferStorageMultisample(GL.GL_RENDERBUFFER,nsamples,GL.GL_RGBA8,width,height);
+    gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,colorBufferAttchPoints[0],GL.GL_RENDERBUFFER,glColorBufferMultisampleID);
+    pgl.popFramebuffer();
+  }
+}

@@ -1,0 +1,95 @@
+{
+  report("render_lines in");
+  float sw0=0;
+  gl2f.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+  gl2f.glEnableClientState(GL2.GL_COLOR_ARRAY);
+  for (int j=start; j < stop; j++) {
+    int i=pathOffset[j];
+    float sw=vertices[lines[i][VERTEX1]][SW];
+    if (sw > 0) {
+      gl2f.glLineWidth(sw);
+      if (sw0 != sw && recordingShape) {
+        int n0=recordedVertices.size();
+        int n1=n0 + pathLength[j];
+        for (int k=j + 1; k < stop; k++) {
+          int i1=pathOffset[k];
+          float sw1=vertices[lines[i1][VERTEX1]][SW];
+          if (sw0 != sw1) {
+            break;
+          }
+          n1=n0 + pathLength[k];
+        }
+        String name="shape";
+        if (mergeRecShapes) {
+          name="shape";
+        }
+ else {
+          name=recShapeName.equals("") ? "shape:" + recordedChildren.size() : recShapeName;
+        }
+        PShape3D child=(PShape3D)PShape3D.createChild(name,n0,n1,LINE_STRIP,sw,null);
+        recordedChildren.add(child);
+      }
+      int size=3 * (pathLength[j] + 1);
+      while (vertexBuffer.capacity() / 3 < size) {
+        expandBuffers();
+      }
+      vertexBuffer.position(0);
+      colorBuffer.position(0);
+      int n=0;
+      float a[]=vertices[lines[i][VERTEX1]];
+      if (recordingShape) {
+        recordedVertices.add(new PVector(a[X],a[Y],a[Z]));
+        recordedColors.add(new float[]{a[SR],a[SG],a[SB],a[SA]});
+        recordedNormals.add(new PVector(0,0,0));
+        for (int t=0; t < maxTextureUnits; t++) {
+          recordedTexCoords[t].add(new PVector(0,0,0));
+        }
+      }
+ else {
+        vertexArray[3 * n + 0]=a[X];
+        vertexArray[3 * n + 1]=a[Y];
+        vertexArray[3 * n + 2]=a[Z];
+        colorArray[4 * n + 0]=a[SR];
+        colorArray[4 * n + 1]=a[SG];
+        colorArray[4 * n + 2]=a[SB];
+        colorArray[4 * n + 3]=a[SA];
+        n++;
+      }
+      for (int k=0; k < pathLength[j]; k++) {
+        float b[]=vertices[lines[i][VERTEX2]];
+        if (recordingShape) {
+          recordedVertices.add(new PVector(b[X],b[Y],b[Z]));
+          recordedColors.add(new float[]{b[SR],b[SG],b[SB],b[SA]});
+          recordedNormals.add(new PVector(0,0,0));
+          for (int t=0; t < maxTextureUnits; t++) {
+            recordedTexCoords[t].add(new PVector(0,0,0));
+          }
+        }
+ else {
+          vertexArray[3 * n + 0]=b[X];
+          vertexArray[3 * n + 1]=b[Y];
+          vertexArray[3 * n + 2]=b[Z];
+          colorArray[4 * n + 0]=b[SR];
+          colorArray[4 * n + 1]=b[SG];
+          colorArray[4 * n + 2]=b[SB];
+          colorArray[4 * n + 3]=b[SA];
+          n++;
+        }
+        i++;
+      }
+      if (!recordingShape) {
+        vertexBuffer.put(vertexArray);
+        colorBuffer.put(colorArray);
+        vertexBuffer.position(0);
+        colorBuffer.position(0);
+        gl2f.glVertexPointer(3,GL.GL_FLOAT,0,vertexBuffer);
+        gl2f.glColorPointer(4,GL.GL_FLOAT,0,colorBuffer);
+        gl2f.glDrawArrays(GL.GL_LINE_STRIP,0,pathLength[j] + 1);
+      }
+    }
+    sw0=sw;
+  }
+  gl2f.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+  gl2f.glDisableClientState(GL2.GL_COLOR_ARRAY);
+  report("render_lines out");
+}

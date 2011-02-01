@@ -1,0 +1,42 @@
+{
+  if (!lights) {
+    enableLighting();
+  }
+  if (lightCount == MAX_LIGHTS) {
+    throw new RuntimeException("can only create " + MAX_LIGHTS + " lights");
+  }
+  colorCalc(r,g,b);
+  lightDiffuse[lightCount][0]=calcR;
+  lightDiffuse[lightCount][1]=calcG;
+  lightDiffuse[lightCount][2]=calcB;
+  lightDiffuse[lightCount][3]=1.0f;
+  lightType[lightCount]=SPOT;
+  lightFalloffConstant[lightCount]=currentLightFalloffConstant;
+  lightFalloffLinear[lightCount]=currentLightFalloffLinear;
+  lightFalloffQuadratic[lightCount]=currentLightFalloffQuadratic;
+  lightSpecular[lightCount][0]=currentLightSpecular[0];
+  lightSpecular[lightCount][1]=currentLightSpecular[1];
+  lightSpecular[lightCount][2]=currentLightSpecular[2];
+  lightPosition[lightCount][0]=x;
+  lightPosition[lightCount][1]=y;
+  lightPosition[lightCount][2]=z;
+  lightPosition[lightCount][3]=1.0f;
+  float invn=1.0f / PApplet.dist(0,0,0,nx,ny,nz);
+  lightNormal[lightCount][0]=invn * nx;
+  lightNormal[lightCount][1]=invn * ny;
+  lightNormal[lightCount][2]=invn * nz;
+  lightNormal[lightCount][3]=0.0f;
+  lightSpotAngle[lightCount]=PApplet.degrees(angle);
+  lightSpotAngleCos[lightCount]=Math.max(0,(float)Math.cos(angle));
+  lightSpotConcentration[lightCount]=concentration;
+  lightEnable(lightCount);
+  lightNoAmbient(lightCount);
+  lightPosition(lightCount);
+  lightDirection(lightCount);
+  lightDiffuse(lightCount);
+  lightSpecular(lightCount);
+  lightFalloff(lightCount);
+  lightSpotAngle(lightCount);
+  lightSpotConcentration(lightCount);
+  lightCount++;
+}

@@ -1,0 +1,25 @@
+{
+  GLProfile.initSingleton(true);
+  pgl=this;
+  profile=null;
+  profile=GLProfile.get(GLProfile.GL2ES1);
+  pipeline=FIXED;
+  if (profile == null) {
+    parent.die("Cannot get a valid OpenGL profile");
+  }
+  capabilities=new GLCapabilities(profile);
+  if (!hints[DISABLE_OPENGL_2X_SMOOTH]) {
+    capabilities.setSampleBuffers(true);
+    capabilities.setNumSamples(2);
+  }
+ else   if (hints[ENABLE_OPENGL_4X_SMOOTH]) {
+    capabilities.setSampleBuffers(true);
+    capabilities.setNumSamples(4);
+  }
+  AWTGraphicsScreen screen=(AWTGraphicsScreen)AWTGraphicsScreen.createDefault();
+  AWTGraphicsConfiguration config=(AWTGraphicsConfiguration)GraphicsConfigurationFactory.getFactory(AWTGraphicsDevice.class).chooseGraphicsConfiguration(capabilities,capabilities,null,screen);
+  NativeWindow win=NativeWindowFactory.getNativeWindow(parent,config);
+  GLDrawableFactory factory=GLDrawableFactory.getFactory(profile);
+  drawable=factory.createGLDrawable(win);
+  context=drawable.createContext(null);
+}

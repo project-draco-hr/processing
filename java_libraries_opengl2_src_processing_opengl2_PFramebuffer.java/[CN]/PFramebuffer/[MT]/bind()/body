@@ -1,0 +1,16 @@
+{
+  if (screenFb) {
+    if (PGraphicsOpenGL2.fboSupported) {
+      gl.glBindFramebuffer(GL.GL_FRAMEBUFFER,0);
+    }
+  }
+ else   if (fboMode) {
+    gl.glBindFramebuffer(GL.GL_FRAMEBUFFER,glFboID);
+  }
+ else {
+    backupScreen();
+    if (noDepth) {
+      gl.glDisable(GL.GL_DEPTH_TEST);
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  if (primarySurface && drawable != null) {
+    drawable.setRealized(parent.isDisplayable());
+    if (parent.isDisplayable()) {
+      drawable.setRealized(true);
+    }
+ else {
+      return;
+    }
+    detainContext();
+  }
+  getGLObjects();
+  if (!glparamsRead) {
+    getGLParameters();
+  }
+  if (!settingsInited) {
+    defaultSettings();
+  }
+  report("top beginDraw()");
+  if (!primarySurface) {
+    pgl.saveGLState();
+    pgl.disableLights();
+  }
+  vertexBuffer.rewind();
+  colorBuffer.rewind();
+  normalBuffer.rewind();
+  for (int t=0; t < numTexBuffers; t++) {
+    texCoordBuffer[t].rewind();
+  }
+  noTexture();
+  blend(BLEND);
+  textureBlend(BLEND);
+  if (hints[DISABLE_DEPTH_TEST]) {
+    gl.glDisable(GL.GL_DEPTH_TEST);
+  }
+ else {
+    gl.glEnable(GL.GL_DEPTH_TEST);
+  }
+  gl.glDepthFunc(GL.GL_LEQUAL);
+  if (hints[DISABLE_DEPTH_MASK]) {
+    gl.glDepthMask(false);
+  }
+ else {
+    gl.glDepthMask(true);
+  }
+  gl.glViewport(0,0,width,height);
+  camera();
+  perspective();
+  noLights();
+  lightFalloff(1,0,0);
+  lightSpecular(0,0,0);
+  gl.glFrontFace(GL.GL_CW);
+  setSurfaceParams();
+  shapeFirst=0;
+  normalX=normalY=normalZ=0;
+  if (primarySurface) {
+  }
+ else {
+    pushFramebuffer();
+    if (offscreenMultisample) {
+      setFramebuffer(offscreenFramebufferMultisample);
+      gl2x.glDrawBuffer(GL.GL_COLOR_ATTACHMENT0);
+    }
+ else {
+      setFramebuffer(offscreenFramebuffer);
+    }
+  }
+  gl.glClearColor(0,0,0,0);
+  gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
+  report("bot beginDraw()");
+}

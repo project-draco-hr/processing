@@ -1,0 +1,42 @@
+{
+  gl.glEnable(GL.GL_TEXTURE_2D);
+  if (!blend || blendMode != BLEND) {
+    gl.glEnable(GL.GL_BLEND);
+    if (blendEqSupported)     gl.glBlendEquation(GL.GL_FUNC_ADD);
+    gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
+  }
+  textTex=(PFontTexture)textFont.getCache(pgl);
+  if (textTex == null) {
+    textTex=new PFontTexture(parent,textFont,maxTextureSize,maxTextureSize);
+    textFont.setCache(this,textTex);
+    textTex.addAllGlyphsToTexture();
+  }
+  textTex.setFirstTexture();
+  setFillColor();
+  if (textMode == MODEL) {
+    if (textVertexBuffer == null) {
+      allocateTextModel();
+    }
+    setDefNormals(0,0,1);
+    if (!textBlockMode) {
+      textVertexCount=0;
+    }
+  }
+  super.textLineImpl(buffer,start,stop,x,y);
+  if (textMode == MODEL && 0 < textVertexCount) {
+    if (!textBlockMode) {
+      renderTextModel();
+    }
+ else {
+      textBlockTex=textTex.currentTex;
+    }
+  }
+  if (blend) {
+    blend(blendMode);
+  }
+ else {
+    noBlend();
+  }
+  gl.glBindTexture(GL.GL_TEXTURE_2D,0);
+  gl.glDisable(GL.GL_TEXTURE_2D);
+}

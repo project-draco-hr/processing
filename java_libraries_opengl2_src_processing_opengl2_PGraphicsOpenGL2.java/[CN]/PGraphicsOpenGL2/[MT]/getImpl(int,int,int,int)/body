@@ -1,0 +1,10 @@
+{
+  PImage newbie=parent.createImage(w,h,ARGB);
+  PTexture newbieTex=addTexture(newbie);
+  IntBuffer newbieBuffer=IntBuffer.allocate(w * h);
+  gl.glReadPixels(x,height - y,w,-h,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,newbieBuffer);
+  copyToTexture(newbieTex,newbieBuffer,0,0,w,h);
+  newbie.loadPixels();
+  newbieTex.get(newbie.pixels);
+  return newbie;
+}

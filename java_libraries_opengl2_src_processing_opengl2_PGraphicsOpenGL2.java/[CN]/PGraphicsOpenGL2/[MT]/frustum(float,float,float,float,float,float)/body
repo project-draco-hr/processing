@@ -1,0 +1,28 @@
+{
+  float temp, temp2, temp3, temp4;
+  temp=2.0f * znear;
+  temp2=right - left;
+  temp3=top - bottom;
+  temp4=zfar - znear;
+  glprojection[0]=temp / temp2;
+  glprojection[1]=0.0f;
+  glprojection[2]=0.0f;
+  glprojection[3]=0.0f;
+  glprojection[4]=0.0f;
+  glprojection[5]=temp / temp3;
+  glprojection[6]=0.0f;
+  glprojection[7]=0.0f;
+  glprojection[8]=(right + left) / temp2;
+  glprojection[9]=(top + bottom) / temp3;
+  glprojection[10]=(-zfar - znear) / temp4;
+  glprojection[11]=-1.0f;
+  glprojection[12]=0.0f;
+  glprojection[13]=0.0f;
+  glprojection[14]=(-temp * zfar) / temp4;
+  glprojection[15]=0.0f;
+  gl2f.glMatrixMode(GL2.GL_PROJECTION);
+  gl2f.glLoadMatrixf(glprojection,0);
+  copyGLArrayToPMatrix(glprojection,projection);
+  projectionUpdated=true;
+  gl2f.glMatrixMode(GL2.GL_MODELVIEW);
+}

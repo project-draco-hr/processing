@@ -1,0 +1,22 @@
+{
+  if (textBlockMode) {
+    textBlockMode=false;
+    if (0 < textVertexCount) {
+      if (!blend || blendMode != BLEND) {
+        gl.glEnable(GL.GL_BLEND);
+        if (blendEqSupported)         gl.glBlendEquation(GL.GL_FUNC_ADD);
+        gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
+      }
+      textTex.setTexture(textBlockTex);
+      renderTextModel();
+      if (blend) {
+        blend(blendMode);
+      }
+ else {
+        noBlend();
+      }
+      gl.glBindTexture(GL.GL_TEXTURE_2D,0);
+      gl.glDisable(GL.GL_TEXTURE_2D);
+    }
+  }
+}

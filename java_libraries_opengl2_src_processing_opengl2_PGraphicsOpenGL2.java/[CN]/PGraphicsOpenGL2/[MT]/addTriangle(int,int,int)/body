@@ -1,0 +1,21 @@
+{
+  if (triangleCount == triangles.length) {
+    int temp[][]=new int[triangleCount << 1][TRIANGLE_FIELD_COUNT];
+    PApplet.arrayCopy(triangles,0,temp,0,triangleCount);
+    triangles=temp;
+  }
+  triangles[triangleCount][VERTEX1]=a;
+  triangles[triangleCount][VERTEX2]=b;
+  triangles[triangleCount][VERTEX3]=c;
+  PImage[] images;
+  images=vertexTex[a];
+  boolean firstFace=triangleCount == 0;
+  if (diffFromMultitextures0(images) || firstFace) {
+    addNewFace(firstFace,images);
+  }
+ else {
+    faceLength[faceCount - 1]++;
+  }
+  triangleCount++;
+  setMultitextures0(images);
+}

@@ -1,0 +1,32 @@
+{
+  shapeLast=vertexCount;
+  if (vertexCount == 0) {
+    shape=0;
+    return;
+  }
+  if (stroke) {
+    endShapeStroke(mode);
+  }
+  if (fill) {
+    endShapeFill();
+  }
+  if (!hints[ENABLE_DEPTH_SORT]) {
+    if (fill) {
+      renderTriangles(0,faceCount);
+      if (raw != null) {
+      }
+      faceCount=0;
+      vertexCount=0;
+      triangleCount=0;
+    }
+    if (stroke) {
+      renderLines(0,pathCount);
+      if (raw != null) {
+      }
+      lineCount=0;
+    }
+    pathCount=0;
+    faceCount=0;
+  }
+  shape=0;
+}

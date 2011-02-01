@@ -1,0 +1,71 @@
+{
+  super.allocate();
+  if (!matricesAllocated) {
+    glprojection=new float[16];
+    glmodelview=new float[16];
+    glmodelviewInv=new float[16];
+    pcamera=new float[16];
+    pcameraInv=new float[16];
+    gltemp=new float[16];
+    projection=new PMatrix3D();
+    modelview=new PMatrix3D();
+    modelviewInv=new PMatrix3D();
+    camera=new PMatrix3D();
+    cameraInv=new PMatrix3D();
+    matricesAllocated=true;
+  }
+  if (!lightsAllocated) {
+    lightType=new int[MAX_LIGHTS];
+    lightPosition=new float[MAX_LIGHTS][4];
+    lightNormal=new float[MAX_LIGHTS][4];
+    lightDiffuse=new float[MAX_LIGHTS][4];
+    lightSpecular=new float[MAX_LIGHTS][4];
+    lightFalloffConstant=new float[MAX_LIGHTS];
+    lightFalloffLinear=new float[MAX_LIGHTS];
+    lightFalloffQuadratic=new float[MAX_LIGHTS];
+    lightSpotAngle=new float[MAX_LIGHTS];
+    lightSpotAngleCos=new float[MAX_LIGHTS];
+    lightSpotConcentration=new float[MAX_LIGHTS];
+    currentLightSpecular=new float[4];
+    lightsAllocated=true;
+  }
+  if (!geometryAllocated) {
+    ByteBuffer vbb=ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE * 3 * SIZEOF_FLOAT);
+    vbb.order(ByteOrder.nativeOrder());
+    vertexBuffer=vbb.asFloatBuffer();
+    ByteBuffer cbb=ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE * 4 * SIZEOF_FLOAT);
+    cbb.order(ByteOrder.nativeOrder());
+    colorBuffer=cbb.asFloatBuffer();
+    ByteBuffer nbb=ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE * 3 * SIZEOF_FLOAT);
+    nbb.order(ByteOrder.nativeOrder());
+    normalBuffer=nbb.asFloatBuffer();
+    texCoordBuffer=new FloatBuffer[MAX_TEXTURES];
+    ByteBuffer tbb=ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE * 2 * SIZEOF_FLOAT);
+    tbb.order(ByteOrder.nativeOrder());
+    texCoordBuffer[0]=tbb.asFloatBuffer();
+    vertexArray=new float[DEFAULT_BUFFER_SIZE * 3];
+    colorArray=new float[DEFAULT_BUFFER_SIZE * 4];
+    normalArray=new float[DEFAULT_BUFFER_SIZE * 3];
+    texCoordArray=new float[1][DEFAULT_BUFFER_SIZE * 2];
+    numTexBuffers=1;
+    geometryAllocated=true;
+  }
+  if (primarySurface) {
+    if (context == null) {
+      initPrimary();
+    }
+ else {
+      context.destroy();
+      context=drawable.createContext(null);
+      reapplySettings();
+    }
+  }
+ else {
+    if (context == null) {
+      initOffscreen();
+    }
+ else {
+      reapplySettings();
+    }
+  }
+}

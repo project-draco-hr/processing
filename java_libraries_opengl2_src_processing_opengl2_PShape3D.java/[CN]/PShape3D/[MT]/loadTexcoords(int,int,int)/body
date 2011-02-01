@@ -1,0 +1,25 @@
+{
+  if (last < first || first < firstVertex || lastVertex < last) {
+    PGraphics.showWarning("PShape3D: wrong vertex index");
+    updateElement=-1;
+    return;
+  }
+  if (updateElement != -1) {
+    PGraphics.showWarning("PShape3D: can load only one type of data at the time");
+    return;
+  }
+  if (PGraphicsOpenGL2.maxTextureUnits <= unit) {
+    PGraphics.showWarning("PShape3D: wrong texture unit");
+    return;
+  }
+  updateElement=TEXCOORDS;
+  firstUpdateIdx=first;
+  lastUpdateIdx=last;
+  updateTexunit=unit;
+  if (numTexBuffers <= unit) {
+    addTexBuffers(unit - numTexBuffers + 1);
+  }
+  gl.glBindBuffer(GL.GL_ARRAY_BUFFER,glTexCoordBufferID[unit]);
+  texCoordBuffer=gl.glMapBuffer(GL.GL_ARRAY_BUFFER,GL.GL_WRITE_ONLY).asFloatBuffer();
+  texcoords=allTexcoords[unit];
+}

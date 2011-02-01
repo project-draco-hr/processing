@@ -1,0 +1,63 @@
+{
+  pgl=(PGraphicsOpenGL2)parent.g;
+  context=pgl.getContext();
+  capabilities=pgl.getCapabilities();
+  drawable=null;
+  getGLObjects();
+  loadTextureImpl(BILINEAR);
+  if (offscreenFramebuffer != null) {
+    offscreenFramebuffer.delete();
+    offscreenFramebuffer=null;
+  }
+  if (offscreenFramebufferMultisample != null) {
+    offscreenFramebufferMultisample.delete();
+    offscreenFramebufferMultisample=null;
+  }
+  boolean opengl2X=!hints[DISABLE_OPENGL_2X_SMOOTH];
+  boolean opengl4X=hints[ENABLE_OPENGL_4X_SMOOTH];
+  offscreenMultisample=false;
+  offscreenFramebuffer=new PFramebuffer(parent,texture.getGLWidth(),texture.getGLHeight(),false);
+  if (PGraphicsOpenGL2.fboMultisampleSupported && gl2x != null && (opengl2X || opengl4X)) {
+    int nsamples=1;
+    if (opengl2X) {
+      nsamples=2;
+    }
+ else     if (opengl4X) {
+      nsamples=4;
+    }
+    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.getGLWidth(),texture.getGLHeight(),false);
+    try {
+      offscreenFramebufferMultisample.addColorBufferMultisample(nsamples);
+      offscreenMultisample=true;
+    }
+ catch (    GLException e) {
+      PGraphics.showWarning("Unable to create antialised offscreen surface.");
+    }
+  }
+  if (offscreenMultisample) {
+    if (offscreenDepthBits == 24 && offscreenStencilBits == 8) {
+      offscreenFramebufferMultisample.addDepthStencilBuffer();
+    }
+ else {
+      offscreenFramebufferMultisample.addDepthBuffer(offscreenDepthBits);
+      if (0 < offscreenStencilBits) {
+        offscreenFramebufferMultisample.addStencilBuffer(offscreenStencilBits);
+      }
+    }
+    offscreenFramebufferMultisample.clear();
+    offscreenFramebuffer.setColorBuffer(texture);
+  }
+ else {
+    offscreenFramebuffer.setColorBuffer(texture);
+    if (offscreenDepthBits == 24 && offscreenStencilBits == 8) {
+      offscreenFramebuffer.addDepthStencilBuffer();
+    }
+ else {
+      offscreenFramebuffer.addDepthBuffer(offscreenDepthBits);
+      if (0 < offscreenStencilBits) {
+        offscreenFramebuffer.addStencilBuffer(offscreenStencilBits);
+      }
+    }
+  }
+  offscreenFramebuffer.clear();
+}

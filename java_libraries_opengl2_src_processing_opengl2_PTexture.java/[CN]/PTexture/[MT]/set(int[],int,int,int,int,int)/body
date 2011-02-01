@@ -1,0 +1,30 @@
+{
+  if (pixels == null) {
+    throw new RuntimeException("PTexture: null pixels array");
+  }
+  if (pixels.length != w * h) {
+    throw new RuntimeException("PTexture: wrong length of pixels array");
+  }
+  if (glID == 0) {
+    createTexture(width,height);
+  }
+  gl.glEnable(glTarget);
+  gl.glBindTexture(glTarget,glID);
+  if (usingMipmaps) {
+    if (PGraphicsOpenGL2.mipmapGeneration) {
+      int[] rgbaPixels=new int[w * h];
+      convertToRGBA(pixels,rgbaPixels,format,w,h);
+      gl.glTexParameteri(GL.GL_TEXTURE_2D,GL2.GL_GENERATE_MIPMAP,GL.GL_TRUE);
+      setTexels(x,y,w,h,rgbaPixels);
+    }
+ else {
+    }
+  }
+ else {
+    int[] rgbaPixels=new int[w * h];
+    convertToRGBA(pixels,rgbaPixels,format,w,h);
+    setTexels(x,y,w,h,rgbaPixels);
+  }
+  gl.glBindTexture(glTarget,0);
+  gl.glDisable(glTarget);
+}

@@ -1,0 +1,53 @@
+{
+  int[] rgba=new int[glyph.width * glyph.height];
+  int t=0;
+  int p=0;
+  if (PGraphicsOpenGL2.BIG_ENDIAN) {
+    for (int y=0; y < glyph.height; y++) {
+      for (int x=0; x < glyph.width; x++) {
+        rgba[t++]=0xFFFFFF00 | glyph.image.pixels[p++];
+      }
+    }
+  }
+ else {
+    for (int y=0; y < glyph.height; y++) {
+      for (int x=0; x < glyph.width; x++) {
+        rgba[t++]=(glyph.image.pixels[p++] << 24) | 0x00FFFFFF;
+      }
+    }
+  }
+  if (offsetX + glyph.width > textures[currentTex].glWidth) {
+    offsetX=0;
+    offsetY+=lineHeight;
+    lineHeight=0;
+  }
+  lineHeight=Math.max(lineHeight,glyph.height);
+  boolean resized=false;
+  if (offsetY + lineHeight > textures[currentTex].glHeight) {
+    resized=addTexture();
+    if (resized) {
+      updateGlyphsTexCoords();
+    }
+ else {
+      offsetX=0;
+      offsetY=0;
+      lineHeight=0;
+    }
+  }
+  if (lastTex == -1) {
+    lastTex=0;
+  }
+  if (currentTex != lastTex || resized) {
+    setTexture(lastTex);
+  }
+  textures[currentTex].setTexels(offsetX,offsetY,glyph.width,glyph.height,rgba);
+  TextureInfo tinfo=new TextureInfo(currentTex,offsetX,offsetY + glyph.height,glyph.width,-glyph.height);
+  offsetX+=glyph.width;
+  if (idx == glyphTexinfos.length) {
+    TextureInfo[] temp=new TextureInfo[glyphTexinfos.length + 1];
+    System.arraycopy(glyphTexinfos,0,temp,0,glyphTexinfos.length);
+    glyphTexinfos=temp;
+  }
+  glyphTexinfos[idx]=tinfo;
+  texinfoMap.put(glyph,tinfo);
+}

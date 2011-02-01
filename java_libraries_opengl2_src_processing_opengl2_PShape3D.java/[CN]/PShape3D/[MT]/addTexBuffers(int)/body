@@ -1,0 +1,19 @@
+{
+  for (int i=0; i < more; i++) {
+    int t=numTexBuffers + i;
+    deleteTexCoordBuffer(t);
+    glTexCoordBufferID[t]=pgl.createGLResource(PGraphicsOpenGL2.GL_VERTEX_BUFFER);
+    gl.glBindBuffer(GL.GL_ARRAY_BUFFER,glTexCoordBufferID[t]);
+    final int bufferSize=texCoordBuffer.capacity() * PGraphicsOpenGL2.SIZEOF_FLOAT;
+    gl.glBufferData(GL.GL_ARRAY_BUFFER,bufferSize,texCoordBuffer,glUsage);
+    gl.glBindBuffer(GL.GL_ARRAY_BUFFER,0);
+  }
+  float temp[][]=new float[numTexBuffers + more][vertexCount * 2];
+  for (int i=0; i < numTexBuffers; i++) {
+    PApplet.arrayCopy(allTexcoords[i],temp[i]);
+  }
+  allTexcoords=temp;
+  texcoords=allTexcoords[0];
+  numTexBuffers+=more;
+  updateTexBuffers();
+}
