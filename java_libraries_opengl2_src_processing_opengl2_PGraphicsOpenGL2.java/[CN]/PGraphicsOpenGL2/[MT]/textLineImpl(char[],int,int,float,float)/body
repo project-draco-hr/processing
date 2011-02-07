@@ -1,6 +1,6 @@
 {
   gl.glEnable(GL.GL_TEXTURE_2D);
-  if (!blend || blendMode != BLEND) {
+  if (screenBlendMode != BLEND) {
     gl.glEnable(GL.GL_BLEND);
     if (blendEqSupported)     gl.glBlendEquation(GL.GL_FUNC_ADD);
     gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
@@ -31,12 +31,7 @@
       textBlockTex=textTex.currentTex;
     }
   }
-  if (blend) {
-    blend(blendMode);
-  }
- else {
-    noBlend();
-  }
+  screenBlend(screenBlendMode);
   gl.glBindTexture(GL.GL_TEXTURE_2D,0);
   gl.glDisable(GL.GL_TEXTURE_2D);
 }

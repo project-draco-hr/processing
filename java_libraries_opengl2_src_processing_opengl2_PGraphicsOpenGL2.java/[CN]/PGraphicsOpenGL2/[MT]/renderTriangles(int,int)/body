@@ -7,8 +7,8 @@
   for (int j=start; j < stop; j++) {
     int i=faceOffset[j];
     PImage[] images=faceTextures[j];
-    if (1 < numMultitextures) {
-      for (int t=0; t < numMultitextures; t++) {
+    if (1 < numTextures) {
+      for (int t=0; t < numTextures; t++) {
         if (images[t] != null) {
           PTexture tex=getTexture(images[t]);
           if (tex == null) {
@@ -41,7 +41,7 @@
       }
       gl2f.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
       if (1 < numTextures) {
-        setMultitextureBlend(renderTextures,numTextures);
+        setupTextureBlend(renderTextures,numTextures);
       }
     }
     if (recordingShape) {
@@ -257,7 +257,7 @@
     }
     if (0 < numTextures) {
       if (1 < numTextures) {
-        clearMultitextureBlend(numTextures);
+        cleanupTextureBlend(numTextures);
       }
       for (int t=0; t < numTextures; t++) {
         PTexture tex=renderTextures[t];
