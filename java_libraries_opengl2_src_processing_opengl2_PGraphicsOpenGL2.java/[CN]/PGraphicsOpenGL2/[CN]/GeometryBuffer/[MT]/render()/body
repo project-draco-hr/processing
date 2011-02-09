@@ -1,3 +1,17 @@
 {
-  pgl.gl2f.glDrawElements(mode,idxCount,GL2.GL_UNSIGNED_INT,indicesBuffer);
+  indicesBuffer.position(0);
+  verticesBuffer.position(0);
+  colorsBuffer.position(0);
+  normalsBuffer.position(0);
+  for (int t=0; t < texCount; t++) {
+    texcoordsBuffer[t].position(0);
+  }
+  gl2f.glVertexPointer(3,GL.GL_FLOAT,0,verticesBuffer);
+  gl2f.glColorPointer(4,GL.GL_FLOAT,0,colorsBuffer);
+  gl2f.glNormalPointer(GL.GL_FLOAT,0,normalsBuffer);
+  for (int t=0; t < texCount; t++) {
+    gl2f.glClientActiveTexture(GL.GL_TEXTURE0 + t);
+    gl2f.glTexCoordPointer(2,GL.GL_FLOAT,0,texcoordsBuffer[t]);
+  }
+  gl2f.glDrawElements(GL.GL_TRIANGLES,idxCount,GL2.GL_UNSIGNED_INT,indicesBuffer);
 }
