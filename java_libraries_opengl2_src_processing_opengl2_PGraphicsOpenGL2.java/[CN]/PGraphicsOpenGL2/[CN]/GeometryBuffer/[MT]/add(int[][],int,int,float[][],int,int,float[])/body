@@ -1,10 +1,4 @@
 {
-  if (mode == LINES) {
-  }
- else   if (mode == TRIANGLES) {
-  }
-  minVertIndex=PApplet.min(minVertIndex,v0);
-  maxVertIndex=PApplet.max(maxVertIndex,v1);
   int gcount=i1 - i0 + 1;
   int vcount=v1 - v0 + 1;
   while (indicesBuffer.capacity() < idxCount + 3 * gcount) {
@@ -39,10 +33,12 @@
   }
   int ni=0;
   for (int i=i0; i <= i1; i++) {
-    indicesArray[ni++]=indices[i][VERTEX1];
-    indicesArray[ni++]=indices[i][VERTEX2];
-    indicesArray[ni++]=indices[i][VERTEX3];
+    indicesArray[ni++]=vertCount + indices[i][VERTEX1] - v0;
+    indicesArray[ni++]=vertCount + indices[i][VERTEX2] - v0;
+    indicesArray[ni++]=vertCount + indices[i][VERTEX3] - v0;
   }
+  minVertIndex=vertCount;
+  maxVertIndex=vertCount + v1 - v0;
   int nv=0;
   int nn=0;
   int nc=0;
