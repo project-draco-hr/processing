@@ -1,15 +1,19 @@
 {
+  if (USE_GBUFFER && GBUFFER_MERGE_ALL && GBUFFER_UPDATE_STACK) {
+    gbuffer.stack.scale(sx,sy,sz);
+    return;
+  }
   if (manipulatingCamera) {
     scalingDuringCamManip=true;
   }
-  gl.glScalef(x,y,z);
+  gl.glScalef(sx,sy,sz);
   if (usingGLMatrixStack) {
     if (matrixMode == PROJECTION) {
-      projectionStack.scale(x,y,z);
+      projectionStack.scale(sx,sy,sz);
       projectionUpdated=false;
     }
  else {
-      modelviewStack.scale(x,y,z);
+      modelviewStack.scale(sx,sy,sz);
       modelviewUpdated=false;
     }
   }

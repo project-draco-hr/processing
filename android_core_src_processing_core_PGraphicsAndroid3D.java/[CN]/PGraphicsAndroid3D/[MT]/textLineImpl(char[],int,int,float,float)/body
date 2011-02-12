@@ -21,11 +21,18 @@
       allocateTextModel();
     }
     setDefNormals(0,0,1);
-    textVertexCount=0;
+    if (!textBlockMode) {
+      textVertexCount=0;
+    }
   }
   super.textLineImpl(buffer,start,stop,x,y);
   if (textMode == MODEL && 0 < textVertexCount) {
-    renderTextModel();
+    if (!textBlockMode) {
+      renderTextModel();
+    }
+ else {
+      textBlockTex=textTex.currentTex;
+    }
   }
   screenBlend(screenBlendMode);
   gl.glBindTexture(GL10.GL_TEXTURE_2D,0);
