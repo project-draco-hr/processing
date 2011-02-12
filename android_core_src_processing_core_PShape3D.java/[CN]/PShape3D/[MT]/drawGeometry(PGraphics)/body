@@ -27,12 +27,10 @@
   if (style) {
     for (int t=0; t < textures.length; t++) {
       if (textures[t] != null) {
-        PTexture tex=textures[t].getTexture();
+        PTexture tex=(PTexture)textures[t].getCache(a3d);
+        tex=a3d.getTexture(textures[t]);
         if (tex == null) {
-          tex=textures[t].createTexture();
-          if (tex == null) {
-            break;
-          }
+          break;
         }
         gl.glEnable(tex.getGLTarget());
         gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
@@ -56,9 +54,9 @@
       gl.glEnable(GL11.GL_POINT_SPRITE_OES);
     }
  else {
-      gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
       for (int t=0; t < numTextures; t++) {
         gl.glClientActiveTexture(GL11.GL_TEXTURE0 + t);
+        gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,glTexCoordBufferID[t]);
         gl.glTexCoordPointer(2,GL11.GL_FLOAT,0,0);
       }
@@ -82,15 +80,6 @@
   }
   gl.glDrawArrays(glMode,firstVertex,lastVertex - firstVertex + 1);
   if (0 < numTextures) {
-    if (1 < numTextures) {
-      a3d.cleanupTextureBlend(numTextures);
-    }
-    if (pointSprites) {
-      gl.glDisable(GL11.GL_POINT_SPRITE_OES);
-    }
- else {
-      gl.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-    }
     for (int t=0; t < numTextures; t++) {
       PTexture tex=renderTextures[t];
       gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
@@ -99,6 +88,18 @@
     for (int t=0; t < numTextures; t++) {
       PTexture tex=renderTextures[t];
       gl.glDisable(tex.getGLTarget());
+    }
+    if (pointSprites) {
+      gl.glDisable(GL11.GL_POINT_SPRITE_OES);
+    }
+ else {
+      for (int t=0; t < numTextures; t++) {
+        gl.glClientActiveTexture(GL10.GL_TEXTURE0 + t);
+        gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+      }
+      if (1 < numTextures) {
+        a3d.cleanupTextureBlend(numTextures);
+      }
     }
   }
   gl.glBindBuffer(GL11.GL_ARRAY_BUFFER,0);

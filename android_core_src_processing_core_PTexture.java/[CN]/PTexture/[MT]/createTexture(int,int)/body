@@ -20,7 +20,9 @@
   gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_MAG_FILTER,glMagFilter);
   gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_S,glWrapS);
   gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_T,glWrapT);
-  gl.glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,null);
+  int[] initArray=new int[glWidth * glHeight];
+  java.util.Arrays.fill(initArray,0,glWidth * glHeight,0x00000000);
+  gl.glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(initArray));
   gl.glBindTexture(glTarget,0);
   gl.glDisable(glTarget);
   flippedX=false;

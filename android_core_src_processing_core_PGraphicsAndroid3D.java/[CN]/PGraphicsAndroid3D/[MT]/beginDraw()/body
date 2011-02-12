@@ -1,29 +1,23 @@
 {
+  if (!settingsInited) {
+    defaultSettings();
+  }
+  report("top beginDraw()");
   if (!primarySurface) {
-    PGraphicsAndroid3D a3d=(PGraphicsAndroid3D)parent.g;
     a3d.saveGLState();
     gl=a3d.gl;
     gl11=a3d.gl11;
     gl11x=a3d.gl11x;
     gl11xp=a3d.gl11xp;
-    for (int i=0; i < a3d.lightCount; i++) {
-      a3d.lightDisable(i);
-    }
+    a3d.disableLights();
   }
-  if (!settingsInited) {
-    defaultSettings();
-  }
-  report("top beginDraw()");
   vertexBuffer.rewind();
   colorBuffer.rewind();
   normalBuffer.rewind();
   for (int t=0; t < numTexBuffers; t++) {
     texCoordBuffer[t].rewind();
   }
-  numTextures=0;
-  clearTextures();
-  clearTextures0();
-  gl.glShadeModel(GL10.GL_SMOOTH);
+  noTexture();
   screenBlend(BLEND);
   textureBlend(BLEND);
   if (hints[DISABLE_DEPTH_TEST]) {
@@ -46,11 +40,7 @@
   lightFalloff(1,0,0);
   lightSpecular(0,0,0);
   gl.glFrontFace(GL10.GL_CW);
-  gl.glEnable(GL10.GL_COLOR_MATERIAL);
-  gl.glEnable(GL10.GL_NORMALIZE);
-  gl.glEnable(GL10.GL_RESCALE_NORMAL);
-  gl.glLightModelfv(GL10.GL_LIGHT_MODEL_AMBIENT,baseLight,0);
-  gl.glLightModelx(GL10.GL_LIGHT_MODEL_TWO_SIDE,0);
+  setSurfaceParams();
   shapeFirst=0;
   normalX=normalY=normalZ=0;
   if (primarySurface) {
@@ -65,7 +55,7 @@
           throw new RuntimeException("A3D:  no clear mode with no FBOs requires OpenGL ES 1.1");
         }
         if (texture == null) {
-          createScreenTexture();
+          loadTextureImpl(POINT);
         }
       }
     }
@@ -94,7 +84,7 @@
           gl.glClearColor(0,0,0,0);
           gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
           if (0 < parent.frameCount) {
-            drawScreenTexture();
+            drawTexture();
           }
         }
       }

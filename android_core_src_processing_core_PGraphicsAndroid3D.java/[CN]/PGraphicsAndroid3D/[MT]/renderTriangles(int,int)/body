@@ -10,12 +10,9 @@
     if (1 < numTextures) {
       for (int t=0; t < numTextures; t++) {
         if (images[t] != null) {
-          PTexture tex=images[t].getTexture();
+          PTexture tex=getTexture(images[t]);
           if (tex == null) {
-            tex=images[t].createTexture();
-            if (tex == null) {
-              break;
-            }
+            break;
           }
           gl.glEnable(tex.getGLTarget());
           gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
@@ -29,10 +26,7 @@
       }
     }
  else     if (images[0] != null) {
-      PTexture tex=images[0].getTexture();
-      if (tex == null) {
-        tex=images[0].createTexture();
-      }
+      PTexture tex=getTexture(images[0]);
       if (tex != null) {
         gl.glEnable(tex.getGLTarget());
         gl.glActiveTexture(GL10.GL_TEXTURE0);

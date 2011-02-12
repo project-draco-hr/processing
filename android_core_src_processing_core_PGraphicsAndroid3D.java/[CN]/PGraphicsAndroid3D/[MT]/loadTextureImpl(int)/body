@@ -1,14 +1,15 @@
 {
+  if (width == 0 || height == 0)   return;
   if (texture == null) {
-    loadTexture(POINT);
+    PTexture.Parameters params=PTexture.newParameters(ARGB,sampling);
+    texture=new PTexture(parent,width,height,params);
     texture.setFlippedY(true);
+    this.setCache(a3d,texture);
+    this.setParams(a3d,params);
+    texCrop=new int[4];
+    texCrop[0]=0;
+    texCrop[1]=0;
+    texCrop[2]=width;
+    texCrop[3]=height;
   }
-  if ((pixels == null) || (pixels.length != width * height)) {
-    pixels=new int[width * height];
-    pixelBuffer=IntBuffer.allocate(pixels.length);
-    pixelBuffer.rewind();
-  }
-  gl.glReadPixels(0,0,width,height,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,pixelBuffer);
-  copyToScreenTexture(pixelBuffer);
-  pixelBuffer.rewind();
 }
