@@ -8,17 +8,17 @@
   }
   if (PGraphicsOpenGL2.fboSupported) {
     tempFbo.setColorBuffer(this);
-    pgl.pushFramebuffer();
-    pgl.setFramebuffer(tempFbo);
+    ogl.pushFramebuffer();
+    ogl.setFramebuffer(tempFbo);
     tempFbo.readPixels();
-    pgl.popFramebuffer();
+    ogl.popFramebuffer();
   }
  else {
-    pgl.pushFramebuffer();
-    pgl.setFramebuffer(tempFbo);
-    pgl.drawTexture(this,0,0,glWidth,glHeight,0,0,glWidth,glHeight);
+    ogl.pushFramebuffer();
+    ogl.setFramebuffer(tempFbo);
+    ogl.drawTexture(this,0,0,glWidth,glHeight,0,0,glWidth,glHeight);
     tempFbo.readPixels();
-    pgl.popFramebuffer();
+    ogl.popFramebuffer();
   }
   if (tempPixels == null) {
     tempPixels=new int[size];
