@@ -7,15 +7,21 @@
   triangles[triangleCount][VERTEX1]=a;
   triangles[triangleCount][VERTEX2]=b;
   triangles[triangleCount][VERTEX3]=c;
+  int mini=PApplet.min(a,b,c);
+  int maxi=PApplet.max(a,b,c);
   PImage[] images;
   images=vertexTex[a];
   boolean firstFace=triangleCount == 0;
-  if (diffFromMultitextures0(images) || firstFace) {
+  if (diffFromTextures0(images) || firstFace) {
     addNewFace(firstFace,images);
+    faceMinIndex[faceCount - 1]=mini;
+    faceMaxIndex[faceCount - 1]=maxi;
   }
  else {
     faceLength[faceCount - 1]++;
+    faceMinIndex[faceCount - 1]=PApplet.min(faceMinIndex[faceCount - 1],mini);
+    faceMaxIndex[faceCount - 1]=PApplet.max(faceMaxIndex[faceCount - 1],maxi);
   }
   triangleCount++;
-  setMultitextures0(images);
+  setTextures0(images);
 }

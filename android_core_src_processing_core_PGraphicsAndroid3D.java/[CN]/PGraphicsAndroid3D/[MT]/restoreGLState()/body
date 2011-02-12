@@ -17,12 +17,7 @@
  else {
     gl.glDepthMask(true);
   }
-  if (blend) {
-    blend(blendMode);
-  }
- else {
-    noBlend();
-  }
+  screenBlend(screenBlendMode);
   if (fill) {
     calcR=fillR;
     calcG=fillG;
@@ -46,44 +41,44 @@
   if (lights) {
     lights();
     for (int i=0; i < lightCount; i++) {
-      glLightEnable(i);
+      lightEnable(i);
       if (lightType[i] == AMBIENT) {
-        glLightEnable(i);
-        glLightAmbient(i);
-        glLightPosition(i);
-        glLightFalloff(i);
-        glLightNoSpot(i);
-        glLightNoDiffuse(i);
-        glLightNoSpecular(i);
+        lightEnable(i);
+        lightAmbient(i);
+        lightPosition(i);
+        lightFalloff(i);
+        lightNoSpot(i);
+        lightNoDiffuse(i);
+        lightNoSpecular(i);
       }
  else       if (lightType[i] == DIRECTIONAL) {
-        glLightEnable(i);
-        glLightNoAmbient(i);
-        glLightDirection(i);
-        glLightDiffuse(i);
-        glLightSpecular(i);
-        glLightFalloff(i);
-        glLightNoSpot(i);
+        lightEnable(i);
+        lightNoAmbient(i);
+        lightDirection(i);
+        lightDiffuse(i);
+        lightSpecular(i);
+        lightFalloff(i);
+        lightNoSpot(i);
       }
  else       if (lightType[i] == POINT) {
-        glLightEnable(i);
-        glLightNoAmbient(i);
-        glLightPosition(i);
-        glLightDiffuse(i);
-        glLightSpecular(i);
-        glLightFalloff(i);
-        glLightNoSpot(i);
+        lightEnable(i);
+        lightNoAmbient(i);
+        lightPosition(i);
+        lightDiffuse(i);
+        lightSpecular(i);
+        lightFalloff(i);
+        lightNoSpot(i);
       }
  else       if (lightType[i] == SPOT) {
-        glLightEnable(i);
-        glLightNoAmbient(i);
-        glLightPosition(i);
-        glLightDirection(i);
-        glLightDiffuse(i);
-        glLightSpecular(i);
-        glLightFalloff(i);
-        glLightSpotAngle(i);
-        glLightSpotConcentration(i);
+        lightEnable(i);
+        lightNoAmbient(i);
+        lightPosition(i);
+        lightDirection(i);
+        lightDiffuse(i);
+        lightSpecular(i);
+        lightFalloff(i);
+        lightSpotAngle(i);
+        lightSpotConcentration(i);
       }
     }
   }

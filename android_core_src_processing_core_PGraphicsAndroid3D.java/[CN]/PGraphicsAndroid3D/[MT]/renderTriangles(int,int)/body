@@ -7,8 +7,8 @@
   for (int j=start; j < stop; j++) {
     int i=faceOffset[j];
     PImage[] images=faceTextures[j];
-    if (1 < numMultitextures) {
-      for (int t=0; t < numMultitextures; t++) {
+    if (1 < numTextures) {
+      for (int t=0; t < numTextures; t++) {
         if (images[t] != null) {
           PTexture tex=images[t].getTexture();
           if (tex == null) {
@@ -45,9 +45,12 @@
       if (numTexBuffers < tcount) {
         addTexBuffers(tcount - numTexBuffers);
       }
-      gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+      for (int t=0; t < tcount; t++) {
+        gl.glClientActiveTexture(GL10.GL_TEXTURE0 + t);
+        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+      }
       if (1 < tcount) {
-        setMultitextureBlend(renderTextures,tcount);
+        setTextureBlend(renderTextures,tcount);
       }
     }
     if (recordingShape) {
@@ -263,7 +266,7 @@
     }
     if (0 < tcount) {
       if (1 < tcount) {
-        clearMultitextureBlend(tcount);
+        cleanupTextureBlend(tcount);
       }
       for (int t=0; t < tcount; t++) {
         PTexture tex=renderTextures[t];
@@ -274,7 +277,10 @@
         PTexture tex=renderTextures[t];
         gl.glDisable(tex.getGLTarget());
       }
-      gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+      for (int t=0; t < tcount; t++) {
+        gl.glClientActiveTexture(GL10.GL_TEXTURE0 + t);
+        gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+      }
     }
   }
   gl.glDisableClientState(GL10.GL_NORMAL_ARRAY);
