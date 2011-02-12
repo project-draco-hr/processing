@@ -1,8 +1,9 @@
 {
   PFont.Glyph glyph=textFont.getGlyph(ch);
   if (glyph != null) {
-    if (glyph.texture == null) {
-      glyph.addToTexture();
+    PFontTexture.TextureInfo tinfo=textTex.getTexInfo(glyph);
+    if (tinfo == null) {
+      tinfo=textTex.addToTexture(glyph);
     }
     if (textMode == MODEL) {
       float high=glyph.height / (float)textFont.size;
@@ -13,14 +14,14 @@
       float y1=y - textent * textSize;
       float x2=x1 + bwidth * textSize;
       float y2=y1 + high * textSize;
-      textCharModelImpl(glyph.texture,x1,y1,x2,y2);
+      textCharModelImpl(tinfo,x1,y1,x2,y2);
     }
  else     if (textMode == SCREEN) {
       int xx=(int)x + glyph.leftExtent;
       int yy=(int)y - glyph.topExtent;
       int w0=glyph.width;
       int h0=glyph.height;
-      textCharScreenImpl(glyph.texture,xx,yy,w0,h0);
+      textCharScreenImpl(tinfo,xx,yy,w0,h0);
     }
   }
 }
