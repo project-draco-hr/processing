@@ -1,0 +1,35 @@
+{
+  int w, h;
+  boolean resize;
+  w=maxTexWidth;
+  if (-1 < currentTex && textures[currentTex].glHeight < maxTexHeight) {
+    h=PApplet.min(2 * textures[currentTex].glHeight,maxTexHeight);
+    resize=true;
+  }
+ else {
+    h=PApplet.min(512,maxTexHeight / 4);
+    resize=false;
+  }
+  PTexture tex=new PTexture(parent,w,h,new PTexture.Parameters(ARGB,BILINEAR));
+  if (textures == null) {
+    textures=new PTexture[1];
+    textures[0]=tex;
+    currentTex=0;
+  }
+ else   if (resize) {
+    PTexture tex0=textures[currentTex];
+    tex.put(tex0);
+    textures[currentTex]=tex;
+    tex0.delete();
+  }
+ else {
+    PTexture[] temp=textures;
+    textures=new PTexture[textures.length + 1];
+    PApplet.arrayCopy(temp,textures,temp.length);
+    textures[temp.length]=tex;
+    currentTex=textures.length - 1;
+  }
+  lastTex=currentTex;
+  tex.bind();
+  return resize;
+}
