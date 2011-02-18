@@ -1,13 +1,11 @@
 {
   report("top endDraw()");
-  if (USE_GBUFFER && GBUFFER_MERGE_ALL && (gbuffer != null)) {
-    gl2f.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-    gl2f.glEnableClientState(GL2.GL_COLOR_ARRAY);
-    gl2f.glEnableClientState(GL2.GL_NORMAL_ARRAY);
-    gbuffer.render();
-    gl2f.glDisableClientState(GL2.GL_NORMAL_ARRAY);
-    gl2f.glDisableClientState(GL2.GL_COLOR_ARRAY);
-    gl2f.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+  if (USE_GBUFFER) {
+    if (GBUFFER_MERGE_ALL && gbuffer != null && 0 < gbuffer.vertCount) {
+      gbuffer.pre();
+      gbuffer.render();
+      gbuffer.post();
+    }
   }
   if (hints[ENABLE_DEPTH_SORT]) {
     flush();

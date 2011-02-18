@@ -48,12 +48,23 @@
       }
     }
     if (USE_GBUFFER) {
-      if (!GBUFFER_MERGE_ALL) {
+      if (GBUFFER_MERGE_ALL) {
+        gbuffer.setTextures(renderTextures,tcount);
+      }
+ else {
         gbuffer.init(TRIANGLES,renderTextures,tcount);
       }
       gbuffer.add(triangles,i,i + faceLength[j] - 1,vertices,faceMinIndex[j],faceMaxIndex[j]);
-      if (!GBUFFER_MERGE_ALL) {
+      if (GBUFFER_MERGE_ALL) {
+        if (GBUFFER_MAXSIZE < gbuffer.vertCount) {
+          gbuffer.render();
+          GBUFFER_COUNT++;
+          gbuffer.init(TRIANGLES,renderTextures,tcount);
+        }
+      }
+ else {
         gbuffer.render();
+        GBUFFER_COUNT++;
       }
     }
  else {
