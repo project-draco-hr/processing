@@ -4,6 +4,13 @@
     return recordedShape;
   }
  else {
+    if (USE_GBUFFER) {
+      if (gbuffer != null && 0 < gbuffer.vertCount) {
+        gbuffer.pre();
+        gbuffer.render();
+        gbuffer.post();
+      }
+    }
     recordedShape=new PShape3D(parent);
     beginShapeRecorderImpl();
     return recordedShape;

@@ -49,7 +49,16 @@
     }
     if (USE_GBUFFER) {
       if (GBUFFER_MERGE_ALL) {
-        gbuffer.setTextures(renderTextures,tcount);
+        if (gbuffer.newTextures(renderTextures,tcount)) {
+          if (0 < gbuffer.vertCount) {
+            gbuffer.render();
+            GBUFFER_COUNT++;
+            gbuffer.init(TRIANGLES,renderTextures,tcount);
+          }
+ else {
+            gbuffer.setTextures(renderTextures,tcount);
+          }
+        }
       }
  else {
         gbuffer.init(TRIANGLES,renderTextures,tcount);
