@@ -31,6 +31,17 @@
       recordedTexCoords[t].ensureCapacity(size);
     }
   }
-  numRecordedTextures=0;
+  if (USE_GEO_BUFFER) {
+    if (recordedIndices == null) {
+      recordedIndices=new ArrayList<Integer>(vertexBuffer.capacity() / 3);
+    }
+ else {
+      recordedIndices.ensureCapacity(vertexBuffer.capacity() / 3);
+    }
+  }
+ else {
+    recordedIndices=null;
+  }
+  recTexturesCount=0;
   recordedChildren=new ArrayList<PShape3D>(PApplet.max(DEFAULT_PATHS,DEFAULT_FACES));
 }

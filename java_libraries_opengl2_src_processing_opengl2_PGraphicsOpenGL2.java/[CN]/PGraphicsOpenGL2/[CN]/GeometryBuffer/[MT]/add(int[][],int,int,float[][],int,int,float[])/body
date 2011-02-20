@@ -1,12 +1,30 @@
 {
   int gcount=i1 - i0 + 1;
   int vcount=v1 - v0 + 1;
+  int k=0;
+  IntBuffer indicesBuffer0=indicesBuffer;
   while (indicesBuffer.capacity() < idxCount + 3 * gcount) {
     int newSize=indicesBuffer.capacity() << 1;
     ByteBuffer ibb=ByteBuffer.allocateDirect(newSize * SIZEOF_INT);
     ibb.order(ByteOrder.nativeOrder());
     indicesBuffer=ibb.asIntBuffer();
     indicesArray=new int[newSize];
+    k++;
+  }
+  if (0 < k) {
+    indicesBuffer0.position(0);
+    indicesBuffer.position(0);
+    indicesBuffer.put(indicesBuffer0);
+    indicesBuffer.position(idxCount);
+    indicesBuffer0=null;
+  }
+  k=0;
+  FloatBuffer verticesBuffer0=verticesBuffer;
+  FloatBuffer colorsBuffer0=colorsBuffer;
+  FloatBuffer normalsBuffer0=normalsBuffer;
+  FloatBuffer[] texcoordsBuffer0=new FloatBuffer[texCount];
+  for (int t=0; t < texCount; t++) {
+    texcoordsBuffer0[t]=texcoordsBuffer[t];
   }
   while (verticesBuffer.capacity() / 3 < vertCount + vcount) {
     int newSize=verticesBuffer.capacity() / 3 << 1;
@@ -29,6 +47,31 @@
     normalsArray=new float[newSize * 3];
     for (int t=0; t < texCount; t++) {
       texcoordsArray[t]=new float[newSize * 2];
+    }
+    k++;
+  }
+  if (0 < k) {
+    verticesBuffer0.position(0);
+    verticesBuffer.position(0);
+    verticesBuffer.put(verticesBuffer0);
+    verticesBuffer0=null;
+    verticesBuffer.position(3 * vertCount);
+    colorsBuffer0.position(0);
+    colorsBuffer.position(0);
+    colorsBuffer.put(colorsBuffer0);
+    colorsBuffer0=null;
+    colorsBuffer.position(4 * vertCount);
+    normalsBuffer0.position(0);
+    normalsBuffer.position(0);
+    normalsBuffer.put(normalsBuffer0);
+    normalsBuffer0=null;
+    normalsBuffer.position(3 * vertCount);
+    for (int t=0; t < texCount; t++) {
+      texcoordsBuffer0[t].position(0);
+      texcoordsBuffer[t].position(0);
+      texcoordsBuffer[t].put(texcoordsBuffer0[t]);
+      texcoordsBuffer0[t]=null;
+      texcoordsBuffer[t].position(3 * vertCount);
     }
   }
   int ni=0;
@@ -109,5 +152,5 @@
   }
   idxCount+=3 * gcount;
   vertCount+=vcount;
-  GBUFFER_SIZE+=vcount;
+  GEO_BUFFER_SIZE+=vcount;
 }

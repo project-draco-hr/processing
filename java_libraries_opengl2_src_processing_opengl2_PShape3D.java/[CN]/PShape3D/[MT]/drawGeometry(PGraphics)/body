@@ -78,7 +78,16 @@
       pgl.setFillColor();
     }
   }
-  gl.glDrawArrays(glMode,firstVertex,lastVertex - firstVertex + 1);
+  if (glIndexBufferID != 0) {
+    gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,glIndexBufferID);
+    int last=lastIndex;
+    int first=firstIndex;
+    gl.glDrawElements(glMode,last - first + 1,GL.GL_UNSIGNED_INT,first * PGraphicsOpenGL2.SIZEOF_INT);
+    gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,0);
+  }
+ else {
+    gl.glDrawArrays(glMode,firstVertex,lastVertex - firstVertex + 1);
+  }
   if (0 < numTextures) {
     for (int t=0; t < numTextures; t++) {
       PTexture tex=renderTextures[t];
