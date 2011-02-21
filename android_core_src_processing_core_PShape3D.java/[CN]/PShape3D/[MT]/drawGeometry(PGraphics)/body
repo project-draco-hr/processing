@@ -78,7 +78,16 @@
       gl.glColor4f(g.fillR,g.fillG,g.fillB,g.fillA);
     }
   }
-  gl.glDrawArrays(glMode,firstVertex,lastVertex - firstVertex + 1);
+  if (glIndexBufferID != 0) {
+    gl.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER,glIndexBufferID);
+    int last=lastIndex;
+    int first=firstIndex;
+    gl.glDrawElements(glMode,last - first + 1,GL11.GL_UNSIGNED_SHORT,first * PGraphicsAndroid3D.SIZEOF_SHORT);
+    gl.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER,0);
+  }
+ else {
+    gl.glDrawArrays(glMode,firstVertex,lastVertex - firstVertex + 1);
+  }
   if (0 < numTextures) {
     for (int t=0; t < numTextures; t++) {
       PTexture tex=renderTextures[t];

@@ -1,0 +1,20 @@
+{
+  if (textures == null || tc == 0) {
+    texCount=0;
+  }
+ else {
+    texCount=tc;
+    PApplet.arrayCopy(textures,texturesArray,tc);
+  }
+  if (allocTexStorage < texCount) {
+    int more=texCount - allocTexStorage;
+    int size=texcoordsBuffer[allocTexStorage - 1].capacity();
+    for (int i=0; i < more; i++) {
+      ByteBuffer tbb=ByteBuffer.allocateDirect(size * SIZEOF_FLOAT);
+      tbb.order(ByteOrder.nativeOrder());
+      texcoordsBuffer[allocTexStorage + i]=tbb.asFloatBuffer();
+    }
+    texcoordsArray=new float[allocTexStorage + more][size];
+    allocTexStorage+=more;
+  }
+}
