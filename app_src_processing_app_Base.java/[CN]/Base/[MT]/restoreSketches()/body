@@ -1,4 +1,18 @@
 {
+  String lastMode=Preferences.get("last.sketch.mode");
+  if (DEBUG) {
+    System.out.println("setting mode to " + lastMode);
+  }
+  if (lastMode != null) {
+    for (    Mode m : modeList) {
+      if (m.getClass().getName().equals(lastMode)) {
+        defaultMode=m;
+      }
+    }
+  }
+  if (DEBUG) {
+    System.out.println("default mode set to " + defaultMode.getClass().getName());
+  }
   if (!Preferences.getBoolean("last.sketch.restore")) {
     return false;
   }
