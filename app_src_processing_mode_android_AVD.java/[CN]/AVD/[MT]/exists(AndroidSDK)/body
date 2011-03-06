@@ -1,23 +1,11 @@
 {
-  try {
-    ProcessResult listResult=new ProcessHelper(sdk.getAndroidToolPath(),"list","avds").execute();
-    if (listResult.succeeded()) {
-      for (      String line : listResult) {
-        final Matcher m=AVD_ROW.matcher(line);
-        if (m.matches() && m.group(1).equals(name)) {
-          return true;
-        }
-        if (line.contains("could not be loaded:")) {
-          break;
-        }
-      }
-    }
- else {
-      System.err.println("Unhappy inside exists()");
-      System.err.println(listResult);
-    }
+  if (avdList == null) {
+    list(sdk);
   }
- catch (  final InterruptedException ie) {
+  for (  String avd : avdList) {
+    if (avd.equals(name)) {
+      return true;
+    }
   }
   return false;
 }

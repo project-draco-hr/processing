@@ -1,0 +1,24 @@
+{
+  try {
+    avdList=new ArrayList<String>();
+    ProcessResult listResult=new ProcessHelper(sdk.getAndroidToolPath(),"list","avds").execute();
+    if (listResult.succeeded()) {
+      for (      String line : listResult) {
+        String[] m=PApplet.match(line,"\\s+Name\\:\\s+(\\S+)");
+        if (m != null) {
+          avdList.add(m[1]);
+        }
+        if (line.contains("could not be loaded:")) {
+          System.err.println("could not get AVDs ");
+          break;
+        }
+      }
+    }
+ else {
+      System.err.println("Unhappy inside exists()");
+      System.err.println(listResult);
+    }
+  }
+ catch (  final InterruptedException ie) {
+  }
+}
