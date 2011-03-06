@@ -7,7 +7,7 @@
     return Collections.emptyList();
   }
 catch (  IOException e) {
-    System.err.println("AndroidEnvironment.listDevices() did this to me");
+    System.err.println("Problem inside Devices.list()");
     e.printStackTrace();
     return Collections.emptyList();
   }
@@ -23,16 +23,16 @@ catch (  IOException e) {
   final String stdout=result.getStdout();
   if (!(stdout.startsWith("List of devices") || stdout.trim().length() == 0)) {
     System.err.println(ADB_DEVICES_ERROR);
+    System.err.println("Output was ???" + stdout + "???");
     return Collections.emptyList();
   }
   final List<String> devices=new ArrayList<String>();
   for (  final String line : result) {
-    if (!line.contains("\t")) {
-      continue;
-    }
-    final String[] fields=line.split("\t");
-    if (fields[1].equals("device")) {
-      devices.add(fields[0]);
+    if (line.contains("\t")) {
+      final String[] fields=line.split("\t");
+      if (fields[1].equals("device")) {
+        devices.add(fields[0]);
+      }
     }
   }
   return devices;

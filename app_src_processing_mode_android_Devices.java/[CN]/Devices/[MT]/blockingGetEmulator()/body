@@ -9,9 +9,13 @@
       emuController.launch();
     }
  catch (    final IOException e) {
+      System.err.println("Problem while launching emulator.");
       e.printStackTrace(System.err);
       return null;
     }
+  }
+ else {
+    System.out.println("Emulator is " + emuController.getState() + ", which is not expected.");
   }
   while (!Thread.currentThread().isInterrupted()) {
     if (emuController.getState() == State.NOT_RUNNING) {
@@ -26,7 +30,7 @@
       Thread.sleep(2000);
     }
  catch (    final InterruptedException e) {
-      System.err.println("AndroidEnvironment: interrupted in loop.");
+      System.err.println("Devices: interrupted in loop.");
       return null;
     }
   }
