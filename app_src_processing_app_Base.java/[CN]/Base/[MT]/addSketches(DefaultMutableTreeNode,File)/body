@@ -1,0 +1,37 @@
+{
+  if (!folder.isDirectory()) {
+    return false;
+  }
+  if (folder.getName().equals("libraries")) {
+    return false;
+  }
+  String[] list=folder.list();
+  if (list == null) {
+    return false;
+  }
+  Arrays.sort(list,String.CASE_INSENSITIVE_ORDER);
+  boolean found=false;
+  for (  String name : list) {
+    if (name.charAt(0) == '.') {
+      continue;
+    }
+    File subfolder=new File(folder,name);
+    if (subfolder.isDirectory()) {
+      File entry=checkSketchFolder(subfolder,name);
+      if (entry != null) {
+        DefaultMutableTreeNode item=new DefaultMutableTreeNode(new SketchReference(name,entry));
+        node.add(item);
+        found=true;
+      }
+ else {
+        DefaultMutableTreeNode subnode=new DefaultMutableTreeNode(name);
+        boolean anything=addSketches(subnode,subfolder);
+        if (anything) {
+          node.add(subnode);
+          found=true;
+        }
+      }
+    }
+  }
+  return found;
+}

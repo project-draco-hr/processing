@@ -1,0 +1,53 @@
+{
+  if (examplesFrame == null) {
+    examplesFrame=new JFrame("Examples");
+    final JTree tree=buildExamplesTree();
+    tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    tree.setShowsRootHandles(true);
+    tree.expandRow(0);
+    tree.setRootVisible(false);
+    for (int row=tree.getRowCount() - 1; row >= 0; --row) {
+      tree.expandRow(row);
+    }
+    tree.addMouseListener(new MouseAdapter(){
+      public void mouseClicked(      MouseEvent e){
+        if (e.getClickCount() > 1) {
+          DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+          if (node != null && node.isLeaf()) {
+            SketchReference sketch=(SketchReference)node.getUserObject();
+            base.handleOpen(sketch.getPath());
+          }
+        }
+      }
+    }
+);
+    tree.addKeyListener(new KeyAdapter(){
+      public void keyTyped(      KeyEvent e){
+        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+          DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+          if (node != null && node.isLeaf()) {
+            SketchReference sketch=(SketchReference)node.getUserObject();
+            base.handleOpen(sketch.getPath());
+          }
+        }
+ else         if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+          examplesFrame.setVisible(false);
+        }
+      }
+    }
+);
+    tree.setBorder(new EmptyBorder(5,5,5,5));
+    JScrollPane treeView=new JScrollPane(tree);
+    treeView.setPreferredSize(new Dimension(250,450));
+    examplesFrame.add(treeView);
+    examplesFrame.pack();
+  }
+  if (base.activeEditor != null) {
+    Point p=base.activeEditor.getLocation();
+    examplesFrame.setLocation(p.x - examplesFrame.getWidth() - 20,p.y);
+  }
+ else {
+    examplesFrame.setLocationRelativeTo(null);
+  }
+  examplesFrame.setVisible(true);
+}

@@ -1,0 +1,43 @@
+{
+  DefaultMutableTreeNode node=new DefaultMutableTreeNode("Examples");
+  JTree examplesTree=new JTree(node);
+  try {
+    File[] subfolders=getExampleCategoryFolders();
+    for (    File sub : subfolders) {
+      DefaultMutableTreeNode subNode=new DefaultMutableTreeNode(sub.getName());
+      if (base.addSketches(subNode,sub)) {
+        node.add(subNode);
+      }
+    }
+    DefaultMutableTreeNode libParent=new DefaultMutableTreeNode("Libraries");
+    for (    Library lib : coreLibraries) {
+      if (lib.hasExamples()) {
+        DefaultMutableTreeNode libNode=new DefaultMutableTreeNode(lib.getName());
+        base.addSketches(libNode,lib.getExamplesFolder());
+        libParent.add(libNode);
+      }
+    }
+    node.add(libParent);
+    boolean any=false;
+    for (    Library lib : contribLibraries) {
+      if (lib.hasExamples()) {
+        any=true;
+      }
+    }
+    if (any) {
+      DefaultMutableTreeNode contribParent=new DefaultMutableTreeNode("Contributed Libraries");
+      for (      Library lib : contribLibraries) {
+        if (lib.hasExamples()) {
+          DefaultMutableTreeNode libNode=new DefaultMutableTreeNode(lib.getName());
+          base.addSketches(libNode,lib.getExamplesFolder());
+          contribParent.add(libNode);
+        }
+      }
+      node.add(contribParent);
+    }
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+  return examplesTree;
+}
