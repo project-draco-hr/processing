@@ -1,4 +1,14 @@
 {
   final String[] params={sdk.getAndroidToolPath(),"create","avd","-n",name,"-t",target,"-c","64M","-s",DEFAULT_SKIN};
-  throw new RuntimeException("avd.create() not currently working");
+  final ProcessHelper p=new ProcessHelper(params);
+  try {
+    final ProcessResult createAvdResult=p.execute();
+    if (createAvdResult.succeeded()) {
+      return true;
+    }
+    System.err.println(createAvdResult);
+  }
+ catch (  final InterruptedException ie) {
+  }
+  return false;
 }
