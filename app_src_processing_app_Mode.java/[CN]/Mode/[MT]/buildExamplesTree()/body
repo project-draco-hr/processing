@@ -9,16 +9,19 @@
         node.add(subNode);
       }
     }
+    boolean any=false;
     DefaultMutableTreeNode libParent=new DefaultMutableTreeNode("Libraries");
     for (    Library lib : coreLibraries) {
       if (lib.hasExamples()) {
         DefaultMutableTreeNode libNode=new DefaultMutableTreeNode(lib.getName());
-        base.addSketches(libNode,lib.getExamplesFolder());
+        any|=base.addSketches(libNode,lib.getExamplesFolder());
         libParent.add(libNode);
       }
     }
-    node.add(libParent);
-    boolean any=false;
+    if (any) {
+      node.add(libParent);
+    }
+    any=false;
     for (    Library lib : contribLibraries) {
       if (lib.hasExamples()) {
         any=true;
