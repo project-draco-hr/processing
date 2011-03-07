@@ -1,10 +1,15 @@
 {
   toolbar.activate(JavaToolbar.RUN);
-  prepareRun();
-  try {
-    jmode.handleRun(sketch,this);
+  new Thread(new Runnable(){
+    public void run(){
+      prepareRun();
+      try {
+        jmode.handleRun(sketch,JavaEditor.this);
+      }
+ catch (      Exception e) {
+        statusError(e);
+      }
+    }
   }
- catch (  Exception e) {
-    statusError(e);
-  }
+).start();
 }
