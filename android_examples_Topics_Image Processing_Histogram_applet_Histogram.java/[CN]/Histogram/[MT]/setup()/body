@@ -1,0 +1,27 @@
+{
+  size(200,200);
+  colorMode(RGB,width);
+  int[] hist=new int[width];
+  PImage a;
+  a=loadImage("cdi01_g.jpg");
+  image(a,0,0);
+  for (int i=0; i < width; i++) {
+    for (int j=0; j < height; j++) {
+      hist[PApplet.parseInt(red(get(i,j)))]++;
+    }
+  }
+  float maxval=0;
+  for (int i=0; i < width; i++) {
+    if (hist[i] > maxval) {
+      maxval=hist[i];
+    }
+  }
+  for (int i=0; i < width; i++) {
+    hist[i]=PApplet.parseInt(hist[i] / maxval * height);
+  }
+  stroke(width);
+  for (int i=0; i < width; i+=2) {
+    line(i,height,i,height - hist[i]);
+  }
+  noLoop();
+}

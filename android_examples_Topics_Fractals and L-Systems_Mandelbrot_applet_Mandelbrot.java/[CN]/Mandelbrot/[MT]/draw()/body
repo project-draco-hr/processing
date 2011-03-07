@@ -1,0 +1,37 @@
+{
+  loadPixels();
+  int maxiterations=200;
+  float xmax=xmin + wh;
+  float ymax=ymin + wh;
+  float dx=(xmax - xmin) / (width);
+  float dy=(ymax - ymin) / (height);
+  float y=ymin;
+  for (int j=0; j < height; j++) {
+    float x=xmin;
+    for (int i=0; i < width; i++) {
+      float a=x;
+      float b=y;
+      int n=0;
+      while (n < maxiterations) {
+        float aa=a * a;
+        float bb=b * b;
+        float twoab=2.0f * a * b;
+        a=aa - bb + x;
+        b=twoab + y;
+        if (aa + bb > 16.0f) {
+          break;
+        }
+        n++;
+      }
+      if (n == maxiterations) {
+        pixels[i + j * width]=0;
+      }
+ else {
+        pixels[i + j * width]=color(n * 16 % 255);
+      }
+      x+=dx;
+    }
+    y+=dy;
+  }
+  updatePixels();
+}

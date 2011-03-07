@@ -1,0 +1,19 @@
+{
+  tunnelEffect.beginDraw();
+  tunnelEffect.loadPixels();
+  float timeDisplacement=millis() / 1000.0f;
+  int shiftX=PApplet.parseInt(textureImg.width * .2f * timeDisplacement + 300);
+  int shiftY=PApplet.parseInt(textureImg.height * .15f * timeDisplacement + 300);
+  int shiftLookX=w / 2 + PApplet.parseInt(w / 4 * sin(timeDisplacement));
+  int shiftLookY=h / 2 + PApplet.parseInt(h / 4 * sin(timeDisplacement * 1.5f));
+  for (int y=0; y < h; y++) {
+    for (int x=0; x < w; x++) {
+      int texture_x=constrain((distanceTable[x + shiftLookX][y + shiftLookY] + shiftX) % textureImg.width,0,textureImg.width);
+      int texture_y=(angleTable[x + shiftLookX][y + shiftLookY] + shiftY) % textureImg.height;
+      tunnelEffect.pixels[x + y * w]=textureImg.pixels[texture_y * textureImg.width + texture_x];
+    }
+  }
+  tunnelEffect.updatePixels();
+  tunnelEffect.endDraw();
+  image(tunnelEffect,0,0,width,height);
+}

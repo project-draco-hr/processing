@@ -1,0 +1,30 @@
+{
+  float adj;
+  float opp;
+  float dist;
+  float mod;
+  if (mousePressed) {
+    adj=x - mouseX;
+    opp=y - mouseY;
+    dist=sqrt(opp * opp + adj * adj);
+    if (dist < penSize) {
+      if (dist < 4)       dist=penSize;
+      mod=penSize / dist;
+      xvel+=mvelX * mod;
+      yvel+=mvelY * mod;
+    }
+  }
+  if (randomGust > 0) {
+    adj=x - randomGustX;
+    opp=y - randomGustY;
+    dist=sqrt(opp * opp + adj * adj);
+    if (dist < randomGustSize) {
+      if (dist < res * 2)       dist=randomGustSize;
+      mod=randomGustSize / dist;
+      xvel+=(randomGustMax - randomGust) * randomGustXvel * mod;
+      yvel+=(randomGustMax - randomGust) * randomGustYvel * mod;
+    }
+  }
+  xvel*=0.99f;
+  yvel*=0.98f;
+}

@@ -1,0 +1,26 @@
+{
+  float desiredseparation=20.0f;
+  PVector steer=new PVector(0,0,0);
+  int count=0;
+  for (int i=0; i < boids.size(); i++) {
+    Boid other=(Boid)boids.get(i);
+    float d=PVector.dist(loc,other.loc);
+    if ((d > 0) && (d < desiredseparation)) {
+      PVector diff=PVector.sub(loc,other.loc);
+      diff.normalize();
+      diff.div(d);
+      steer.add(diff);
+      count++;
+    }
+  }
+  if (count > 0) {
+    steer.div((float)count);
+  }
+  if (steer.mag() > 0) {
+    steer.normalize();
+    steer.mult(maxspeed);
+    steer.sub(vel);
+    steer.limit(maxforce);
+  }
+  return steer;
+}

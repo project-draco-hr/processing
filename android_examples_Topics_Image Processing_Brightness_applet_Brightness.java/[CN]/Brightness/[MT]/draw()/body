@@ -1,0 +1,18 @@
+{
+  loadPixels();
+  for (int x=0; x < img.width; x++) {
+    for (int y=0; y < img.height; y++) {
+      int loc=x + y * img.width;
+      float r, g, b;
+      r=red(img.pixels[loc]);
+      float maxdist=50;
+      float d=dist(x,y,mouseX,mouseY);
+      float adjustbrightness=255 * (maxdist - d) / maxdist;
+      r+=adjustbrightness;
+      r=constrain(r,0,255);
+      int c=color(r);
+      pixels[loc]=c;
+    }
+  }
+  updatePixels();
+}
