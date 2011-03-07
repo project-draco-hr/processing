@@ -1,0 +1,21 @@
+{
+  pts=points;
+  px=new float[points];
+  py=new float[points];
+  cx=new float[points];
+  cy=new float[points];
+  cx2=new float[points];
+  cy2=new float[points];
+  float angle=360.0f / points;
+  float controlAngle1=angle / 3.0f;
+  float controlAngle2=controlAngle1 * 2.0f;
+  for (int i=0; i < points; i++) {
+    px[i]=width / 2 + cos(radians(angle)) * radius;
+    py[i]=height / 2 + sin(radians(angle)) * radius;
+    cx[i]=width / 2 + cos(radians(angle + controlAngle1)) * controlRadius / cos(radians(controlAngle1));
+    cy[i]=height / 2 + sin(radians(angle + controlAngle1)) * controlRadius / cos(radians(controlAngle1));
+    cx2[i]=width / 2 + cos(radians(angle + controlAngle2)) * controlRadius / cos(radians(controlAngle1));
+    cy2[i]=height / 2 + sin(radians(angle + controlAngle2)) * controlRadius / cos(radians(controlAngle1));
+    angle+=360.0f / points;
+  }
+}

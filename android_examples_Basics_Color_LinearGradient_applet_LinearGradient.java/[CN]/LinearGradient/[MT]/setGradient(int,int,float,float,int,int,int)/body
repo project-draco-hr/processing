@@ -1,0 +1,21 @@
+{
+  float deltaR=red(c2) - red(c1);
+  float deltaG=green(c2) - green(c1);
+  float deltaB=blue(c2) - blue(c1);
+  if (axis == Y_AXIS) {
+    for (int i=x; i <= (x + w); i++) {
+      for (int j=y; j <= (y + h); j++) {
+        int c=color((red(c1) + (j - y) * (deltaR / h)),(green(c1) + (j - y) * (deltaG / h)),(blue(c1) + (j - y) * (deltaB / h)));
+        set(i,j,c);
+      }
+    }
+  }
+ else   if (axis == X_AXIS) {
+    for (int i=y; i <= (y + h); i++) {
+      for (int j=x; j <= (x + w); j++) {
+        int c=color((red(c1) + (j - x) * (deltaR / h)),(green(c1) + (j - x) * (deltaG / h)),(blue(c1) + (j - x) * (deltaB / h)));
+        set(j,i,c);
+      }
+    }
+  }
+}
