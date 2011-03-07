@@ -8,8 +8,12 @@
       throw new RuntimeException("Use textMode(SHAPE) with PDF when loading " + ".ttf and .otf files with createFont().");
     }
  else     if (mapper.getAliases().get(textFont.getName()) == null) {
-      System.err.println("Use PGraphicsPDF.listFonts() to get a list of " + "fonts that can be used with PDF.");
-      throw new RuntimeException("The font ???" + textFont.getName() + "??? "+ "cannot be used with PDF Export.");
+      if (textFont.getName().equals("Lucida Sans")) {
+        throw new RuntimeException("Use textMode(SHAPE) with the default " + "font when exporting to PDF.");
+      }
+ else {
+        throw new RuntimeException("Use textMode(SHAPE) with " + "???" + textFont.getName() + "??? "+ "when exporting to PDF.");
+      }
     }
   }
 }
