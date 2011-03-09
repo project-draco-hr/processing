@@ -2,7 +2,11 @@
   if (frameCount == 0) {
     return;
   }
-  if ((g != null) && (g.image != null)) {
-    screen.drawImage(g.image,0,0,null);
+  if (g != null) {
+synchronized (g) {
+      if (g.image != null) {
+        screen.drawImage(g.image,0,0,null);
+      }
+    }
   }
 }
