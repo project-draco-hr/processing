@@ -5,6 +5,7 @@
       Base.showWarning("Save","Please save the sketch before changing the mode.",null);
     }
  else {
+      boolean untitled=activeEditor.untitled;
       String mainPath=sketch.getMainFilePath();
       File sketchProps=new File(sketch.getFolder(),"sketch.properties");
       PrintWriter writer=PApplet.createWriter(sketchProps);
@@ -13,7 +14,10 @@
       writer.close();
       int[] where=activeEditor.getPlacement();
       handleClose(activeEditor);
-      handleOpen(mainPath,where);
+      Editor editor=handleOpen(mainPath,where);
+      if (editor != null) {
+        editor.untitled=untitled;
+      }
     }
   }
 }
