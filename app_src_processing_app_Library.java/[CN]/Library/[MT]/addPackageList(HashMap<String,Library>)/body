@@ -2,10 +2,16 @@
   for (  String pkg : packageList) {
     Library library=importToLibraryTable.get(pkg);
     if (library != null) {
-      System.err.println("The library found in " + getPath());
-      System.err.println("conflicts with " + library.getPath());
-      System.err.println("which already defines the package " + pkg);
-      System.err.println();
+      if (!packageWarningMap.containsKey(pkg)) {
+        packageWarningMap.put(pkg,null);
+        System.err.println("The library found in " + getPath());
+        System.err.println("conflicts with " + library.getPath());
+        System.err.println("which already defines the package " + pkg);
+        System.err.println("If you have a line in your sketch that reads");
+        System.err.println("import " + pkg + ".*;");
+        System.err.println("Then you'll need to first remove one of those libraries.");
+        System.err.println();
+      }
     }
  else {
       importToLibraryTable.put(pkg,this);
