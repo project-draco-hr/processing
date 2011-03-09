@@ -11,18 +11,11 @@
     }
     boolean any=false;
     DefaultMutableTreeNode libParent=new DefaultMutableTreeNode("Libraries");
-    System.out.println("core libraries " + coreLibraries.size());
     for (    Library lib : coreLibraries) {
-      System.out.println("checking " + lib.getName() + " for examples");
       if (lib.hasExamples()) {
-        System.out.println("has examples");
-        any=true;
         DefaultMutableTreeNode libNode=new DefaultMutableTreeNode(lib.getName());
-        base.addSketches(libNode,lib.getExamplesFolder());
+        any|=base.addSketches(libNode,lib.getExamplesFolder());
         libParent.add(libNode);
-      }
- else {
-        System.out.println("no examples");
       }
     }
     if (any) {
