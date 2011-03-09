@@ -1,5 +1,10 @@
 {
-  importMenu.removeAll();
+  if (importMenu == null) {
+    importMenu=new JMenu("Import Library...");
+  }
+ else {
+    importMenu.removeAll();
+  }
   rebuildLibraryList();
   ActionListener listener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -7,16 +12,24 @@
     }
   }
 ;
-  for (  Library library : coreLibraries) {
-    JMenuItem item=new JMenuItem(library.getName());
-    item.addActionListener(listener);
-    item.setActionCommand(library.getJarPath());
+  if (coreLibraries.size() == 0) {
+    JMenuItem item=new JMenuItem(getTitle() + " mode has no core libraries");
+    item.setEnabled(false);
     importMenu.add(item);
+  }
+ else {
+    for (    Library library : coreLibraries) {
+      JMenuItem item=new JMenuItem(library.getName());
+      item.addActionListener(listener);
+      item.setActionCommand(library.getJarPath());
+      importMenu.add(item);
+    }
   }
   if (contribLibraries.size() != 0) {
     importMenu.addSeparator();
     JMenuItem contrib=new JMenuItem("Contributed");
     contrib.setEnabled(false);
+    importMenu.add(contrib);
     for (    Library library : contribLibraries) {
       JMenuItem item=new JMenuItem(library.getName());
       item.addActionListener(listener);
