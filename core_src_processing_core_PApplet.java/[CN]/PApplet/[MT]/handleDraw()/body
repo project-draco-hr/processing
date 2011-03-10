@@ -3,43 +3,41 @@
     if (!g.canDraw()) {
       return;
     }
-synchronized (g) {
-      g.beginDraw();
-      if (recorder != null) {
-        recorder.beginDraw();
-      }
-      long now=System.nanoTime();
-      if (frameCount == 0) {
-        try {
-          setup();
-        }
- catch (        RendererChangeException e) {
-          return;
-        }
-        this.defaultSize=false;
-      }
- else {
-        double rate=1000000.0 / ((now - frameRateLastNanos) / 1000000.0);
-        float instantaneousRate=(float)rate / 1000.0f;
-        frameRate=(frameRate * 0.9f) + (instantaneousRate * 0.1f);
-        preMethods.handle();
-        pmouseX=dmouseX;
-        pmouseY=dmouseY;
-        draw();
-        dmouseX=mouseX;
-        dmouseY=mouseY;
-        dequeueMouseEvents();
-        dequeueKeyEvents();
-        drawMethods.handle();
-        redraw=false;
-      }
-      g.endDraw();
-      if (recorder != null) {
-        recorder.endDraw();
-      }
-      frameRateLastNanos=now;
-      frameCount++;
+    g.beginDraw();
+    if (recorder != null) {
+      recorder.beginDraw();
     }
+    long now=System.nanoTime();
+    if (frameCount == 0) {
+      try {
+        setup();
+      }
+ catch (      RendererChangeException e) {
+        return;
+      }
+      this.defaultSize=false;
+    }
+ else {
+      double rate=1000000.0 / ((now - frameRateLastNanos) / 1000000.0);
+      float instantaneousRate=(float)rate / 1000.0f;
+      frameRate=(frameRate * 0.9f) + (instantaneousRate * 0.1f);
+      preMethods.handle();
+      pmouseX=dmouseX;
+      pmouseY=dmouseY;
+      draw();
+      dmouseX=mouseX;
+      dmouseY=mouseY;
+      dequeueMouseEvents();
+      dequeueKeyEvents();
+      drawMethods.handle();
+      redraw=false;
+    }
+    g.endDraw();
+    if (recorder != null) {
+      recorder.endDraw();
+    }
+    frameRateLastNanos=now;
+    frameCount++;
     repaint();
     getToolkit().sync();
     postMethods.handle();
