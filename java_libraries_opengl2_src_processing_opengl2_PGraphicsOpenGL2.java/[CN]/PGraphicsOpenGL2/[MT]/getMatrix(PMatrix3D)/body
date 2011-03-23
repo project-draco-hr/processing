@@ -3,9 +3,15 @@
     target=new PMatrix3D();
   }
   if (matrixMode == PROJECTION) {
+    if (!projectionUpdated) {
+      getProjectionMatrix();
+    }
     target.set(projection);
   }
  else {
+    if (!modelviewUpdated) {
+      getModelviewMatrix();
+    }
     target.set(modelview);
   }
   return target;
