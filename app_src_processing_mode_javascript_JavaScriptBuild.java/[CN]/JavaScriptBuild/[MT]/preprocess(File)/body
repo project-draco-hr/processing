@@ -1,0 +1,14 @@
+{
+  StringBuffer bigCode=new StringBuffer();
+  for (  SketchCode sc : sketch.getCode()) {
+    if (sc.isExtension("pde")) {
+      bigCode.append(sc.getProgram());
+      bigCode.append("\n");
+    }
+  }
+  if (!bin.exists()) {
+    bin.mkdirs();
+  }
+  File bigFile=new File(bin,sketch.getName() + ".pde");
+  Base.saveFile(bigCode.toString(),bigFile);
+}

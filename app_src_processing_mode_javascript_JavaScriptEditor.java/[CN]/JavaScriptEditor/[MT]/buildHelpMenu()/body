@@ -1,0 +1,58 @@
+{
+  JMenu menu=new JMenu("Help ");
+  JMenuItem item;
+  item=new JMenuItem("QuickStart for JS Devs");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.openURL("http://processingjs.org/reference/articles/jsQuickStart");
+    }
+  }
+);
+  menu.add(item);
+  item=new JMenuItem("QuickStart for Processing Devs");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.openURL("http://processingjs.org/reference/articles/p5QuickStart");
+    }
+  }
+);
+  menu.add(item);
+  item=new JMenuItem("Reference");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.openURL("http://processingjs.org/reference");
+    }
+  }
+);
+  menu.add(item);
+  item=Base.newJMenuItemShift("Find in Reference",'F');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (textarea.isSelectionActive()) {
+        Base.openURL("http://www.google.com/search?q=" + textarea.getSelectedText() + "+site%3Ahttp%3A%2F%2Fprocessingjs.org%2Freference");
+      }
+    }
+  }
+);
+  menu.add(item);
+  item=new JMenuItem("Visit Processingjs.org");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.openURL("http://processingjs.org/");
+    }
+  }
+);
+  menu.add(item);
+  if (!Base.isMacOS()) {
+    menu.addSeparator();
+    item=new JMenuItem("About Processing");
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        base.handleAbout();
+      }
+    }
+);
+    menu.add(item);
+  }
+  return menu;
+}

@@ -1,0 +1,19 @@
+{
+  if (handleExportCheckModified()) {
+    toolbar.activate(JavaScriptToolbar.EXPORT);
+    try {
+      boolean success=jsMode.handleExport(sketch);
+      if (success) {
+        File appletJSFolder=new File(sketch.getFolder(),"applet_js");
+        Base.openFolder(appletJSFolder);
+        statusNotice("Finished exporting.");
+      }
+ else {
+      }
+    }
+ catch (    Exception e) {
+      statusError(e);
+    }
+    toolbar.deactivate(JavaScriptToolbar.EXPORT);
+  }
+}

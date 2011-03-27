@@ -1,0 +1,62 @@
+{
+  sketch.ensureExistence();
+  this.binFolder=bin;
+  if (bin.exists()) {
+    Base.removeDescendants(bin);
+  }
+  try {
+    preprocess(bin);
+  }
+ catch (  IOException e) {
+    final String msg="A problem occured while writing to the output folder.";
+    Base.showWarning("Could not build the sketch",msg,e);
+    return false;
+  }
+  if (sketch.hasDataFolder()) {
+    try {
+      Base.copyDir(sketch.getDataFolder(),bin);
+    }
+ catch (    IOException e) {
+      final String msg="An exception occured while trying to copy the data folder. " + "You may have to manually move the contents of sketch/data to " + "the applet_js/ folder. Processing.js doesn't look for a data "+ "folder, so lump them together.";
+      Base.showWarning("Problem building the sketch",msg,e);
+    }
+  }
+  int wide=PApplet.DEFAULT_WIDTH;
+  int high=PApplet.DEFAULT_HEIGHT;
+  String scrubbed=JavaBuild.scrubComments(sketch.getCode(0).getProgram());
+  String[] matches=PApplet.match(scrubbed,JavaBuild.SIZE_REGEX);
+  if (matches != null) {
+    try {
+      wide=Integer.parseInt(matches[1]);
+      high=Integer.parseInt(matches[2]);
+    }
+ catch (    NumberFormatException e) {
+      final String message="The size of this applet could not automatically be\n" + "determined from your code. You'll have to edit the\n" + "HTML file to set the size of the applet.\n"+ "Use only numeric values (not variables) for the size()\n"+ "command. See the size() reference for an explanation.";
+      Base.showWarning("Could not find applet size",message,null);
+    }
+  }
+  File templateFile=sketch.getMode().getContentFile("applet_js/template.html");
+  File htmlOutputFile=new File(bin,"index.html");
+  Map<String,String> templateFields=new HashMap<String,String>();
+  templateFields.put("width",String.valueOf(wide));
+  templateFields.put("height",String.valueOf(high));
+  templateFields.put("sketch",sketch.getName());
+  templateFields.put("description",getSketchDescription());
+  templateFields.put("source","<a href=\"" + sketch.getName() + ".pde\">"+ sketch.getName()+ "</a>");
+  try {
+    writeTemplate(templateFile,htmlOutputFile,templateFields);
+  }
+ catch (  IOException ioe) {
+    final String msg="There was a problem writing the html template " + "to the build folder.";
+    Base.showWarning("A problem occured during the build",msg,ioe);
+    return false;
+  }
+  try {
+    Base.copyFile(sketch.getMode().getContentFile("applet_js/processing.js"),new File(bin,"processing.js"));
+  }
+ catch (  IOException ioe) {
+    final String msg="There was a problem copying processing.js to the " + "build folder. You will have to manually add " + "processing.js to the build folder before the sketch "+ "will run.";
+    Base.showWarning("There was a problem writing to the build folder",msg,ioe);
+  }
+  return true;
+}
