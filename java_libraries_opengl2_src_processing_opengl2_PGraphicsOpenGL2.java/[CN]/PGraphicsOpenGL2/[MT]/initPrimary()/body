@@ -3,8 +3,12 @@
     GLProfile.initSingleton(false);
   }
  else {
-    PApplet.println("Initializing JOGL2");
-    GLProfile.initSingleton(true);
+    if (PApplet.platform == LINUX) {
+      GLProfile.initSingleton(false);
+    }
+ else {
+      GLProfile.initSingleton(true);
+    }
   }
   ogl=this;
   profile=null;
