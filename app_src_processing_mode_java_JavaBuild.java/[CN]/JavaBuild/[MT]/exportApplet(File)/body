@@ -49,6 +49,14 @@
       e.printStackTrace();
     }
   }
+  String preprocFilename=sketch.getName() + ".java";
+  File preprocFile=new File(srcFolder,preprocFilename);
+  if (preprocFile.exists()) {
+    preprocFile.renameTo(new File(appletFolder,preprocFilename));
+  }
+ else {
+    System.err.println("Could not copy source file: " + preprocFile.getAbsolutePath());
+  }
   boolean separateJar=Preferences.getBoolean("export.applet.separate_jar_files") || sketch.hasCodeFolder() || javaLibraryPath.length() != 0;
   String LOADING_IMAGE="loading.gif";
   File loadingImage=new File(sketch.getFolder(),LOADING_IMAGE);
