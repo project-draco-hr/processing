@@ -48,38 +48,19 @@
         Base.showWarning("Cannot Rename","Sorry, a sketch (or folder) named " + "\"" + newName + "\" already exists.",null);
         return;
       }
-      if (current.isModified()) {
-        current.setProgram(editor.getText());
-        try {
-          current.save();
-        }
- catch (        Exception e) {
-          Base.showWarning("Error","Could not rename the sketch. (0)",e);
-          return;
-        }
-      }
       if (!current.renameTo(newFile,newExtension)) {
         Base.showWarning("Error","Could not rename \"" + current.getFileName() + "\" to \""+ newFile.getName()+ "\"",null);
         return;
       }
-      try {
-        for (int i=1; i < codeCount; i++) {
-          code[i].save();
-        }
-      }
- catch (      Exception e) {
-        Base.showWarning("Error","Could not rename the sketch. (1)",e);
-        return;
-      }
       boolean success=folder.renameTo(newFolder);
       if (!success) {
-        Base.showWarning("Error","Could not rename the sketch. (2)",null);
+        Base.showWarning("Error","Could not rename the sketch folder.",null);
         return;
       }
-      File newMainFile=new File(newFolder,newName + ".pde");
-      String newMainFilePath=newMainFile.getAbsolutePath();
-      editor.handleOpenUnchecked(newMainFilePath,currentIndex,editor.getSelectionStart(),editor.getSelectionStop(),editor.getScrollPosition());
-      editor.base.rebuildSketchbookMenusAsync();
+      for (int i=1; i < codeCount; i++) {
+        code[i].setFolder(newFolder);
+      }
+      updateInternal(sanitaryName,newFolder);
     }
  else {
       if (!current.renameTo(newFile,newExtension)) {

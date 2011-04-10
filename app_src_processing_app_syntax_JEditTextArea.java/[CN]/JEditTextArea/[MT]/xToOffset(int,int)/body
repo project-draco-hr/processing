@@ -24,7 +24,9 @@
   }
  else {
     Token tokens;
-    if (painter.currentLineIndex == line && painter.currentLineTokens != null)     tokens=painter.currentLineTokens;
+    if (painter.currentLineIndex == line && painter.currentLineTokens != null) {
+      tokens=painter.currentLineTokens;
+    }
  else {
       painter.currentLineIndex=line;
       tokens=painter.currentLineTokens=tokenMarker.markTokens(lineSegment,line);
@@ -41,13 +43,21 @@
       for (int i=0; i < length; i++) {
         char c=segmentArray[segmentOffset + offset + i];
         int charWidth;
-        if (c == '\t')         charWidth=(int)painter.nextTabStop(width,offset + i) - width;
- else         charWidth=fm.charWidth(c);
-        if (painter.isBlockCaretEnabled()) {
-          if (x - charWidth <= width)           return offset + i;
+        if (c == '\t') {
+          charWidth=(int)painter.nextTabStop(width,offset + i) - width;
         }
  else {
-          if (x - charWidth / 2 <= width)           return offset + i;
+          charWidth=fm.charWidth(c);
+        }
+        if (painter.isBlockCaretEnabled()) {
+          if (x - charWidth <= width) {
+            return offset + i;
+          }
+        }
+ else {
+          if (x - charWidth / 2 <= width) {
+            return offset + i;
+          }
         }
         width+=charWidth;
       }

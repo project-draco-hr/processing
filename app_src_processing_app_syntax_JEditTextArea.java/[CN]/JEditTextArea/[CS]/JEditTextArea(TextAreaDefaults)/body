@@ -1,5 +1,15 @@
 {
   enableEvents(AWTEvent.KEY_EVENT_MASK);
+  caretTimer=new Timer(500,new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (hasFocus()) {
+        blinkCaret();
+      }
+    }
+  }
+);
+  caretTimer.setInitialDelay(500);
+  caretTimer.start();
   painter=new TextAreaPainter(this,defaults);
   documentHandler=new DocumentHandler();
   eventListenerList=new EventListenerList();
@@ -24,7 +34,6 @@
   caretVisible=defaults.caretVisible;
   caretBlinks=defaults.caretBlinks;
   electricScroll=defaults.electricScroll;
-  focusedComponent=this;
   addMouseWheelListener(new MouseWheelListener(){
     public void mouseWheelMoved(    MouseWheelEvent e){
       if (scrollBarsInitialized) {

@@ -1,15 +1,16 @@
 {
-  if (folder.exists())   return;
-  Base.showWarning("Sketch Disappeared","The sketch folder has disappeared.\n " + "Will attempt to re-save in the same location,\n" + "but anything besides the code will be lost.",null);
-  try {
-    folder.mkdirs();
-    modified=true;
-    for (int i=0; i < codeCount; i++) {
-      code[i].save();
+  if (!folder.exists()) {
+    Base.showWarning("Sketch Disappeared","The sketch folder has disappeared.\n " + "Will attempt to re-save in the same location,\n" + "but anything besides the code will be lost.",null);
+    try {
+      folder.mkdirs();
+      modified=true;
+      for (int i=0; i < codeCount; i++) {
+        code[i].save();
+      }
+      calcModified();
     }
-    calcModified();
-  }
- catch (  Exception e) {
-    Base.showWarning("Could not re-save sketch","Could not properly re-save the sketch. " + "You may be in trouble at this point,\n" + "and it might be time to copy and paste "+ "your code to another text editor.",e);
+ catch (    Exception e) {
+      Base.showWarning("Could not re-save sketch","Could not properly re-save the sketch. " + "You may be in trouble at this point,\n" + "and it might be time to copy and paste "+ "your code to another text editor.",e);
+    }
   }
 }
