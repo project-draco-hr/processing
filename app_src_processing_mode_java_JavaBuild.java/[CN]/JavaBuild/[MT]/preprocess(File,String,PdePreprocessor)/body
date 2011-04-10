@@ -107,7 +107,20 @@ catch (  Exception ex) {
       }
     }
  else {
-      if (!item.startsWith("java.") && !item.startsWith("javax.")) {
+      boolean found=false;
+      if (codeFolderPackages != null) {
+        String itemPkg=item.substring(0,item.lastIndexOf('.'));
+        for (        String pkg : codeFolderPackages) {
+          if (pkg.equals(itemPkg)) {
+            found=true;
+            break;
+          }
+        }
+      }
+      if (ignorableImport(item)) {
+        found=true;
+      }
+      if (!found) {
         System.err.println("No library found for " + entry);
       }
     }
