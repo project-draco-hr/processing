@@ -48,13 +48,15 @@
         Base.showWarning("Cannot Rename","Sorry, a sketch (or folder) named " + "\"" + newName + "\" already exists.",null);
         return;
       }
-      if (!current.renameTo(newFile,newExtension)) {
-        Base.showWarning("Error","Could not rename \"" + current.getFileName() + "\" to \""+ newFile.getName()+ "\"",null);
-        return;
-      }
       boolean success=folder.renameTo(newFolder);
       if (!success) {
         Base.showWarning("Error","Could not rename the sketch folder.",null);
+        return;
+      }
+      current.setFolder(newFolder);
+      newFile=new File(newFolder,newName);
+      if (!current.renameTo(newFile,newExtension)) {
+        Base.showWarning("Error","Could not rename \"" + current.getFileName() + "\" to \""+ newFile.getName()+ "\"",null);
         return;
       }
       for (int i=1; i < codeCount; i++) {
