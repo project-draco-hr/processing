@@ -65,6 +65,12 @@
   setPlacement(location);
   setMinimumSize(new Dimension(Preferences.getInteger("editor.window.width.min"),Preferences.getInteger("editor.window.height.min")));
   applyPreferences();
+  addWindowFocusListener(new WindowAdapter(){
+    public void windowGainedFocus(    WindowEvent e){
+      textarea.requestFocusInWindow();
+    }
+  }
+);
   boolean loaded=handleOpenInternal(path);
   if (!loaded)   sketch=null;
 }
