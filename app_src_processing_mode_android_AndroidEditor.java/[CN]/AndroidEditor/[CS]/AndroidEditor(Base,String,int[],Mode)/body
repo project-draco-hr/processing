@@ -1,16 +1,8 @@
 {
   super(base,path,location,mode);
   amode=(AndroidMode)mode;
-  try {
-    AndroidSDK sdk=amode.loadSDK();
-    if (sdk == null) {
-      sdk=AndroidSDK.locate(this);
-    }
-  }
- catch (  BadSDKException bse) {
-    statusError(bse);
-  }
-catch (  IOException e) {
-    statusError(e);
+  AndroidSDK sdk=amode.loadSDK();
+  if (sdk == null) {
+    sdk=AndroidSDK.locate(this);
   }
 }
