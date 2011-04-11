@@ -3,10 +3,13 @@
     if (defaultAVD.exists(sdk)) {
       return true;
     }
+    if (defaultAVD.badness()) {
+      Base.showWarning("Android Error",AVD_CANNOT_LOAD,null);
+      return false;
+    }
     if (defaultAVD.create(sdk)) {
       return true;
     }
-    Base.showWarning("Android Error",AVD_CREATE_ERROR,null);
   }
  catch (  final Exception e) {
     Base.showWarning("Android Error",AVD_CREATE_ERROR,e);

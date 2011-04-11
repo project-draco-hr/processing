@@ -6,7 +6,12 @@
     if (createAvdResult.succeeded()) {
       return true;
     }
-    System.err.println(createAvdResult);
+    if (createAvdResult.toString().contains("Target id is not valid")) {
+      Base.showWarning("Android Error",AVD_TARGET_MISSING,null);
+    }
+ else {
+      Base.showWarning("Android Error",AVD_CREATE_ERROR,null);
+    }
   }
  catch (  final InterruptedException ie) {
   }

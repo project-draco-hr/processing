@@ -1,16 +1,22 @@
 {
   try {
     avdList=new ArrayList<String>();
+    badList=new ArrayList<String>();
     ProcessResult listResult=new ProcessHelper(sdk.getAndroidToolPath(),"list","avds").execute();
     if (listResult.succeeded()) {
+      boolean badness=false;
       for (      String line : listResult) {
         String[] m=PApplet.match(line,"\\s+Name\\:\\s+(\\S+)");
         if (m != null) {
-          avdList.add(m[1]);
+          if (!badness) {
+            avdList.add(m[1]);
+          }
+ else {
+            badList.add(m[1]);
+          }
         }
         if (line.contains("could not be loaded:")) {
-          System.err.println(listResult);
-          break;
+          badness=true;
         }
       }
     }
