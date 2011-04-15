@@ -16,7 +16,7 @@
   boolean opengl2X=!hints[DISABLE_OPENGL_2X_SMOOTH];
   boolean opengl4X=hints[ENABLE_OPENGL_4X_SMOOTH];
   offscreenMultisample=false;
-  offscreenFramebuffer=new PFramebuffer(parent,texture.getGLWidth(),texture.getGLHeight(),false);
+  offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,false);
   if (PGraphicsOpenGL2.fboMultisampleSupported && gl2x != null && (opengl2X || opengl4X)) {
     int nsamples=1;
     if (opengl2X) {
@@ -25,7 +25,7 @@
  else     if (opengl4X) {
       nsamples=4;
     }
-    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.getGLWidth(),texture.getGLHeight(),false);
+    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,false);
     try {
       offscreenFramebufferMultisample.addColorBufferMultisample(nsamples);
       offscreenMultisample=true;

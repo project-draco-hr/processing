@@ -32,9 +32,9 @@
         if (tex == null) {
           break;
         }
-        gl.glEnable(tex.getGLTarget());
+        gl.glEnable(tex.glTarget);
         gl.glActiveTexture(GL.GL_TEXTURE0 + t);
-        gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
+        gl.glBindTexture(tex.glTarget,tex.glID);
         renderTextures[numTextures]=tex;
         numTextures++;
       }
@@ -92,11 +92,11 @@
     for (int t=0; t < numTextures; t++) {
       PTexture tex=renderTextures[t];
       gl.glActiveTexture(GL.GL_TEXTURE0 + t);
-      gl.glBindTexture(tex.getGLTarget(),0);
+      gl.glBindTexture(tex.glTarget,0);
     }
     for (int t=0; t < numTextures; t++) {
       PTexture tex=renderTextures[t];
-      gl.glDisable(tex.getGLTarget());
+      gl.glDisable(tex.glTarget);
     }
     if (pointSprites) {
       gl.glDisable(GL2.GL_POINT_SPRITE);
