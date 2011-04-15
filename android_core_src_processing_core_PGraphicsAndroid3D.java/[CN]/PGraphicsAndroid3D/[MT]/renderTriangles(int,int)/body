@@ -14,9 +14,9 @@
           if (tex == null) {
             break;
           }
-          gl.glEnable(tex.getGLTarget());
+          gl.glEnable(tex.glTarget);
           gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
-          gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
+          gl.glBindTexture(tex.glTarget,tex.glID);
           renderTextures[tcount]=tex;
           tcount++;
         }
@@ -28,9 +28,9 @@
  else     if (images[0] != null) {
       PTexture tex=getTexture(images[0]);
       if (tex != null) {
-        gl.glEnable(tex.getGLTarget());
+        gl.glEnable(tex.glTarget);
         gl.glActiveTexture(GL10.GL_TEXTURE0);
-        gl.glBindTexture(tex.getGLTarget(),tex.getGLID());
+        gl.glBindTexture(tex.glTarget,tex.glID);
         renderTextures[0]=tex;
         tcount=1;
       }
@@ -328,11 +328,11 @@
       for (int t=0; t < tcount; t++) {
         PTexture tex=renderTextures[t];
         gl.glActiveTexture(GL10.GL_TEXTURE0 + t);
-        gl.glBindTexture(tex.getGLTarget(),0);
+        gl.glBindTexture(tex.glTarget,0);
       }
       for (int t=0; t < tcount; t++) {
         PTexture tex=renderTextures[t];
-        gl.glDisable(tex.getGLTarget());
+        gl.glDisable(tex.glTarget);
       }
       for (int t=0; t < tcount; t++) {
         gl.glClientActiveTexture(GL10.GL_TEXTURE0 + t);
