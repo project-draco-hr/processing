@@ -1,10 +1,15 @@
 {
-  Runner runtime=null;
   JavaBuild build=new JavaBuild(sketch);
   String appletClassName=build.build();
   if (appletClassName != null) {
-    runtime=new Runner(build,listener);
-    runtime.launch(false);
+    final Runner runtime=new Runner(build,listener);
+    new Thread(new Runnable(){
+      public void run(){
+        runtime.launch(false);
+      }
+    }
+).start();
+    return runtime;
   }
-  return runtime;
+  return null;
 }
