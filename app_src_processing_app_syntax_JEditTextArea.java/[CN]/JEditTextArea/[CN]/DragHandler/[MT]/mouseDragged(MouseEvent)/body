@@ -1,5 +1,26 @@
 {
   if (popup != null && popup.isVisible())   return;
-  setSelectionRectangular((evt.getModifiers() & InputEvent.CTRL_MASK) != 0);
-  select(getMarkPosition(),xyToOffset(evt.getX(),evt.getY()));
+  if (!selectWord && !selectLine) {
+    setSelectionRectangular((evt.getModifiers() & InputEvent.CTRL_MASK) != 0);
+    select(getMarkPosition(),xyToOffset(evt.getX(),evt.getY()));
+  }
+ else {
+    int line=yToLine(evt.getY());
+    if (selectWord) {
+      setNewSelectionWord(line,xToOffset(line,evt.getX()));
+    }
+ else {
+      newSelectionStart=getLineStartOffset(line);
+      newSelectionEnd=getLineSelectionStopOffset(line);
+    }
+    if (newSelectionStart < selectionAncorStart) {
+      select(newSelectionStart,selectionAncorEnd);
+    }
+ else     if (newSelectionEnd > selectionAncorEnd) {
+      select(selectionAncorStart,newSelectionEnd);
+    }
+ else {
+      select(newSelectionStart,newSelectionEnd);
+    }
+  }
 }

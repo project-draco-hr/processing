@@ -5,19 +5,15 @@
   Container pain=getContentPane();
   pain.setLayout(null);
   JLabel findLabel=new JLabel("Find:");
-  Dimension d0=findLabel.getPreferredSize();
   JLabel replaceLabel=new JLabel("Replace with:");
-  Dimension d1=replaceLabel.getPreferredSize();
+  Dimension labelDimension=replaceLabel.getPreferredSize();
   pain.add(findLabel);
   pain.add(replaceLabel);
-  pain.add(findField=new JTextField(20));
-  pain.add(replaceField=new JTextField(20));
-  Dimension d2=findField.getPreferredSize();
+  pain.add(findField=new JTextField());
+  pain.add(replaceField=new JTextField());
+  int fieldHeight=findField.getPreferredSize().height;
   if (findString != null)   findField.setText(findString);
   if (replaceString != null)   replaceField.setText(replaceString);
-  int yoff=(1 + d2.height - d1.height) / 2;
-  findLabel.setBounds(BIG + (d1.width - d0.width) + yoff,BIG,d1.width,d1.height);
-  replaceLabel.setBounds(BIG,BIG + d2.height + SMALL+ yoff,d1.width,d1.height);
   ignoreCaseBox=new JCheckBox("Ignore Case");
   ignoreCaseBox.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -27,16 +23,27 @@
 );
   ignoreCaseBox.setSelected(ignoreCase);
   pain.add(ignoreCaseBox);
+  wrapAroundBox=new JCheckBox("Wrap Around");
+  wrapAroundBox.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      wrapAround=wrapAroundBox.isSelected();
+    }
+  }
+);
+  wrapAroundBox.setSelected(wrapAround);
+  pain.add(wrapAroundBox);
   JPanel buttons=new JPanel();
-  buttons.setLayout(new FlowLayout());
+  buttons.setLayout(new FlowLayout(FlowLayout.CENTER,BUTTON_GAP,0));
   if (Base.isMacOS()) {
     buttons.add(replaceAllButton=new JButton("Replace All"));
     buttons.add(replaceButton=new JButton("Replace"));
     buttons.add(replaceFindButton=new JButton("Replace & Find"));
+    buttons.add(previousButton=new JButton("Previous"));
     buttons.add(findButton=new JButton("Find"));
   }
  else {
     buttons.add(findButton=new JButton("Find"));
+    buttons.add(previousButton=new JButton("Previous"));
     buttons.add(replaceFindButton=new JButton("Replace & Find"));
     buttons.add(replaceButton=new JButton("Replace"));
     buttons.add(replaceAllButton=new JButton("Replace All"));
@@ -45,23 +52,36 @@
   if (Base.isMacOS()) {
     buttons.setBorder(null);
   }
-  Dimension d3=buttons.getPreferredSize();
-  buttons.setBounds(BIG,BIG + d2.height * 3 + SMALL * 2 + BIG,d3.width,d3.height);
-  findField.setBounds(BIG + d1.width + SMALL,BIG,d3.width - (d1.width + SMALL),d2.height);
-  replaceField.setBounds(BIG + d1.width + SMALL,BIG + d2.height + SMALL,d3.width - (d1.width + SMALL),d2.height);
-  ignoreCaseBox.setBounds(BIG + d1.width + SMALL,BIG + d2.height * 2 + SMALL * 2,d3.width,d2.height);
+  Dimension buttonsDimension=buttons.getPreferredSize();
+  int visibleButtonWidth=buttonsDimension.width - 2 * BUTTON_GAP;
+  int fieldWidth=visibleButtonWidth - (labelDimension.width + SMALL);
+  int yoff=(1 + fieldHeight - labelDimension.height) / 2;
+  int ypos=EDGE;
+  int labelWidth=findLabel.getPreferredSize().width;
+  findLabel.setBounds(EDGE + (labelDimension.width - labelWidth),ypos + yoff,labelWidth,labelDimension.height);
+  findField.setBounds(EDGE + labelDimension.width + SMALL,ypos,fieldWidth,fieldHeight);
+  ypos+=fieldHeight + SMALL;
+  labelWidth=replaceLabel.getPreferredSize().width;
+  replaceLabel.setBounds(EDGE + (labelDimension.width - labelWidth),ypos + yoff,labelWidth,labelDimension.height);
+  replaceField.setBounds(EDGE + labelDimension.width + SMALL,ypos,fieldWidth,fieldHeight);
+  ypos+=fieldHeight + SMALL;
+  ignoreCaseBox.setBounds(EDGE + labelDimension.width + SMALL,ypos,(fieldWidth - SMALL) / 2,fieldHeight);
+  wrapAroundBox.setBounds(EDGE + labelDimension.width + SMALL+ (fieldWidth - SMALL) / 2 + SMALL,ypos,(fieldWidth - SMALL) / 2,fieldHeight);
+  ypos+=fieldHeight + SMALL;
+  buttons.setBounds(EDGE - BUTTON_GAP,ypos,buttonsDimension.width,buttonsDimension.height);
+  ypos+=buttonsDimension.height + EDGE;
+  int wide=visibleButtonWidth + EDGE * 2;
+  int high=ypos;
+  pack();
+  Insets insets=getInsets();
+  setSize(wide + insets.left + insets.right,high + insets.top + insets.bottom);
+  setLocationRelativeTo(null);
   replaceButton.addActionListener(this);
   replaceAllButton.addActionListener(this);
   replaceFindButton.addActionListener(this);
   findButton.addActionListener(this);
-  replaceButton.setEnabled(false);
-  replaceFindButton.setEnabled(false);
+  previousButton.addActionListener(this);
   getRootPane().setDefaultButton(findButton);
-  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
-  int wide=d3.width + BIG * 2;
-  Rectangle butt=buttons.getBounds();
-  int high=butt.y + butt.height + BIG * 2 + SMALL;
-  setBounds((screen.width - wide) / 2,(screen.height - high) / 2,wide,high);
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
   addWindowListener(new WindowAdapter(){
     public void windowClosing(    WindowEvent e){

@@ -103,8 +103,29 @@
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       if (find != null) {
-        find.find(true);
+        find.findNext();
       }
+    }
+  }
+);
+  menu.add(item);
+  item=Base.newJMenuItemShift("Find Previous",'G');
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (find != null) {
+        find.findPrevious();
+      }
+    }
+  }
+);
+  menu.add(item);
+  item=new JMenuItem("Use Selection for Find");
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (find == null) {
+        find=new FindReplace(Editor.this);
+      }
+      find.setFindText(getSelectedText());
     }
   }
 );

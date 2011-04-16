@@ -1,8 +1,16 @@
 {
   editor.setSelection(0,0);
-  do {
-    find(false);
-    replace();
+  boolean foundAtLeastOne=false;
+  while (true) {
+    if (find(false,false)) {
+      foundAtLeastOne=true;
+      replace();
+    }
+ else {
+      break;
+    }
   }
- while (found);
+  if (!foundAtLeastOne) {
+    Toolkit.getDefaultToolkit().beep();
+  }
 }

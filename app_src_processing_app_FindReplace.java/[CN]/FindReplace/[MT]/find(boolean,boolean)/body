@@ -1,0 +1,35 @@
+{
+  String search=findField.getText();
+  if (search.length() == 0)   return false;
+  String text=editor.getText();
+  if (ignoreCase) {
+    search=search.toLowerCase();
+    text=text.toLowerCase();
+  }
+  int nextIndex;
+  if (!backwards) {
+    int selectionEnd=editor.getSelectionStop();
+    nextIndex=text.indexOf(search,selectionEnd);
+    if (wrap && nextIndex == -1) {
+      nextIndex=text.indexOf(search,0);
+    }
+  }
+ else {
+    int selectionStart=editor.getSelectionStart() - 1;
+    if (selectionStart >= 0) {
+      nextIndex=text.lastIndexOf(search,selectionStart);
+    }
+ else {
+      nextIndex=-1;
+    }
+    if (wrap && nextIndex == -1) {
+      nextIndex=text.lastIndexOf(search);
+    }
+  }
+  if (nextIndex != -1) {
+    editor.setSelection(nextIndex,nextIndex + search.length());
+  }
+ else {
+  }
+  return nextIndex != -1;
+}
