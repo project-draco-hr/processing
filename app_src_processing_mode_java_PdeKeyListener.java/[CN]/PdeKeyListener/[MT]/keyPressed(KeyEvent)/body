@@ -85,13 +85,11 @@
   }
 switch ((int)c) {
 case 9:
-    if (textarea.isSelectionActive()) {
-      if ((event.getModifiers() & KeyEvent.SHIFT_MASK) == 0) {
-        editor.handleIndent();
-      }
- else {
-        editor.handleOutdent();
-      }
+    if ((event.getModifiers() & KeyEvent.SHIFT_MASK) != 0) {
+      editor.handleOutdent();
+    }
+ else     if (textarea.isSelectionActive()) {
+      editor.handleIndent();
     }
  else     if (Preferences.getBoolean("editor.tabs.expand")) {
       int tabSize=Preferences.getInteger("editor.tabs.size");
