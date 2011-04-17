@@ -6,9 +6,13 @@
   }
   if (filename.indexOf(":") != -1) {
     try {
-      URL url=new URL(filename);
-      stream=url.openStream();
-      return stream;
+      HttpGet httpRequest=null;
+      httpRequest=new HttpGet(URI.create(filename));
+      HttpClient httpclient=new DefaultHttpClient();
+      HttpResponse response=(HttpResponse)httpclient.execute(httpRequest);
+      HttpEntity entity=response.getEntity();
+      BufferedHttpEntity bufHttpEntity=new BufferedHttpEntity(entity);
+      return bufHttpEntity.getContent();
     }
  catch (    MalformedURLException mfue) {
     }
