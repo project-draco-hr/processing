@@ -1,6 +1,10 @@
 {
   new Thread(new Runnable(){
     public void run(){
+      if (outputFolder.exists()) {
+        Base.showWarning("Try Again","Please remove the examples folder from the desktop,\n" + "because that's where I wanna put things.",null);
+        return;
+      }
       boolean delete=Preferences.getBoolean(DELETE_TARGET);
       Preferences.setBoolean(DELETE_TARGET,false);
       boolean separate=Preferences.getBoolean(SEPARATE_JAR);
@@ -12,6 +16,7 @@
       }
       Preferences.setBoolean(DELETE_TARGET,delete);
       Preferences.setBoolean(SEPARATE_JAR,separate);
+      orig.statusNotice("Finished exporting examples.");
     }
   }
 ).start();
