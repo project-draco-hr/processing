@@ -16,7 +16,9 @@
     if (saveImageFormats != null) {
       for (int i=0; i < saveImageFormats.length; i++) {
         if (filename.endsWith("." + saveImageFormats[i])) {
-          saveImageIO(filename);
+          if (!saveImageIO(filename)) {
+            throw new RuntimeException("Error while saving image.");
+          }
           return;
         }
       }
