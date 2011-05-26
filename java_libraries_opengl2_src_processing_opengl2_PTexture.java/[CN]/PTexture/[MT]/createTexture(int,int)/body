@@ -13,18 +13,18 @@
     throw new RuntimeException("Image width and height cannot be" + " larger than " + PGraphicsOpenGL2.maxTextureSize + " with this graphics card.");
   }
   usingMipmaps=glMinFilter == GL.GL_LINEAR_MIPMAP_LINEAR;
-  gl.glEnable(glTarget);
+  getGl().glEnable(glTarget);
   glID=ogl.createGLResource(PGraphicsOpenGL2.GL_TEXTURE_OBJECT);
-  gl.glBindTexture(glTarget,glID);
-  gl.glTexParameteri(glTarget,GL.GL_TEXTURE_MIN_FILTER,glMinFilter);
-  gl.glTexParameteri(glTarget,GL.GL_TEXTURE_MAG_FILTER,glMagFilter);
-  gl.glTexParameteri(glTarget,GL.GL_TEXTURE_WRAP_S,glWrapS);
-  gl.glTexParameteri(glTarget,GL.GL_TEXTURE_WRAP_T,glWrapT);
+  getGl().glBindTexture(glTarget,glID);
+  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_MIN_FILTER,glMinFilter);
+  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_MAG_FILTER,glMagFilter);
+  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_WRAP_S,glWrapS);
+  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_WRAP_T,glWrapT);
   int[] initArray=new int[glWidth * glHeight];
   java.util.Arrays.fill(initArray,0,glWidth * glHeight,0x00000000);
-  gl.glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,IntBuffer.wrap(initArray));
-  gl.glBindTexture(glTarget,0);
-  gl.glDisable(glTarget);
+  getGl().glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,IntBuffer.wrap(initArray));
+  getGl().glBindTexture(glTarget,0);
+  getGl().glDisable(glTarget);
   flippedX=false;
   flippedY=false;
   maxTexCoordU=(float)w / glWidth;
