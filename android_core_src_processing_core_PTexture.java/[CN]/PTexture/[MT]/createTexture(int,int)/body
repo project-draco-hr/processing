@@ -13,18 +13,18 @@
     throw new RuntimeException("Image width and height cannot be" + " larger than " + PGraphicsAndroid3D.maxTextureSize + " with this graphics card.");
   }
   usingMipmaps=glMinFilter == GL10.GL_LINEAR_MIPMAP_LINEAR;
-  gl.glEnable(glTarget);
+  getGl().glEnable(glTarget);
   glID=a3d.createGLResource(PGraphicsAndroid3D.GL_TEXTURE_OBJECT);
-  gl.glBindTexture(glTarget,glID);
-  gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_MIN_FILTER,glMinFilter);
-  gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_MAG_FILTER,glMagFilter);
-  gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_S,glWrapS);
-  gl.glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_T,glWrapT);
+  getGl().glBindTexture(glTarget,glID);
+  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_MIN_FILTER,glMinFilter);
+  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_MAG_FILTER,glMagFilter);
+  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_S,glWrapS);
+  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_T,glWrapT);
   int[] initArray=new int[glWidth * glHeight];
   java.util.Arrays.fill(initArray,0,glWidth * glHeight,0x00000000);
-  gl.glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(initArray));
-  gl.glBindTexture(glTarget,0);
-  gl.glDisable(glTarget);
+  getGl().glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,IntBuffer.wrap(initArray));
+  getGl().glBindTexture(glTarget,0);
+  getGl().glDisable(glTarget);
   flippedX=false;
   flippedY=false;
   maxTexCoordU=(float)w / glWidth;

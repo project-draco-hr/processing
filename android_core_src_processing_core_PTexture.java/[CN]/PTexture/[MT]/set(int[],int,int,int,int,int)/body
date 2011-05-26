@@ -8,13 +8,13 @@
   if (glID == 0) {
     createTexture(width,height);
   }
-  gl.glEnable(glTarget);
-  gl.glBindTexture(glTarget,glID);
+  getGl().glEnable(glTarget);
+  getGl().glBindTexture(glTarget,glID);
   if (usingMipmaps) {
     if (a3d.gl11 != null && PGraphicsAndroid3D.mipmapGeneration) {
       int[] rgbaPixels=new int[w * h];
       convertToRGBA(pixels,rgbaPixels,format,w,h);
-      gl.glTexParameterf(GL11.GL_TEXTURE_2D,GL11.GL_GENERATE_MIPMAP,GL11.GL_TRUE);
+      getGl().glTexParameterf(GL11.GL_TEXTURE_2D,GL11.GL_GENERATE_MIPMAP,GL11.GL_TRUE);
       setTexels(x,y,w,h,rgbaPixels);
     }
  else {
@@ -50,6 +50,6 @@
     convertToRGBA(pixels,rgbaPixels,format,w,h);
     setTexels(x,y,w,h,rgbaPixels);
   }
-  gl.glBindTexture(glTarget,0);
-  gl.glDisable(glTarget);
+  getGl().glBindTexture(glTarget,0);
+  getGl().glDisable(glTarget);
 }
