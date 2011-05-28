@@ -4,10 +4,10 @@
     throw new RuntimeException("PFramebuffer: size undefined.");
   }
   if (fboMode) {
-    pgl.pushFramebuffer();
-    pgl.setFramebuffer(this);
-    glDepthBufferID=pgl.createGLResource(PGraphicsOpenGL2.GL_RENDER_BUFFER);
-    gl.glBindRenderbuffer(GL.GL_RENDERBUFFER,glDepthBufferID);
+    ogl.pushFramebuffer();
+    ogl.setFramebuffer(this);
+    glDepthBufferID=ogl.createGLResource(PGraphicsOpenGL2.GL_RENDER_BUFFER);
+    getGl().glBindRenderbuffer(GL.GL_RENDERBUFFER,glDepthBufferID);
     int glConst=GL.GL_DEPTH_COMPONENT16;
     if (bits == 16) {
       glConst=GL.GL_DEPTH_COMPONENT16;
@@ -19,12 +19,12 @@
       glConst=GL.GL_DEPTH_COMPONENT32;
     }
     if (multisample) {
-      gl2.glRenderbufferStorageMultisample(GL.GL_RENDERBUFFER,nsamples,glConst,width,height);
+      getGl2().glRenderbufferStorageMultisample(GL.GL_RENDERBUFFER,nsamples,glConst,width,height);
     }
  else {
-      gl.glRenderbufferStorage(GL.GL_RENDERBUFFER,glConst,width,height);
+      getGl().glRenderbufferStorage(GL.GL_RENDERBUFFER,glConst,width,height);
     }
-    gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,GL.GL_DEPTH_ATTACHMENT,GL.GL_RENDERBUFFER,glDepthBufferID);
-    pgl.popFramebuffer();
+    getGl().glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,GL.GL_DEPTH_ATTACHMENT,GL.GL_RENDERBUFFER,glDepthBufferID);
+    ogl.popFramebuffer();
   }
 }

@@ -1,38 +1,38 @@
 {
   int mtlIdxCur=-1;
   OBJMaterial mtl=null;
-  pgl.saveDrawingState();
-  pgl.mergeRecShapes=false;
-  pgl.colorMode=RGB;
-  pgl.stroke=false;
-  pgl.autoNormal(true);
-  pgl.textureMode=NORMAL;
-  pgl.beginShapeRecorderImpl();
+  ogl.saveDrawingState();
+  ogl.mergeRecShapes=false;
+  ogl.colorMode=RGB;
+  ogl.stroke=false;
+  ogl.autoNormal(true);
+  ogl.textureMode=NORMAL;
+  ogl.beginShapeRecorderImpl();
   for (int i=0; i < faces.size(); i++) {
     OBJFace face=(OBJFace)faces.get(i);
     if (mtlIdxCur != face.matIdx) {
       mtlIdxCur=PApplet.max(0,face.matIdx);
       mtl=(OBJMaterial)materials.get(mtlIdxCur);
-      pgl.specular(mtl.ks.x * 255.0f,mtl.ks.y * 255.0f,mtl.ks.z * 255.0f);
-      pgl.ambient(mtl.ka.x * 255.0f,mtl.ka.y * 255.0f,mtl.ka.z * 255.0f);
-      if (pgl.fill) {
-        pgl.fill(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
+      ogl.specular(mtl.ks.x * 255.0f,mtl.ks.y * 255.0f,mtl.ks.z * 255.0f);
+      ogl.ambient(mtl.ka.x * 255.0f,mtl.ka.y * 255.0f,mtl.ka.z * 255.0f);
+      if (ogl.fill) {
+        ogl.fill(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
       }
-      pgl.shininess(mtl.ns);
-      if (pgl.tint && mtl.kdMap != null) {
-        pgl.tint(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
+      ogl.shininess(mtl.ns);
+      if (ogl.tint && mtl.kdMap != null) {
+        ogl.tint(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
       }
     }
     if (face.vertIdx.size() == 3) {
-      pgl.beginShape(TRIANGLES);
+      ogl.beginShape(TRIANGLES);
     }
  else     if (face.vertIdx.size() == 4) {
-      pgl.beginShape(QUADS);
+      ogl.beginShape(QUADS);
     }
  else {
-      pgl.beginShape();
+      ogl.beginShape();
     }
-    pgl.shapeName(face.name);
+    ogl.shapeName(face.name);
     for (int j=0; j < face.vertIdx.size(); j++) {
       int vertIdx, normIdx;
       PVector vert, norms;
@@ -54,35 +54,35 @@
             tex=(PVector)textures.get(texIdx);
           }
         }
-        PTexture texMtl=(PTexture)mtl.kdMap.getCache(pgl);
+        PTexture texMtl=(PTexture)mtl.kdMap.getCache(ogl);
         if (texMtl != null) {
           texMtl.setFlippedY(true);
         }
-        pgl.texture(mtl.kdMap);
+        ogl.texture(mtl.kdMap);
         if (norms != null) {
-          pgl.normal(norms.x,norms.y,norms.z);
+          ogl.normal(norms.x,norms.y,norms.z);
         }
         if (tex != null) {
-          pgl.vertex(vert.x,vert.y,vert.z,tex.x,tex.y);
+          ogl.vertex(vert.x,vert.y,vert.z,tex.x,tex.y);
         }
  else {
-          pgl.vertex(vert.x,vert.y,vert.z);
+          ogl.vertex(vert.x,vert.y,vert.z);
         }
       }
  else {
         if (norms != null) {
-          pgl.normal(norms.x,norms.y,norms.z);
+          ogl.normal(norms.x,norms.y,norms.z);
         }
-        pgl.vertex(vert.x,vert.y,vert.z);
+        ogl.vertex(vert.x,vert.y,vert.z);
       }
     }
-    pgl.endShape(CLOSE);
+    ogl.endShape(CLOSE);
   }
-  allocateShape(pgl.recordedVertices.size());
+  allocateShape(ogl.recordedVertices.size());
   updateElement=-1;
   width=height=depth=0;
   xmin=ymin=zmin=10000;
   xmax=ymax=zmax=-10000;
-  pgl.endShapeRecorderImpl(this);
-  pgl.restoreDrawingState();
+  ogl.endShapeRecorderImpl(this);
+  ogl.restoreDrawingState();
 }

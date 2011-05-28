@@ -1,16 +1,19 @@
 {
   if (screenFb) {
     if (PGraphicsOpenGL2.fboSupported) {
-      gl.glBindFramebuffer(GL.GL_FRAMEBUFFER,0);
+      getGl().glBindFramebuffer(GL.GL_FRAMEBUFFER,0);
     }
   }
  else   if (fboMode) {
-    gl.glBindFramebuffer(GL.GL_FRAMEBUFFER,glFboID);
+    getGl().glBindFramebuffer(GL.GL_FRAMEBUFFER,glFboID);
   }
  else {
     backupScreen();
+    if (0 < numColorBuffers) {
+      ogl.drawTexture(glColorBufferTargets[0],glColorBufferIDs[0],0,0,width,height,0,0,width,height);
+    }
     if (noDepth) {
-      gl.glDisable(GL.GL_DEPTH_TEST);
+      getGl().glDisable(GL.GL_DEPTH_TEST);
     }
   }
 }
