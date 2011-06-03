@@ -1,0 +1,33 @@
+{
+  handleExport(false);
+  File serverRoot=new File(sketch.getFolder(),JavaScriptBuild.EXPORTED_FOLDER_NAME);
+  if (jsServer != null && (!jsServer.isRunning() || !jsServer.getRoot().equals(serverRoot))) {
+    jsServer.shutDown();
+    jsServer=null;
+  }
+  if (jsServer == null) {
+    jsServer=new JavaScriptServer(serverRoot);
+    jsServer.start();
+    System.out.println("Server started.");
+    while (!jsServer.isRunning()) {
+    }
+    String location=localDomain + ":" + jsServer.getPort()+ "/";
+    System.out.println(location);
+    if (!System.getProperty("os.name").startsWith("Mac OS"))     Base.openURL(location);
+ else {
+      try {
+        String scpt="osascript -e " + "\"tell application \\\"Finder\\\" to open location \\\"" + location + "\\\"\"";
+        String[] cmd={"/bin/bash","-c",scpt};
+        Process process=new ProcessBuilder(cmd).start();
+      }
+ catch (      Exception e) {
+        Base.openURL(location);
+      }
+    }
+  }
+ else   if (jsServer.isRunning()) {
+    System.out.println("Server running, reload your browser window.");
+    System.out.println(localDomain + ":" + jsServer.getPort()+ "/");
+  }
+  toolbar.activate(JavaScriptToolbar.RUN);
+}

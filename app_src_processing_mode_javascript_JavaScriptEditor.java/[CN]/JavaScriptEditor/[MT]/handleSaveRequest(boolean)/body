@@ -1,0 +1,19 @@
+{
+  if (untitled) {
+    return handleSaveAs();
+  }
+ else   if (immediately) {
+    handleSave();
+    if (jsServer != null && jsServer.isRunning())     handleStartServer();
+  }
+ else {
+    SwingUtilities.invokeLater(new Runnable(){
+      public void run(){
+        handleSave();
+        if (jsServer != null && jsServer.isRunning())         handleStartServer();
+      }
+    }
+);
+  }
+  return true;
+}

@@ -2,9 +2,15 @@
   boolean shift=e.isShiftDown();
   JavaScriptEditor jsEditor=(JavaScriptEditor)editor;
 switch (index) {
+case RUN:
+    jsEditor.handleStartServer();
+  break;
+case STOP:
+jsEditor.handleStopServer();
+break;
 case OPEN:
-    JPopupMenu popup=editor.getMode().getToolbarMenu().getPopupMenu();
-  popup.show(this,e.getX(),e.getY());
+JPopupMenu popup=editor.getMode().getToolbarMenu().getPopupMenu();
+popup.show(this,e.getX(),e.getY());
 break;
 case NEW:
 if (shift) {
@@ -18,7 +24,7 @@ case SAVE:
 jsEditor.handleSaveRequest(false);
 break;
 case EXPORT:
-jsEditor.handleExport();
+jsEditor.handleExport(true);
 break;
 }
 }

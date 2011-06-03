@@ -1,0 +1,21 @@
+{
+  if (virtualRoot == null) {
+    System.err.println("ProcessingJSServer: virtual root is null.");
+    return;
+  }
+  try {
+    running=true;
+    server=new ServerSocket(0);
+    port=server.getLocalPort();
+    inited=true;
+    while (thread != null) {
+      Socket s=server.accept();
+      Worker ws=new Worker(virtualRoot);
+      ws.setSocket(s);
+      (new Thread(ws,"ProcessingJSServer Worker")).start();
+    }
+  }
+ catch (  IOException ioe) {
+  }
+  running=false;
+}

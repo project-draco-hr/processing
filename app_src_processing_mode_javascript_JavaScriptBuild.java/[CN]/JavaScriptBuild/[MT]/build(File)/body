@@ -7,9 +7,14 @@
   try {
     preprocess(bin);
   }
- catch (  IOException e) {
+ catch (  IOException ioe) {
     final String msg="A problem occured while writing to the output folder.";
-    Base.showWarning("Could not build the sketch",msg,e);
+    Base.showWarning("Could not build the sketch",msg,ioe);
+    return false;
+  }
+catch (  SketchException se) {
+    final String msg="The preprocessor found a problem in your code.";
+    Base.showWarning("Could not build the sketch",msg,se);
     return false;
   }
   if (sketch.hasDataFolder()) {
@@ -19,6 +24,27 @@
  catch (    IOException e) {
       final String msg="An exception occured while trying to copy the data folder. " + "You may have to manually move the contents of sketch/data to " + "the applet_js/ folder. Processing.js doesn't look for a data "+ "folder, so lump them together.";
       Base.showWarning("Problem building the sketch",msg,e);
+    }
+  }
+  String[] sketchFolderFilesRaw=sketch.getFolder().list();
+  String[] sketchFolderFiles=new String[0];
+  ArrayList sffList=new ArrayList();
+  if (sketchFolderFilesRaw != null) {
+    for (    String s : sketchFolderFilesRaw) {
+      if (s.toLowerCase().startsWith("."))       continue;
+      if (!s.toLowerCase().endsWith(".js"))       continue;
+      sffList.add(s);
+    }
+    if (sffList.size() > 0)     sketchFolderFiles=(String[])sffList.toArray(new String[0]);
+  }
+  for (  String s : sketchFolderFiles) {
+    try {
+      Base.copyFile(new File(sketch.getFolder(),s),new File(bin,s));
+    }
+ catch (    IOException ioe) {
+      String msg="Unable to copy file: " + s;
+      Base.showWarning("Problem building the sketch",msg,ioe);
+      return false;
     }
   }
   int wide=PApplet.DEFAULT_WIDTH;
@@ -35,14 +61,25 @@
       Base.showWarning("Could not find applet size",message,null);
     }
   }
-  File templateFile=sketch.getMode().getContentFile("applet_js/template.html");
+  File templateFile=getTemplateFile();
   File htmlOutputFile=new File(bin,"index.html");
   Map<String,String> templateFields=new HashMap<String,String>();
   templateFields.put("width",String.valueOf(wide));
   templateFields.put("height",String.valueOf(high));
   templateFields.put("sketch",sketch.getName());
   templateFields.put("description",getSketchDescription());
-  templateFields.put("source","<a href=\"" + sketch.getName() + ".pde\">"+ sketch.getName()+ "</a>");
+  String sketchID=sketch.getName().replaceAll("[^a-zA-Z0-9]+","").replaceAll("^[^a-zA-Z]+","");
+  String scriptFiles="<script type=\"text/javascript\">" + "function getProcessingSketchID () { return '" + sketchID + "'; }"+ "</script>\n";
+  String sourceFiles="<a href=\"" + sketch.getName() + ".pde\">"+ sketch.getName()+ "</a> ";
+  if (sketchFolderFiles != null) {
+    for (    String s : sketchFolderFiles) {
+      sourceFiles+="<a href=\"" + s + "\">"+ s+ "</a> ";
+      scriptFiles+="<script src=\"" + s + "\" type=\"text/javascript\"></script>\n";
+    }
+  }
+  templateFields.put("source",sourceFiles);
+  templateFields.put("scripts",scriptFiles);
+  templateFields.put("id",sketchID);
   try {
     writeTemplate(templateFile,htmlOutputFile,templateFields);
   }
@@ -52,7 +89,7 @@
     return false;
   }
   try {
-    Base.copyFile(sketch.getMode().getContentFile("applet_js/processing.js"),new File(bin,"processing.js"));
+    Base.copyFile(sketch.getMode().getContentFile(EXPORTED_FOLDER_NAME + "/processing.js"),new File(bin,"processing.js"));
   }
  catch (  IOException ioe) {
     final String msg="There was a problem copying processing.js to the " + "build folder. You will have to manually add " + "processing.js to the build folder before the sketch "+ "will run.";
