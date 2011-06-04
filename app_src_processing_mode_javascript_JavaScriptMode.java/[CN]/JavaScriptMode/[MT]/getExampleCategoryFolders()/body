@@ -1,3 +1,12 @@
 {
-  return new File[]{};
+  JavaMode jMode=null;
+  for (  Mode m : base.getModeList()) {
+    if (m.getClass() == JavaMode.class) {
+      jMode=(JavaMode)m;
+      break;
+    }
+  }
+  if (jMode == null)   return new File[0];
+  File jExamples=jMode.getContentFile("examples");
+  return new File[]{new File(jExamples,"Basics"),new File(jExamples,"Topics"),new File(jExamples,"3D"),new File(jExamples,"Books")};
 }
