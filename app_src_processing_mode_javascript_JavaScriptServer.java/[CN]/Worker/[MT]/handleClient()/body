@@ -50,20 +50,25 @@
       fname=fname.substring(1);
     }
     fname=java.net.URLDecoder.decode(fname);
-    File targ=new File(getRoot(),fname);
-    if (targ.isDirectory()) {
-      File ind=new File(targ,"index.html");
-      if (ind.exists()) {
-        targ=ind;
-      }
+    if (fname.startsWith("logger?")) {
+      System.out.println(fname.substring(7));
     }
-    boolean OK=printHeaders(targ,ps);
-    if (doingGet) {
-      if (OK) {
-        sendFile(targ,ps);
-      }
  else {
-        send404(targ,ps);
+      File targ=new File(getRoot(),fname);
+      if (targ.isDirectory()) {
+        File ind=new File(targ,"index.html");
+        if (ind.exists()) {
+          targ=ind;
+        }
+      }
+      boolean OK=printHeaders(targ,ps);
+      if (doingGet) {
+        if (OK) {
+          sendFile(targ,ps);
+        }
+ else {
+          send404(targ,ps);
+        }
       }
     }
   }
