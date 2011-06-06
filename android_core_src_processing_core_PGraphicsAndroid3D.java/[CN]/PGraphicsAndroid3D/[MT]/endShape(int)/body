@@ -7,16 +7,17 @@
   if (stroke) {
     endShapeStroke(mode);
   }
-  if (fill) {
+  if (fill || 0 < shapeTextures) {
     endShapeFill();
   }
   if (!hints[ENABLE_DEPTH_SORT]) {
-    if (fill) {
+    if (fill || 0 < shapeTextures) {
       renderTriangles(0,faceCount);
       if (raw != null) {
       }
       vertexCount=0;
       triangleCount=0;
+      shapeTextures=0;
     }
     if (stroke) {
       if (pointCount > 0) {
