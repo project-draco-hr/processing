@@ -4,19 +4,7 @@
   if (bin.exists()) {
     Base.removeDescendants(bin);
   }
-  try {
-    preprocess(bin);
-  }
- catch (  IOException ioe) {
-    final String msg="A problem occured while writing to the output folder.";
-    Base.showWarning("Could not build the sketch",msg,ioe);
-    return false;
-  }
-catch (  SketchException se) {
-    final String msg="The preprocessor found a problem in your code.";
-    Base.showWarning("Could not build the sketch",msg,se);
-    return false;
-  }
+  preprocess(bin);
   if (sketch.hasDataFolder()) {
     try {
       Base.copyDir(sketch.getDataFolder(),bin);
