@@ -5,17 +5,28 @@
   }
   try {
     running=true;
-    server=new ServerSocket(0);
-    port=server.getLocalPort();
-    inited=true;
-    while (thread != null) {
-      Socket s=server.accept();
-      Worker ws=new Worker(virtualRoot);
-      ws.setSocket(s);
-      (new Thread(ws,"ProcessingJSServer Worker")).start();
+    if (port < 0) {
+      server=new ServerSocket(0);
+      port=server.getLocalPort();
+    }
+ else {
+      server=new ServerSocket(port);
+    }
+    if (server != null) {
+      inited=true;
+      while (thread != null) {
+        Socket s=server.accept();
+        Worker ws=new Worker(virtualRoot);
+        ws.setSocket(s);
+        (new Thread(ws,"ProcessingJSServer Worker")).start();
+      }
     }
   }
  catch (  IOException ioe) {
+    System.err.println(ioe);
+  }
+catch (  SecurityException se) {
+    System.err.println(se);
   }
   running=false;
 }

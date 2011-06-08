@@ -8,6 +8,18 @@
   }
   if (jsServer == null) {
     jsServer=new JavaScriptServer(serverRoot);
+    File sketchFolder=getSketch().getFolder();
+    File sketchProps=new File(sketchFolder,"sketch.properties");
+    if (sketchProps.exists()) {
+      try {
+        Settings props=new Settings(sketchProps);
+        int port=Integer.parseInt(props.get("server.port"));
+        jsServer.setPort(port);
+      }
+ catch (      IOException ioe) {
+        statusError(ioe);
+      }
+    }
     jsServer.start();
     while (!jsServer.isRunning()) {
     }
