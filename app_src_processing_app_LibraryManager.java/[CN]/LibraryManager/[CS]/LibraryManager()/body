@@ -1,0 +1,37 @@
+{
+  dialog=new JFrame("Library Manager");
+  dialog.setResizable(true);
+  Base.setIcon(dialog);
+  uriLabel=new JLabel("Library URI:");
+  libraryUri=new JTextField(40);
+  installButton=new JButton("Install");
+  ActionListener installLibAction=new ActionListener(){
+    public void actionPerformed(    ActionEvent arg){
+      try {
+        URI uri=new URI(libraryUri.getText());
+        System.out.println("Installing library: " + uri);
+      }
+ catch (      URISyntaxException e) {
+        System.err.println("Malformed URI");
+      }
+      libraryUri.setText("");
+    }
+  }
+;
+  libraryUri.addActionListener(installLibAction);
+  installButton.addActionListener(installLibAction);
+  Container pane=dialog.getContentPane();
+  BoxLayout boxLayout=new BoxLayout(pane,BoxLayout.Y_AXIS);
+  pane.setLayout(boxLayout);
+  Box horizontal=Box.createHorizontalBox();
+  horizontal.add(Box.createVerticalStrut(2));
+  horizontal.add(uriLabel);
+  uriLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+  horizontal.add(Box.createVerticalStrut(5));
+  horizontal.add(libraryUri);
+  horizontal.add(installButton);
+  pane.add(horizontal);
+  dialog.pack();
+  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  dialog.setLocation((screen.width - dialog.getWidth()) / 2,(screen.height - dialog.getHeight()) / 2);
+}
