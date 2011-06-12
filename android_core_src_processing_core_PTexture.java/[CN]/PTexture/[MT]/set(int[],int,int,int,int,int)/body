@@ -16,6 +16,7 @@
       convertToRGBA(pixels,rgbaPixels,format,w,h);
       getGl().glTexParameterf(GL11.GL_TEXTURE_2D,GL11.GL_GENERATE_MIPMAP,GL11.GL_TRUE);
       setTexels(x,y,w,h,rgbaPixels);
+      rgbaPixels=null;
     }
  else {
       if (w != width || h != height) {
@@ -42,13 +43,17 @@
         Bitmap bitmap2=Bitmap.createScaledBitmap(bitmap,w0,h0,true);
         bitmap.recycle();
         bitmap=bitmap2;
+        bitmap2=null;
       }
+      argbPixels=null;
+      bitmap=null;
     }
   }
  else {
     int[] rgbaPixels=new int[w * h];
     convertToRGBA(pixels,rgbaPixels,format,w,h);
     setTexels(x,y,w,h,rgbaPixels);
+    rgbaPixels=null;
   }
   getGl().glBindTexture(glTarget,0);
   getGl().glDisable(glTarget);
