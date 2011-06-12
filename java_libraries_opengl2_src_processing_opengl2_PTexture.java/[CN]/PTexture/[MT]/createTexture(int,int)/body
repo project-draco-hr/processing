@@ -20,9 +20,11 @@
   getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_MAG_FILTER,glMagFilter);
   getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_WRAP_S,glWrapS);
   getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_WRAP_T,glWrapT);
-  int[] initArray=new int[glWidth * glHeight];
-  java.util.Arrays.fill(initArray,0,glWidth * glHeight,0x00000000);
-  getGl().glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,IntBuffer.wrap(initArray));
+  getGl().glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,null);
+  int[] texels=new int[w * h];
+  java.util.Arrays.fill(texels,0,w * h,0x00000000);
+  setTexels(0,0,w,h,texels);
+  texels=null;
   getGl().glBindTexture(glTarget,0);
   getGl().glDisable(glTarget);
   flippedX=false;
