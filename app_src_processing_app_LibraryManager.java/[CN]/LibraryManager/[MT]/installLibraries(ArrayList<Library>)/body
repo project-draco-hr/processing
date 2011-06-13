@@ -1,0 +1,18 @@
+{
+  ArrayList<Library> oldLibs=editor.getMode().contribLibraries;
+  Iterator<Library> it=newLibs.iterator();
+  while (it.hasNext()) {
+    Library lib=it.next();
+    for (    Library oldLib : oldLibs) {
+      if (oldLib.getName().equals(lib.getName())) {
+        System.err.println("A library by the name " + oldLib.getName() + " is already installed.");
+        it.remove();
+        break;
+      }
+    }
+  }
+  for (  Library newLib : newLibs) {
+    String libFolderName=newLib.folder.getName();
+    newLib.folder.renameTo(new File(editor.getBase().getSketchbookLibrariesFolder(),libFolderName));
+  }
+}
