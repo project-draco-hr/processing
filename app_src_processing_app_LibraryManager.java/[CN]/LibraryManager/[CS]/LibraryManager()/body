@@ -10,7 +10,10 @@
       try {
         URL url=new URL(libraryUri.getText());
         System.out.println("Installing library: " + url);
-        installLibrary(url);
+        File libFile=downloadLibrary(url);
+        if (libFile != null) {
+          installLibrary(libFile);
+        }
       }
  catch (      MalformedURLException e) {
         System.err.println("Malformed URL");
