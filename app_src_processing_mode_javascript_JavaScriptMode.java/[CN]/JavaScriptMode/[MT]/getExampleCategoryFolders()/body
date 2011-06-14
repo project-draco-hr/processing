@@ -1,4 +1,11 @@
 {
+  File[] inclExamples=examplesFolder.listFiles(new java.io.FileFilter(){
+    public boolean accept(    File f){
+      return f.isDirectory();
+    }
+  }
+);
+  java.util.Arrays.sort(inclExamples);
   JavaMode jMode=null;
   for (  Mode m : base.getModeList()) {
     if (m.getClass() == JavaMode.class) {
@@ -8,5 +15,9 @@
   }
   if (jMode == null)   return new File[0];
   File jExamples=jMode.getContentFile("examples");
-  return new File[]{new File(examplesFolder,"Environment"),new File(examplesFolder,"HTML5"),new File(examplesFolder,"Libraries"),new File(examplesFolder,"Services"),new File(jExamples,"Basics"),new File(jExamples,"Topics"),new File(jExamples,"3D"),new File(jExamples,"Books")};
+  File[] jModeExamples=new File[]{new File(jExamples,"Basics"),new File(jExamples,"Topics"),new File(jExamples,"3D"),new File(jExamples,"Books")};
+  File[] finalExamples=new File[inclExamples.length + jModeExamples.length];
+  for (int i=0; i < inclExamples.length; i++)   finalExamples[i]=inclExamples[i];
+  for (int i=0; i < jModeExamples.length; i++)   finalExamples[inclExamples.length + i]=jModeExamples[i];
+  return finalExamples;
 }
