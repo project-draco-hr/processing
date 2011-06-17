@@ -1,0 +1,22 @@
+{
+  this.libInfo=libInfo;
+  setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+  setBorder(BorderFactory.createEmptyBorder(topAndBottomBorder,2,topAndBottomBorder,2));
+  configureHeaderPane();
+  configureInfoPane();
+  setShowInfo(false);
+  updateLibraryListSize();
+  addMouseListener(new MouseAdapter(){
+    public void mouseClicked(    MouseEvent e){
+      for (      Component c : LibraryListPanel.this.getComponents()) {
+        if (c != LibraryPanel.this && c instanceof LibraryPanel) {
+          LibraryPanel lp=(LibraryPanel)c;
+          lp.setShowInfo(false);
+        }
+      }
+      setShowInfo(true);
+      updateLibraryListSize();
+    }
+  }
+);
+}
