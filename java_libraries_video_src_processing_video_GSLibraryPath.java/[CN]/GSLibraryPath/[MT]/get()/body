@@ -1,0 +1,25 @@
+{
+  URL url=this.getClass().getResource("GSLibraryPath.class");
+  if (url != null) {
+    String path=url.toString().replace("%20"," ");
+    int n0=path.indexOf('/');
+    int n1=-1;
+    if (Platform.isWindows()) {
+      n1=path.indexOf("/lib/GSVideo.jar");
+      if (n1 == -1)       n1=path.indexOf("/GSVideo.jar");
+      n0++;
+    }
+ else     if (Platform.isMac()) {
+      n1=path.indexOf("GSVideo.jar");
+    }
+ else     if (Platform.isLinux()) {
+    }
+    if ((-1 < n0) && (-1 < n1)) {
+      return path.substring(n0,n1);
+    }
+ else {
+      return "";
+    }
+  }
+  return "";
+}

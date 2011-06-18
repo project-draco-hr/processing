@@ -1,0 +1,30 @@
+{
+  if (PApplet.platform == LINUX) {
+    globalGStreamer=true;
+    setLinuxPath();
+  }
+ else   if (PApplet.platform == WINDOWS) {
+    setWindowsPath();
+  }
+ else   if (PApplet.platform == MACOSX) {
+    setMacOSXPath();
+  }
+  if (!gstreamerBinPath.equals("")) {
+    System.setProperty("jna.library.path",gstreamerBinPath);
+  }
+  if ((PApplet.platform == LINUX) && !globalGStreamer) {
+    System.err.println("Loading local version of GStreamer not supported in Linux at this time.");
+  }
+  if ((PApplet.platform == WINDOWS) && !globalGStreamer) {
+    GSLibraryLoader loader=GSLibraryLoader.getInstance();
+    if (loader == null) {
+      System.err.println("Cannot load local version of GStreamer libraries.");
+    }
+  }
+  if ((PApplet.platform == MACOSX) && !globalGStreamer) {
+  }
+  String[] args={""};
+  Gst.setUseDefaultContext(defaultGLibContext);
+  Gst.init("GSVideo",args);
+  addPlugins();
+}

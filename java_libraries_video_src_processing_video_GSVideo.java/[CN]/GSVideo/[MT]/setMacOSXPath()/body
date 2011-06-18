@@ -1,0 +1,19 @@
+{
+  if (globalGStreamer && lookForGlobalGStreamer()) {
+    gstreamerBinPath=globalGStreamerPath;
+    gstreamerPluginsPath=globalGStreamerPath + "/" + globalPluginsFolder;
+  }
+ else {
+    globalGStreamer=false;
+    if (localGStreamerPath.equals("")) {
+      GSLibraryPath libPath=new GSLibraryPath();
+      String path=libPath.get();
+      gstreamerBinPath=path + "/gstreamer/macosx";
+      gstreamerPluginsPath=path + "/gstreamer/macosx/" + localPluginsFolder;
+    }
+ else {
+      gstreamerBinPath=localGStreamerPath;
+      gstreamerPluginsPath=localGStreamerPath + "/" + localPluginsFolder;
+    }
+  }
+}

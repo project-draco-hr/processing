@@ -1,0 +1,28 @@
+{
+  available=true;
+  bufWidth=w;
+  bufHeight=h;
+  bufSize=w * h;
+  if (copyPixels == null) {
+    copyPixels=new int[w * h];
+  }
+  buffer.rewind();
+  try {
+    buffer.get(copyPixels);
+  }
+ catch (  BufferUnderflowException e) {
+    e.printStackTrace();
+    copyPixels=null;
+    return;
+  }
+  if (pipelineEventMethod != null) {
+    try {
+      pipelineEventMethod.invoke(eventHandler,new Object[]{this});
+    }
+ catch (    Exception e) {
+      System.err.println("error, disabling pipelineEvent() for " + pipeline);
+      e.printStackTrace();
+      pipelineEventMethod=null;
+    }
+  }
+}

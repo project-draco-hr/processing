@@ -1,0 +1,19 @@
+{
+  String[] searchPaths=null;
+  if (!globalGStreamerPath.equals("")) {
+    searchPaths=new String[]{globalGStreamerPath};
+  }
+  if (searchPaths == null) {
+    String lpaths=System.getProperty("java.library.path");
+    String pathsep=System.getProperty("path.separator");
+    searchPaths=lpaths.split(pathsep);
+  }
+  for (int i=0; i < searchPaths.length; i++) {
+    String path=searchPaths[i];
+    if (libgstreamerPresent(path,"libgstreamer")) {
+      globalGStreamerPath=path;
+      return true;
+    }
+  }
+  return false;
+}

@@ -1,0 +1,15 @@
+{
+  if (playing) {
+    gplayer.pause();
+  }
+  boolean res;
+  long start=GSVideo.secToNanoLong(where);
+  long stop=-1;
+  res=gplayer.seek(1.0,Format.TIME,SeekFlags.FLUSH,SeekType.SET,start,SeekType.SET,stop);
+  if (!res) {
+    System.err.println("Seek operation failed.");
+  }
+  if (playing) {
+    gplayer.play();
+  }
+}

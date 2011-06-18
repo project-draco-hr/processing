@@ -1,0 +1,17 @@
+{
+  GSVideo.init();
+  String[] valuesListing=new String[0];
+  Element videoSource=ElementFactory.make(sourceName,"Source");
+  PropertyProbe probe=PropertyProbe.wrap(videoSource);
+  if (probe != null) {
+    Property property=probe.getProperty(propertyName);
+    if (property != null) {
+      Object[] values=probe.getValues(property);
+      if (values != null) {
+        valuesListing=new String[values.length];
+        for (int i=0; i < values.length; i++)         if (values[i] instanceof String)         valuesListing[i]=(String)values[i];
+      }
+    }
+  }
+  return valuesListing;
+}

@@ -1,0 +1,35 @@
+{
+  getSuppResAndFpsList();
+  boolean suppRes=!(0 < suppResList.size());
+  for (int i=0; i < suppResList.size(); i++) {
+    int[] wh=(int[])suppResList.get(i);
+    if (reqWidth == wh[0] && reqHeight == wh[1]) {
+      suppRes=true;
+      break;
+    }
+  }
+  if (!suppRes) {
+    System.err.println("The requested resolution of " + reqWidth + "x"+ reqHeight+ " is not supported by the capture device.");
+    System.err.println("Use one of the following resolutions instead:");
+    for (int i=0; i < suppResList.size(); i++) {
+      int[] wh=(int[])suppResList.get(i);
+      System.err.println(wh[0] + "x" + wh[1]);
+    }
+  }
+  boolean suppFps=!(0 < suppFpsList.size());
+  for (int i=0; i < suppFpsList.size(); i++) {
+    String str=(String)suppFpsList.get(i);
+    if (fps.equals("") || fps.equals(str)) {
+      suppFps=true;
+      break;
+    }
+  }
+  if (!suppFps) {
+    System.err.println("The requested framerate of " + fps + " is not supported by the capture device.");
+    System.err.println("Use one of the following framerates instead:");
+    for (int i=0; i < suppFpsList.size(); i++) {
+      String str=(String)suppFpsList.get(i);
+      System.err.println(str);
+    }
+  }
+}

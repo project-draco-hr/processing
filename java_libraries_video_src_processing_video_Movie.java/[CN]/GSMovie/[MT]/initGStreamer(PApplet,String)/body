@@ -1,0 +1,50 @@
+{
+  this.parent=parent;
+  gplayer=null;
+  File file;
+  GSVideo.init();
+  try {
+    try {
+      file=new File(parent.dataPath(filename));
+      if (file.exists()) {
+        gplayer=new PlayBin2("GSMovie Player");
+        gplayer.setInputFile(file);
+      }
+    }
+ catch (    Exception e) {
+    }
+    if (gplayer == null) {
+      try {
+        file=new File(filename);
+        if (file.exists()) {
+          gplayer=new PlayBin2("GSMovie Player");
+          gplayer.setInputFile(file);
+        }
+ else {
+          System.err.println("File " + filename + " does not exist. Please check location.");
+        }
+      }
+ catch (      Exception e) {
+        PApplet.println("Shit coming...");
+        e.printStackTrace();
+      }
+    }
+  }
+ catch (  SecurityException se) {
+  }
+  if (gplayer == null) {
+    parent.die("Could not load movie file " + filename,null);
+  }
+  try {
+    this.filename=filename;
+    parent.registerDispose(this);
+    setEventHandlerObject(parent);
+    rate=1.0f;
+    fps=-1;
+    sinkReady=false;
+    bufWidth=bufHeight=0;
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}

@@ -1,0 +1,147 @@
+{
+  this.parent=iparent;
+  GSVideo.init();
+  parent.registerDispose(this);
+  width=requestWidth;
+  height=requestHeight;
+  String[] propNames=null;
+  Object[] propValues=null;
+  String encoder="";
+  String muxer="";
+  String fn=filename.toLowerCase();
+  if (fn.endsWith(".ogg")) {
+    muxer="oggmux";
+  }
+ else   if (fn.endsWith(".avi")) {
+    muxer="avimux";
+  }
+ else   if (fn.endsWith(".mov")) {
+    muxer="qtmux";
+  }
+ else   if (fn.endsWith(".flv")) {
+    muxer="flvmux";
+  }
+ else   if (fn.endsWith(".mkv")) {
+    muxer="matroskamux";
+  }
+ else   if (fn.endsWith(".mp4")) {
+    muxer="mp4mux";
+  }
+ else   if (fn.endsWith(".3gp")) {
+    muxer="gppmux";
+  }
+ else   if (fn.endsWith(".mpg")) {
+    muxer="ffmux_mpeg";
+  }
+ else   if (fn.endsWith(".mj2")) {
+    muxer="mj2mux";
+  }
+ else {
+    parent.die("Unrecognized video container",null);
+  }
+  if (codecType == THEORA) {
+    encoder="theoraenc";
+    propNames=new String[1];
+    propValues=new Object[1];
+    propNames[0]="quality";
+    Integer q=31;
+    if (codecQuality == WORST) {
+      q=0;
+    }
+ else     if (codecQuality == LOW) {
+      q=15;
+    }
+ else     if (codecQuality == MEDIUM) {
+      q=31;
+    }
+ else     if (codecQuality == HIGH) {
+      q=47;
+    }
+ else     if (codecQuality == BEST) {
+      q=63;
+    }
+    propValues[0]=q;
+  }
+ else   if (codecType == DIRAC) {
+    encoder="schroenc";
+    propNames=new String[1];
+    propValues=new Object[1];
+    propNames[0]="quality";
+    Double q=5.0d;
+    if (codecQuality == WORST) {
+      q=0.0d;
+    }
+ else     if (codecQuality == LOW) {
+      q=2.5d;
+    }
+ else     if (codecQuality == MEDIUM) {
+      q=5.0d;
+    }
+ else     if (codecQuality == HIGH) {
+      q=7.5d;
+    }
+ else     if (codecQuality == BEST) {
+      q=10.0d;
+    }
+    propValues[0]=q;
+  }
+ else   if (codecType == XVID) {
+    encoder="xvidenc";
+  }
+ else   if (codecType == X264) {
+    encoder="x264enc";
+    propNames=new String[2];
+    propValues=new Object[2];
+    propNames[0]="pass";
+    Integer p=5;
+    propValues[0]=p;
+    propNames[1]="quantizer";
+    Integer q=21;
+    if (codecQuality == WORST) {
+      q=50;
+    }
+ else     if (codecQuality == LOW) {
+      q=35;
+    }
+ else     if (codecQuality == MEDIUM) {
+      q=21;
+    }
+ else     if (codecQuality == HIGH) {
+      q=15;
+    }
+ else     if (codecQuality == BEST) {
+      q=1;
+    }
+    propValues[1]=q;
+  }
+ else   if (codecType == MJPEG) {
+    encoder="jpegenc";
+    propNames=new String[1];
+    propValues=new Object[1];
+    propNames[0]="quality";
+    Integer q=85;
+    if (codecQuality == WORST) {
+      q=0;
+    }
+ else     if (codecQuality == LOW) {
+      q=30;
+    }
+ else     if (codecQuality == MEDIUM) {
+      q=50;
+    }
+ else     if (codecQuality == HIGH) {
+      q=85;
+    }
+ else     if (codecQuality == BEST) {
+      q=100;
+    }
+    propValues[0]=q;
+  }
+ else   if (codecType == MJPEG2K) {
+    encoder="jp2kenc";
+  }
+ else {
+    parent.die("Unrecognized video codec",null);
+  }
+  initRecorder(filename,ifps,encoder,muxer,propNames,propValues);
+}

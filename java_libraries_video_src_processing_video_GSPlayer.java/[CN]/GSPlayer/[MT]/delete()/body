@@ -1,0 +1,37 @@
+{
+  if (gplayer != null) {
+    try {
+      if (gplayer.isPlaying()) {
+        gplayer.stop();
+      }
+    }
+ catch (    IllegalStateException e) {
+      System.err.println("error when deleting player, maybe some native resource is already disposed");
+    }
+catch (    Exception e) {
+      e.printStackTrace();
+    }
+    pixels=null;
+    data=null;
+    copyPixels=null;
+    if (rgbSink != null) {
+      rgbSink.removeListener();
+      rgbSink.dispose();
+      rgbSink=null;
+    }
+    copyData=null;
+    if (dataSink != null) {
+      dataSink.removeListener();
+      dataSink.dispose();
+      dataSink=null;
+    }
+    natBuffer=null;
+    if (natSink != null) {
+      natSink.removeListener();
+      natSink.dispose();
+      natSink=null;
+    }
+    gplayer.dispose();
+    gplayer=null;
+  }
+}

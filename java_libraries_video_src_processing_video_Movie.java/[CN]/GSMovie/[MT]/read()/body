@@ -1,0 +1,38 @@
+{
+  if (fps <= 0) {
+    fps=getSourceFrameRate();
+  }
+  loadPixels();
+  if (copyBufferMode) {
+    if (natBuffer == null || copyBufferMethod == null) {
+      return;
+    }
+    if (firstFrame) {
+      super.init(bufWidth,bufHeight,RGB);
+      loadPixels();
+      firstFrame=false;
+    }
+    IntBuffer rgbBuffer=natBuffer.getByteBuffer().asIntBuffer();
+    try {
+      copyBufferMethod.invoke(copyHandler,new Object[]{natBuffer,rgbBuffer,bufWidth,bufHeight});
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    natBuffer=null;
+  }
+ else {
+    if (copyPixels == null) {
+      return;
+    }
+    if (firstFrame) {
+      resize(bufWidth,bufHeight);
+      firstFrame=false;
+    }
+    int[] temp=pixels;
+    pixels=copyPixels;
+    updatePixels();
+    copyPixels=temp;
+  }
+  available=false;
+}
