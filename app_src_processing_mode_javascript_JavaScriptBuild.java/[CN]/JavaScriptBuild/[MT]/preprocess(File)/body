@@ -13,13 +13,12 @@
   String bigCodeContents=bigCode.toString();
   Base.saveFile(bigCodeContents,bigFile);
   PdePreprocessor preprocessor=new PdePreprocessor(sketch.getName());
-  PreprocessorResult result;
   try {
     File outputFolder=sketch.makeTempFolder();
     final File java=new File(outputFolder,sketch.getName() + ".java");
     final PrintWriter stream=new PrintWriter(new FileWriter(java));
     try {
-      result=preprocessor.write(stream,bigCodeContents,null);
+      preprocessor.write(stream,bigCodeContents,null);
     }
   finally {
       stream.close();
