@@ -1,6 +1,6 @@
 {
   deleteTexture();
-  if (PGraphicsOpenGL2.npotTexSupported) {
+  if (PGraphicsOpenGL.npotTexSupported) {
     glWidth=w;
     glHeight=h;
   }
@@ -8,13 +8,13 @@
     glWidth=nextPowerOfTwo(w);
     glHeight=nextPowerOfTwo(h);
   }
-  if ((glWidth > PGraphicsOpenGL2.maxTextureSize) || (glHeight > PGraphicsOpenGL2.maxTextureSize)) {
+  if ((glWidth > PGraphicsOpenGL.maxTextureSize) || (glHeight > PGraphicsOpenGL.maxTextureSize)) {
     glWidth=glHeight=0;
-    throw new RuntimeException("Image width and height cannot be" + " larger than " + PGraphicsOpenGL2.maxTextureSize + " with this graphics card.");
+    throw new RuntimeException("Image width and height cannot be" + " larger than " + PGraphicsOpenGL.maxTextureSize + " with this graphics card.");
   }
   usingMipmaps=glMinFilter == GL.GL_LINEAR_MIPMAP_LINEAR;
   getGl().glEnable(glTarget);
-  glID=ogl.createGLResource(PGraphicsOpenGL2.GL_TEXTURE_OBJECT);
+  glID=ogl.createGLResource(PGraphicsOpenGL.GL_TEXTURE_OBJECT);
   getGl().glBindTexture(glTarget,glID);
   getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_MIN_FILTER,glMinFilter);
   getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_MAG_FILTER,glMagFilter);
