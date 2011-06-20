@@ -17,9 +17,9 @@
       for (int i=0; i < saveImageFormats.length; i++) {
         if (filename.endsWith("." + saveImageFormats[i])) {
           if (!saveImageIO(filename)) {
-            throw new RuntimeException("Error while saving image.");
+            System.err.println("Error while saving image.");
+            return false;
           }
-          return;
         }
       }
     }
@@ -38,10 +38,9 @@
     os.close();
   }
  catch (  IOException e) {
+    System.err.println("Error while saving image.");
     e.printStackTrace();
     success=false;
   }
-  if (!success) {
-    throw new RuntimeException("Error while saving image.");
-  }
+  return success;
 }
