@@ -1,0 +1,26 @@
+{
+  int count=0;
+  for (  Component c : getComponents()) {
+    if (c instanceof LibraryPanel) {
+      LibraryPanel libPanel=(LibraryPanel)c;
+      if (libPanel.isInfoShown) {
+        libPanel.setBackground(UIManager.getColor("List.selectionBackground"));
+        cascadeForgroundColor(libPanel,UIManager.getColor("List.selectionForeground"));
+        libPanel.setBorder(UIManager.getBorder("List.focusCellHighlightBorder"));
+      }
+ else {
+        if (Base.isMacOS()) {
+          if (count % 2 == 1) {
+            libPanel.setBorder(UIManager.getBorder("List.evenRowBackgroundPainter"));
+          }
+ else {
+            libPanel.setBorder(UIManager.getBorder("List.oddRowBackgroundPainter"));
+          }
+        }
+        libPanel.setBackground(UIManager.getColor("List.background"));
+        cascadeForgroundColor(libPanel,UIManager.getColor("List.foreground"));
+      }
+      count++;
+    }
+  }
+}
