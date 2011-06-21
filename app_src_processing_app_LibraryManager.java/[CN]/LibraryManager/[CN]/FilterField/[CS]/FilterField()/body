@@ -1,0 +1,20 @@
+{
+  super(filterHint);
+  isShowingHint=true;
+  addFocusListener(new FocusListener(){
+    public void focusLost(    FocusEvent focusEvent){
+      if (filterField.getText().isEmpty()) {
+        isShowingHint=true;
+      }
+      updateStyle();
+    }
+    public void focusGained(    FocusEvent focusEvent){
+      if (isShowingHint) {
+        isShowingHint=false;
+        filterField.setText("");
+      }
+      updateStyle();
+    }
+  }
+);
+}
