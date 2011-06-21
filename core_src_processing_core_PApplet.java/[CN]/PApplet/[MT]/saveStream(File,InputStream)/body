@@ -15,6 +15,11 @@
     bos.flush();
     bos.close();
     bos=null;
+    if (targetFile.exists()) {
+      if (!targetFile.delete()) {
+        System.err.println("Could not replace " + targetFile.getAbsolutePath() + ".");
+      }
+    }
     if (!tempFile.renameTo(targetFile)) {
       System.err.println("Could not rename temporary file " + tempFile.getAbsolutePath());
       return false;
