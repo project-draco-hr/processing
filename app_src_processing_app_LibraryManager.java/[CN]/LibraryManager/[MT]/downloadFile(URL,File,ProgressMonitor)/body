@@ -1,0 +1,21 @@
+{
+  URLConnection urlConn=source.openConnection();
+  urlConn.setConnectTimeout(1000);
+  urlConn.setReadTimeout(5000);
+  int fileSize=urlConn.getContentLength();
+  progressMonitor.progressBar.setMaximum(fileSize);
+  InputStream in=urlConn.getInputStream();
+  FileOutputStream out=new FileOutputStream(dest);
+  byte[] b=new byte[256];
+  int bytesDownloaded=0, len;
+  while (!progressMonitor.isCanceled() && (len=in.read(b)) != -1) {
+    out.write(b,0,len);
+    bytesDownloaded+=len;
+    progressMonitor.progressBar.setValue(bytesDownloaded);
+  }
+  out.close();
+  if (!progressMonitor.isCanceled()) {
+    return true;
+  }
+  return false;
+}
