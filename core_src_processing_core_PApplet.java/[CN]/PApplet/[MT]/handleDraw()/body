@@ -21,7 +21,9 @@
       double rate=1000000.0 / ((now - frameRateLastNanos) / 1000000.0);
       float instantaneousRate=(float)rate / 1000.0f;
       frameRate=(frameRate * 0.9f) + (instantaneousRate * 0.1f);
-      preMethods.handle();
+      if (frameCount != 0) {
+        preMethods.handle();
+      }
       pmouseX=dmouseX;
       pmouseY=dmouseY;
       draw();
@@ -39,6 +41,8 @@
     frameRateLastNanos=now;
     frameCount++;
     paint();
-    postMethods.handle();
+    if (frameCount != 0) {
+      postMethods.handle();
+    }
   }
 }
