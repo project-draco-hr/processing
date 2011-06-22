@@ -8,10 +8,14 @@
       boolean untitled=activeEditor.untitled;
       String mainPath=sketch.getMainFilePath();
       File sketchProps=new File(sketch.getFolder(),"sketch.properties");
-      PrintWriter writer=PApplet.createWriter(sketchProps);
-      writer.println("mode=" + mode.getTitle());
-      writer.flush();
-      writer.close();
+      try {
+        Settings props=new Settings(sketchProps);
+        props.set("mode",mode.getTitle());
+        props.save();
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+      }
       int[] where=activeEditor.getPlacement();
       handleClose(activeEditor,true);
       Editor editor=handleOpen(mainPath,where);
