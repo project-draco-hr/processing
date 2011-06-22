@@ -8,8 +8,10 @@
     while (m.find()) {
       String mm=m.group();
       mm=mm.replaceAll("^\\/\\*\\s*@pjs","").replaceAll("\\s*\\*\\/\\s*$","");
-      mm=mm.replaceAll("([^;\\s\\n\\r]+)[\\s]*[\\n\\r]+","$1;");
-      mm=mm.replaceAll("\n","").replaceAll("\r","");
+      mm=mm.replaceAll("[\\s]*([^;\\s\\n\\r]+)[\\s]*,[\\s]*[\\n\\r]+","$1,");
+      mm=mm.replaceAll("[\\s]*([^;\\s\\n\\r]+)[\\s]*[\\n\\r]+","$1;");
+      mm=mm.replaceAll("\n"," ").replaceAll("\r"," ");
+      System.out.println(mm);
       if (clean) {
         m.appendReplacement(buffer,"");
       }
