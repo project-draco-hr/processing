@@ -1,0 +1,67 @@
+{
+  raw.colorMode(RGB,1);
+  raw.noStroke();
+  raw.beginShape(TRIANGLES);
+  if (!modelviewUpdated) {
+    getModelviewMatrix();
+  }
+  if (!projectionUpdated) {
+    getProjectionMatrix();
+  }
+  for (int i=start; i < stop; i++) {
+    float a[]=vertices[triangles[i][VERTEX1]];
+    float b[]=vertices[triangles[i][VERTEX2]];
+    float c[]=vertices[triangles[i][VERTEX3]];
+    float ar=255;
+    float ag=255;
+    float ab=255;
+    float br=255;
+    float bg=255;
+    float bb=255;
+    float cr=255;
+    float cg=255;
+    float cb=255;
+    PImage texImage=null;
+    if (texImage != null) {
+      if (raw.is3D()) {
+        if ((a[VW] != 0) && (b[VW] != 0) && (c[VW] != 0)) {
+          raw.fill(ar,ag,ab,a[A]);
+          raw.vertex(a[VX] / a[VW],a[VY] / a[VW],a[VZ] / a[VW],a[U],a[V]);
+          raw.fill(br,bg,bb,b[A]);
+          raw.vertex(b[VX] / b[VW],b[VY] / b[VW],b[VZ] / b[VW],b[U],b[V]);
+          raw.fill(cr,cg,cb,c[A]);
+          raw.vertex(c[VX] / c[VW],c[VY] / c[VW],c[VZ] / c[VW],c[U],c[V]);
+        }
+      }
+ else       if (raw.is2D()) {
+        raw.fill(ar,ag,ab,a[A]);
+        raw.vertex(a[TX],a[TY],a[U],a[V]);
+        raw.fill(br,bg,bb,b[A]);
+        raw.vertex(b[TX],b[TY],b[U],b[V]);
+        raw.fill(cr,cg,cb,c[A]);
+        raw.vertex(c[TX],c[TY],c[U],c[V]);
+      }
+    }
+ else {
+      if (raw.is3D()) {
+        if ((a[VW] != 0) && (b[VW] != 0) && (c[VW] != 0)) {
+          raw.fill(ar,ag,ab,a[A]);
+          raw.vertex(a[VX] / a[VW],a[VY] / a[VW],a[VZ] / a[VW]);
+          raw.fill(br,bg,bb,b[A]);
+          raw.vertex(b[VX] / b[VW],b[VY] / b[VW],b[VZ] / b[VW]);
+          raw.fill(cr,cg,cb,c[A]);
+          raw.vertex(c[VX] / c[VW],c[VY] / c[VW],c[VZ] / c[VW]);
+        }
+      }
+ else       if (raw.is2D()) {
+        raw.fill(ar,ag,ab,a[A]);
+        raw.vertex(a[TX],a[TY]);
+        raw.fill(br,bg,bb,b[A]);
+        raw.vertex(b[TX],b[TY]);
+        raw.fill(cr,cg,cb,c[A]);
+        raw.vertex(c[TX],c[TY]);
+      }
+    }
+  }
+  raw.endShape();
+}
