@@ -4,17 +4,10 @@
     File parentDir=targetFile.getParentFile();
     createPath(targetFile);
     tempFile=File.createTempFile(targetFile.getName(),null,parentDir);
-    BufferedInputStream bis=new BufferedInputStream(sourceStream,16384);
-    FileOutputStream fos=new FileOutputStream(tempFile);
-    BufferedOutputStream bos=new BufferedOutputStream(fos);
-    byte[] buffer=new byte[8192];
-    int bytesRead;
-    while ((bytesRead=bis.read(buffer)) != -1) {
-      bos.write(buffer,0,bytesRead);
-    }
-    bos.flush();
-    bos.close();
-    bos=null;
+    FileOutputStream targetStream=new FileOutputStream(tempFile);
+    saveStream(targetStream,sourceStream);
+    targetStream.close();
+    targetStream=null;
     if (targetFile.exists()) {
       if (!targetFile.delete()) {
         System.err.println("Could not replace " + targetFile.getAbsolutePath() + ".");

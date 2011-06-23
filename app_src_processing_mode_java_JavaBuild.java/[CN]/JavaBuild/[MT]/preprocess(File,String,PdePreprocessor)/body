@@ -22,6 +22,15 @@
       bigCount+=sc.getLineCount();
     }
   }
+  String scrubbed=scrubComments(sketch.getCode(0).getProgram());
+  String[] matches=PApplet.match(scrubbed,SIZE_REGEX);
+  String renderer="";
+  if (matches != null) {
+    if (matches.length == 4)     renderer=matches[3].trim();
+  }
+  if (renderer.equals("P3D") || renderer.equals("OPENGL")) {
+    bigCode.insert(0,"import processing.opengl.*; ");
+  }
   PreprocessorResult result;
   try {
     File outputFolder=(packageName == null) ? srcFolder : new File(srcFolder,packageName.replace('.','/'));
@@ -67,7 +76,7 @@ catch (  antlr.RecognitionException re) {
   }
 catch (  antlr.TokenStreamRecognitionException tsre) {
     String mess="^line (\\d+):(\\d+):\\s";
-    String[] matches=PApplet.match(tsre.toString(),mess);
+    matches=PApplet.match(tsre.toString(),mess);
     if (matches != null) {
       int errorLine=Integer.parseInt(matches[1]) - 1;
       int errorColumn=Integer.parseInt(matches[2]);
