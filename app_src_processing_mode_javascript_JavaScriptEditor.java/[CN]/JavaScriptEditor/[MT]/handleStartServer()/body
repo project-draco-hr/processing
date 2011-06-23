@@ -1,28 +1,13 @@
 {
   statusEmpty();
   if (!handleExport(false))   return;
-  File serverRoot=new File(sketch.getFolder(),JavaScriptBuild.EXPORTED_FOLDER_NAME);
+  File serverRoot=getExportFolder();
   if (jsServer != null && (!jsServer.isRunning() || !jsServer.getRoot().equals(serverRoot))) {
     jsServer.shutDown();
     jsServer=null;
   }
   if (jsServer == null) {
-    jsServer=new JavaScriptServer(serverRoot);
-    File sketchFolder=getSketch().getFolder();
-    File sketchProps=new File(sketchFolder,"sketch.properties");
-    if (sketchProps.exists()) {
-      try {
-        Settings props=new Settings(sketchProps);
-        String portString=props.get("server.port");
-        if (portString != null && !portString.trim().equals("")) {
-          int port=Integer.parseInt(portString);
-          jsServer.setPort(port);
-        }
-      }
- catch (      IOException ioe) {
-        statusError(ioe);
-      }
-    }
+    jsServer=createJavaScriptServer();
     jsServer.start();
     while (!jsServer.isRunning()) {
     }
