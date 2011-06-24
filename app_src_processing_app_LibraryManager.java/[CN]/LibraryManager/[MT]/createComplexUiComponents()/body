@@ -10,7 +10,12 @@
   c.fill=GridBagConstraints.HORIZONTAL;
   filterField=new FilterField();
   pane.add(filterField,c);
-  libraryListPane=new LibraryListPanel(fetchLibraryInfo());
+  LibraryListFetcher llf=new LibraryListFetcher();
+  llf.fetchLibraryList(null);
+  while (!llf.isDone()) {
+    Thread.yield();
+  }
+  libraryListPane=new LibraryListPanel(llf.getLibraryListing());
   c=new GridBagConstraints();
   c.fill=GridBagConstraints.BOTH;
   c.gridx=0;

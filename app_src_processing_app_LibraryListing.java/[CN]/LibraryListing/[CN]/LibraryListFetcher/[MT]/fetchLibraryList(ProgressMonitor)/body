@@ -1,0 +1,14 @@
+{
+  downloader=new FileDownloader(url,dest,pm);
+  downloader.setPostOperation(new Runnable(){
+    public void run(){
+      File xmlFile=downloader.getFile();
+      if (xmlFile != null) {
+        libListing=new LibraryListing(xmlFile);
+      }
+    }
+  }
+);
+  downloaderThread=new Thread(downloader);
+  downloaderThread.start();
+}

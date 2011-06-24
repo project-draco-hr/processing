@@ -1,0 +1,26 @@
+{
+  super();
+  setLayout(new GridBagLayout());
+  int row=0;
+  for (  LibraryInfo libInfo : libraries.getAllLibararies()) {
+    GridBagConstraints c=new GridBagConstraints();
+    c.fill=GridBagConstraints.HORIZONTAL;
+    c.weightx=1;
+    c.gridx=0;
+    c.gridy=row++;
+    add(new LibraryPanel(libInfo),c);
+  }
+  GridBagConstraints verticalFill=new GridBagConstraints();
+  verticalFill.fill=GridBagConstraints.VERTICAL;
+  verticalFill.weighty=1;
+  verticalFill.gridx=0;
+  verticalFill.gridy=row++;
+  add(Box.createVerticalGlue(),verticalFill);
+  setFocusable(true);
+  addMouseListener(new MouseAdapter(){
+    public void mousePressed(    MouseEvent mouseEvent){
+      requestFocusInWindow();
+    }
+  }
+);
+}
