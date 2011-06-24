@@ -44,7 +44,7 @@
           installProgressBar.setVisible(true);
           dialog.pack();
           URL url=new URL(libraryUrl.getText());
-          final ProgressMonitor2 pm=new ProgressMonitor2(installProgressBar);
+          final JProgressMonitor pm=new JProgressMonitor(installProgressBar);
           dialog.addWindowListener(new WindowAdapter(){
             public void windowClosing(            WindowEvent we){
               pm.cancel();
@@ -134,9 +134,31 @@
     pane.add(categoryChooser,c);
     dialog.setMinimumSize(new Dimension(400,400));
   }
+  dialog.addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      disposeFrame();
+    }
+  }
+);
+  ActionListener disposer=new ActionListener(){
+    public void actionPerformed(    ActionEvent actionEvent){
+      disposeFrame();
+    }
+  }
+;
+  Base.registerWindowCloseKeys(dialog.getRootPane(),disposer);
   dialog.pack();
   Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
   dialog.setLocation((screen.width - dialog.getWidth()) / 2,(screen.height - dialog.getHeight()) / 2);
+  pane.addKeyListener(new KeyAdapter(){
+    public void keyPressed(    KeyEvent e){
+      KeyStroke wc=Base.WINDOW_CLOSE_KEYSTROKE;
+      if ((e.getKeyCode() == KeyEvent.VK_ESCAPE) || (KeyStroke.getKeyStrokeForEvent(e).equals(wc))) {
+        disposeFrame();
+      }
+    }
+  }
+);
   if (!USE_SIMPLE) {
     libraryListPane.grabFocus();
   }
