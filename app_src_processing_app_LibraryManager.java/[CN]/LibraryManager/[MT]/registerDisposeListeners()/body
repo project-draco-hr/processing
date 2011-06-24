@@ -1,0 +1,24 @@
+{
+  dialog.addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      disposeFrame();
+    }
+  }
+);
+  ActionListener disposer=new ActionListener(){
+    public void actionPerformed(    ActionEvent actionEvent){
+      disposeFrame();
+    }
+  }
+;
+  Base.registerWindowCloseKeys(dialog.getRootPane(),disposer);
+  dialog.getContentPane().addKeyListener(new KeyAdapter(){
+    public void keyPressed(    KeyEvent e){
+      KeyStroke wc=Base.WINDOW_CLOSE_KEYSTROKE;
+      if ((e.getKeyCode() == KeyEvent.VK_ESCAPE) || (KeyStroke.getKeyStrokeForEvent(e).equals(wc))) {
+        disposeFrame();
+      }
+    }
+  }
+);
+}
