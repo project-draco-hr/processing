@@ -7,18 +7,27 @@
   setFocusable(true);
   setShowInfo(false);
   updateColors();
-  updateLibraryListSize();
+  updateLibraryListSizeAndPosition(0,true,null);
   addMouseListener(new MouseAdapter(){
     public void mouseClicked(    MouseEvent e){
+      int obtainedSpace=0;
+      boolean obtainedSpaceIsAbove=true;
       for (      Component c : LibraryListPanel.this.getComponents()) {
-        if (c != LibraryPanel.this && c instanceof LibraryPanel) {
+        if (c == LibraryPanel.this) {
+          obtainedSpaceIsAbove=false;
+        }
+ else         if (c instanceof LibraryPanel) {
           LibraryPanel lp=(LibraryPanel)c;
-          lp.setShowInfo(false);
+          if (lp.isInfoShown) {
+            obtainedSpace=lp.briefText.getSize().height;
+            lp.setShowInfo(false);
+            break;
+          }
         }
       }
       setShowInfo(true);
       updateColors();
-      updateLibraryListSize();
+      updateLibraryListSizeAndPosition(obtainedSpace,obtainedSpaceIsAbove,LibraryPanel.this);
       requestFocusInWindow();
     }
   }
