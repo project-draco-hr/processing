@@ -1,7 +1,9 @@
 {
   super();
   preferredViewPositionListener=null;
+  this.libraries=libraries;
   setLayout(new GridBagLayout());
+  libPanelsByInfo=new HashMap<LibraryInfo,LibraryPanel>();
   int row=0;
   for (  LibraryInfo libInfo : libraries.getAllLibararies()) {
     GridBagConstraints c=new GridBagConstraints();
@@ -9,7 +11,9 @@
     c.weightx=1;
     c.gridx=0;
     c.gridy=row++;
-    add(new LibraryPanel(libInfo),c);
+    LibraryPanel libPanel=new LibraryPanel(libInfo);
+    libPanelsByInfo.put(libPanel.libInfo,libPanel);
+    add(libPanel,c);
   }
   GridBagConstraints verticalFill=new GridBagConstraints();
   verticalFill.fill=GridBagConstraints.VERTICAL;
