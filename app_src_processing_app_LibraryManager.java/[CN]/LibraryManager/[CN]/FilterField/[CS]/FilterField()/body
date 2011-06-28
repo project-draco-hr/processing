@@ -1,6 +1,7 @@
 {
   super(filterHint);
   isShowingHint=true;
+  filters=new ArrayList<String>();
   addFocusListener(new FocusListener(){
     public void focusLost(    FocusEvent focusEvent){
       if (filterField.getText().isEmpty()) {
@@ -14,6 +15,25 @@
         filterField.setText("");
       }
       updateStyle();
+    }
+  }
+);
+  getDocument().addDocumentListener(new DocumentListener(){
+    public void removeUpdate(    DocumentEvent e){
+      filter();
+    }
+    public void insertUpdate(    DocumentEvent e){
+      filter();
+    }
+    public void changedUpdate(    DocumentEvent e){
+      filter();
+    }
+    void filter(){
+      String filter=filterField.getFilterText();
+      filter=filter.toLowerCase();
+      filter=filter.replaceAll("[^\\x30-\\x39^\\x61-\\x7a]"," ");
+      filters=Arrays.asList(filter.split(" "));
+      libraryListPane.filterLibraries(category,filters);
     }
   }
 );

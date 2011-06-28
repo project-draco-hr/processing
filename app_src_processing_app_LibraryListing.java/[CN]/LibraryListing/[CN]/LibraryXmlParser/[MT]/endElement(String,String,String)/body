@@ -1,14 +1,13 @@
 {
   if ("library".equals(qName)) {
-    LibraryInfo libInfo=new LibraryInfo(categoryName,libraryName,libraryUrl,libraryDescription,authors,libraryVersionId,libraryLink);
-    if (librariesByCategory.containsKey(categoryName)) {
-      librariesByCategory.get(categoryName).add(libInfo);
+    if (librariesByCategory.containsKey(currentCategoryName)) {
+      librariesByCategory.get(currentCategoryName).add(currentLibInfo);
     }
  else {
       ArrayList<LibraryInfo> libs=new ArrayList<LibraryInfo>();
-      libs.add(libInfo);
-      librariesByCategory.put(categoryName,libs);
+      libs.add(currentLibInfo);
+      librariesByCategory.put(currentCategoryName,libs);
     }
-    reset();
+    currentLibInfo=null;
   }
 }

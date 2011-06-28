@@ -1,23 +1,26 @@
 {
   if ("category".equals(qName)) {
-    categoryName=attributes.getValue("name");
+    currentCategoryName=attributes.getValue("name");
   }
  else   if ("library".equals(qName)) {
-    reset();
-    libraryName=attributes.getValue("name");
-    libraryUrl=attributes.getValue("url");
+    currentLibInfo=new LibraryInfo();
+    currentLibInfo.categoryName=currentCategoryName;
+    currentLibInfo.name=attributes.getValue("name");
+    currentLibInfo.url=attributes.getValue("url");
   }
  else   if ("author".equals(qName)) {
-    authorUrl=attributes.getValue("url");
+    currentAuthor=new Author();
+    currentAuthor.url=attributes.getValue("url");
     doingAuthor=true;
   }
  else   if ("description".equals(qName)) {
+    currentLibInfo.brief=attributes.getValue("brief");
     doingDescription=true;
   }
  else   if ("version".equals(qName)) {
-    libraryVersionId=attributes.getValue("id");
+    currentLibInfo.versionId=attributes.getValue("id");
   }
  else   if ("location".equals(qName)) {
-    libraryLink=attributes.getValue("url");
+    currentLibInfo.link=attributes.getValue("url");
   }
 }

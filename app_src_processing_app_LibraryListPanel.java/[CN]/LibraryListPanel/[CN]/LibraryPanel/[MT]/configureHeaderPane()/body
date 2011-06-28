@@ -2,9 +2,24 @@
   headerPanel=new JPanel();
   headerPanel.setFocusable(true);
   headerPanel.setOpaque(false);
-  headerPanel.setLayout(new BoxLayout(headerPanel,BoxLayout.X_AXIS));
-  nameLabel=new JLabel(libInfo.name);
-  headerPanel.add(this.nameLabel);
-  headerPanel.add(Box.createHorizontalGlue());
+  headerPanel.setLayout(new GridBagLayout());
+  GridBagConstraints c=new GridBagConstraints();
+  c.gridx=0;
+  c.gridy=0;
+  c.weightx=1;
+  c.anchor=GridBagConstraints.WEST;
+  JLabel nameLabel=new JLabel(libInfo.name);
+  headerPanel.add(nameLabel,c);
+  c=new GridBagConstraints();
+  c.gridx=0;
+  c.gridy=1;
+  c.weightx=1;
+  c.fill=GridBagConstraints.HORIZONTAL;
+  c.anchor=GridBagConstraints.WEST;
+  c=new GridBagConstraints();
+  c.gridx=1;
+  c.gridy=1;
+  c.anchor=GridBagConstraints.EAST;
+  headerPanel.add(Box.createRigidArea(new Dimension(BUTTON_WIDTH,1)),c);
   add(headerPanel);
 }

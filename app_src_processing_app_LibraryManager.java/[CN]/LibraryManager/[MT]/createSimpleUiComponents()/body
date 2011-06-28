@@ -49,10 +49,7 @@
 );
         libraryUrl.setEnabled(false);
         installButton.setEnabled(false);
-        File libDest=getTemporaryFile(url);
-        FileDownloader downloader=new FileDownloader(url,libDest,pm);
-        downloader.setPostOperation(new LibraryInstaller(downloader,pm));
-        new Thread(downloader).start();
+        installLibraryFromUrl(url,pm);
       }
  catch (      MalformedURLException e) {
         System.err.println("Malformed URL");
