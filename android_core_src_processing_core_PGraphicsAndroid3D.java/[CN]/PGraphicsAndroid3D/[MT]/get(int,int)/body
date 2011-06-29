@@ -3,7 +3,15 @@
     getsetBuffer=IntBuffer.allocate(1);
     getsetBuffer.rewind();
   }
-  gl.glReadPixels(x,height - y,1,1,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,getsetBuffer);
+  boolean nonCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
+  if (nonCurrent) {
+    pushFramebuffer();
+    setFramebuffer(offscreenFramebuffer);
+  }
+  gl.glReadPixels(x,height - y - 1,1,1,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,getsetBuffer);
+  if (nonCurrent) {
+    popFramebuffer();
+  }
   int getset=getsetBuffer.get(0);
   if (BIG_ENDIAN) {
     return 0xff000000 | ((getset >> 8) & 0x00ffffff);
