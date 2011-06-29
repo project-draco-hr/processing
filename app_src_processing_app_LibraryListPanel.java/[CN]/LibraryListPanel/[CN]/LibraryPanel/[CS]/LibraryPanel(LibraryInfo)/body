@@ -1,25 +1,27 @@
 {
   this.libInfo=libInfo;
   setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+  generateAuthorStrings();
+  hyperlinkOpener=new HyperlinkListener(){
+    public void hyperlinkUpdate(    HyperlinkEvent e){
+      if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        Base.openURL(e.getURL().toString());
+      }
+    }
+  }
+;
   setBorder(BorderFactory.createEmptyBorder(topAndBottomBorder,2,topAndBottomBorder,2));
-  configureHeaderPane();
-  configureInfoPane();
+  addPaneComponents();
+  addProgressBarAndButton();
   setFocusable(true);
   setShowInfo(false);
   updateColors();
-  updateLibraryListSizeAndPosition(0,true,null);
-  addMouseListener(new MouseAdapter(){
-    public void mouseClicked(    MouseEvent e){
-      int obtainedSpace=0;
-      boolean obtainedSpaceIsAbove=true;
+  MouseAdapter expandPanelMouseListener=new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
       for (      Component c : LibraryListPanel.this.getComponents()) {
-        if (c == LibraryPanel.this) {
-          obtainedSpaceIsAbove=false;
-        }
- else         if (c instanceof LibraryPanel) {
+        if (c instanceof LibraryPanel) {
           LibraryPanel lp=(LibraryPanel)c;
           if (lp.isInfoShown) {
-            obtainedSpace=lp.description.getSize().height;
             lp.setShowInfo(false);
             break;
           }
@@ -27,9 +29,11 @@
       }
       setShowInfo(true);
       updateColors();
-      updateLibraryListSizeAndPosition(obtainedSpace,obtainedSpaceIsAbove,LibraryPanel.this);
-      requestFocusInWindow();
+      getParent().requestFocusInWindow();
     }
   }
-);
+;
+  addMouseListener(expandPanelMouseListener);
+  authorLabel.addMouseListener(expandPanelMouseListener);
+  descriptionText.addMouseListener(expandPanelMouseListener);
 }

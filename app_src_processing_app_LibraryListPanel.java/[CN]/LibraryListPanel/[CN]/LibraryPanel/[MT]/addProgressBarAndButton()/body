@@ -1,0 +1,59 @@
+{
+  GridBagConstraints c=new GridBagConstraints();
+  c.gridx=3;
+  c.gridy=0;
+  c.weighty=1;
+  c.gridheight=2;
+  c.fill=GridBagConstraints.VERTICAL;
+  c.anchor=GridBagConstraints.NORTH;
+  JPanel rightPane=new JPanel();
+  rightPane.setOpaque(false);
+  rightPane.setLayout(new BoxLayout(rightPane,BoxLayout.Y_AXIS));
+  headerPanel.add(rightPane,c);
+  installProgressBar=new JProgressBar();
+  installProgressBar.setString("");
+  installProgressBar.setStringPainted(true);
+  installProgressBar.setVisible(false);
+  Dimension d=installProgressBar.getPreferredSize();
+  d.width=BUTTON_WIDTH;
+  installProgressBar.setPreferredSize(d);
+  installProgressBar.setMaximumSize(d);
+  installProgressBar.setMinimumSize(d);
+  installProgressBar.setOpaque(false);
+  rightPane.add(installProgressBar);
+  installProgressBar.setAlignmentX(CENTER_ALIGNMENT);
+  rightPane.add(Box.createVerticalGlue());
+  installOrRemove=new JButton();
+  if (libInfo.isInstalled) {
+  }
+ else {
+    installOrRemove.setText("Install");
+    ActionListener installLibAction=new ActionListener(){
+      public void actionPerformed(      ActionEvent arg){
+        try {
+          URL url=new URL(libInfo.link);
+          libraryManager.installLibraryFromUrl(url,null);
+        }
+ catch (        MalformedURLException e) {
+          Base.showWarning("Install Failed","The link fetched from Processing.org is invalid.\n" + "You can still intall this library manually by visiting\n" + "the library's website.",e);
+        }
+      }
+    }
+;
+    installOrRemove.addActionListener(installLibAction);
+  }
+  Dimension installButtonDimensions=installOrRemove.getPreferredSize();
+  installButtonDimensions.width=BUTTON_WIDTH;
+  installOrRemove.setPreferredSize(installButtonDimensions);
+  installOrRemove.setMaximumSize(installButtonDimensions);
+  installOrRemove.setMinimumSize(installButtonDimensions);
+  installOrRemove.setOpaque(false);
+  rightPane.add(installOrRemove);
+  installOrRemove.setAlignmentX(CENTER_ALIGNMENT);
+  d=installProgressBar.getPreferredSize();
+  Dimension d2=installOrRemove.getPreferredSize();
+  d.width=BUTTON_WIDTH;
+  d.height=d.height + d2.height;
+  rightPane.setMinimumSize(d);
+  rightPane.setPreferredSize(d);
+}
