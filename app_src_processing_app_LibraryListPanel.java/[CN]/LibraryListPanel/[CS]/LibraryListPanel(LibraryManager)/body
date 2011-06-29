@@ -8,6 +8,14 @@
 ;
   libraries=libraryManager.getLibraryListing(null);
   setLayout(new GridBagLayout());
+  setFocusable(true);
+  setOpaque(true);
+  if (Base.isLinux()) {
+    setBackground(Color.white);
+  }
+ else {
+    setBackground(UIManager.getColor("List.background"));
+  }
   libPanelsByInfo=new HashMap<LibraryInfo,LibraryPanel>();
   int row=0;
   for (  LibraryInfo libInfo : libraries.getAllLibararies()) {
@@ -20,17 +28,11 @@
     libPanelsByInfo.put(libPanel.libInfo,libPanel);
     add(libPanel,c);
   }
-  GridBagConstraints verticalFill=new GridBagConstraints();
-  verticalFill.fill=GridBagConstraints.VERTICAL;
-  verticalFill.weighty=1;
-  verticalFill.gridx=0;
-  verticalFill.gridy=row++;
-  add(Box.createVerticalGlue(),verticalFill);
-  setFocusable(true);
   addMouseListener(new MouseAdapter(){
     public void mousePressed(    MouseEvent mouseEvent){
       requestFocusInWindow();
     }
   }
 );
+  updateColors();
 }

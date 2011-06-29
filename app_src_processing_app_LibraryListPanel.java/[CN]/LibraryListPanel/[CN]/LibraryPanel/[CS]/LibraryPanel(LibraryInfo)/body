@@ -4,22 +4,22 @@
   generateAuthorString();
   addPaneComponents();
   addProgressBarAndButton();
+  setBackground(LibraryListPanel.this.getBackground());
   setOpaque(true);
   setFocusable(true);
-  setShowInfo(false);
-  updateColors();
+  setSelected(false);
   MouseAdapter expandPanelMouseListener=new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
       for (      Component c : LibraryListPanel.this.getComponents()) {
         if (c instanceof LibraryPanel) {
           LibraryPanel lp=(LibraryPanel)c;
-          if (lp.isInfoShown) {
-            lp.setShowInfo(false);
+          if (lp.isSelected) {
+            lp.setSelected(false);
             break;
           }
         }
       }
-      setShowInfo(true);
+      setSelected(true);
       updateColors();
       getParent().requestFocusInWindow();
     }
@@ -28,5 +28,4 @@
   addMouseListener(expandPanelMouseListener);
   authorLabel.addMouseListener(expandPanelMouseListener);
   descriptionText.addMouseListener(expandPanelMouseListener);
-  updateColors();
 }
