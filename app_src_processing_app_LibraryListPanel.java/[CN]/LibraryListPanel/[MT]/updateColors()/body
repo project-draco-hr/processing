@@ -10,14 +10,19 @@
           libPanel.setBorder(UIManager.getBorder("List.focusCellHighlightBorder"));
         }
  else {
+          Border border=null;
           if (Base.isMacOS()) {
             if (count % 2 == 1) {
-              libPanel.setBorder(UIManager.getBorder("List.evenRowBackgroundPainter"));
+              border=UIManager.getBorder("List.evenRowBackgroundPainter");
             }
  else {
-              libPanel.setBorder(UIManager.getBorder("List.oddRowBackgroundPainter"));
+              border=UIManager.getBorder("List.oddRowBackgroundPainter");
             }
           }
+          if (border == null) {
+            border=BorderFactory.createEmptyBorder(1,1,1,1);
+          }
+          libPanel.setBorder(border);
           libPanel.setBackground(UIManager.getColor("List.background"));
           cascadeForgroundColor(libPanel,UIManager.getColor("List.foreground"));
         }
