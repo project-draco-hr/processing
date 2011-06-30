@@ -1,0 +1,20 @@
+{
+  if (libraryListing == null) {
+    final LibraryListFetcher llf=new LibraryListFetcher();
+    llf.setProgressMonitor(new JProgressMonitor(progressBar){
+      @Override public void finishedAction(){
+        libraryListing=llf.getLibraryListing();
+synchronized (libraryListing) {
+          libraryListing=llf.getLibraryListing();
+          if (libraryListPane != null) {
+            libraryListPane.setLibraryList(libraryListing);
+          }
+          updateCategoryChooser();
+        }
+      }
+    }
+);
+    new Thread(llf).start();
+  }
+  return libraryListing;
+}

@@ -1,5 +1,5 @@
 {
-  downloader=new FileDownloader(url,dest,pm);
+  downloader=new FileDownloader(url,dest,progressMonitor);
   downloader.setPostOperation(new Runnable(){
     public void run(){
       File xmlFile=downloader.getFile();
@@ -9,6 +9,5 @@
     }
   }
 );
-  downloaderThread=new Thread(downloader);
-  downloaderThread.start();
+  downloader.run();
 }

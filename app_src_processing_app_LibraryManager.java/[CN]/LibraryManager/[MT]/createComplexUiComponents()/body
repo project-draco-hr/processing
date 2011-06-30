@@ -10,7 +10,11 @@
   c.fill=GridBagConstraints.HORIZONTAL;
   filterField=new FilterField();
   pane.add(filterField,c);
-  libraryListPane=new LibraryListPanel(this);
+  libraryListPane=new LibraryListPanel(this,libraryListing);
+  if (libraryListing == null) {
+    JProgressBar progressBar=libraryListPane.getSetupProgressBar();
+    getLibraryListing(progressBar);
+  }
   c=new GridBagConstraints();
   c.fill=GridBagConstraints.BOTH;
   c.gridx=0;
@@ -40,10 +44,8 @@
   c.fill=GridBagConstraints.HORIZONTAL;
   c.gridx=1;
   c.gridy=2;
-  ArrayList<String> categories=new ArrayList<String>(getLibraryListing(null).getCategories());
-  Collections.sort(categories);
-  categories.add(0,ANY_CATEGORY);
-  categoryChooser=new JComboBox(categories.toArray());
+  categoryChooser=new JComboBox();
+  updateCategoryChooser();
   pane.add(categoryChooser,c);
   categoryChooser.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){

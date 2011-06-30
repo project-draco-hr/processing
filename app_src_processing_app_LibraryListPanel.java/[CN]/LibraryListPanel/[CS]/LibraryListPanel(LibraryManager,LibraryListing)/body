@@ -6,7 +6,6 @@
     }
   }
 ;
-  libraries=libraryManager.getLibraryListing(null);
   setLayout(new GridBagLayout());
   setFocusable(true);
   setOpaque(true);
@@ -17,22 +16,24 @@
     setBackground(UIManager.getColor("List.background"));
   }
   libPanelsByInfo=new HashMap<LibraryInfo,LibraryPanel>();
-  int row=0;
-  for (  LibraryInfo libInfo : libraries.getAllLibararies()) {
-    GridBagConstraints c=new GridBagConstraints();
-    c.fill=GridBagConstraints.HORIZONTAL;
-    c.weightx=1;
-    c.gridx=0;
-    c.gridy=row++;
-    LibraryPanel libPanel=new LibraryPanel(libInfo);
-    libPanelsByInfo.put(libPanel.libInfo,libPanel);
-    add(libPanel,c);
-  }
   addMouseListener(new MouseAdapter(){
     public void mousePressed(    MouseEvent mouseEvent){
       requestFocusInWindow();
     }
   }
 );
-  updateColors();
+  if (libraryListing == null) {
+    GridBagConstraints c=new GridBagConstraints();
+    c.fill=GridBagConstraints.HORIZONTAL;
+    c.weightx=1;
+    c.weighty=1;
+    c.anchor=GridBagConstraints.CENTER;
+    setupProgressBar=new JProgressBar();
+    setupProgressBar.setString("");
+    setupProgressBar.setStringPainted(true);
+    add(setupProgressBar,c);
+  }
+ else {
+    setLibraryList(libraryListing);
+  }
 }

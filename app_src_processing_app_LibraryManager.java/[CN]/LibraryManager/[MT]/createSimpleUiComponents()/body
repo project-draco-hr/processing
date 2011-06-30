@@ -40,7 +40,11 @@
         installProgressBar.setVisible(true);
         dialog.pack();
         URL url=new URL(libraryUrl.getText());
-        final JProgressMonitor pm=new JProgressMonitor(installProgressBar);
+        final JProgressMonitor pm=new JProgressMonitor(installProgressBar){
+          @Override public void finishedAction(){
+          }
+        }
+;
         dialog.addWindowListener(new WindowAdapter(){
           public void windowClosing(          WindowEvent we){
             pm.cancel();
