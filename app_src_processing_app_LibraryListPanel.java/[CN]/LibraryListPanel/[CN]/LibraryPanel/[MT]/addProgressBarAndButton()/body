@@ -11,9 +11,8 @@
   rightPane.setLayout(new BoxLayout(rightPane,BoxLayout.Y_AXIS));
   add(rightPane,c);
   installProgressBar=new JProgressBar();
-  installProgressBar.setString("");
   installProgressBar.setStringPainted(true);
-  installProgressBar.setVisible(false);
+  resetInstallProgressBarState();
   Dimension d=installProgressBar.getPreferredSize();
   d.width=BUTTON_WIDTH;
   installProgressBar.setPreferredSize(d);
@@ -39,7 +38,7 @@
           }
 ,new JProgressMonitor(installProgressBar){
             public void finishedAction(){
-              installProgressBar.setVisible(false);
+              resetInstallProgressBarState();
             }
           }
 );
