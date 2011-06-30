@@ -32,7 +32,17 @@
       public void actionPerformed(      ActionEvent arg){
         try {
           URL url=new URL(libInfo.link);
-          libraryManager.installLibraryFromUrl(url,null);
+          installProgressBar.setVisible(true);
+          libraryManager.installLibraryFromUrl(url,new JProgressMonitor(installProgressBar){
+            public void finishedAction(){
+            }
+          }
+,new JProgressMonitor(installProgressBar){
+            public void finishedAction(){
+              installProgressBar.setVisible(false);
+            }
+          }
+);
         }
  catch (        MalformedURLException e) {
           Base.showWarning("Install Failed","The link fetched from Processing.org is invalid.\n" + "You can still intall this library manually by visiting\n" + "the library's website.",e);
