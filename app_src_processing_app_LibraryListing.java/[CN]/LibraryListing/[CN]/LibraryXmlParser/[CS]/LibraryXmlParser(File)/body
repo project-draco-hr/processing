@@ -6,13 +6,12 @@
     InputSource input=new InputSource(new FileReader(xmlFile));
     sp.parse(input,this);
   }
- catch (  SAXException e) {
-    e.printStackTrace();
+ catch (  IOException e) {
+    Base.showWarning("Error reading library list","A error occured while reading the list of available libraries.\n" + "Try restarting the Library Manager.\n",e);
   }
-catch (  IOException e) {
-    e.printStackTrace();
-  }
-catch (  ParserConfigurationException e) {
-    e.printStackTrace();
+catch (  Exception e) {
+    Base.showWarning("Error reading library list","The list of libraries downloaded from Processing.org\n" + "appears to be malformed. You can still install libraries\n" + "manually while we work on fixing this.",e);
+    librariesByCategory=null;
+    allLibraries=null;
   }
 }
