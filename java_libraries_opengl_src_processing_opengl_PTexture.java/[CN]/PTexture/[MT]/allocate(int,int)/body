@@ -1,0 +1,34 @@
+{
+  release();
+  if (PGraphicsOpenGL.npotTexSupported) {
+    glWidth=w;
+    glHeight=h;
+  }
+ else {
+    glWidth=nextPowerOfTwo(w);
+    glHeight=nextPowerOfTwo(h);
+  }
+  if ((glWidth > PGraphicsOpenGL.maxTextureSize) || (glHeight > PGraphicsOpenGL.maxTextureSize)) {
+    glWidth=glHeight=0;
+    throw new RuntimeException("Image width and height cannot be" + " larger than " + PGraphicsOpenGL.maxTextureSize + " with this graphics card.");
+  }
+  usingMipmaps=glMinFilter == GL.GL_LINEAR_MIPMAP_LINEAR;
+  getGl().glEnable(glTarget);
+  glID=ogl.createGLResource(PGraphicsOpenGL.GL_TEXTURE_OBJECT);
+  getGl().glBindTexture(glTarget,glID);
+  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_MIN_FILTER,glMinFilter);
+  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_MAG_FILTER,glMagFilter);
+  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_WRAP_S,glWrapS);
+  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_WRAP_T,glWrapT);
+  getGl().glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,null);
+  int[] texels=new int[w * h];
+  java.util.Arrays.fill(texels,0,w * h,0x00000000);
+  setTexels(0,0,w,h,texels);
+  texels=null;
+  getGl().glBindTexture(glTarget,0);
+  getGl().glDisable(glTarget);
+  flippedX=false;
+  flippedY=false;
+  maxTexCoordU=(float)w / glWidth;
+  maxTexCoordV=(float)h / glHeight;
+}

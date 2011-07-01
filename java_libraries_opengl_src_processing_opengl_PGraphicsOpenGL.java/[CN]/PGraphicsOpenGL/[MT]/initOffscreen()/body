@@ -15,8 +15,6 @@
   }
   boolean opengl2X=!hints[DISABLE_OPENGL_2X_SMOOTH];
   boolean opengl4X=hints[ENABLE_OPENGL_4X_SMOOTH];
-  offscreenMultisample=false;
-  offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,false);
   if (PGraphicsOpenGL.fboMultisampleSupported && gl2x != null && (opengl2X || opengl4X)) {
     int nsamples=1;
     if (opengl2X) {
@@ -25,39 +23,15 @@
  else     if (opengl4X) {
       nsamples=4;
     }
-    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,false);
-    try {
-      offscreenFramebufferMultisample.addColorBufferMultisample(nsamples);
-      offscreenMultisample=true;
-    }
- catch (    GLException e) {
-      PGraphics.showWarning("Unable to create antialised offscreen surface.");
-    }
-  }
-  if (offscreenMultisample) {
-    if (offscreenDepthBits == 24 && offscreenStencilBits == 8) {
-      offscreenFramebufferMultisample.addDepthStencilBuffer();
-    }
- else {
-      offscreenFramebufferMultisample.addDepthBuffer(offscreenDepthBits);
-      if (0 < offscreenStencilBits) {
-        offscreenFramebufferMultisample.addStencilBuffer(offscreenStencilBits);
-      }
-    }
+    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,nsamples,0,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
     offscreenFramebufferMultisample.clear();
-    offscreenFramebuffer.setColorBuffer(texture);
+    offscreenMultisample=true;
+    offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
   }
  else {
-    offscreenFramebuffer.setColorBuffer(texture);
-    if (offscreenDepthBits == 24 && offscreenStencilBits == 8) {
-      offscreenFramebuffer.addDepthStencilBuffer();
-    }
- else {
-      offscreenFramebuffer.addDepthBuffer(offscreenDepthBits);
-      if (0 < offscreenStencilBits) {
-        offscreenFramebuffer.addStencilBuffer(offscreenStencilBits);
-      }
-    }
+    offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
+    offscreenMultisample=false;
   }
+  offscreenFramebuffer.setColorBuffer(texture);
   offscreenFramebuffer.clear();
 }
