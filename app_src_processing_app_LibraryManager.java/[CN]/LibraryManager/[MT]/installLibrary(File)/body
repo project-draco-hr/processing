@@ -1,12 +1,12 @@
 {
   try {
-    String libName=guessLibraryName(libFile.getPath());
+    String libName=guessLibraryName(libFile);
     File tmpFolder=Base.createTempFolder(libName,"uncompressed");
     unzip(libFile,tmpFolder);
     return installLibraries(Library.list(tmpFolder));
   }
  catch (  IOException e) {
-    Base.showError("Trouble creating temporary folder","Could not create a place to store libary's uncompressed contents.\n" + "That's gonna prevent us from continuing.",e);
+    Base.showWarning("Trouble creating temporary folder","Could not create a place to store libary's uncompressed contents,\n" + "so it won't be installed.",e);
   }
   return 0;
 }

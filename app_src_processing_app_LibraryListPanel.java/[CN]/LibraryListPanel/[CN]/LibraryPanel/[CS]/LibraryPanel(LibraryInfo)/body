@@ -1,7 +1,9 @@
 {
   this.libInfo=libInfo;
+  okayToOpenHyperLink=false;
+  hyperlinkOpener=new ConditionalHyperlinkListener();
   setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-  generateAuthorString();
+  createAuthorString();
   addPaneComponents();
   addProgressBarAndButton();
   setBackground(LibraryListPanel.this.getBackground());
@@ -10,22 +12,28 @@
   setSelected(false);
   MouseAdapter expandPanelMouseListener=new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
-      for (      Component c : LibraryListPanel.this.getComponents()) {
-        if (c instanceof LibraryPanel) {
-          LibraryPanel lp=(LibraryPanel)c;
-          if (lp.isSelected) {
-            lp.setSelected(false);
-            break;
+      okayToOpenHyperLink=isSelected;
+      if (!isSelected) {
+        for (        Component c : LibraryListPanel.this.getComponents()) {
+          if (c instanceof LibraryPanel) {
+            LibraryPanel lp=(LibraryPanel)c;
+            if (lp.isSelected) {
+              lp.setSelected(false);
+              break;
+            }
           }
         }
+        setSelected(true);
+        updateColors();
+        getParent().requestFocusInWindow();
       }
-      setSelected(true);
-      updateColors();
-      getParent().requestFocusInWindow();
     }
   }
 ;
   addMouseListener(expandPanelMouseListener);
-  authorLabel.addMouseListener(expandPanelMouseListener);
+  stripListeners(headerLabel);
+  stripListeners(descriptionText);
+  headerLabel.addMouseListener(expandPanelMouseListener);
+  categoryLabel.addMouseListener(expandPanelMouseListener);
   descriptionText.addMouseListener(expandPanelMouseListener);
 }

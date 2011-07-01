@@ -1,0 +1,27 @@
+{
+  StringBuilder authors=new StringBuilder();
+  if (!libInfo.authors.isEmpty()) {
+    authors.append(" by ");
+    for (int i=0; i < libInfo.authors.size(); i++) {
+      Author author=libInfo.authors.get(i);
+      if (author.url == null) {
+        authors.append(author.name);
+      }
+ else {
+        authors.append("<a href=\"" + author.url + "\">"+ author.name+ "</a>");
+      }
+      if (i + 2 < libInfo.authors.size()) {
+        authors.append(", ");
+      }
+ else       if (i + 2 == libInfo.authors.size()) {
+        if (libInfo.authors.size() > 2) {
+          authors.append(", and ");
+        }
+ else {
+          authors.append(" and ");
+        }
+      }
+    }
+  }
+  return authors.toString();
+}

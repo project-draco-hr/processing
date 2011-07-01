@@ -7,4 +7,13 @@
   if (component instanceof JLabel || component instanceof JTextComponent) {
     component.setForeground(color);
   }
+  if (component instanceof JEditorPane) {
+    JEditorPane editorPane=(JEditorPane)component;
+    Document doc=editorPane.getDocument();
+    if (doc instanceof HTMLDocument) {
+      HTMLDocument html=(HTMLDocument)doc;
+      StyleSheet stylesheet=html.getStyleSheet();
+      stylesheet.addRule("body {color:" + toHex(color) + ";}");
+    }
+  }
 }

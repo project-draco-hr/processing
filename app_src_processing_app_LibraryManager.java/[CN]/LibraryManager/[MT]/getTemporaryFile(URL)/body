@@ -1,12 +1,10 @@
 {
   try {
-    String libName=guessLibraryName(url.getFile());
-    if (libName != null) {
-      File tmpFolder=Base.createTempFolder(libName,"download");
-      File libFile=new File(tmpFolder,libName + ".plb");
-      libFile.setWritable(true);
-      return libFile;
-    }
+    File tmpFolder=Base.createTempFolder("library","download");
+    String[] segments=url.getFile().split("/");
+    File libFile=new File(tmpFolder,segments[segments.length - 1]);
+    libFile.setWritable(true);
+    return libFile;
   }
  catch (  IOException e) {
     Base.showError("Trouble creating temporary folder","Could not create a place to store libraries being downloaded.\n" + "That's gonna prevent us from continuing.",e);

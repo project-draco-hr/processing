@@ -17,28 +17,24 @@
       }
     }
   }
+  File backupFolder=null;
+  if (!libsToBeBackuped.isEmpty()) {
+    backupFolder=new File(editor.getBase().getSketchbookLibrariesFolder(),"old");
+    if (!backupFolder.exists() || !backupFolder.isDirectory()) {
+      if (!backupFolder.mkdirs()) {
+        Base.showWarning("Trouble creating folder to store old libraries in","Could not create folder " + backupFolder.getAbsolutePath() + ".\n"+ "That's gonna prevent us from replacing the library.",null);
+        return 0;
+      }
+    }
+  }
   for (  Library lib : libsToBeBackuped) {
     String libFolderName=lib.folder.getName();
-    File backupFolder=new File(editor.getBase().getSketchbookLibrariesFolder(),"old");
-    if (!backupFolder.exists() || !backupFolder.isDirectory()) {
-      if (!backupFolder.mkdir()) {
-        Base.showError("Trouble creating folder to store old libraries in\"" + lib.getName() + "\"","Could not create folder " + backupFolder.getAbsolutePath() + ".\n"+ "That's gonna prevent us from continuing.",null);
-      }
-    }
     String prefix=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
     final String backupName=prefix + "_" + libFolderName;
-    File backupFolderForLib;
-    int i=1;
-    do {
-      String folderName=backupName;
-      if (i >= 2) {
-        folderName+="(" + i + ")";
-      }
-      i++;
-      backupFolderForLib=new File(backupFolder,folderName);
-    }
- while (backupFolderForLib.exists());
-    if (!lib.folder.renameTo(backupFolderForLib)) {
+    File backupFolderForLib=getUniqueName(backupFolder,backupName);
+    boolean success=false;
+    success=lib.folder.renameTo(backupFolderForLib);
+    if (!success) {
       Base.showError("Trouble creating backup of old \"" + lib.getName() + "\" library","Could not move library to " + backupFolderForLib.getAbsolutePath() + "\n"+ "That's gonna prevent us from continuing.",null);
     }
   }
