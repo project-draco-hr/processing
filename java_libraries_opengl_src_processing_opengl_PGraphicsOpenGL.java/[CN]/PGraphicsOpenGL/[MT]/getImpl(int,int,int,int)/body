@@ -2,18 +2,18 @@
   PImage newbie=parent.createImage(w,h,ARGB);
   PTexture newbieTex=addTexture(newbie);
   IntBuffer newbieBuffer=IntBuffer.allocate(w * h);
-  boolean nonCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
-  if (nonCurrent) {
+  boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
+  if (notCurrent) {
     pushFramebuffer();
     setFramebuffer(offscreenFramebuffer);
   }
   gl.glReadPixels(x,height - y - h,w,h,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,newbieBuffer);
-  if (nonCurrent) {
+  if (notCurrent) {
     popFramebuffer();
   }
   copyToTexture(newbieTex,newbieBuffer,0,0,w,h);
   newbie.loadPixels();
-  newbieTex.flippedY=true;
+  newbieTex.setFlippedY(true);
   newbieTex.get(newbie.pixels);
   return newbie;
 }

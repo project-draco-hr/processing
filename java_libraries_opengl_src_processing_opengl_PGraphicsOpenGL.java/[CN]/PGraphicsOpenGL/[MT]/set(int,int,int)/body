@@ -16,5 +16,13 @@
     getsetTexture=new PTexture(parent,1,1,new PTexture.Parameters(ARGB,POINT));
   }
   copyToTexture(getsetTexture,getsetBuffer,0,0,1,1);
+  boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
+  if (notCurrent) {
+    pushFramebuffer();
+    setFramebuffer(offscreenFramebuffer);
+  }
   drawTexture(getsetTexture,0,0,1,1,x,height - y,1,1);
+  if (notCurrent) {
+    popFramebuffer();
+  }
 }

@@ -1,3 +1,11 @@
 {
+  boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
+  if (notCurrent) {
+    pushFramebuffer();
+    setFramebuffer(offscreenFramebuffer);
+  }
   drawTexture();
+  if (notCurrent) {
+    popFramebuffer();
+  }
 }

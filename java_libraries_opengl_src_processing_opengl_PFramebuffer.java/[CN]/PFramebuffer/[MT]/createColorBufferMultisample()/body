@@ -3,13 +3,10 @@
   if (fboMode) {
     ogl.pushFramebuffer();
     ogl.setFramebuffer(this);
-    numColorBuffers=1;
-    colorBufferAttchPoints=new int[numColorBuffers];
-    colorBufferAttchPoints[0]=GL.GL_COLOR_ATTACHMENT0;
     glColorBufferMultisampleID=ogl.createGLResource(PGraphicsOpenGL.GL_RENDER_BUFFER);
     getGl().glBindRenderbuffer(GL.GL_RENDERBUFFER,glColorBufferMultisampleID);
     getGl2().glRenderbufferStorageMultisample(GL.GL_RENDERBUFFER,nsamples,GL.GL_RGBA8,width,height);
-    getGl().glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,colorBufferAttchPoints[0],GL.GL_RENDERBUFFER,glColorBufferMultisampleID);
+    getGl().glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,GL.GL_COLOR_ATTACHMENT0,GL.GL_RENDERBUFFER,glColorBufferMultisampleID);
     ogl.popFramebuffer();
   }
 }
