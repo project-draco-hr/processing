@@ -24,31 +24,11 @@
   rightPane.add(Box.createVerticalGlue());
   installOrRemove=new JButton();
   if (libInfo.isInstalled) {
+    installOrRemove.setText("Remove");
+    installOrRemove.addActionListener(removeAction);
   }
  else {
     installOrRemove.setText("Install");
-    ActionListener installLibAction=new ActionListener(){
-      public void actionPerformed(      ActionEvent arg){
-        try {
-          URL url=new URL(libInfo.link);
-          installProgressBar.setVisible(true);
-          libraryManager.installLibraryFromUrl(url,new JProgressMonitor(installProgressBar){
-            public void finishedAction(){
-            }
-          }
-,new JProgressMonitor(installProgressBar){
-            public void finishedAction(){
-              resetInstallProgressBarState();
-            }
-          }
-);
-        }
- catch (        MalformedURLException e) {
-          Base.showWarning("Install Failed","The link fetched from Processing.org is invalid.\n" + "You can still intall this library manually by visiting\n" + "the library's website.",e);
-        }
-      }
-    }
-;
     installOrRemove.addActionListener(installLibAction);
   }
   Dimension installButtonDimensions=installOrRemove.getPreferredSize();

@@ -5,8 +5,18 @@
  else   if ("library".equals(qName)) {
     currentLibInfo=new LibraryInfo();
     currentLibInfo.categoryName=currentCategoryName;
-    currentLibInfo.name=attributes.getValue("name");
+    currentLibInfo.displayName=attributes.getValue("name");
     currentLibInfo.url=attributes.getValue("url");
+    currentLibInfo.names.add(currentLibInfo.displayName);
+  }
+ else   if ("installed".equals(qName)) {
+    String nameList=attributes.getValue("name");
+    if (nameList != null) {
+      currentLibInfo.names.clear();
+      for (      String name : nameList.split(",")) {
+        currentLibInfo.names.add(name.trim());
+      }
+    }
   }
  else   if ("author".equals(qName)) {
     currentAuthor=new Author();
