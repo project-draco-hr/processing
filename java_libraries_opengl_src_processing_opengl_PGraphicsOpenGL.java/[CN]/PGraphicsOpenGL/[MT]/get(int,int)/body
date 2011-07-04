@@ -1,13 +1,13 @@
 {
   if (getsetBuffer == null) {
     getsetBuffer=IntBuffer.allocate(1);
-    getsetBuffer.rewind();
   }
   boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
   if (notCurrent) {
     pushFramebuffer();
     setFramebuffer(offscreenFramebuffer);
   }
+  getsetBuffer.rewind();
   gl.glReadPixels(x,height - y - 1,1,1,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,getsetBuffer);
   if (notCurrent) {
     popFramebuffer();

@@ -19,12 +19,7 @@
  else   if (which == DISABLE_OPENGL_2X_SMOOTH) {
     if (opengl2X) {
       if (primarySurface) {
-        backupGL();
-        releaseContext();
-        context.destroy();
-        context=null;
-        allocate();
-        restoreGL();
+        restartContext();
         throw new PApplet.RendererChangeException();
       }
  else {
@@ -33,16 +28,20 @@
     }
   }
  else   if (which == ENABLE_OPENGL_2X_SMOOTH) {
+    if (!opengl2X) {
+      if (primarySurface) {
+        restartContext();
+        throw new PApplet.RendererChangeException();
+      }
+ else {
+        initOffscreen();
+      }
+    }
   }
  else   if (which == ENABLE_OPENGL_4X_SMOOTH) {
     if (!opengl4X) {
       if (primarySurface) {
-        backupGL();
-        releaseContext();
-        context.destroy();
-        context=null;
-        allocate();
-        restoreGL();
+        restartContext();
         throw new PApplet.RendererChangeException();
       }
  else {
