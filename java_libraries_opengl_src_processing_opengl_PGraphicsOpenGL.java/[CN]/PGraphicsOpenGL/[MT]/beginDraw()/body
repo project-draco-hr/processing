@@ -64,8 +64,15 @@
     }
     resized=false;
   }
-  camera();
-  perspective();
+  if (sizeChanged) {
+    camera();
+    perspective();
+    sizeChanged=false;
+  }
+ else {
+    restoreCamera();
+    restoreProjection();
+  }
   noLights();
   lightFalloff(1,0,0);
   lightSpecular(0,0,0);
