@@ -43,8 +43,15 @@
   }
   gl.glGetIntegerv(GL11.GL_VIEWPORT,viewport,0);
   gl.glViewport(0,0,width,height);
-  camera();
-  perspective();
+  if (sizeChanged) {
+    camera();
+    perspective();
+    sizeChanged=false;
+  }
+ else {
+    restoreCamera();
+    restoreProjection();
+  }
   noLights();
   lightFalloff(1,0,0);
   lightSpecular(0,0,0);
