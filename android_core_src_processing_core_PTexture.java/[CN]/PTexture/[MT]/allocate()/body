@@ -1,0 +1,17 @@
+{
+  release();
+  getGl().glEnable(glTarget);
+  glID=a3d.createGLResource(PGraphicsAndroid3D.GL_TEXTURE_OBJECT);
+  getGl().glBindTexture(glTarget,glID);
+  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_MIN_FILTER,glMinFilter);
+  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_MAG_FILTER,glMagFilter);
+  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_S,glWrapS);
+  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_T,glWrapT);
+  getGl().glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,null);
+  int[] texels=new int[width * height];
+  java.util.Arrays.fill(texels,0,width * height,0x00000000);
+  setTexels(0,0,width,height,texels);
+  texels=null;
+  getGl().glBindTexture(glTarget,0);
+  getGl().glDisable(glTarget);
+}

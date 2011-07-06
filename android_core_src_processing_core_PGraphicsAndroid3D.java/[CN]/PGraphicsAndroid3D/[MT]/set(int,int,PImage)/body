@@ -3,6 +3,14 @@
   if (tex != null) {
     int w=source.width;
     int h=source.height;
+    boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
+    if (notCurrent) {
+      pushFramebuffer();
+      setFramebuffer(offscreenFramebuffer);
+    }
     drawTexture(tex,0,h,w,-h,x,height - y,w,h);
+    if (notCurrent) {
+      popFramebuffer();
+    }
   }
 }
