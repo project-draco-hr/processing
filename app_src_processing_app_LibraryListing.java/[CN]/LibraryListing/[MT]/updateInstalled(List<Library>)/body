@@ -1,12 +1,22 @@
 {
+  HashMap<String,String> categoriesByName=new HashMap<String,String>();
   HashSet<String> installedLibraries=new HashSet<String>();
   for (  Library library : installed) {
-    installedLibraries.add(library.name);
+    installedLibraries.add(library.getName());
   }
-  for (  LibraryInfo libInfo : allLibraries) {
+  Iterator<LibraryInfo> it=allLibraries.iterator();
+  while (it.hasNext()) {
+    LibraryInfo libInfo=it.next();
     if (installedLibraries.contains(libInfo.name)) {
-      libInfo.isInstalled=true;
-      break;
+      it.remove();
+      categoriesByName.put(libInfo.name,libInfo.category);
     }
+  }
+  for (  Library library : installed) {
+    String category=categoriesByName.get(library.getName());
+    if (category != null) {
+      library.info.category=category;
+    }
+    addLibrary(library.info);
   }
 }

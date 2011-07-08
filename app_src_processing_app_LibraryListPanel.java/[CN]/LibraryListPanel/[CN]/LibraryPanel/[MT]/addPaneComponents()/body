@@ -29,7 +29,8 @@
   c.gridx=1;
   c.gridy=0;
   c.anchor=GridBagConstraints.EAST;
-  categoryLabel=new JLabel("[" + libInfo.categoryName + "]");
+  categoryLabel=new JLabel("[" + libInfo.category + "]");
+  categoryLabel.setBorder(BorderFactory.createEmptyBorder(0,0,0,7));
   add(categoryLabel,c);
   c=new GridBagConstraints();
   c.gridx=0;
@@ -40,7 +41,13 @@
   c.anchor=GridBagConstraints.WEST;
   descriptionText=new JTextPane();
   descriptionText.setContentType("text/html");
-  descriptionText.setText("<html><body>" + libInfo.brief + " "+ libInfo.description+ "</body></html>");
+  StringBuilder description=new StringBuilder();
+  description.append("<html><body>");
+  if (libInfo.sentence != null)   description.append(libInfo.sentence);
+  if (libInfo.sentence != null && libInfo.paragraph != null)   description.append(" ");
+  if (libInfo.sentence != null && libInfo.paragraph != null)   description.append(libInfo.paragraph);
+  description.append("</body></html>");
+  descriptionText.setText(description.toString());
   descriptionText.addHyperlinkListener(nullHyperlinkListener);
   descriptionText.setMargin(new Insets(0,25,10,5));
   setTextStyle(descriptionText);

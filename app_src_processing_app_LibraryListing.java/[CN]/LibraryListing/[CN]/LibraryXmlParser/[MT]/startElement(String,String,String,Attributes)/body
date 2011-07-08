@@ -3,23 +3,25 @@
     currentCategoryName=attributes.getValue("name");
   }
  else   if ("library".equals(qName)) {
-    currentLibInfo=new LibraryInfo(currentCategoryName,attributes.getValue("name"));
+    currentLibInfo=new LibraryInfo();
+    currentLibInfo.authorList=new ArrayList<Author>();
+    currentLibInfo.category=currentCategoryName;
+    currentLibInfo.name=attributes.getValue("name");
     currentLibInfo.url=attributes.getValue("url");
   }
  else   if ("author".equals(qName)) {
-    currentAuthor=new Author();
-    currentAuthor.url=attributes.getValue("url");
-    doingAuthor=true;
+    Author author=new Author();
+    author.name=attributes.getValue("name");
+    author.url=attributes.getValue("url");
+    currentLibInfo.authorList.add(author);
   }
  else   if ("description".equals(qName)) {
-    String brief=attributes.getValue("brief");
-    if (brief != null) {
-      currentLibInfo.brief=brief;
-    }
-    doingDescription=true;
+    currentLibInfo.sentence=attributes.getValue("sentence");
+    currentLibInfo.paragraph=attributes.getValue("paragraph");
   }
  else   if ("version".equals(qName)) {
-    currentLibInfo.versionId=attributes.getValue("id");
+    currentLibInfo.version=Integer.parseInt(attributes.getValue("id"));
+    currentLibInfo.prettyVersion=attributes.getValue("pretty");
   }
  else   if ("location".equals(qName)) {
     currentLibInfo.link=attributes.getValue("url");

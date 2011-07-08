@@ -2,9 +2,10 @@
   downloader=new FileDownloader(url,dest,progressMonitor);
   downloader.setPostOperation(new Runnable(){
     public void run(){
+      libListing=new LibraryListing();
       File xmlFile=downloader.getFile();
       if (xmlFile != null) {
-        libListing=new LibraryListing(xmlFile);
+        libListing.rebuildList(xmlFile);
       }
     }
   }
