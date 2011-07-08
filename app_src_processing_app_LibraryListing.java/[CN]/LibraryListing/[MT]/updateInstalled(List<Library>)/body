@@ -1,14 +1,12 @@
 {
   HashSet<String> installedLibraries=new HashSet<String>();
   for (  Library library : installed) {
-    installedLibraries.add(library.name.toLowerCase());
+    installedLibraries.add(library.name);
   }
   for (  LibraryInfo libInfo : allLibraries) {
-    for (    String name : libInfo.names) {
-      if (installedLibraries.contains(name.toLowerCase())) {
-        libInfo.isInstalled=true;
-        break;
-      }
+    if (installedLibraries.contains(libInfo.name)) {
+      libInfo.isInstalled=true;
+      break;
     }
   }
 }

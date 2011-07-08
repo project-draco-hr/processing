@@ -3,20 +3,8 @@
     currentCategoryName=attributes.getValue("name");
   }
  else   if ("library".equals(qName)) {
-    currentLibInfo=new LibraryInfo();
-    currentLibInfo.categoryName=currentCategoryName;
-    currentLibInfo.displayName=attributes.getValue("name");
+    currentLibInfo=new LibraryInfo(currentCategoryName,attributes.getValue("name"));
     currentLibInfo.url=attributes.getValue("url");
-    currentLibInfo.names.add(currentLibInfo.displayName);
-  }
- else   if ("installed".equals(qName)) {
-    String nameList=attributes.getValue("name");
-    if (nameList != null) {
-      currentLibInfo.names.clear();
-      for (      String name : nameList.split(",")) {
-        currentLibInfo.names.add(name.trim());
-      }
-    }
   }
  else   if ("author".equals(qName)) {
     currentAuthor=new Author();
@@ -24,7 +12,10 @@
     doingAuthor=true;
   }
  else   if ("description".equals(qName)) {
-    currentLibInfo.brief=attributes.getValue("brief");
+    String brief=attributes.getValue("brief");
+    if (brief != null) {
+      currentLibInfo.brief=brief;
+    }
     doingDescription=true;
   }
  else   if ("version".equals(qName)) {
