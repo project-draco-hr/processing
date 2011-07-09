@@ -1,14 +1,18 @@
 {
-  if (libraries != null && libPanelsByInfo != null) {
+  if (libraries != null && libPanels != null) {
 synchronized (libraries) {
-synchronized (libPanelsByInfo) {
-        List<LibraryInfo> hiddenLibraries=libraries.getAllLibararies();
+synchronized (libPanels) {
+        List<LibraryPanel> hiddenPanels=new ArrayList(libPanels);
         for (        LibraryInfo lib : libraries.getFilteredLibraryList(category,filters)) {
-          libPanelsByInfo.get(lib).setVisible(true);
-          hiddenLibraries.remove(lib);
+          for (          LibraryPanel libPanel : libPanels) {
+            if (libPanel.libInfo.equals(lib)) {
+              libPanel.setVisible(true);
+              hiddenPanels.remove(libPanel);
+            }
+          }
         }
-        for (        LibraryInfo lib : hiddenLibraries) {
-          libPanelsByInfo.get(lib).setVisible(false);
+        for (        LibraryPanel libPanel : hiddenPanels) {
+          libPanel.setVisible(false);
         }
       }
     }

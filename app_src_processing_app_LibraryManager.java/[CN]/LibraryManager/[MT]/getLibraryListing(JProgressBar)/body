@@ -5,9 +5,14 @@
       @Override public void finishedAction(){
         libraryListing=llf.getLibraryListing();
 synchronized (libraryListing) {
-          libraryListing.updateInstalled(editor.getMode().contribLibraries);
-          if (libraryListPane != null) {
-            libraryListPane.setLibraryList(libraryListing);
+          ArrayList<Library> libraries=editor.getMode().contribLibraries;
+          ArrayList<LibraryInfo> infoList=new ArrayList<LibraryInfo>();
+          for (          Library library : libraries) {
+            infoList.add(library.info);
+          }
+          libraryListing.updateList(infoList);
+          if (libraryListPanel != null) {
+            libraryListPanel.setLibraryList(libraryListing);
           }
           updateCategoryChooser();
         }

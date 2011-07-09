@@ -4,12 +4,17 @@
   try {
     SAXParser sp=spf.newSAXParser();
     InputSource input=new InputSource(new FileReader(xmlFile));
+    libraries=new ArrayList<LibraryInfo>();
     sp.parse(input,this);
   }
- catch (  IOException e) {
+ catch (  ParserConfigurationException e) {
+    Base.showWarning("Error reading library list","An internal error occured when preparing to read the list\n" + "of libraries. You can still install libraries manually while\n" + "we work on fixing this.",e);
+  }
+catch (  IOException e) {
     Base.showWarning("Error reading library list","A error occured while reading the list of available libraries.\n" + "Try restarting the Library Manager.\n",e);
   }
-catch (  Exception e) {
+catch (  SAXException e) {
     Base.showWarning("Error reading library list","The list of libraries downloaded from Processing.org\n" + "appears to be malformed. You can still install libraries\n" + "manually while we work on fixing this.",e);
+    libraries=null;
   }
 }

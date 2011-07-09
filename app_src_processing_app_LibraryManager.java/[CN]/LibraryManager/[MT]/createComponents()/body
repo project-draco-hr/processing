@@ -10,9 +10,9 @@
   c.fill=GridBagConstraints.HORIZONTAL;
   filterField=new FilterField();
   pane.add(filterField,c);
-  libraryListPane=new LibraryListPanel(this,libraryListing);
+  libraryListPanel=new LibraryListPanel(this,libraryListing);
   if (libraryListing == null) {
-    JProgressBar progressBar=libraryListPane.getSetupProgressBar();
+    JProgressBar progressBar=libraryListPanel.getSetupProgressBar();
     getLibraryListing(progressBar);
   }
   c=new GridBagConstraints();
@@ -24,13 +24,13 @@
   c.weightx=1;
   final JScrollPane scrollPane=new JScrollPane();
   scrollPane.setPreferredSize(new Dimension(300,300));
-  scrollPane.setViewportView(libraryListPane);
+  scrollPane.setViewportView(libraryListPanel);
   scrollPane.getViewport().setOpaque(true);
-  scrollPane.getViewport().setBackground(libraryListPane.getBackground());
+  scrollPane.getViewport().setBackground(libraryListPanel.getBackground());
   scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
   pane.add(scrollPane,c);
   scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-  libraryListPane.setPreferredViewPositionListener(new PreferredViewPositionListener(){
+  libraryListPanel.setPreferredViewPositionListener(new PreferredViewPositionListener(){
     public void handlePreferredLocation(    Point p){
       scrollPane.getViewport().setViewPosition(p);
     }
@@ -53,7 +53,7 @@
       if (ANY_CATEGORY.equals(category)) {
         category=null;
       }
-      libraryListPane.filterLibraries(category,filterField.filters);
+      libraryListPanel.filterLibraries(category,filterField.filters);
     }
   }
 );

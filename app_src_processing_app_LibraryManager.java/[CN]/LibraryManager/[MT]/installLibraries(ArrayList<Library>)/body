@@ -1,6 +1,5 @@
 {
   ArrayList<Library> oldLibs=editor.getMode().contribLibraries;
-  ArrayList<Library> libsToBeBackuped=new ArrayList<Library>();
   Iterator<Library> it=newLibs.iterator();
   while (it.hasNext()) {
     Library lib=it.next();
@@ -8,35 +7,15 @@
       if (oldLib.getName().equals(lib.getName()) && oldLib.libraryFolder.exists()) {
         int result=Base.showYesNoQuestion(editor,"Replace","Replace existing \"" + oldLib.getName() + "\" library?","An existing copy of the \"" + oldLib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ " in <i>libraries/old</i> before replacing it.");
         if (result == JOptionPane.YES_OPTION) {
-          libsToBeBackuped.add(oldLib);
+          if (!backupLibrary(oldLib)) {
+            return 0;
+          }
         }
  else {
           it.remove();
         }
         break;
       }
-    }
-  }
-  File backupFolder=null;
-  if (!libsToBeBackuped.isEmpty()) {
-    backupFolder=new File(editor.getBase().getSketchbookLibrariesFolder(),"old");
-    if (!backupFolder.exists() || !backupFolder.isDirectory()) {
-      if (!backupFolder.mkdirs()) {
-        Base.showWarning("Trouble creating folder to store old libraries in","Could not create folder " + backupFolder.getAbsolutePath() + ".\n"+ "That's gonna prevent us from replacing the library.",null);
-        return 0;
-      }
-    }
-  }
-  for (  Library lib : libsToBeBackuped) {
-    String libFolderName=lib.folder.getName();
-    String prefix=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-    final String backupName=prefix + "_" + libFolderName;
-    File backupFolderForLib=getUniqueName(backupFolder,backupName);
-    boolean success=false;
-    success=lib.folder.renameTo(backupFolderForLib);
-    if (!success) {
-      Base.showWarning("Trouble creating backup of old \"" + lib.getName() + "\" library","Could not move library to " + backupFolderForLib.getAbsolutePath() + "\n",null);
-      return 0;
     }
   }
   int failures=0;
@@ -50,8 +29,7 @@
   }
   int numInstalled=newLibs.size() - failures;
   if (numInstalled > 0) {
-    editor.getMode().rebuildLibraryList();
-    editor.getMode().rebuildImportMenu();
+    refreshInstalled();
   }
   return numInstalled;
 }

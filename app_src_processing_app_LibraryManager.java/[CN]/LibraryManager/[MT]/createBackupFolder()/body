@@ -1,0 +1,11 @@
+{
+  if (backupFolder != null)   return true;
+  backupFolder=new File(editor.getBase().getSketchbookLibrariesFolder(),"old");
+  if (!backupFolder.exists() || !backupFolder.isDirectory()) {
+    if (!backupFolder.mkdirs()) {
+      Base.showWarning("Trouble creating folder to store old libraries in","Could not create folder " + backupFolder.getAbsolutePath() + ".\n"+ "That's gonna prevent us from replacing the library.",null);
+      return false;
+    }
+  }
+  return true;
+}
