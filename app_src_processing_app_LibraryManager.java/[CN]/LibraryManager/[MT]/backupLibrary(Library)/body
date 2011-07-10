@@ -6,9 +6,11 @@
   String prefix=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
   final String backupName=prefix + "_" + libFolderName;
   File backupFolderForLib=getUniqueName(backupFolder,backupName);
-  boolean success=lib.folder.renameTo(backupFolderForLib);
-  if (!success) {
-    Base.showWarning("Trouble creating backup of old \"" + lib.getName() + "\" library","Could not move library to backup folder.\n",null);
+  if (lib.folder.renameTo(backupFolderForLib)) {
+    return true;
   }
-  return success;
+ else {
+    Base.showWarning("Trouble creating backup of old \"" + lib.getName() + "\" library","Could not move library to backup folder:\n" + backupFolderForLib.getAbsolutePath(),null);
+    return false;
+  }
 }

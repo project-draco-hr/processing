@@ -23,7 +23,10 @@
     Library newLib=it.next();
     String libFolderName=newLib.folder.getName();
     File libFolder=new File(editor.getBase().getSketchbookLibrariesFolder(),libFolderName);
-    if (!newLib.folder.renameTo(libFolder)) {
+    if (newLib.folder.renameTo(libFolder)) {
+      newLib.folder=libFolder;
+    }
+ else {
       Base.showWarning("Trouble moving new library to the sketchbook","Could not move \"" + newLib.getName() + "\" to "+ libFolder.getAbsolutePath()+ ".\n",null);
       it.remove();
     }

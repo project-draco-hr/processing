@@ -1,5 +1,11 @@
 {
-  installOrRemove.removeActionListener(removeAction);
-  installOrRemove.setText("Install");
-  installOrRemove.addActionListener(installLibAction);
+  if (Arrays.asList(installOrRemove.getActionListeners()).contains(installLibAction)) {
+    return false;
+  }
+ else {
+    installOrRemove.removeActionListener(removeAction);
+    installOrRemove.setText("Install");
+    installOrRemove.addActionListener(installLibAction);
+    return true;
+  }
 }
