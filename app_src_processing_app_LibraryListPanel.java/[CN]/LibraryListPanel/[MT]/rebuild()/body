@@ -1,10 +1,25 @@
 {
   for (  LibraryPanel libPanel : libPanels) {
-    if (libPanel.libInfo.isInstalled()) {
-      libPanel.useRemoveAction();
+    if (libPanel.info.isInstalled()) {
+      if (libPanel.info.library.folder.exists()) {
+        libPanel.useRemoveAction();
+      }
+ else {
+        libraries.removeLibrary(libPanel.info);
+        String libName=libPanel.info.name;
+        LibraryInfo newLibInfo=libraries.getAdvertisedLibrary(libName);
+        if (newLibInfo == null) {
+          remove(libPanel);
+        }
+ else {
+          libPanel.info=newLibInfo;
+          libPanel.useInstalledAction();
+        }
+      }
     }
  else {
       libPanel.useInstalledAction();
     }
   }
+  updateUI();
 }
