@@ -1,16 +1,19 @@
 {
   removeAction=new ActionListener(){
     public void actionPerformed(    ActionEvent arg){
+      installOrRemove.setEnabled(false);
       libraryManager.uninstallLibrary(libInfo.library);
+      installOrRemove.setEnabled(true);
     }
   }
 ;
   installLibAction=new ActionListener(){
     public void actionPerformed(    ActionEvent arg){
+      installOrRemove.setEnabled(false);
       try {
         URL url=new URL(libInfo.link);
         installProgressBar.setVisible(true);
-        libraryManager.installLibraryFromUrl(url,new JProgressMonitor(installProgressBar){
+        libraryManager.installLibraryFromUrl(url,LibraryPanel.this,new JProgressMonitor(installProgressBar){
           public void finishedAction(){
           }
         }
@@ -24,6 +27,7 @@
  catch (      MalformedURLException e) {
         Base.showWarning("Install Failed","The link fetched from Processing.org is invalid.\n" + "You can still intall this library manually by visiting\n" + "the library's website.",e);
       }
+      installOrRemove.setEnabled(true);
     }
   }
 ;

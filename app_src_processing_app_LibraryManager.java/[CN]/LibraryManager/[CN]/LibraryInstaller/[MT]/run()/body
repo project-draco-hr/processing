@@ -2,7 +2,11 @@
   File libFile=fileDownloader.getFile();
   if (libFile != null) {
     progressMonitor.startTask("Installing",ProgressMonitor.UNKNOWN);
-    installLibrary(libFile);
+    ArrayList<Library> info=installLibrary(libFile);
+    if (info != null) {
+      libraryPanel.libInfo=info.get(0).info;
+    }
+    refreshInstalled();
   }
   dialog.pack();
   progressMonitor.finished();

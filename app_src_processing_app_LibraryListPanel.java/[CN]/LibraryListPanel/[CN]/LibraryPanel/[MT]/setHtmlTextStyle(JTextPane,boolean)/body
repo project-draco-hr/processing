@@ -3,10 +3,12 @@
   textPane.setOpaque(false);
   textPane.setEditable(true);
   Font font=UIManager.getFont("Label.font");
-  StyledDocument sdoc=textPane.getStyledDocument();
-  SimpleAttributeSet sa=new SimpleAttributeSet();
-  StyleConstants.setAlignment(sa,StyleConstants.ALIGN_JUSTIFIED);
-  sdoc.setParagraphAttributes(0,1,sa,false);
+  if (justified) {
+    StyledDocument sdoc=textPane.getStyledDocument();
+    SimpleAttributeSet sa=new SimpleAttributeSet();
+    StyleConstants.setAlignment(sa,StyleConstants.ALIGN_JUSTIFIED);
+    sdoc.setParagraphAttributes(0,1,sa,false);
+  }
   Document doc=textPane.getDocument();
   if (doc instanceof HTMLDocument) {
     HTMLDocument html=(HTMLDocument)doc;
