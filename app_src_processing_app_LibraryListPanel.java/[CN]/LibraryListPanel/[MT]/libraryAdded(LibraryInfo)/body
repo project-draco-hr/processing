@@ -1,14 +1,15 @@
 {
-  System.out.println("Adding " + libraryInfo.name);
+  LibraryPanel newPanel=new LibraryPanel(libraryInfo);
+synchronized (libPanels) {
+    libPanels.add(newPanel);
+    Collections.sort(libPanels);
+  }
   GridBagConstraints c=new GridBagConstraints();
   c.fill=GridBagConstraints.HORIZONTAL;
   c.weightx=1;
   c.gridx=0;
-  c.gridy=row++;
-  LibraryPanel libPanel=new LibraryPanel(libraryInfo);
-synchronized (libPanels) {
-    libPanels.add(libPanel);
-  }
-  add(libPanel,c);
+  c.gridy=getRowForPanel(newPanel);
+  rowForEachPanel.put(newPanel,c.gridy);
+  add(newPanel,c);
   updateColors();
 }
