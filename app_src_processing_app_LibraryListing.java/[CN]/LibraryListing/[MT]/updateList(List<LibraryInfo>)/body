@@ -1,6 +1,6 @@
 {
   HashSet<String> installedLibraryNames=new HashSet<String>();
-  for (  LibraryInfo libInfo : installedLibraries) {
+  for (  LibraryInfo libInfo : libraries) {
     installedLibraryNames.add(libInfo.name);
   }
   HashMap<String,String> categoriesByName=new HashMap<String,String>();
@@ -12,10 +12,11 @@
         librariesByCategory.get(libInfo.category).remove(libInfo);
       }
       it.remove();
+      notifyRemove(libInfo);
       categoriesByName.put(libInfo.name,libInfo.category);
     }
   }
-  for (  LibraryInfo libInfo : installedLibraries) {
+  for (  LibraryInfo libInfo : libraries) {
     String category=categoriesByName.get(libInfo.name);
     if (category != null) {
       libInfo.category=category;

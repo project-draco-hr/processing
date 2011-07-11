@@ -1,20 +1,19 @@
 {
   if (libraryListing == null) {
-    final LibraryListFetcher llf=new LibraryListFetcher();
+    libraryListing=new LibraryListing();
+    libraryListing.addLibraryListener(libraryListPanel);
+    final LibraryListFetcher llf=new LibraryListFetcher(libraryListing);
     llf.setProgressMonitor(new JProgressMonitor(progressBar){
       @Override public void finishedAction(){
         libraryListing=llf.getLibraryListing();
 synchronized (libraryListing) {
           updateLibraryListing();
-          if (libraryListPanel != null) {
-            libraryListPanel.setLibraryList(libraryListing);
-          }
           updateCategoryChooser();
+          progressBar.setVisible(false);
         }
       }
     }
 );
     new Thread(llf).start();
   }
-  return libraryListing;
 }

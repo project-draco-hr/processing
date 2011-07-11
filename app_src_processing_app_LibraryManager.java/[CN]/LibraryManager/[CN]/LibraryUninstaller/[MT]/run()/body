@@ -2,8 +2,15 @@
   pm.startTask("Removing",ProgressMonitor.UNKNOWN);
   if (library != null) {
     if (backupLibrary(library)) {
-      refreshInstalled();
+      LibraryInfo advertisedVersion=libraryListing.getAdvertisedLibrary(library.info.name);
+      if (advertisedVersion == null) {
+        libraryListing.removeLibrary(library.info);
+      }
+ else {
+        libraryListing.replaceLibrary(library.info,advertisedVersion);
+      }
     }
   }
+  refreshInstalled();
   pm.finished();
 }

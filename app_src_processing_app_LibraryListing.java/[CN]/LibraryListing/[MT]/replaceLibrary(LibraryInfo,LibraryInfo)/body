@@ -1,0 +1,19 @@
+{
+  if (oldLib == null || newLib == null) {
+    return;
+  }
+  if (librariesByCategory.containsKey(oldLib.category)) {
+    List<LibraryInfo> list=librariesByCategory.get(oldLib.category);
+    for (int i=0; i < list.size(); i++) {
+      if (list.get(i) == oldLib) {
+        list.set(i,newLib);
+      }
+    }
+  }
+  for (int i=0; i < allLibraries.size(); i++) {
+    if (allLibraries.get(i) == oldLib) {
+      allLibraries.set(i,newLib);
+    }
+  }
+  notifyChange(oldLib,newLib);
+}

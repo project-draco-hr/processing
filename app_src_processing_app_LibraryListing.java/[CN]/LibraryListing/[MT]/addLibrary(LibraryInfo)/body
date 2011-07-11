@@ -1,6 +1,8 @@
 {
   if (librariesByCategory.containsKey(libInfo.category)) {
-    librariesByCategory.get(libInfo.category).add(libInfo);
+    List<LibraryInfo> list=librariesByCategory.get(libInfo.category);
+    list.add(libInfo);
+    Collections.sort(list);
   }
  else {
     ArrayList<LibraryInfo> libs=new ArrayList<LibraryInfo>();
@@ -8,4 +10,6 @@
     librariesByCategory.put(libInfo.category,libs);
   }
   allLibraries.add(libInfo);
+  notifyAdd(libInfo);
+  Collections.sort(allLibraries);
 }
