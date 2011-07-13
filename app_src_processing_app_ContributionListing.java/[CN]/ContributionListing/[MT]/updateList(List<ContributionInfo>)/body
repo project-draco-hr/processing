@@ -1,0 +1,27 @@
+{
+  HashSet<String> installedContributionNames=new HashSet<String>();
+  for (  ContributionInfo libInfo : libraries) {
+    installedContributionNames.add(libInfo.name);
+  }
+  HashMap<String,String> categoriesByName=new HashMap<String,String>();
+  Iterator<ContributionInfo> it=allLibraries.iterator();
+  while (it.hasNext()) {
+    ContributionInfo libInfo=it.next();
+    if (installedContributionNames.contains(libInfo.name)) {
+      if (librariesByCategory.containsKey(libInfo.category)) {
+        librariesByCategory.get(libInfo.category).remove(libInfo);
+      }
+      it.remove();
+      notifyRemove(libInfo);
+      categoriesByName.put(libInfo.name,libInfo.category);
+    }
+  }
+  for (  ContributionInfo libInfo : libraries) {
+    String category=categoriesByName.get(libInfo.name);
+    if (category != null) {
+      libInfo.category=category;
+    }
+    addContribution(libInfo);
+  }
+  Collections.sort(allLibraries);
+}

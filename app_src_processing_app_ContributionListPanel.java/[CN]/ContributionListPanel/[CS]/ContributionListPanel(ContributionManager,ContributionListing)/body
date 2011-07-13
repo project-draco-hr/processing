@@ -1,0 +1,42 @@
+{
+  super();
+  this.contributionManager=libraryManager;
+  rowForEachPanel=new HashMap<ContributionPanel,Integer>();
+  preferredViewPositionListener=new PreferredViewPositionListener(){
+    public void handlePreferredLocation(    Point p){
+    }
+  }
+;
+  setLayout(new GridBagLayout());
+  setFocusable(true);
+  setOpaque(true);
+  if (Base.isLinux()) {
+    setBackground(Color.white);
+  }
+ else {
+    setBackground(UIManager.getColor("List.background"));
+  }
+  contributionPanels=new ArrayList<ContributionPanel>();
+  addMouseListener(new MouseAdapter(){
+    public void mousePressed(    MouseEvent mouseEvent){
+      requestFocusInWindow();
+    }
+  }
+);
+  if (libraryListing == null) {
+    GridBagConstraints c=new GridBagConstraints();
+    c.fill=GridBagConstraints.HORIZONTAL;
+    c.weightx=1;
+    c.weighty=1;
+    c.anchor=GridBagConstraints.CENTER;
+    setupProgressBar=new JProgressBar();
+    setupProgressBar.setString("");
+    setupProgressBar.setStringPainted(true);
+    add(setupProgressBar,c);
+  }
+ else {
+    for (    ContributionInfo info : libraryListing.getAllLibararies()) {
+      contributionAdded(info);
+    }
+  }
+}
