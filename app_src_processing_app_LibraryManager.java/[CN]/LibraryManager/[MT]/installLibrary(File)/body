@@ -28,7 +28,13 @@
       }
     }
     if (!errorEncountered) {
-      return installLibraries(discoveredLibs);
+      if (discoveredLibs.isEmpty()) {
+        Base.showWarning("Trouble discovering libraries","Maybe it's just us, but it looks like there are no\n" + "libraries in the file we just downloaded.\n",null);
+        return null;
+      }
+ else {
+        return installLibraries(discoveredLibs);
+      }
     }
   }
  catch (  IOException ioe) {
