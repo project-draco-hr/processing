@@ -1,0 +1,16 @@
+{
+  return new ActionListener(){
+    public void actionPerformed(    ActionEvent arg){
+      installOrRemove.setEnabled(false);
+      installProgressBar.setVisible(true);
+      contributionManager.uninstallLibrary(getInfo().library,new JProgressMonitor(installProgressBar){
+        public void finishedAction(){
+          resetInstallProgressBarState();
+          installOrRemove.setEnabled(true);
+        }
+      }
+);
+    }
+  }
+;
+}

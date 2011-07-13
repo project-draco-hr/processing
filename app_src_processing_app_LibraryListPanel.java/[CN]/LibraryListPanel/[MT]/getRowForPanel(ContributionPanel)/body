@@ -1,0 +1,20 @@
+{
+  int currentIndex=0;
+  while (currentIndex < contributionPanels.size()) {
+    ContributionPanel currentPanel=contributionPanels.get(currentIndex);
+    if (currentPanel == newPanel) {
+      break;
+    }
+    currentIndex++;
+  }
+  int lastIndex=currentIndex - 1;
+  int nextIndex=currentIndex + 1;
+  ContributionPanel last=null, next=null;
+  if (0 <= lastIndex && lastIndex < contributionPanels.size())   last=contributionPanels.get(lastIndex);
+  if (0 <= nextIndex && nextIndex < contributionPanels.size())   next=contributionPanels.get(nextIndex);
+  Integer lastRow=rowForEachPanel.get(last);
+  if (lastRow == null)   lastRow=0;
+  Integer nextRow=rowForEachPanel.get(next);
+  if (nextRow == null)   nextRow=16384;
+  return lastRow + ((nextRow - lastRow) / 2);
+}

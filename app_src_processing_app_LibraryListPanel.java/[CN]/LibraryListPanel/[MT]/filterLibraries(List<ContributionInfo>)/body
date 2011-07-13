@@ -1,0 +1,18 @@
+{
+  if (contributionPanels != null) {
+synchronized (contributionPanels) {
+      List<ContributionPanel> hiddenPanels=new ArrayList(contributionPanels);
+      for (      ContributionInfo lib : filteredContributions) {
+        for (        ContributionPanel libPanel : contributionPanels) {
+          if (libPanel.info == lib) {
+            libPanel.setVisible(true);
+            hiddenPanels.remove(libPanel);
+          }
+        }
+      }
+      for (      ContributionPanel libPanel : hiddenPanels) {
+        libPanel.setVisible(false);
+      }
+    }
+  }
+}

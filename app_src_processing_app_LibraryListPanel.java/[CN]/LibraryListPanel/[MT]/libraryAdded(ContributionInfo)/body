@@ -1,0 +1,20 @@
+{
+  ContributionPanel newPanel=null;
+  if (contributionInfo.getType() == ContributionType.LIBRARY) {
+    newPanel=new LibraryPanel((LibraryInfo)contributionInfo);
+  }
+  if (newPanel != null) {
+synchronized (contributionPanels) {
+      contributionPanels.add(newPanel);
+      Collections.sort(contributionPanels);
+    }
+    GridBagConstraints c=new GridBagConstraints();
+    c.fill=GridBagConstraints.HORIZONTAL;
+    c.weightx=1;
+    c.gridx=0;
+    c.gridy=getRowForPanel(newPanel);
+    rowForEachPanel.put(newPanel,c.gridy);
+    add(newPanel,c);
+    updateColors();
+  }
+}
