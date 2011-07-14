@@ -20,9 +20,17 @@
           gplayer=new PlayBin2("GSMovie Player");
           gplayer.setInputFile(file);
         }
- else {
-          System.err.println("File " + filename + " does not exist. Please check location.");
-        }
+      }
+ catch (      Exception e) {
+        PApplet.println("Shit coming...");
+        e.printStackTrace();
+      }
+    }
+    if (gplayer == null) {
+      try {
+        PApplet.println("network read");
+        gplayer=new PlayBin2("GSMovie Player");
+        gplayer.setURI(URI.create(filename));
       }
  catch (      Exception e) {
         PApplet.println("Shit coming...");
