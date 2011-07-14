@@ -1,44 +1,34 @@
 {
-  String libName=guessLibraryName(libFile);
-  File tmpFolder=null;
+  String libName=getFileName(libFile);
+  File tempDir=unzipFileToTemp(libFile,libName);
   try {
-    tmpFolder=Base.createTempFolder(libName,"uncompressed");
-  }
- catch (  IOException e) {
-    Base.showWarning("Trouble creating temporary folder","Could not create a place to store libary's uncompressed contents,\n" + "so it won't be installed.",e);
-  }
-  boolean errorEncountered=false;
-  unzip(libFile,tmpFolder);
-  try {
-    ArrayList<Library> discoveredLibs=Library.list(tmpFolder);
+    ArrayList<Library> discoveredLibs=Library.list(tempDir);
     if (discoveredLibs.isEmpty()) {
-      File newLibFolder=getUniqueName(tmpFolder,libName);
-      if (newLibFolder.mkdirs()) {
-        for (        File f : tmpFolder.listFiles()) {
-          if (!f.equals(newLibFolder)) {
-            if (!f.renameTo(new File(newLibFolder,f.getName()))) {
-              errorEncountered=true;
-            }
-          }
-        }
-        discoveredLibs=Library.list(tmpFolder);
+      discoveredLibs=recoverLibrary(tempDir,libName);
+    }
+    if (discoveredLibs != null && discoveredLibs.size() == 1) {
+      Library discoveredLib=discoveredLibs.get(0);
+      if (installLibrary(discoveredLib)) {
+        return discoveredLib;
       }
  else {
-        errorEncountered=true;
-      }
-    }
-    if (!errorEncountered) {
-      if (discoveredLibs.isEmpty()) {
-        Base.showWarning("Trouble discovering libraries","Maybe it's just us, but it looks like there are no\n" + "libraries in the file we just downloaded.\n",null);
         return null;
       }
+    }
  else {
-        return installLibraries(discoveredLibs);
+      if (discoveredLibs == null) {
+        Base.showWarning(DISCOVERY_ERROR_TITLE,DISCOVERY_INTERNAL_ERROR_MESSAGE,null);
+      }
+ else       if (discoveredLibs.isEmpty()) {
+        Base.showWarning(DISCOVERY_ERROR_TITLE,"Maybe it's just us, but it looks like there are no\n" + "libraries in the file we just downloaded.\n",null);
+      }
+ else {
+        Base.showWarning("Too many libraries","We found more than one library in the library file\n" + "we just downloaded. That shouldn't happen, so we're\n" + "going to ignore this file.",null);
       }
     }
   }
  catch (  IOException ioe) {
-    Base.showWarning("Trouble discovering libraries","An internal error occured while searching for libraries in the file.\n" + "This may be a one time error, so try again.",ioe);
+    Base.showWarning(DISCOVERY_ERROR_TITLE,DISCOVERY_INTERNAL_ERROR_MESSAGE,ioe);
   }
   return null;
 }

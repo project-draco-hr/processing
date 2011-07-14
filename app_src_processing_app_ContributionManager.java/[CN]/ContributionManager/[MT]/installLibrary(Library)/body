@@ -1,0 +1,30 @@
+{
+  ArrayList<Library> oldLibs=editor.getMode().contribLibraries;
+  String libFolderName=newLib.folder.getName();
+  File libraryDestination=editor.getBase().getSketchbookLibrariesFolder();
+  File newLibDest=new File(libraryDestination,libFolderName);
+  boolean doInstall=true;
+  for (  Library oldLib : oldLibs) {
+    if (oldLib.libraryFolder.exists() && oldLib.equals(newLibDest)) {
+      int result=Base.showYesNoQuestion(editor,"Replace","Replace existing \"" + oldLib.getName() + "\" library?","An existing copy of the \"" + oldLib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ " in <i>libraries/old</i> before replacing it.");
+      if (result == JOptionPane.YES_OPTION) {
+        if (!backupLibrary(oldLib)) {
+          return false;
+        }
+      }
+ else {
+        doInstall=false;
+      }
+    }
+  }
+  if (doInstall) {
+    if (newLib.folder.renameTo(newLibDest)) {
+      newLib.folder=newLibDest;
+      return true;
+    }
+ else {
+      Base.showWarning("Trouble moving new library to the sketchbook","Could not move library \"" + newLib.getName() + "\" to "+ newLibDest.getAbsolutePath()+ ".\n",null);
+    }
+  }
+  return false;
+}

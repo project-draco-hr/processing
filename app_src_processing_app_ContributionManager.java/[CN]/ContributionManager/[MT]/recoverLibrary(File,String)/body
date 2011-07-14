@@ -1,0 +1,16 @@
+{
+  File newLibFolder=getUniqueName(tempDir,libName);
+  if (newLibFolder.mkdirs()) {
+    for (    File f : tempDir.listFiles()) {
+      if (!f.equals(newLibFolder)) {
+        if (!f.renameTo(new File(newLibFolder,f.getName()))) {
+          return null;
+        }
+      }
+    }
+    return Library.list(tempDir);
+  }
+ else {
+    return null;
+  }
+}

@@ -1,0 +1,18 @@
+{
+  downloadAndInstall(url,downloadProgressMonitor,installProgressMonitor,new Installer(){
+    public boolean install(    File f){
+      String libName=getFileName(f);
+      File parentDir=unzipFileToTemp(f,libName);
+      String folderName=libPanel.info.name;
+      File libraryDestination=editor.getBase().getSketchbookLibrariesFolder();
+      File dest=new File(libraryDestination,folderName);
+      boolean errorEncountered=false;
+      if (dest.exists()) {
+        if (!dest.delete()) {
+        }
+      }
+      return !errorEncountered && parentDir.renameTo(dest);
+    }
+  }
+);
+}
