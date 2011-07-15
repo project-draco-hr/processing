@@ -1,0 +1,25 @@
+{
+  HashMap<String,ArrayList<Library>> libsByGroup=new HashMap<String,ArrayList<Library>>();
+  for (  Library lib : libraries) {
+    String group=lib.getGroup();
+    if (group != null) {
+      if (!libsByGroup.containsKey(group)) {
+        ArrayList<Library> libs=new ArrayList<Library>();
+        libs.add(lib);
+        libsByGroup.put(group,libs);
+      }
+ else {
+        libsByGroup.get(group).add(lib);
+      }
+    }
+  }
+  ArrayList<LibraryCompilation> compilations=new ArrayList<LibraryCompilation>();
+  for (  ArrayList<Library> libList : libsByGroup.values()) {
+    try {
+      compilations.add(new LibraryCompilation(libList));
+    }
+ catch (    IllegalArgumentException e) {
+    }
+  }
+  return compilations;
+}

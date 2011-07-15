@@ -1,8 +1,17 @@
 {
   ArrayList<Library> libraries=editor.getMode().contribLibraries;
+  ArrayList<LibraryCompilation> compilations=LibraryCompilation.list(libraries);
+  for (  LibraryCompilation compilation : compilations) {
+    for (    Library lib : compilation.libraries) {
+      libraries.remove(lib);
+    }
+  }
   ArrayList<ContributionInfo> infoList=new ArrayList<ContributionInfo>();
   for (  Library library : libraries) {
     infoList.add(library.info);
+  }
+  for (  LibraryCompilation compilation : compilations) {
+    infoList.add(compilation.info);
   }
   contributionListing.updateList(infoList);
 }

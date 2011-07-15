@@ -1,10 +1,9 @@
 {
-  String libName=getFileName(libFile);
-  File tempDir=unzipFileToTemp(libFile,libName);
+  File tempDir=unzipFileToTemp(libFile);
   try {
     ArrayList<Library> discoveredLibs=Library.list(tempDir);
     if (discoveredLibs.isEmpty()) {
-      discoveredLibs=recoverLibrary(tempDir,libName);
+      discoveredLibs=Library.list(tempDir.getParentFile());
     }
     if (discoveredLibs != null && discoveredLibs.size() == 1) {
       Library discoveredLib=discoveredLibs.get(0);
@@ -20,7 +19,7 @@
         Base.showWarning(DISCOVERY_ERROR_TITLE,DISCOVERY_INTERNAL_ERROR_MESSAGE,null);
       }
  else       if (discoveredLibs.isEmpty()) {
-        Base.showWarning(DISCOVERY_ERROR_TITLE,"Maybe it's just us, but it looks like there are no\n" + "libraries in the file we just downloaded.\n",null);
+        Base.showWarning(DISCOVERY_ERROR_TITLE,DISCOVERY_NONE_FOUND_ERROR_MESSAGE,null);
       }
  else {
         Base.showWarning("Too many libraries","We found more than one library in the library file\n" + "we just downloaded. That shouldn't happen, so we're\n" + "going to ignore this file.",null);

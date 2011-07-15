@@ -1,0 +1,14 @@
+{
+  String fileName=getFileName(libFile);
+  File tmpFolder=null;
+  try {
+    tmpFolder=Base.createTempFolder(fileName,"uncompressed");
+    tmpFolder=new File(tmpFolder,fileName);
+    tmpFolder.mkdirs();
+  }
+ catch (  IOException e) {
+    Base.showWarning("Trouble creating temporary folder","Could not create a place to store libary's uncompressed contents,\n" + "so it won't be installed.",e);
+  }
+  unzip(libFile,tmpFolder);
+  return tmpFolder;
+}

@@ -1,0 +1,24 @@
+{
+  File backupFolder=null;
+switch (lib.getInfo().getType()) {
+case LIBRARY:
+case LIBRARY_COMPILATION:
+    backupFolder=createLibraryBackupFolder();
+  break;
+case MODE:
+case TOOL:
+break;
+}
+if (backupFolder == null) return false;
+String libFolderName=lib.getFolder().getName();
+String prefix=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+final String backupName=prefix + "_" + libFolderName;
+File backupFolderForLib=getUniqueName(backupFolder,backupName);
+if (lib.getFolder().renameTo(backupFolderForLib)) {
+return true;
+}
+ else {
+Base.showWarning("Trouble creating backup of old \"" + lib.getInfo().name + "\" library","Could not move library to backup folder:\n" + backupFolderForLib.getAbsolutePath(),null);
+return false;
+}
+}
