@@ -1,7 +1,17 @@
 {
   this.info=contributionInfo;
+  this.installer=contributionInstaller;
   okayToOpenHyperLink=false;
-  hyperlinkOpener=new ConditionalHyperlinkListener();
+  conditionalHyperlinkOpener=new HyperlinkListener(){
+    public void hyperlinkUpdate(    HyperlinkEvent e){
+      if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        if (okayToOpenHyperLink) {
+          Base.openURL(e.getURL().toString());
+        }
+      }
+    }
+  }
+;
   setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
   createAuthorString();
   installAction=createInstallAction();

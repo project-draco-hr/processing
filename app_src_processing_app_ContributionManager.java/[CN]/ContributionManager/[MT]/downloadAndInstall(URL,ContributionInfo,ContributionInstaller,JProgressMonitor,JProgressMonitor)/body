@@ -6,8 +6,11 @@
       File libFile=downloader.getFile();
       if (libFile != null) {
         installProgressMonitor.startTask("Installing",ProgressMonitor.UNKNOWN);
-        installOperation.install(libFile);
-        refreshInstalled();
+        Contribution contribution=installOperation.installContribution(libFile);
+        if (contribution != null) {
+          contributionListing.replaceContribution(info,contribution.getInfo());
+          refreshInstalled();
+        }
       }
       dialog.pack();
       installProgressMonitor.finished();

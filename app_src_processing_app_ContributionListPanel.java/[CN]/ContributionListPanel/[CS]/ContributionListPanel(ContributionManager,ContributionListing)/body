@@ -2,8 +2,15 @@
   super();
   this.contributionManager=libraryManager;
   rowForEachPanel=new HashMap<ContributionPanel,Integer>();
-  preferredViewPositionListener=new PreferredViewPositionListener(){
-    public void handlePreferredLocation(    Point p){
+  libraryInstaller=new ContributionInstaller(){
+    public Contribution installContribution(    File f){
+      return contributionManager.installLibrary(f);
+    }
+  }
+;
+  compilationInstaller=new ContributionInstaller(){
+    public Contribution installContribution(    File f){
+      return contributionManager.installLibraryCompilation(f);
     }
   }
 ;
