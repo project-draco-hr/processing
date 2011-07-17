@@ -9,26 +9,24 @@
   c.anchor=GridBagConstraints.WEST;
   headerLabel=new JTextPane();
   headerLabel.setContentType("text/html");
-  StringBuilder header=new StringBuilder();
-  header.append("<html><body>");
-  header.append("<b>");
+  StringBuilder nameText=new StringBuilder();
+  nameText.append("<html><body><b>");
   if (info.url == null) {
-    header.append(info.name);
+    nameText.append(info.name);
   }
  else {
-    header.append("<a href=\"" + info.url + "\">"+ info.name+ "</a>");
+    nameText.append("<a href=\"" + info.url + "\">"+ info.name+ "</a>");
   }
-  header.append("</b>");
-  header.append(createAuthorString());
-  header.append("</body></html>");
-  headerLabel.setText(header.toString());
+  nameText.append("</b>");
+  nameText.append(createAuthorString());
+  nameText.append("</body></html>");
+  headerLabel.setText(nameText.toString());
   setHtmlTextStyle(headerLabel,false);
-  headerLabel.addHyperlinkListener(nullHyperlinkListener);
   add(headerLabel,c);
   c=new GridBagConstraints();
   c.gridx=1;
   c.gridy=0;
-  c.anchor=GridBagConstraints.EAST;
+  c.anchor=GridBagConstraints.WEST;
   categoryLabel=new JLabel("[" + info.category + "]");
   categoryLabel.setBorder(BorderFactory.createEmptyBorder(0,0,0,7));
   add(categoryLabel,c);
@@ -36,7 +34,7 @@
   c.gridx=0;
   c.gridy=1;
   c.weightx=1;
-  c.gridwidth=3;
+  c.gridwidth=2;
   c.fill=GridBagConstraints.BOTH;
   c.anchor=GridBagConstraints.WEST;
   descriptionText=new JTextPane();
@@ -48,8 +46,19 @@
   if (info.sentence != null && info.paragraph != null)   description.append(info.paragraph);
   description.append("</body></html>");
   descriptionText.setText(description.toString());
-  descriptionText.addHyperlinkListener(nullHyperlinkListener);
   descriptionText.setMargin(new Insets(0,25,10,5));
   setHtmlTextStyle(descriptionText,true);
   add(descriptionText,c);
+  c=new GridBagConstraints();
+  c.gridx=0;
+  c.gridy=2;
+  c.weightx=1;
+  c.gridwidth=2;
+  c.fill=GridBagConstraints.BOTH;
+  c.anchor=GridBagConstraints.WEST;
+  versionLabel=new JTextPane();
+  versionLabel.setContentType("text/html");
+  setHtmlTextStyle(versionLabel,false);
+  versionLabel.setVisible(false);
+  add(versionLabel,c);
 }

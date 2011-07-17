@@ -5,9 +5,12 @@
   File newLibDest=new File(libraryDestination,libFolderName);
   boolean doInstall=true;
   for (  Library oldLib : oldLibs) {
-    if (oldLib.libraryFolder.exists() && oldLib.equals(newLibDest)) {
-      int result=Base.showYesNoQuestion(editor,"Replace","Replace existing \"" + oldLib.getName() + "\" library?","An existing copy of the \"" + oldLib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ " in <i>libraries/old</i> before replacing it.");
-      if (result == JOptionPane.YES_OPTION) {
+    if (oldLib.folder.exists() && oldLib.folder.equals(newLibDest)) {
+      int result=0;
+      if (confirmReplace) {
+        result=Base.showYesNoQuestion(editor,"Replace","Replace existing \"" + oldLib.getName() + "\" library?","An existing copy of the \"" + oldLib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ " in <i>libraries/old</i> before replacing it.");
+      }
+      if (!confirmReplace || result == JOptionPane.YES_OPTION) {
         if (!backupContribution(oldLib)) {
           return false;
         }

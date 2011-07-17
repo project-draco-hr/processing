@@ -1,0 +1,16 @@
+{
+  for (  ContributionInfo contribution : installedContributions) {
+    getInformationFromAdvertised(contribution);
+    boolean found=false;
+    for (    ContributionInfo existing : allLibraries) {
+      if (existing.name.equals(contribution.name) && existing.getType() == contribution.getType()) {
+        replaceContribution(existing,contribution);
+        found=true;
+        break;
+      }
+    }
+    if (!found) {
+      addContribution(contribution);
+    }
+  }
+}

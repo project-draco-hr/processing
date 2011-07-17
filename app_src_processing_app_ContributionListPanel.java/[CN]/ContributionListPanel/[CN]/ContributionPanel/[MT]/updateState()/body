@@ -1,8 +1,24 @@
 {
   if (info.isInstalled()) {
+    StringBuilder versionText=new StringBuilder();
+    versionText.append("<html><body>");
+    versionText.append("Version ");
+    versionText.append(info.prettyVersion);
+    versionText.append(" installed.");
+    if (info.latestVersion != null && info.latestVersion.version > info.version) {
+      versionText.append(" <a href=\"");
+      versionText.append(UPDATE_LINK);
+      versionText.append("\">");
+      versionText.append("Click here to update to latest version.</a>");
+    }
+    versionText.append("</body></html>");
+    versionLabel.setText(versionText.toString());
+    versionLabel.setMargin(new Insets(0,25,10,5));
+    versionLabel.setVisible(true);
     useRemoveAction();
   }
  else {
     useInstalledAction();
+    versionLabel.setVisible(false);
   }
 }

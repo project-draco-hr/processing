@@ -1,6 +1,19 @@
 {
-  isSelected=doShow;
-  installOrRemove.setVisible(doShow);
-  updateLiseners(headerLabel);
-  updateLiseners(descriptionText);
+  this.isSelected=isSelected;
+  installOrRemove.setVisible(isSelected);
+  for (  JTextPane textPane : htmlPanes) {
+    if (textPane instanceof JEditorPane) {
+      JEditorPane editorPane=(JEditorPane)textPane;
+      if (isSelected) {
+        editorPane.removeHyperlinkListener(nullHyperlinkListener);
+        editorPane.addHyperlinkListener(conditionalHyperlinkOpener);
+        editorPane.setEditable(false);
+      }
+ else {
+        editorPane.removeHyperlinkListener(conditionalHyperlinkOpener);
+        editorPane.addHyperlinkListener(nullHyperlinkListener);
+        editorPane.setEditable(true);
+      }
+    }
+  }
 }

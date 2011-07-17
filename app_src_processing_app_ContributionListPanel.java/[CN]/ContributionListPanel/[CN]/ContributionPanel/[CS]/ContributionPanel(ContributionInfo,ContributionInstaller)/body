@@ -1,19 +1,24 @@
 {
   this.info=contributionInfo;
   this.installer=contributionInstaller;
+  htmlPanes=new ArrayList<JTextPane>();
   okayToOpenHyperLink=false;
   conditionalHyperlinkOpener=new HyperlinkListener(){
     public void hyperlinkUpdate(    HyperlinkEvent e){
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         if (okayToOpenHyperLink) {
-          Base.openURL(e.getURL().toString());
+          if (UPDATE_LINK.equals(e.getURL().toString())) {
+            installContribution(info.latestVersion.link);
+          }
+ else {
+            Base.openURL(e.getURL().toString());
+          }
         }
       }
     }
   }
 ;
   setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-  createAuthorString();
   installAction=createInstallAction();
   removeAction=createRemoveAction();
   addPaneComponents();
@@ -43,9 +48,5 @@
   }
 ;
   addMouseListener(expandPanelMouseListener);
-  stripListeners(headerLabel);
-  stripListeners(descriptionText);
-  headerLabel.addMouseListener(expandPanelMouseListener);
-  categoryLabel.addMouseListener(expandPanelMouseListener);
-  descriptionText.addMouseListener(expandPanelMouseListener);
+  stripListener(expandPanelMouseListener,this);
 }
