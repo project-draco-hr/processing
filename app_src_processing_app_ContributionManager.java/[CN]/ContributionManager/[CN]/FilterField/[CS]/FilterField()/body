@@ -20,20 +20,13 @@
 );
   getDocument().addDocumentListener(new DocumentListener(){
     public void removeUpdate(    DocumentEvent e){
-      filter();
+      applyFilter();
     }
     public void insertUpdate(    DocumentEvent e){
-      filter();
+      applyFilter();
     }
     public void changedUpdate(    DocumentEvent e){
-      filter();
-    }
-    void filter(){
-      String filter=filterField.getFilterText();
-      filter=filter.toLowerCase();
-      filter=filter.replaceAll("[^\\x30-\\x39^\\x61-\\x7a^\\x3a]"," ");
-      filters=Arrays.asList(filter.split(" "));
-      filterLibraries(category,filters);
+      applyFilter();
     }
   }
 );

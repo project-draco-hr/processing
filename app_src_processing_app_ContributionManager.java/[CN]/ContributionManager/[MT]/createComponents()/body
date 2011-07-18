@@ -10,11 +10,20 @@
   c.fill=GridBagConstraints.HORIZONTAL;
   filterField=new FilterField();
   pane.add(filterField,c);
-  contributionListPanel=new ContributionListPanel(this,contributionListing);
-  if (contributionListing == null) {
-    JProgressBar progressBar=contributionListPanel.getSetupProgressBar();
-    getContributionListing(progressBar);
+  contributionListing=new ContributionListing();
+  contributionListPanel=new ContributionListPanel(this);
+  contributionListing.addContributionListener(contributionListPanel);
+  JProgressBar progressBar=contributionListPanel.getSetupProgressBar();
+  contributionListing.getAdvertisedContributions(new JProgressMonitor(progressBar){
+    @Override public void finishedAction(){
+synchronized (contributionListing) {
+        updateContributionListing();
+        updateCategoryChooser();
+        progressBar.setVisible(false);
+      }
+    }
   }
+);
   c=new GridBagConstraints();
   c.fill=GridBagConstraints.BOTH;
   c.gridx=0;
