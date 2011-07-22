@@ -1,10 +1,10 @@
 {
-synchronized (contributionPanels) {
-    for (    ContributionPanel panel : contributionPanels) {
-      if (panel.info == oldInfo) {
-        panel.info=newInfo;
-        panel.updateState();
-      }
-    }
+synchronized (contributionPanelsByInfo) {
+    ContributionPanel panel=contributionPanelsByInfo.get(oldInfo);
+    contributionPanelsByInfo.remove(oldInfo);
+    panel.setContributionInfo(newInfo);
+    contributionPanelsByInfo.put(newInfo,panel);
+    add(panel);
   }
+  recalculateConstraints();
 }

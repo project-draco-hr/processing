@@ -1,0 +1,16 @@
+{
+  super.setForeground(fg);
+  if (categoryLabel != null)   categoryLabel.setForeground(fg);
+  if (htmlPanes != null) {
+    for (    JTextPane pane : htmlPanes) {
+      Document doc=pane.getDocument();
+      if (doc instanceof HTMLDocument) {
+        HTMLDocument html=(HTMLDocument)doc;
+        StyleSheet stylesheet=html.getStyleSheet();
+        stylesheet.addRule("body {color:" + toHex(fg) + ";}");
+        stylesheet.addRule("a {color:" + toHex(fg) + "}");
+      }
+    }
+  }
+  if (versionLabel != null)   updateHyperLinkStyle(versionLabel);
+}

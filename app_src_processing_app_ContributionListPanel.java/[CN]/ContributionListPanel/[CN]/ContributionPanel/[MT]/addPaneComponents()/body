@@ -9,25 +9,13 @@
   c.anchor=GridBagConstraints.WEST;
   headerLabel=new JTextPane();
   headerLabel.setContentType("text/html");
-  StringBuilder nameText=new StringBuilder();
-  nameText.append("<html><body><b>");
-  if (info.url == null) {
-    nameText.append(info.name);
-  }
- else {
-    nameText.append("<a href=\"" + info.url + "\">"+ info.name+ "</a>");
-  }
-  nameText.append("</b>");
-  nameText.append(createAuthorString());
-  nameText.append("</body></html>");
-  headerLabel.setText(nameText.toString());
   setHtmlTextStyle(headerLabel,false);
   add(headerLabel,c);
   c=new GridBagConstraints();
   c.gridx=1;
   c.gridy=0;
   c.anchor=GridBagConstraints.WEST;
-  categoryLabel=new JLabel("[" + info.category + "]");
+  categoryLabel=new JLabel();
   categoryLabel.setBorder(BorderFactory.createEmptyBorder(0,0,0,7));
   add(categoryLabel,c);
   c=new GridBagConstraints();
@@ -39,13 +27,6 @@
   c.anchor=GridBagConstraints.WEST;
   descriptionText=new JTextPane();
   descriptionText.setContentType("text/html");
-  StringBuilder description=new StringBuilder();
-  description.append("<html><body>");
-  if (info.sentence != null)   description.append(info.sentence);
-  if (info.sentence != null && info.paragraph != null)   description.append(" ");
-  if (info.sentence != null && info.paragraph != null)   description.append(info.paragraph);
-  description.append("</body></html>");
-  descriptionText.setText(description.toString());
   descriptionText.setMargin(new Insets(0,25,10,5));
   setHtmlTextStyle(descriptionText,true);
   add(descriptionText,c);
@@ -58,7 +39,8 @@
   c.anchor=GridBagConstraints.WEST;
   versionLabel=new JTextPane();
   versionLabel.setContentType("text/html");
-  setHtmlTextStyle(versionLabel,false);
   versionLabel.setVisible(false);
+  versionLabel.setEditable(false);
+  setHtmlTextStyle(versionLabel,false);
   add(versionLabel,c);
 }

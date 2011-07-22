@@ -1,17 +1,17 @@
 {
-  if (contributionPanels != null) {
-synchronized (contributionPanels) {
-      List<ContributionPanel> hiddenPanels=new ArrayList(contributionPanels);
-      for (      ContributionInfo lib : filteredContributions) {
-        for (        ContributionPanel libPanel : contributionPanels) {
-          if (libPanel.info == lib) {
-            libPanel.setVisible(true);
-            hiddenPanels.remove(libPanel);
-          }
-        }
+synchronized (contributionPanelsByInfo) {
+    Set<ContributionInfo> hiddenPanels=new TreeSet(contributionPanelsByInfo.keySet());
+    for (    ContributionInfo info : filteredContributions) {
+      ContributionPanel panel=contributionPanelsByInfo.get(info);
+      if (panel != null) {
+        panel.setVisible(true);
+        hiddenPanels.remove(info);
       }
-      for (      ContributionPanel libPanel : hiddenPanels) {
-        libPanel.setVisible(false);
+    }
+    for (    ContributionInfo info : hiddenPanels) {
+      ContributionPanel panel=contributionPanelsByInfo.get(info);
+      if (panel != null) {
+        panel.setVisible(false);
       }
     }
   }

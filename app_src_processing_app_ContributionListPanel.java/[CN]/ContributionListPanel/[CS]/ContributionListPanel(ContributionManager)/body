@@ -1,19 +1,6 @@
 {
   super();
   this.contributionManager=libraryManager;
-  rowForEachPanel=new HashMap<ContributionPanel,Integer>();
-  libraryInstaller=new ContributionInstaller(){
-    public Contribution installContribution(    File f){
-      return contributionManager.installLibrary(f,false);
-    }
-  }
-;
-  compilationInstaller=new ContributionInstaller(){
-    public Contribution installContribution(    File f){
-      return contributionManager.installLibraryCompilation(f);
-    }
-  }
-;
   setLayout(new GridBagLayout());
   setFocusable(true);
   setOpaque(true);
@@ -23,13 +10,7 @@
  else {
     setBackground(UIManager.getColor("List.background"));
   }
-  contributionPanels=new ArrayList<ContributionPanel>();
-  addMouseListener(new MouseAdapter(){
-    public void mousePressed(    MouseEvent mouseEvent){
-      requestFocusInWindow();
-    }
-  }
-);
+  contributionPanelsByInfo=new TreeMap<ContributionInfo,ContributionPanel>();
   GridBagConstraints c=new GridBagConstraints();
   c.fill=GridBagConstraints.HORIZONTAL;
   c.weightx=1;

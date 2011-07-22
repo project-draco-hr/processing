@@ -2,25 +2,23 @@
   if (setupProgressBar.isVisible()) {
     setupProgressBar.setVisible(false);
   }
+  if (contributionPanelsByInfo.containsKey(contributionInfo)) {
+    return;
+  }
   ContributionPanel newPanel=null;
   if (contributionInfo.getType() == ContributionType.LIBRARY) {
-    newPanel=new ContributionPanel(contributionInfo,libraryInstaller);
+    newPanel=new ContributionPanel();
   }
  else   if (contributionInfo.getType() == ContributionType.LIBRARY_COMPILATION) {
-    newPanel=new ContributionPanel(contributionInfo,compilationInstaller);
+    newPanel=new ContributionPanel();
+  }
+synchronized (contributionPanelsByInfo) {
+    contributionPanelsByInfo.put(contributionInfo,newPanel);
   }
   if (newPanel != null) {
-synchronized (contributionPanels) {
-      contributionPanels.add(newPanel);
-      Collections.sort(contributionPanels);
-    }
-    GridBagConstraints c=new GridBagConstraints();
-    c.fill=GridBagConstraints.HORIZONTAL;
-    c.weightx=1;
-    c.gridx=0;
-    c.gridy=getRowForPanel(newPanel);
-    rowForEachPanel.put(newPanel,c.gridy);
-    add(newPanel,c);
+    newPanel.setContributionInfo(contributionInfo);
+    add(newPanel);
+    recalculateConstraints();
     updateColors();
   }
 }

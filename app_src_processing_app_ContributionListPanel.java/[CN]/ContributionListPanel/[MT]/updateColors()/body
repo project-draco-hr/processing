@@ -1,16 +1,17 @@
 {
   int count=0;
-synchronized (contributionPanels) {
-    for (    ContributionPanel libPanel : contributionPanels) {
-      if (libPanel.isVisible() && libPanel.isSelected) {
-        libPanel.setBackground(UIManager.getColor("List.selectionBackground"));
-        cascadeForgroundColor(libPanel,UIManager.getColor("List.selectionForeground"));
-        libPanel.setBorder(UIManager.getBorder("List.focusCellHighlightBorder"));
+synchronized (contributionPanelsByInfo) {
+    for (    Entry<ContributionInfo,ContributionPanel> entry : contributionPanelsByInfo.entrySet()) {
+      ContributionPanel panel=entry.getValue();
+      if (panel.isVisible() && panel.isSelected()) {
+        panel.setBackground(UIManager.getColor("List.selectionBackground"));
+        panel.setForeground(UIManager.getColor("List.selectionForeground"));
+        panel.setBorder(UIManager.getBorder("List.focusCellHighlightBorder"));
         count++;
       }
  else {
         Border border=null;
-        if (Base.isMacOS() && libPanel.isVisible()) {
+        if (Base.isMacOS() && panel.isVisible()) {
           if (count % 2 == 1) {
             border=UIManager.getBorder("List.evenRowBackgroundPainter");
           }
@@ -22,11 +23,11 @@ synchronized (contributionPanels) {
         if (border == null) {
           border=BorderFactory.createEmptyBorder(1,1,1,1);
         }
-        libPanel.setBorder(border);
-        libPanel.setBackground(ContributionListPanel.this.getBackground());
-        cascadeForgroundColor(libPanel,UIManager.getColor("List.foreground"));
+        panel.setBorder(border);
+        panel.setBackground(ContributionListPanel.this.getBackground());
+        panel.setForeground(UIManager.getColor("List.foreground"));
       }
-      libPanel.updateHyperLinkStyles();
+      panel.updateHyperLinkStyles();
     }
   }
 }

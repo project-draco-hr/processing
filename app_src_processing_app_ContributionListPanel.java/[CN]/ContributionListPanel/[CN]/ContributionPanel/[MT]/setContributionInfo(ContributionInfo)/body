@@ -1,0 +1,82 @@
+{
+  setFocusable(true);
+  StringBuilder nameText=new StringBuilder();
+  nameText.append("<html><body><b>");
+  if (info.url == null) {
+    nameText.append(info.name);
+  }
+ else {
+    nameText.append("<a href=\"" + info.url + "\">"+ info.name+ "</a>");
+  }
+  nameText.append("</b>");
+  nameText.append(createAuthorString(info.authorList));
+  nameText.append("</body></html>");
+  headerLabel.setText(nameText.toString());
+  setHtmlTextStyle(headerLabel,false);
+  categoryLabel.setText("[" + info.category + "]");
+  StringBuilder description=new StringBuilder();
+  description.append("<html><body>");
+  if (info.sentence != null)   description.append(info.sentence);
+  description.append("</body></html>");
+  descriptionText.setText(description.toString());
+  for (  ActionListener listener : installOrRemoveButton.getActionListeners()) {
+    installOrRemoveButton.removeActionListener(listener);
+  }
+  if (info.isInstalled()) {
+    StringBuilder versionText=new StringBuilder();
+    versionText.append("<html><body>");
+    versionText.append("Version ");
+    if (info.prettyVersion != null) {
+      versionText.append(info.prettyVersion);
+    }
+ else {
+      versionText.append(info.version);
+    }
+    versionText.append(" installed.");
+    if (info.hasUpdates()) {
+      final String afterClickText=versionText.toString();
+      versionText.append(" <a href=\"\">Click here to update to latest version.</a>");
+      versionLabel.removeHyperlinkListener(updateListner);
+      updateListner=new HyperlinkListener(){
+        public void hyperlinkUpdate(        HyperlinkEvent e){
+          if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            versionLabel.setText(afterClickText);
+            installContribution(info,info.link);
+          }
+        }
+      }
+;
+      versionLabel.addHyperlinkListener(updateListner);
+    }
+    versionText.append("</body></html>");
+    versionLabel.setText(versionText.toString());
+    versionLabel.setMargin(new Insets(0,25,10,5));
+    versionLabel.setVisible(true);
+    installOrRemoveButton.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent arg){
+        installOrRemoveButton.setEnabled(false);
+        installProgressBar.setVisible(true);
+        contributionManager.removeContribution(info.getContribution(),new JProgressMonitor(installProgressBar){
+          public void finishedAction(){
+            resetInstallProgressBarState();
+            installOrRemoveButton.setEnabled(true);
+          }
+        }
+);
+      }
+    }
+);
+    installOrRemoveButton.setText("Remove");
+  }
+ else {
+    versionLabel.setText("");
+    versionLabel.setVisible(false);
+    installOrRemoveButton.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent arg){
+        installContribution(info,info.link);
+      }
+    }
+);
+    installOrRemoveButton.setText("Install");
+  }
+}
