@@ -23,35 +23,25 @@
     installOrRemoveButton.removeActionListener(listener);
   }
   if (info.isInstalled()) {
-    StringBuilder versionText=new StringBuilder();
-    versionText.append("<html><body>");
-    versionText.append("Version ");
-    if (info.prettyVersion != null) {
-      versionText.append(info.prettyVersion);
-    }
- else {
-      versionText.append(info.version);
-    }
-    versionText.append(" installed.");
     if (info.hasUpdates()) {
-      final String afterClickText=versionText.toString();
-      versionText.append(" <a href=\"\">Click here to update to latest version.</a>");
+      StringBuilder versionText=new StringBuilder();
+      versionText.append("<html><body>");
+      versionText.append("<a href=\"\">Click here to update to latest version.</a>");
       versionLabel.removeHyperlinkListener(updateListner);
       updateListner=new HyperlinkListener(){
         public void hyperlinkUpdate(        HyperlinkEvent e){
           if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            versionLabel.setText(afterClickText);
+            versionLabel.setText("");
             installContribution(info,info.link);
           }
         }
       }
 ;
       versionLabel.addHyperlinkListener(updateListner);
+      versionText.append("</body></html>");
+      versionLabel.setText(versionText.toString());
+      versionLabel.setVisible(true);
     }
-    versionText.append("</body></html>");
-    versionLabel.setText(versionText.toString());
-    versionLabel.setMargin(new Insets(0,25,10,5));
-    versionLabel.setVisible(true);
     installOrRemoveButton.addActionListener(new ActionListener(){
       public void actionPerformed(      ActionEvent arg){
         installOrRemoveButton.setEnabled(false);
