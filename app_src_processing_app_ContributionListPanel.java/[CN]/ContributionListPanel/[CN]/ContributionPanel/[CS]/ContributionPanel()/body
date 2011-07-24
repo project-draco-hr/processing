@@ -1,15 +1,37 @@
 {
-  htmlPanes=new ArrayList<JTextPane>();
-  doOpenHyperLink=false;
+  htmlPanes=new HashSet<JTextPane>();
+  enableHyperlinks=false;
+  alreadySelected=false;
   conditionalHyperlinkOpener=new HyperlinkListener(){
     public void hyperlinkUpdate(    HyperlinkEvent e){
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-        if (doOpenHyperLink) {
+        if (enableHyperlinks) {
           if (e.getURL() != null) {
             Base.openURL(e.getURL().toString());
           }
         }
       }
+    }
+  }
+;
+  installActionListener=new ActionListener(){
+    public void actionPerformed(    ActionEvent arg){
+      installContribution(info,info.link);
+    }
+  }
+;
+  removeActionListener=new ActionListener(){
+    public void actionPerformed(    ActionEvent arg){
+      updateButton.setEnabled(false);
+      installOrRemoveButton.setEnabled(false);
+      installProgressBar.setVisible(true);
+      contributionManager.removeContribution(info.getContribution(),new JProgressMonitor(installProgressBar){
+        public void finishedAction(){
+          resetInstallProgressBarState();
+          installOrRemoveButton.setEnabled(true);
+        }
+      }
+);
     }
   }
 ;
@@ -19,22 +41,11 @@
   setBackground(ContributionListPanel.this.getBackground());
   setOpaque(true);
   setFocusable(true);
-  updateInteractiveComponents();
-  MouseAdapter expandPanelMouseListener=new MouseAdapter(){
+  setSelected(false);
+  setExpandListener(this,new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
-      if (selectedPanel != ContributionPanel.this) {
-        ContributionPanel lastSelected=selectedPanel;
-        selectedPanel=ContributionPanel.this;
-        if (lastSelected != null)         lastSelected.updateInteractiveComponents();
-        updateInteractiveComponents();
-        updateColors();
-        getParent().requestFocusInWindow();
-      }
- else {
-        doOpenHyperLink=true;
-      }
+      setSelectedPanel(ContributionPanel.this);
     }
   }
-;
-  setExpandListener(this,expandPanelMouseListener);
+);
 }

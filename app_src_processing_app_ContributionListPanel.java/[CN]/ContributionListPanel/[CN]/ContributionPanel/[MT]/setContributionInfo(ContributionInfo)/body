@@ -1,4 +1,5 @@
 {
+  this.info=info;
   setFocusable(true);
   StringBuilder nameText=new StringBuilder();
   nameText.append("<html><body><b>");
@@ -11,62 +12,35 @@
   nameText.append("</b>");
   nameText.append(createAuthorString(info.authorList));
   nameText.append("</body></html>");
-  headerLabel.setText(nameText.toString());
-  setHtmlTextStyle(headerLabel,false);
+  headerText.setText(nameText.toString());
   categoryLabel.setText("[" + info.category + "]");
   StringBuilder description=new StringBuilder();
   description.append("<html><body>");
   if (info.sentence != null)   description.append(info.sentence);
   description.append("</body></html>");
   descriptionText.setText(description.toString());
-  for (  ActionListener listener : installOrRemoveButton.getActionListeners()) {
-    installOrRemoveButton.removeActionListener(listener);
+  setAlignment(descriptionText,StyleConstants.ALIGN_JUSTIFIED);
+  if (info.hasUpdates()) {
+    StringBuilder versionText=new StringBuilder();
+    versionText.append("<html><body><i>");
+    versionText.append("New version available!");
+    versionText.append("</i></body></html>");
+    updateNotificationLabel.setText(versionText.toString());
+    updateNotificationLabel.setVisible(true);
+  }
+ else {
+    updateNotificationLabel.setText("");
+    updateNotificationLabel.setVisible(false);
+    updateButton.setVisible(false);
   }
   if (info.isInstalled()) {
-    if (info.hasUpdates()) {
-      StringBuilder versionText=new StringBuilder();
-      versionText.append("<html><body>");
-      versionText.append("<a href=\"\">Click here to update to latest version.</a>");
-      versionLabel.removeHyperlinkListener(updateListner);
-      updateListner=new HyperlinkListener(){
-        public void hyperlinkUpdate(        HyperlinkEvent e){
-          if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            versionLabel.setText("");
-            installContribution(info,info.link);
-          }
-        }
-      }
-;
-      versionLabel.addHyperlinkListener(updateListner);
-      versionText.append("</body></html>");
-      versionLabel.setText(versionText.toString());
-      versionLabel.setVisible(true);
-    }
-    installOrRemoveButton.addActionListener(new ActionListener(){
-      public void actionPerformed(      ActionEvent arg){
-        installOrRemoveButton.setEnabled(false);
-        installProgressBar.setVisible(true);
-        contributionManager.removeContribution(info.getContribution(),new JProgressMonitor(installProgressBar){
-          public void finishedAction(){
-            resetInstallProgressBarState();
-            installOrRemoveButton.setEnabled(true);
-          }
-        }
-);
-      }
-    }
-);
+    installOrRemoveButton.removeActionListener(installActionListener);
+    installOrRemoveButton.addActionListener(removeActionListener);
     installOrRemoveButton.setText("Remove");
   }
  else {
-    versionLabel.setText("");
-    versionLabel.setVisible(false);
-    installOrRemoveButton.addActionListener(new ActionListener(){
-      public void actionPerformed(      ActionEvent arg){
-        installContribution(info,info.link);
-      }
-    }
-);
+    installOrRemoveButton.removeActionListener(removeActionListener);
+    installOrRemoveButton.addActionListener(installActionListener);
     installOrRemoveButton.setText("Install");
   }
 }
