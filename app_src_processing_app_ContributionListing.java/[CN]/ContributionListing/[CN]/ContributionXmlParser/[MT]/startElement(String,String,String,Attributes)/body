@@ -2,11 +2,11 @@
   if ("category".equals(qName)) {
     currentCategoryName=attributes.getValue("name");
   }
- else   if ("library".equals(qName)) {
+ else   if (LIBRARY_TAG.equals(qName)) {
     currentInfo=new LibraryInfo();
     setCommonAttributes(attributes);
   }
- else   if ("librarycompilation".equals(qName)) {
+ else   if (LIBRARY_COMPILATION_TAG.equals(qName)) {
     LibraryCompilationInfo compilationInfo=new LibraryCompilationInfo();
     String[] names=attributes.getValue("libraryNames").split(";");
     for (int i=0; i < names.length; i++) {
@@ -14,6 +14,10 @@
     }
     compilationInfo.libraryNames=Arrays.asList(names);
     currentInfo=compilationInfo;
+    setCommonAttributes(attributes);
+  }
+ else   if (TOOL_TAG.equals(qName)) {
+    currentInfo=new ToolInfo();
     setCommonAttributes(attributes);
   }
  else   if ("author".equals(qName)) {

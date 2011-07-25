@@ -3,22 +3,25 @@
   final FileDownloader downloader=new FileDownloader(url,libDest,downloadProgressMonitor);
   downloader.setPostOperation(new Runnable(){
     public void run(){
-      File libFile=downloader.getFile();
-      if (libFile != null) {
+      File contributionFile=downloader.getFile();
+      if (contributionFile != null) {
         installProgressMonitor.startTask("Installing",ProgressMonitor.UNKNOWN);
         Contribution contribution=null;
 switch (info.getType()) {
 case LIBRARY:
-          contribution=installLibrary(libFile,false);
+          contribution=installLibrary(contributionFile,false);
         break;
 case LIBRARY_COMPILATION:
-      contribution=installLibraryCompilation(libFile);
+      contribution=installLibraryCompilation(contributionFile);
     break;
+case TOOL:
+  contribution=installTool(contributionFile);
+break;
 }
 if (contribution != null) {
-  contributionListing.getInformationFromAdvertised(contribution.getInfo());
-  contributionListing.replaceContribution(info,contribution.getInfo());
-  refreshInstalled();
+contributionListing.getInformationFromAdvertised(contribution.getInfo());
+contributionListing.replaceContribution(info,contribution.getInfo());
+refreshInstalled();
 }
 }
 dialog.pack();

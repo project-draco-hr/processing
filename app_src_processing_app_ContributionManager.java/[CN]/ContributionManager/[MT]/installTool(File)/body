@@ -1,0 +1,20 @@
+{
+  File tempDir=unzipFileToTemp(zippedToolFile);
+  ArrayList<ToolContribution> discoveredTools=ToolContribution.list(tempDir);
+  if (discoveredTools.isEmpty()) {
+    discoveredTools=ToolContribution.list(tempDir.getParentFile());
+  }
+  if (discoveredTools != null && discoveredTools.size() == 1) {
+    ToolContribution discoveredTool=discoveredTools.get(0);
+    return installTool(discoveredTool);
+  }
+ else {
+    if (discoveredTools == null || discoveredTools.isEmpty()) {
+      Base.showWarning(DISCOVERY_ERROR_TITLE,DISCOVERY_INTERNAL_ERROR_MESSAGE,null);
+    }
+ else {
+      Base.showWarning("Too many tools","We found more than one tool in the file we just\n" + "downloaded. That shouldn't happen, so we're going\n" + "to ignore this file.",null);
+    }
+  }
+  return null;
+}

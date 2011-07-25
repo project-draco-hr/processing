@@ -1,0 +1,20 @@
+{
+  ArrayList<ToolContribution> oldTools=editor.contribTools;
+  String toolFolderName=newTool.folder.getName();
+  File toolDestination=editor.getBase().getSketchbookToolsFolder();
+  File newToolDest=new File(toolDestination,toolFolderName);
+  for (  ToolContribution oldTool : oldTools) {
+    if (oldTool.folder.exists() && oldTool.folder.equals(newToolDest)) {
+      if (!backupContribution(oldTool)) {
+        return null;
+      }
+    }
+  }
+  if (newTool.folder.renameTo(newToolDest)) {
+    return ToolContribution.getTool(newToolDest);
+  }
+ else {
+    Base.showWarning("Trouble moving new tool to the sketchbook","Could not move tool \"" + newTool.info.name + "\" to "+ newToolDest.getAbsolutePath()+ ".\n",null);
+  }
+  return null;
+}

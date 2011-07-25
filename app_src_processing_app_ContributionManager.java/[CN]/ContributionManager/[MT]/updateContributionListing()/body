@@ -7,12 +7,13 @@
       libraries.remove(lib);
     }
   }
+  ArrayList<Contribution> contributions=new ArrayList<Contribution>();
+  contributions.addAll(editor.contribTools);
+  contributions.addAll(libraries);
+  contributions.addAll(compilations);
   ArrayList<ContributionInfo> infoList=new ArrayList<ContributionInfo>();
-  for (  Library library : libraries) {
-    infoList.add(library.info);
-  }
-  for (  LibraryCompilation compilation : compilations) {
-    infoList.add(compilation.info);
+  for (  Contribution contribution : contributions) {
+    infoList.add(contribution.getInfo());
   }
   contributionListing.updateInstalledList(infoList);
 }
