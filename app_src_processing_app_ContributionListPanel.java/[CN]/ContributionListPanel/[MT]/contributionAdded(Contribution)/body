@@ -1,0 +1,16 @@
+{
+  setupProgressBar.setVisible(false);
+  if (contributionPanelsByInfo.containsKey(contributionInfo)) {
+    return;
+  }
+  ContributionPanel newPanel=new ContributionPanel();
+synchronized (contributionPanelsByInfo) {
+    contributionPanelsByInfo.put(contributionInfo,newPanel);
+  }
+  if (newPanel != null) {
+    newPanel.setContribution(contributionInfo);
+    add(newPanel);
+    updatePanelOrdering();
+    updateColors();
+  }
+}

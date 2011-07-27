@@ -1,18 +1,18 @@
 {
   ArrayList<Library> oldLibs=editor.getMode().contribLibraries;
-  String libFolderName=newLib.folder.getName();
+  String libFolderName=newLib.getFolder().getName();
   File libraryDestination=editor.getBase().getSketchbookLibrariesFolder();
   File newLibDest=new File(libraryDestination,libFolderName);
   boolean doInstall=true;
   for (  Library oldLib : oldLibs) {
-    if (oldLib.folder.exists() && oldLib.folder.equals(newLibDest)) {
+    if (oldLib.getFolder().exists() && oldLib.getFolder().equals(newLibDest)) {
       int result=0;
       if (confirmReplace) {
         result=Base.showYesNoQuestion(editor,"Replace","Replace existing \"" + oldLib.getName() + "\" library?","An existing copy of the \"" + oldLib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ " in <i>libraries/old</i> before replacing it.");
       }
       if (!confirmReplace || result == JOptionPane.YES_OPTION) {
         if (!backupContribution(oldLib)) {
-          return false;
+          return null;
         }
       }
  else {
@@ -21,13 +21,12 @@
     }
   }
   if (doInstall) {
-    if (newLib.folder.renameTo(newLibDest)) {
-      newLib.folder=newLibDest;
-      return true;
+    if (newLib.getFolder().renameTo(newLibDest)) {
+      return new Library(newLibDest,null);
     }
  else {
       Base.showWarning("Trouble moving new library to the sketchbook","Could not move library \"" + newLib.getName() + "\" to "+ newLibDest.getAbsolutePath()+ ".\n",null);
     }
   }
-  return false;
+  return null;
 }

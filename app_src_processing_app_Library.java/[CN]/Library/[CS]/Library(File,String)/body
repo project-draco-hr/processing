@@ -1,17 +1,11 @@
 {
-  this.folder=folder;
+  super(folder);
   this.group=subfolder;
   libraryFolder=new File(folder,"library");
   examplesFolder=new File(folder,"examples");
   referenceFile=new File(folder,"reference/index.html");
   File exportSettings=new File(libraryFolder,"export.txt");
   HashMap<String,String> exportTable=Base.readSettings(exportSettings);
-  info=new LibraryInfo();
-  info.library=this;
-  readProperties(exportTable,info);
-  if (info.name == null) {
-    info.name=folder.getName();
-  }
   exportList=new HashMap<String,String[]>();
   String[] baseList=libraryFolder.list(standardFilter);
   String appletExportStr=exportTable.get("applet");

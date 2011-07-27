@@ -3,21 +3,17 @@
     currentCategoryName=attributes.getValue("name");
   }
  else   if (LIBRARY_TAG.equals(qName)) {
-    currentInfo=new LibraryInfo();
+    currentInfo=new AdvertisedContribution(Type.LIBRARY);
     setCommonAttributes(attributes);
   }
  else   if (LIBRARY_COMPILATION_TAG.equals(qName)) {
-    LibraryCompilationInfo compilationInfo=new LibraryCompilationInfo();
-    String[] names=attributes.getValue("libraryNames").split(";");
-    for (int i=0; i < names.length; i++) {
-      names[i]=names[i].trim();
-    }
-    compilationInfo.libraryNames=Arrays.asList(names);
-    currentInfo=compilationInfo;
+    currentInfo=new AdvertisedContribution(Type.LIBRARY_COMPILATION);
+    String names=attributes.getValue("libraryNames");
+    currentInfo.libraryNames=AbstractContribution.toList(names);
     setCommonAttributes(attributes);
   }
  else   if (TOOL_TAG.equals(qName)) {
-    currentInfo=new ToolInfo();
+    currentInfo=new AdvertisedContribution(Type.TOOL);
     setCommonAttributes(attributes);
   }
  else   if ("author".equals(qName)) {

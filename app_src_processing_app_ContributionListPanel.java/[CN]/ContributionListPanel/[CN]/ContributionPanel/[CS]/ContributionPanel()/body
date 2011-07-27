@@ -16,22 +16,26 @@
 ;
   installActionListener=new ActionListener(){
     public void actionPerformed(    ActionEvent arg){
-      installContribution(info,info.link);
+      if (info instanceof AdvertisedContribution) {
+        installContribution((AdvertisedContribution)info);
+      }
     }
   }
 ;
   removeActionListener=new ActionListener(){
     public void actionPerformed(    ActionEvent arg){
-      updateButton.setEnabled(false);
-      installOrRemoveButton.setEnabled(false);
-      installProgressBar.setVisible(true);
-      contributionManager.removeContribution(info.getContribution(),new JProgressMonitor(installProgressBar){
-        public void finishedAction(){
-          resetInstallProgressBarState();
-          installOrRemoveButton.setEnabled(true);
+      if (info.isInstalled() && info instanceof InstalledContribution) {
+        updateButton.setEnabled(false);
+        installOrRemoveButton.setEnabled(false);
+        installProgressBar.setVisible(true);
+        contributionManager.removeContribution((InstalledContribution)info,new JProgressMonitor(installProgressBar){
+          public void finishedAction(){
+            resetInstallProgressBarState();
+            installOrRemoveButton.setEnabled(true);
+          }
         }
-      }
 );
+      }
     }
   }
 ;

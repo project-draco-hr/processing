@@ -1,0 +1,24 @@
+{
+  if (filter.equals("has:update") || filter.equals("has:updates")) {
+    return hasUpdates(info);
+  }
+  if (filter.equals("is:installed")) {
+    return info.isInstalled();
+  }
+  if (filter.equals("not:installed")) {
+    return !info.isInstalled();
+  }
+  if (filter.contains(":")) {
+    return true;
+  }
+  filter=".*" + filter.toLowerCase() + ".*";
+  if (filter.isEmpty()) {
+    return true;
+  }
+  for (  Author author : info.getAuthorList()) {
+    if (author.name.toLowerCase().matches(filter)) {
+      return true;
+    }
+  }
+  return info.getSentence() != null && info.getSentence().toLowerCase().matches(filter) || info.getParagraph() != null && info.getParagraph().toLowerCase().matches(filter) || info.getCategory() != null && info.getCategory().toLowerCase().matches(filter) || info.getName() != null && info.getName().toLowerCase().matches(filter);
+}

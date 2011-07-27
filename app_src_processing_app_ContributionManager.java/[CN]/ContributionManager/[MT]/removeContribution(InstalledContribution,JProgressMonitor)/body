@@ -1,0 +1,21 @@
+{
+  new Thread(new Runnable(){
+    public void run(){
+      pm.startTask("Removing",ProgressMonitor.UNKNOWN);
+      if (contribution != null) {
+        if (backupContribution(contribution)) {
+          Contribution advertisedVersion=contributionListing.getAdvertisedContribution(contribution.getName(),contribution.getType());
+          if (advertisedVersion == null) {
+            contributionListing.removeContribution(contribution);
+          }
+ else {
+            contributionListing.replaceContribution(contribution,advertisedVersion);
+          }
+        }
+      }
+      refreshInstalled();
+      pm.finished();
+    }
+  }
+).start();
+}

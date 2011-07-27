@@ -5,7 +5,7 @@
     Base.showWarning(DISCOVERY_ERROR_TITLE,DISCOVERY_NONE_FOUND_ERROR_MESSAGE,null);
     return null;
   }
-  String folderName=compilation.info.name;
+  String folderName=compilation.getName();
   File libraryDestination=editor.getBase().getSketchbookLibrariesFolder();
   File dest=new File(libraryDestination,folderName);
   boolean errorEncountered=false;
@@ -16,8 +16,7 @@
   }
   if (!errorEncountered) {
     if (parentDir.renameTo(dest)) {
-      compilation.folder=dest;
-      return compilation;
+      return LibraryCompilation.create(dest);
     }
   }
   return null;

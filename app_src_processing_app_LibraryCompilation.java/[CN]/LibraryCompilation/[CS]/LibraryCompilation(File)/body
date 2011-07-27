@@ -1,13 +1,6 @@
 {
-  this.folder=folder;
-  File propertiesFile=new File(folder,"properties.txt");
-  info=new LibraryCompilationInfo();
-  info.compilation=this;
-  HashMap<String,String> propertiesTable=Base.readSettings(propertiesFile);
-  readProperties(propertiesTable,info);
-  if (info.name == null) {
-    info.name=folder.getName();
-  }
+  super(folder);
+  libraryNames=toList(properties.get("libraryNames"));
   libraries=new ArrayList<Library>();
-  Library.list(folder,libraries,info.name);
+  Library.list(folder,libraries,name);
 }

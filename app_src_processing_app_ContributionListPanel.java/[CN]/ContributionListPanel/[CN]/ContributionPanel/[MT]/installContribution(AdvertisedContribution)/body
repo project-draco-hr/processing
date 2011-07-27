@@ -1,0 +1,23 @@
+{
+  String url=info.link;
+  installOrRemoveButton.setEnabled(false);
+  try {
+    URL downloadUrl=new URL(url);
+    installProgressBar.setVisible(true);
+    contributionManager.downloadAndInstall(downloadUrl,info,new JProgressMonitor(installProgressBar){
+      public void finishedAction(){
+      }
+    }
+,new JProgressMonitor(installProgressBar){
+      public void finishedAction(){
+        resetInstallProgressBarState();
+        installOrRemoveButton.setEnabled(true);
+      }
+    }
+);
+  }
+ catch (  MalformedURLException e) {
+    Base.showWarning(INSTALL_FAILURE_TITLE,MALFORMED_URL_MESSAGE,e);
+    installOrRemoveButton.setEnabled(true);
+  }
+}
