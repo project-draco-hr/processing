@@ -1,9 +1,14 @@
 {
-synchronized (contributionPanelsByInfo) {
-    ContributionPanel panel=contributionPanelsByInfo.get(contributionInfo);
-    if (panel != null) {
-      remove(panel);
+  SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+synchronized (panelByContribution) {
+        ContributionPanel panel=panelByContribution.get(contribution);
+        if (panel != null) {
+          remove(panel);
+        }
+      }
+      updateUI();
     }
   }
-  updateUI();
+);
 }

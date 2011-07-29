@@ -3,17 +3,17 @@
   ArrayList<Library> libraries=editor.getMode().contribLibraries;
   ArrayList<LibraryCompilation> compilations=LibraryCompilation.list(libraries);
   for (  LibraryCompilation compilation : compilations) {
-    for (    Library lib : compilation.libraries) {
-      libraries.remove(lib);
+    Iterator<Library> it=libraries.iterator();
+    while (it.hasNext()) {
+      Library current=it.next();
+      if (compilation.getFolder().equals(current.getFolder().getParentFile())) {
+        it.remove();
+      }
     }
   }
-  ArrayList<InstalledContribution> contributions=new ArrayList<InstalledContribution>();
+  ArrayList<Contribution> contributions=new ArrayList<Contribution>();
   contributions.addAll(editor.contribTools);
   contributions.addAll(libraries);
   contributions.addAll(compilations);
-  List<Contribution> infoList=new ArrayList<Contribution>();
-  for (  InstalledContribution contribution : contributions) {
-    infoList.add(contribution);
-  }
-  contributionListing.updateInstalledList(infoList);
+  contribListing.updateInstalledList(contributions);
 }

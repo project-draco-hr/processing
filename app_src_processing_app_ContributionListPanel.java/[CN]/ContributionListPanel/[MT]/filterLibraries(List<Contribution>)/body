@@ -1,15 +1,16 @@
 {
-synchronized (contributionPanelsByInfo) {
-    Set<Contribution> hiddenPanels=new TreeSet(contributionPanelsByInfo.keySet());
+synchronized (panelByContribution) {
+    Set<Contribution> hiddenPanels=new TreeSet(contribManager.getListing().getComparator());
+    hiddenPanels.addAll(panelByContribution.keySet());
     for (    Contribution info : filteredContributions) {
-      ContributionPanel panel=contributionPanelsByInfo.get(info);
+      ContributionPanel panel=panelByContribution.get(info);
       if (panel != null) {
         panel.setVisible(true);
         hiddenPanels.remove(info);
       }
     }
     for (    Contribution info : hiddenPanels) {
-      ContributionPanel panel=contributionPanelsByInfo.get(info);
+      ContributionPanel panel=panelByContribution.get(info);
       if (panel != null) {
         panel.setVisible(false);
       }

@@ -1,24 +1,18 @@
 {
-  HashMap<String,ArrayList<Library>> libsByGroup=new HashMap<String,ArrayList<Library>>();
+  HashMap<String,File> folderByGroup=new HashMap<String,File>();
   for (  Library lib : libraries) {
     String group=lib.getGroup();
     if (group != null) {
-      if (!libsByGroup.containsKey(group)) {
-        ArrayList<Library> libs=new ArrayList<Library>();
-        libs.add(lib);
-        libsByGroup.put(group,libs);
-      }
- else {
-        libsByGroup.get(group).add(lib);
-      }
+      folderByGroup.put(group,lib.getFolder().getParentFile());
     }
   }
   ArrayList<LibraryCompilation> compilations=new ArrayList<LibraryCompilation>();
-  for (  ArrayList<Library> libList : libsByGroup.values()) {
+  for (  File folder : folderByGroup.values()) {
     try {
-      compilations.add(new LibraryCompilation(libList));
+      compilations.add(new LibraryCompilation(folder));
     }
- catch (    IllegalArgumentException e) {
+ catch (    IOException e) {
+      e.printStackTrace();
     }
   }
   return compilations;

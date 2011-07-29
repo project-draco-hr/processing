@@ -1,14 +1,10 @@
 {
   for (  Contribution contribution : installedContributions) {
-    boolean found=false;
-    for (    Contribution existing : allLibraries) {
-      if (existing.getName().equals(contribution.getName()) && existing.getType() == contribution.getType()) {
-        replaceContribution(existing,contribution);
-        found=true;
-        break;
-      }
+    Contribution preexistingContribution=getContribution(contribution);
+    if (preexistingContribution != null) {
+      replaceContribution(preexistingContribution,contribution);
     }
-    if (!found) {
+ else {
       addContribution(contribution);
     }
   }

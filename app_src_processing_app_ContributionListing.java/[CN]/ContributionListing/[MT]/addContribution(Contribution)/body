@@ -1,15 +1,15 @@
 {
-  if (librariesByCategory.containsKey(info.getCategory())) {
-    List<Contribution> list=librariesByCategory.get(info.getCategory());
-    list.add(info);
-    Collections.sort(list);
+  if (librariesByCategory.containsKey(contribution.getCategory())) {
+    List<Contribution> list=librariesByCategory.get(contribution.getCategory());
+    list.add(contribution);
+    Collections.sort(list,contribComparator);
   }
  else {
     ArrayList<Contribution> list=new ArrayList<Contribution>();
-    list.add(info);
-    librariesByCategory.put(info.getCategory(),list);
+    list.add(contribution);
+    librariesByCategory.put(contribution.getCategory(),list);
   }
-  allLibraries.add(info);
-  notifyAdd(info);
-  Collections.sort(allLibraries);
+  allContributions.add(contribution);
+  notifyAdd(contribution);
+  Collections.sort(allContributions,contribComparator);
 }
