@@ -16,7 +16,12 @@
     try {
       final ToolContribution tool=getTool(folders[i]);
       if (tool != null) {
-        tools.add(tool);
+        try {
+          if (doInitializeToolClass)           tool.initializeToolClass();
+          tools.add(tool);
+        }
+ catch (        Exception e) {
+        }
       }
     }
  catch (    Exception e) {

@@ -11,7 +11,14 @@
     }
   }
   if (newTool.getFolder().renameTo(newToolDest)) {
-    return ToolContribution.getTool(newToolDest);
+    ToolContribution movedTool=ToolContribution.getTool(newToolDest);
+    try {
+      movedTool.initializeToolClass();
+      return newTool;
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
   }
  else {
     Base.showWarning("Trouble moving new tool to the sketchbook","Could not move tool \"" + newTool.getName() + "\" to "+ newToolDest.getAbsolutePath()+ ".\n",null);
