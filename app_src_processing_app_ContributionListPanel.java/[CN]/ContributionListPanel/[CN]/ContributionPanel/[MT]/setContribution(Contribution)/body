@@ -46,6 +46,10 @@
     updateNotificationLabel.setText("");
     updateNotificationLabel.setVisible(false);
   }
+  updateButton.setEnabled(true);
+  if (contrib != null && !ContributionManager.requiresRestart(contrib)) {
+    updateButton.setVisible(isSelected() && contribManager.getListing().hasUpdates(contrib));
+  }
   if (isFlagged) {
     installRemoveButton.removeActionListener(installActionListener);
     installRemoveButton.removeActionListener(removeActionListener);
