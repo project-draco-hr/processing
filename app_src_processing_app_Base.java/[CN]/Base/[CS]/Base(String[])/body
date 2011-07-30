@@ -3,8 +3,13 @@
   Mode androidMode=new AndroidMode(this,getContentFile("modes/android"));
   Mode javaScriptMode=new JavaScriptMode(this,getContentFile("modes/javascript"));
   modeList=new Mode[]{defaultMode,androidMode,javaScriptMode};
-  libraryManagerFrame=new ContributionManager();
   determineSketchbookFolder();
+  for (  ToolContribution contrib : ToolContribution.list(getSketchbookToolsFolder(),false)) {
+    if (new File(contrib.getFolder(),ContributionManager.DELETION_FLAG).exists()) {
+      removeDir(contrib.getFolder());
+    }
+  }
+  libraryManagerFrame=new ContributionManager();
   defaultMode.rebuildLibraryList();
   platform.init(this);
   toolsFolder=getContentFile("tools");

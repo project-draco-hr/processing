@@ -31,25 +31,32 @@
         contribManager.removeContribution((InstalledContribution)info,new JProgressMonitor(installProgressBar){
           public void finishedAction(){
             resetInstallProgressBarState();
-            installOrRemoveButton.setEnabled(true);
-          }
-        }
-);
+switch (info.getType()) {
+case LIBRARY:
+case LIBRARY_COMPILATION:
+              installOrRemoveButton.setEnabled(true);
+            break;
+case TOOL:
+          descriptionText.setText(DELETION_MESSAGE);
       }
     }
   }
+);
+}
+}
+}
 ;
-  setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-  addPaneComponents();
-  addProgressBarAndButton();
-  setBackground(ContributionListPanel.this.getBackground());
-  setOpaque(true);
-  setFocusable(true);
-  setSelected(false);
-  setExpandListener(this,new MouseAdapter(){
-    public void mousePressed(    MouseEvent e){
-      setSelectedPanel(ContributionPanel.this);
-    }
-  }
+setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+addPaneComponents();
+addProgressBarAndButton();
+setBackground(ContributionListPanel.this.getBackground());
+setOpaque(true);
+setFocusable(true);
+setSelected(false);
+setExpandListener(this,new MouseAdapter(){
+public void mousePressed(MouseEvent e){
+setSelectedPanel(ContributionPanel.this);
+}
+}
 );
 }

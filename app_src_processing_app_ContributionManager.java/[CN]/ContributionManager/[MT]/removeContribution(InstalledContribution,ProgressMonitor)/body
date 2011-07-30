@@ -1,0 +1,36 @@
+{
+  if (contribution == null)   return;
+  final ProgressMonitor progressMonitor=pm != null ? pm : new NullProgressMonitor();
+  new Thread(new Runnable(){
+    public void run(){
+      progressMonitor.startTask("Removing",ProgressMonitor.UNKNOWN);
+switch (contribution.getType()) {
+case LIBRARY:
+case LIBRARY_COMPILATION:
+        if (backupContribution(contribution,true)) {
+          Contribution advertisedVersion=contribListing.getAdvertisedContribution(contribution);
+          if (advertisedVersion == null) {
+            contribListing.removeContribution(contribution);
+          }
+ else {
+            contribListing.replaceContribution(contribution,advertisedVersion);
+          }
+        }
+case TOOL:
+case MODE:
+      if (backupContribution(contribution,false)) {
+        try {
+          File d=new File(contribution.getFolder(),DELETION_FLAG);
+          d.createNewFile();
+        }
+ catch (        IOException e) {
+          e.printStackTrace();
+        }
+      }
+  }
+  refreshInstalled();
+  progressMonitor.finished();
+}
+}
+).start();
+}

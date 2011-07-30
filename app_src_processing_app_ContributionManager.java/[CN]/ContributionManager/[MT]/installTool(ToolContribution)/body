@@ -5,7 +5,7 @@
   File newToolDest=new File(toolDestination,toolFolderName);
   for (  ToolContribution oldTool : oldTools) {
     if (oldTool.getFolder().exists() && oldTool.getFolder().equals(newToolDest)) {
-      if (!backupContribution(oldTool)) {
+      if (!backupContribution(oldTool,false)) {
         return null;
       }
     }
@@ -14,7 +14,7 @@
     ToolContribution movedTool=ToolContribution.getTool(newToolDest);
     try {
       movedTool.initializeToolClass();
-      return newTool;
+      return movedTool;
     }
  catch (    Exception e) {
       e.printStackTrace();

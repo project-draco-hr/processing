@@ -1,0 +1,34 @@
+{
+  File backupFolder=null;
+switch (contribution.getType()) {
+case LIBRARY:
+case LIBRARY_COMPILATION:
+    backupFolder=createLibraryBackupFolder();
+  break;
+case MODE:
+case TOOL:
+backupFolder=createToolBackupFolder();
+break;
+}
+if (backupFolder == null) return false;
+String libFolderName=contribution.getFolder().getName();
+String prefix=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+final String backupName=prefix + "_" + libFolderName;
+File backupSubFolder=getUniqueName(backupFolder,backupName);
+boolean success=false;
+if (doDeleteOriginal) {
+success=contribution.getFolder().renameTo(backupSubFolder);
+}
+ else {
+try {
+Base.copyDir(contribution.getFolder(),backupSubFolder);
+success=true;
+}
+ catch (IOException e) {
+}
+}
+if (!success) {
+Base.showWarning("Trouble creating backup of old \"" + contribution.getName() + "\" contribution","Could not move contribution to backup folder:\n" + backupSubFolder.getAbsolutePath(),null);
+}
+return success;
+}
