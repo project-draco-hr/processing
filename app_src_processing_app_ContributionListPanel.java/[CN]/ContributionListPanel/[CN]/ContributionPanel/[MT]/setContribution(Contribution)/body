@@ -10,7 +10,11 @@
     nameText.append("<a href=\"" + contrib.getUrl() + "\">"+ contrib.getName()+ "</a>");
   }
   nameText.append("</b>");
-  nameText.append(createAuthorString(contrib.getAuthorList()));
+  String authorList=contrib.getAuthorList();
+  if (authorList != null && !authorList.isEmpty()) {
+    nameText.append(" by ");
+    nameText.append(toHtmlLinks(contrib.getAuthorList()));
+  }
   nameText.append("</body></html>");
   headerText.setText(nameText.toString());
   categoryLabel.setText("[" + contrib.getCategory() + "]");
