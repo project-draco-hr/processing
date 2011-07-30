@@ -4,9 +4,14 @@
   new Thread(new Runnable(){
     public void run(){
       progressMonitor.startTask("Removing",ProgressMonitor.UNKNOWN);
-switch (contribution.getType()) {
-case LIBRARY:
-case LIBRARY_COMPILATION:
+      if (ContributionManager.requiresRestart(contribution)) {
+        if (backupContribution(contribution,false)) {
+          if (flagForDeletion(contribution)) {
+            contribListing.replaceContribution(contribution,contribution);
+          }
+        }
+      }
+ else {
         if (backupContribution(contribution,true)) {
           Contribution advertisedVersion=contribListing.getAdvertisedContribution(contribution);
           if (advertisedVersion == null) {
@@ -16,17 +21,10 @@ case LIBRARY_COMPILATION:
             contribListing.replaceContribution(contribution,advertisedVersion);
           }
         }
-case TOOL:
-case MODE:
-      if (backupContribution(contribution,false)) {
-        if (flagForDeletion(contribution)) {
-          contribListing.replaceContribution(contribution,contribution);
-        }
       }
+      refreshInstalled();
+      progressMonitor.finished();
+    }
   }
-  refreshInstalled();
-  progressMonitor.finished();
-}
-}
 ).start();
 }

@@ -1,7 +1,9 @@
 {
   enableHyperlinks=alreadySelected;
-  updateButton.setVisible(isSelected() && contribManager.getListing().hasUpdates(contrib));
-  installOrRemoveButton.setVisible(isSelected());
+  if (contrib != null && !ContributionManager.requiresRestart(contrib)) {
+    updateButton.setVisible(isSelected() && contribManager.getListing().hasUpdates(contrib));
+  }
+  installRemoveButton.setVisible(isSelected());
   for (  JTextPane textPane : htmlPanes) {
     if (textPane instanceof JEditorPane) {
       JEditorPane editorPane=(JEditorPane)textPane;
