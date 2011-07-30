@@ -1,10 +1,11 @@
 {
   text=text.trim();
   name="";
-  url="";
-  if (isUrlSyntax(text)) {
-    name=getText(text).trim();
-    url=getUrl(text);
+  Pattern p=Pattern.compile("\\[(.*?)\\]\\((.*?)\\)");
+  Matcher m=p.matcher(text);
+  if (m.find()) {
+    name=m.group(1);
+    url=m.group(2);
   }
  else {
     name=text;
