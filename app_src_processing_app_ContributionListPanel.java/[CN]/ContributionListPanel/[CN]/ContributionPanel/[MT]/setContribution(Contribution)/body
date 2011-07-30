@@ -1,26 +1,37 @@
 {
-  this.info=info;
+  this.contrib=contrib;
   setFocusable(true);
   StringBuilder nameText=new StringBuilder();
   nameText.append("<html><body><b>");
-  if (info.getUrl() == null) {
-    nameText.append(info.getName());
+  if (contrib.getUrl() == null) {
+    nameText.append(contrib.getName());
   }
  else {
-    nameText.append("<a href=\"" + info.getUrl() + "\">"+ info.getName()+ "</a>");
+    nameText.append("<a href=\"" + contrib.getUrl() + "\">"+ contrib.getName()+ "</a>");
   }
   nameText.append("</b>");
-  nameText.append(createAuthorString(info.getAuthorList()));
+  nameText.append(createAuthorString(contrib.getAuthorList()));
   nameText.append("</body></html>");
   headerText.setText(nameText.toString());
-  categoryLabel.setText("[" + info.getCategory() + "]");
+  categoryLabel.setText("[" + contrib.getCategory() + "]");
   StringBuilder description=new StringBuilder();
   description.append("<html><body>");
-  if (info.getSentence() != null)   description.append(info.getSentence());
+  if (ContributionManager.isFlaggedForDeletion(contrib)) {
+    description.append(DELETION_MESSAGE);
+    installOrRemoveButton.setText("Undo");
+    installOrRemoveButton.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+      }
+    }
+);
+  }
+ else   if (contrib.getSentence() != null) {
+    description.append(contrib.getSentence());
+  }
   description.append("</body></html>");
   descriptionText.setText(description.toString());
   setAlignment(descriptionText,StyleConstants.ALIGN_JUSTIFIED);
-  if (contribManager.getListing().hasUpdates(info)) {
+  if (contribManager.getListing().hasUpdates(contrib)) {
     StringBuilder versionText=new StringBuilder();
     versionText.append("<html><body><i>");
     versionText.append("New version available!");
@@ -33,13 +44,23 @@
     updateNotificationLabel.setVisible(false);
     updateButton.setVisible(false);
   }
-  if (info.isInstalled()) {
-    installOrRemoveButton.removeActionListener(installActionListener);
-    installOrRemoveButton.addActionListener(removeActionListener);
-    installOrRemoveButton.setText("Remove");
+  if (contrib.isInstalled()) {
+    if (ContributionManager.isFlaggedForDeletion(contrib)) {
+      installOrRemoveButton.removeActionListener(installActionListener);
+      installOrRemoveButton.removeActionListener(removeActionListener);
+      installOrRemoveButton.addActionListener(undoActionListener);
+      installOrRemoveButton.setText("Undo");
+    }
+ else {
+      installOrRemoveButton.removeActionListener(installActionListener);
+      installOrRemoveButton.removeActionListener(undoActionListener);
+      installOrRemoveButton.addActionListener(removeActionListener);
+      installOrRemoveButton.setText("Remove");
+    }
   }
  else {
     installOrRemoveButton.removeActionListener(removeActionListener);
+    installOrRemoveButton.removeActionListener(undoActionListener);
     installOrRemoveButton.addActionListener(installActionListener);
     installOrRemoveButton.setText("Install");
   }

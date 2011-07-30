@@ -15,48 +15,51 @@
   }
 ;
   installActionListener=new ActionListener(){
-    public void actionPerformed(    ActionEvent arg){
-      if (info instanceof AdvertisedContribution) {
-        installContribution((AdvertisedContribution)info);
+    public void actionPerformed(    ActionEvent e){
+      if (contrib instanceof AdvertisedContribution) {
+        installContribution((AdvertisedContribution)contrib);
+      }
+    }
+  }
+;
+  undoActionListener=new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (contrib instanceof InstalledContribution) {
+        InstalledContribution installed=(InstalledContribution)contrib;
+        ContributionManager.removeFlagForDeletion(installed);
+        contribManager.getListing().replaceContribution(contrib,contrib);
       }
     }
   }
 ;
   removeActionListener=new ActionListener(){
     public void actionPerformed(    ActionEvent arg){
-      if (info.isInstalled() && info instanceof InstalledContribution) {
+      if (contrib.isInstalled() && contrib instanceof InstalledContribution) {
         updateButton.setEnabled(false);
         installOrRemoveButton.setEnabled(false);
         installProgressBar.setVisible(true);
-        contribManager.removeContribution((InstalledContribution)info,new JProgressMonitor(installProgressBar){
+        contribManager.removeContribution((InstalledContribution)contrib,new JProgressMonitor(installProgressBar){
           public void finishedAction(){
             resetInstallProgressBarState();
-switch (info.getType()) {
-case LIBRARY:
-case LIBRARY_COMPILATION:
-              installOrRemoveButton.setEnabled(true);
-            break;
-case TOOL:
-          descriptionText.setText(DELETION_MESSAGE);
+            installOrRemoveButton.setEnabled(true);
+          }
+        }
+);
       }
     }
   }
-);
-}
-}
-}
 ;
-setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-addPaneComponents();
-addProgressBarAndButton();
-setBackground(ContributionListPanel.this.getBackground());
-setOpaque(true);
-setFocusable(true);
-setSelected(false);
-setExpandListener(this,new MouseAdapter(){
-public void mousePressed(MouseEvent e){
-setSelectedPanel(ContributionPanel.this);
-}
-}
+  setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+  addPaneComponents();
+  addProgressBarAndButton();
+  setBackground(ContributionListPanel.this.getBackground());
+  setOpaque(true);
+  setFocusable(true);
+  setSelected(false);
+  setExpandListener(this,new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
+      setSelectedPanel(ContributionPanel.this);
+    }
+  }
 );
 }

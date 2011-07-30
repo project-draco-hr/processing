@@ -19,12 +19,8 @@ case LIBRARY_COMPILATION:
 case TOOL:
 case MODE:
       if (backupContribution(contribution,false)) {
-        try {
-          File d=new File(contribution.getFolder(),DELETION_FLAG);
-          d.createNewFile();
-        }
- catch (        IOException e) {
-          e.printStackTrace();
+        if (flagForDeletion(contribution)) {
+          contribListing.replaceContribution(contribution,contribution);
         }
       }
   }

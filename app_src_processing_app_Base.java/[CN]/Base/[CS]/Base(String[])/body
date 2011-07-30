@@ -5,11 +5,11 @@
   modeList=new Mode[]{defaultMode,androidMode,javaScriptMode};
   determineSketchbookFolder();
   for (  ToolContribution contrib : ToolContribution.list(getSketchbookToolsFolder(),false)) {
-    if (new File(contrib.getFolder(),ContributionManager.DELETION_FLAG).exists()) {
+    if (ContributionManager.isFlaggedForDeletion(contrib)) {
       removeDir(contrib.getFolder());
     }
   }
-  libraryManagerFrame=new ContributionManager();
+  contributionManagerFrame=new ContributionManager();
   defaultMode.rebuildLibraryList();
   platform.init(this);
   toolsFolder=getContentFile("tools");
