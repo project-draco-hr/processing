@@ -1,17 +1,17 @@
 {
   save(file);
-  PNode mf=new PNode(new FileReader(file));
+  XML mf=new XML(new FileReader(file));
   String p=mf.getString("package").trim();
   if (p.length() == 0) {
     mf.setString("package",defaultPackageName());
   }
-  PNode app=mf.getChild("application");
+  XML app=mf.getChild("application");
   String label=app.getString("android:label");
   if (label.length() == 0) {
     app.setString("android:label",className);
   }
   app.setString("android:debuggable",debug ? "true" : "false");
-  PNode activity=app.getChild("activity");
+  XML activity=app.getChild("activity");
   activity.setString("android:name","." + className);
   PrintWriter writer=PApplet.createWriter(file);
   writer.print(mf.toString());
