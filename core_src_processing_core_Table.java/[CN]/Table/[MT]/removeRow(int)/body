@@ -1,31 +1,45 @@
 {
-  for (int col=0; col < columnCount; col++) {
+  for (int col=0; col < columns.length; col++) {
 switch (columnTypes[col]) {
 case INT:
-      int[] intTemp=new int[rowCount - 1];
-    int[] intData=(int[])columns[col];
-  System.arraycopy(intData[col],0,intTemp,0,dead);
-System.arraycopy(intData[col],dead + 1,intTemp,dead,(rowCount - dead) + 1);
-columns[col]=intTemp;
-break;
+{
+        int[] intTemp=new int[rowCount - 1];
+        System.arraycopy(columns[col],0,intTemp,0,dead);
+        System.arraycopy(columns[col],dead + 1,intTemp,dead,(rowCount - dead) + 1);
+        columns[col]=intTemp;
+        break;
+      }
 case LONG:
-long[] ltemp=new long[rowCount - 1];
-System.arraycopy(longData[col],0,ltemp,0,dead);
-System.arraycopy(longData[col],dead + 1,ltemp,dead,(rowCount - dead) + 1);
-longData[col]=ltemp;
-break;
+{
+      long[] longTemp=new long[rowCount - 1];
+      System.arraycopy(columns[col],0,longTemp,0,dead);
+      System.arraycopy(columns[col],dead + 1,longTemp,dead,(rowCount - dead) + 1);
+      columns[col]=longTemp;
+      break;
+    }
 case FLOAT:
-float[] ftemp=new float[rowCount - 1];
-System.arraycopy(floatData[col],0,ftemp,0,dead);
-System.arraycopy(floatData[col],dead + 1,ftemp,dead,(rowCount - dead) + 1);
-floatData[col]=ftemp;
-break;
+{
+    float[] floatTemp=new float[rowCount - 1];
+    System.arraycopy(columns[col],0,floatTemp,0,dead);
+    System.arraycopy(columns[col],dead + 1,floatTemp,dead,(rowCount - dead) + 1);
+    columns[col]=floatTemp;
+    break;
+  }
 case DOUBLE:
-double[] dtemp=new double[rowCount - 1];
-System.arraycopy(doubleData[col],0,dtemp,0,dead);
-System.arraycopy(doubleData[col],dead + 1,dtemp,dead,(rowCount - dead) + 1);
-doubleData[col]=dtemp;
-break;
+{
+  double[] doubleTemp=new double[rowCount - 1];
+  System.arraycopy(columns[col],0,doubleTemp,0,dead);
+  System.arraycopy(columns[col],dead + 1,doubleTemp,dead,(rowCount - dead) + 1);
+  columns[col]=doubleTemp;
+  break;
+}
+case STRING:
+{
+String[] stringTemp=new String[rowCount - 1];
+System.arraycopy(columns[col],0,stringTemp,0,dead);
+System.arraycopy(columns[col],dead + 1,stringTemp,dead,(rowCount - dead) + 1);
+columns[col]=stringTemp;
+}
 }
 }
 rowCount--;
