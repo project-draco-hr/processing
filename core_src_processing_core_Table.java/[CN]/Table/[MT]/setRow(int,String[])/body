@@ -1,0 +1,37 @@
+{
+  checkColumn(pieces.length - 1);
+  for (int col=0; col < columns.length; col++) {
+switch (columnTypes[col]) {
+case STRING:
+      String[] stringData=(String[])columns[col];
+    stringData[row]=pieces[col];
+  break;
+case INT:
+int[] intData=(int[])columns[col];
+intData[row]=PApplet.parseInt(pieces[col],missingInt);
+break;
+case LONG:
+long[] longData=(long[])columns[col];
+try {
+longData[row]=Long.parseLong(pieces[col]);
+}
+ catch (NumberFormatException nfe) {
+longData[row]=missingLong;
+}
+break;
+case FLOAT:
+float[] floatData=(float[])columns[col];
+floatData[row]=PApplet.parseFloat(pieces[col],missingFloat);
+break;
+case DOUBLE:
+double[] doubleData=(double[])columns[col];
+try {
+doubleData[row]=Double.parseDouble(pieces[col]);
+}
+ catch (NumberFormatException nfe) {
+doubleData[row]=missingDouble;
+}
+break;
+}
+}
+}
