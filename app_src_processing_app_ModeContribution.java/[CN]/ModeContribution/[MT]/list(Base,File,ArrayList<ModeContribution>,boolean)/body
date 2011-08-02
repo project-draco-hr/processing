@@ -1,0 +1,21 @@
+{
+  if (!folder.isDirectory())   return;
+  File[] folders=folder.listFiles(new FileFilter(){
+    public boolean accept(    File potentialModeFolder){
+      if (!potentialModeFolder.isDirectory())       return false;
+      return new File(potentialModeFolder,"mode").exists();
+    }
+  }
+);
+  if (folders == null || folders.length == 0) {
+    return;
+  }
+  for (  File potentialModeFolder : folders) {
+    ModeContribution contrib=getContributedMode(base,potentialModeFolder);
+    if (contrib != null) {
+      if (!instantiateModeClass || (instantiateModeClass && contrib.instantiateModeClass())) {
+        modes.add(contrib);
+      }
+    }
+  }
+}

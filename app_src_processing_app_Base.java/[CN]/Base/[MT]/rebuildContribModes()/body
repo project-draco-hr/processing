@@ -1,0 +1,11 @@
+{
+  if (contribModes == null)   contribModes=new ArrayList<ModeContribution>();
+  ArrayList<ModeContribution> newContribs=ModeContribution.list(this,getSketchbookModesFolder(),false);
+  for (  ModeContribution contrib : newContribs) {
+    if (!contribModes.contains(contrib)) {
+      if (contrib.instantiateModeClass()) {
+        contribModes.add(contrib);
+      }
+    }
+  }
+}
