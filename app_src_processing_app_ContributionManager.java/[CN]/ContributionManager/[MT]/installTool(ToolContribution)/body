@@ -12,8 +12,12 @@
   }
   if (newTool.getFolder().renameTo(newToolDest)) {
     ToolContribution movedTool=ToolContribution.getTool(newToolDest);
-    if (movedTool.instantiateToolClass()) {
+    try {
+      movedTool.initializeToolClass();
       return movedTool;
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
     }
   }
  else {
