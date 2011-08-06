@@ -16,6 +16,11 @@
   JPopupMenu.setDefaultLightWeightPopupEnabled(false);
   initRequirements();
   Preferences.init(null);
+  String filename=args.length > 1 ? args[0] : null;
+  if (!(Preferences.get("server.port") == null) && sendArgumentsToOtherInstance(filename,1000)) {
+    return;
+  }
+  createSingleInstanceServer();
   try {
     platform.setLookAndFeel();
   }
