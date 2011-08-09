@@ -13,7 +13,7 @@
   String authorList=contrib.getAuthorList();
   if (authorList != null && !authorList.isEmpty()) {
     nameText.append(" by ");
-    nameText.append(toHtmlLinks(contrib.getAuthorList()));
+    nameText.append(ContributionListPanel.toHtmlLinks(contrib.getAuthorList()));
   }
   nameText.append("</body></html>");
   headerText.setText(nameText.toString());
@@ -22,11 +22,11 @@
   description.append("<html><body>");
   boolean isFlagged=ContributionManager.isFlaggedForDeletion(contrib);
   if (isFlagged) {
-    description.append(DELETION_MESSAGE);
+    description.append(ContributionListPanel.DELETION_MESSAGE);
   }
  else   if (contrib.getSentence() != null) {
-    String sentence=sanitizeHtmlTags(contrib.getSentence());
-    sentence=toHtmlLinks(sentence);
+    String sentence=ContributionListPanel.sanitizeHtmlTags(contrib.getSentence());
+    sentence=ContributionListPanel.toHtmlLinks(sentence);
     description.append(sentence);
   }
   description.append("</body></html>");
