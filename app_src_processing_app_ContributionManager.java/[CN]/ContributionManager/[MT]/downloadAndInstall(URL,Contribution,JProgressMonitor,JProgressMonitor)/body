@@ -1,32 +1,34 @@
 {
-  File libDest=getTemporaryFile(url);
-  final FileDownloader downloader=new FileDownloader(url,libDest,downloadProgressMonitor);
-  downloader.setPostOperation(new Runnable(){
+  final File libDest=getTemporaryFile(url);
+  new Thread(new Runnable(){
     public void run(){
-      File contributionFile=downloader.getFile();
-      if (contributionFile != null) {
-        installProgressMonitor.startTask("Installing",ProgressMonitor.UNKNOWN);
-        InstalledContribution contribution=null;
+      try {
+        if (FileDownloader.downloadFile(url,libDest,downloadProgressMonitor)) {
+          installProgressMonitor.startTask("Installing",ProgressMonitor.UNKNOWN);
+          InstalledContribution contribution=null;
 switch (toBeReplaced.getType()) {
 case LIBRARY:
-          contribution=installLibrary(contributionFile,false);
-        break;
+            contribution=installLibrary(libDest,false);
+          break;
 case LIBRARY_COMPILATION:
-      contribution=installLibraryCompilation(contributionFile);
-    break;
+        contribution=installLibraryCompilation(libDest);
+      break;
 case TOOL:
-  contribution=installTool(contributionFile);
-break;
+    contribution=installTool(libDest);
+  break;
 }
 if (contribution != null) {
 contribListing.replaceContribution(toBeReplaced,contribution);
 refreshInstalled();
 }
 }
+}
+ catch (IOException e) {
+System.err.println("An error occured when downloading the contribution.");
+}
 dialog.pack();
 installProgressMonitor.finished();
 }
 }
-);
-new Thread(downloader).start();
+).start();
 }
