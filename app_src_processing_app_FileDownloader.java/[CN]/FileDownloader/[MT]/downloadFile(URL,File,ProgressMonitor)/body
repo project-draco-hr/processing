@@ -1,21 +1,26 @@
 {
-  URLConnection urlConn=source.openConnection();
-  urlConn.setConnectTimeout(1000);
-  urlConn.setReadTimeout(5000);
-  int fileSize=urlConn.getContentLength();
-  progressMonitor.startTask("Downloading",fileSize);
-  InputStream in=urlConn.getInputStream();
-  FileOutputStream out=new FileOutputStream(dest);
-  byte[] b=new byte[256];
-  int bytesDownloaded=0, len;
-  while (!progressMonitor.isCanceled() && (len=in.read(b)) != -1) {
-    out.write(b,0,len);
-    bytesDownloaded+=len;
-    progressMonitor.setProgress(bytesDownloaded);
+  try {
+    URLConnection urlConn=source.openConnection();
+    urlConn.setConnectTimeout(1000);
+    urlConn.setReadTimeout(5000);
+    int fileSize=urlConn.getContentLength();
+    progressMonitor.startTask("Downloading",fileSize);
+    InputStream in=urlConn.getInputStream();
+    FileOutputStream out=new FileOutputStream(dest);
+    byte[] b=new byte[256];
+    int bytesDownloaded=0, len;
+    while (!progressMonitor.isCanceled() && (len=in.read(b)) != -1) {
+      out.write(b,0,len);
+      bytesDownloaded+=len;
+      progressMonitor.setProgress(bytesDownloaded);
+    }
+    out.close();
+    if (!progressMonitor.isCanceled()) {
+      return true;
+    }
   }
-  out.close();
-  if (!progressMonitor.isCanceled()) {
-    return true;
+ catch (  IOException e) {
+    System.err.println("An error occured while downloading the file " + source.toExternalForm());
   }
   return false;
 }

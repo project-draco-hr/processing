@@ -1,5 +1,18 @@
 {
   this.editor=editor;
+  if (!contribListing.hasDownloadedLatestList()) {
+    JProgressBar progressBar=contributionListPanel.getSetupProgressBar();
+    contribListing.getAdvertisedContributions(new JProgressMonitor(progressBar){
+      @Override public void finishedAction(){
+synchronized (contribListing) {
+          updateContributionListing();
+          updateCategoryChooser();
+          progressBar.setVisible(false);
+        }
+      }
+    }
+);
+  }
   updateContributionListing();
   if (dialog == null) {
     dialog=new JFrame("Contribution Manager");
