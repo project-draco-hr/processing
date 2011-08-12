@@ -12,31 +12,19 @@
   }
   dialog.setVisible(true);
   if (!contribListing.hasDownloadedLatestList()) {
-    new Thread(new Runnable(){
-      public void run(){
-        final Thread t=contribListing.getAdvertisedContributions(new AbstractProgressMonitor(){
-          public void startTask(          String name,          int maxValue){
-          }
-          public void finished(){
-            super.finished();
-            updateContributionListing();
-            updateCategoryChooser();
-          }
-        }
-);
-synchronized (t) {
-          try {
-            t.join();
-          }
- catch (          InterruptedException e) {
-          }
-        }
-        if (!contribListing.hasDownloadedLatestList()) {
-          statusBar.setErrorMessage("An error occured when downloading the list of available contributions.");
+    contribListing.getAdvertisedContributions(new AbstractProgressMonitor(){
+      public void startTask(      String name,      int maxValue){
+      }
+      public void finished(){
+        super.finished();
+        updateContributionListing();
+        updateCategoryChooser();
+        if (isError()) {
+          statusBar.setErrorMessage("An error occured when downloading " + "the list of available contributions.");
         }
       }
     }
-).start();
+);
   }
   updateContributionListing();
   if (contributionIcons == null) {

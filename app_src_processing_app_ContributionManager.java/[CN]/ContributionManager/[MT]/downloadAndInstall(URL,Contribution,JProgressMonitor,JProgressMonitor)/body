@@ -2,32 +2,28 @@
   final File libDest=getTemporaryFile(url);
   new Thread(new Runnable(){
     public void run(){
-      try {
-        if (FileDownloader.downloadFile(url,libDest,downloadProgressMonitor)) {
-          installProgressMonitor.startTask("Installing",ProgressMonitor.UNKNOWN);
-          InstalledContribution contribution=null;
+      FileDownloader.downloadFile(url,libDest,downloadProgressMonitor);
+      if (!downloadProgressMonitor.isCanceled() && !downloadProgressMonitor.isError()) {
+        installProgressMonitor.startTask("Installing",ProgressMonitor.UNKNOWN);
+        InstalledContribution contribution=null;
 switch (toBeReplaced.getType()) {
 case LIBRARY:
-            contribution=installLibrary(libDest,false);
-          break;
+          contribution=installLibrary(libDest,false);
+        break;
 case LIBRARY_COMPILATION:
-        contribution=installLibraryCompilation(libDest);
-      break;
+      contribution=installLibraryCompilation(libDest);
+    break;
 case TOOL:
-    contribution=installTool(libDest);
-  break;
+  contribution=installTool(libDest);
+break;
 }
 if (contribution != null) {
 contribListing.replaceContribution(toBeReplaced,contribution);
 refreshInstalled();
 }
-}
-}
- catch (IOException e) {
-statusBar.setErrorMessage("An error occured when " + "downloading the contribution.");
-}
 dialog.pack();
 installProgressMonitor.finished();
+}
 }
 }
 ).start();
