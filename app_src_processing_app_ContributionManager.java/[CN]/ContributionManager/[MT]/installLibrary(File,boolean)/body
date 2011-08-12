@@ -1,5 +1,5 @@
 {
-  File tempDir=ContributionManager.unzipFileToTemp(libFile);
+  File tempDir=unzipFileToTemp(libFile);
   try {
     ArrayList<Library> discoveredLibs=Library.list(tempDir);
     if (discoveredLibs.isEmpty()) {
@@ -11,18 +11,18 @@
     }
  else {
       if (discoveredLibs == null) {
-        Base.showWarning(ContributionManager.DISCOVERY_ERROR_TITLE,ContributionManager.DISCOVERY_INTERNAL_ERROR_MESSAGE,null);
+        statusBar.setErrorMessage(ContributionManager.DISCOVERY_INTERNAL_ERROR_MESSAGE);
       }
  else       if (discoveredLibs.isEmpty()) {
-        Base.showWarning(ContributionManager.DISCOVERY_ERROR_TITLE,ContributionManager.DISCOVERY_NONE_FOUND_ERROR_MESSAGE,null);
+        statusBar.setErrorMessage(ContributionManager.DISCOVERY_NONE_FOUND_ERROR_MESSAGE);
       }
  else {
-        Base.showWarning("Too many libraries","We found more than one library in the library file\n" + "we just downloaded. That shouldn't happen, so we're\n" + "going to ignore this file.",null);
+        statusBar.setErrorMessage("There were multiple libraries in the file, so we're ignoring it.");
       }
     }
   }
  catch (  IOException ioe) {
-    Base.showWarning(ContributionManager.DISCOVERY_ERROR_TITLE,ContributionManager.DISCOVERY_INTERNAL_ERROR_MESSAGE,ioe);
+    statusBar.setErrorMessage(ContributionManager.DISCOVERY_INTERNAL_ERROR_MESSAGE);
   }
   return null;
 }
