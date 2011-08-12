@@ -14,9 +14,9 @@
     progressMonitor.setProgress(bytesDownloaded);
   }
   out.close();
-  if (!progressMonitor.isCanceled()) {
-    return true;
+  if (progressMonitor.isCanceled()) {
+    return false;
   }
   progressMonitor.finished();
-  return false;
+  return true;
 }

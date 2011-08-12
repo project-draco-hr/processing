@@ -1,18 +1,5 @@
 {
   this.editor=editor;
-  if (!contribListing.hasDownloadedLatestList()) {
-    contribListing.getAdvertisedContributions(new AbstractProgressMonitor(){
-      public void startTask(      String name,      int maxValue){
-      }
-      public void finished(){
-        super.finished();
-        updateContributionListing();
-        updateCategoryChooser();
-      }
-    }
-);
-  }
-  updateContributionListing();
   if (dialog == null) {
     dialog=new JFrame("Contribution Manager");
     Base.setIcon(dialog);
@@ -24,6 +11,34 @@
     contributionListPanel.grabFocus();
   }
   dialog.setVisible(true);
+  if (!contribListing.hasDownloadedLatestList()) {
+    new Thread(new Runnable(){
+      public void run(){
+        final Thread t=contribListing.getAdvertisedContributions(new AbstractProgressMonitor(){
+          public void startTask(          String name,          int maxValue){
+          }
+          public void finished(){
+            super.finished();
+            updateContributionListing();
+            updateCategoryChooser();
+          }
+        }
+);
+synchronized (t) {
+          try {
+            t.join();
+          }
+ catch (          InterruptedException e) {
+          }
+        }
+        if (!contribListing.hasDownloadedLatestList()) {
+          statusBar.setErrorMessage("An error occured when downloading the list of available contributions.");
+        }
+      }
+    }
+).start();
+  }
+  updateContributionListing();
   if (contributionIcons == null) {
     try {
       Image allButtons=ImageIO.read(Base.getLibStream("contributions.gif"));
