@@ -31,22 +31,6 @@
     overallLayout.addView(layout,lp);
     window.setContentView(overallLayout);
   }
-  Method visibilityMethod=null;
-  try {
-    visibilityMethod=surfaceView.getClass().getMethod("setSystemUiVisibility",new Class[]{int.class});
-  }
- catch (  NoSuchMethodException e) {
-  }
-  if (visibilityMethod != null) {
-    try {
-      visibilityMethod.invoke(surfaceView,new Object[]{1});
-    }
- catch (    InvocationTargetException e) {
-    }
-catch (    IllegalAccessException e) {
-    }
-  }
-  window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
   finished=false;
   looping=true;
   redraw=true;
@@ -61,7 +45,5 @@ catch (    IllegalAccessException e) {
   Context context=getApplicationContext();
   sketchPath=context.getFilesDir().getAbsolutePath();
   handler=new Handler();
-  println("calling loop()");
-  println("done with loop() call, will continue...");
   start();
 }
