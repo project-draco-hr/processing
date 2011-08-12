@@ -5,5 +5,17 @@
   if (property.startsWith("instal") && !property.startsWith("installabl")) {
     return contrib.isInstalled();
   }
+  if (property.equals("tool")) {
+    return contrib.getType() == Contribution.Type.TOOL;
+  }
+  if (property.startsWith("lib")) {
+    return contrib.getType() == Contribution.Type.LIBRARY || contrib.getType() == Contribution.Type.LIBRARY_COMPILATION;
+  }
+  if (property.equals("mode")) {
+    return contrib.getType() == Contribution.Type.MODE;
+  }
+  if (property.equals("compilation")) {
+    return contrib.getType() == Contribution.Type.LIBRARY_COMPILATION;
+  }
   return false;
 }
