@@ -3,23 +3,19 @@
   new Thread(new Runnable(){
     public void run(){
       downloadingListingLock.lock();
-      File dest=null;
       URL url=null;
       try {
-        File tmpFolder=Base.createTempFolder("libarylist","download");
-        dest=new File(tmpFolder,"contributions.xml");
-        dest.setWritable(true);
         url=new URL("http://dl.dropbox.com/u/700641/generated/contributions.xml");
       }
- catch (      IOException e) {
+ catch (      MalformedURLException e) {
         progressMonitor.error(e);
         progressMonitor.finished();
       }
       if (!progressMonitor.isFinished()) {
-        FileDownloader.downloadFile(url,dest,progressMonitor);
+        FileDownloader.downloadFile(url,listingFile,progressMonitor);
         if (!progressMonitor.isCanceled() && !progressMonitor.isError()) {
           hasDownloadedLatestList=true;
-          setAdvertisedList(dest);
+          setAdvertisedList(listingFile);
         }
       }
       downloadingListingLock.unlock();
