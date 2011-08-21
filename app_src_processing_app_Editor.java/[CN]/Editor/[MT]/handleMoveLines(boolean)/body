@@ -1,0 +1,44 @@
+{
+  startCompoundEdit();
+  int startLine=textarea.getSelectionStartLine();
+  int stopLine=textarea.getSelectionStopLine();
+  if (startLine != stopLine && textarea.getSelectionStop() == textarea.getLineStartOffset(stopLine))   stopLine--;
+  int replacedLine=moveUp ? startLine - 1 : stopLine + 1;
+  if (replacedLine < 0 || replacedLine >= textarea.getLineCount())   return;
+  final String source=getText();
+  int replaceStart=textarea.getLineStartOffset(replacedLine);
+  int replaceEnd=textarea.getLineStopOffset(replacedLine);
+  if (replaceEnd == source.length() + 1)   replaceEnd--;
+  int selectionStart=textarea.getLineStartOffset(startLine);
+  int selectionEnd=textarea.getLineStopOffset(stopLine);
+  if (selectionEnd == source.length() + 1)   selectionEnd--;
+  String replacedText=source.substring(replaceStart,replaceEnd);
+  String selectedText=source.substring(selectionStart,selectionEnd);
+  if (replacedLine == textarea.getLineCount() - 1) {
+    replacedText+="\n";
+    selectedText=selectedText.substring(0,selectedText.length() - 1);
+  }
+ else   if (stopLine == textarea.getLineCount() - 1) {
+    selectedText+="\n";
+    replacedText=replacedText.substring(0,replacedText.length() - 1);
+  }
+  int newSelectionStart, newSelectionEnd;
+  if (moveUp) {
+    textarea.select(selectionStart,selectionEnd);
+    textarea.setSelectedText(replacedText);
+    textarea.select(replaceStart,replaceEnd);
+    textarea.setSelectedText(selectedText);
+    newSelectionStart=textarea.getLineStartOffset(startLine - 1);
+    newSelectionEnd=textarea.getLineStopOffset(stopLine - 1) - 1;
+  }
+ else {
+    textarea.select(replaceStart,replaceEnd);
+    textarea.setSelectedText(selectedText);
+    textarea.select(selectionStart,selectionEnd);
+    textarea.setSelectedText(replacedText);
+    newSelectionStart=textarea.getLineStartOffset(startLine + 1);
+    newSelectionEnd=textarea.getLineStopOffset(stopLine + 1) - 1;
+  }
+  textarea.select(newSelectionStart,newSelectionEnd);
+  stopCompoundEdit();
+}
