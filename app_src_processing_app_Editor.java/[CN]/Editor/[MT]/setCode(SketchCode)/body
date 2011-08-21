@@ -12,11 +12,15 @@
     }
     document.addDocumentListener(new DocumentListener(){
       public void removeUpdate(      DocumentEvent e){
-        if (isInserting)         endTextEditHistory();
+        if (isInserting && isDirectEdit()) {
+          endTextEditHistory();
+        }
         isInserting=false;
       }
       public void insertUpdate(      DocumentEvent e){
-        if (!isInserting)         endTextEditHistory();
+        if (!isInserting && isDirectEdit()) {
+          endTextEditHistory();
+        }
         isInserting=true;
       }
       public void changedUpdate(      DocumentEvent e){
