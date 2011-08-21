@@ -22,6 +22,7 @@
     }
   }
 );
+  timer=new Timer();
   buildMenuBar();
   Container contentPain=getContentPane();
   contentPain.setLayout(new BorderLayout());
@@ -60,6 +61,17 @@
   box.add(splitPane);
   pain.add(box);
   textarea.addKeyListener(toolbar);
+  textarea.addCaretListener(new CaretListener(){
+    String lastText=textarea.getText();
+    public void caretUpdate(    CaretEvent e){
+      String newText=textarea.getText();
+      if (lastText.equals(newText)) {
+        endTextEditHistory();
+      }
+      lastText=newText;
+    }
+  }
+);
   pain.setTransferHandler(new FileDropHandler());
   pack();
   setPlacement(location);

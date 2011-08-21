@@ -10,18 +10,34 @@
  catch (    BadLocationException bl) {
       bl.printStackTrace();
     }
+    document.addDocumentListener(new DocumentListener(){
+      public void removeUpdate(      DocumentEvent e){
+        if (isInserting)         endTextEditHistory();
+        isInserting=false;
+      }
+      public void insertUpdate(      DocumentEvent e){
+        if (!isInserting)         endTextEditHistory();
+        isInserting=true;
+      }
+      public void changedUpdate(      DocumentEvent e){
+        endTextEditHistory();
+      }
+    }
+);
     document.addUndoableEditListener(new UndoableEditListener(){
       public void undoableEditHappened(      UndoableEditEvent e){
-        if (compoundEdit != null) {
-          compoundEdit.addEdit(e.getEdit());
+        if (endUndoEvent != null) {
+          endUndoEvent.cancel();
+          endUndoEvent=null;
+          startTimerEvent();
         }
- else         if (undo != null) {
-          caretUndoStack.push(textarea.getCaretPosition());
-          caretRedoStack.clear();
-          undo.addEdit(e.getEdit());
-          undoAction.updateUndoState();
-          redoAction.updateRedoState();
+        if (compoundEdit == null) {
+          startCompoundEdit();
+          startTimerEvent();
         }
+        compoundEdit.addEdit(e.getEdit());
+        undoAction.updateUndoState();
+        redoAction.updateRedoState();
       }
     }
 );
