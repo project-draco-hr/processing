@@ -23,7 +23,16 @@
     currentInfo.version=Integer.parseInt(attributes.getValue("id"));
     currentInfo.prettyVersion=attributes.getValue("pretty");
   }
- else   if ("location".equals(qName)) {
-    currentInfo.link=attributes.getValue("url");
+ else   if ("download".equals(qName)) {
+    String link=null;
+    String hostPlatform=Base.getPlatformName();
+    int nativeBits=Base.getNativeBits();
+    String hostVersion=Base.getPlatformVersionName();
+    if (!hostPlatform.isEmpty())     link=attributes.getValue(hostPlatform + nativeBits + "."+ hostVersion);
+    if (link == null)     link=attributes.getValue(hostPlatform + "." + hostVersion);
+    if (link == null)     link=attributes.getValue(hostPlatform + nativeBits);
+    if (link == null)     link=attributes.getValue(hostPlatform);
+    if (link == null)     link=attributes.getValue("other");
+    currentInfo.link=link;
   }
 }
