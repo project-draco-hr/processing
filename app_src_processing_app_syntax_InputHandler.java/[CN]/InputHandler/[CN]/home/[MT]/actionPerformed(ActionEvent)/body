@@ -2,14 +2,19 @@
   JEditTextArea textArea=getTextArea(evt);
   int caret=textArea.getCaretPosition();
   int firstLine=textArea.getFirstLine();
-  int firstOfLine=textArea.getLineStartOffset(textArea.getCaretLine());
+  int caretLine=textArea.getCaretLine();
+  int firstOfLine=textArea.getLineStartOffset(caretLine);
+  int firstNonWhiteSpaceOfLine=textArea.getLineStartNonWhiteSpaceOffset(caretLine);
   int firstVisibleLine=(firstLine == 0 ? 0 : firstLine + textArea.getElectricScroll());
   int firstVisible=textArea.getLineStartOffset(firstVisibleLine);
-  if (caret == 0) {
+  if (caret == 0 && !Preferences.getBoolean(CONTEXT_AWARE_HOME_END)) {
     textArea.getToolkit().beep();
     return;
   }
- else   if (!Boolean.TRUE.equals(textArea.getClientProperty(SMART_HOME_END_PROPERTY)))   caret=firstOfLine;
+ else   if (!Boolean.TRUE.equals(textArea.getClientProperty(SMART_HOME_END_PROPERTY))) {
+    if (!Preferences.getBoolean(CONTEXT_AWARE_HOME_END) || caret == firstNonWhiteSpaceOfLine)     caret=firstOfLine;
+ else     caret=firstNonWhiteSpaceOfLine;
+  }
  else   if (caret == firstVisible)   caret=0;
  else   if (caret == firstOfLine)   caret=firstVisible;
  else   caret=firstOfLine;

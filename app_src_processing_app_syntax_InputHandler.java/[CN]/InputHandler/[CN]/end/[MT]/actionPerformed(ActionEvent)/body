@@ -1,7 +1,9 @@
 {
   JEditTextArea textArea=getTextArea(evt);
   int caret=textArea.getCaretPosition();
-  int lastOfLine=textArea.getLineStopOffset(textArea.getCaretLine()) - 1;
+  int caretLine=textArea.getCaretLine();
+  int lastOfLine=textArea.getLineStopOffset(caretLine) - 1;
+  int lastNonWhiteSpaceOfLine=textArea.getLineStopNonWhiteSpaceOffset(caretLine) - 1;
   int lastVisibleLine=textArea.getFirstLine() + textArea.getVisibleLines();
   if (lastVisibleLine >= textArea.getLineCount()) {
     lastVisibleLine=Math.min(textArea.getLineCount() - 1,lastVisibleLine);
@@ -9,11 +11,14 @@
  else   lastVisibleLine-=(textArea.getElectricScroll() + 1);
   int lastVisible=textArea.getLineStopOffset(lastVisibleLine) - 1;
   int lastDocument=textArea.getDocumentLength();
-  if (caret == lastDocument) {
+  if (caret == lastDocument && !Preferences.getBoolean(CONTEXT_AWARE_HOME_END)) {
     textArea.getToolkit().beep();
     return;
   }
- else   if (!Boolean.TRUE.equals(textArea.getClientProperty(SMART_HOME_END_PROPERTY)))   caret=lastOfLine;
+ else   if (!Boolean.TRUE.equals(textArea.getClientProperty(SMART_HOME_END_PROPERTY))) {
+    if (!Preferences.getBoolean(CONTEXT_AWARE_HOME_END) || caret == lastNonWhiteSpaceOfLine)     caret=lastOfLine;
+ else     caret=lastNonWhiteSpaceOfLine;
+  }
  else   if (caret == lastVisible)   caret=lastDocument;
  else   if (caret == lastOfLine)   caret=lastVisible;
  else   caret=lastOfLine;
