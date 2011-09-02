@@ -4,8 +4,14 @@
     filename=parent.savePath(filename);
   }
  else {
-    String msg="PImage.save() requires an absolute path. " + "Use createImage(), or pass savePath() to save().";
-    PGraphics.showException(msg);
+    File file=new File(filename);
+    if (file.isAbsolute()) {
+      PApplet.createPath(file);
+    }
+ else {
+      String msg="PImage.save() requires an absolute path. " + "Use createImage(), or pass savePath() to save().";
+      PGraphics.showException(msg);
+    }
   }
   loadPixels();
   try {

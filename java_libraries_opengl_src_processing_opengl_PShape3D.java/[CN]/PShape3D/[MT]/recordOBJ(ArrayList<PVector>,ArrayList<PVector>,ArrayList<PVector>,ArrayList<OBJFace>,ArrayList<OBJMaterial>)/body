@@ -9,10 +9,10 @@
   ogl.textureMode=NORMAL;
   ogl.beginShapeRecorderImpl();
   for (int i=0; i < faces.size(); i++) {
-    OBJFace face=(OBJFace)faces.get(i);
+    OBJFace face=faces.get(i);
     if (mtlIdxCur != face.matIdx) {
       mtlIdxCur=PApplet.max(0,face.matIdx);
-      mtl=(OBJMaterial)materials.get(mtlIdxCur);
+      mtl=materials.get(mtlIdxCur);
       ogl.specular(mtl.ks.x * 255.0f,mtl.ks.y * 255.0f,mtl.ks.z * 255.0f);
       ogl.ambient(mtl.ka.x * 255.0f,mtl.ka.y * 255.0f,mtl.ka.z * 255.0f);
       if (ogl.fill) {
@@ -38,11 +38,11 @@
       PVector vert, norms;
       vert=norms=null;
       vertIdx=face.vertIdx.get(j).intValue() - 1;
-      vert=(PVector)vertices.get(vertIdx);
+      vert=vertices.get(vertIdx);
       if (j < face.normIdx.size()) {
         normIdx=face.normIdx.get(j).intValue() - 1;
         if (-1 < normIdx) {
-          norms=(PVector)normals.get(normIdx);
+          norms=normals.get(normIdx);
         }
       }
       if (mtl != null && mtl.kdMap != null) {
@@ -51,7 +51,7 @@
         if (j < face.texIdx.size()) {
           texIdx=face.texIdx.get(j).intValue() - 1;
           if (-1 < texIdx) {
-            tex=(PVector)textures.get(texIdx);
+            tex=textures.get(texIdx);
           }
         }
         PTexture texMtl=(PTexture)mtl.kdMap.getCache(ogl);
