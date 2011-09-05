@@ -1,4 +1,8 @@
 {
+  boolean outsideDraw=primarySurface && !drawing;
+  if (outsideDraw) {
+    beginGLOp();
+  }
   boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
   if (notCurrent) {
     pushFramebuffer();
@@ -7,5 +11,8 @@
   drawTexture();
   if (notCurrent) {
     popFramebuffer();
+  }
+  if (outsideDraw) {
+    endGLOp();
   }
 }

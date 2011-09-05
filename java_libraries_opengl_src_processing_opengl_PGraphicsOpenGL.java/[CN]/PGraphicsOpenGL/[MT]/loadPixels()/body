@@ -3,6 +3,10 @@
     pixels=new int[width * height];
     pixelBuffer=IntBuffer.allocate(pixels.length);
   }
+  boolean outsideDraw=primarySurface && !drawing;
+  if (outsideDraw) {
+    beginGLOp();
+  }
   boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
   if (notCurrent) {
     pushFramebuffer();
@@ -53,5 +57,8 @@
   if (primarySurface) {
     loadTextureImpl(POINT);
     pixelsToTexture();
+  }
+  if (outsideDraw) {
+    endGLOp();
   }
 }

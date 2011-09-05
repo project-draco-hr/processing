@@ -2,6 +2,10 @@
   if (getsetBuffer == null) {
     getsetBuffer=IntBuffer.allocate(1);
   }
+  boolean outsideDraw=primarySurface && !drawing;
+  if (outsideDraw) {
+    beginGLOp();
+  }
   boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
   if (notCurrent) {
     pushFramebuffer();
@@ -13,6 +17,9 @@
     popFramebuffer();
   }
   int getset=getsetBuffer.get(0);
+  if (outsideDraw) {
+    endGLOp();
+  }
   if (BIG_ENDIAN) {
     return 0xff000000 | ((getset >> 8) & 0x00ffffff);
   }

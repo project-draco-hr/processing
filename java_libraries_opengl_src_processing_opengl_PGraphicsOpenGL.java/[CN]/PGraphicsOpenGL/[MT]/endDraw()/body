@@ -1,5 +1,9 @@
 {
   report("top endDraw()");
+  if (!drawing) {
+    System.err.println("P3D: Cannot call endDraw() before beginDraw().");
+    return;
+  }
   gl.glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
   if (USE_GEO_BUFFER) {
     if (GEO_BUFFER_ACCUM_ALL && geoBuffer != null && 0 < geoBuffer.vertCount) {
@@ -25,5 +29,6 @@
     popFramebuffer();
     ogl.restoreGLState();
   }
+  drawing=false;
   report("bot endDraw()");
 }

@@ -1,4 +1,8 @@
 {
+  if (drawing) {
+    System.err.println("P3D: Already called beginDraw().");
+    return;
+  }
   if (primarySurface && drawable != null) {
     drawable.setRealized(parent.isDisplayable());
     if (parent.isDisplayable()) {
@@ -94,5 +98,6 @@
   }
   gl.glClearColor(0,0,0,0);
   gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
+  drawing=true;
   report("bot beginDraw()");
 }
