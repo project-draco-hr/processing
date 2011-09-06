@@ -1,0 +1,81 @@
+{
+  finish();
+  long originalMdatOffset=mdatAtom.getOffset();
+  CompositeAtom originalMoovAtom=moovAtom;
+  mdatOffset=0;
+  ImageOutputStream originalOut=out;
+  try {
+    out=null;
+    if (compressHeader) {
+      ByteArrayOutputStream buf=new ByteArrayOutputStream();
+      int maxIteration=5;
+      long compressionHeadersSize=40 + 8;
+      long headerSize=0;
+      long freeSize=0;
+      while (true) {
+        mdatOffset=compressionHeadersSize + headerSize + freeSize;
+        buf.reset();
+        DeflaterOutputStream deflater=new DeflaterOutputStream(buf);
+        out=new MemoryCacheImageOutputStream(deflater);
+        writeEpilog();
+        out.close();
+        deflater.close();
+        if (buf.size() > headerSize + freeSize && --maxIteration > 0) {
+          if (headerSize != 0) {
+            freeSize=Math.max(freeSize,buf.size() - headerSize - freeSize);
+          }
+          headerSize=buf.size();
+        }
+ else {
+          freeSize=headerSize + freeSize - buf.size();
+          headerSize=buf.size();
+          break;
+        }
+      }
+      if (maxIteration < 0 || buf.size() == 0) {
+        compressHeader=false;
+        System.err.println("WARNING QuickTimeWriter failed to compress header.");
+      }
+ else {
+        out=new FileImageOutputStream(outputFile);
+        writeProlog();
+        DataAtomOutputStream daos=new DataAtomOutputStream(new ImageOutputStreamAdapter(out));
+        daos.writeUInt(headerSize + 40);
+        daos.writeType("moov");
+        daos.writeUInt(headerSize + 32);
+        daos.writeType("cmov");
+        daos.writeUInt(12);
+        daos.writeType("dcom");
+        daos.writeType("zlib");
+        daos.writeUInt(headerSize + 12);
+        daos.writeType("cmvd");
+        daos.writeUInt(originalMoovAtom.size());
+        daos.write(buf.toByteArray());
+        daos.writeUInt(freeSize + 8);
+        daos.writeType("free");
+        for (int i=0; i < freeSize; i++) {
+          daos.write(0);
+        }
+      }
+    }
+    if (!compressHeader) {
+      out=new FileImageOutputStream(outputFile);
+      mdatOffset=moovAtom.size();
+      writeProlog();
+      writeEpilog();
+    }
+    byte[] buf=new byte[4096];
+    originalOut.seek((originalMdatOffset));
+    for (long count=0, n=mdatAtom.size(); count < n; ) {
+      int read=originalOut.read(buf,0,(int)Math.min(buf.length,n - count));
+      out.write(buf,0,read);
+      count+=read;
+    }
+    out.close();
+  }
+  finally {
+    mdatOffset=0;
+    moovAtom=originalMoovAtom;
+    out=originalOut;
+  }
+}

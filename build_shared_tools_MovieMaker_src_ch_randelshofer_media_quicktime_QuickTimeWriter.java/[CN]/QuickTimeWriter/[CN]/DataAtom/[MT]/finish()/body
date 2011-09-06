@@ -1,0 +1,19 @@
+{
+  if (!finished) {
+    long sizeBefore=size();
+    if (size() > 0xffffffffL) {
+      throw new IOException("DataAtom \"" + type + "\" is too large: "+ size());
+    }
+    long pointer=getRelativeStreamPosition();
+    seekRelative(offset);
+    DataAtomOutputStream headerData=new DataAtomOutputStream(new ImageOutputStreamAdapter(out));
+    headerData.writeUInt(size());
+    headerData.writeType(type);
+    seekRelative(pointer);
+    finished=true;
+    long sizeAfter=size();
+    if (sizeBefore != sizeAfter) {
+      System.err.println("size mismatch " + sizeBefore + ".."+ sizeAfter);
+    }
+  }
+}

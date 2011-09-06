@@ -1,0 +1,13 @@
+{
+  mediaDuration+=chunk.firstSample.duration * chunk.sampleCount;
+  sampleCount+=chunk.sampleCount;
+  if (timeToSamples.isEmpty() || !timeToSamples.get(timeToSamples.size() - 1).maybeAddChunk(chunk)) {
+    timeToSamples.add(new TimeToSampleGroup(chunk));
+  }
+  if (sampleSizes.isEmpty() || !sampleSizes.get(sampleSizes.size() - 1).maybeAddChunk(chunk)) {
+    sampleSizes.add(new SampleSizeGroup(chunk));
+  }
+  if (chunks.isEmpty() || !chunks.get(chunks.size() - 1).maybeAddChunk(chunk)) {
+    chunks.add(chunk);
+  }
+}

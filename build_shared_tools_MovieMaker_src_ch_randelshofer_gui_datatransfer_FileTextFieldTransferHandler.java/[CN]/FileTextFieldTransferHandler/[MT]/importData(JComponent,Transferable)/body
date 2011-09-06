@@ -1,0 +1,65 @@
+{
+  JTextComponent c=(JTextComponent)comp;
+  if (c == exportComp && c.getCaretPosition() >= p0 && c.getCaretPosition() <= p1) {
+    shouldRemove=false;
+    return true;
+  }
+  boolean imported=false;
+  if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+    InputContext ic=c.getInputContext();
+    if (ic != null) {
+      ic.endComposition();
+    }
+    try {
+      java.util.List list=(List)t.getTransferData(DataFlavor.javaFileListFlavor);
+      if (list.size() > 0) {
+        File file=(File)list.get(0);
+switch (fileSelectionMode) {
+case JFileChooser.FILES_AND_DIRECTORIES:
+          break;
+case JFileChooser.FILES_ONLY:
+        if (file.isDirectory()) {
+          return false;
+        }
+      break;
+case JFileChooser.DIRECTORIES_ONLY:
+    if (!file.isDirectory()) {
+      return false;
+    }
+  break;
+}
+if (fileFilter != null && !fileFilter.accept(file)) {
+return false;
+}
+c.setText(file.getPath());
+}
+imported=true;
+}
+ catch (UnsupportedFlavorException ex) {
+}
+catch (IOException ex) {
+}
+}
+if (!imported) {
+DataFlavor importFlavor=getImportFlavor(t.getTransferDataFlavors(),c);
+if (importFlavor != null) {
+InputContext ic=c.getInputContext();
+if (ic != null) {
+ic.endComposition();
+}
+try {
+Reader r=importFlavor.getReaderForText(t);
+boolean useRead=false;
+handleReaderImport(r,c,useRead);
+imported=true;
+}
+ catch (UnsupportedFlavorException ex) {
+}
+catch (BadLocationException ex) {
+}
+catch (IOException ex) {
+}
+}
+}
+return imported;
+}

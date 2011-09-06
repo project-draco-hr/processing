@@ -1,0 +1,12 @@
+{
+  ensureOpen();
+  if (state == States.FINISHED) {
+    throw new IOException("Can not write into finished movie.");
+  }
+  if (state != States.STARTED) {
+    creationTime=new Date();
+    writeProlog();
+    mdatAtom=new WideDataAtom("mdat");
+    state=States.STARTED;
+  }
+}

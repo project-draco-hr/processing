@@ -1,0 +1,14 @@
+{
+  if (off < 0 || len < 0 || off + len > i.length || off + len < 0) {
+    throw new IndexOutOfBoundsException("off < 0 || len < 0 || off + len > i.length!");
+  }
+  byte[] b=new byte[len * 3];
+  int boff=0;
+  for (int j=0; j < len; j++) {
+    int v=i[off + j];
+    b[boff++]=(byte)(v >>> 16);
+    b[boff++]=(byte)(v >>> 8);
+    b[boff++]=(byte)(v >>> 0);
+  }
+  write(b,0,len * 3);
+}

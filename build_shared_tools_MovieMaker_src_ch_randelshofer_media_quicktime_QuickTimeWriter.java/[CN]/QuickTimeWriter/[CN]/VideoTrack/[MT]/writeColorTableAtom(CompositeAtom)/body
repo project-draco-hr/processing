@@ -1,0 +1,16 @@
+{
+  DataAtom leaf;
+  DataAtomOutputStream d;
+  leaf=new DataAtom("ctab");
+  stblAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.writeUInt(0);
+  d.writeUShort(0x8000);
+  d.writeUShort(videoColorTable.getMapSize() - 1);
+  for (int i=0, n=videoColorTable.getMapSize(); i < n; ++i) {
+    d.writeUShort(0);
+    d.writeUShort((videoColorTable.getRed(i) << 8) | videoColorTable.getRed(i));
+    d.writeUShort((videoColorTable.getGreen(i) << 8) | videoColorTable.getGreen(i));
+    d.writeUShort((videoColorTable.getBlue(i) << 8) | videoColorTable.getBlue(i));
+  }
+}

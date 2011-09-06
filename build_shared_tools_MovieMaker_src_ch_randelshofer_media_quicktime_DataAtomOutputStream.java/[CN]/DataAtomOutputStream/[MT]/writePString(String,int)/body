@@ -1,0 +1,19 @@
+{
+  if (s.length() > length) {
+    throw new IllegalArgumentException("String too long for PString of length " + length);
+  }
+  if (s.length() != 0 && s.length() < 256) {
+    out.write(s.length());
+  }
+ else {
+    out.write(0);
+    writeShort(s.length());
+  }
+  for (int i=0; i < s.length(); i++) {
+    out.write(s.charAt(i));
+  }
+  for (int i=1 + s.length(); i < length; i++) {
+    out.write(0);
+  }
+  incCount(length);
+}

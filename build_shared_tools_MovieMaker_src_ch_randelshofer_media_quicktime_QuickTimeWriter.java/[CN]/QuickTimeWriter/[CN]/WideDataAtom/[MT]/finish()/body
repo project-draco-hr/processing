@@ -1,0 +1,21 @@
+{
+  if (!finished) {
+    long pointer=getRelativeStreamPosition();
+    seekRelative(offset);
+    DataAtomOutputStream headerData=new DataAtomOutputStream(new ImageOutputStreamAdapter(out));
+    long finishedSize=size();
+    if (finishedSize <= 0xffffffffL) {
+      headerData.writeUInt(8);
+      headerData.writeType("wide");
+      headerData.writeUInt(finishedSize - 8);
+      headerData.writeType(type);
+    }
+ else {
+      headerData.writeInt(1);
+      headerData.writeType(type);
+      headerData.writeLong(finishedSize - 8);
+    }
+    seekRelative(pointer);
+    finished=true;
+  }
+}

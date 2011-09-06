@@ -1,0 +1,22 @@
+{
+  ensureStarted();
+  if (sampleDuration <= 0) {
+    throw new IllegalArgumentException("sampleDuration must be greater 0, sampleDuration=" + sampleDuration);
+  }
+  if (sampleCount <= 0) {
+    throw new IllegalArgumentException("sampleCount must be greater 0, sampleCount=" + sampleCount);
+  }
+  if (len % sampleCount != 0) {
+    throw new IllegalArgumentException("len must be divisable by sampleCount len=" + len + " sampleCount="+ sampleCount);
+  }
+  Track t=tracks.get(track);
+  ensureOpen();
+  ensureStarted();
+  long offset=getRelativeStreamPosition();
+  OutputStream mdatOut=mdatAtom.getOutputStream();
+  mdatOut.write(data,off,len);
+  int sampleLength=len / sampleCount;
+  Sample first=new Sample(sampleDuration,offset,sampleLength);
+  Sample last=new Sample(sampleDuration,offset + sampleLength * (sampleCount - 1),sampleLength);
+  t.addChunk(new Chunk(first,last,sampleCount,1),isSync);
+}

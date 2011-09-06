@@ -1,0 +1,29 @@
+{
+  DataAtom leaf;
+  DataAtomOutputStream d;
+  leaf=new DataAtom("stsd");
+  stblAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.writeInt(1);
+  d.writeUInt(4 + 12 + 20+ 16+ stsdExtensions.length);
+  d.writeType(mediaCompressionType);
+  d.write(new byte[6]);
+  d.writeUShort(1);
+  d.writeUShort(1);
+  d.writeUShort(0);
+  d.writeUInt(0);
+  d.writeUShort(soundNumberOfChannels);
+  d.writeUShort(soundSampleSize);
+  d.writeUShort(soundCompressionId);
+  d.writeUShort(0);
+  d.writeFixed16D16(soundSampleRate);
+  d.writeUInt(soundSamplesPerPacket);
+  d.writeUInt(soundBytesPerPacket);
+  d.writeUInt(soundBytesPerFrame);
+  d.writeUInt(soundBytesPerSample);
+  d.write(stsdExtensions);
+}

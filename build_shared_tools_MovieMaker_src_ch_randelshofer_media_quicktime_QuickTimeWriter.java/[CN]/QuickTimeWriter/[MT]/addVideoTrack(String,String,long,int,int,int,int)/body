@@ -1,0 +1,30 @@
+{
+  ensureStarted();
+  if (compressionType == null || compressionType.length() != 4) {
+    throw new IllegalArgumentException("compressionType must be 4 characters long:" + compressionType);
+  }
+  if (compressorName == null || compressorName.length() < 1 || compressorName.length() > 32) {
+    throw new IllegalArgumentException("compressorName must be between 1 and 32 characters long:" + compressionType);
+  }
+  if (timeScale < 1 || timeScale > (2L << 32)) {
+    throw new IllegalArgumentException("timeScale must be between 1 and 2^32:" + timeScale);
+  }
+  if (width < 1 || height < 1) {
+    throw new IllegalArgumentException("Width and height must be greater than 0, width:" + width + " height:"+ height);
+  }
+  VideoTrack t=new VideoTrack();
+  t.mediaCompressionType=compressionType;
+  t.mediaCompressorName=compressorName;
+  t.mediaTimeScale=timeScale;
+  t.videoWidth=width;
+  t.videoHeight=height;
+  t.videoDepth=depth;
+  t.syncInterval=syncInterval;
+  for (  VideoFormat vf : VideoFormat.values()) {
+    if (vf.compressionType.equals(compressionType)) {
+      t.videoEncoding=vf;
+      break;
+    }
+  }
+  tracks.add(t);
+}

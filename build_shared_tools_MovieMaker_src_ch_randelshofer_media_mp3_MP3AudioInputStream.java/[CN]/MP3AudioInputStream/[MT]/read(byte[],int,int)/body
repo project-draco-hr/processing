@@ -1,0 +1,23 @@
+{
+  if (in.getFrame() == null && in.getNextFrame() == null) {
+    return -1;
+  }
+  if (in.getStreamPosition() != in.getFrame().getFrameOffset()) {
+    if (in.getNextFrame() == null) {
+      return -1;
+    }
+  }
+  int bytesRead=0;
+  int frameSize=in.getFrame().getFrameSize();
+  while (len >= frameSize) {
+    in.readFully(b,off,frameSize);
+    len-=frameSize;
+    bytesRead+=frameSize;
+    off+=frameSize;
+    if (in.getNextFrame() == null) {
+      break;
+    }
+    frameSize=in.getFrame().getFrameSize();
+  }
+  return bytesRead;
+}

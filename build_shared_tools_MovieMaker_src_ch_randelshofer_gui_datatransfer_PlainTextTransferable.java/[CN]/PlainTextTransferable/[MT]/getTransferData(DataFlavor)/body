@@ -1,0 +1,17 @@
+{
+  if (!isDataFlavorSupported(flavor)) {
+    throw new UnsupportedFlavorException(flavor);
+  }
+  plainText=(plainText == null) ? "" : plainText;
+  if (String.class.equals(flavor.getRepresentationClass())) {
+    return plainText;
+  }
+ else   if (Reader.class.equals(flavor.getRepresentationClass())) {
+    return new StringReader(plainText);
+  }
+ else   if (InputStream.class.equals(flavor.getRepresentationClass())) {
+    String charsetName=flavor.getParameter("charset");
+    return new ByteArrayInputStream(plainText.getBytes(charsetName == null ? "UTF-8" : charsetName));
+  }
+  throw new UnsupportedFlavorException(flavor);
+}

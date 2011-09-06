@@ -1,0 +1,92 @@
+{
+  DataAtom leaf;
+  DataAtomOutputStream d;
+  CompositeAtom trakAtom=new CompositeAtom("trak");
+  moovAtom.add(trakAtom);
+  leaf=new DataAtom("tkhd");
+  trakAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0xf);
+  d.writeMacTimestamp(creationTime);
+  d.writeMacTimestamp(modificationTime);
+  d.writeInt(trackIndex + 1);
+  d.writeInt(0);
+  d.writeUInt(getTrackDuration(movieTimeScale));
+  d.writeLong(0);
+  d.writeShort(0);
+  d.writeShort(0);
+  d.writeFixed8D8(mediaType == MediaType.AUDIO ? 1 : 0);
+  d.writeShort(0);
+  d.writeFixed16D16(1);
+  d.writeFixed16D16(0);
+  d.writeFixed2D30(0);
+  d.writeFixed16D16(0);
+  d.writeFixed16D16(1);
+  d.writeFixed2D30(0);
+  d.writeFixed16D16(0);
+  d.writeFixed16D16(0);
+  d.writeFixed2D30(1);
+  d.writeFixed16D16(mediaType == MediaType.VIDEO ? ((VideoTrack)this).videoWidth : 0);
+  d.writeFixed16D16(mediaType == MediaType.VIDEO ? ((VideoTrack)this).videoHeight : 0);
+  CompositeAtom edtsAtom=new CompositeAtom("edts");
+  trakAtom.add(edtsAtom);
+  leaf=new DataAtom("elst");
+  edtsAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  Edit[] elist=editList;
+  if (elist == null || elist.length == 0) {
+    d.writeUInt(1);
+    d.writeUInt(getTrackDuration(movieTimeScale));
+    d.writeUInt(0);
+    d.writeFixed16D16(1);
+  }
+ else {
+    d.writeUInt(elist.length);
+    for (int i=0; i < elist.length; ++i) {
+      d.writeUInt(elist[i].trackDuration);
+      d.writeUInt(elist[i].mediaTime);
+      d.writeUInt(elist[i].mediaRate);
+    }
+  }
+  CompositeAtom mdiaAtom=new CompositeAtom("mdia");
+  trakAtom.add(mdiaAtom);
+  leaf=new DataAtom("mdhd");
+  mdiaAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.writeMacTimestamp(creationTime);
+  d.writeMacTimestamp(modificationTime);
+  d.writeUInt(mediaTimeScale);
+  d.writeUInt(mediaDuration);
+  d.writeShort(0);
+  d.writeShort(0);
+  leaf=new DataAtom("hdlr");
+  mdiaAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.writeType("mhlr");
+  d.writeType(mediaType == MediaType.VIDEO ? "vide" : "soun");
+  if (mediaType == MediaType.AUDIO) {
+    d.writeType("appl");
+  }
+ else {
+    d.writeUInt(0);
+  }
+  d.writeUInt(mediaType == MediaType.AUDIO ? 268435456L : 0);
+  d.writeUInt(mediaType == MediaType.AUDIO ? 65941 : 0);
+  d.writePString(mediaType == MediaType.AUDIO ? "Apple Sound Media Handler" : "");
+  writeMediaInformationAtoms(mdiaAtom);
+}

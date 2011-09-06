@@ -1,0 +1,17 @@
+{
+  if (!finished) {
+    if (size() > 0xffffffffL) {
+      throw new IOException("CompositeAtom \"" + type + "\" is too large: "+ size());
+    }
+    long pointer=getRelativeStreamPosition();
+    seekRelative(offset);
+    DataAtomOutputStream headerData=new DataAtomOutputStream(new ImageOutputStreamAdapter(out));
+    headerData.writeInt((int)size());
+    headerData.writeType(type);
+    for (    Atom child : children) {
+      child.finish();
+    }
+    seekRelative(pointer);
+    finished=true;
+  }
+}

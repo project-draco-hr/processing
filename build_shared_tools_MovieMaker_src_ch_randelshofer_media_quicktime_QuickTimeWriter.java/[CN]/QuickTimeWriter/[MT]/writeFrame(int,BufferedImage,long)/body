@@ -1,0 +1,158 @@
+{
+  if (duration <= 0) {
+    throw new IllegalArgumentException("Duration must be greater 0.");
+  }
+  VideoTrack t=(VideoTrack)tracks.get(track);
+  if (t.mediaType != MediaType.VIDEO) {
+    throw new IllegalArgumentException("Track " + track + " is not a video track");
+  }
+  if (t.videoEncoding == null) {
+    throw new UnsupportedOperationException("Encoding not supported.");
+  }
+  ensureStarted();
+  if (t.videoWidth != image.getWidth() || t.videoHeight != image.getHeight()) {
+    throw new IllegalArgumentException("Dimensions of frame[" + tracks.get(track).getSampleCount() + "] (width="+ image.getWidth()+ ", height="+ image.getHeight()+ ") differs from video dimension (width="+ t.videoWidth+ ", height="+ t.videoHeight+ ") in track "+ track+ ".");
+  }
+  long offset=getRelativeStreamPosition();
+  boolean isSync;
+switch (t.videoEncoding) {
+case RAW:
+{
+      isSync=true;
+switch (t.videoDepth) {
+case 8:
+{
+          if (image.getType() != BufferedImage.TYPE_BYTE_INDEXED) {
+            throw new IllegalArgumentException("BufferedImage type " + image.getType() + " does not match track type "+ BufferedImage.TYPE_BYTE_INDEXED+ ".");
+          }
+          WritableRaster raster=image.getRaster();
+          int sw=raster.getSampleModel().getWidth();
+          Rectangle r=raster.getBounds();
+          r.x-=raster.getSampleModelTranslateX();
+          r.y-=raster.getSampleModelTranslateY();
+          DataBufferByte buf=(DataBufferByte)raster.getDataBuffer();
+          byte[] bytes=buf.getData();
+          for (int xy=r.x + r.y * sw, ymax=r.x + (r.y + r.height) * sw; xy < ymax; xy+=sw) {
+            mdatAtom.getOutputStream().write(bytes,xy,r.width);
+          }
+          break;
+        }
+case 24:
+{
+        WritableRaster raster=image.getRaster();
+        int[] rgb=new int[t.videoWidth * 3];
+        byte[] bytes=new byte[t.videoWidth * 3];
+        for (int y=0; y < t.videoHeight; y++) {
+          rgb=raster.getPixels(0,y,t.videoWidth,1,rgb);
+          for (int k=0, n=t.videoWidth * 3; k < n; k++) {
+            bytes[k]=(byte)rgb[k];
+          }
+          mdatAtom.getOutputStream().write(bytes);
+        }
+        break;
+      }
+default :
+    throw new UnsupportedOperationException("Encoding not supported.");
+}
+break;
+}
+case JPG:
+{
+isSync=true;
+ImageWriter iw=ImageIO.getImageWritersByMIMEType("image/jpeg").next();
+ImageWriteParam iwParam=iw.getDefaultWriteParam();
+iwParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+iwParam.setCompressionQuality(t.videoQuality);
+MemoryCacheImageOutputStream imgOut=new MemoryCacheImageOutputStream(mdatAtom.getOutputStream());
+iw.setOutput(imgOut);
+IIOImage img=new IIOImage(image,null,null);
+iw.write(null,img,iwParam);
+iw.dispose();
+break;
+}
+case PNG:
+{
+isSync=true;
+ImageWriter iw=ImageIO.getImageWritersByMIMEType("image/png").next();
+ImageWriteParam iwParam=iw.getDefaultWriteParam();
+MemoryCacheImageOutputStream imgOut=new MemoryCacheImageOutputStream(mdatAtom.getOutputStream());
+iw.setOutput(imgOut);
+IIOImage img=new IIOImage(image,null,null);
+iw.write(null,img,iwParam);
+iw.dispose();
+break;
+}
+case RLE:
+{
+isSync=t.previousData == null || t.syncInterval != 0 && t.sampleCount % t.syncInterval == 0;
+WritableRaster raster=image.getRaster();
+int sw=raster.getSampleModel().getWidth();
+Rectangle r=raster.getBounds();
+r.x-=raster.getSampleModelTranslateX();
+r.y-=raster.getSampleModelTranslateY();
+if (t.encoder == null) {
+t.encoder=new AppleRLEEncoder();
+}
+AppleRLEEncoder enc=t.encoder;
+switch (t.videoDepth) {
+case 16:
+{
+DataBufferUShort buf=(DataBufferUShort)raster.getDataBuffer();
+short[] data=buf.getData();
+if (isSync) {
+enc.writeKey16(mdatAtom.getOutputStream(),data,r.width,r.height,r.x + r.y * sw,sw);
+}
+ else {
+enc.writeDelta16(mdatAtom.getOutputStream(),data,(short[])t.previousData,r.width,r.height,r.x + r.y * sw,sw);
+}
+if (t.previousData == null) {
+t.previousData=new short[data.length];
+}
+System.arraycopy(data,0,t.previousData,0,data.length);
+break;
+}
+case 24:
+{
+DataBufferInt buf=(DataBufferInt)raster.getDataBuffer();
+int[] data=buf.getData();
+if (isSync) {
+enc.writeKey24(mdatAtom.getOutputStream(),data,r.width,r.height,r.x + r.y * sw,sw);
+}
+ else {
+enc.writeDelta24(mdatAtom.getOutputStream(),data,(int[])t.previousData,r.width,r.height,r.x + r.y * sw,sw);
+}
+if (t.previousData == null) {
+t.previousData=new int[data.length];
+}
+System.arraycopy(data,0,t.previousData,0,data.length);
+break;
+}
+case 32:
+{
+DataBufferInt buf=(DataBufferInt)raster.getDataBuffer();
+int[] data=buf.getData();
+if (isSync) {
+enc.writeKey32(mdatAtom.getOutputStream(),data,image.getWidth(),image.getHeight(),0,image.getWidth());
+}
+ else {
+enc.writeDelta32(mdatAtom.getOutputStream(),data,(int[])t.previousData,image.getWidth(),image.getHeight(),0,image.getWidth());
+}
+if (t.previousData == null) {
+t.previousData=new int[data.length];
+}
+System.arraycopy(data,0,t.previousData,0,data.length);
+break;
+}
+default :
+throw new UnsupportedOperationException("Encoding not supported.");
+}
+break;
+}
+default :
+{
+throw new UnsupportedOperationException("Encoding not supported.");
+}
+}
+long length=getRelativeStreamPosition() - offset;
+t.addSample(new Sample(duration,offset,length),1,isSync);
+}

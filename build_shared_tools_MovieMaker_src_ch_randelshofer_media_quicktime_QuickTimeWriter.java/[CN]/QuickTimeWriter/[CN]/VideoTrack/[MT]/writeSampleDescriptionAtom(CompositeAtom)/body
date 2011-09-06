@@ -1,0 +1,33 @@
+{
+  CompositeAtom leaf;
+  DataAtomOutputStream d;
+  leaf=new CompositeAtom("stsd");
+  stblAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.writeInt(1);
+  d.writeInt(86);
+  d.writeType(mediaCompressionType);
+  d.write(new byte[6]);
+  d.writeShort(1);
+  d.writeShort(0);
+  d.writeShort(0);
+  d.writeType("java");
+  d.writeInt(0);
+  d.writeInt(512);
+  d.writeUShort(videoWidth);
+  d.writeUShort(videoHeight);
+  d.writeFixed16D16(72.0);
+  d.writeFixed16D16(72.0);
+  d.writeInt(0);
+  d.writeShort(1);
+  d.writePString(mediaCompressorName,32);
+  d.writeShort(videoDepth);
+  d.writeShort(videoColorTable == null ? -1 : 0);
+  if (videoColorTable != null) {
+    writeColorTableAtom(leaf);
+  }
+}

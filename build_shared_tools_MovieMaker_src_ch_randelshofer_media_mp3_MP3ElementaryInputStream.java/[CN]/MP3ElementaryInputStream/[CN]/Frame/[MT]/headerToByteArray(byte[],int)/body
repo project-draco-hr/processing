@@ -1,0 +1,14 @@
+{
+  if (data.length - offset < getHeaderSize()) {
+    throw new IllegalArgumentException("data array is too small");
+  }
+  data[offset + 0]=(byte)(header >>> 24);
+  data[offset + 1]=(byte)(header >>> 16);
+  data[offset + 2]=(byte)(header >>> 8);
+  data[offset + 3]=(byte)(header >>> 0);
+  if (hasCRC()) {
+    data[offset + 4]=(byte)(crc >>> 8);
+    data[offset + 5]=(byte)(crc >>> 0);
+  }
+  return getHeaderSize();
+}

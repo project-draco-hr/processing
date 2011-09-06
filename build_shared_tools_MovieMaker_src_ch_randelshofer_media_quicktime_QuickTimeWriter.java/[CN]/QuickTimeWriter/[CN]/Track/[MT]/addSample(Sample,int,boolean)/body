@@ -1,0 +1,26 @@
+{
+  mediaDuration+=sample.duration;
+  sampleCount++;
+  if (isSyncSample) {
+    if (syncSamples != null) {
+      syncSamples.add(sampleCount);
+    }
+  }
+ else {
+    if (syncSamples == null) {
+      syncSamples=new ArrayList<Long>();
+      for (long i=1; i < sampleCount; i++) {
+        syncSamples.add(i);
+      }
+    }
+  }
+  if (timeToSamples.isEmpty() || !timeToSamples.get(timeToSamples.size() - 1).maybeAddSample(sample)) {
+    timeToSamples.add(new TimeToSampleGroup(sample));
+  }
+  if (sampleSizes.isEmpty() || !sampleSizes.get(sampleSizes.size() - 1).maybeAddSample(sample)) {
+    sampleSizes.add(new SampleSizeGroup(sample));
+  }
+  if (chunks.isEmpty() || !chunks.get(chunks.size() - 1).maybeAddSample(sample,sampleDescriptionId)) {
+    chunks.add(new Chunk(sample,sampleDescriptionId));
+  }
+}

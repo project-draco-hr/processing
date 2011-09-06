@@ -1,0 +1,36 @@
+{
+  ensureStarted();
+  if (compressionType == null || compressionType.length() != 4) {
+    throw new IllegalArgumentException("audioFormat must be 4 characters long:" + compressionType);
+  }
+  if (timeScale < 1 || timeScale > (2L << 32)) {
+    throw new IllegalArgumentException("timeScale must be between 1 and 2^32:" + timeScale);
+  }
+  if (timeScale != (int)Math.floor(sampleRate)) {
+    throw new IllegalArgumentException("timeScale: " + timeScale + " must match integer portion of sampleRate: "+ sampleRate);
+  }
+  if (numberOfChannels != 1 && numberOfChannels != 2) {
+    throw new IllegalArgumentException("numberOfChannels must be 1 or 2: " + numberOfChannels);
+  }
+  if (sampleSizeInBits != 8 && sampleSizeInBits != 16) {
+    throw new IllegalArgumentException("sampleSize must be 8 or 16: " + numberOfChannels);
+  }
+  AudioTrack t=new AudioTrack();
+  t.mediaCompressionType=compressionType;
+  t.mediaTimeScale=timeScale;
+  t.soundSampleRate=sampleRate;
+  t.soundCompressionId=isCompressed ? -2 : -1;
+  t.soundNumberOfChannels=numberOfChannels;
+  t.soundSampleSize=sampleSizeInBits;
+  t.soundSamplesPerPacket=frameDuration;
+  if (isCompressed) {
+    t.soundBytesPerPacket=frameSize;
+    t.soundBytesPerFrame=frameSize * numberOfChannels;
+  }
+ else {
+    t.soundBytesPerPacket=frameSize / numberOfChannels;
+    t.soundBytesPerFrame=frameSize;
+  }
+  t.soundBytesPerSample=sampleSizeInBits / 8;
+  tracks.add(t);
+}

@@ -1,0 +1,42 @@
+{
+  DataAtom leaf;
+  DataAtomOutputStream d;
+  CompositeAtom minfAtom=new CompositeAtom("minf");
+  mdiaAtom.add(minfAtom);
+  writeMediaInformationHeaderAtom(minfAtom);
+  leaf=new DataAtom("hdlr");
+  minfAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.writeType("dhlr");
+  d.writeType("alis");
+  if (mediaType == MediaType.AUDIO) {
+    d.writeType("appl");
+  }
+ else {
+    d.writeUInt(0);
+  }
+  d.writeUInt(mediaType == MediaType.AUDIO ? 268435457L : 0);
+  d.writeInt(mediaType == MediaType.AUDIO ? 65967 : 0);
+  d.writePString("Apple Alias Data Handler");
+  CompositeAtom dinfAtom=new CompositeAtom("dinf");
+  minfAtom.add(dinfAtom);
+  leaf=new DataAtom("dref");
+  dinfAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.writeInt(1);
+  d.writeInt(12);
+  d.writeType("alis");
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0x1);
+  writeSampleTableAtoms(minfAtom);
+}

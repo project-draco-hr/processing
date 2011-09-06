@@ -1,0 +1,115 @@
+{
+  DataAtom leaf;
+  DataAtomOutputStream d;
+  CompositeAtom stblAtom=new CompositeAtom("stbl");
+  minfAtom.add(stblAtom);
+  writeSampleDescriptionAtom(stblAtom);
+  leaf=new DataAtom("stts");
+  stblAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.writeUInt(timeToSamples.size());
+  for (  TimeToSampleGroup tts : timeToSamples) {
+    d.writeUInt(tts.getSampleCount());
+    d.writeUInt(tts.getSampleDuration());
+  }
+  leaf=new DataAtom("stsc");
+  stblAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  int entryCount=0;
+  long previousSampleCount=-1;
+  long previousSampleDescriptionId=-1;
+  for (  Chunk c : chunks) {
+    if (c.sampleCount != previousSampleCount || c.sampleDescriptionId != previousSampleDescriptionId) {
+      previousSampleCount=c.sampleCount;
+      previousSampleDescriptionId=c.sampleDescriptionId;
+      entryCount++;
+    }
+  }
+  d.writeInt(entryCount);
+  int firstChunk=1;
+  previousSampleCount=-1;
+  previousSampleDescriptionId=-1;
+  for (  Chunk c : chunks) {
+    if (c.sampleCount != previousSampleCount || c.sampleDescriptionId != previousSampleDescriptionId) {
+      previousSampleCount=c.sampleCount;
+      previousSampleDescriptionId=c.sampleDescriptionId;
+      d.writeUInt(firstChunk);
+      d.writeUInt(c.sampleCount);
+      d.writeInt(c.sampleDescriptionId);
+    }
+    firstChunk++;
+  }
+  if (syncSamples != null) {
+    leaf=new DataAtom("stss");
+    stblAtom.add(leaf);
+    d=leaf.getOutputStream();
+    d.write(0);
+    d.write(0);
+    d.write(0);
+    d.write(0);
+    d.writeUInt(syncSamples.size());
+    for (    Long number : syncSamples) {
+      d.writeUInt(number);
+    }
+  }
+  leaf=new DataAtom("stsz");
+  stblAtom.add(leaf);
+  d=leaf.getOutputStream();
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  d.write(0);
+  int sampleUnit=mediaType == MediaType.AUDIO && ((AudioTrack)this).soundCompressionId != -2 ? ((AudioTrack)this).soundSampleSize / 8 * ((AudioTrack)this).soundNumberOfChannels : 1;
+  if (sampleSizes.size() == 1) {
+    d.writeUInt(sampleSizes.get(0).getSampleLength() / sampleUnit);
+    d.writeUInt(sampleSizes.get(0).getSampleCount());
+  }
+ else {
+    d.writeUInt(0);
+    long count=0;
+    for (    SampleSizeGroup s : sampleSizes) {
+      count+=s.sampleCount;
+    }
+    d.writeUInt(count);
+    for (    SampleSizeGroup s : sampleSizes) {
+      long sampleSize=s.getSampleLength() / sampleUnit;
+      for (int i=0; i < s.sampleCount; i++) {
+        d.writeUInt(sampleSize);
+      }
+    }
+  }
+  if (chunks.isEmpty() || chunks.get(chunks.size() - 1).getChunkOffset() <= 0xffffffffL) {
+    leaf=new DataAtom("stco");
+    stblAtom.add(leaf);
+    d=leaf.getOutputStream();
+    d.write(0);
+    d.write(0);
+    d.write(0);
+    d.write(0);
+    d.writeUInt(chunks.size());
+    for (    Chunk c : chunks) {
+      d.writeUInt(c.getChunkOffset() + mdatOffset);
+    }
+  }
+ else {
+    leaf=new DataAtom("co64");
+    stblAtom.add(leaf);
+    d=leaf.getOutputStream();
+    d.write(0);
+    d.write(0);
+    d.write(0);
+    d.write(0);
+    d.writeUInt(chunks.size());
+    for (    Chunk c : chunks) {
+      d.writeLong(c.getChunkOffset());
+    }
+  }
+}
