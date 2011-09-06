@@ -10,8 +10,8 @@
   prefs=Preferences.userNodeForPackage(MovieMakerTool.class);
   imageFolderField.setText(prefs.get("movie.imageFolder",""));
   soundFileField.setText(prefs.get("movie.soundFile",""));
-  widthField.setText("" + prefs.getInt("movie.width",320));
-  heightField.setText("" + prefs.getInt("movie.height",240));
+  widthField.setText("" + prefs.getInt("movie.width",640));
+  heightField.setText("" + prefs.getInt("movie.height",480));
   passThroughCheckBox.setSelected(prefs.getBoolean("movie.passThrough",false));
   String fps="" + prefs.getDouble("movie.fps",30);
   if (fps.endsWith(".0")) {
@@ -19,5 +19,12 @@
   }
   fpsField.setText(fps);
   compressionBox.setSelectedIndex(Math.max(0,Math.min(compressionBox.getItemCount() - 1,prefs.getInt("movie.compression",1))));
+  passThroughCheckBox.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      widthField.setEnabled(passThroughCheckBox.isSelected());
+      heightField.setEnabled(passThroughCheckBox.isSelected());
+    }
+  }
+);
   pack();
 }
