@@ -26,28 +26,30 @@ setColumnType(col,DOUBLE);
 break;
 }
 }
+int row=0;
 while (rs.next()) {
 for (int col=0; col < columnCount; col++) {
 switch (columnTypes[col]) {
 case STRING:
-setString(rowCount,col,rs.getString(col + 1));
+setString(row,col,rs.getString(col + 1));
 break;
 case INT:
-setInt(rowCount,col,rs.getInt(col + 1));
+setInt(row,col,rs.getInt(col + 1));
 break;
 case LONG:
-setLong(rowCount,col,rs.getLong(col + 1));
+setLong(row,col,rs.getLong(col + 1));
 break;
 case FLOAT:
-setFloat(rowCount,col,rs.getFloat(col + 1));
+setFloat(row,col,rs.getFloat(col + 1));
 break;
 case DOUBLE:
-setDouble(rowCount,col,rs.getDouble(col + 1));
+setDouble(row,col,rs.getDouble(col + 1));
 break;
 default :
 throw new IllegalArgumentException("column type " + columnTypes[col] + " not supported.");
 }
 }
+row++;
 }
 }
  catch (SQLException s) {
