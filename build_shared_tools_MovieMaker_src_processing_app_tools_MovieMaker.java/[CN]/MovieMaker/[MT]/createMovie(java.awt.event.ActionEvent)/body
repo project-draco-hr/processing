@@ -39,7 +39,7 @@ prefs.putInt("movie.width",width);
 prefs.putInt("movie.height",height);
 prefs.putDouble("movie.fps",fps);
 prefs.putInt("movie.compression",compressionBox.getSelectedIndex());
-prefs.putBoolean("movie.passThrough",passThroughCheckBox.isSelected());
+prefs.putBoolean("movie.originalSize",originalSizeCheckBox.isSelected());
 if (movieFileChooser == null) {
 movieFileChooser=new JFileChooser();
 if (prefs.get("movie.outputFile",null) != null) {
@@ -60,7 +60,7 @@ return;
 final File movieFile=movieFileChooser.getSelectedFile().getPath().toLowerCase().endsWith(".mov") ? movieFileChooser.getSelectedFile() : new File(movieFileChooser.getSelectedFile().getPath() + ".mov");
 prefs.put("movie.outputFile",movieFile.getPath());
 createMovieButton.setEnabled(false);
-final boolean passThrough=passThroughCheckBox.isSelected();
+final boolean originalSize=originalSizeCheckBox.isSelected();
 SwingWorker w=new SwingWorker(){
 @Override protected Object doInBackground(){
 try {
@@ -75,7 +75,7 @@ public boolean accept(File f){
 );
 Arrays.sort(imgFiles);
 }
-if (passThrough) {
+if (originalSize) {
 ImageIcon temp=new ImageIcon(imgFiles[0].getAbsolutePath());
 width=temp.getIconWidth();
 height=temp.getIconHeight();
