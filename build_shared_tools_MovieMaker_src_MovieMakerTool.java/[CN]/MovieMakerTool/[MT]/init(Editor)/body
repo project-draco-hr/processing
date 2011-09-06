@@ -1,13 +1,9 @@
 {
   initComponents();
-  String version=getClass().getPackage().getImplementationVersion();
-  if (version != null) {
-    setTitle(getTitle() + " " + version);
-  }
   ((JComponent)getContentPane()).setBorder(new EmptyBorder(12,18,18,18));
   imageFolderField.setTransferHandler(new FileTextFieldTransferHandler(JFileChooser.DIRECTORIES_ONLY));
   soundFileField.setTransferHandler(new FileTextFieldTransferHandler());
-  JComponent[] smallComponents={compressionBox,compressionLabel,fpsField,fpsLabel,heightField,heightLabel,widthField,widthLabel,passThroughCheckBox,noPreparationRadio,fastStartCompressedRadio,fastStartRadio};
+  JComponent[] smallComponents={compressionBox,compressionLabel,fpsField,fpsLabel,widthField,widthLabel,heightField,heightLabel,passThroughCheckBox};
   for (  JComponent c : smallComponents) {
     c.putClientProperty("JComponent.sizeVariant","small");
   }
@@ -23,12 +19,5 @@
   }
   fpsField.setText(fps);
   compressionBox.setSelectedIndex(Math.max(0,Math.min(compressionBox.getItemCount() - 1,prefs.getInt("movie.compression",1))));
-  String streaming=prefs.get("movie.streaming","fastStartCompressed");
-  for (Enumeration<AbstractButton> i=streamingGroup.getElements(); i.hasMoreElements(); ) {
-    AbstractButton btn=i.nextElement();
-    if (btn.getActionCommand().equals(streaming)) {
-      btn.setSelected(true);
-      break;
-    }
-  }
+  pack();
 }
