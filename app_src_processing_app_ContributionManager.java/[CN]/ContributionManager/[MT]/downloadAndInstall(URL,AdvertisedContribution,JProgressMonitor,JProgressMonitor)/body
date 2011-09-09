@@ -6,19 +6,19 @@
       if (!downloadProgressMonitor.isCanceled() && !downloadProgressMonitor.isError()) {
         installProgressMonitor.startTask("Installing",ProgressMonitor.UNKNOWN);
         InstalledContribution contribution=null;
-switch (toBeReplaced.getType()) {
+switch (ad.getType()) {
 case LIBRARY:
-          contribution=installLibrary(libDest,false);
+          contribution=installLibrary(libDest,ad,false);
         break;
 case LIBRARY_COMPILATION:
       contribution=installLibraryCompilation(libDest);
     break;
 case TOOL:
-  contribution=installTool(libDest);
+  contribution=installTool(libDest,ad);
 break;
 }
 if (contribution != null) {
-contribListing.replaceContribution(toBeReplaced,contribution);
+contribListing.replaceContribution(ad,contribution);
 refreshInstalled();
 }
 dialog.pack();

@@ -7,7 +7,13 @@
     }
     if (discoveredLibs != null && discoveredLibs.size() == 1) {
       Library discoveredLib=discoveredLibs.get(0);
-      return installLibrary(discoveredLib,confirmReplace);
+      File propFile=new File(discoveredLib.getFolder(),"library.properties");
+      if (ad == null || writePropertiesFile(propFile,ad)) {
+        return installLibrary(discoveredLib,confirmReplace);
+      }
+ else {
+        statusBar.setErrorMessage(ERROR_OVERWRITING_PROPERTIES_MESSAGE);
+      }
     }
  else {
       if (discoveredLibs == null) {

@@ -6,7 +6,13 @@
   }
   if (discoveredTools != null && discoveredTools.size() == 1) {
     ToolContribution discoveredTool=discoveredTools.get(0);
-    return installTool(discoveredTool);
+    File propFile=new File(discoveredTool.getFolder(),"tool.properties");
+    if (ad == null || writePropertiesFile(propFile,ad)) {
+      return installTool(discoveredTool);
+    }
+ else {
+      statusBar.setErrorMessage(ERROR_OVERWRITING_PROPERTIES_MESSAGE);
+    }
   }
  else {
     if (discoveredTools == null || discoveredTools.isEmpty()) {
