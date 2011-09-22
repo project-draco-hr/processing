@@ -10,7 +10,33 @@
   }
   buildCoreModes();
   rebuildContribModes();
-  contributionManagerFrame=new ContributionManager();
+  libraryManagerFrame=new ContributionManagerDialog("Library Manager",new ContributionListing.Filter(){
+    public boolean matches(    Contribution contrib){
+      return contrib.getType() == Contribution.Type.LIBRARY || contrib.getType() == Contribution.Type.LIBRARY_COMPILATION;
+    }
+  }
+);
+  toolManagerFrame=new ContributionManagerDialog("Tool Manager",new ContributionListing.Filter(){
+    public boolean matches(    Contribution contrib){
+      return contrib.getType() == Contribution.Type.TOOL;
+    }
+  }
+);
+  modeManagerFrame=new ContributionManagerDialog("Mode Manager",new ContributionListing.Filter(){
+    public boolean matches(    Contribution contrib){
+      return contrib.getType() == Contribution.Type.MODE;
+    }
+  }
+);
+  updateManagerFrame=new ContributionManagerDialog("Update Manager",new ContributionListing.Filter(){
+    public boolean matches(    Contribution contrib){
+      if (contrib instanceof InstalledContribution) {
+        return ContributionListing.getInstance().hasUpdates(contrib);
+      }
+      return false;
+    }
+  }
+);
   defaultMode.rebuildLibraryList();
   platform.init(this);
   toolsFolder=getContentFile("tools");

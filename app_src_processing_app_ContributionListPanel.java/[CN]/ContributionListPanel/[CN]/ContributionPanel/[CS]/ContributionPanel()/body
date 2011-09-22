@@ -27,7 +27,7 @@
       if (contrib instanceof InstalledContribution) {
         InstalledContribution installed=(InstalledContribution)contrib;
         ContributionManager.removeFlagForDeletion(installed);
-        contribManager.getListing().replaceContribution(contrib,contrib);
+        contribListing.replaceContribution(contrib,contrib);
       }
     }
   }
@@ -38,13 +38,13 @@
         updateButton.setEnabled(false);
         installRemoveButton.setEnabled(false);
         installProgressBar.setVisible(true);
-        contribManager.removeContribution((InstalledContribution)contrib,new JProgressMonitor(installProgressBar){
+        ContributionManager.removeContribution(contribManager.editor,(InstalledContribution)contrib,new JProgressMonitor(installProgressBar){
           public void finishedAction(){
             resetInstallProgressBarState();
             installRemoveButton.setEnabled(true);
           }
         }
-);
+,contribManager.statusBar);
       }
     }
   }

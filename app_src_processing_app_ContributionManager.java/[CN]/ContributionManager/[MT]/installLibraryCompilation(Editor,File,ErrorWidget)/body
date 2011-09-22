@@ -1,0 +1,22 @@
+{
+  File parentDir=unzipFileToTemp(f,statusBar);
+  LibraryCompilation compilation=LibraryCompilation.create(parentDir);
+  if (compilation == null) {
+    statusBar.setErrorMessage(DISCOVERY_NONE_FOUND_ERROR_MESSAGE);
+    return null;
+  }
+  String folderName=compilation.getName();
+  File dest=new File(editor.getBase().getSketchbookLibrariesFolder(),folderName);
+  boolean errorEncountered=false;
+  if (dest.exists()) {
+    if (!dest.delete()) {
+      errorEncountered=true;
+    }
+  }
+  if (!errorEncountered) {
+    if (parentDir.renameTo(dest)) {
+      return LibraryCompilation.create(dest);
+    }
+  }
+  return null;
+}

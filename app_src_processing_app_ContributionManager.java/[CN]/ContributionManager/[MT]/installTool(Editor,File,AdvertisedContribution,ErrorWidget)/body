@@ -1,0 +1,26 @@
+{
+  File tempDir=unzipFileToTemp(zippedToolFile,statusBar);
+  ArrayList<ToolContribution> discoveredTools=ToolContribution.list(tempDir,false);
+  if (discoveredTools.isEmpty()) {
+    discoveredTools=ToolContribution.list(tempDir.getParentFile(),false);
+  }
+  if (discoveredTools != null && discoveredTools.size() == 1) {
+    ToolContribution discoveredTool=discoveredTools.get(0);
+    File propFile=new File(discoveredTool.getFolder(),"tool.properties");
+    if (ad == null || writePropertiesFile(propFile,ad)) {
+      return installTool(editor,discoveredTool,statusBar);
+    }
+ else {
+      statusBar.setErrorMessage(ERROR_OVERWRITING_PROPERTIES_MESSAGE);
+    }
+  }
+ else {
+    if (discoveredTools == null || discoveredTools.isEmpty()) {
+      statusBar.setErrorMessage(DISCOVERY_INTERNAL_ERROR_MESSAGE);
+    }
+ else {
+      statusBar.setErrorMessage("There were multiple tools in the file, so we're ignoring it.");
+    }
+  }
+  return null;
+}
