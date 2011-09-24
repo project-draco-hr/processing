@@ -27,23 +27,4 @@
 );
   }
   updateContributionListing();
-  if (contributionIcons == null) {
-    try {
-      Image allButtons=ImageIO.read(Base.getLibStream("contributions.gif"));
-      int count=allButtons.getHeight(dialog) / ContributionManagerDialog.ICON_HEIGHT;
-      contributionIcons=new Image[count];
-      contributionIcons[0]=allButtons;
-      contributionIcons[1]=allButtons;
-      contributionIcons[2]=allButtons;
-      contributionIcons[3]=allButtons;
-      for (int i=0; i < count; i++) {
-        Image image=dialog.createImage(new FilteredImageSource(allButtons.getSource(),new CropImageFilter(0,i * ContributionManagerDialog.ICON_HEIGHT,ContributionManagerDialog.ICON_WIDTH,ContributionManagerDialog.ICON_HEIGHT)));
-        contributionIcons[i]=image;
-      }
-      contributionListPanel.updateColors();
-    }
- catch (    IOException e) {
-      e.printStackTrace();
-    }
-  }
 }
