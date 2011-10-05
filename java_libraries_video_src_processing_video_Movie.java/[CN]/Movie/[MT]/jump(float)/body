@@ -1,15 +1,12 @@
 {
-  if (playing) {
-    gplayer.pause();
-  }
+  if (seeking)   return;
   boolean res;
-  long start=Video.secToNanoLong(where);
-  long stop=-1;
-  res=gplayer.seek(1.0,Format.TIME,SeekFlags.FLUSH,SeekType.SET,start,SeekType.SET,stop);
+  long pos=Video.secToNanoLong(where);
+  res=gplayer.seek(1.0,Format.TIME,SeekFlags.FLUSH,SeekType.SET,pos,SeekType.NONE,-1);
   if (!res) {
     System.err.println("Seek operation failed.");
   }
-  if (playing) {
-    gplayer.play();
-  }
+  seeking=true;
+  gplayer.getState();
+  seeking=false;
 }
