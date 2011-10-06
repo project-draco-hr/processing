@@ -1,5 +1,8 @@
 {
   if (seeking)   return;
+  if (!sinkReady) {
+    initSink();
+  }
   boolean res;
   long pos=Video.secToNanoLong(where);
   res=gplayer.seek(1.0,Format.TIME,SeekFlags.FLUSH,SeekType.SET,pos,SeekType.NONE,-1);

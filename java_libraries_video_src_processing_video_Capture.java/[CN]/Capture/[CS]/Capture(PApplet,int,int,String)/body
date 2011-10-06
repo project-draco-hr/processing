@@ -1,4 +1,9 @@
 {
   super(requestWidth,requestHeight,RGB);
-  initPlatform(parent,requestWidth,requestHeight,new String[]{},new int[]{},new String[]{devicePropertyName()},new String[]{cameraName},"");
+  if (devicePropertyName.equals("")) {
+    initGStreamer(parent,requestWidth,requestHeight,capturePlugin,new String[]{indexPropertyName},new int[]{PApplet.parseInt(cameraName)},new String[]{},new String[]{},"");
+  }
+ else {
+    initGStreamer(parent,requestWidth,requestHeight,capturePlugin,new String[]{},new int[]{},new String[]{devicePropertyName},new String[]{cameraName},"");
+  }
 }

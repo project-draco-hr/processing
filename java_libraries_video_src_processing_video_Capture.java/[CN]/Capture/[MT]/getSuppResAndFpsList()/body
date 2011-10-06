@@ -56,19 +56,26 @@
           }
         }
  else {
-          boolean sigleFrac=false;
+          boolean singleFrac=false;
           try {
             Fraction fr=str.getFraction("framerate");
             addFps(fr);
-            sigleFrac=true;
+            singleFrac=true;
           }
  catch (          Exception e) {
           }
-          if (!sigleFrac) {
-            ValueList flist=str.getValueList("framerate");
-            for (int k=0; k < flist.getSize(); k++) {
-              Fraction fr=flist.getFraction(k);
-              addFps(fr);
+          if (!singleFrac) {
+            ValueList flist=null;
+            try {
+              flist=str.getValueList("framerate");
+            }
+ catch (            Exception e) {
+            }
+            if (flist != null) {
+              for (int k=0; k < flist.getSize(); k++) {
+                Fraction fr=flist.getFraction(k);
+                addFps(fr);
+              }
             }
           }
         }
