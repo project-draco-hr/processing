@@ -1,9 +1,11 @@
 {
   super(requestWidth,requestHeight,RGB);
+  HashMap<String,Object> properties=new HashMap<String,Object>();
   if (devicePropertyName.equals("")) {
-    initGStreamer(parent,requestWidth,requestHeight,capturePlugin,new String[]{indexPropertyName},new int[]{PApplet.parseInt(cameraName)},new String[]{},new String[]{},"");
+    properties.put(indexPropertyName,PApplet.parseInt(cameraName));
   }
  else {
-    initGStreamer(parent,requestWidth,requestHeight,capturePlugin,new String[]{},new int[]{},new String[]{devicePropertyName},new String[]{cameraName},"");
+    properties.put(devicePropertyName,cameraName);
   }
+  initGStreamer(parent,requestWidth,requestHeight,capturePlugin,properties,"");
 }

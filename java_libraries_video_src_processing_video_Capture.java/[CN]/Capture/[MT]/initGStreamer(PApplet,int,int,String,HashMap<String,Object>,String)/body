@@ -1,0 +1,22 @@
+{
+  this.parent=parent;
+  Video.init();
+  parent.registerDispose(this);
+  setEventHandlerObject(parent);
+  gpipeline=new Pipeline("GSCapture");
+  this.source=sourceName;
+  fps=frameRate;
+  reqWidth=requestWidth;
+  reqHeight=requestHeight;
+  gsource=ElementFactory.make(sourceName,"Source");
+  if (properties != null) {
+    Iterator<String> it=properties.keySet().iterator();
+    while (it.hasNext()) {
+      String name=(String)it.next();
+      Object value=properties.get(name);
+      gsource.set(name,value);
+    }
+  }
+  bufWidth=bufHeight=0;
+  pipelineReady=false;
+}
