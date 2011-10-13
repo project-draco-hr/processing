@@ -1,5 +1,17 @@
 {
+  ArrayList<File> toolsFolders=ToolContribution.discover(folder);
   ArrayList<ToolContribution> tools=new ArrayList<ToolContribution>();
-  list(folder,tools,doInitializeToolClass);
+  for (  File toolFolder : toolsFolders) {
+    final ToolContribution tool=ToolContribution.getTool(toolFolder);
+    if (tool != null) {
+      try {
+        if (doInitializeToolClass)         tool.initializeToolClass();
+        tools.add(tool);
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
   return tools;
 }

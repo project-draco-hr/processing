@@ -1,25 +1,26 @@
 {
   File tempDir=unzipFileToTemp(libFile,statusBar);
   try {
-    ArrayList<Library> discoveredLibs=Library.list(tempDir);
-    if (discoveredLibs.isEmpty()) {
-      discoveredLibs=Library.list(tempDir.getParentFile());
+    ArrayList<File> libfolders=Library.discover(tempDir);
+    if (libfolders.isEmpty()) {
+      libfolders=Library.discover(tempDir.getParentFile());
     }
-    if (discoveredLibs != null && discoveredLibs.size() == 1) {
-      Library discoveredLib=discoveredLibs.get(0);
-      File propFile=new File(discoveredLib.getFolder(),"library.properties");
+    if (libfolders != null && libfolders.size() == 1) {
+      File libfolder=libfolders.get(0);
+      File propFile=new File(libfolder,"library.properties");
       if (ad == null || writePropertiesFile(propFile,ad)) {
-        return installLibrary(editor,discoveredLib,confirmReplace,statusBar);
+        Library newlib=new Library(libfolder,null);
+        return installLibrary(editor,newlib,confirmReplace,statusBar);
       }
  else {
         statusBar.setErrorMessage(ERROR_OVERWRITING_PROPERTIES_MESSAGE);
       }
     }
  else {
-      if (discoveredLibs == null) {
+      if (libfolders == null) {
         statusBar.setErrorMessage(ContributionManager.DISCOVERY_INTERNAL_ERROR_MESSAGE);
       }
- else       if (discoveredLibs.isEmpty()) {
+ else       if (libfolders.isEmpty()) {
         statusBar.setErrorMessage(ContributionManager.DISCOVERY_NONE_FOUND_ERROR_MESSAGE);
       }
  else {

@@ -1,21 +1,22 @@
 {
   File tempDir=unzipFileToTemp(zippedToolFile,statusBar);
-  ArrayList<ToolContribution> discoveredTools=ToolContribution.list(tempDir,false);
-  if (discoveredTools.isEmpty()) {
-    discoveredTools=ToolContribution.list(tempDir.getParentFile(),false);
+  ArrayList<File> toolFolders=ToolContribution.discover(tempDir);
+  if (toolFolders.isEmpty()) {
+    toolFolders=ToolContribution.discover(tempDir.getParentFile());
   }
-  if (discoveredTools != null && discoveredTools.size() == 1) {
-    ToolContribution discoveredTool=discoveredTools.get(0);
-    File propFile=new File(discoveredTool.getFolder(),"tool.properties");
+  if (toolFolders != null && toolFolders.size() == 1) {
+    File toolFolder=toolFolders.get(0);
+    final ToolContribution tool=ToolContribution.getTool(toolFolder);
+    File propFile=new File(tool.getFolder(),"tool.properties");
     if (ad == null || writePropertiesFile(propFile,ad)) {
-      return installTool(editor,discoveredTool,statusBar);
+      return installTool(editor,tool,statusBar);
     }
  else {
       statusBar.setErrorMessage(ERROR_OVERWRITING_PROPERTIES_MESSAGE);
     }
   }
  else {
-    if (discoveredTools == null || discoveredTools.isEmpty()) {
+    if (toolFolders == null || toolFolders.isEmpty()) {
       statusBar.setErrorMessage(DISCOVERY_INTERNAL_ERROR_MESSAGE);
     }
  else {
