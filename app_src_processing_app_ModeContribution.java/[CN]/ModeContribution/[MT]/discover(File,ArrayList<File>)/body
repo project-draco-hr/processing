@@ -1,5 +1,4 @@
 {
-  if (!folder.isDirectory())   return;
   File[] folders=folder.listFiles(new FileFilter(){
     public boolean accept(    File potentialModeFolder){
       if (!potentialModeFolder.isDirectory())       return false;
@@ -11,11 +10,6 @@
     return;
   }
   for (  File potentialModeFolder : folders) {
-    ModeContribution contrib=getContributedMode(base,potentialModeFolder);
-    if (contrib != null) {
-      if (!instantiateModeClass || (instantiateModeClass && contrib.instantiateModeClass())) {
-        modes.add(contrib);
-      }
-    }
+    modeFolders.add(potentialModeFolder);
   }
 }

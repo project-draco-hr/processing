@@ -1,0 +1,68 @@
+{
+  ArrayList<InstalledContribution> oldLibs=getContributions(newLib.getType(),editor);
+  String libFolderName=newLib.getFolder().getName();
+  File libraryDestination=editor.getBase().getSketchbookLibrariesFolder();
+  File newLibDest=new File(libraryDestination,libFolderName);
+  for (  InstalledContribution oldLib : oldLibs) {
+    if (oldLib.getFolder().exists() && oldLib.getFolder().equals(newLibDest)) {
+      if (ContributionManager.requiresRestart(newLib)) {
+        if (!backupContribution(editor,oldLib,false,statusBar)) {
+          return null;
+        }
+      }
+ else {
+        int result=0;
+        boolean doBackup=Preferences.getBoolean("contribution.backup.on_install");
+        if (confirmReplace) {
+          if (doBackup) {
+            result=Base.showYesNoQuestion(editor,"Replace","Replace pre-existing \"" + oldLib.getName() + "\" library?","A pre-existing copy of the \"" + oldLib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ " in <i>libraries/old</i> before replacing it.");
+            if (result != JOptionPane.YES_OPTION || !backupContribution(editor,oldLib,true,statusBar)) {
+              return null;
+            }
+          }
+ else {
+            result=Base.showYesNoQuestion(editor,"Replace","Replace pre-existing \"" + oldLib.getName() + "\" library?","A pre-existing copy of the \"" + oldLib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will permanently delete this library and all of its contents<br>"+ "before replacing it.");
+            if (result != JOptionPane.YES_OPTION || !oldLib.getFolder().delete()) {
+              return null;
+            }
+          }
+        }
+ else {
+          if (doBackup && !backupContribution(editor,oldLib,true,statusBar) || !doBackup && !oldLib.getFolder().delete()) {
+            return null;
+          }
+        }
+      }
+    }
+  }
+  if (newLibDest.exists()) {
+    Base.removeDir(newLibDest);
+  }
+  if (newLib.getFolder().renameTo(newLibDest)) {
+    InstalledContribution contrib=ContributionManager.create(editor.getBase(),newLib.getType(),newLibDest);
+    try {
+      initialize(contrib);
+      return contrib;
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+  }
+ else {
+    String errorMsg=null;
+switch (newLib.getType()) {
+case LIBRARY:
+      errorMsg="Could not move library \"" + newLib.getName() + "\" to sketchbook.";
+    break;
+case LIBRARY_COMPILATION:
+  break;
+case TOOL:
+errorMsg="Could not move tool \"" + newLib.getName() + "\" to sketchbook.";
+break;
+case MODE:
+break;
+}
+statusBar.setErrorMessage(errorMsg);
+}
+return null;
+}

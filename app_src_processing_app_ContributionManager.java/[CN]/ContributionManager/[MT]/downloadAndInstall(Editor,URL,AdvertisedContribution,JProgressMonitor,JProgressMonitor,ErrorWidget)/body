@@ -6,24 +6,14 @@
       if (!downloadProgressMonitor.isCanceled() && !downloadProgressMonitor.isError()) {
         installProgressMonitor.startTask("Installing",ProgressMonitor.UNKNOWN);
         InstalledContribution contribution=null;
-switch (ad.getType()) {
-case LIBRARY:
-          contribution=installLibrary(editor,libDest,ad,false,statusBar);
-        break;
-case LIBRARY_COMPILATION:
-      contribution=installLibraryCompilation(editor,libDest,statusBar);
-    break;
-case TOOL:
-  contribution=installTool(editor,libDest,ad,statusBar);
-break;
-}
-if (contribution != null) {
-contribListing.replaceContribution(ad,contribution);
-refreshInstalled(editor);
-}
-installProgressMonitor.finished();
-}
-}
-}
+        contribution=install(editor,libDest,ad,false,statusBar);
+        if (contribution != null) {
+          contribListing.replaceContribution(ad,contribution);
+          refreshInstalled(editor);
+        }
+        installProgressMonitor.finished();
+      }
+    }
+  }
 ).start();
 }
