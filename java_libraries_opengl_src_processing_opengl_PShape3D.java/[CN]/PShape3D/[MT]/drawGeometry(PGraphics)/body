@@ -1,116 +1,18 @@
 {
-  int numTextures;
-  float pointSize;
-  if (0 < strokeWeight && style) {
-    getGl().glLineWidth(strokeWeight);
-    pointSize=PApplet.min(strokeWeight,PGraphicsOpenGL.maxPointSize);
-  }
- else {
-    getGl().glLineWidth(g.strokeWeight);
-    pointSize=PApplet.min(g.strokeWeight,PGraphicsOpenGL.maxPointSize);
-  }
-  if (!pointSprites) {
-    getGl().glPointSize(pointSize);
-  }
   getGl().glEnableClientState(GL2.GL_NORMAL_ARRAY);
   getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,glNormalBufferID);
   getGl().glNormalPointer(GL.GL_FLOAT,0,0);
-  if (style) {
-    getGl().glEnableClientState(GL2.GL_COLOR_ARRAY);
-    getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,glColorBufferID);
-    getGl().glColorPointer(4,GL.GL_FLOAT,0,0);
-  }
+  getGl().glEnableClientState(GL2.GL_COLOR_ARRAY);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,glColorBufferID);
+  getGl().glColorPointer(4,GL.GL_FLOAT,0,0);
   getGl().glEnableClientState(GL2.GL_VERTEX_ARRAY);
   getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,glVertexBufferID);
   getGl().glVertexPointer(3,GL.GL_FLOAT,0,0);
-  numTextures=0;
-  if (style) {
-    for (int t=0; t < textures.length; t++) {
-      if (textures[t] != null) {
-        PTexture tex=(PTexture)textures[t].getCache(ogl);
-        tex=ogl.getTexture(textures[t]);
-        if (tex == null) {
-          break;
-        }
-        getGl().glEnable(tex.glTarget);
-        getGl().glActiveTexture(GL.GL_TEXTURE0 + t);
-        getGl().glBindTexture(tex.glTarget,tex.glID);
-        renderTextures[numTextures]=tex;
-        numTextures++;
-      }
- else {
-        break;
-      }
-    }
-  }
-  if (0 < numTextures) {
-    if (pointSprites) {
-      getGl().glPointParameterf(GL2.GL_POINT_FADE_THRESHOLD_SIZE,0.6f * maxSpriteSize);
-      getGl().glPointParameterf(GL2.GL_POINT_SIZE_MIN,1.0f);
-      getGl().glPointParameterf(GL2.GL_POINT_SIZE_MAX,maxSpriteSize);
-      getGl().glPointSize(maxSpriteSize);
-      getGl().glPointParameterfv(GL2.GL_POINT_DISTANCE_ATTENUATION,spriteDistAtt,0);
-      getGl().glTexEnvf(GL2.GL_POINT_SPRITE,GL2.GL_COORD_REPLACE,GL.GL_TRUE);
-      getGl().glEnable(GL2.GL_POINT_SPRITE);
-    }
- else {
-      for (int t=0; t < numTextures; t++) {
-        getGl().glClientActiveTexture(GL.GL_TEXTURE0 + t);
-        getGl().glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-        getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,glTexCoordBufferID[t]);
-        getGl().glTexCoordPointer(2,GL.GL_FLOAT,0,0);
-      }
-      if (1 < numTextures) {
-        ogl.setupTextureBlend(renderTextures,numTextures);
-      }
-    }
-  }
-  if (!style) {
-    if (0 < numTextures) {
-      if (g.tint) {
-        ogl.setTintColor();
-      }
- else {
-        getGl().glColor4f(1,1,1,1);
-      }
-    }
- else {
-      ogl.setFillColor();
-    }
-  }
-  if (glIndexBufferID != 0 && useIndices) {
-    getGl().glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,glIndexBufferID);
-    int last=lastIndex;
-    int first=firstIndex;
-    getGl().glDrawElements(glMode,last - first + 1,GL.GL_UNSIGNED_INT,first * PGraphicsOpenGL.SIZEOF_INT);
-    getGl().glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,0);
-  }
- else {
-    getGl().glDrawArrays(glMode,firstVertex,lastVertex - firstVertex + 1);
-  }
-  if (0 < numTextures) {
-    for (int t=0; t < numTextures; t++) {
-      PTexture tex=renderTextures[t];
-      getGl().glActiveTexture(GL.GL_TEXTURE0 + t);
-      getGl().glBindTexture(tex.glTarget,0);
-    }
-    for (int t=0; t < numTextures; t++) {
-      PTexture tex=renderTextures[t];
-      getGl().glDisable(tex.glTarget);
-    }
-    if (pointSprites) {
-      getGl().glDisable(GL2.GL_POINT_SPRITE);
-    }
- else {
-      for (int t=0; t < numTextures; t++) {
-        getGl().glClientActiveTexture(GL.GL_TEXTURE0 + t);
-        getGl().glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-      }
-      if (1 < numTextures) {
-        ogl.cleanupTextureBlend(numTextures);
-      }
-    }
-  }
+  getGl().glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,glIndexBufferID);
+  int first=0;
+  int last=indexCount;
+  getGl().glDrawElements(glMode,last - first + 1,GL.GL_UNSIGNED_INT,first * PGraphicsOpenGL.SIZEOF_INT);
+  getGl().glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,0);
   getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,0);
   getGl().glDisableClientState(GL2.GL_VERTEX_ARRAY);
   getGl().glDisableClientState(GL2.GL_COLOR_ARRAY);
