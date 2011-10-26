@@ -1,0 +1,50 @@
+{
+  if (parent != null) {
+    firstVertex=((PShape3D)parent).lastVertex;
+    firstIndex=((PShape3D)parent).lastIndex;
+    if (incFirst) {
+      firstVertex++;
+      firstIndex++;
+    }
+  }
+ else {
+    firstVertex=0;
+    firstIndex=0;
+  }
+  lastVertex=firstVertex;
+  lastIndex=firstIndex;
+  if (family == GROUP) {
+    vertexCount=0;
+    indexCount=0;
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.aggregateImpl(0 < i);
+    }
+    if (0 < childCount) {
+      PShape3D child=(PShape3D)children[0];
+      firstVertex=child.firstVertex;
+      firstIndex=child.firstIndex;
+    }
+ else {
+      firstVertex=lastVertex=-1;
+      firstIndex=lastIndex=-1;
+    }
+  }
+ else {
+    if (0 < vertexCount) {
+      lastVertex=firstVertex + vertexCount - 1;
+    }
+    if (0 < indexCount) {
+      for (int i=0; i < indexCount; i++) {
+        indices[i]+=firstIndex;
+      }
+      lastIndex=indices[indexCount - 1];
+    }
+  }
+  if (parent != null) {
+    ((PShape3D)parent).lastVertex=lastVertex;
+    ((PShape3D)parent).vertexCount+=vertexCount;
+    ((PShape3D)parent).lastIndex=lastIndex;
+    ((PShape3D)parent).indexCount+=indexCount;
+  }
+}

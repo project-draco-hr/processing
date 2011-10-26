@@ -1,0 +1,20 @@
+{
+  if (root == null) {
+    return;
+  }
+  getGl().glEnableClientState(GL2.GL_NORMAL_ARRAY);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glNormalBufferID);
+  getGl().glNormalPointer(GL.GL_FLOAT,0,0);
+  getGl().glEnableClientState(GL2.GL_COLOR_ARRAY);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glColorBufferID);
+  getGl().glColorPointer(4,GL.GL_FLOAT,0,0);
+  getGl().glEnableClientState(GL2.GL_VERTEX_ARRAY);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glVertexBufferID);
+  getGl().glVertexPointer(3,GL.GL_FLOAT,0,0);
+  getGl().glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,root.glIndexBufferID);
+  getGl().glDrawElements(GL.GL_TRIANGLES,lastIndex - firstIndex + 1,GL.GL_UNSIGNED_INT,firstIndex * PGraphicsOpenGL.SIZEOF_INT);
+  getGl().glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,0);
+  getGl().glDisableClientState(GL2.GL_VERTEX_ARRAY);
+  getGl().glDisableClientState(GL2.GL_COLOR_ARRAY);
+  getGl().glDisableClientState(GL2.GL_NORMAL_ARRAY);
+}

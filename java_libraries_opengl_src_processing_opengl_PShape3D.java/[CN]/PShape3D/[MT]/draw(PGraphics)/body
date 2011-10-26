@@ -5,13 +5,24 @@
       g.applyMatrix(matrix);
     }
     if (family == GROUP) {
-      init();
+      boolean matrixBelow=false;
       for (int i=0; i < childCount; i++) {
-        ((PShape3D)children[i]).draw(g);
+        if (((PShape3D)children[i]).hasMatrix()) {
+          matrixBelow=true;
+          break;
+        }
+      }
+      if (matrixBelow) {
+        for (int i=0; i < childCount; i++) {
+          ((PShape3D)children[i]).draw(g);
+        }
+      }
+ else {
+        render(g);
       }
     }
  else {
-      drawGeometry(g);
+      render(g);
     }
     if (matrix != null) {
       g.popMatrix();
