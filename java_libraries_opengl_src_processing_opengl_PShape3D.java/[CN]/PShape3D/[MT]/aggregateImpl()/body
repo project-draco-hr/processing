@@ -1,0 +1,25 @@
+{
+  if (family == GROUP) {
+    int tot=0;
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      tot+=child.aggregateImpl();
+    }
+    indices=new int[tot];
+    int pos=0;
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      PApplet.arrayCopy(child.indices,0,indices,pos,indices.length);
+      pos+=indices.length;
+    }
+    return tot;
+  }
+ else {
+    root.vertexCount+=vertexCount;
+    for (int i=0; i < indexCount; i++) {
+      indices[i]=root.indexCount + i;
+    }
+    root.indexCount+=indexCount;
+    return indexCount;
+  }
+}

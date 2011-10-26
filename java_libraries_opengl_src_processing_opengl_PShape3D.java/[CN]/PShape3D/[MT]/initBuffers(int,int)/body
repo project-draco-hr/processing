@@ -1,0 +1,29 @@
+{
+  glVertexBufferID=ogl.createGLResource(PGraphicsOpenGL.GL_VERTEX_BUFFER);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,glVertexBufferID);
+  getGl().glBufferData(GL.GL_ARRAY_BUFFER,nvert * 3 * PGraphicsOpenGL.SIZEOF_FLOAT,null,glUsage);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,0);
+  glColorBufferID=ogl.createGLResource(PGraphicsOpenGL.GL_VERTEX_BUFFER);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,glColorBufferID);
+  getGl().glBufferData(GL.GL_ARRAY_BUFFER,nvert * 4 * PGraphicsOpenGL.SIZEOF_FLOAT,null,glUsage);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,0);
+  glNormalBufferID=ogl.createGLResource(PGraphicsOpenGL.GL_VERTEX_BUFFER);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,glNormalBufferID);
+  getGl().glBufferData(GL.GL_ARRAY_BUFFER,nvert * 3 * PGraphicsOpenGL.SIZEOF_FLOAT,null,glUsage);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,0);
+  if (glTexCoordBufferID == null) {
+    glTexCoordBufferID=new int[PGraphicsOpenGL.MAX_TEXTURES];
+    java.util.Arrays.fill(glTexCoordBufferID,0);
+  }
+  numTexBuffers=1;
+  for (int i=0; i < numTexBuffers; i++) {
+    glTexCoordBufferID[i]=ogl.createGLResource(PGraphicsOpenGL.GL_VERTEX_BUFFER);
+    getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,glTexCoordBufferID[i]);
+    getGl().glBufferData(GL.GL_ARRAY_BUFFER,nvert * 2 * PGraphicsOpenGL.SIZEOF_FLOAT,null,glUsage);
+    getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,0);
+  }
+  glIndexBufferID=ogl.createGLResource(PGraphicsOpenGL.GL_VERTEX_BUFFER);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,glIndexBufferID);
+  getGl().glBufferData(GL.GL_ARRAY_BUFFER,nind * PGraphicsOpenGL.SIZEOF_INT,null,GL.GL_STATIC_DRAW);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,0);
+}
