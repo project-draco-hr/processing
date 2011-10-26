@@ -1,11 +1,11 @@
 {
   ArrayList<InstalledContribution> oldLibs=getContributions(newLib.getType(),editor);
   String libFolderName=newLib.getFolder().getName();
-  File libraryDestination=editor.getBase().getSketchbookLibrariesFolder();
+  File libraryDestination=ContributionManager.getSketchbookContribFolder(editor.getBase(),newLib.getType());
   File newLibDest=new File(libraryDestination,libFolderName);
   for (  InstalledContribution oldLib : oldLibs) {
-    if (oldLib.getFolder().exists() && oldLib.getFolder().equals(newLibDest)) {
-      if (ContributionManager.requiresRestart(newLib)) {
+    if ((oldLib.getFolder().exists() && oldLib.getFolder().equals(newLibDest)) || (oldLib.getId() != null && oldLib.getId().equals(newLib.getId()))) {
+      if (ContributionManager.requiresRestart(oldLib)) {
         if (!backupContribution(editor,oldLib,false,statusBar)) {
           return null;
         }
