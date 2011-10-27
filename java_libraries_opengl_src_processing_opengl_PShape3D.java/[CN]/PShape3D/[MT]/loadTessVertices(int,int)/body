@@ -1,0 +1,28 @@
+{
+  if (last < first || first < firstVertex || lastVertex < last) {
+    PGraphics.showWarning("PShape3D: wrong vertex index");
+    updateElement=-1;
+    return;
+  }
+  if (updateElement != -1) {
+    PGraphics.showWarning("PShape3D: can load only one type of data at the time");
+    return;
+  }
+  if (root.isModified()) {
+    root.tessellate();
+    root.aggregate();
+    root.setModified(false);
+  }
+  updateElement=VERTICES;
+  firstUpdateIdx=first;
+  lastUpdateIdx=last;
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glVertexBufferID);
+  int offset=firstUpdateIdx * 3;
+  int size=(lastUpdateIdx - firstUpdateIdx + 1) * 3;
+  vertexBuffer=getGl().glMapBuffer(GL.GL_ARRAY_BUFFER,GL.GL_WRITE_ONLY).asFloatBuffer();
+  if (vertices == null || vertices.length != vertexBuffer.capacity()) {
+    vertices=new float[vertexBuffer.capacity()];
+    vertexBuffer.position(0);
+    vertexBuffer.get(vertices);
+  }
+}
