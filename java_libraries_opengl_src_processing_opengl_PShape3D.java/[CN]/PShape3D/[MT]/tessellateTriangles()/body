@@ -18,13 +18,40 @@
   }
   firstIndex=0;
   lastIndex=indexCount - 1;
-  boolean hasStroke=false;
-  for (int i=0; i < dataSize; i++) {
-    if (0 < strokeData[5 * i + 4]) {
-      hasStroke=true;
-      break;
+  int count=0;
+  for (int tr=0; tr < dataSize / 3; tr++) {
+    int i0=3 * tr + 0;
+    int i1=3 * tr + 1;
+    int i2=3 * tr + 2;
+    if (0 < strokeData[5 * i0 + 4] || 0 < strokeData[5 * i1 + 4] || 0 < strokeData[5 * i2 + 4]) {
+      count++;
     }
   }
-  if (hasStroke) {
+  if (0 < count) {
+    int nvert=count * 3 * 4;
+    strokeVertices=new float[3 * nvert];
+    strokeColors=new float[4 * nvert];
+    strokeOffsets=new float[nvert];
+    int nind=count * 2 * 3;
+    strokeIndices=new int[nind];
+    int vcount=0;
+    int icount=0;
+    for (int tr=0; tr < dataSize / 3; tr++) {
+      int i0=3 * tr + 0;
+      int i1=3 * tr + 1;
+      int i2=3 * tr + 2;
+      if (0 < strokeData[5 * i0 + 4] || 0 < strokeData[5 * i1 + 4] || 0 < strokeData[5 * i2 + 4]) {
+        addStrokeLine(i0,i1,vcount,icount);
+        vcount+=4;
+        icount+=6;
+        addStrokeLine(i1,i2,vcount,icount);
+        vcount+=4;
+        icount+=6;
+        ;
+        addStrokeLine(i2,i0,vcount,icount);
+        vcount+=4;
+        icount+=6;
+      }
+    }
   }
 }
