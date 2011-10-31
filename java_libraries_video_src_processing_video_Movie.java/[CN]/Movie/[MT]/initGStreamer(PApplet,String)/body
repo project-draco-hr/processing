@@ -7,7 +7,7 @@
     try {
       file=new File(parent.dataPath(filename));
       if (file.exists()) {
-        gplayer=new PlayBin2("GSMovie Player");
+        gplayer=new PlayBin2("Movie Player");
         gplayer.setInputFile(file);
       }
     }
@@ -17,23 +17,21 @@
       try {
         file=new File(filename);
         if (file.exists()) {
-          gplayer=new PlayBin2("GSMovie Player");
+          gplayer=new PlayBin2("Movie Player");
           gplayer.setInputFile(file);
         }
       }
  catch (      Exception e) {
-        PApplet.println("Shit coming...");
         e.printStackTrace();
       }
     }
-    if (gplayer == null) {
+    if (gplayer == null && filename.startsWith("http://")) {
       try {
         PApplet.println("network read");
-        gplayer=new PlayBin2("GSMovie Player");
+        gplayer=new PlayBin2("Movie Player");
         gplayer.setURI(URI.create(filename));
       }
  catch (      Exception e) {
-        PApplet.println("Shit coming...");
         e.printStackTrace();
       }
     }
