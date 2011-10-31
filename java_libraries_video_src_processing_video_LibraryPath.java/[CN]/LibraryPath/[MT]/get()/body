@@ -4,16 +4,14 @@
     String path=url.toString().replace("%20"," ");
     int n0=path.indexOf('/');
     int n1=-1;
-    if (Platform.isWindows()) {
-      n1=path.indexOf("/lib/video.jar");
-      if (n1 == -1)       n1=path.indexOf("/video.jar");
-      n0++;
-    }
- else     if (Platform.isMac()) {
-      n1=path.indexOf("video.jar");
-    }
- else     if (Platform.isLinux()) {
+    if (Platform.isLinux()) {
       return "";
+    }
+ else {
+      n1=path.indexOf("video.jar");
+      if (Platform.isWindows()) {
+        n0++;
+      }
     }
     if ((-1 < n0) && (-1 < n1)) {
       return path.substring(n0,n1);
