@@ -112,6 +112,14 @@
     runOptions+=" -Xmx" + Preferences.get("run.options.memory.maximum") + "m";
   }
   if (exportPlatform == PConstants.MACOSX) {
+    if (exportBits == 32) {
+      runOptions+=" -d32";
+    }
+ else     if (exportBits == 64) {
+      runOptions+=" -d64";
+    }
+  }
+  if (exportPlatform == PConstants.MACOSX) {
     String PLIST_TEMPLATE="template.plist";
     File plistTemplate=new File(sketch.getFolder(),PLIST_TEMPLATE);
     if (!plistTemplate.exists()) {
