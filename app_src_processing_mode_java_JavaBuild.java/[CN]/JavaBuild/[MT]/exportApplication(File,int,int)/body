@@ -129,14 +129,6 @@
     runOptions+=" -Xmx" + Preferences.get("run.options.memory.maximum") + "m";
   }
   if (exportPlatform == PConstants.MACOSX) {
-    if (exportBits == 32) {
-      runOptions+=" -d32";
-    }
- else     if (exportBits == 64) {
-      runOptions+=" -d64";
-    }
-  }
-  if (exportPlatform == PConstants.MACOSX) {
     String PLIST_TEMPLATE="template.plist";
     File plistTemplate=new File(sketch.getFolder(),PLIST_TEMPLATE);
     if (!plistTemplate.exists()) {
@@ -160,6 +152,16 @@
         }
         while ((index=sb.indexOf("@@lsuipresentationmode@@")) != -1) {
           sb.replace(index,index + "@@lsuipresentationmode@@".length(),Preferences.getBoolean("export.application.fullscreen") ? "4" : "0");
+        }
+        while ((index=sb.indexOf("@@lsarchitecturepriority@@")) != -1) {
+          String arch="<string>x86_64</string>\n      <string>i386</string>";
+          if (exportBits == 32) {
+            arch="<string>i386</string>";
+          }
+ else           if (exportBits == 64) {
+            arch="<string>x86_64</string>";
+          }
+          sb.replace(index,index + "@@lsarchitecturepriority@@".length(),arch);
         }
         lines[i]=sb.toString();
       }
