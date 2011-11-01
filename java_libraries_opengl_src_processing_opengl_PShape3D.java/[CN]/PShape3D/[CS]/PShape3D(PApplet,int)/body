@@ -13,6 +13,12 @@
   params.drawMode=TRIANGLES;
   params.updateMode=DYNAMIC;
   setParameters(params);
+  if (strokeRenderShader == null) {
+    strokeRenderShader=new PShader(parent);
+    strokeRenderShader.loadVertexShaderSource(strokeRenderVertShader);
+    strokeRenderShader.loadFragmentShaderSource(strokeRenderFragShader);
+    strokeRenderShader.setup();
+  }
   root=this;
   parent=null;
   updateElement=-1;
