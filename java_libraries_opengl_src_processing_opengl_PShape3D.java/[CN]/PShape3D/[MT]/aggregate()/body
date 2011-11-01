@@ -1,14 +1,16 @@
 {
   if (root == this && parent == null) {
-    firstVertex=lastVertex=vertexCount=0;
-    firstIndex=lastIndex=indexCount=0;
-    firstStrokeVertex=lastStrokeVertex=strokeVertexCount=0;
-    firstStrokeIndex=lastStrokeIndex=strokeIndexCount=0;
+    lastVertexOffset=0;
+    lastIndexOffset=0;
+    lastStrokeVertexOffset=0;
+    lastStrokeIndexOffset=0;
     aggregateImpl();
-    initBuffers(vertexCount,indexCount);
-    copyVertOffset=0;
-    copyIndOffset=0;
-    copyGeometryToRoot();
+    if (0 < vertexCount && 0 < indexCount) {
+      initBuffers(vertexCount,indexCount);
+      copyVertOffset=0;
+      copyIndOffset=0;
+      copyGeometryToRoot();
+    }
     if (0 < strokeVertexCount && 0 < strokeIndexCount) {
       initStrokeBuffers(strokeVertexCount,strokeIndexCount);
       strokeVertCopyOffset=0;
