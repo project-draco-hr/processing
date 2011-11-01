@@ -30,7 +30,17 @@
   }
   if (!jarFolder.exists())   jarFolder.mkdirs();
   if (exportPlatform == PConstants.WINDOWS) {
-    Base.copyFile(mode.getContentFile("application/template.exe"),new File(destFolder,sketch.getName() + ".exe"));
+    if (exportBits == 64) {
+      File batFile=new File(destFolder,sketch.getName() + ".bat");
+      PrintWriter writer=PApplet.createWriter(batFile);
+      writer.println("@echo off");
+      writer.println("java -Djava.ext.dirs=lib -Djava.library.path=lib " + sketch.getName());
+      writer.flush();
+      writer.close();
+    }
+ else {
+      Base.copyFile(mode.getContentFile("application/template.exe"),new File(destFolder,sketch.getName() + ".exe"));
+    }
   }
   Vector<String> jarListVector=new Vector<String>();
   FileOutputStream zipOutputFile=new FileOutputStream(new File(jarFolder,sketch.getName() + ".jar"));
