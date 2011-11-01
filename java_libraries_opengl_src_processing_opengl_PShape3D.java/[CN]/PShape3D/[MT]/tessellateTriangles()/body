@@ -1,15 +1,15 @@
 {
-  vertexCount=dataSize;
+  vertexCount=inVertexCount;
   firstVertex=0;
   lastVertex=vertexCount - 1;
-  vertices=new float[3 * dataSize];
-  PApplet.arrayCopy(vertexData,vertices,3 * dataSize);
-  texcoords=new float[2 * dataSize];
-  PApplet.arrayCopy(tcoordData,texcoords,2 * dataSize);
-  colors=new float[4 * dataSize];
-  PApplet.arrayCopy(colorData,colors,4 * dataSize);
-  normals=new float[3 * dataSize];
-  PApplet.arrayCopy(normalData,normals,3 * dataSize);
+  vertices=new float[3 * inVertexCount];
+  PApplet.arrayCopy(inVertices,vertices,3 * inVertexCount);
+  texcoords=new float[2 * inVertexCount];
+  PApplet.arrayCopy(inTexCoords,texcoords,2 * inVertexCount);
+  colors=new float[4 * inVertexCount];
+  PApplet.arrayCopy(inColors,colors,4 * inVertexCount);
+  normals=new float[3 * inVertexCount];
+  PApplet.arrayCopy(inNormals,normals,3 * inVertexCount);
   useIndices=true;
   indexCount=vertexCount;
   indices=new int[indexCount];
@@ -19,11 +19,11 @@
   firstIndex=0;
   lastIndex=indexCount - 1;
   int count=0;
-  for (int tr=0; tr < dataSize / 3; tr++) {
+  for (int tr=0; tr < inVertexCount / 3; tr++) {
     int i0=3 * tr + 0;
     int i1=3 * tr + 1;
     int i2=3 * tr + 2;
-    if (0 < strokeData[5 * i0 + 4] || 0 < strokeData[5 * i1 + 4] || 0 < strokeData[5 * i2 + 4]) {
+    if (0 < inStroke[5 * i0 + 4] || 0 < inStroke[5 * i1 + 4] || 0 < inStroke[5 * i2 + 4]) {
       count++;
     }
   }
@@ -40,11 +40,11 @@
     strokeIndices=new int[nind];
     int vcount=0;
     int icount=0;
-    for (int tr=0; tr < dataSize / 3; tr++) {
+    for (int tr=0; tr < inVertexCount / 3; tr++) {
       int i0=3 * tr + 0;
       int i1=3 * tr + 1;
       int i2=3 * tr + 2;
-      if (0 < strokeData[5 * i0 + 4] || 0 < strokeData[5 * i1 + 4] || 0 < strokeData[5 * i2 + 4]) {
+      if (0 < inStroke[5 * i0 + 4] || 0 < inStroke[5 * i1 + 4] || 0 < inStroke[5 * i2 + 4]) {
         addStrokeLine(i0,i1,vcount,icount);
         vcount+=4;
         icount+=6;

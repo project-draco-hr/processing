@@ -1,11 +1,11 @@
 {
-  int offset=3 * firstVertex;
-  int size=3 * vertexCount;
-  if (vertices != null && vertices.length == size) {
-    getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glVertexBufferID);
+  int offset=3 * firstStrokeVertex;
+  int size=3 * strokeVertexCount;
+  if (strokeVertices != null && strokeVertices.length == size) {
+    getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glStrokeVertexBufferID);
     FloatBuffer mbuf=getGl().glMapBuffer(GL.GL_ARRAY_BUFFER,GL.GL_WRITE_ONLY).asFloatBuffer();
     mbuf.position(offset);
-    mbuf.put(vertices,0,size);
+    mbuf.put(strokeVertices,0,size);
     getGl().glUnmapBuffer(GL.GL_ARRAY_BUFFER);
     getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,0);
   }

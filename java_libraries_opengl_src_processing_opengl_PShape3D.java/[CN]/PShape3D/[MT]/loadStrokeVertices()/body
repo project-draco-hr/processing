@@ -1,0 +1,14 @@
+{
+  tessCheck();
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glStrokeVertexBufferID);
+  FloatBuffer mbuf=getGl().glMapBuffer(GL.GL_ARRAY_BUFFER,GL.GL_WRITE_ONLY).asFloatBuffer();
+  int offset=3 * firstStrokeVertex;
+  int size=3 * strokeVertexCount;
+  if (strokeVertices == null || strokeVertices.length != size) {
+    strokeVertices=new float[size];
+  }
+  mbuf.position(offset);
+  mbuf.get(strokeVertices,0,size);
+  getGl().glUnmapBuffer(GL.GL_ARRAY_BUFFER);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,0);
+}

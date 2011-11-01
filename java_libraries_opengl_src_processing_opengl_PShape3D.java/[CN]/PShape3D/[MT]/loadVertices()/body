@@ -1,3 +1,14 @@
 {
-  loadVertices(firstVertex,lastVertex);
+  tessCheck();
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glVertexBufferID);
+  FloatBuffer mbuf=getGl().glMapBuffer(GL.GL_ARRAY_BUFFER,GL.GL_WRITE_ONLY).asFloatBuffer();
+  int offset=3 * firstVertex;
+  int size=3 * vertexCount;
+  if (vertices == null || vertices.length != size) {
+    vertices=new float[size];
+  }
+  mbuf.position(offset);
+  mbuf.get(vertices,0,size);
+  getGl().glUnmapBuffer(GL.GL_ARRAY_BUFFER);
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,0);
 }
