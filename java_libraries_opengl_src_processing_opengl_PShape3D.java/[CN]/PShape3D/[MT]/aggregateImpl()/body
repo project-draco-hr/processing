@@ -1,0 +1,77 @@
+{
+  if (family == GROUP) {
+    firstVertex=lastVertex=vertexCount=0;
+    firstIndex=lastIndex=indexCount=0;
+    firstStrokeVertex=lastStrokeVertex=strokeVertexCount=0;
+    firstStrokeIndex=lastStrokeIndex=strokeIndexCount=0;
+    boolean firstGeom=true;
+    boolean firstStroke=true;
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.aggregateImpl();
+      vertexCount+=child.vertexCount;
+      indexCount+=child.indexCount;
+      strokeVertexCount+=child.strokeVertexCount;
+      strokeIndexCount+=child.strokeIndexCount;
+      if (0 < child.vertexCount) {
+        if (firstGeom) {
+          firstVertex=child.firstVertex;
+          firstIndex=child.firstIndex;
+          firstGeom=false;
+        }
+        lastVertex=child.lastVertex;
+        lastIndex=child.lastIndex;
+      }
+      if (0 < child.strokeVertexCount) {
+        if (firstStroke) {
+          firstStrokeVertex=child.firstStrokeVertex;
+          firstStrokeIndex=child.firstStrokeIndex;
+          firstStroke=false;
+        }
+        lastStrokeVertex=child.lastStrokeVertex;
+        lastStrokeIndex=child.lastStrokeIndex;
+      }
+    }
+    useStroke=0 < strokeVertexCount && 0 < strokeIndexCount;
+  }
+ else {
+    if (0 < vertexCount) {
+      firstVertex=0;
+      if (0 < root.lastVertex) {
+        firstVertex=root.lastVertex + 1;
+      }
+      lastVertex=firstVertex + vertexCount - 1;
+      root.lastVertex=lastVertex;
+    }
+    if (0 < indexCount) {
+      firstIndex=0;
+      if (0 < root.lastIndex) {
+        firstIndex=root.lastIndex + 1;
+      }
+      for (int i=0; i < indexCount; i++) {
+        indices[i]+=firstVertex;
+      }
+      lastIndex=firstIndex + indexCount - 1;
+      root.lastIndex=lastIndex;
+    }
+    if (0 < strokeVertexCount) {
+      firstStrokeVertex=0;
+      if (0 < root.lastStrokeVertex) {
+        firstStrokeVertex=root.lastStrokeVertex + 1;
+      }
+      lastStrokeVertex=firstStrokeVertex + strokeVertexCount - 1;
+      root.lastStrokeVertex=lastStrokeVertex;
+    }
+    if (0 < strokeIndexCount) {
+      firstStrokeIndex=0;
+      if (0 < root.lastStrokeIndex) {
+        firstStrokeIndex=root.lastStrokeIndex + 1;
+      }
+      for (int i=0; i < strokeIndexCount; i++) {
+        strokeIndices[i]+=firstStrokeVertex;
+      }
+      lastStrokeIndex=firstStrokeIndex + strokeIndexCount - 1;
+      root.lastStrokeIndex=lastStrokeIndex;
+    }
+  }
+}
