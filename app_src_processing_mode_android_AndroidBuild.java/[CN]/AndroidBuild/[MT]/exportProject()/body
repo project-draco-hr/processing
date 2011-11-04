@@ -1,9 +1,10 @@
 {
-  File projectFolder=build("debug");
-  if (projectFolder == null) {
-    return null;
+  target="debug";
+  File projectFolder=createProject();
+  if (projectFolder != null) {
+    File exportFolder=createExportFolder();
+    Base.copyDir(projectFolder,exportFolder);
+    return exportFolder;
   }
-  File exportFolder=createExportFolder();
-  Base.copyDir(projectFolder,exportFolder);
-  return exportFolder;
+  return null;
 }

@@ -1,21 +1,13 @@
 {
   final PrintWriter writer=PApplet.createWriter(file);
-  writer.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+  writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
   writer.println("<project name=\"" + projectName + "\" default=\"help\">");
-  writer.println("  <property file=\"local.properties\"/>");
-  writer.println("  <property file=\"build.properties\"/>");
-  writer.println("  <property file=\"default.properties\"/>");
-  writer.println("  <path id=\"android.antlibs\">");
-  writer.println("    <pathelement path=\"${sdk.dir}/tools/lib/anttasks.jar\" />");
-  writer.println("    <pathelement path=\"${sdk.dir}/tools/lib/sdklib.jar\" />");
-  writer.println("    <pathelement path=\"${sdk.dir}/tools/lib/androidprefs.jar\" />");
-  writer.println("    <pathelement path=\"${sdk.dir}/tools/lib/apkbuilder.jar\" />");
-  writer.println("    <pathelement path=\"${sdk.dir}/tools/lib/jarutils.jar\" />");
-  writer.println("  </path>");
-  writer.println("  <taskdef name=\"setup\"");
-  writer.println("           classname=\"com.android.ant.SetupTask\"");
-  writer.println("           classpathref=\"android.antlibs\" />");
-  writer.println("  <setup />");
+  writer.println("  <loadproperties srcFile=\"local.properties\" />");
+  writer.println("  <property file=\"ant.properties\" />");
+  writer.println("  <loadproperties srcFile=\"project.properties\" />");
+  writer.println("  <fail message=\"sdk.dir is missing. Make sure to generate local.properties using 'android update project'\" unless=\"sdk.dir\" />");
+  writer.println("  <!-- version-tag: 1 -->");
+  writer.println("  <import file=\"${sdk.dir}/tools/ant/build.xml\" />");
   writer.println("</project>");
   writer.flush();
   writer.close();
