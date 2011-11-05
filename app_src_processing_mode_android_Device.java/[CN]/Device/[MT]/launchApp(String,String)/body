@@ -2,5 +2,13 @@
   if (!isAlive()) {
     return false;
   }
-  return adb("shell","am","start","-e","debug","true","-a","android.intent.action.MAIN","-c","android.intent.category.LAUNCHER","-n",packageName + "/." + className).succeeded();
+  ProcessResult pr=adb("shell","am","start","-e","debug","true","-a","android.intent.action.MAIN","-c","android.intent.category.LAUNCHER","-n",packageName + "/." + className);
+  if (Base.DEBUG) {
+    System.out.println(pr.toString());
+  }
+  if (pr.getStdout().contains("android.util.AndroidException")) {
+    System.err.println(pr.getStdout());
+    return false;
+  }
+  return pr.succeeded();
 }

@@ -2,13 +2,15 @@
   listener.statusNotice("Waiting for device to become available...");
   final Device device=waitForDevice(deviceFuture,listener);
   if (device == null || !device.isAlive()) {
-    listener.statusError("Device killed or disconnected.");
+    listener.statusError("Lost connection with device while launching. Try again.");
+    Devices.killAdbServer();
     return;
   }
   device.addListener(this);
   listener.statusNotice("Installing sketch on " + device.getId());
   if (!device.installApp(build.getPathForAPK(),listener)) {
-    listener.statusError("Device killed or disconnected.");
+    listener.statusError("Lost connection with device while installing. Try again.");
+    Devices.killAdbServer();
     return;
   }
   listener.statusNotice("Starting sketch on " + device.getId());
