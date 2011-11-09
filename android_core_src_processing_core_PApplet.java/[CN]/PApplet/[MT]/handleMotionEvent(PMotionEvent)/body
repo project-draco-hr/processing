@@ -67,9 +67,11 @@
  else     if (twoPointerGesture) {
       float d0=PApplet.dist(ppointersX[0],ppointersY[0],ppointersX[1],ppointersY[1]);
       float d1=PApplet.dist(pointersX[0],pointersY[0],pointersX[1],pointersY[1]);
-      float centerX=0.5f * (pointersX[0] + pointersX[1]);
-      float centerY=0.5f * (pointersY[0] + pointersY[1]);
-      zoomEvent(centerX,centerY,d0,d1);
+      if (0 < d0 && 0 < d1) {
+        float centerX=0.5f * (pointersX[0] + pointersX[1]);
+        float centerY=0.5f * (pointersY[0] + pointersY[1]);
+        zoomEvent(centerX,centerY,d0,d1);
+      }
     }
   }
  else   if (pme.action == MotionEvent.ACTION_UP) {
