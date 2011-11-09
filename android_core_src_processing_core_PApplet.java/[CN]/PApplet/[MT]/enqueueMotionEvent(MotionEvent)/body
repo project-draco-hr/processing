@@ -21,21 +21,15 @@ synchronized (motionLock) {
       }
     }
     PMotionEvent pme=motionEventQueue[motionEventCount + historyCount];
-    pme.action=event.getAction();
-    pme.motionX=event.getX();
-    pme.motionY=event.getY();
-    pme.motionPressure=event.getPressure();
-    pme.mouseX=(int)pme.motionX;
-    pme.mouseY=(int)pme.motionY;
+    pme.setAction(event.getAction());
+    pme.setNumPointers(event.getPointerCount());
+    pme.setPointers(event);
     if (pme.action == MotionEvent.ACTION_MOVE && historyCount > 0) {
       for (int i=0; i < historyCount; i++) {
         PMotionEvent hist=motionEventQueue[motionEventCount++];
-        hist.action=pme.action;
-        hist.motionX=event.getHistoricalX(i);
-        hist.motionY=event.getHistoricalY(i);
-        hist.motionPressure=event.getHistoricalPressure(i);
-        hist.mouseX=(int)hist.motionX;
-        hist.mouseY=(int)hist.motionY;
+        hist.setAction(event.getAction());
+        hist.setNumPointers(event.getPointerCount());
+        pme.setPointers(event,i);
       }
     }
     motionEventCount++;
