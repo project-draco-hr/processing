@@ -1,19 +1,35 @@
 {
   copyInDataToTessData();
-  int triCount=vertexCount / 3;
+  int triCount=vertexCount - 2;
   useIndices=true;
-  indexCount=vertexCount;
+  indexCount=3 * triCount;
   indices=new int[indexCount];
-  for (int i=0; i < indexCount; i++) {
-    indices[i]=i;
+  int idx=0;
+  for (int i=1; i < vertexCount - 1; i++) {
+    indices[idx++]=i;
+    if (i % 2 == 0) {
+      indices[idx++]=i - 1;
+      indices[idx++]=i + 1;
+    }
+ else {
+      indices[idx++]=i + 1;
+      indices[idx++]=i - 1;
+    }
   }
   firstIndex=0;
   lastIndex=indexCount - 1;
   int strokedCount=0;
-  for (int tr=0; tr < triCount; tr++) {
-    int i0=3 * tr + 0;
-    int i1=3 * tr + 1;
-    int i2=3 * tr + 2;
+  for (int i=1; i < vertexCount - 1; i++) {
+    int i0=i;
+    int i1, i2;
+    if (i % 2 == 0) {
+      i1=i - 1;
+      i2=i + 1;
+    }
+ else {
+      i1=i + 1;
+      i2=i - 1;
+    }
     if (0 < inStroke[5 * i0 + 4] || 0 < inStroke[5 * i1 + 4] || 0 < inStroke[5 * i2 + 4]) {
       strokedCount++;
     }
@@ -31,10 +47,17 @@
     strokeIndices=new int[nind];
     int vcount=0;
     int icount=0;
-    for (int tr=0; tr < triCount; tr++) {
-      int i0=3 * tr + 0;
-      int i1=3 * tr + 1;
-      int i2=3 * tr + 2;
+    for (int i=1; i < vertexCount - 1; i++) {
+      int i0=i;
+      int i1, i2;
+      if (i % 2 == 0) {
+        i1=i - 1;
+        i2=i + 1;
+      }
+ else {
+        i1=i + 1;
+        i2=i - 1;
+      }
       if (0 < inStroke[5 * i0 + 4] || 0 < inStroke[5 * i1 + 4] || 0 < inStroke[5 * i2 + 4]) {
         addStrokeLine(i0,i1,vcount,icount);
         vcount+=4;
