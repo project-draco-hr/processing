@@ -4,8 +4,11 @@
     firstIndex=lastIndex=indexCount=0;
     firstStrokeVertex=lastStrokeVertex=strokeVertexCount=0;
     firstStrokeIndex=lastStrokeIndex=strokeIndexCount=0;
+    firstPointVertex=lastPointVertex=pointVertexCount=0;
+    firstPointIndex=lastPointIndex=pointIndexCount=0;
     boolean firstGeom=true;
     boolean firstStroke=true;
+    boolean firstPoint=true;
     for (int i=0; i < childCount; i++) {
       PShape3D child=(PShape3D)children[i];
       child.aggregateImpl();
@@ -13,6 +16,8 @@
       indexCount+=child.indexCount;
       strokeVertexCount+=child.strokeVertexCount;
       strokeIndexCount+=child.strokeIndexCount;
+      pointVertexCount+=child.pointVertexCount;
+      pointIndexCount+=child.pointIndexCount;
       if (0 < child.vertexCount) {
         if (firstGeom) {
           firstVertex=child.firstVertex;
@@ -31,8 +36,18 @@
         lastStrokeVertex=child.lastStrokeVertex;
         lastStrokeIndex=child.lastStrokeIndex;
       }
+      if (0 < child.pointVertexCount) {
+        if (firstPoint) {
+          firstPointVertex=child.firstPointVertex;
+          firstPointIndex=child.firstPointIndex;
+          firstPoint=false;
+        }
+        lastPointVertex=child.lastPointVertex;
+        lastPointIndex=child.lastPointIndex;
+      }
     }
-    useStroke=0 < strokeVertexCount && 0 < strokeIndexCount;
+    isStroked=0 < strokeVertexCount && 0 < strokeIndexCount;
+    hasPoints=0 < pointVertexCount && 0 < pointIndexCount;
   }
  else {
     if (0 < vertexCount) {
@@ -72,6 +87,25 @@
       }
       lastStrokeIndex=firstStrokeIndex + strokeIndexCount - 1;
       root.lastStrokeIndexOffset=lastStrokeIndex;
+    }
+    if (0 < pointVertexCount) {
+      firstPointVertex=0;
+      if (0 < root.lastPointVertexOffset) {
+        firstPointVertex=root.lastPointVertexOffset + 1;
+      }
+      lastPointVertex=firstPointVertex + pointVertexCount - 1;
+      root.lastPointVertexOffset=lastPointVertex;
+    }
+    if (0 < pointIndexCount) {
+      firstPointIndex=0;
+      if (0 < root.lastPointIndexOffset) {
+        firstPointIndex=root.lastPointIndexOffset + 1;
+      }
+      for (int i=0; i < pointIndexCount; i++) {
+        pointIndices[i]+=firstPointVertex;
+      }
+      lastPointIndex=firstPointIndex + pointIndexCount - 1;
+      root.lastPointIndexOffset=lastPointIndex;
     }
   }
 }
