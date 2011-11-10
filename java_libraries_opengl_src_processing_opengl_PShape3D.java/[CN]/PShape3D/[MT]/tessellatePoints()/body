@@ -8,9 +8,10 @@
   int nindTot=0;
   for (int i=0; i < inVertexCount; i++) {
     float w=inStroke[5 * i + 4];
-    int perim=PApplet.max(6,(int)(TWO_PI * w / 20));
-    nvertTot+=perim + 1;
-    nindTot+=3 * (perim - 1);
+    int perim=PApplet.max(MIN_ACCURACY,(int)(TWO_PI * w / 20));
+    int nvert=perim + 1;
+    nvertTot+=nvert;
+    nindTot+=3 * (nvert - 1);
   }
   pointVertexCount=nvertTot;
   pointVertices=new float[3 * nvertTot];
@@ -22,14 +23,15 @@
   int vertIdx=0;
   int indIdx=0;
   int attribIdx=0;
+  int vert0=0;
   for (int i=0; i < inVertexCount; i++) {
     float w=inStroke[5 * i + 4];
-    int perim=PApplet.max(6,(int)(TWO_PI * w / 20));
+    int perim=PApplet.max(MIN_ACCURACY,(int)(TWO_PI * w / 20));
     int nvert=perim + 1;
     for (int k=0; k < nvert; k++) {
       PApplet.arrayCopy(inVertices,3 * i,pointVertices,3 * vertIdx,3);
-      PApplet.arrayCopy(inStroke,5 * i,pointNormals,4 * vertIdx,4);
-      PApplet.arrayCopy(inNormals,3 * i,pointColors,3 * vertIdx,3);
+      PApplet.arrayCopy(inStroke,5 * i,pointColors,4 * vertIdx,4);
+      PApplet.arrayCopy(inNormals,3 * i,pointNormals,3 * vertIdx,3);
       vertIdx++;
     }
     pointAttributes[2 * attribIdx + 0]=0;
@@ -44,11 +46,17 @@
       attribIdx++;
     }
     for (int k=1; k < nvert - 1; k++) {
-      pointIndices[indIdx++]=0;
-      pointIndices[indIdx++]=i;
-      pointIndices[indIdx++]=i + 1;
+      pointIndices[indIdx++]=vert0 + 0;
+      pointIndices[indIdx++]=vert0 + k;
+      pointIndices[indIdx++]=vert0 + k + 1;
     }
+    pointIndices[indIdx++]=vert0 + 0;
+    pointIndices[indIdx++]=vert0 + 1;
+    pointIndices[indIdx++]=vert0 + nvert - 1;
+    vert0=vertIdx;
   }
+  PApplet.println(vertIdx + " " + attribIdx+ " "+ pointVertexCount);
+  PApplet.println(indIdx + " " + pointIndexCount);
   firstPointIndex=0;
   lastPointIndex=pointIndexCount - 1;
 }
