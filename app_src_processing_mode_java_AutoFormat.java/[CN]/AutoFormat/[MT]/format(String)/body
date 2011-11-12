@@ -3,7 +3,6 @@
   final String cleanText=normalizedText + (normalizedText.endsWith("\n") ? "" : "\n");
   result.setLength(0);
   indentValue=Preferences.getInteger("editor.tabs.size");
-  lineNumber=0;
   q_flg=e_flg=a_flg=if_flg=false;
   s_flag=true;
   c_level=if_lev=level=paren=0;
@@ -19,7 +18,6 @@
   s_tabs=new int[20][10];
   pos=-1;
   chars=cleanText.toCharArray();
-  lineNumber=1;
   EOF=false;
   while (!EOF) {
     c=next();
@@ -50,7 +48,6 @@ buf.append(c);
 }
 break;
 case '\n':
-lineNumber++;
 if (EOF) {
 break;
 }
@@ -156,7 +153,6 @@ if (cc == '\\') {
 buf.append(cc=next());
 }
 if (cc == '\n') {
-lineNumber++;
 writeIndentedLine();
 s_flag=true;
 }
