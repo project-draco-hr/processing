@@ -28,7 +28,10 @@
   String[] javadoc=PApplet.match(sketch.getCode(0).getProgram(),"/\\*{2,}(.*)\\*+/");
   if (javadoc != null) {
     StringBuffer dbuffer=new StringBuffer();
-    String[] pieces=PApplet.split(javadoc[1],'\n');
+    String found=javadoc[1];
+    found=found.substring(0,found.indexOf("*/"));
+    System.out.println(found);
+    String[] pieces=PApplet.split(found,'\n');
     for (    String line : pieces) {
       String[] m=PApplet.match(line,"^\\s*\\*+(.*)");
       dbuffer.append(m != null ? m[1] : line);
