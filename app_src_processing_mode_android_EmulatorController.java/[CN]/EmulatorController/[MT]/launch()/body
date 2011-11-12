@@ -9,9 +9,11 @@
     Preferences.set("android.emulator.port",portString);
   }
   final String[] cmd=new String[]{"emulator","-avd",AVD.defaultAVD.name,"-port",portString,"-no-boot-anim"};
+  if (Base.DEBUG) {
+    System.out.println(processing.core.PApplet.join(cmd," "));
+  }
   final Process p=Runtime.getRuntime().exec(cmd);
   ProcessRegistry.watch(p);
-  new StreamPump(p.getInputStream(),"emulator: ").addTarget(System.out).start();
   setState(State.WAITING_FOR_BOOT);
   final String title=PApplet.join(cmd,' ');
   StreamPump outie=new StreamPump(p.getInputStream(),"out: " + title);
@@ -54,8 +56,9 @@
         }
         System.err.println("EmulatorController: Emulator never booted. " + state);
       }
- catch (      final Exception e) {
-        System.err.println("While waiting for emulator to boot " + e);
+ catch (      Exception e) {
+        System.err.println("Exception while waiting for emulator to boot:");
+        e.printStackTrace();
         p.destroy();
       }
  finally {
@@ -67,23 +70,23 @@
   new Thread(new Runnable(){
     public void run(){
       try {
-        try {
-          p.waitFor();
-        }
- catch (        final InterruptedException e) {
-          System.err.println("Emulator was interrupted.");
-        }
- finally {
-          p.destroy();
-          ProcessRegistry.unwatch(p);
+        final int result=p.waitFor();
+        if (result != 0) {
+          System.err.println("Emulator process exited with status " + result + ".");
+          setState(State.NOT_RUNNING);
         }
       }
-  finally {
+ catch (      InterruptedException e) {
+        System.err.println("Emulator was interrupted.");
         setState(State.NOT_RUNNING);
+      }
+ finally {
+        p.destroy();
+        ProcessRegistry.unwatch(p);
       }
     }
   }
-,"EmulatorController: Process manager").start();
+,"EmulatorController: emulator process waitFor()").start();
   try {
     latch.await();
   }
