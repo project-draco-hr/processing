@@ -16,27 +16,26 @@
   JPopupMenu.setDefaultLightWeightPopupEnabled(false);
   initRequirements();
   Preferences.init(null);
-  if (SingleInstance.exists(args)) {
-    return;
-  }
-  SingleInstance.createServer(platform);
-  try {
-    platform.setLookAndFeel();
-  }
- catch (  Exception e) {
-    String mess=e.getMessage();
-    if (mess.indexOf("ch.randelshofer.quaqua.QuaquaLookAndFeel") == -1) {
-      System.err.println("Non-fatal error while setting the Look & Feel.");
-      System.err.println("The error message follows, however Processing should run fine.");
-      System.err.println(mess);
+  if (!SingleInstance.exists(args)) {
+    SingleInstance.createServer(platform);
+    try {
+      platform.setLookAndFeel();
     }
+ catch (    Exception e) {
+      String mess=e.getMessage();
+      if (mess.indexOf("ch.randelshofer.quaqua.QuaquaLookAndFeel") == -1) {
+        System.err.println("Non-fatal error while setting the Look & Feel.");
+        System.err.println("The error message follows, however Processing should run fine.");
+        System.err.println(mess);
+      }
+    }
+    try {
+      untitledFolder=Base.createTempFolder("untitled","sketches");
+      untitledFolder.deleteOnExit();
+    }
+ catch (    IOException e) {
+      Base.showError("Trouble without a name","Could not create a place to store untitled sketches.\n" + "That's gonna prevent us from continuing.",e);
+    }
+    new Base(args);
   }
-  try {
-    untitledFolder=Base.createTempFolder("untitled","sketches");
-    untitledFolder.deleteOnExit();
-  }
- catch (  IOException e) {
-    Base.showError("Trouble without a name","Could not create a place to store untitled sketches.\n" + "That's gonna prevent us from continuing.",e);
-  }
-  new Base(args);
 }
