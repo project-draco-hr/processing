@@ -1,0 +1,52 @@
+{
+  try {
+    final ServerSocket ss=new ServerSocket(0,0,InetAddress.getByName(null));
+    Preferences.set(SERVER_PORT,"" + ss.getLocalPort());
+    final String key="" + Math.random();
+    Preferences.set(SERVER_KEY,key);
+    Preferences.save();
+    new Thread(new Runnable(){
+      public void run(){
+        while (true) {
+          try {
+            Socket s=ss.accept();
+            final BufferedReader reader=PApplet.createReader(s.getInputStream());
+            String receivedKey=reader.readLine();
+            if (platform.base != null) {
+              if (key.equals(receivedKey)) {
+                SwingUtilities.invokeLater(new Runnable(){
+                  public void run(){
+                    try {
+                      String filename=reader.readLine();
+                      if (filename != null) {
+                        platform.base.handleOpen(filename);
+                        while ((filename=reader.readLine()) != null) {
+                          platform.base.handleOpen(filename);
+                        }
+                      }
+ else {
+                        platform.base.handleNew();
+                      }
+                    }
+ catch (                    IOException e) {
+                      e.printStackTrace();
+                    }
+                  }
+                }
+);
+              }
+            }
+          }
+ catch (          IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
+).start();
+  }
+ catch (  IOException e) {
+    System.err.println("Could not create single instance server.");
+    e.printStackTrace();
+  }
+}
