@@ -1,3 +1,23 @@
 {
-  return importToLibraryTable.get(name);
+  ArrayList<Library> libraries=importToLibraryTable.get(pkgName);
+  if (libraries == null) {
+    return null;
+  }
+ else   if (libraries.size() > 1) {
+    String primary="More than one library is competing for this sketch.";
+    String secondary="The import " + pkgName + " points to multiple libraries:<br>";
+    for (    Library library : libraries) {
+      String location=library.getPath();
+      if (location.startsWith(getLibrariesFolder().getAbsolutePath())) {
+        location="part of Processing";
+      }
+      secondary+="<b>" + library.getName() + "</b> ("+ location+ ")<br>";
+    }
+    secondary+="Extra libraries need to be removed before this sketch can be used.";
+    Base.showWarningTiered("Duplicate Library Problem",primary,secondary,null);
+    throw new SketchException("Duplicate libraries found for " + pkgName + ".");
+  }
+ else {
+    return libraries.get(0);
+  }
 }

@@ -1,22 +1,25 @@
 {
   for (  String pkg : packageList) {
-    Library library=importToLibraryTable.get(pkg);
-    if (library != null) {
-      if (!packageWarningMap.containsKey(pkg)) {
-        packageWarningMap.put(pkg,null);
+    ArrayList<Library> libraries=importToLibraryTable.get(pkg);
+    if (libraries == null) {
+      libraries=new ArrayList<Library>();
+      importToLibraryTable.put(pkg,libraries);
+    }
+ else {
+      if (Base.DEBUG) {
         System.err.println("The library found in");
         System.err.println(getPath());
         System.err.println("conflicts with");
-        System.err.println(library.getPath());
-        System.err.println("which already defines the package " + pkg);
+        for (        Library library : libraries) {
+          System.err.println(library.getPath());
+        }
+        System.err.println("which already define(s) the package " + pkg);
         System.err.println("If you have a line in your sketch that reads");
         System.err.println("import " + pkg + ".*;");
         System.err.println("Then you'll need to first remove one of those libraries.");
         System.err.println();
       }
     }
- else {
-      importToLibraryTable.put(pkg,this);
-    }
+    libraries.add(this);
   }
 }
