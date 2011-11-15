@@ -1,0 +1,20 @@
+{
+  GLUtessellator tobj;
+  tobj=GLU.gluNewTess();
+  TessCallback tessCallback;
+  tessCallback=new TessCallback();
+  GLU.gluTessCallback(tobj,GLU.GLU_TESS_BEGIN,tessCallback);
+  GLU.gluTessCallback(tobj,GLU.GLU_TESS_END,tessCallback);
+  GLU.gluTessCallback(tobj,GLU.GLU_TESS_VERTEX,tessCallback);
+  GLU.gluTessCallback(tobj,GLU.GLU_TESS_COMBINE,tessCallback);
+  GLU.gluTessCallback(tobj,GLU.GLU_TESS_ERROR,tessCallback);
+  float coords[]=new float[6];
+  GLU.gluTessBeginPolygon(tobj,null);
+  GLU.gluTessBeginContour(tobj);
+  for (int i=0; i < inVertexCount; i++) {
+    double[] vertex=new double[]{inVertices[3 * i + 0],inVertices[3 * i + 1],inVertices[3 * i + 2]};
+    GLU.gluTessVertex(tobj,vertex,0,vertex);
+  }
+  GLU.gluTessEndContour(tobj);
+  GLU.gluTessEndPolygon(tobj);
+}
