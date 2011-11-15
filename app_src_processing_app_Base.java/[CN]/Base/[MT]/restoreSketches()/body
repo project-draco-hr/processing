@@ -10,39 +10,5 @@
       }
     }
   }
-  if (DEBUG) {
-    System.out.println("default mode set to " + defaultMode.getClass().getName());
-  }
-  if (!Preferences.getBoolean("last.sketch.restore")) {
-    return false;
-  }
-  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
-  boolean windowPositionValid=true;
-  if (Preferences.get("last.screen.height") != null) {
-    int screenW=Preferences.getInteger("last.screen.width");
-    int screenH=Preferences.getInteger("last.screen.height");
-    if ((screen.width != screenW) || (screen.height != screenH)) {
-      windowPositionValid=false;
-    }
-  }
- else {
-    windowPositionValid=false;
-  }
-  int count=Preferences.getInteger("last.sketch.count");
-  int opened=0;
-  for (int i=0; i < count; i++) {
-    String path=Preferences.get("last.sketch" + i + ".path");
-    int[] location;
-    if (windowPositionValid) {
-      String locationStr=Preferences.get("last.sketch" + i + ".location");
-      location=PApplet.parseInt(PApplet.split(locationStr,','));
-    }
- else {
-      location=nextEditorLocation();
-    }
-    if (handleOpen(path,location) != null) {
-      opened++;
-    }
-  }
-  return (opened > 0);
+  log("default mode set to " + defaultMode.getClass().getName());
 }
