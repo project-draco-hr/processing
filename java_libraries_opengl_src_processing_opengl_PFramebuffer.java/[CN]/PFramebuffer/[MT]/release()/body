@@ -1,7 +1,22 @@
 {
-  deleteFbo();
-  deleteDepthBuffer();
-  deleteStencilBuffer();
-  deleteCombinedDepthStencilBuffer();
-  deleteColorBufferMultisample();
+  if (glFboID != 0) {
+    ogl.finalizeFrameBufferObject(glFboID);
+    glFboID=0;
+  }
+  if (glDepthBufferID != 0) {
+    ogl.finalizeRenderBufferObject(glDepthBufferID);
+    glDepthBufferID=0;
+  }
+  if (glStencilBufferID != 0) {
+    ogl.finalizeRenderBufferObject(glStencilBufferID);
+    glStencilBufferID=0;
+  }
+  if (glColorBufferMultisampleID != 0) {
+    ogl.finalizeRenderBufferObject(glColorBufferMultisampleID);
+    glColorBufferMultisampleID=0;
+  }
+  if (glDepthStencilBufferID != 0) {
+    ogl.finalizeRenderBufferObject(glDepthStencilBufferID);
+    glDepthStencilBufferID=0;
+  }
 }

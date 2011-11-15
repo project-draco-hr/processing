@@ -1,0 +1,14 @@
+{
+  Set<Integer> finalized=new HashSet<Integer>();
+  for (  Integer idx : glVertexBuffers.keySet()) {
+    if (glVertexBuffers.get(idx)) {
+      finalized.add(idx);
+      int id=idx.intValue();
+      int[] temp={id};
+      gl.glDeleteBuffers(1,temp,0);
+    }
+  }
+  for (  Integer idx : finalized) {
+    glVertexBuffers.remove(idx);
+  }
+}

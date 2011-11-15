@@ -1,0 +1,14 @@
+{
+  Set<Integer> finalized=new HashSet<Integer>();
+  for (  Integer idx : glRenderBuffers.keySet()) {
+    if (glRenderBuffers.get(idx)) {
+      finalized.add(idx);
+      int id=idx.intValue();
+      int[] temp={id};
+      gl.glDeleteRenderbuffers(1,temp,0);
+    }
+  }
+  for (  Integer idx : finalized) {
+    glRenderBuffers.remove(idx);
+  }
+}
