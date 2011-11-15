@@ -1,20 +1,19 @@
 {
-  GLUtessellator tobj;
-  tobj=GLU.gluNewTess();
-  TessCallback tessCallback;
-  tessCallback=new TessCallback();
-  GLU.gluTessCallback(tobj,GLU.GLU_TESS_BEGIN,tessCallback);
-  GLU.gluTessCallback(tobj,GLU.GLU_TESS_END,tessCallback);
-  GLU.gluTessCallback(tobj,GLU.GLU_TESS_VERTEX,tessCallback);
-  GLU.gluTessCallback(tobj,GLU.GLU_TESS_COMBINE,tessCallback);
-  GLU.gluTessCallback(tobj,GLU.GLU_TESS_ERROR,tessCallback);
-  float coords[]=new float[6];
+  vertexCount=0;
   GLU.gluTessBeginPolygon(tobj,null);
+  if (isSolid) {
+    GLU.gluTessProperty(tobj,GLU.GLU_TESS_WINDING_RULE,GLU.GLU_TESS_WINDING_ODD);
+  }
+ else {
+    GLU.gluTessProperty(tobj,GLU.GLU_TESS_WINDING_RULE,GLU.GLU_TESS_WINDING_NONZERO);
+  }
   GLU.gluTessBeginContour(tobj);
   for (int i=0; i < inVertexCount; i++) {
-    double[] vertex=new double[]{inVertices[3 * i + 0],inVertices[3 * i + 1],inVertices[3 * i + 2]};
+    double[] vertex=new double[]{inVertices[3 * i + 0],inVertices[3 * i + 1],inVertices[3 * i + 2],inColors[4 * i + 0],inColors[4 * i + 1],inColors[4 * i + 2],inColors[4 * i + 3],inNormals[3 * i + 0],inNormals[3 * i + 1],inNormals[3 * i + 2],inTexCoords[2 * i + 0],inTexCoords[2 * i + 1]};
     GLU.gluTessVertex(tobj,vertex,0,vertex);
   }
   GLU.gluTessEndContour(tobj);
   GLU.gluTessEndPolygon(tobj);
+  firstVertex=0;
+  lastVertex=vertexCount - 1;
 }

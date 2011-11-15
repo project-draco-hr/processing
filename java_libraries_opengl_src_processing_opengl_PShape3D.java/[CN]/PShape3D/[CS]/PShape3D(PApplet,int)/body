@@ -24,6 +24,18 @@
     pointShader.loadFragmentShaderSource(pointShaderFrag);
     pointShader.setup();
   }
+  if (tobj == null) {
+    tobj=GLU.gluNewTess();
+    TessCallback tessCallback;
+    tessCallback=new TessCallback();
+    GLU.gluTessCallback(tobj,GLU.GLU_TESS_BEGIN,tessCallback);
+    GLU.gluTessCallback(tobj,GLU.GLU_TESS_END,tessCallback);
+    GLU.gluTessCallback(tobj,GLU.GLU_TESS_VERTEX,tessCallback);
+    GLU.gluTessCallback(tobj,GLU.GLU_TESS_COMBINE,tessCallback);
+    GLU.gluTessCallback(tobj,GLU.GLU_TESS_ERROR,tessCallback);
+  }
+  isSolid=true;
+  isClosed=true;
   root=this;
   parent=null;
   updateElement=-1;
