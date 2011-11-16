@@ -1,0 +1,45 @@
+{
+  int quadCount=inVertexCount;
+  int nvertTot=5 * quadCount;
+  int nindTot=12 * quadCount;
+  pointVertexCount=nvertTot;
+  pointVertices=new float[3 * nvertTot];
+  pointColors=new float[4 * nvertTot];
+  pointNormals=new float[3 * nvertTot];
+  pointAttributes=new float[2 * nvertTot];
+  pointIndexCount=nindTot;
+  pointIndices=new int[nindTot];
+  int vertIdx=0;
+  int indIdx=0;
+  int attribIdx=0;
+  int vert0=0;
+  for (int i=0; i < inVertexCount; i++) {
+    int nvert=5;
+    for (int k=0; k < nvert; k++) {
+      PApplet.arrayCopy(inVertices,3 * i,pointVertices,3 * vertIdx,3);
+      PApplet.arrayCopy(inStroke,5 * i,pointColors,4 * vertIdx,4);
+      PApplet.arrayCopy(inNormals,3 * i,pointNormals,3 * vertIdx,3);
+      vertIdx++;
+    }
+    pointAttributes[2 * attribIdx + 0]=0;
+    pointAttributes[2 * attribIdx + 1]=0;
+    attribIdx++;
+    float w=inStroke[5 * i + 4];
+    for (int k=0; k < 4; k++) {
+      pointAttributes[2 * attribIdx + 0]=QUAD_SIGNS[k][0] * w / 2;
+      pointAttributes[2 * attribIdx + 1]=QUAD_SIGNS[k][1] * w / 2;
+      attribIdx++;
+    }
+    for (int k=1; k < nvert - 1; k++) {
+      pointIndices[indIdx++]=vert0 + 0;
+      pointIndices[indIdx++]=vert0 + k;
+      pointIndices[indIdx++]=vert0 + k + 1;
+    }
+    pointIndices[indIdx++]=vert0 + 0;
+    pointIndices[indIdx++]=vert0 + 1;
+    pointIndices[indIdx++]=vert0 + nvert - 1;
+    vert0=vertIdx;
+  }
+  firstPointIndex=0;
+  lastPointIndex=pointIndexCount - 1;
+}
