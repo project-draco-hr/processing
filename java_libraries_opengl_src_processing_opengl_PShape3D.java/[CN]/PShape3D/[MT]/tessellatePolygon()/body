@@ -9,13 +9,18 @@
   indices=new int[DEFAULT_INDICES];
   GLU.gluTessBeginPolygon(tobj,null);
   if (isSolid) {
-    GLU.gluTessProperty(tobj,GLU.GLU_TESS_WINDING_RULE,GLU.GLU_TESS_WINDING_ODD);
+    GLU.gluTessProperty(tobj,GLU.GLU_TESS_WINDING_RULE,GLU.GLU_TESS_WINDING_NONZERO);
   }
  else {
-    GLU.gluTessProperty(tobj,GLU.GLU_TESS_WINDING_RULE,GLU.GLU_TESS_WINDING_NONZERO);
+    GLU.gluTessProperty(tobj,GLU.GLU_TESS_WINDING_RULE,GLU.GLU_TESS_WINDING_ODD);
   }
   GLU.gluTessBeginContour(tobj);
   for (int i=0; i < inVertexCount; i++) {
+    boolean breakPt=inVertexTypes[i] == BREAK_POINT;
+    if (breakPt) {
+      GLU.gluTessEndContour(tobj);
+      GLU.gluTessBeginContour(tobj);
+    }
     double[] vertex=new double[]{inVertices[3 * i + 0],inVertices[3 * i + 1],inVertices[3 * i + 2],inColors[4 * i + 0],inColors[4 * i + 1],inColors[4 * i + 2],inColors[4 * i + 3],inNormals[3 * i + 0],inNormals[3 * i + 1],inNormals[3 * i + 2],inTexCoords[2 * i + 0],inTexCoords[2 * i + 1]};
     GLU.gluTessVertex(tobj,vertex,0,vertex);
   }
@@ -25,4 +30,55 @@
   lastVertex=vertexCount - 1;
   firstIndex=0;
   lastIndex=indexCount - 1;
+  int lineCount=0;
+  int lnCount=inVertexCount;
+  if (!isClosed) {
+    lnCount--;
+  }
+  int contour0=0;
+  for (int ln=0; ln < lnCount; ln++) {
+    int i0=ln;
+    int i1=ln + 1;
+    if (inVertexTypes[i0] == BREAK_POINT) {
+      contour0=i0;
+    }
+    if ((i1 == lnCount || inVertexTypes[i1] == BREAK_POINT) && isClosed) {
+      i0=contour0;
+      i1=ln;
+    }
+    if (inVertexTypes[i1] != BREAK_POINT && (0 < inStroke[5 * i0 + 4] || 0 < inStroke[5 * i1 + 4])) {
+      lineCount++;
+    }
+  }
+  if (0 < lineCount) {
+    isStroked=true;
+    int nvert=lineCount * 4;
+    strokeVertexCount=nvert;
+    strokeVertices=new float[3 * nvert];
+    strokeColors=new float[4 * nvert];
+    strokeNormals=new float[3 * nvert];
+    strokeAttributes=new float[4 * nvert];
+    int nind=lineCount * 2 * 3;
+    strokeIndexCount=nind;
+    strokeIndices=new int[nind];
+    int vcount=0;
+    int icount=0;
+    contour0=0;
+    for (int ln=0; ln < lnCount; ln++) {
+      int i0=ln;
+      int i1=ln + 1;
+      if (inVertexTypes[i0] == BREAK_POINT) {
+        contour0=i0;
+      }
+      if ((i1 == lnCount || inVertexTypes[i1] == BREAK_POINT) && isClosed) {
+        i0=contour0;
+        i1=ln;
+      }
+      if (inVertexTypes[i1] != BREAK_POINT && (0 < inStroke[5 * i0 + 4] || 0 < inStroke[5 * i1 + 4])) {
+        addStrokeLine(i0,i1,vcount,icount);
+        vcount+=4;
+        icount+=6;
+      }
+    }
+  }
 }
