@@ -1,0 +1,48 @@
+{
+  int nvertTot=0;
+  int nindTot=0;
+  for (int i=inGeo.firstVertex; i <= inGeo.lastVertex; i++) {
+    float w=inGeo.strokes[5 * i + 4];
+    int perim=PApplet.max(MIN_ACCURACY,(int)(TWO_PI * w / 20));
+    int nvert=perim + 1;
+    nvertTot+=nvert;
+    nindTot+=3 * (nvert - 1);
+  }
+  int vertIdx=3 * tessGeo.pointVertexCount;
+  int attribIdx=2 * tessGeo.pointVertexCount;
+  int indIdx=tessGeo.pointIndexCount;
+  int vert0=tessGeo.pointVertexCount;
+  tessGeo.addPointVertices(nvertTot);
+  tessGeo.addPointIndices(nindTot);
+  for (int i=inGeo.firstVertex; i <= inGeo.lastVertex; i++) {
+    float w=inGeo.strokes[5 * i + 4];
+    int perim=PApplet.max(MIN_ACCURACY,(int)(TWO_PI * w / 20));
+    int nvert=perim + 1;
+    for (int k=0; k < nvert; k++) {
+      PApplet.arrayCopy(inGeo.vertices,3 * i,tessGeo.pointVertices,3 * vertIdx,3);
+      PApplet.arrayCopy(inGeo.normals,3 * i,tessGeo.pointNormals,3 * vertIdx,3);
+      PApplet.arrayCopy(inGeo.strokes,5 * i,tessGeo.pointColors,4 * vertIdx,4);
+      vertIdx++;
+    }
+    tessGeo.pointAttributes[2 * attribIdx + 0]=0;
+    tessGeo.pointAttributes[2 * attribIdx + 1]=0;
+    attribIdx++;
+    float val=0;
+    float inc=(float)SINCOS_LENGTH / perim;
+    for (int k=0; k < perim; k++) {
+      tessGeo.pointAttributes[2 * attribIdx + 0]=cosLUT[(int)val] * w / 2;
+      tessGeo.pointAttributes[2 * attribIdx + 1]=sinLUT[(int)val] * w / 2;
+      val=(val + inc) % SINCOS_LENGTH;
+      attribIdx++;
+    }
+    for (int k=1; k < nvert - 1; k++) {
+      tessGeo.pointIndices[indIdx++]=vert0 + 0;
+      tessGeo.pointIndices[indIdx++]=vert0 + k;
+      tessGeo.pointIndices[indIdx++]=vert0 + k + 1;
+    }
+    tessGeo.pointIndices[indIdx++]=vert0 + 0;
+    tessGeo.pointIndices[indIdx++]=vert0 + 1;
+    tessGeo.pointIndices[indIdx++]=vert0 + nvert - 1;
+    vert0=vertIdx;
+  }
+}
