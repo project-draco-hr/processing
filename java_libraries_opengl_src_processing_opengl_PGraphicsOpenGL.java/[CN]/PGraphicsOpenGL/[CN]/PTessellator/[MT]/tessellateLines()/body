@@ -1,0 +1,17 @@
+{
+  int lineCount=(inGeo.lastVertex - inGeo.firstVertex + 1) / 2;
+  int nvert=lineCount * 4;
+  int nind=lineCount * 2 * 3;
+  int vcount=tessGeo.lineVertexCount;
+  int icount=tessGeo.lineIndexCount;
+  int vert0=inGeo.firstVertex;
+  tessGeo.addLineVertices(nvert);
+  tessGeo.addLineIndices(nind);
+  for (int ln=0; ln < lineCount; ln++) {
+    int i0=vert0 + 2 * ln + 0;
+    int i1=vert0 + 2 * ln + 1;
+    addStrokeLine(i0,i1,vcount,icount);
+    vcount+=4;
+    icount+=6;
+  }
+}
