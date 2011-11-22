@@ -1,111 +1,57 @@
 {
   if (family == GROUP) {
-    firstVertex=lastVertex=vertexCount=0;
-    firstIndex=lastIndex=indexCount=0;
-    firstStrokeVertex=lastStrokeVertex=strokeVertexCount=0;
-    firstStrokeIndex=lastStrokeIndex=strokeIndexCount=0;
-    firstPointVertex=lastPointVertex=pointVertexCount=0;
-    firstPointIndex=lastPointIndex=pointIndexCount=0;
+    tess.reset();
     boolean firstGeom=true;
     boolean firstStroke=true;
     boolean firstPoint=true;
     for (int i=0; i < childCount; i++) {
       PShape3D child=(PShape3D)children[i];
       child.aggregateImpl();
-      vertexCount+=child.vertexCount;
-      indexCount+=child.indexCount;
-      strokeVertexCount+=child.strokeVertexCount;
-      strokeIndexCount+=child.strokeIndexCount;
-      pointVertexCount+=child.pointVertexCount;
-      pointIndexCount+=child.pointIndexCount;
-      if (0 < child.vertexCount) {
+      tess.addCounts(child.tess);
+      if (0 < child.tess.fillVertexCount) {
         if (firstGeom) {
-          firstVertex=child.firstVertex;
-          firstIndex=child.firstIndex;
+          tess.setFirstFill(child.tess);
           firstGeom=false;
         }
-        lastVertex=child.lastVertex;
-        lastIndex=child.lastIndex;
+        tess.setLastFill(child.tess);
       }
-      if (0 < child.strokeVertexCount) {
+      if (0 < child.tess.lineVertexCount) {
         if (firstStroke) {
-          firstStrokeVertex=child.firstStrokeVertex;
-          firstStrokeIndex=child.firstStrokeIndex;
+          tess.setFirstLine(child.tess);
           firstStroke=false;
         }
-        lastStrokeVertex=child.lastStrokeVertex;
-        lastStrokeIndex=child.lastStrokeIndex;
+        tess.setLastLine(child.tess);
       }
-      if (0 < child.pointVertexCount) {
+      if (0 < child.tess.pointVertexCount) {
         if (firstPoint) {
-          firstPointVertex=child.firstPointVertex;
-          firstPointIndex=child.firstPointIndex;
+          tess.setFirstPoint(child.tess);
           firstPoint=false;
         }
-        lastPointVertex=child.lastPointVertex;
-        lastPointIndex=child.lastPointIndex;
+        tess.setLastPoint(child.tess);
       }
     }
-    isStroked=0 < strokeVertexCount && 0 < strokeIndexCount;
-    hasPoints=0 < pointVertexCount && 0 < pointIndexCount;
   }
  else {
-    if (0 < vertexCount) {
-      firstVertex=0;
-      if (0 < root.lastVertexOffset) {
-        firstVertex=root.lastVertexOffset + 1;
-      }
-      lastVertex=firstVertex + vertexCount - 1;
-      root.lastVertexOffset=lastVertex;
+    if (0 < tess.fillVertexCount) {
+      root.lastFillVertexOffset=tess.setFillVertex(root.lastFillVertexOffset);
     }
-    if (0 < indexCount) {
-      firstIndex=0;
-      if (0 < root.lastIndexOffset) {
-        firstIndex=root.lastIndexOffset + 1;
-      }
-      for (int i=0; i < indexCount; i++) {
-        indices[i]+=firstVertex;
-      }
-      lastIndex=firstIndex + indexCount - 1;
-      root.lastIndexOffset=lastIndex;
+    if (0 < tess.fillIndexCount) {
+      root.lastFillIndexOffset=tess.setFillIndex(root.lastFillIndexOffset);
     }
-    if (0 < strokeVertexCount) {
-      firstStrokeVertex=0;
-      if (0 < root.lastStrokeVertexOffset) {
-        firstStrokeVertex=root.lastStrokeVertexOffset + 1;
-      }
-      lastStrokeVertex=firstStrokeVertex + strokeVertexCount - 1;
-      root.lastStrokeVertexOffset=lastStrokeVertex;
+    if (0 < tess.lineVertexCount) {
+      root.lastLineVertexOffset=tess.setLineVertex(root.lastLineVertexOffset);
     }
-    if (0 < strokeIndexCount) {
-      firstStrokeIndex=0;
-      if (0 < root.lastStrokeIndexOffset) {
-        firstStrokeIndex=root.lastStrokeIndexOffset + 1;
-      }
-      for (int i=0; i < strokeIndexCount; i++) {
-        strokeIndices[i]+=firstStrokeVertex;
-      }
-      lastStrokeIndex=firstStrokeIndex + strokeIndexCount - 1;
-      root.lastStrokeIndexOffset=lastStrokeIndex;
+    if (0 < tess.lineIndexCount) {
+      root.lastLineIndexOffset=tess.setLineIndex(root.lastLineIndexOffset);
     }
-    if (0 < pointVertexCount) {
-      firstPointVertex=0;
-      if (0 < root.lastPointVertexOffset) {
-        firstPointVertex=root.lastPointVertexOffset + 1;
-      }
-      lastPointVertex=firstPointVertex + pointVertexCount - 1;
-      root.lastPointVertexOffset=lastPointVertex;
+    if (0 < tess.pointVertexCount) {
+      root.lastPointVertexOffset=tess.setPointVertex(root.lastPointVertexOffset);
     }
-    if (0 < pointIndexCount) {
-      firstPointIndex=0;
-      if (0 < root.lastPointIndexOffset) {
-        firstPointIndex=root.lastPointIndexOffset + 1;
-      }
-      for (int i=0; i < pointIndexCount; i++) {
-        pointIndices[i]+=firstPointVertex;
-      }
-      lastPointIndex=firstPointIndex + pointIndexCount - 1;
-      root.lastPointIndexOffset=lastPointIndex;
+    if (0 < tess.pointIndexCount) {
+      root.lastPointIndexOffset=tess.setPointIndex(root.lastPointIndexOffset);
     }
   }
+  hasFill=0 < tess.fillVertexCount && 0 < tess.fillIndexCount;
+  hasLines=0 < tess.lineVertexCount && 0 < tess.lineIndexCount;
+  hasPoints=0 < tess.pointVertexCount && 0 < tess.pointIndexCount;
 }

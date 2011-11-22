@@ -1,5 +1,5 @@
 {
-  pointShader.start();
+  ogl.pointShader.start();
   getGl().glEnableClientState(GL2.GL_NORMAL_ARRAY);
   getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glPointNormalBufferID);
   getGl().glNormalPointer(GL.GL_FLOAT,0,0);
@@ -9,16 +9,16 @@
   getGl().glEnableClientState(GL2.GL_VERTEX_ARRAY);
   getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glPointVertexBufferID);
   getGl().glVertexPointer(3,GL.GL_FLOAT,0,0);
-  int attribsID=pointShader.getAttribLocation("vertDisp");
+  int attribsID=ogl.pointShader.getAttribLocation("vertDisp");
   ogl.gl2x.glEnableVertexAttribArray(attribsID);
   getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glPointAttribBufferID);
   ogl.gl2x.glVertexAttribPointer(attribsID,2,GL.GL_FLOAT,false,0,0);
   getGl().glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,root.glPointIndexBufferID);
-  getGl().glDrawElements(GL.GL_TRIANGLES,lastPointIndex - firstPointIndex + 1,GL.GL_UNSIGNED_INT,firstPointIndex * PGraphicsOpenGL.SIZEOF_INT);
+  getGl().glDrawElements(GL.GL_TRIANGLES,tess.lastPointIndex - tess.firstPointIndex + 1,GL.GL_UNSIGNED_INT,tess.firstPointIndex * PGraphicsOpenGL.SIZEOF_INT);
   getGl().glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,0);
   ogl.gl2x.glDisableVertexAttribArray(attribsID);
   getGl().glDisableClientState(GL2.GL_VERTEX_ARRAY);
   getGl().glDisableClientState(GL2.GL_COLOR_ARRAY);
   getGl().glDisableClientState(GL2.GL_NORMAL_ARRAY);
-  pointShader.stop();
+  ogl.pointShader.stop();
 }

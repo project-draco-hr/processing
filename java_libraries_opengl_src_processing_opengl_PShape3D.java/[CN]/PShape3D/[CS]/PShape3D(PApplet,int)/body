@@ -1,43 +1,23 @@
 {
-  this.papplet=parent;
   ogl=(PGraphicsOpenGL)parent.g;
+  glFillVertexBufferID=0;
+  glFillColorBufferID=0;
+  glFillNormalBufferID=0;
+  glFillTexCoordBufferID=0;
+  glFillIndexBufferID=0;
+  glLineVertexBufferID=0;
+  glLineColorBufferID=0;
+  glLineNormalBufferID=0;
+  glLineAttribBufferID=0;
+  glLineIndexBufferID=0;
+  glPointVertexBufferID=0;
+  glPointColorBufferID=0;
+  glPointNormalBufferID=0;
+  glPointAttribBufferID=0;
+  glPointIndexBufferID=0;
+  this.tessellator=ogl.tessellator;
   this.family=family;
-  vertexCount=0;
-  firstVertex=0;
-  lastVertex=0;
-  indexCount=0;
-  firstIndex=0;
-  lastIndex=0;
-  Parameters params=new Parameters();
-  params.drawMode=TRIANGLES;
-  params.updateMode=DYNAMIC;
-  setParameters(params);
-  if (strokeShader == null) {
-    strokeShader=new PShader(parent);
-    strokeShader.loadVertexShaderSource(strokeShaderVert);
-    strokeShader.loadFragmentShaderSource(strokeShaderFrag);
-    strokeShader.setup();
-  }
-  if (pointShader == null) {
-    pointShader=new PShader(parent);
-    pointShader.loadVertexShaderSource(pointShaderVert);
-    pointShader.loadFragmentShaderSource(pointShaderFrag);
-    pointShader.setup();
-  }
-  if (family != GROUP) {
-    tobj=GLU.gluNewTess();
-    TessCallback tessCallback;
-    tessCallback=new TessCallback();
-    GLU.gluTessCallback(tobj,GLU.GLU_TESS_BEGIN,tessCallback);
-    GLU.gluTessCallback(tobj,GLU.GLU_TESS_END,tessCallback);
-    GLU.gluTessCallback(tobj,GLU.GLU_TESS_VERTEX,tessCallback);
-    GLU.gluTessCallback(tobj,GLU.GLU_TESS_COMBINE,tessCallback);
-    GLU.gluTessCallback(tobj,GLU.GLU_TESS_ERROR,tessCallback);
-  }
-  isSolid=false;
-  isClosed=true;
-  addBreak=false;
-  root=this;
-  parent=null;
-  updateElement=-1;
+  this.root=this;
+  this.parent=null;
+  this.modified=false;
 }

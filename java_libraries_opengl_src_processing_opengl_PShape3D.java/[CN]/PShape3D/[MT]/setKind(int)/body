@@ -1,20 +1,16 @@
 {
   this.kind=kind;
-  if (family == GEOMETRY || family == PRIMITIVE) {
-    inVertexTypes=new int[64];
-    inVertices=new float[3 * DEFAULT_VERTICES];
-    inTexCoords=new float[2 * DEFAULT_VERTICES];
-    inNormals=new float[3 * DEFAULT_VERTICES];
-    inColors=new float[4 * DEFAULT_VERTICES];
-    inStroke=new float[5 * DEFAULT_VERTICES];
-    textures=new PImage[1];
-    textures[0]=null;
+  if (family == GEOMETRY || family == PRIMITIVE || family == PATH) {
+    in=ogl.newInGeometry();
+    tess=ogl.newTessGeometry();
     if (family == PRIMITIVE) {
       if (kind == BOX) {
         params=new float[1];
+        params[0]=0;
       }
  else       if (kind == SPHERE) {
         params=new float[3];
+        params[0]=0;
         params[1]=20;
         params[2]=20;
       }

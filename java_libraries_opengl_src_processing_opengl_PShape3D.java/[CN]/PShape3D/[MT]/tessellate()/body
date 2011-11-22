@@ -7,30 +7,32 @@
   }
  else {
     if (modified) {
+      tessellator.setInGeometry(in);
+      tessellator.setTessGeometry(tess);
       if (family == GEOMETRY) {
         if (kind == POINTS) {
-          tessellatePoints();
+          tessellator.tessellatePoints(strokeCap);
         }
  else         if (kind == LINES) {
-          tessellateLines();
+          tessellator.tessellateLines();
         }
  else         if (kind == TRIANGLES) {
-          tessellateTriangles();
+          tessellator.tessellateTriangles();
         }
  else         if (kind == TRIANGLE_FAN) {
-          tessellateTriangleFan();
+          tessellator.tessellateTriangleFan();
         }
  else         if (kind == TRIANGLE_STRIP) {
-          tessellateTriangleStrip();
+          tessellator.tessellateTriangleStrip();
         }
  else         if (kind == QUADS) {
-          tessellateQuads();
+          tessellator.tessellateQuads();
         }
  else         if (kind == QUAD_STRIP) {
-          tessellateQuadStrip();
+          tessellator.tessellateQuadStrip();
         }
  else         if (kind == POLYGON) {
-          tessellatePolygon();
+          tessellator.tessellatePolygon(isSolid,isClosed);
         }
       }
  else       if (family == PRIMITIVE) {
@@ -49,14 +51,13 @@
  else         if (kind == ARC) {
         }
  else         if (kind == BOX) {
-          tessellateBox();
         }
  else         if (kind == SPHERE) {
-          tessellateSphere();
         }
       }
  else       if (family == PATH) {
       }
     }
   }
+  modified=false;
 }
