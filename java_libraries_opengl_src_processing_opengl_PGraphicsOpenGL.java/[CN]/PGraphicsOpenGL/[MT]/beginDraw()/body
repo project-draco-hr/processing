@@ -20,6 +20,18 @@
   if (!settingsInited) {
     defaultSettings();
   }
+  if (lineShader == null) {
+    lineShader=new PShader(parent);
+    lineShader.loadVertexShaderSource(lineShaderVert);
+    lineShader.loadFragmentShaderSource(lineShaderFrag);
+    lineShader.setup();
+  }
+  if (pointShader == null) {
+    pointShader=new PShader(parent);
+    pointShader.loadVertexShaderSource(pointShaderVert);
+    pointShader.loadFragmentShaderSource(pointShaderFrag);
+    pointShader.setup();
+  }
   report("top beginDraw()");
   if (!primarySurface) {
     ogl.saveGLState();

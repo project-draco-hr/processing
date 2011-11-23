@@ -8,12 +8,12 @@
     nvertTot+=nvert;
     nindTot+=3 * (nvert - 1);
   }
-  int vertIdx=3 * tessGeo.pointVertexCount;
-  int attribIdx=2 * tessGeo.pointVertexCount;
-  int indIdx=tessGeo.pointIndexCount;
-  int vert0=tessGeo.pointVertexCount;
   tessGeo.addPointVertices(nvertTot);
   tessGeo.addPointIndices(nindTot);
+  int vertIdx=3 * tessGeo.firstPointVertex;
+  int attribIdx=2 * tessGeo.firstPointVertex;
+  int indIdx=tessGeo.firstPointIndex;
+  int vert0=tessGeo.firstPointVertex;
   for (int i=inGeo.firstVertex; i <= inGeo.lastVertex; i++) {
     float w=inGeo.strokes[5 * i + 4];
     int perim=PApplet.max(MIN_ACCURACY,(int)(TWO_PI * w / 20));
