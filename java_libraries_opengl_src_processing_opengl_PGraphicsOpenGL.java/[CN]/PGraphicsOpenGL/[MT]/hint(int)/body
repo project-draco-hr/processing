@@ -1,6 +1,4 @@
 {
-  boolean opengl2X=!hints[DISABLE_OPENGL_2X_SMOOTH];
-  boolean opengl4X=hints[ENABLE_OPENGL_4X_SMOOTH];
   super.hint(which);
   if (which == DISABLE_DEPTH_TEST) {
     gl.glDisable(GL.GL_DEPTH_TEST);
@@ -15,38 +13,5 @@
   }
  else   if (which == ENABLE_DEPTH_MASK) {
     gl.glDepthMask(true);
-  }
- else   if (which == DISABLE_OPENGL_2X_SMOOTH) {
-    if (opengl2X) {
-      if (primarySurface) {
-        restartContext();
-        throw new PApplet.RendererChangeException();
-      }
- else {
-        initOffscreen();
-      }
-    }
-  }
- else   if (which == ENABLE_OPENGL_2X_SMOOTH) {
-    if (!opengl2X) {
-      if (primarySurface) {
-        restartContext();
-        throw new PApplet.RendererChangeException();
-      }
- else {
-        initOffscreen();
-      }
-    }
-  }
- else   if (which == ENABLE_OPENGL_4X_SMOOTH) {
-    if (!opengl4X) {
-      if (primarySurface) {
-        restartContext();
-        throw new PApplet.RendererChangeException();
-      }
- else {
-        initOffscreen();
-      }
-    }
   }
 }

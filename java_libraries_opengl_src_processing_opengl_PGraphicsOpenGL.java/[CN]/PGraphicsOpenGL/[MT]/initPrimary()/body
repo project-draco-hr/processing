@@ -18,13 +18,10 @@
     parent.die("Cannot get a valid OpenGL profile");
   }
   capabilities=new GLCapabilities(profile);
-  if (!hints[DISABLE_OPENGL_2X_SMOOTH]) {
+  if (1 < multisampleLevel) {
     capabilities.setSampleBuffers(true);
-    capabilities.setNumSamples(2);
-  }
- else   if (hints[ENABLE_OPENGL_4X_SMOOTH]) {
-    capabilities.setSampleBuffers(true);
-    capabilities.setNumSamples(4);
+    capabilities.setNumSamples(multisampleLevel);
+    PApplet.println("Requested multisample level: " + capabilities.getNumSamples());
   }
  else {
     capabilities.setSampleBuffers(false);

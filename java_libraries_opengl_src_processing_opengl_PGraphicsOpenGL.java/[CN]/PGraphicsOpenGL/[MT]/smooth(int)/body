@@ -1,0 +1,22 @@
+{
+  smooth=true;
+  if (level != multisampleLevel) {
+    multisampleLevel=level;
+    if (primarySurface) {
+      restartContext();
+    }
+ else {
+      initOffscreen();
+    }
+  }
+  if (level < 2) {
+    gl2f.glEnable(GL2.GL_MULTISAMPLE);
+    gl2f.glEnable(GL2.GL_POINT_SMOOTH);
+    gl2f.glEnable(GL2.GL_LINE_SMOOTH);
+    gl2f.glEnable(GL2.GL_POLYGON_SMOOTH);
+  }
+  int[] temp={0};
+  gl.glGetIntegerv(GL.GL_SAMPLES,temp,0);
+  multisampleLevel=temp[0];
+  PApplet.println("Effective multisampling level: " + multisampleLevel);
+}

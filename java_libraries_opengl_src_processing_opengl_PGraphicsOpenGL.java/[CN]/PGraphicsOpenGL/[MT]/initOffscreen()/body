@@ -11,16 +11,8 @@
   if (offscreenFramebufferMultisample != null) {
     offscreenFramebufferMultisample=null;
   }
-  boolean opengl2X=!hints[DISABLE_OPENGL_2X_SMOOTH];
-  boolean opengl4X=hints[ENABLE_OPENGL_4X_SMOOTH];
-  if (PGraphicsOpenGL.fboMultisampleSupported && gl2x != null && (opengl2X || opengl4X)) {
-    int nsamples=1;
-    if (opengl2X) {
-      nsamples=2;
-    }
- else     if (opengl4X) {
-      nsamples=4;
-    }
+  if (PGraphicsOpenGL.fboMultisampleSupported && gl2x != null && 1 < multisampleLevel) {
+    int nsamples=multisampleLevel;
     offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,nsamples,0,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
     offscreenFramebufferMultisample.clear();
     offscreenMultisample=true;
