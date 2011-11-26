@@ -1,0 +1,23 @@
+{
+  if (vertexBuffer.capacity() / 3 < tess.fillVertexCount) {
+    int newSize=tess.fillVertexCount;
+    ByteBuffer vbb=ByteBuffer.allocateDirect(newSize * 3 * SIZEOF_FLOAT);
+    vbb.order(ByteOrder.nativeOrder());
+    vertexBuffer=vbb.asFloatBuffer();
+    ByteBuffer cbb=ByteBuffer.allocateDirect(newSize * 4 * SIZEOF_FLOAT);
+    cbb.order(ByteOrder.nativeOrder());
+    colorBuffer=cbb.asFloatBuffer();
+    ByteBuffer nbb=ByteBuffer.allocateDirect(newSize * 3 * SIZEOF_FLOAT);
+    nbb.order(ByteOrder.nativeOrder());
+    normalBuffer=nbb.asFloatBuffer();
+    ByteBuffer tbb=ByteBuffer.allocateDirect(newSize * 2 * SIZEOF_FLOAT);
+    tbb.order(ByteOrder.nativeOrder());
+    texCoordBuffer=tbb.asFloatBuffer();
+  }
+  if (indexBuffer.capacity() < tess.fillIndexCount) {
+    int newSize=tess.fillIndexCount;
+    ByteBuffer ibb=ByteBuffer.allocateDirect(newSize * SIZEOF_INT);
+    ibb.order(ByteOrder.nativeOrder());
+    indexBuffer=ibb.asIntBuffer();
+  }
+}

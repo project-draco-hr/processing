@@ -107,7 +107,6 @@
       colorBuffer.position(0);
       normalBuffer.position(0);
       for (int t=0; t < tcount; t++) {
-        texCoordBuffer[t].position(0);
       }
       int n=0;
       for (int k=0; k < faceLength[j]; k++) {
@@ -279,20 +278,17 @@
         colorBuffer.put(colorArray);
         normalBuffer.put(normalArray);
         for (int t=0; t < tcount; t++) {
-          texCoordBuffer[t].put(texCoordArray[t]);
         }
         vertexBuffer.position(0);
         colorBuffer.position(0);
         normalBuffer.position(0);
         for (int t=0; t < tcount; t++) {
-          texCoordBuffer[t].position(0);
         }
         gl2f.glVertexPointer(3,GL.GL_FLOAT,0,vertexBuffer);
         gl2f.glColorPointer(4,GL.GL_FLOAT,0,colorBuffer);
         gl2f.glNormalPointer(GL.GL_FLOAT,0,normalBuffer);
         for (int t=0; t < tcount; t++) {
           gl2f.glClientActiveTexture(GL.GL_TEXTURE0 + t);
-          gl2f.glTexCoordPointer(2,GL.GL_FLOAT,0,texCoordBuffer[t]);
         }
         gl2f.glDrawArrays(GL.GL_TRIANGLES,0,3 * faceLength[j]);
       }
