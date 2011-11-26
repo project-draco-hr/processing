@@ -1,38 +1,29 @@
 {
-  shapeLast=vertexCount;
-  if (vertexCount == 0) {
-    shape=0;
-    return;
+  tessellator.setInGeometry(in);
+  tessellator.setTessGeometry(tess);
+  if (shape == POINTS) {
+    tessellator.tessellatePoints(strokeCap);
   }
-  if (stroke) {
-    endShapeStroke(mode);
+ else   if (shape == LINES) {
+    tessellator.tessellateLines();
   }
-  if (fill || 0 < shapeTextures) {
-    endShapeFill();
+ else   if (shape == TRIANGLES) {
+    tessellator.tessellateTriangles();
   }
-  if (!hints[ENABLE_DEPTH_SORT]) {
-    if (fill || 0 < shapeTextures) {
-      renderTriangles(0,faceCount);
-      if (raw != null) {
-      }
-      vertexCount=0;
-      triangleCount=0;
-      shapeTextures=0;
-    }
-    if (stroke) {
-      if (pointCount > 0) {
-        renderPoints(0,pointCount);
-        if (raw != null) {
-        }
-        pointCount=0;
-      }
-      renderLines(0,pathCount);
-      if (raw != null) {
-      }
-      lineCount=0;
-    }
-    pathCount=0;
-    faceCount=0;
+ else   if (shape == TRIANGLE_FAN) {
+    tessellator.tessellateTriangleFan();
   }
-  shape=0;
+ else   if (shape == TRIANGLE_STRIP) {
+    tessellator.tessellateTriangleStrip();
+  }
+ else   if (shape == QUADS) {
+    tessellator.tessellateQuads();
+  }
+ else   if (shape == QUAD_STRIP) {
+    tessellator.tessellateQuadStrip();
+  }
+ else   if (shape == POLYGON) {
+    tessellator.tessellatePolygon(false,mode == CLOSE);
+  }
+  flushTess();
 }

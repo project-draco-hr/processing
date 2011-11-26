@@ -1,10 +1,48 @@
 {
-  vertexTexture(u,v,0);
-  vertex(x,y,z);
-  int n=vertexCount - 1;
-  for (int i=0; i < numTextures; i++) {
-    vertexTex[n][i]=textureImages[i];
-    vertexU[n][i]=texturesU[0];
-    vertexV[n][i]=texturesV[0];
+  currentVertex[0]=x;
+  currentVertex[1]=y;
+  currentVertex[2]=z;
+  boolean textured=textureImage != null;
+  if (fill || textured) {
+    if (!textured) {
+      currentColor[0]=fillR;
+      currentColor[1]=fillG;
+      currentColor[2]=fillB;
+      currentColor[3]=fillA;
+    }
+ else {
+      if (tint) {
+        currentColor[0]=tintR;
+        currentColor[1]=tintG;
+        currentColor[2]=tintB;
+        currentColor[3]=tintA;
+      }
+ else {
+        currentColor[0]=1;
+        currentColor[1]=1;
+        currentColor[2]=1;
+        currentColor[3]=1;
+      }
+    }
   }
+  currentNormal[0]=normalX;
+  currentNormal[1]=normalY;
+  currentNormal[2]=normalZ;
+  currentTexcoord[0]=u;
+  currentTexcoord[1]=v;
+  if (stroke) {
+    currentStroke[0]=strokeR;
+    currentStroke[1]=strokeG;
+    currentStroke[2]=strokeB;
+    currentStroke[3]=strokeA;
+    currentStroke[4]=strokeWeight;
+  }
+ else {
+    currentStroke[0]=0;
+    currentStroke[1]=0;
+    currentStroke[2]=0;
+    currentStroke[3]=0;
+    currentStroke[4]=0;
+  }
+  in.addVertex(currentVertex,currentColor,currentNormal,currentTexcoord,currentStroke,VERTEX);
 }
