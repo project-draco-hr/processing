@@ -1,5 +1,5 @@
 {
-  checkRenderBuffers();
+  checkVertexBuffers(tess.fillVertexCount);
   vertexBuffer.rewind();
   vertexBuffer.put(tess.fillVertices,0,3 * tess.fillVertexCount);
   vertexBuffer.position(0);
@@ -30,12 +30,7 @@
   if (tex != null) {
     gl2f.glTexCoordPointer(2,GL.GL_FLOAT,0,texCoordBuffer);
   }
-  indexBuffer.rewind();
-  indexBuffer.put(tess.fillIndices);
-  indexBuffer.position(0);
-  PApplet.println("Drawing " + tess.fillIndexCount + " vertices: ");
-  PApplet.println(tess.fillIndices);
-  gl2f.glDrawElements(GL.GL_TRIANGLES,tess.fillIndexCount,GL.GL_UNSIGNED_BYTE,IntBuffer.wrap(tess.fillIndices));
+  gl2f.glDrawElements(GL.GL_TRIANGLES,tess.fillIndexCount,GL.GL_UNSIGNED_INT,IntBuffer.wrap(tess.fillIndices));
   if (tex != null) {
     gl2f.glActiveTexture(GL.GL_TEXTURE0);
     gl2f.glBindTexture(tex.glTarget,0);
