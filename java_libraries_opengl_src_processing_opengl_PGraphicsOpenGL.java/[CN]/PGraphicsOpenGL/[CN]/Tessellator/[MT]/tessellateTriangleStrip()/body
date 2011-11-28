@@ -4,15 +4,16 @@
   int triCount=nvertFill - 2;
   tessGeo.addFillIndices(3 * triCount);
   int idx=tessGeo.firstFillIndex;
+  int offset=tessGeo.firstFillVertex;
   for (int i=inGeo.firstVertex + 1; i < inGeo.lastVertex; i++) {
-    tessGeo.fillIndices[idx++]=i;
+    tessGeo.fillIndices[idx++]=offset + i;
     if (i % 2 == 0) {
-      tessGeo.fillIndices[idx++]=i - 1;
-      tessGeo.fillIndices[idx++]=i + 1;
+      tessGeo.fillIndices[idx++]=offset + i - 1;
+      tessGeo.fillIndices[idx++]=offset + i + 1;
     }
  else {
-      tessGeo.fillIndices[idx++]=i + 1;
-      tessGeo.fillIndices[idx++]=i - 1;
+      tessGeo.fillIndices[idx++]=offset + i + 1;
+      tessGeo.fillIndices[idx++]=offset + i - 1;
     }
   }
   int strokedCount=0;

@@ -4,12 +4,12 @@
   int quadCount=nvertFill / 4;
   tessGeo.addFillIndices(6 * quadCount);
   int idx=tessGeo.firstFillIndex;
-  int vert0=inGeo.firstVertex;
+  int offset=tessGeo.firstFillVertex;
   for (int qd=0; qd < quadCount; qd++) {
-    int i0=vert0 + 4 * qd + 0;
-    int i1=vert0 + 4 * qd + 1;
-    int i2=vert0 + 4 * qd + 2;
-    int i3=vert0 + 4 * qd + 3;
+    int i0=offset + 4 * qd + 0;
+    int i1=offset + 4 * qd + 1;
+    int i2=offset + 4 * qd + 2;
+    int i3=offset + 4 * qd + 3;
     tessGeo.fillIndices[idx++]=i0;
     tessGeo.fillIndices[idx++]=i1;
     tessGeo.fillIndices[idx++]=i3;
@@ -19,10 +19,10 @@
   }
   int strokedCount=0;
   for (int qd=0; qd < quadCount; qd++) {
-    int i0=vert0 + 4 * qd + 0;
-    int i1=vert0 + 4 * qd + 1;
-    int i2=vert0 + 4 * qd + 2;
-    int i3=vert0 + 4 * qd + 3;
+    int i0=4 * qd + 0;
+    int i1=4 * qd + 1;
+    int i2=4 * qd + 2;
+    int i3=4 * qd + 3;
     if (0 < inGeo.strokes[5 * i0 + 4] || 0 < inGeo.strokes[5 * i1 + 4] || 0 < inGeo.strokes[5 * i2 + 4] || 0 < inGeo.strokes[5 * i3 + 4]) {
       strokedCount++;
     }
@@ -35,10 +35,10 @@
     int vcount=tessGeo.firstLineVertex;
     int icount=tessGeo.firstLineIndex;
     for (int qd=0; qd < quadCount; qd++) {
-      int i0=vert0 + 4 * qd + 0;
-      int i1=vert0 + 4 * qd + 1;
-      int i2=vert0 + 4 * qd + 2;
-      int i3=vert0 + 4 * qd + 3;
+      int i0=4 * qd + 0;
+      int i1=4 * qd + 1;
+      int i2=4 * qd + 2;
+      int i3=4 * qd + 3;
       if (0 < inGeo.strokes[5 * i0 + 4] || 0 < inGeo.strokes[5 * i1 + 4] || 0 < inGeo.strokes[5 * i2 + 4] || 0 < inGeo.strokes[5 * i3 + 4]) {
         addStrokeLine(i0,i1,vcount,icount);
         vcount+=4;

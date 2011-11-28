@@ -7,7 +7,7 @@
   int vertIdx=3 * tessGeo.firstPointVertex;
   int attribIdx=2 * tessGeo.firstPointVertex;
   int indIdx=tessGeo.firstPointIndex;
-  int vert0=tessGeo.firstPointVertex;
+  int firstVert=tessGeo.firstPointVertex;
   for (int i=inGeo.firstVertex; i <= inGeo.lastVertex; i++) {
     int nvert=5;
     for (int k=0; k < nvert; k++) {
@@ -26,13 +26,13 @@
       attribIdx++;
     }
     for (int k=1; k < nvert - 1; k++) {
-      tessGeo.pointIndices[indIdx++]=vert0 + 0;
-      tessGeo.pointIndices[indIdx++]=vert0 + k;
-      tessGeo.pointIndices[indIdx++]=vert0 + k + 1;
+      tessGeo.pointIndices[indIdx++]=firstVert + 0;
+      tessGeo.pointIndices[indIdx++]=firstVert + k;
+      tessGeo.pointIndices[indIdx++]=firstVert + k + 1;
     }
-    tessGeo.pointIndices[indIdx++]=vert0 + 0;
-    tessGeo.pointIndices[indIdx++]=vert0 + 1;
-    tessGeo.pointIndices[indIdx++]=vert0 + nvert - 1;
-    vert0=vertIdx;
+    tessGeo.pointIndices[indIdx++]=firstVert + 0;
+    tessGeo.pointIndices[indIdx++]=firstVert + 1;
+    tessGeo.pointIndices[indIdx++]=firstVert + nvert - 1;
+    firstVert=vertIdx;
   }
 }
