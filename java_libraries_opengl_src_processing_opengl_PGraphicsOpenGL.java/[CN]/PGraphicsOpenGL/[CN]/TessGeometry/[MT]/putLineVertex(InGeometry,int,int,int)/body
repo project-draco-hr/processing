@@ -1,0 +1,29 @@
+{
+  if (flushMode == FLUSH_WHEN_FULL) {
+    float[] mm=transformStack.current;
+    float x0=in.vertices[3 * inIdx0 + 0];
+    float y0=in.vertices[3 * inIdx0 + 1];
+    float z0=in.vertices[3 * inIdx0 + 2];
+    float nx=in.normals[3 * inIdx0 + 0];
+    float ny=in.normals[3 * inIdx0 + 1];
+    float nz=in.normals[3 * inIdx0 + 2];
+    lineVertices[3 * tessIdx + 0]=x0 * mm[0] + y0 * mm[4] + z0 * mm[8] + mm[12];
+    lineVertices[3 * tessIdx + 1]=x0 * mm[1] + y0 * mm[5] + z0 * mm[9] + mm[13];
+    lineVertices[3 * tessIdx + 2]=x0 * mm[2] + y0 * mm[6] + z0 * mm[10] + mm[14];
+    lineNormals[3 * tessIdx + 0]=nx * mm[0] + ny * mm[4] + nz * mm[8] + mm[12];
+    lineNormals[3 * tessIdx + 1]=nx * mm[1] + ny * mm[5] + nz * mm[9] + mm[13];
+    lineNormals[3 * tessIdx + 2]=nx * mm[2] + ny * mm[6] + nz * mm[10] + mm[14];
+    float x1=in.vertices[3 * inIdx1 + 0];
+    float y1=in.vertices[3 * inIdx1 + 1];
+    float z1=in.vertices[3 * inIdx1 + 2];
+    lineAttributes[4 * tessIdx + 0]=x1 * mm[0] + y1 * mm[4] + z1 * mm[8] + mm[12];
+    lineAttributes[4 * tessIdx + 1]=x1 * mm[1] + y1 * mm[5] + z1 * mm[9] + mm[13];
+    lineAttributes[4 * tessIdx + 2]=x1 * mm[2] + y1 * mm[6] + z1 * mm[10] + mm[14];
+  }
+ else {
+    System.arraycopy(in.vertices,3 * inIdx0,lineVertices,3 * tessIdx,3);
+    System.arraycopy(in.normals,3 * inIdx0,lineNormals,3 * tessIdx,3);
+    System.arraycopy(in.vertices,3 * inIdx1,lineAttributes,4 * tessIdx,3);
+  }
+  System.arraycopy(in.strokes,5 * inIdx0,lineColors,4 * tessIdx,4);
+}

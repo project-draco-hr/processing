@@ -1,14 +1,13 @@
 {
   report("top endDraw()");
-  flushTess();
+  if (flushMode == FLUSH_WHEN_FULL || flushMode == FLUSH_AFTER_TRANSFORMATION) {
+    flush();
+  }
   if (!drawing) {
     System.err.println("P3D: Cannot call endDraw() before beginDraw().");
     return;
   }
   gl.glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
-  if (hints[ENABLE_DEPTH_SORT]) {
-    flush();
-  }
   if (primarySurface) {
     gl.glFlush();
     if (drawable != null) {

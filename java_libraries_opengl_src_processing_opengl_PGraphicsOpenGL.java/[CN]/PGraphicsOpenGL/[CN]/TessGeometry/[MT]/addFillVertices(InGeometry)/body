@@ -1,0 +1,31 @@
+{
+  int i0=in.firstVertex;
+  int i1=in.lastVertex;
+  int nvert=i1 - i0 + 1;
+  addFillVertices(nvert);
+  if (flushMode == FLUSH_WHEN_FULL) {
+    float[] mm=transformStack.current;
+    for (int i=0; i < nvert; i++) {
+      int inIdx=i0 + i;
+      int tessIdx=firstFillVertex + i;
+      float x=in.vertices[3 * inIdx + 0];
+      float y=in.vertices[3 * inIdx + 1];
+      float z=in.vertices[3 * inIdx + 2];
+      float nx=in.normals[3 * inIdx + 0];
+      float ny=in.normals[3 * inIdx + 1];
+      float nz=in.normals[3 * inIdx + 2];
+      fillVertices[3 * tessIdx + 0]=x * mm[0] + y * mm[4] + z * mm[8] + mm[12];
+      fillVertices[3 * tessIdx + 1]=x * mm[1] + y * mm[5] + z * mm[9] + mm[13];
+      fillVertices[3 * tessIdx + 2]=x * mm[2] + y * mm[6] + z * mm[10] + mm[14];
+      fillNormals[3 * tessIdx + 0]=nx * mm[0] + ny * mm[4] + nz * mm[8] + mm[12];
+      fillNormals[3 * tessIdx + 1]=nx * mm[1] + ny * mm[5] + nz * mm[9] + mm[13];
+      fillNormals[3 * tessIdx + 2]=nx * mm[2] + ny * mm[6] + nz * mm[10] + mm[14];
+    }
+  }
+ else {
+    PApplet.arrayCopy(in.vertices,3 * i0,fillVertices,3 * firstFillVertex,3 * nvert);
+    PApplet.arrayCopy(in.normals,3 * i0,fillNormals,3 * firstFillVertex,3 * nvert);
+  }
+  PApplet.arrayCopy(in.colors,4 * i0,fillColors,4 * firstFillVertex,4 * nvert);
+  PApplet.arrayCopy(in.texcoords,2 * i0,fillTexcoords,2 * firstFillVertex,2 * nvert);
+}

@@ -1,0 +1,22 @@
+{
+  if (flushMode == FLUSH_WHEN_FULL) {
+    float[] mm=transformStack.current;
+    float x=in.vertices[3 * inIdx + 0];
+    float y=in.vertices[3 * inIdx + 1];
+    float z=in.vertices[3 * inIdx + 2];
+    float nx=in.normals[3 * inIdx + 0];
+    float ny=in.normals[3 * inIdx + 1];
+    float nz=in.normals[3 * inIdx + 2];
+    pointVertices[3 * tessIdx + 0]=x * mm[0] + y * mm[4] + z * mm[8] + mm[12];
+    pointVertices[3 * tessIdx + 1]=x * mm[1] + y * mm[5] + z * mm[9] + mm[13];
+    pointVertices[3 * tessIdx + 2]=x * mm[2] + y * mm[6] + z * mm[10] + mm[14];
+    pointNormals[3 * tessIdx + 0]=nx * mm[0] + ny * mm[4] + nz * mm[8] + mm[12];
+    pointNormals[3 * tessIdx + 1]=nx * mm[1] + ny * mm[5] + nz * mm[9] + mm[13];
+    pointNormals[3 * tessIdx + 2]=nx * mm[2] + ny * mm[6] + nz * mm[10] + mm[14];
+  }
+ else {
+    System.arraycopy(in.vertices,3 * inIdx,pointVertices,3 * tessIdx,3);
+    System.arraycopy(in.normals,3 * inIdx,pointNormals,3 * tessIdx,3);
+  }
+  System.arraycopy(in.strokes,5 * inIdx,pointColors,4 * tessIdx,4);
+}

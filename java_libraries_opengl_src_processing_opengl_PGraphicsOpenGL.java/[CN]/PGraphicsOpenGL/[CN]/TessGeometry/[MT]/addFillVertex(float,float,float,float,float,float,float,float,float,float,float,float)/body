@@ -1,15 +1,26 @@
 {
   fillVertexCheck();
-  fillVertices[3 * fillVertexCount + 0]=x;
-  fillVertices[3 * fillVertexCount + 1]=y;
-  fillVertices[3 * fillVertexCount + 2]=z;
+  if (flushMode == FLUSH_WHEN_FULL) {
+    float[] mm=transformStack.current;
+    fillVertices[3 * fillVertexCount + 0]=x * mm[0] + y * mm[4] + z * mm[8] + mm[12];
+    fillVertices[3 * fillVertexCount + 1]=x * mm[1] + y * mm[5] + z * mm[9] + mm[13];
+    fillVertices[3 * fillVertexCount + 2]=x * mm[2] + y * mm[6] + z * mm[10] + mm[14];
+    fillNormals[3 * fillVertexCount + 0]=nx * mm[0] + ny * mm[4] + nz * mm[8] + mm[12];
+    fillNormals[3 * fillVertexCount + 1]=nx * mm[1] + ny * mm[5] + nz * mm[9] + mm[13];
+    fillNormals[3 * fillVertexCount + 2]=nx * mm[2] + ny * mm[6] + nz * mm[10] + mm[14];
+  }
+ else {
+    fillVertices[3 * fillVertexCount + 0]=x;
+    fillVertices[3 * fillVertexCount + 1]=y;
+    fillVertices[3 * fillVertexCount + 2]=z;
+    fillNormals[3 * fillVertexCount + 0]=nx;
+    fillNormals[3 * fillVertexCount + 1]=ny;
+    fillNormals[3 * fillVertexCount + 2]=nz;
+  }
   fillColors[4 * fillVertexCount + 0]=r;
   fillColors[4 * fillVertexCount + 1]=g;
   fillColors[4 * fillVertexCount + 2]=b;
   fillColors[4 * fillVertexCount + 3]=a;
-  fillNormals[3 * fillVertexCount + 0]=nx;
-  fillNormals[3 * fillVertexCount + 1]=ny;
-  fillNormals[3 * fillVertexCount + 2]=nz;
   fillTexcoords[2 * fillVertexCount + 0]=u;
   fillTexcoords[2 * fillVertexCount + 1]=v;
 }

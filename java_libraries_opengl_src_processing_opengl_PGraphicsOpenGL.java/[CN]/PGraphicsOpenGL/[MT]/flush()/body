@@ -3,8 +3,10 @@
   boolean hasLines=0 < tess.lineVertexCount && 0 < tess.lineIndexCount;
   boolean hasPoints=0 < tess.pointVertexCount && 0 < tess.pointIndexCount;
   if (hasFill || hasLines || hasPoints) {
-    gl2f.glPushMatrix();
-    gl2f.glLoadMatrixf(pcamera,0);
+    if (flushMode == FLUSH_WHEN_FULL) {
+      gl2f.glPushMatrix();
+      gl2f.glLoadMatrixf(pcamera,0);
+    }
     if (hasFill) {
       renderFill(textureImage);
     }
@@ -14,7 +16,9 @@
     if (hasPoints) {
       renderPoints();
     }
-    gl2f.glPopMatrix();
+    if (flushMode == FLUSH_WHEN_FULL) {
+      gl2f.glPopMatrix();
+    }
   }
   tess.reset();
 }

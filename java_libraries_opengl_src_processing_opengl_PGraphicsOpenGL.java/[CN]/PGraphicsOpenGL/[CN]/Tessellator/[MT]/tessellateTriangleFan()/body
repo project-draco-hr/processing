@@ -1,5 +1,5 @@
 {
-  copyInGeoToTessGeo();
+  tessGeo.addFillVertices(inGeo);
   int nvertFill=inGeo.lastVertex - inGeo.firstVertex + 1;
   int triCount=nvertFill - 2;
   tessGeo.addFillIndices(3 * triCount);
@@ -31,13 +31,13 @@
       int i1=i;
       int i2=i + 1;
       if (0 < inGeo.strokes[5 * i0 + 4] || 0 < inGeo.strokes[5 * i1 + 4] || 0 < inGeo.strokes[5 * i2 + 4]) {
-        addStrokeLine(i0,i1,vcount,icount);
+        addLine(i0,i1,vcount,icount);
         vcount+=4;
         icount+=6;
-        addStrokeLine(i1,i2,vcount,icount);
+        addLine(i1,i2,vcount,icount);
         vcount+=4;
         icount+=6;
-        addStrokeLine(i2,i0,vcount,icount);
+        addLine(i2,i0,vcount,icount);
         vcount+=4;
         icount+=6;
       }
