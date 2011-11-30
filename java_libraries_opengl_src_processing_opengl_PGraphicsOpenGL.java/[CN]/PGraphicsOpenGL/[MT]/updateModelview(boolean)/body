@@ -2,14 +2,13 @@
   if (flushMode == FLUSH_AFTER_TRANSFORMATION) {
     flush();
   }
-  copyPMatrixToGLArray(modelview,glmodelview);
   if (calcInv) {
-    calculateModelviewInverse();
+    modelviewInv.set(modelview);
+    modelviewInv.invert();
   }
- else {
-    copyPMatrixToGLArray(modelviewInv,glmodelviewInv);
-  }
+  copyPMatrixToGLArray(modelview,glmodelview);
+  copyPMatrixToGLArray(modelviewInv,glmodelviewInv);
   gl2f.glLoadMatrixf(glmodelview,0);
-  modelviewStack.set(glmodelview);
+  modelviewStack.set(modelview);
   modelviewUpdated=true;
 }
