@@ -4,8 +4,14 @@
     flush();
     textureImage=null;
   }
-  tessellator.setInGeometry(in);
-  tessellator.setTessGeometry(tess);
+  tessellator2D.setInGeometry(in);
+  tessellator2D.setTessGeometry(tess);
+  tessellator2D.setFill(fill);
+  tessellator2D.setStroke(stroke);
+  tessellator2D.setStrokeWeight(10);
+  tessellator2D.setStrokeCap(ROUND);
+  tessellator2D.setStrokeJoin(ROUND);
+  tessellator2D.setStrokeColor(0,0,1,1);
   if (shape == POINTS) {
     tessellator.tessellatePoints(strokeCap);
   }
@@ -28,9 +34,9 @@
     tessellator.tessellateQuadStrip();
   }
  else   if (shape == POLYGON) {
-    tessellator.tessellatePolygon(false,mode == CLOSE);
+    tessellator2D.tessellatePolygon(false,mode == CLOSE);
   }
-  if (flushMode == FLUSH_END_SHAPE || (flushMode == FLUSH_WHEN_FULL && tess.isFull())) {
+  if (flushMode == FLUSH_END_SHAPE || (flushMode == FLUSH_WHEN_FULL && tess.isFull()) || (flushMode == FLUSH_WHEN_FULL && twoDimensionalDrawing && textureImage != null && stroke)) {
     flush();
   }
 }
