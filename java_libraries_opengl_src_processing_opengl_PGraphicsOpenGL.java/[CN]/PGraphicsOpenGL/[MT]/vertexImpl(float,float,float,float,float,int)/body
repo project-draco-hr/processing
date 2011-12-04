@@ -41,13 +41,6 @@
     u/=textureImage.width;
     v/=textureImage.height;
   }
-  float dot=(x - cameraCenterX) * cameraAxisX + (y - cameraCenterY) * cameraAxisY + (z - cameraCenterZ) * cameraAxisZ;
-  if (firstVert) {
-    twoDimensionalDrawing=true;
-  }
- else {
-    twoDimensionalDrawing&=PApplet.abs(camVertProj0 - dot) < FLOAT_EPS;
-  }
-  camVertProj0=dot;
+  drawing2D&=PApplet.abs(z) < FLOAT_EPS;
   in.addVertex(x,y,z,fR,fG,fB,fA,normalX,normalY,normalZ,u,v,sR,sG,sB,sA,sW,code);
 }

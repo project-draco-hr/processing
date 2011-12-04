@@ -4,16 +4,22 @@
     flush();
     textureImage=null;
   }
-  tessellator2D.setInGeometry(in);
-  tessellator2D.setTessGeometry(tess);
-  tessellator2D.setFill(fill);
-  tessellator2D.setStroke(stroke);
-  tessellator2D.setStrokeWeight(10);
-  tessellator2D.setStrokeCap(ROUND);
-  tessellator2D.setStrokeJoin(ROUND);
-  tessellator2D.setStrokeColor(0,0,1,1);
+  tessellator.setInGeometry(in);
+  tessellator.setTessGeometry(tess);
+  tessellator.setFill(fill);
+  tessellator.setStroke(stroke);
+  tessellator.setStrokeWeight(strokeWeight);
+  tessellator.setStrokeCap(strokeCap);
+  tessellator.setStrokeJoin(strokeJoin);
+  tessellator.setStrokeColor(strokeR,strokeG,strokeB,strokeA);
+  if (drawing2D) {
+    tessellator.set2D();
+  }
+ else {
+    tessellator.set3D();
+  }
   if (shape == POINTS) {
-    tessellator.tessellatePoints(strokeCap);
+    tessellator.tessellatePoints();
   }
  else   if (shape == LINES) {
     tessellator.tessellateLines();
@@ -34,9 +40,9 @@
     tessellator.tessellateQuadStrip();
   }
  else   if (shape == POLYGON) {
-    tessellator2D.tessellatePolygon(false,mode == CLOSE);
+    tessellator.tessellatePolygon(false,mode == CLOSE);
   }
-  if (flushMode == FLUSH_END_SHAPE || (flushMode == FLUSH_WHEN_FULL && tess.isFull()) || (flushMode == FLUSH_WHEN_FULL && twoDimensionalDrawing && textureImage != null && stroke)) {
+  if (flushMode == FLUSH_END_SHAPE || (flushMode == FLUSH_WHEN_FULL && tess.isFull()) || (flushMode == FLUSH_WHEN_FULL && drawing2D && textureImage != null && stroke)) {
     flush();
   }
 }
