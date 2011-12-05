@@ -1,50 +1,15 @@
 {
-  if ((textTex.currentTex != info.texIndex) || (textBlockMode && textBlockTex != info.texIndex)) {
-    if (0 < textVertexCount) {
-      renderTextModel();
-      textVertexCount=0;
-    }
-    textTex.setTexture(info.texIndex);
-  }
-  if (textVertexBuffer.capacity() / 3 < textVertexCount + 6) {
-    expandTextBuffers();
-  }
-  int n=textVertexCount;
-  textVertexArray[3 * n + 0]=x1;
-  textVertexArray[3 * n + 1]=y1;
-  textVertexArray[3 * n + 2]=0;
-  textTexCoordArray[2 * n + 0]=info.u0;
-  textTexCoordArray[2 * n + 1]=info.v0;
-  n++;
-  textVertexArray[3 * n + 0]=x2;
-  textVertexArray[3 * n + 1]=y2;
-  textVertexArray[3 * n + 2]=0;
-  textTexCoordArray[2 * n + 0]=info.u1;
-  textTexCoordArray[2 * n + 1]=info.v1;
-  n++;
-  textVertexArray[3 * n + 0]=x1;
-  textVertexArray[3 * n + 1]=y2;
-  textVertexArray[3 * n + 2]=0;
-  textTexCoordArray[2 * n + 0]=info.u0;
-  textTexCoordArray[2 * n + 1]=info.v1;
-  n++;
-  textVertexArray[3 * n + 0]=x1;
-  textVertexArray[3 * n + 1]=y1;
-  textVertexArray[3 * n + 2]=0;
-  textTexCoordArray[2 * n + 0]=info.u0;
-  textTexCoordArray[2 * n + 1]=info.v0;
-  n++;
-  textVertexArray[3 * n + 0]=x2;
-  textVertexArray[3 * n + 1]=y1;
-  textVertexArray[3 * n + 2]=0;
-  textTexCoordArray[2 * n + 0]=info.u1;
-  textTexCoordArray[2 * n + 1]=info.v0;
-  n++;
-  textVertexArray[3 * n + 0]=x2;
-  textVertexArray[3 * n + 1]=y2;
-  textVertexArray[3 * n + 2]=0;
-  textTexCoordArray[2 * n + 0]=info.u1;
-  textTexCoordArray[2 * n + 1]=info.v1;
-  n++;
-  textVertexCount=n;
+  PImage tex=textTex.getTexture(info.texIndex);
+  int mode0=textureMode;
+  noStroke();
+  textureMode(NORMAL);
+  beginShape(QUADS);
+  texture(tex);
+  normal(0,0,1);
+  vertex(x0,y0,info.u0,info.v0);
+  vertex(x1,y0,info.u1,info.v0);
+  vertex(x1,y1,info.u1,info.v1);
+  vertex(x0,y1,info.u0,info.v1);
+  endShape();
+  textureMode(mode0);
 }
