@@ -1,6 +1,6 @@
 {
   checkVertexBuffers(tess.pointVertexCount);
-  pointShader.start();
+  startPointShader();
   vertexBuffer.rewind();
   vertexBuffer.put(tess.pointVertices,0,3 * tess.pointVertexCount);
   vertexBuffer.position(0);
@@ -16,13 +16,10 @@
   gl2f.glVertexPointer(3,GL.GL_FLOAT,0,vertexBuffer);
   gl2f.glColorPointer(4,GL.GL_FLOAT,0,colorBuffer);
   gl2f.glNormalPointer(GL.GL_FLOAT,0,normalBuffer);
-  int attribsID=pointShader.getAttribLocation("vertDisp");
-  gl2x.glEnableVertexAttribArray(attribsID);
-  gl2x.glVertexAttribPointer(attribsID,2,GL.GL_FLOAT,false,0,FloatBuffer.wrap(tess.pointAttributes));
+  setupPointShader(tess.pointAttributes);
   gl2f.glDrawElements(GL.GL_TRIANGLES,tess.pointIndexCount,GL.GL_UNSIGNED_INT,IntBuffer.wrap(tess.pointIndices));
-  gl2x.glDisableVertexAttribArray(attribsID);
   gl2f.glDisableClientState(GL2.GL_VERTEX_ARRAY);
   gl2f.glDisableClientState(GL2.GL_COLOR_ARRAY);
   gl2f.glDisableClientState(GL2.GL_NORMAL_ARRAY);
-  pointShader.stop();
+  stopPointShader();
 }

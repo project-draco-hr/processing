@@ -1,6 +1,6 @@
 {
   checkVertexBuffers(tess.lineVertexCount);
-  lineShader.start();
+  startLineShader();
   vertexBuffer.rewind();
   vertexBuffer.put(tess.lineVertices,0,3 * tess.lineVertexCount);
   vertexBuffer.position(0);
@@ -16,16 +16,10 @@
   gl2f.glVertexPointer(3,GL.GL_FLOAT,0,vertexBuffer);
   gl2f.glColorPointer(4,GL.GL_FLOAT,0,colorBuffer);
   gl2f.glNormalPointer(GL.GL_FLOAT,0,normalBuffer);
-  int[] viewport={0,0,0,0};
-  gl2f.glGetIntegerv(GL.GL_VIEWPORT,viewport,0);
-  lineShader.setVecUniform("viewport",viewport[0],viewport[1],viewport[2],viewport[3]);
-  int attribsID=lineShader.getAttribLocation("attribs");
-  gl2x.glEnableVertexAttribArray(attribsID);
-  gl2x.glVertexAttribPointer(attribsID,4,GL.GL_FLOAT,false,0,FloatBuffer.wrap(tess.lineAttributes));
+  setupLineShader(tess.lineAttributes);
   gl2f.glDrawElements(GL.GL_TRIANGLES,tess.lineIndexCount,GL.GL_UNSIGNED_INT,IntBuffer.wrap(tess.lineIndices));
-  gl2x.glDisableVertexAttribArray(attribsID);
   gl2f.glDisableClientState(GL2.GL_VERTEX_ARRAY);
   gl2f.glDisableClientState(GL2.GL_COLOR_ARRAY);
   gl2f.glDisableClientState(GL2.GL_NORMAL_ARRAY);
-  lineShader.stop();
+  stopLineShader();
 }
