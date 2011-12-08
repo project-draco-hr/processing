@@ -1,0 +1,33 @@
+{
+  if (imageMode == CORNER) {
+    if (c < 0) {
+      a+=c;
+      c=-c;
+    }
+    if (d < 0) {
+      b+=d;
+      d=-d;
+    }
+    clipImpl(a,b,a + c,b + d);
+  }
+ else   if (imageMode == CORNERS) {
+    if (c < a) {
+      float temp=a;
+      a=c;
+      c=temp;
+    }
+    if (d < b) {
+      float temp=b;
+      b=d;
+      d=temp;
+    }
+    clipImpl(a,b,c,d);
+  }
+ else   if (imageMode == CENTER) {
+    if (c < 0)     c=-c;
+    if (d < 0)     d=-d;
+    float x1=a - c / 2;
+    float y1=b - d / 2;
+    clipImpl(x1,y1,x1 + c,y1 + d);
+  }
+}
