@@ -1,11 +1,11 @@
 {
   if (is3D) {
-    tessGeo.addLineVertices(in.getNumLineVertices());
-    tessGeo.addLineIndices(in.getNumLineIndices());
+    tessGeo.addLineVertices(inGeo.getNumLineVertices());
+    tessGeo.addLineIndices(inGeo.getNumLineIndices());
     int vcount=tessGeo.firstLineVertex;
     int icount=tessGeo.firstLineIndex;
-    for (int i=in.firstEdge; i <= in.lastEdge; i++) {
-      int[] edge=in.edges[i];
+    for (int i=inGeo.firstEdge; i <= inGeo.lastEdge; i++) {
+      int[] edge=inGeo.edges[i];
       addLine(edge[0],edge[1],vcount,icount);
       vcount+=4;
       icount+=6;
@@ -13,8 +13,8 @@
   }
  else {
     GeneralPath path=new GeneralPath(GeneralPath.WIND_NON_ZERO);
-    for (int i=in.firstEdge; i <= in.lastEdge; i++) {
-      int[] edge=in.edges[i];
+    for (int i=inGeo.firstEdge; i <= inGeo.lastEdge; i++) {
+      int[] edge=inGeo.edges[i];
       if (startEdge(edge[2]))       path.moveTo(inGeo.getVertexX(edge[0]),inGeo.getVertexY(edge[0]));
       path.lineTo(inGeo.getVertexX(edge[1]),inGeo.getVertexY(edge[1]));
       if (endEdge(edge[2]))       path.closePath();

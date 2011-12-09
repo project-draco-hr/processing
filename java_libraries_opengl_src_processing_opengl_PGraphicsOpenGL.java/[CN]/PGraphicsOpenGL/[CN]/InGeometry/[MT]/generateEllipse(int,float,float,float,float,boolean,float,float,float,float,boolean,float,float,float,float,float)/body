@@ -1,0 +1,60 @@
+{
+  float x=a;
+  float y=b;
+  float w=c;
+  float h=d;
+  if (ellipseMode == CORNERS) {
+    w=c - a;
+    h=d - b;
+  }
+ else   if (ellipseMode == RADIUS) {
+    x=a - c;
+    y=b - d;
+    w=c * 2;
+    h=d * 2;
+  }
+ else   if (ellipseMode == DIAMETER) {
+    x=a - c / 2f;
+    y=b - d / 2f;
+  }
+  if (w < 0) {
+    x+=w;
+    w=-w;
+  }
+  if (h < 0) {
+    y+=h;
+    h=-h;
+  }
+  float radiusH=w / 2;
+  float radiusV=h / 2;
+  float centerX=x + radiusH;
+  float centerY=y + radiusV;
+  float sx1=screenX(x,y);
+  float sy1=screenY(x,y);
+  float sx2=screenX(x + w,y + h);
+  float sy2=screenY(x + w,y + h);
+  int accuracy=(int)(TWO_PI * PApplet.dist(sx1,sy1,sx2,sy2) / 20);
+  if (accuracy < 6) {
+    accuracy=6;
+  }
+  float inc=(float)PGraphicsOpenGL.SINCOS_LENGTH / accuracy;
+  if (fill) {
+    addVertex(centerX,centerY,fillR,fillG,fillB,fillA,strokeR,strokeG,strokeB,strokeA,strokeWeight,VERTEX);
+  }
+  int idx0, pidx, idx;
+  idx0=pidx=idx=0;
+  float val=0;
+  for (int i=0; i < accuracy; i++) {
+    idx=addVertex(centerX + PGraphicsOpenGL.cosLUT[(int)val] * radiusH,centerY + PGraphicsOpenGL.sinLUT[(int)val] * radiusV,fillR,fillG,fillB,fillA,strokeR,strokeG,strokeB,strokeA,strokeWeight,VERTEX);
+    val=(val + inc) % PGraphicsOpenGL.SINCOS_LENGTH;
+    if (0 < i) {
+      if (stroke)       addEdge(pidx,idx,i == 1,false);
+    }
+ else {
+      idx0=idx;
+    }
+    pidx=idx;
+  }
+  addVertex(centerX + PGraphicsOpenGL.cosLUT[0] * radiusH,centerY + PGraphicsOpenGL.sinLUT[0] * radiusV,fillR,fillG,fillB,fillA,strokeR,strokeG,strokeB,strokeA,strokeWeight,VERTEX);
+  if (stroke)   addEdge(idx,idx0,false,true);
+}
