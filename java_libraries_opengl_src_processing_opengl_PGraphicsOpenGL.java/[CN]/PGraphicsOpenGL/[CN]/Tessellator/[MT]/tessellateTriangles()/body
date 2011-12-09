@@ -1,6 +1,5 @@
 {
   int nvertFill=inGeo.lastVertex - inGeo.firstVertex + 1;
-  int triCount=nvertFill / 3;
   if (fill) {
     tessGeo.addFillVertices(inGeo);
     tessGeo.addFillIndices(nvertFill);
@@ -12,44 +11,6 @@
   }
   if (stroke) {
     tessGeo.isStroked=true;
-    if (is3D) {
-      int first=inGeo.firstVertex;
-      int nvertLine=triCount * 3 * 4;
-      tessGeo.addLineVertices(nvertLine);
-      int nind=triCount * 3 * 2* 3;
-      tessGeo.addLineIndices(nind);
-      int vcount=tessGeo.firstLineVertex;
-      int icount=tessGeo.firstLineIndex;
-      for (int tr=0; tr < triCount; tr++) {
-        int i0=first + 3 * tr + 0;
-        int i1=first + 3 * tr + 1;
-        int i2=first + 3 * tr + 2;
-        addLine(i0,i1,vcount,icount);
-        vcount+=4;
-        icount+=6;
-        addLine(i1,i2,vcount,icount);
-        vcount+=4;
-        icount+=6;
-        addLine(i2,i0,vcount,icount);
-        vcount+=4;
-        icount+=6;
-      }
-    }
- else {
-      GeneralPath path=new GeneralPath(GeneralPath.WIND_NON_ZERO);
-      int first=inGeo.firstVertex;
-      for (int tr=0; tr < triCount; tr++) {
-        int i0=first + 3 * tr + 0;
-        int i1=first + 3 * tr + 1;
-        int i2=first + 3 * tr + 2;
-        path.moveTo(inGeo.vertices[3 * i0 + 0],inGeo.vertices[3 * i0 + 1]);
-        path.lineTo(inGeo.vertices[3 * i1 + 0],inGeo.vertices[3 * i1 + 1]);
-        path.lineTo(inGeo.vertices[3 * i2 + 0],inGeo.vertices[3 * i2 + 1]);
-        path.closePath();
-      }
-      tessGeo.firstLineIndex=tessGeo.fillIndexCount;
-      tessellatePath(path);
-      tessGeo.lastLineIndex=tessGeo.fillIndexCount - 1;
-    }
+    tessellateEdges();
   }
 }

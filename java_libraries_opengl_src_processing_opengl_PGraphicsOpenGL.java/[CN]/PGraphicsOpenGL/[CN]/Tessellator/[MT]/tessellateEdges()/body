@@ -1,0 +1,26 @@
+{
+  if (is3D) {
+    tessGeo.addLineVertices(in.getNumLineVertices());
+    tessGeo.addLineIndices(in.getNumLineIndices());
+    int vcount=tessGeo.firstLineVertex;
+    int icount=tessGeo.firstLineIndex;
+    for (int i=in.firstEdge; i <= in.lastEdge; i++) {
+      int[] edge=in.edges[i];
+      addLine(edge[0],edge[1],vcount,icount);
+      vcount+=4;
+      icount+=6;
+    }
+  }
+ else {
+    GeneralPath path=new GeneralPath(GeneralPath.WIND_NON_ZERO);
+    for (int i=in.firstEdge; i <= in.lastEdge; i++) {
+      int[] edge=in.edges[i];
+      if (startEdge(edge[2]))       path.moveTo(inGeo.getVertexX(edge[0]),inGeo.getVertexY(edge[0]));
+      path.lineTo(inGeo.getVertexX(edge[1]),inGeo.getVertexY(edge[1]));
+      if (endEdge(edge[2]))       path.closePath();
+    }
+    tessGeo.firstLineIndex=tessGeo.fillIndexCount;
+    tessellatePath(path);
+    tessGeo.lastLineIndex=tessGeo.fillIndexCount - 1;
+  }
+}
