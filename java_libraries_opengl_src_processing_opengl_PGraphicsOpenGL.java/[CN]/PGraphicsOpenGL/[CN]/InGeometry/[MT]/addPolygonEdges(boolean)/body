@@ -1,0 +1,39 @@
+{
+  int edgeCount=0;
+  int lnMax=lastVertex - firstVertex + 1;
+  int first=firstVertex;
+  int contour0=first;
+  if (!closed)   lnMax--;
+  for (int ln=0; ln < lnMax; ln++) {
+    int i=first + ln + 1;
+    if ((i == lnMax || codes[i] == PShape.BREAK) && closed) {
+      i=first + ln;
+    }
+    if (codes[i] != PShape.BREAK) {
+      edgeCount++;
+    }
+  }
+  if (0 < edgeCount) {
+    boolean begin=true;
+    contour0=first;
+    for (int ln=0; ln < lnMax; ln++) {
+      int i0=first + ln;
+      int i1=first + ln + 1;
+      if (codes[i0] == PShape.BREAK)       contour0=i0;
+      if (i1 == lnMax || codes[i1] == PShape.BREAK) {
+        if (closed) {
+          i0=first + ln;
+          i1=contour0;
+          addEdge(i0,i1,begin,true);
+        }
+ else         if (codes[i1] != PShape.BREAK) {
+          addEdge(i0,i1,begin,false);
+        }
+        begin=true;
+      }
+ else       if (codes[i1] != PShape.BREAK) {
+        addEdge(i0,i1,begin,false);
+      }
+    }
+  }
+}

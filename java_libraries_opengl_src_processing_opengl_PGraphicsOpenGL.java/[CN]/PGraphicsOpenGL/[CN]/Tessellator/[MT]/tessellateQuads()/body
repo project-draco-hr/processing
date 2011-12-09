@@ -1,8 +1,7 @@
 {
-  int nvertFill=inGeo.lastVertex - inGeo.firstVertex + 1;
-  int quadCount=nvertFill / 4;
   if (fill) {
     tessGeo.addFillVertices(inGeo);
+    int quadCount=(inGeo.lastVertex - inGeo.firstVertex + 1) / 4;
     tessGeo.addFillIndices(6 * quadCount);
     int idx=tessGeo.firstFillIndex;
     int offset=tessGeo.firstFillVertex;
@@ -21,48 +20,6 @@
   }
   if (stroke) {
     tessGeo.isStroked=true;
-    if (is3D) {
-      int nvertLine=quadCount * 4 * 4;
-      tessGeo.addLineVertices(nvertLine);
-      int nind=quadCount * 4 * 2* 3;
-      tessGeo.addLineIndices(nind);
-      int vcount=tessGeo.firstLineVertex;
-      int icount=tessGeo.firstLineIndex;
-      for (int qd=0; qd < quadCount; qd++) {
-        int i0=4 * qd + 0;
-        int i1=4 * qd + 1;
-        int i2=4 * qd + 2;
-        int i3=4 * qd + 3;
-        addLine(i0,i1,vcount,icount);
-        vcount+=4;
-        icount+=6;
-        addLine(i1,i2,vcount,icount);
-        vcount+=4;
-        icount+=6;
-        addLine(i2,i3,vcount,icount);
-        vcount+=4;
-        icount+=6;
-        addLine(i3,i0,vcount,icount);
-        vcount+=4;
-        icount+=6;
-      }
-    }
- else {
-      GeneralPath path=new GeneralPath(GeneralPath.WIND_NON_ZERO);
-      for (int qd=0; qd < quadCount; qd++) {
-        int i0=4 * qd + 0;
-        int i1=4 * qd + 1;
-        int i2=4 * qd + 2;
-        int i3=4 * qd + 3;
-        path.moveTo(inGeo.vertices[3 * i0 + 0],inGeo.vertices[3 * i0 + 1]);
-        path.lineTo(inGeo.vertices[3 * i1 + 0],inGeo.vertices[3 * i1 + 1]);
-        path.lineTo(inGeo.vertices[3 * i2 + 0],inGeo.vertices[3 * i2 + 1]);
-        path.lineTo(inGeo.vertices[3 * i3 + 0],inGeo.vertices[3 * i3 + 1]);
-        path.closePath();
-      }
-      tessGeo.firstLineIndex=tessGeo.fillIndexCount;
-      tessellatePath(path);
-      tessGeo.lastLineIndex=tessGeo.fillIndexCount - 1;
-    }
+    tessellateEdges();
   }
 }
