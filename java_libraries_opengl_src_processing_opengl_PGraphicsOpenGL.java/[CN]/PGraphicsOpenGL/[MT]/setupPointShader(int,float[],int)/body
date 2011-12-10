@@ -1,0 +1,9 @@
+{
+  pointShader.setIntUniform("lights",lightCount);
+  pointShader.setVecUniform("eye",cameraEyeX,cameraEyeY,cameraEyeZ,0);
+  pointAttribsID=PGraphicsOpenGL.pointShader.getAttribLocation("vertDisp");
+  gl2x.glEnableVertexAttribArray(pointAttribsID);
+  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,attrBufID);
+  gl2f.glBufferSubData(GL.GL_ARRAY_BUFFER,0,2 * nvert * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(attribs));
+  ogl.gl2x.glVertexAttribPointer(pointAttribsID,2,GL.GL_FLOAT,false,0,0);
+}

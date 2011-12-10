@@ -1,7 +1,7 @@
 {
   smooth=true;
-  if (this.antialias != antialias) {
-    this.antialias=antialias;
+  if (antialias != level) {
+    antialias=level;
     if (primarySurface) {
       restartContext();
     }
@@ -9,16 +9,16 @@
       initOffscreen();
     }
   }
-  if (antialias < 2) {
-    gl2f.glEnable(GL2.GL_MULTISAMPLE);
-    gl2f.glEnable(GL2.GL_POINT_SMOOTH);
-    gl2f.glEnable(GL2.GL_LINE_SMOOTH);
-    gl2f.glEnable(GL2.GL_POLYGON_SMOOTH);
-  }
   int[] temp={0};
   gl.glGetIntegerv(GL.GL_SAMPLES,temp,0);
   if (antialias != temp[0]) {
     antialias=temp[0];
     PApplet.println("Effective multisampling level: " + antialias);
+  }
+  if (antialias < 2) {
+    gl2f.glEnable(GL2.GL_MULTISAMPLE);
+    gl2f.glEnable(GL2.GL_POINT_SMOOTH);
+    gl2f.glEnable(GL2.GL_LINE_SMOOTH);
+    gl2f.glEnable(GL2.GL_POLYGON_SMOOTH);
   }
 }

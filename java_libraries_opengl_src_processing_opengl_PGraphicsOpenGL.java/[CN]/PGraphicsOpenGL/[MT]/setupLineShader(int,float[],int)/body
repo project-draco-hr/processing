@@ -6,5 +6,7 @@
   lineShader.setVecUniform("eye",cameraEyeX,cameraEyeY,cameraEyeZ,0);
   lineAttribsID=lineShader.getAttribLocation("attribs");
   gl2x.glEnableVertexAttribArray(lineAttribsID);
-  gl2x.glVertexAttribPointer(lineAttribsID,4,GL.GL_FLOAT,false,0,FloatBuffer.wrap(tess.lineAttributes));
+  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,attrBufID);
+  gl2f.glBufferSubData(GL.GL_ARRAY_BUFFER,0,4 * nvert * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(attribs));
+  gl2x.glVertexAttribPointer(lineAttribsID,4,GL.GL_FLOAT,false,0,0);
 }
