@@ -1,0 +1,25 @@
+{
+  checkVertexBuffers(tess.lineVertexCount);
+  startLineShader();
+  vertexBuffer.rewind();
+  vertexBuffer.put(tess.lineVertices,0,3 * tess.lineVertexCount);
+  vertexBuffer.position(0);
+  colorBuffer.rewind();
+  colorBuffer.put(tess.lineColors,0,4 * tess.lineVertexCount);
+  colorBuffer.position(0);
+  normalBuffer.rewind();
+  normalBuffer.put(tess.lineNormals,0,3 * tess.lineVertexCount);
+  normalBuffer.position(0);
+  gl2f.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+  gl2f.glEnableClientState(GL2.GL_COLOR_ARRAY);
+  gl2f.glEnableClientState(GL2.GL_NORMAL_ARRAY);
+  gl2f.glVertexPointer(3,GL.GL_FLOAT,0,vertexBuffer);
+  gl2f.glColorPointer(4,GL.GL_FLOAT,0,colorBuffer);
+  gl2f.glNormalPointer(GL.GL_FLOAT,0,normalBuffer);
+  setupLineShader(tess.lineAttributes);
+  gl2f.glDrawElements(GL.GL_TRIANGLES,tess.lineIndexCount,GL.GL_UNSIGNED_INT,IntBuffer.wrap(tess.lineIndices));
+  gl2f.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+  gl2f.glDisableClientState(GL2.GL_COLOR_ARRAY);
+  gl2f.glDisableClientState(GL2.GL_NORMAL_ARRAY);
+  stopLineShader();
+}

@@ -1,43 +1,42 @@
 {
-  checkVertexBuffers(tess.fillVertexCount);
-  vertexBuffer.rewind();
-  vertexBuffer.put(tess.fillVertices,0,3 * tess.fillVertexCount);
-  vertexBuffer.position(0);
-  colorBuffer.rewind();
-  colorBuffer.put(tess.fillColors,0,4 * tess.fillVertexCount);
-  colorBuffer.position(0);
-  normalBuffer.rewind();
-  normalBuffer.put(tess.fillNormals,0,3 * tess.fillVertexCount);
-  normalBuffer.position(0);
-  gl2f.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-  gl2f.glEnableClientState(GL2.GL_COLOR_ARRAY);
+  int size;
+  if (glFillNormalBufferID == -1) {
+    size=1000000;
+    glFillNormalBufferID=createVertexBufferObject();
+    gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillNormalBufferID);
+    gl2f.glBufferData(GL.GL_ARRAY_BUFFER,3 * size * PGraphicsOpenGL.SIZEOF_FLOAT,null,GL2.GL_STATIC_DRAW);
+    glFillColorBufferID=createVertexBufferObject();
+    gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillColorBufferID);
+    gl2f.glBufferData(GL.GL_ARRAY_BUFFER,4 * size * PGraphicsOpenGL.SIZEOF_FLOAT,null,GL2.GL_STATIC_DRAW);
+    glFillVertexBufferID=createVertexBufferObject();
+    gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillVertexBufferID);
+    gl2f.glBufferData(GL.GL_ARRAY_BUFFER,3 * size * PGraphicsOpenGL.SIZEOF_FLOAT,null,GL2.GL_STATIC_DRAW);
+    glFillTexCoordBufferID=createVertexBufferObject();
+    gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillTexCoordBufferID);
+    gl2f.glBufferData(GL.GL_ARRAY_BUFFER,2 * size * PGraphicsOpenGL.SIZEOF_FLOAT,null,GL2.GL_STATIC_DRAW);
+    glFillIndexBufferID=createVertexBufferObject();
+    gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillIndexBufferID);
+    gl2f.glBufferData(GL.GL_ARRAY_BUFFER,size * PGraphicsOpenGL.SIZEOF_INT,null,GL2.GL_STATIC_DRAW);
+  }
+  size=tess.fillVertexCount;
   gl2f.glEnableClientState(GL2.GL_NORMAL_ARRAY);
-  PTexture tex=null;
-  if (textureImage != null) {
-    tex=ogl.getTexture(textureImage);
-    if (tex != null) {
-      gl2f.glEnable(tex.glTarget);
-      gl2f.glActiveTexture(GL.GL_TEXTURE0);
-      gl2f.glBindTexture(tex.glTarget,tex.glID);
-    }
-    texcoordBuffer.rewind();
-    texcoordBuffer.put(tess.fillTexcoords,0,2 * tess.fillVertexCount);
-    texcoordBuffer.position(0);
-    gl2f.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-  }
-  gl2f.glVertexPointer(3,GL.GL_FLOAT,0,vertexBuffer);
-  gl2f.glColorPointer(4,GL.GL_FLOAT,0,colorBuffer);
-  gl2f.glNormalPointer(GL.GL_FLOAT,0,normalBuffer);
-  if (tex != null) {
-    gl2f.glTexCoordPointer(2,GL.GL_FLOAT,0,texcoordBuffer);
-  }
-  gl2f.glDrawElements(GL.GL_TRIANGLES,tess.fillIndexCount,GL.GL_UNSIGNED_INT,IntBuffer.wrap(tess.fillIndices));
-  if (tex != null) {
-    gl2f.glActiveTexture(GL.GL_TEXTURE0);
-    gl2f.glBindTexture(tex.glTarget,0);
-    gl2f.glDisable(tex.glTarget);
-    gl2f.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-  }
+  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillNormalBufferID);
+  gl2f.glBufferSubData(GL.GL_ARRAY_BUFFER,0,3 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tess.fillNormals));
+  gl2f.glNormalPointer(GL.GL_FLOAT,0,0);
+  gl2f.glEnableClientState(GL2.GL_COLOR_ARRAY);
+  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillColorBufferID);
+  gl2f.glBufferSubData(GL.GL_ARRAY_BUFFER,0,4 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tess.fillColors));
+  gl2f.glColorPointer(4,GL.GL_FLOAT,0,0);
+  gl2f.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillVertexBufferID);
+  gl2f.glBufferSubData(GL.GL_ARRAY_BUFFER,0,3 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tess.fillVertices));
+  gl2f.glVertexPointer(3,GL.GL_FLOAT,0,0);
+  size=tess.fillIndexCount;
+  gl2f.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,glFillIndexBufferID);
+  gl2f.glBufferSubData(GL.GL_ELEMENT_ARRAY_BUFFER,0,size * PGraphicsOpenGL.SIZEOF_INT,IntBuffer.wrap(tess.fillIndices));
+  gl2f.glDrawElements(GL.GL_TRIANGLES,size,GL.GL_UNSIGNED_INT,0);
+  gl2f.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,0);
+  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,0);
   gl2f.glDisableClientState(GL2.GL_VERTEX_ARRAY);
   gl2f.glDisableClientState(GL2.GL_COLOR_ARRAY);
   gl2f.glDisableClientState(GL2.GL_NORMAL_ARRAY);
