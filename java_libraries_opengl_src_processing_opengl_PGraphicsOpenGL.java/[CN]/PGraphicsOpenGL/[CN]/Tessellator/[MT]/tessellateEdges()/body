@@ -12,15 +12,17 @@
     }
   }
  else {
-    GeneralPath path=new GeneralPath(GeneralPath.WIND_NON_ZERO);
+    tessGeo.firstLineIndex=tessGeo.fillIndexCount;
+    tessGeo.addFillVertices(inGeo.getNumLineVertices());
+    tessGeo.addFillIndices(inGeo.getNumLineIndices());
+    tessGeo.lastLineIndex=tessGeo.fillIndexCount - 1;
+    int vcount=tessGeo.firstFillVertex;
+    int icount=tessGeo.firstFillIndex;
     for (int i=inGeo.firstEdge; i <= inGeo.lastEdge; i++) {
       int[] edge=inGeo.edges[i];
-      if (startEdge(edge[2]))       path.moveTo(inGeo.getVertexX(edge[0]),inGeo.getVertexY(edge[0]));
-      path.lineTo(inGeo.getVertexX(edge[1]),inGeo.getVertexY(edge[1]));
-      if (endEdge(edge[2]))       path.closePath();
+      addLineToFill(edge[0],edge[1],vcount,icount);
+      vcount+=4;
+      icount+=6;
     }
-    tessGeo.firstLineIndex=tessGeo.fillIndexCount;
-    tessellatePath(path);
-    tessGeo.lastLineIndex=tessGeo.fillIndexCount - 1;
   }
 }

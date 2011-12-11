@@ -1,0 +1,37 @@
+{
+  int index;
+  index=3 * inIdx;
+  float x=in.vertices[index++] + dispX;
+  float y=in.vertices[index++] + dispY;
+  float z=in.vertices[index];
+  index=3 * inIdx;
+  float nx=in.normals[index++];
+  float ny=in.normals[index++];
+  float nz=in.normals[index];
+  if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL) {
+    PMatrix3D tr=modelviewStack.getTransform();
+    index=3 * tessIdx;
+    fillVertices[index++]=x * tr.m00 + y * tr.m01 + z * tr.m02 + tr.m03;
+    fillVertices[index++]=x * tr.m10 + y * tr.m11 + z * tr.m12 + tr.m13;
+    fillVertices[index]=x * tr.m20 + y * tr.m21 + z * tr.m22 + tr.m23;
+    index=3 * tessIdx;
+    fillNormals[index++]=nx * tr.m00 + ny * tr.m01 + nz * tr.m02;
+    fillNormals[index++]=nx * tr.m10 + ny * tr.m11 + nz * tr.m12;
+    fillNormals[index]=nx * tr.m20 + ny * tr.m21 + nz * tr.m22;
+  }
+ else {
+    index=3 * tessIdx;
+    fillVertices[index++]=x;
+    fillVertices[index++]=y;
+    fillVertices[index]=z;
+    index=3 * tessIdx;
+    fillNormals[index++]=nx;
+    fillNormals[index++]=ny;
+    fillNormals[index]=nz;
+  }
+  index=4 * tessIdx;
+  fillColors[index++]=sr;
+  fillColors[index++]=sg;
+  fillColors[index++]=sb;
+  fillColors[index]=sa;
+}
