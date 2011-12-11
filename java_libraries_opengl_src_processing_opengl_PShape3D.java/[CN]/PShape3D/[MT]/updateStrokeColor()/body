@@ -1,0 +1,35 @@
+{
+  if (shapeEnded) {
+    updateTesselation();
+    if (0 < tess.lineVertexCount) {
+      int offset=root.lineVertOffset.get(this);
+      int size=tess.lineVertexCount;
+      float[] colors=tess.lineColors;
+      int index;
+      for (int i=0; i < size; i++) {
+        index=4 * i;
+        colors[index++]=strokeR;
+        colors[index++]=strokeG;
+        colors[index++]=strokeB;
+        colors[index]=strokeA;
+      }
+      getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glLineColorBufferID);
+      getGl().glBufferSubData(GL.GL_ARRAY_BUFFER,4 * offset * PGraphicsOpenGL.SIZEOF_FLOAT,4 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(colors));
+    }
+    if (0 < tess.pointVertexCount) {
+      int offset=root.pointVertOffset.get(this);
+      int size=tess.pointVertexCount;
+      float[] colors=tess.pointColors;
+      int index;
+      for (int i=0; i < size; i++) {
+        index=4 * i;
+        colors[index++]=strokeR;
+        colors[index++]=strokeG;
+        colors[index++]=strokeB;
+        colors[index]=strokeA;
+      }
+      getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glPointColorBufferID);
+      getGl().glBufferSubData(GL.GL_ARRAY_BUFFER,4 * offset * PGraphicsOpenGL.SIZEOF_FLOAT,4 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(colors));
+    }
+  }
+}
