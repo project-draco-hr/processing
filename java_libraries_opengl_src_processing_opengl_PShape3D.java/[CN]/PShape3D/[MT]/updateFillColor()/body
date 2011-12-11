@@ -1,0 +1,16 @@
+{
+  updateTesselation();
+  int offset=root.fillVertOffset.get(this);
+  int size=tess.fillVertexCount;
+  float[] colors=tess.fillColors;
+  int index;
+  for (int i=0; i < size; i++) {
+    index=4 * i;
+    colors[index++]=fillR;
+    colors[index++]=fillG;
+    colors[index++]=fillB;
+    colors[index]=fillA;
+  }
+  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glFillColorBufferID);
+  getGl().glBufferSubData(GL.GL_ARRAY_BUFFER,4 * offset * PGraphicsOpenGL.SIZEOF_FLOAT,4 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(colors));
+}
