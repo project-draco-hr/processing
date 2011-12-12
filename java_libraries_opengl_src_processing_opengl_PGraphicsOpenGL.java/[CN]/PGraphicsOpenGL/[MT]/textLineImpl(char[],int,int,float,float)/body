@@ -4,6 +4,16 @@
     textTex=new PFontTexture(parent,textFont,maxTextureSize,maxTextureSize);
     textFont.setCache(this,textTex);
   }
+ else {
+    if (context.hashCode() != textTex.context.hashCode()) {
+      for (int i=0; i < textTex.textures.length; i++) {
+        textTex.textures[i].glID=0;
+        textTex.textures[i]=null;
+      }
+      textTex=new PFontTexture(parent,textFont,maxTextureSize,maxTextureSize);
+      textFont.setCache(this,textTex);
+    }
+  }
   textTex.setFirstTexture();
   int savedTextureMode=textureMode;
   boolean savedStroke=stroke;

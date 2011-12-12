@@ -3,11 +3,17 @@
   if (tex == null) {
     tex=addTexture(img);
   }
- else   if (img.isModified()) {
-    if (img.width != tex.width || img.height != tex.height) {
-      tex.init(img.width,img.height);
+ else {
+    if (context.hashCode() != tex.context.hashCode()) {
+      tex.glID=0;
+      tex=addTexture(img);
     }
-    updateTexture(img,tex);
+    if (img.isModified()) {
+      if (img.width != tex.width || img.height != tex.height) {
+        tex.init(img.width,img.height);
+      }
+      updateTexture(img,tex);
+    }
   }
   return tex;
 }
