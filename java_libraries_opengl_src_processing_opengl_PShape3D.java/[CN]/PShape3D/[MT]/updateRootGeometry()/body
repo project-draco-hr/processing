@@ -1,0 +1,25 @@
+{
+  if (family == GROUP) {
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.updateRootGeometry();
+    }
+  }
+ else {
+    if (transformed) {
+      if (0 < tess.fillVertexCount && 0 < tess.fillIndexCount) {
+        root.copyFillGeometry(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillVertices,tess.fillColors,tess.fillNormals,tess.fillTexcoords);
+      }
+      if (0 < tess.lineVertexCount && 0 < tess.lineIndexCount) {
+        root.copyLineGeometry(root.lineVertCopyOffset,tess.lineVertexCount,tess.lineVertices,tess.lineColors,tess.lineNormals,tess.lineAttributes);
+      }
+      if (0 < tess.pointVertexCount && 0 < tess.pointIndexCount) {
+        root.copyPointGeometry(root.pointVertCopyOffset,tess.pointVertexCount,tess.pointVertices,tess.pointColors,tess.pointNormals,tess.pointAttributes);
+      }
+      transformed=false;
+    }
+    root.fillVertCopyOffset+=tess.fillVertexCount;
+    root.lineVertCopyOffset+=tess.lineVertexCount;
+    root.pointVertCopyOffset+=tess.pointVertexCount;
+  }
+}
