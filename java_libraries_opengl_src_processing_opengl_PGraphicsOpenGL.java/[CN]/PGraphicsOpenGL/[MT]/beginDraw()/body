@@ -29,18 +29,18 @@
   tess.reset();
   super.noTexture();
   setDefaultBlend();
-  if (hints[DISABLE_DEPTH_TEST]) {
-    gl.glDisable(GL.GL_DEPTH_TEST);
-  }
- else {
+  if (hintEnabled(ENABLE_DEPTH_TEST)) {
     gl.glEnable(GL.GL_DEPTH_TEST);
   }
+ else {
+    gl.glDisable(GL.GL_DEPTH_TEST);
+  }
   gl.glDepthFunc(GL.GL_LEQUAL);
-  if (hints[DISABLE_DEPTH_MASK]) {
-    gl.glDepthMask(false);
+  if (hintEnabled(ENABLE_DEPTH_MASK)) {
+    gl.glDepthMask(true);
   }
  else {
-    gl.glDepthMask(true);
+    gl.glDepthMask(false);
   }
   gl.glGetIntegerv(GL.GL_VIEWPORT,savedViewport,0);
   gl.glViewport(0,0,width,height);
