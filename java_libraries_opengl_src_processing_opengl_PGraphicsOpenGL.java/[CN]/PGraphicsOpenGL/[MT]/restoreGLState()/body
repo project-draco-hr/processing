@@ -1,19 +1,19 @@
 {
   gl.glViewport(0,0,width,height);
   restoreGLMatrices();
-  if (hintEnabled(DISABLE_DEPTH_TEST)) {
-    gl.glEnable(GL.GL_DEPTH_TEST);
-  }
- else {
+  if (hints[DISABLE_DEPTH_TEST]) {
     gl.glDisable(GL.GL_DEPTH_TEST);
     gl.glClearColor(0,0,0,0);
     gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
   }
-  if (hintEnabled(ENABLE_DEPTH_MASK)) {
-    gl.glDepthMask(true);
+ else {
+    gl.glEnable(GL.GL_DEPTH_TEST);
+  }
+  if (hints[DISABLE_DEPTH_MASK]) {
+    gl.glDepthMask(false);
   }
  else {
-    gl.glDepthMask(false);
+    gl.glDepthMask(true);
   }
   blendMode(blendMode);
   if (fill) {

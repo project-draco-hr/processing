@@ -29,18 +29,24 @@
   tess.reset();
   super.noTexture();
   setDefaultBlend();
-  if (hintEnabled(ENABLE_DEPTH_TEST)) {
-    gl.glEnable(GL.GL_DEPTH_TEST);
-  }
- else {
+  if (hints[DISABLE_DEPTH_TEST]) {
     gl.glDisable(GL.GL_DEPTH_TEST);
   }
-  gl.glDepthFunc(GL.GL_LESS);
-  if (hintEnabled(ENABLE_DEPTH_MASK)) {
-    gl.glDepthMask(true);
+ else {
+    gl.glEnable(GL.GL_DEPTH_TEST);
+  }
+  gl.glDepthFunc(GL.GL_LEQUAL);
+  if (hints[DISABLE_DEPTH_MASK]) {
+    gl.glDepthMask(false);
   }
  else {
-    gl.glDepthMask(false);
+    gl.glDepthMask(true);
+  }
+  if (hints[ENABLE_ACCURATE_2D]) {
+    flushMode=FLUSH_CONTINUOUSLY;
+  }
+ else {
+    flushMode=FLUSH_WHEN_FULL;
   }
   gl.glGetIntegerv(GL.GL_VIEWPORT,savedViewport,0);
   gl.glViewport(0,0,width,height);
@@ -85,6 +91,6 @@
   gl.glClearColor(0,0,0,0);
   gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
   drawing=true;
-  drawing2D=false;
+  drawing2D=true;
   report("bot beginDraw()");
 }
