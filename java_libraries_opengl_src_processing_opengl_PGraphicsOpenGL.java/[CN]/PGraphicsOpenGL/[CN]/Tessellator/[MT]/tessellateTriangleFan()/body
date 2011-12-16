@@ -1,7 +1,8 @@
 {
-  if (fill) {
+  int nInVert=inGeo.lastVertex - inGeo.firstVertex + 1;
+  if (fill && 3 <= nInVert) {
     tessGeo.addFillVertices(inGeo);
-    tessGeo.addFillIndices(3 * (inGeo.lastVertex - inGeo.firstVertex - 1));
+    tessGeo.addFillIndices(3 * (nInVert - 2));
     int idx=tessGeo.firstFillIndex;
     int offset=tessGeo.firstFillVertex;
     for (int i=inGeo.firstVertex + 1; i < inGeo.lastVertex; i++) {

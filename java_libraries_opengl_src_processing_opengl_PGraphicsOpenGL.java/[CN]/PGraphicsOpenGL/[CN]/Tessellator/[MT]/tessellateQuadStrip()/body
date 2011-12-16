@@ -1,12 +1,12 @@
 {
-  if (fill) {
+  int nInVert=inGeo.lastVertex - inGeo.firstVertex + 1;
+  if (fill && 4 <= nInVert) {
     tessGeo.addFillVertices(inGeo);
-    int nvertFill=inGeo.lastVertex - inGeo.firstVertex + 1;
-    int quadCount=nvertFill / 2 - 1;
+    int quadCount=nInVert / 2 - 1;
     tessGeo.addFillIndices(6 * quadCount);
     int idx=tessGeo.firstFillIndex;
     int offset=tessGeo.firstFillVertex;
-    for (int qd=1; qd < nvertFill / 2; qd++) {
+    for (int qd=1; qd < nInVert / 2; qd++) {
       int i0=offset + 2 * (qd - 1);
       int i1=offset + 2 * (qd - 1) + 1;
       int i2=offset + 2 * qd + 1;

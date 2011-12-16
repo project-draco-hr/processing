@@ -1,8 +1,9 @@
 {
-  if (stroke) {
+  int nInVert=inGeo.lastVertex - inGeo.firstVertex + 1;
+  if (stroke && 1 <= nInVert) {
     tessGeo.isStroked=true;
     if (is3D) {
-      int quadCount=inGeo.lastVertex - inGeo.firstVertex + 1;
+      int quadCount=nInVert;
       int nvertTot=5 * quadCount;
       int nindTot=12 * quadCount;
       tessGeo.addPointVertices(nvertTot);
@@ -37,7 +38,7 @@
       }
     }
  else {
-      int quadCount=inGeo.lastVertex - inGeo.firstVertex + 1;
+      int quadCount=nInVert;
       int nvertTot=5 * quadCount;
       int nindTot=12 * quadCount;
       PMatrix3D tr=modelviewStack.getTransform();
