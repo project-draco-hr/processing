@@ -1,0 +1,35 @@
+{
+  float[] colors=tess.fillColors;
+  float[] normals=tess.fillNormals;
+  float[] texcoords=tess.fillTexcoords;
+  float[] vertices=tess.fillVertices;
+  int[] indices=tess.fillIndices;
+  PTexture tex=null;
+  if (textureImage != null) {
+    tex=ogl.getTexture(textureImage);
+    if (tex != null) {
+      gl2f.glEnable(tex.glTarget);
+      gl2f.glActiveTexture(GL.GL_TEXTURE0);
+      gl2f.glBindTexture(tex.glTarget,tex.glID);
+    }
+  }
+  int size=tess.fillIndexCount;
+  gl2.glBegin(GL.GL_TRIANGLES);
+  for (int tr=0; tr < size / 3; tr++) {
+    for (int pt=0; pt < 3; pt++) {
+      int i=indices[3 * tr + pt];
+      gl2.glColor4f(colors[4 * i + 0],colors[4 * i + 1],colors[4 * i + 2],colors[4 * i + 3]);
+      gl2.glNormal3f(normals[3 * i + 0],normals[3 * i + 1],normals[3 * i + 2]);
+      if (tex != null) {
+        gl2.glTexCoord2f(texcoords[2 * i + 0],texcoords[2 * i + 1]);
+      }
+      gl2.glVertex3f(vertices[3 * i + 0],vertices[3 * i + 1],vertices[3 * i + 2]);
+    }
+  }
+  gl2.glEnd();
+  if (tex != null) {
+    gl2f.glActiveTexture(GL.GL_TEXTURE0);
+    gl2f.glBindTexture(tex.glTarget,0);
+    gl2f.glDisable(tex.glTarget);
+  }
+}
