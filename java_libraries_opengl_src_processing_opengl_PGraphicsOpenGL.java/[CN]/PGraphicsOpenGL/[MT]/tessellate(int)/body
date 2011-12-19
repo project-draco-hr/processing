@@ -13,6 +13,7 @@
  else {
     tessellator.set3D();
   }
+  int first=tess.fillIndexCount;
   if (shape == POINTS) {
     tessellator.tessellatePoints();
   }
@@ -42,5 +43,12 @@
  else   if (shape == POLYGON) {
     if (stroke && defaultEdges)     in.addPolygonEdges(mode == CLOSE);
     tessellator.tessellatePolygon(false,mode == CLOSE);
+  }
+  int last=tess.lastFillIndex;
+  if (textureImage0 != textureImage || texState.count == 0) {
+    texState.addTexture(textureImage,first,last);
+  }
+ else {
+    texState.setLastIndex(last);
   }
 }
