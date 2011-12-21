@@ -4,35 +4,18 @@
     tessGeo.isStroked=true;
     int lineCount=nInVert / 2;
     int first=inGeo.firstVertex;
-    if (is3D) {
-      int nvert=lineCount * 4;
-      int nind=lineCount * 2 * 3;
-      tessGeo.addLineVertices(nvert);
-      tessGeo.addLineIndices(nind);
-      int vcount=tessGeo.firstLineVertex;
-      int icount=tessGeo.firstLineIndex;
-      for (int ln=0; ln < lineCount; ln++) {
-        int i0=first + 2 * ln + 0;
-        int i1=first + 2 * ln + 1;
-        addLine(i0,i1,vcount,icount);
-        vcount+=4;
-        icount+=6;
-      }
-    }
- else {
-      tessGeo.firstLineIndex=tessGeo.fillIndexCount;
-      tessGeo.addFillVertices(inGeo.getNumLineVertices());
-      tessGeo.addFillIndices(inGeo.getNumLineIndices());
-      tessGeo.lastLineIndex=tessGeo.fillIndexCount - 1;
-      int vcount=tessGeo.firstFillVertex;
-      int icount=tessGeo.firstFillIndex;
-      for (int ln=0; ln < lineCount; ln++) {
-        int i0=first + 2 * ln + 0;
-        int i1=first + 2 * ln + 1;
-        addLineToFill(i0,i1,vcount,icount);
-        vcount+=4;
-        icount+=6;
-      }
+    int nvert=lineCount * 4;
+    int nind=lineCount * 2 * 3;
+    tessGeo.addLineVertices(nvert);
+    tessGeo.addLineIndices(nind);
+    int vcount=tessGeo.firstLineVertex;
+    int icount=tessGeo.firstLineIndex;
+    for (int ln=0; ln < lineCount; ln++) {
+      int i0=first + 2 * ln + 0;
+      int i1=first + 2 * ln + 1;
+      addLine(i0,i1,vcount,icount);
+      vcount+=4;
+      icount+=6;
     }
   }
 }

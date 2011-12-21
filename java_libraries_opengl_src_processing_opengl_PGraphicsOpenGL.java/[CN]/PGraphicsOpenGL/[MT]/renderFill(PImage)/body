@@ -23,6 +23,7 @@
     gl2f.glTexCoordPointer(2,GL.GL_FLOAT,0,0);
   }
   gl2f.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,glFillIndexBufferID);
+  PTexture tex0=null;
   for (int i=0; i < texState.count; i++) {
     PImage img=texState.textures[i];
     PTexture tex;
@@ -32,6 +33,10 @@
         gl2f.glEnable(tex.glTarget);
         gl2f.glActiveTexture(GL.GL_TEXTURE0);
         gl2f.glBindTexture(tex.glTarget,tex.glID);
+        tex0=tex;
+      }
+      if (tex == null && tex0 != null) {
+        gl2f.glDisable(tex0.glTarget);
       }
     }
     int offset=texState.firstIndex[i];
@@ -40,7 +45,7 @@
     gl2f.glDrawElements(GL.GL_TRIANGLES,size,GL.GL_UNSIGNED_INT,0);
   }
   if (texState.hasTexture) {
-    PTexture tex0=null;
+    tex0=null;
     for (int i=0; i < texState.count; i++) {
       PImage img=texState.textures[i];
       if (img != null) {

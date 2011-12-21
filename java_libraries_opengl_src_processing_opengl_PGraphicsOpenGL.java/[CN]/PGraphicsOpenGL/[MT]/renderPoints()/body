@@ -4,19 +4,19 @@
     pointVBOsCreated=true;
   }
   startPointShader();
-  int size=tess.pointVertexCount;
-  gl2f.glEnableClientState(GL2.GL_NORMAL_ARRAY);
-  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glPointNormalBufferID);
-  gl2f.glBufferData(GL.GL_ARRAY_BUFFER,3 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tess.pointNormals,0,3 * size),vboMode);
-  gl2f.glNormalPointer(GL.GL_FLOAT,0,0);
-  gl2f.glEnableClientState(GL2.GL_COLOR_ARRAY);
-  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glPointColorBufferID);
-  gl2f.glBufferData(GL.GL_ARRAY_BUFFER,4 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tess.pointColors,0,4 * size),vboMode);
-  gl2f.glColorPointer(4,GL.GL_FLOAT,0,0);
   gl2f.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+  gl2f.glEnableClientState(GL2.GL_COLOR_ARRAY);
+  gl2f.glEnableClientState(GL2.GL_NORMAL_ARRAY);
+  int size=tess.pointVertexCount;
   gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glPointVertexBufferID);
   gl2f.glBufferData(GL.GL_ARRAY_BUFFER,3 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tess.pointVertices,0,3 * size),vboMode);
   gl2f.glVertexPointer(3,GL.GL_FLOAT,0,0);
+  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glPointColorBufferID);
+  gl2f.glBufferData(GL.GL_ARRAY_BUFFER,4 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tess.pointColors,0,4 * size),vboMode);
+  gl2f.glColorPointer(4,GL.GL_FLOAT,0,0);
+  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glPointNormalBufferID);
+  gl2f.glBufferData(GL.GL_ARRAY_BUFFER,3 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tess.pointNormals,0,3 * size),vboMode);
+  gl2f.glNormalPointer(GL.GL_FLOAT,0,0);
   setupPointShader(glPointAttribBufferID,tess.pointAttributes,size);
   size=tess.pointIndexCount;
   gl2f.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,glPointIndexBufferID);

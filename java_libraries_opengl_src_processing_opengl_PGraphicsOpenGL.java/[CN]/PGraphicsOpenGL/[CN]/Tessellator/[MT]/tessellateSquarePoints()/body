@@ -2,95 +2,38 @@
   int nInVert=inGeo.lastVertex - inGeo.firstVertex + 1;
   if (stroke && 1 <= nInVert) {
     tessGeo.isStroked=true;
-    if (is3D) {
-      int quadCount=nInVert;
-      int nvertTot=5 * quadCount;
-      int nindTot=12 * quadCount;
-      tessGeo.addPointVertices(nvertTot);
-      tessGeo.addPointIndices(nindTot);
-      int vertIdx=3 * tessGeo.firstPointVertex;
-      int attribIdx=2 * tessGeo.firstPointVertex;
-      int indIdx=tessGeo.firstPointIndex;
-      int firstVert=tessGeo.firstPointVertex;
-      for (int i=inGeo.firstVertex; i <= inGeo.lastVertex; i++) {
-        int nvert=5;
-        for (int k=0; k < nvert; k++) {
-          tessGeo.putPointVertex(inGeo,i,vertIdx);
-          vertIdx++;
-        }
-        tessGeo.pointAttributes[2 * attribIdx + 0]=0;
-        tessGeo.pointAttributes[2 * attribIdx + 1]=0;
-        attribIdx++;
-        for (int k=0; k < 4; k++) {
-          tessGeo.pointAttributes[2 * attribIdx + 0]=0.5f * QUAD_SIGNS[k][0] * strokeWeight;
-          tessGeo.pointAttributes[2 * attribIdx + 1]=0.5f * QUAD_SIGNS[k][1] * strokeWeight;
-          attribIdx++;
-        }
-        for (int k=1; k < nvert - 1; k++) {
-          tessGeo.pointIndices[indIdx++]=firstVert + 0;
-          tessGeo.pointIndices[indIdx++]=firstVert + k;
-          tessGeo.pointIndices[indIdx++]=firstVert + k + 1;
-        }
-        tessGeo.pointIndices[indIdx++]=firstVert + 0;
-        tessGeo.pointIndices[indIdx++]=firstVert + 1;
-        tessGeo.pointIndices[indIdx++]=firstVert + nvert - 1;
-        firstVert=vertIdx;
-      }
-    }
- else {
-      int quadCount=nInVert;
-      int nvertTot=5 * quadCount;
-      int nindTot=12 * quadCount;
-      PMatrix3D tr=modelviewStack.getTransform();
-      tessGeo.addFillVertices(nvertTot);
-      tessGeo.addFillIndices(nindTot);
-      int vertIdx=3 * tessGeo.firstFillVertex;
-      int indIdx=tessGeo.firstFillIndex;
-      int firstVert=tessGeo.firstFillVertex;
-      for (int i=inGeo.firstVertex; i <= inGeo.lastVertex; i++) {
-        int nvert=5;
-        float x0=inGeo.vertices[3 * i + 0];
-        float y0=inGeo.vertices[3 * i + 1];
-        tessGeo.fillVertices[3 * vertIdx + 0]=x0 * tr.m00 + y0 * tr.m01 + tr.m03;
-        tessGeo.fillVertices[3 * vertIdx + 1]=x0 * tr.m10 + y0 * tr.m11 + tr.m13;
-        tessGeo.fillVertices[3 * vertIdx + 2]=0;
-        tessGeo.fillColors[4 * vertIdx + 0]=strokeRed;
-        tessGeo.fillColors[4 * vertIdx + 1]=strokeGreen;
-        tessGeo.fillColors[4 * vertIdx + 2]=strokeBlue;
-        tessGeo.fillColors[4 * vertIdx + 3]=strokeAlpha;
-        tessGeo.fillNormals[3 * vertIdx + 0]=0;
-        tessGeo.fillNormals[3 * vertIdx + 1]=0;
-        tessGeo.fillNormals[3 * vertIdx + 2]=1;
-        tessGeo.fillTexcoords[2 * vertIdx + 0]=0;
-        tessGeo.fillTexcoords[2 * vertIdx + 1]=0;
+    int quadCount=nInVert;
+    int nvertTot=5 * quadCount;
+    int nindTot=12 * quadCount;
+    tessGeo.addPointVertices(nvertTot);
+    tessGeo.addPointIndices(nindTot);
+    int vertIdx=3 * tessGeo.firstPointVertex;
+    int attribIdx=2 * tessGeo.firstPointVertex;
+    int indIdx=tessGeo.firstPointIndex;
+    int firstVert=tessGeo.firstPointVertex;
+    for (int i=inGeo.firstVertex; i <= inGeo.lastVertex; i++) {
+      int nvert=5;
+      for (int k=0; k < nvert; k++) {
+        tessGeo.putPointVertex(inGeo,i,vertIdx);
         vertIdx++;
-        for (int k=0; k < 4; k++) {
-          float x1=x0 + 0.5f * QUAD_SIGNS[k][0] * strokeWeight;
-          float y1=y0 + 0.5f * QUAD_SIGNS[k][1] * strokeWeight;
-          tessGeo.fillVertices[3 * vertIdx + 0]=x1 * tr.m00 + y1 * tr.m01 + tr.m03;
-          tessGeo.fillVertices[3 * vertIdx + 1]=x1 * tr.m10 + y1 * tr.m11 + tr.m13;
-          tessGeo.fillVertices[3 * vertIdx + 2]=0;
-          tessGeo.fillColors[4 * vertIdx + 0]=strokeRed;
-          tessGeo.fillColors[4 * vertIdx + 1]=strokeGreen;
-          tessGeo.fillColors[4 * vertIdx + 2]=strokeBlue;
-          tessGeo.fillColors[4 * vertIdx + 3]=strokeAlpha;
-          tessGeo.fillNormals[3 * vertIdx + 0]=0;
-          tessGeo.fillNormals[3 * vertIdx + 1]=0;
-          tessGeo.fillNormals[3 * vertIdx + 2]=1;
-          tessGeo.fillTexcoords[2 * vertIdx + 0]=0;
-          tessGeo.fillTexcoords[2 * vertIdx + 1]=0;
-          vertIdx++;
-        }
-        for (int k=1; k < nvert - 1; k++) {
-          tessGeo.fillIndices[indIdx++]=firstVert + 0;
-          tessGeo.fillIndices[indIdx++]=firstVert + k;
-          tessGeo.fillIndices[indIdx++]=firstVert + k + 1;
-        }
-        tessGeo.fillIndices[indIdx++]=firstVert + 0;
-        tessGeo.fillIndices[indIdx++]=firstVert + 1;
-        tessGeo.fillIndices[indIdx++]=firstVert + nvert - 1;
-        firstVert=vertIdx;
       }
+      tessGeo.pointAttributes[2 * attribIdx + 0]=0;
+      tessGeo.pointAttributes[2 * attribIdx + 1]=0;
+      attribIdx++;
+      for (int k=0; k < 4; k++) {
+        tessGeo.pointAttributes[2 * attribIdx + 0]=0.5f * QUAD_SIGNS[k][0] * strokeWeight;
+        tessGeo.pointAttributes[2 * attribIdx + 1]=0.5f * QUAD_SIGNS[k][1] * strokeWeight;
+        attribIdx++;
+      }
+      for (int k=1; k < nvert - 1; k++) {
+        tessGeo.pointIndices[indIdx++]=firstVert + 0;
+        tessGeo.pointIndices[indIdx++]=firstVert + k;
+        tessGeo.pointIndices[indIdx++]=firstVert + k + 1;
+      }
+      tessGeo.pointIndices[indIdx++]=firstVert + 0;
+      tessGeo.pointIndices[indIdx++]=firstVert + 1;
+      tessGeo.pointIndices[indIdx++]=firstVert + nvert - 1;
+      firstVert=vertIdx;
     }
   }
 }
