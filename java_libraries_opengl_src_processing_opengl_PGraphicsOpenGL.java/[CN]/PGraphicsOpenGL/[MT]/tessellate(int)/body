@@ -1,13 +1,13 @@
 {
-  tessellator.setInGeometry(in);
-  tessellator.setTessGeometry(tess);
+  tessellator.setInGeometry(inGeo);
+  tessellator.setTessGeometry(tessGeo);
   tessellator.setFill(fill || textureImage != null);
   tessellator.setStroke(stroke);
   tessellator.setStrokeWeight(strokeWeight);
   tessellator.setStrokeCap(strokeCap);
   tessellator.setStrokeJoin(strokeJoin);
   tessellator.setStrokeColor(strokeR,strokeG,strokeB,strokeA);
-  int first=tess.fillIndexCount;
+  int first=tessGeo.fillIndexCount;
   if (shape == POINTS) {
     tessellator.tessellatePoints();
   }
@@ -15,30 +15,30 @@
     tessellator.tessellateLines();
   }
  else   if (shape == TRIANGLE || shape == TRIANGLES) {
-    if (stroke && defaultEdges)     in.addTrianglesEdges();
+    if (stroke && defaultEdges)     inGeo.addTrianglesEdges();
     tessellator.tessellateTriangles();
   }
  else   if (shape == TRIANGLE_FAN) {
-    if (stroke && defaultEdges)     in.addTriangleFanEdges();
+    if (stroke && defaultEdges)     inGeo.addTriangleFanEdges();
     tessellator.tessellateTriangleFan();
   }
  else   if (shape == TRIANGLE_STRIP) {
-    if (stroke && defaultEdges)     in.addTriangleStripEdges();
+    if (stroke && defaultEdges)     inGeo.addTriangleStripEdges();
     tessellator.tessellateTriangleStrip();
   }
  else   if (shape == QUAD || shape == QUADS) {
-    if (stroke && defaultEdges)     in.addQuadsEdges();
+    if (stroke && defaultEdges)     inGeo.addQuadsEdges();
     tessellator.tessellateQuads();
   }
  else   if (shape == QUAD_STRIP) {
-    if (stroke && defaultEdges)     in.addQuadStripEdges();
+    if (stroke && defaultEdges)     inGeo.addQuadStripEdges();
     tessellator.tessellateQuadStrip();
   }
  else   if (shape == POLYGON) {
-    if (stroke && defaultEdges)     in.addPolygonEdges(mode == CLOSE);
+    if (stroke && defaultEdges)     inGeo.addPolygonEdges(mode == CLOSE);
     tessellator.tessellatePolygon(false,mode == CLOSE);
   }
-  int last=tess.lastFillIndex;
+  int last=tessGeo.lastFillIndex;
   if (textureImage0 != textureImage || texState.count == 0) {
     texState.addTexture(textureImage,first,last);
   }

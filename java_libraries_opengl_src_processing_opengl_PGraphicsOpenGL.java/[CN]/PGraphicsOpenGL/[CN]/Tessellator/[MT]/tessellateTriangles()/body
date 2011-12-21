@@ -1,16 +1,16 @@
 {
-  int nInVert=inGeo.lastVertex - inGeo.firstVertex + 1;
+  int nInVert=in.lastVertex - in.firstVertex + 1;
   if (fill && 3 <= nInVert) {
-    tessGeo.addFillVertices(inGeo);
-    tessGeo.addFillIndices(nInVert);
-    int idx0=tessGeo.firstFillIndex;
-    int offset=tessGeo.firstFillVertex;
-    for (int i=inGeo.firstVertex; i <= inGeo.lastVertex; i++) {
-      tessGeo.fillIndices[idx0 + i]=offset + i;
+    tess.addFillVertices(in);
+    tess.addFillIndices(nInVert);
+    int idx0=tess.firstFillIndex;
+    int offset=tess.firstFillVertex;
+    for (int i=in.firstVertex; i <= in.lastVertex; i++) {
+      tess.fillIndices[idx0 + i]=offset + i;
     }
   }
   if (stroke) {
-    tessGeo.isStroked=true;
+    tess.isStroked=true;
     tessellateEdges();
   }
 }
