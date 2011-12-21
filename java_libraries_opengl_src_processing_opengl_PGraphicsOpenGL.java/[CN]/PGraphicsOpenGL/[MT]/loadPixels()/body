@@ -1,4 +1,5 @@
 {
+  flush();
   if ((pixels == null) || (pixels.length != width * height)) {
     pixels=new int[width * height];
     pixelBuffer=IntBuffer.allocate(pixels.length);
@@ -13,6 +14,7 @@
     setFramebuffer(offscreenFramebuffer);
   }
   pixelBuffer.rewind();
+  if (primarySurface)   gl2x.glReadBuffer(GL.GL_FRONT);
   gl.glReadPixels(0,0,width,height,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,pixelBuffer);
   if (notCurrent) {
     popFramebuffer();
