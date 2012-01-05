@@ -2,13 +2,9 @@
   if (!manipulatingCamera) {
     throw new RuntimeException("Cannot call endCamera() " + "without first calling beginCamera()");
   }
-  getModelviewMatrix();
-  modelviewInv.set(modelview);
-  modelviewInv.invert();
   camera.set(modelview);
-  PApplet.arrayCopy(glmodelview,pcamera);
-  PApplet.arrayCopy(glmodelviewInv,pcameraInv);
-  copyGLArrayToPMatrix(pcamera,camera);
-  copyGLArrayToPMatrix(pcameraInv,cameraInv);
+  cameraInv.set(camera);
+  cameraInv.invert();
+  geometry.reset();
   manipulatingCamera=false;
 }
