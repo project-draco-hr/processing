@@ -6,20 +6,55 @@
     }
   }
  else {
-    if (transformed) {
-      if (0 < tess.fillVertexCount && 0 < tess.fillIndexCount) {
-        root.copyFillGeometry(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillVertices,tess.fillColors,tess.fillNormals,tess.fillTexcoords);
+    if (0 < tess.fillVertexCount) {
+      if (modifiedFillVertices) {
+        if (root.fillVerticesCache == null) {
+          root.fillVerticesCache=new VertexCache(3);
+        }
+        root.fillVerticesCache.add(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillVertices);
+        modifiedFillVertices=false;
       }
-      if (0 < tess.lineVertexCount && 0 < tess.lineIndexCount) {
-        root.copyLineGeometry(root.lineVertCopyOffset,tess.lineVertexCount,tess.lineVertices,tess.lineColors,tess.lineNormals,tess.lineAttributes);
+ else       if (root.fillVerticesCache != null && root.fillVerticesCache.hasData()) {
+        root.copyFillVertices(root.fillVerticesCache.offset,root.fillVerticesCache.size,root.fillVerticesCache.data);
+        root.fillVerticesCache.reset();
       }
-      if (0 < tess.pointVertexCount && 0 < tess.pointIndexCount) {
-        root.copyPointGeometry(root.pointVertCopyOffset,tess.pointVertexCount,tess.pointVertices,tess.pointColors,tess.pointNormals,tess.pointAttributes);
+      if (modifiedFillColors) {
+        if (root.fillColorsCache == null) {
+          root.fillColorsCache=new VertexCache(4);
+        }
+        root.fillColorsCache.add(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillColors);
+        modifiedFillColors=false;
       }
-      transformed=false;
+ else       if (root.fillColorsCache != null && root.fillColorsCache.hasData()) {
+        root.copyFillColors(root.fillColorsCache.offset,root.fillColorsCache.size,root.fillColorsCache.data);
+        root.fillColorsCache.reset();
+      }
+      if (modifiedFillNormals) {
+        if (root.fillNormalsCache == null) {
+          root.fillNormalsCache=new VertexCache(3);
+        }
+        root.fillNormalsCache.add(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillNormals);
+        modifiedFillNormals=false;
+      }
+ else       if (root.fillNormalsCache != null && root.fillNormalsCache.hasData()) {
+        root.copyFillNormals(root.fillNormalsCache.offset,root.fillNormalsCache.size,root.fillNormalsCache.data);
+        root.fillNormalsCache.reset();
+      }
+      if (modifiedFillTexCoords) {
+        if (root.fillTexCoordsCache == null) {
+          root.fillTexCoordsCache=new VertexCache(2);
+        }
+        root.fillTexCoordsCache.add(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillTexcoords);
+        modifiedFillTexCoords=false;
+      }
+ else       if (root.fillTexCoordsCache != null && root.fillTexCoordsCache.hasData()) {
+        root.copyFillTexCoords(root.fillTexCoordsCache.offset,root.fillTexCoordsCache.size,root.fillTexCoordsCache.data);
+        root.fillTexCoordsCache.reset();
+      }
     }
     root.fillVertCopyOffset+=tess.fillVertexCount;
     root.lineVertCopyOffset+=tess.lineVertexCount;
     root.pointVertCopyOffset+=tess.pointVertexCount;
+    modified=false;
   }
 }
