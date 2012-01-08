@@ -2,7 +2,6 @@
   if (shapeEnded) {
     updateTesselation();
     if (0 < tess.lineVertexCount) {
-      int offset=root.lineVertOffset.get(this);
       int size=tess.lineVertexCount;
       float[] colors=tess.lineColors;
       int index;
@@ -13,11 +12,10 @@
         colors[index++]=strokeB;
         colors[index]=strokeA;
       }
-      getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glLineColorBufferID);
-      getGl().glBufferSubData(GL.GL_ARRAY_BUFFER,4 * offset * PGraphicsOpenGL.SIZEOF_FLOAT,4 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(colors));
+      modifiedLineColors=true;
+      modified=true;
     }
     if (0 < tess.pointVertexCount) {
-      int offset=root.pointVertOffset.get(this);
       int size=tess.pointVertexCount;
       float[] colors=tess.pointColors;
       int index;
@@ -28,8 +26,8 @@
         colors[index++]=strokeB;
         colors[index]=strokeA;
       }
-      getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glPointColorBufferID);
-      getGl().glBufferSubData(GL.GL_ARRAY_BUFFER,4 * offset * PGraphicsOpenGL.SIZEOF_FLOAT,4 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(colors));
+      modifiedPointColors=true;
+      modified=true;
     }
   }
 }
