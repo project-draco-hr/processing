@@ -2,7 +2,7 @@
   if (visible) {
     updateTesselation();
     updateGeometry();
-    if (matrix != null) {
+    if (matrix != null && applyMatrix) {
       g.pushMatrix();
       g.applyMatrix(matrix);
     }
@@ -16,12 +16,6 @@
       }
       HashSet<PImage> textures=getTextures();
       boolean diffTexBelow=1 < textures.size();
-      for (int i=0; i < childCount; i++) {
-        if (((PShape3D)children[i]).hasMatrix()) {
-          matrixBelow=true;
-          break;
-        }
-      }
       if (matrixBelow || diffTexBelow) {
         for (int i=0; i < childCount; i++) {
           ((PShape3D)children[i]).draw(g);

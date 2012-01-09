@@ -1,10 +1,12 @@
 {
   if (size == 0) {
-    offset=newOffset;
+    offset=dataOffset;
   }
-  if (data.length / ncoords <= size + newSize) {
-    expand(size + newSize);
+  int oldSize=data.length / ncoords;
+  if (size + dataSize >= oldSize) {
+    int newSize=expandSize(oldSize,size + dataSize);
+    expand(newSize);
   }
-  PApplet.arrayCopy(newData,0,data,ncoords * size,ncoords * newSize);
-  size+=newSize;
+  PApplet.arrayCopy(newData,0,data,ncoords * size,ncoords * dataSize);
+  size+=dataSize;
 }
