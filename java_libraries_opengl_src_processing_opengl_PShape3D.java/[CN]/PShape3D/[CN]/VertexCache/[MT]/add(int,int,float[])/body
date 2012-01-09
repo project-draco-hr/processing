@@ -7,6 +7,34 @@
     int newSize=expandSize(oldSize,size + dataSize);
     expand(newSize);
   }
-  PApplet.arrayCopy(newData,0,data,ncoords * size,ncoords * dataSize);
+  if (dataSize <= PGraphicsOpenGL.MIN_ARRAYCOPY_SIZE) {
+    for (int i=0; i < dataSize; i++) {
+      int srcIndex=ncoords * i;
+      int destIndex=ncoords * (size + i);
+      if (ncoords == 2) {
+        data[destIndex++]=newData[srcIndex++];
+        data[destIndex]=newData[srcIndex];
+      }
+ else       if (ncoords == 3) {
+        data[destIndex++]=newData[srcIndex++];
+        data[destIndex++]=newData[srcIndex++];
+        data[destIndex]=newData[srcIndex];
+      }
+ else       if (ncoords == 4) {
+        data[destIndex++]=newData[srcIndex++];
+        data[destIndex++]=newData[srcIndex++];
+        data[destIndex++]=newData[srcIndex++];
+        data[destIndex]=newData[srcIndex];
+      }
+ else {
+        for (int j=0; j < ncoords; j++) {
+          data[destIndex++]=newData[srcIndex++];
+        }
+      }
+    }
+  }
+ else {
+    PApplet.arrayCopy(newData,0,data,ncoords * size,ncoords * dataSize);
+  }
   size+=dataSize;
 }
