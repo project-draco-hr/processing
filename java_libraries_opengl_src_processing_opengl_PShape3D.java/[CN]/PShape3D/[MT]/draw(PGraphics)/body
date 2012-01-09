@@ -7,15 +7,8 @@
       g.applyMatrix(matrix);
     }
     if (family == GROUP) {
-      boolean matrixBelow=false;
-      for (int i=0; i < childCount; i++) {
-        if (((PShape3D)children[i]).hasMatrix()) {
-          matrixBelow=true;
-          break;
-        }
-      }
-      HashSet<PImage> textures=getTextures();
-      boolean diffTexBelow=1 < textures.size();
+      boolean matrixBelow=childHasMatrix;
+      boolean diffTexBelow=textures != null && 1 < textures.size();
       if (matrixBelow || diffTexBelow) {
         for (int i=0; i < childCount; i++) {
           ((PShape3D)children[i]).draw(g);
@@ -23,7 +16,7 @@
       }
  else {
         PImage tex=null;
-        if (textures.size() == 1) {
+        if (textures != null && textures.size() == 1) {
           tex=(PImage)textures.toArray()[0];
         }
         render(tex);
