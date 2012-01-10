@@ -5,6 +5,10 @@
     super.translate(tx,ty,tz);
   }
  else {
+    if (!shapeEnded) {
+      PGraphics.showWarning("Transformations can be applied only after the shape has been ended.");
+      return;
+    }
     checkMatrix(3);
     matrix.translate(tx,ty,tz);
     tess.applyMatrix((PMatrix3D)matrix);

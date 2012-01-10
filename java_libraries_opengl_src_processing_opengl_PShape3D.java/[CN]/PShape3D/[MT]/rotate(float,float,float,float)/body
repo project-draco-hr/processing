@@ -5,6 +5,10 @@
     super.rotate(angle,v0,v1,v2);
   }
  else {
+    if (!shapeEnded) {
+      PGraphics.showWarning("Transformations can be applied only after the shape has been ended.");
+      return;
+    }
     checkMatrix(3);
     matrix.reset();
     matrix.rotate(angle,v0,v1,v2);
@@ -23,6 +27,6 @@
       modifiedPointVertices=true;
       modifiedPointNormals=true;
     }
-    applyMatrix=true;
+    applyMatrix=false;
   }
 }

@@ -1,3 +1,31 @@
 {
-  super.scale(x,y);
+  if (family == GROUP) {
+    childHasMatrix();
+    applyMatrix=true;
+    super.scale(x,y);
+  }
+ else {
+    if (!shapeEnded) {
+      PGraphics.showWarning("Transformations can be applied only after the shape has been ended.");
+      return;
+    }
+    checkMatrix(2);
+    matrix.scale(x,y);
+    tess.applyMatrix((PMatrix2D)matrix);
+    modified();
+    if (0 < tess.fillVertexCount) {
+      modifiedFillVertices=true;
+      modifiedFillNormals=true;
+    }
+    if (0 < tess.lineVertexCount) {
+      modifiedLineVertices=true;
+      modifiedLineNormals=true;
+      modifiedLineAttributes=true;
+    }
+    if (0 < tess.pointVertexCount) {
+      modifiedPointVertices=true;
+      modifiedPointNormals=true;
+    }
+    applyMatrix=false;
+  }
 }
