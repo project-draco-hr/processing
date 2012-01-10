@@ -5,6 +5,7 @@ case TRIANGLE_FAN:
       addIndex(0);
       addIndex(i);
       addIndex(i + 1);
+      if (calcNormals)       calcFanNormal(0,i,i + 1,i == tessCount - 2);
     }
   break;
 case TRIANGLE_STRIP:
@@ -13,16 +14,26 @@ for (int i=1; i < tessCount - 1; i++) {
   if (i % 2 == 0) {
     addIndex(i - 1);
     addIndex(i + 1);
+    if (calcNormals)     calcStripNormal(i,i - 1,i + 1,i == tessCount - 2);
   }
  else {
     addIndex(i + 1);
     addIndex(i - 1);
+    if (calcNormals)     calcStripNormal(i,i + 1,i - 1,i == tessCount - 2);
   }
 }
 break;
 case TRIANGLES:
 for (int i=0; i < tessCount; i++) {
 addIndex(i);
+}
+if (calcNormals) {
+for (int tr=0; tr < tessCount / 3; tr++) {
+int i0=3 * tr + 0;
+int i1=3 * tr + 1;
+int i2=3 * tr + 2;
+calcTriNormal(i0,i1,i2);
+}
 }
 break;
 }

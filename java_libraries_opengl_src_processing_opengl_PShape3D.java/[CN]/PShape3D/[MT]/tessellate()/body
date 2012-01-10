@@ -17,34 +17,41 @@
       tessellator.setStrokeColor(strokeR,strokeG,strokeB,strokeA);
       if (family == GEOMETRY) {
         if (kind == POINTS) {
+          if (normalMode == NORMAL_MODE_AUTO)           in.calcPointsNormals();
           tessellator.tessellatePoints();
         }
  else         if (kind == LINES) {
+          if (normalMode == NORMAL_MODE_AUTO)           in.calcLinesNormals();
           tessellator.tessellateLines();
         }
  else         if (kind == TRIANGLE || kind == TRIANGLES) {
           if (stroke)           in.addTrianglesEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           in.calcTrianglesNormals();
           tessellator.tessellateTriangles();
         }
  else         if (kind == TRIANGLE_FAN) {
           if (stroke)           in.addTriangleFanEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           in.calcTriangleFanNormals();
           tessellator.tessellateTriangleFan();
         }
  else         if (kind == TRIANGLE_STRIP) {
           if (stroke)           in.addTriangleStripEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           in.calcTriangleStripNormals();
           tessellator.tessellateTriangleStrip();
         }
  else         if (kind == QUAD || kind == QUADS) {
           if (stroke)           in.addQuadsEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           in.calcQuadsNormals();
           tessellator.tessellateQuads();
         }
  else         if (kind == QUAD_STRIP) {
           if (stroke)           in.addQuadStripEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           in.calcQuadStripNormals();
           tessellator.tessellateQuadStrip();
         }
  else         if (kind == POLYGON) {
           if (stroke)           in.addPolygonEdges(isClosed);
-          tessellator.tessellatePolygon(isSolid,isClosed);
+          tessellator.tessellatePolygon(isSolid,isClosed,normalMode == NORMAL_MODE_AUTO);
         }
       }
  else       if (family == PRIMITIVE) {
