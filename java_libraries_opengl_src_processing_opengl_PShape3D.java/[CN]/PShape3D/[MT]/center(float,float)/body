@@ -1,22 +1,22 @@
 {
   if (family == GROUP) {
+    PVector center=new PVector();
+    int count=updateCenter(center,0);
+    center.x/=count;
+    center.y/=count;
+    float tx=cx - center.x;
+    float ty=cy - center.y;
+    childHasMatrix();
+    applyMatrix=true;
+    super.translate(tx,ty);
   }
  else {
-    if (!shapeEnded) {
-      PGraphics.showWarning("Transformations can be applied only after the shape has been ended.");
-      return;
-    }
-    tess.center(cx,cy);
-    modified();
-    if (0 < tess.fillVertexCount) {
-      modifiedFillVertices=true;
-    }
-    if (0 < tess.lineVertexCount) {
-      modifiedLineVertices=true;
-      modifiedLineAttributes=true;
-    }
-    if (0 < tess.pointVertexCount) {
-      modifiedPointVertices=true;
-    }
+    PVector vec=new PVector();
+    int count=tess.getCenter(vec);
+    vec.x/=count;
+    vec.y/=count;
+    float tx=cx - vec.x;
+    float ty=cy - vec.y;
+    translate(tx,ty);
   }
 }
