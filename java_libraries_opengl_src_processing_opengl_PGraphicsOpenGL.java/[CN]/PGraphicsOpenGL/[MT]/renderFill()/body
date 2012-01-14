@@ -16,7 +16,7 @@
   gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillNormalBufferID);
   gl2f.glBufferData(GL.GL_ARRAY_BUFFER,3 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tessGeo.fillNormals,0,3 * size),vboMode);
   gl2f.glNormalPointer(GL.GL_FLOAT,0,0);
-  if (texState.hasTexture) {
+  if (texCache.hasTexture) {
     gl2f.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
     gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillTexCoordBufferID);
     gl2f.glBufferData(GL.GL_ARRAY_BUFFER,2 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tessGeo.fillTexcoords,0,2 * size),vboMode);
@@ -24,9 +24,9 @@
   }
   gl2f.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,glFillIndexBufferID);
   PTexture tex0=null;
-  for (int i=0; i < texState.count; i++) {
-    PImage img=texState.textures[i];
-    PTexture tex;
+  for (int i=0; i < texCache.count; i++) {
+    PImage img=texCache.textures[i];
+    PTexture tex=null;
     if (img != null) {
       tex=ogl.getTexture(img);
       if (tex != null) {
@@ -35,19 +35,19 @@
         gl2f.glBindTexture(tex.glTarget,tex.glID);
         tex0=tex;
       }
-      if (tex == null && tex0 != null) {
-        gl2f.glDisable(tex0.glTarget);
-      }
     }
-    int offset=texState.firstIndex[i];
-    size=texState.lastIndex[i] - texState.firstIndex[i] + 1;
+    if (tex == null && tex0 != null) {
+      gl2f.glDisable(tex0.glTarget);
+    }
+    int offset=texCache.firstIndex[i];
+    size=texCache.lastIndex[i] - texCache.firstIndex[i] + 1;
     gl2f.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER,size * PGraphicsOpenGL.SIZEOF_INT,IntBuffer.wrap(tessGeo.fillIndices,offset,size),vboMode);
     gl2f.glDrawElements(GL.GL_TRIANGLES,size,GL.GL_UNSIGNED_INT,0);
   }
-  if (texState.hasTexture) {
+  if (texCache.hasTexture) {
     tex0=null;
-    for (int i=0; i < texState.count; i++) {
-      PImage img=texState.textures[i];
+    for (int i=0; i < texCache.count; i++) {
+      PImage img=texCache.textures[i];
       if (img != null) {
         PTexture tex=ogl.getTexture(img);
         if (tex0 != tex) {
