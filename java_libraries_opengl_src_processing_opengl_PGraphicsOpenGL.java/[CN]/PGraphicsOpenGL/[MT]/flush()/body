@@ -4,8 +4,8 @@
   boolean hasFill=0 < tessGeo.fillVertexCount && 0 < tessGeo.fillIndexCount;
   if (hasPoints || hasLines || hasFill) {
     if (flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
-      gl2f.glPushMatrix();
-      gl2f.glLoadIdentity();
+      pgl.pushMatrix();
+      pgl.loadIdentity();
     }
     if (hasFill) {
       renderFill();
@@ -17,7 +17,7 @@
       renderLines();
     }
     if (flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
-      gl2f.glPopMatrix();
+      pgl.popMatrix();
     }
   }
   tessGeo.reset();

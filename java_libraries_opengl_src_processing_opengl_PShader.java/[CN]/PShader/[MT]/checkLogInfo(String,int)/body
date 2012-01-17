@@ -1,15 +1,7 @@
 {
-  IntBuffer iVal=IntBuffer.allocate(1);
-  ogl.gl.getGL2().glGetObjectParameterivARB(obj,GL2.GL_OBJECT_INFO_LOG_LENGTH_ARB,iVal);
-  int length=iVal.get();
-  if (length <= 1) {
-    return;
+  String log=pgl.getShaderLog(obj);
+  if (!log.equals("")) {
+    System.out.println(title);
+    System.out.println(log);
   }
-  ByteBuffer infoLog=ByteBuffer.allocate(length);
-  iVal.flip();
-  ogl.gl.getGL2().glGetInfoLogARB(obj,length,iVal,infoLog);
-  byte[] infoBytes=new byte[length];
-  infoLog.get(infoBytes);
-  System.out.println(title);
-  System.out.println(new String(infoBytes));
 }

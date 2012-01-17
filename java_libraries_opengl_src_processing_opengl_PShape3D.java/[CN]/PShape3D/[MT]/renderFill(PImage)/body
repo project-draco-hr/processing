@@ -1,36 +1,37 @@
 {
-  getGl().glEnableClientState(GL2.GL_NORMAL_ARRAY);
-  getGl().glEnableClientState(GL2.GL_COLOR_ARRAY);
-  getGl().glEnableClientState(GL2.GL_VERTEX_ARRAY);
-  getGl().glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glFillNormalBufferID);
-  getGl().glNormalPointer(GL.GL_FLOAT,0,0);
-  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glFillColorBufferID);
-  getGl().glColorPointer(4,GL.GL_FLOAT,0,0);
-  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glFillVertexBufferID);
-  getGl().glVertexPointer(3,GL.GL_FLOAT,0,0);
-  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,root.glFillTexCoordBufferID);
-  getGl().glTexCoordPointer(2,GL.GL_FLOAT,0,0);
+  pgl.enableVertexArrays();
+  pgl.enableColorArrays();
+  pgl.enableNormalArrays();
+  pgl.enableTexCoordArrays();
+  pgl.bindVertexBuffer(root.glFillColorBufferID);
+  pgl.setVertexFormat(3,0,0);
+  pgl.bindVertexBuffer(root.glFillColorBufferID);
+  pgl.setColorFormat(4,0,0);
+  pgl.bindVertexBuffer(root.glFillNormalBufferID);
+  pgl.setNormalFormat(3,0,0);
+  pgl.bindVertexBuffer(root.glFillTexCoordBufferID);
+  pgl.setTexCoordFormat(2,0,0);
   PTexture tex=null;
   if (textureImage != null) {
     tex=ogl.getTexture(textureImage);
     if (tex != null) {
-      getGl().glEnable(tex.glTarget);
-      getGl().glActiveTexture(GL.GL_TEXTURE0);
-      getGl().glBindTexture(tex.glTarget,tex.glID);
+      pgl.enableTexturing(tex.glTarget);
+      pgl.setActiveTexUnit(0);
+      pgl.bindTexture(tex.glTarget,tex.glID);
     }
   }
-  getGl().glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,root.glFillIndexBufferID);
-  getGl().glDrawElements(GL.GL_TRIANGLES,tess.lastFillIndex - tess.firstFillIndex + 1,GL.GL_UNSIGNED_INT,tess.firstFillIndex * PGraphicsOpenGL.SIZEOF_INT);
+  int offset=tess.firstFillIndex;
+  int size=tess.lastFillIndex - tess.firstFillIndex + 1;
+  pgl.bindIndexBuffer(root.glFillIndexBufferID);
+  pgl.renderIndexBuffer(offset,size);
   if (tex != null) {
-    getGl().glActiveTexture(GL.GL_TEXTURE0);
-    getGl().glBindTexture(tex.glTarget,0);
-    getGl().glDisable(tex.glTarget);
+    pgl.unbindTexture(tex.glTarget);
+    pgl.disableTexturing(tex.glTarget);
   }
-  getGl().glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,0);
-  getGl().glBindBuffer(GL.GL_ARRAY_BUFFER,0);
-  getGl().glDisableClientState(GL2.GL_VERTEX_ARRAY);
-  getGl().glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-  getGl().glDisableClientState(GL2.GL_COLOR_ARRAY);
-  getGl().glDisableClientState(GL2.GL_NORMAL_ARRAY);
+  pgl.unbindIndexBuffer();
+  pgl.unbindVertexBuffer();
+  pgl.disableVertexArrays();
+  pgl.disableColorArrays();
+  pgl.disableNormalArrays();
+  pgl.disableTexCoordArrays();
 }

@@ -1,45 +1,19 @@
 {
-  OPENGL_VENDOR=gl.glGetString(GL.GL_VENDOR);
-  OPENGL_RENDERER=gl.glGetString(GL.GL_RENDERER);
-  OPENGL_VERSION=gl.glGetString(GL.GL_VERSION);
-  npotTexSupported=false;
-  mipmapGeneration=false;
-  matrixGetSupported=false;
-  texenvCrossbarSupported=false;
-  vboSupported=false;
-  fboSupported=false;
-  fboMultisampleSupported=false;
-  OPENGL_EXTENSIONS=gl.glGetString(GL.GL_EXTENSIONS);
-  if (-1 < OPENGL_EXTENSIONS.indexOf("texture_non_power_of_two")) {
-    npotTexSupported=true;
-  }
-  if (-1 < OPENGL_EXTENSIONS.indexOf("generate_mipmap")) {
-    mipmapGeneration=true;
-  }
-  if (-1 < OPENGL_EXTENSIONS.indexOf("matrix_get")) {
-    matrixGetSupported=true;
-  }
-  if (-1 < OPENGL_EXTENSIONS.indexOf("texture_env_crossbar")) {
-    texenvCrossbarSupported=true;
-  }
-  if (-1 < OPENGL_EXTENSIONS.indexOf("vertex_buffer_object")) {
-    vboSupported=true;
-  }
-  if (-1 < OPENGL_EXTENSIONS.indexOf("framebuffer_object")) {
-    fboSupported=true;
-  }
-  if (-1 < OPENGL_EXTENSIONS.indexOf("framebuffer_multisample")) {
-    fboMultisampleSupported=true;
-  }
-  blendEqSupported=true;
-  int temp[]=new int[2];
-  gl.glGetIntegerv(GL.GL_MAX_TEXTURE_SIZE,temp,0);
-  maxTextureSize=temp[0];
-  gl.glGetIntegerv(GL.GL_ALIASED_LINE_WIDTH_RANGE,temp,0);
-  maxLineWidth=temp[1];
-  gl.glGetIntegerv(GL.GL_ALIASED_POINT_SIZE_RANGE,temp,0);
-  maxPointSize=temp[1];
-  gl.glGetIntegerv(GL2.GL_MAX_TEXTURE_UNITS,temp,0);
-  maxTextureUnits=temp[0];
+  OPENGL_VENDOR=pgl.getVendorString();
+  OPENGL_RENDERER=pgl.getRendererString();
+  OPENGL_VERSION=pgl.getVersionString();
+  OPENGL_EXTENSIONS=pgl.getExtensionsString();
+  npotTexSupported=pgl.isNpotTexSupported();
+  mipmapGeneration=pgl.hasMipmapGeneration();
+  matrixGetSupported=pgl.isMatrixGetSupported();
+  texenvCrossbarSupported=pgl.isTexenvCrossbarSupported();
+  vboSupported=pgl.isVboSupported();
+  fboSupported=pgl.isFboSupported();
+  fboMultisampleSupported=pgl.isFboMultisampleSupported();
+  blendEqSupported=pgl.isBlendEqSupported();
+  maxTextureSize=pgl.getMaxTexureSize();
+  maxLineWidth=pgl.getMaxAliasedLineWidth();
+  maxPointSize=pgl.getMaxAliasedPointSize();
+  maxTextureUnits=pgl.getMaxTextureUnits();
   glParamsRead=true;
 }

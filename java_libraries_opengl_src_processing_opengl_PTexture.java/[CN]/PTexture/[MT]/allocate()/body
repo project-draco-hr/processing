@@ -1,16 +1,16 @@
 {
   release();
-  getGl().glEnable(glTarget);
+  pgl.enableTexturing(glTarget);
   glID=ogl.createTextureObject();
-  getGl().glBindTexture(glTarget,glID);
-  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_MIN_FILTER,glMinFilter);
-  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_MAG_FILTER,glMagFilter);
-  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_WRAP_S,glWrapS);
-  getGl().glTexParameteri(glTarget,GL.GL_TEXTURE_WRAP_T,glWrapT);
-  getGl().glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,null);
+  pgl.bindTexture(glTarget,glID);
+  pgl.setTexMinFilter(glTarget,glMinFilter);
+  pgl.setTexMagFilter(glTarget,glMagFilter);
+  pgl.setTexWrapS(glTarget,glWrapS);
+  pgl.setTexWrapT(glTarget,glWrapT);
+  pgl.initTex(glFormat,glFormat,glWidth,glHeight);
   int[] texels=new int[width * height];
   setTexels(0,0,width,height,texels);
   texels=null;
-  getGl().glBindTexture(glTarget,0);
-  getGl().glDisable(glTarget);
+  pgl.unbindTexture(glTarget);
+  pgl.disableTexturing(glTarget);
 }

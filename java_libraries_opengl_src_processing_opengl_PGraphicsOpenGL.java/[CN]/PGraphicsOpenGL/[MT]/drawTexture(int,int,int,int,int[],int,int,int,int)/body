@@ -1,12 +1,12 @@
 {
-  gl.glEnable(target);
-  gl.glBindTexture(target,id);
+  pgl.enableTexturing(target);
+  pgl.bindTexture(target,id);
   int savedBlendMode=blendMode;
   blendMode(REPLACE);
-  gl2f.glTexEnvi(GL2.GL_TEXTURE_ENV,GL2.GL_TEXTURE_ENV_MODE,GL2.GL_REPLACE);
+  pgl.setTexEnvironmentMode(PGLJava.REPLACE);
   drawTexture(tw,th,crop,x,y,w,h);
-  gl2f.glTexEnvi(GL2.GL_TEXTURE_ENV,GL2.GL_TEXTURE_ENV_MODE,GL2.GL_MODULATE);
-  gl.glBindTexture(target,0);
-  gl.glDisable(target);
+  pgl.setTexEnvironmentMode(PGLJava.MODULATE);
+  pgl.unbindTexture(target);
+  pgl.disableTexturing(target);
   blendMode(savedBlendMode);
 }

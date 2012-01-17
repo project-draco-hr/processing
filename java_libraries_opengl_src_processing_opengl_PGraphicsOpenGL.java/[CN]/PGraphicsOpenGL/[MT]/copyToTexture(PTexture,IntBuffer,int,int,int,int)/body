@@ -1,8 +1,8 @@
 {
   buffer.rewind();
-  gl.glEnable(tex.glTarget);
-  gl.glBindTexture(tex.glTarget,tex.glID);
-  gl.glTexSubImage2D(tex.glTarget,0,x,y,w,h,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,buffer);
-  gl.glBindTexture(tex.glTarget,0);
-  gl.glDisable(tex.glTarget);
+  pgl.enableTexturing(tex.glTarget);
+  pgl.bindTexture(tex.glTarget,tex.glID);
+  pgl.copyTexSubImage(buffer,tex.glTarget,x,y,w,h);
+  pgl.bindTexture(tex.glTarget,0);
+  pgl.disableTexturing(tex.glTarget);
 }

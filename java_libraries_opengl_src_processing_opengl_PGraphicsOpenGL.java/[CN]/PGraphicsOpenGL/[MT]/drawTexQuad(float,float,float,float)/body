@@ -1,16 +1,11 @@
 {
-  if (quadVertexBuffer == null) {
-    allocateTexQuad();
-  }
-  quadTexCoordBuffer.position(0);
-  quadTexCoordBuffer.put(new float[]{u0,v0,u0,v1,u1,v0,u1,v1});
-  gl2f.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-  gl2f.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-  quadVertexBuffer.position(0);
-  quadTexCoordBuffer.position(0);
-  gl2f.glVertexPointer(3,GL.GL_FLOAT,0,quadVertexBuffer);
-  gl2f.glTexCoordPointer(2,GL.GL_FLOAT,0,quadTexCoordBuffer);
-  gl2f.glDrawArrays(GL.GL_TRIANGLE_STRIP,0,4);
-  gl2f.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-  gl2f.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+  stroke=false;
+  beginShape(QUAD);
+  vertex(0,0,u0,v0);
+  vertex(1,0,u1,v0);
+  vertex(1,1,u1,v1);
+  vertex(0,1,u0,v1);
+  endShape();
+  tessellate(OPEN);
+  renderTexFill();
 }

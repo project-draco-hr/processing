@@ -8,13 +8,13 @@
     PGraphics.showWarning("The pixels array has the wrong length. It should be " + w * h);
     return;
   }
-  getGl().glEnable(glTarget);
-  getGl().glBindTexture(glTarget,glID);
+  pgl.enableTexturing(glTarget);
+  pgl.bindTexture(glTarget,glID);
   if (usingMipmaps) {
     if (PGraphicsOpenGL.mipmapGeneration) {
       int[] rgbaPixels=new int[w * h];
       convertToRGBA(pixels,rgbaPixels,format,w,h);
-      getGl().glTexParameteri(GL.GL_TEXTURE_2D,GL2.GL_GENERATE_MIPMAP,GL.GL_TRUE);
+      pgl.enableTexMipmapGen(glTarget);
       setTexels(x,y,w,h,rgbaPixels);
       rgbaPixels=null;
     }
@@ -27,6 +27,6 @@
     setTexels(x,y,w,h,rgbaPixels);
     rgbaPixels=null;
   }
-  getGl().glBindTexture(glTarget,0);
-  getGl().glDisable(glTarget);
+  pgl.bindTexture(glTarget,0);
+  pgl.enableTexturing(glTarget);
 }

@@ -31,17 +31,17 @@
   super.noTexture();
   setDefaultBlend();
   if (hints[DISABLE_DEPTH_TEST]) {
-    gl.glDisable(GL.GL_DEPTH_TEST);
+    pgl.disableDepthTest();
   }
  else {
-    gl.glEnable(GL.GL_DEPTH_TEST);
+    pgl.enableDepthTest();
   }
-  gl.glDepthFunc(GL.GL_LEQUAL);
+  pgl.setDepthFunc(PGLJava.LESS_OR_EQUAL);
   if (hints[DISABLE_DEPTH_MASK]) {
-    gl.glDepthMask(false);
+    pgl.disableDepthMask();
   }
  else {
-    gl.glDepthMask(true);
+    pgl.enableDepthMask();
   }
   if (hints[ENABLE_ACCURATE_2D]) {
     flushMode=FLUSH_CONTINUOUSLY;
@@ -49,8 +49,12 @@
  else {
     flushMode=FLUSH_WHEN_FULL;
   }
-  gl.glGetIntegerv(GL.GL_VIEWPORT,savedViewport,0);
-  gl.glViewport(0,0,width,height);
+  pgl.getViweport(savedViewport);
+  viewport[0]=0;
+  viewport[1]=0;
+  viewport[2]=width;
+  viewport[3]=height;
+  pgl.setViewport(viewport);
   if (resized) {
     background(0);
     if (texture != null) {
@@ -74,7 +78,7 @@
   noLights();
   lightFalloff(1,0,0);
   lightSpecular(0,0,0);
-  gl.glFrontFace(GL.GL_CW);
+  pgl.setFrontFace(PGLJava.CLOCKWISE);
   setSurfaceParams();
   normalX=normalY=0;
   normalZ=0;
@@ -84,14 +88,14 @@
     pushFramebuffer();
     if (offscreenMultisample) {
       setFramebuffer(offscreenFramebufferMultisample);
-      gl2x.glDrawBuffer(GL.GL_COLOR_ATTACHMENT0);
+      pgl.setDrawBuffer(0);
     }
  else {
       setFramebuffer(offscreenFramebuffer);
     }
   }
-  gl.glClearColor(0,0,0,0);
-  gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
+  pgl.setClearColor(0,0,0,0);
+  pgl.clearDepthAndStencilBuffers();
   drawing=true;
   report("bot beginDraw()");
 }

@@ -4,9 +4,9 @@
     ogl.pushFramebuffer();
     ogl.setFramebuffer(this);
     glColorBufferMultisampleID=ogl.createRenderBufferObject();
-    getGl().glBindRenderbuffer(GL.GL_RENDERBUFFER,glColorBufferMultisampleID);
-    getGl2().glRenderbufferStorageMultisample(GL.GL_RENDERBUFFER,nsamples,GL.GL_RGBA8,width,height);
-    getGl().glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,GL.GL_COLOR_ATTACHMENT0,GL.GL_RENDERBUFFER,glColorBufferMultisampleID);
+    pgl.bindRenderbuffer(glColorBufferMultisampleID);
+    pgl.setRenderbufferNumSamples(nsamples,width,height);
+    pgl.setRenderbufferColorAttachment(glColorBufferMultisampleID);
     ogl.popFramebuffer();
   }
 }

@@ -3,26 +3,27 @@
     createFillBuffers();
     fillVBOsCreated=true;
   }
-  gl2f.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-  gl2f.glEnableClientState(GL2.GL_COLOR_ARRAY);
-  gl2f.glEnableClientState(GL2.GL_NORMAL_ARRAY);
+  pgl.enableVertexArrays();
+  pgl.enableColorArrays();
+  pgl.enableNormalArrays();
   int size=tessGeo.fillVertexCount;
-  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillVertexBufferID);
-  gl2f.glBufferData(GL.GL_ARRAY_BUFFER,3 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tessGeo.fillVertices,0,3 * size),vboMode);
-  gl2f.glVertexPointer(3,GL.GL_FLOAT,0,0);
-  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillColorBufferID);
-  gl2f.glBufferData(GL.GL_ARRAY_BUFFER,4 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tessGeo.fillColors,0,4 * size),vboMode);
-  gl2f.glColorPointer(4,GL.GL_FLOAT,0,0);
-  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillNormalBufferID);
-  gl2f.glBufferData(GL.GL_ARRAY_BUFFER,3 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tessGeo.fillNormals,0,3 * size),vboMode);
-  gl2f.glNormalPointer(GL.GL_FLOAT,0,0);
+  pgl.bindVertexBuffer(glFillVertexBufferID);
+  pgl.copyVertexBufferData(tessGeo.fillVertices,3 * size,vboMode);
+  pgl.setVertexFormat(3,0,0);
+  pgl.bindVertexBuffer(glFillColorBufferID);
+  pgl.copyVertexBufferData(tessGeo.fillColors,4 * size,vboMode);
+  pgl.setColorFormat(4,0,0);
+  pgl.bindVertexBuffer(glFillNormalBufferID);
+  pgl.copyVertexBufferData(tessGeo.fillNormals,3 * size,vboMode);
+  pgl.setNormalFormat(3,0,0);
   if (texCache.hasTexture) {
-    gl2f.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-    gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,glFillTexCoordBufferID);
-    gl2f.glBufferData(GL.GL_ARRAY_BUFFER,2 * size * PGraphicsOpenGL.SIZEOF_FLOAT,FloatBuffer.wrap(tessGeo.fillTexcoords,0,2 * size),vboMode);
-    gl2f.glTexCoordPointer(2,GL.GL_FLOAT,0,0);
+    pgl.enableTexCoordArrays();
+    pgl.bindVertexBuffer(glFillTexCoordBufferID);
+    pgl.copyVertexBufferData(tessGeo.fillTexcoords,2 * size,vboMode);
+    pgl.setTexCoordFormat(2,0,0);
   }
-  gl2f.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,glFillIndexBufferID);
+  pgl.bindIndexBuffer(glFillIndexBufferID);
+  pgl.setActiveTexUnit(0);
   PTexture tex0=null;
   for (int i=0; i < texCache.count; i++) {
     PImage img=texCache.textures[i];
@@ -30,41 +31,43 @@
     if (img != null) {
       tex=ogl.getTexture(img);
       if (tex != null) {
-        gl2f.glEnable(tex.glTarget);
-        gl2f.glActiveTexture(GL.GL_TEXTURE0);
-        gl2f.glBindTexture(tex.glTarget,tex.glID);
+        tex.bind();
         tex0=tex;
       }
     }
     if (tex == null && tex0 != null) {
-      gl2f.glDisable(tex0.glTarget);
+      tex0.unbind();
+      pgl.disableTexturing(tex0.glTarget);
     }
     int offset=texCache.firstIndex[i];
     size=texCache.lastIndex[i] - texCache.firstIndex[i] + 1;
-    gl2f.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER,size * PGraphicsOpenGL.SIZEOF_INT,IntBuffer.wrap(tessGeo.fillIndices,offset,size),vboMode);
-    gl2f.glDrawElements(GL.GL_TRIANGLES,size,GL.GL_UNSIGNED_INT,0);
+    pgl.copyIndexBufferData(tessGeo.fillIndices,offset,size,vboMode);
+    pgl.renderIndexBuffer(size);
   }
   if (texCache.hasTexture) {
-    tex0=null;
     for (int i=0; i < texCache.count; i++) {
       PImage img=texCache.textures[i];
       if (img != null) {
         PTexture tex=ogl.getTexture(img);
-        if (tex0 != tex) {
-          gl2f.glDisable(tex.glTarget);
-          tex0=tex;
+        if (tex != null) {
+          tex.unbind();
         }
       }
     }
-    if (tex0 != null) {
-      gl2f.glActiveTexture(GL.GL_TEXTURE0);
-      gl2f.glBindTexture(tex0.glTarget,0);
+    for (int i=0; i < texCache.count; i++) {
+      PImage img=texCache.textures[i];
+      if (img != null) {
+        PTexture tex=ogl.getTexture(img);
+        if (tex != null) {
+          pgl.disableTexturing(tex.glTarget);
+        }
+      }
     }
-    gl2f.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+    pgl.disableTexCoordArrays();
   }
-  gl2f.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER,0);
-  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,0);
-  gl2f.glDisableClientState(GL2.GL_VERTEX_ARRAY);
-  gl2f.glDisableClientState(GL2.GL_COLOR_ARRAY);
-  gl2f.glDisableClientState(GL2.GL_NORMAL_ARRAY);
+  pgl.unbindIndexBuffer();
+  pgl.unbindVertexBuffer();
+  pgl.disableVertexArrays();
+  pgl.disableColorArrays();
+  pgl.disableNormalArrays();
 }

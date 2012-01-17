@@ -1,11 +1,10 @@
 {
   int[] viewport={0,0,0,0};
-  gl2f.glGetIntegerv(GL.GL_VIEWPORT,viewport,0);
   lineShader.setVecUniform("viewport",viewport[0],viewport[1],viewport[2],viewport[3]);
   lineShader.setIntUniform("lights",lightCount);
   lineShader.setVecUniform("eye",cameraEyeX,cameraEyeY,cameraEyeZ,0);
-  lineAttribsID=lineShader.getAttribLocation("attribs");
-  gl2x.glEnableVertexAttribArray(lineAttribsID);
-  gl2f.glBindBuffer(GL.GL_ARRAY_BUFFER,attrBufID);
-  gl2x.glVertexAttribPointer(lineAttribsID,4,GL.GL_FLOAT,false,0,0);
+  lineAttribsLoc=lineShader.getAttribLocation("attribs");
+  pgl.enableAttribsArray(lineAttribsLoc);
+  pgl.bindVertexBuffer(attrBufID);
+  pgl.setAttribsFormat(lineAttribsLoc,4,0,0);
 }

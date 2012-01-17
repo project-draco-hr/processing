@@ -8,8 +8,10 @@
     setFramebuffer(offscreenFramebuffer);
   }
   newbieBuffer.rewind();
-  if (primarySurface)   gl2x.glReadBuffer(GL.GL_FRONT);
-  gl.glReadPixels(x,height - y - h,w,h,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,newbieBuffer);
+  if (primarySurface) {
+    pgl.setReadBuffer(PGLJava.FRONT);
+  }
+  pgl.readPixels(newbieBuffer,x,height - y - h,w,h);
   if (notCurrent) {
     popFramebuffer();
   }

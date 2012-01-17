@@ -1,11 +1,11 @@
 {
   if (screenFb) {
     if (PGraphicsOpenGL.fboSupported) {
-      getGl().glBindFramebuffer(GL.GL_FRAMEBUFFER,0);
+      pgl.bindFramebuffer(0);
     }
   }
  else   if (fboMode) {
-    getGl().glBindFramebuffer(GL.GL_FRAMEBUFFER,glFboID);
+    pgl.bindFramebuffer(glFboID);
   }
  else {
     backupScreen();
@@ -13,7 +13,7 @@
       ogl.drawTexture(colorBufferTex[0].glTarget,colorBufferTex[0].glID,width,height,0,0,width,height,0,0,width,height);
     }
     if (noDepth) {
-      getGl().glDisable(GL.GL_DEPTH_TEST);
+      pgl.disableDepthTest();
     }
   }
 }

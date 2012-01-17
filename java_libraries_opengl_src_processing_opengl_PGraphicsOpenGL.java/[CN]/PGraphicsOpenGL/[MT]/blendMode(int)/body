@@ -2,27 +2,35 @@
   if (blendMode != mode) {
     flush();
     blendMode=mode;
-    gl.glEnable(GL.GL_BLEND);
+    pgl.enableBlend();
     if (mode == REPLACE) {
-      if (blendEqSupported)       gl.glBlendEquation(GL.GL_FUNC_ADD);
-      gl.glBlendFunc(GL.GL_ONE,GL.GL_ZERO);
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGLJava.BLEND_EQ_ADD);
+      }
+      pgl.setReplaceBlend();
     }
  else     if (mode == BLEND) {
-      if (blendEqSupported)       gl.glBlendEquation(GL.GL_FUNC_ADD);
-      gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGLJava.BLEND_EQ_ADD);
+      }
+      pgl.setDefaultBlend();
     }
  else     if (mode == ADD) {
-      if (blendEqSupported)       gl.glBlendEquation(GL.GL_FUNC_ADD);
-      gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE);
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGLJava.BLEND_EQ_ADD);
+      }
+      pgl.setAdditiveBlend();
     }
  else     if (mode == SUBTRACT) {
-      if (blendEqSupported)       gl.glBlendEquation(GL.GL_FUNC_ADD);
-      gl.glBlendFunc(GL.GL_ONE_MINUS_DST_COLOR,GL.GL_ZERO);
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGLJava.BLEND_EQ_ADD);
+      }
+      pgl.setSubstractiveBlend();
     }
  else     if (mode == LIGHTEST) {
       if (blendEqSupported) {
-        gl.glBlendEquation(GL2.GL_MAX);
-        gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_DST_ALPHA);
+        pgl.setBlendEquation(PGLJava.BLEND_EQ_MAX);
+        pgl.setLightestBlend();
       }
  else {
         PGraphics.showWarning("P3D: This blend mode is currently unsupported.");
@@ -30,8 +38,8 @@
     }
  else     if (mode == DARKEST) {
       if (blendEqSupported) {
-        gl.glBlendEquation(GL2.GL_MIN);
-        gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_DST_ALPHA);
+        pgl.setBlendEquation(PGLJava.BLEND_EQ_MIN);
+        pgl.setDarkestBlend();
       }
  else {
         PGraphics.showWarning("P3D: This blend mode is currently unsupported.");
@@ -39,24 +47,30 @@
     }
  else     if (mode == DIFFERENCE) {
       if (blendEqSupported) {
-        gl.glBlendEquation(GL.GL_FUNC_REVERSE_SUBTRACT);
-        gl.glBlendFunc(GL.GL_ONE,GL.GL_ONE);
+        pgl.setBlendEquation(PGLJava.BLEND_EQ_REVERSE_SUBTRACT);
+        pgl.setDifferenceBlend();
       }
  else {
         PGraphics.showWarning("P3D: This blend mode is currently unsupported.");
       }
     }
  else     if (mode == EXCLUSION) {
-      if (blendEqSupported)       gl.glBlendEquation(GL.GL_FUNC_ADD);
-      gl.glBlendFunc(GL.GL_ONE_MINUS_DST_COLOR,GL.GL_ONE_MINUS_SRC_COLOR);
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGLJava.BLEND_EQ_ADD);
+      }
+      pgl.setExclussionBlend();
     }
  else     if (mode == MULTIPLY) {
-      if (blendEqSupported)       gl.glBlendEquation(GL.GL_FUNC_ADD);
-      gl.glBlendFunc(GL.GL_DST_COLOR,GL.GL_SRC_COLOR);
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGLJava.BLEND_EQ_ADD);
+      }
+      pgl.setMultiplyBlend();
     }
  else     if (mode == SCREEN) {
-      if (blendEqSupported)       gl.glBlendEquation(GL.GL_FUNC_ADD);
-      gl.glBlendFunc(GL.GL_ONE_MINUS_DST_COLOR,GL.GL_ONE);
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGLJava.BLEND_EQ_ADD);
+      }
+      pgl.setScreenBlend();
     }
   }
 }
