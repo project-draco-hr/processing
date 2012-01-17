@@ -1,7 +1,7 @@
 {
-  ogl=(PGraphicsOpenGL)parent.g;
-  context=ogl.getContext();
-  capabilities=ogl.getCapabilities();
+  renderer=(PGraphicsOpenGL)parent.g;
+  context=renderer.getContext();
+  capabilities=renderer.getCapabilities();
   drawable=null;
   updateGLInterfaces();
   loadTextureImpl(BILINEAR);
@@ -16,6 +16,7 @@
     offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,nsamples,0,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
     offscreenFramebufferMultisample.clear();
     offscreenMultisample=true;
+    renderer.report("after cleaning fbm");
     offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
   }
  else {

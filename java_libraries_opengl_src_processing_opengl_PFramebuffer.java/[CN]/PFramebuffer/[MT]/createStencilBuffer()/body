@@ -4,9 +4,9 @@
     throw new RuntimeException("PFramebuffer: size undefined.");
   }
   if (fboMode) {
-    ogl.pushFramebuffer();
-    ogl.setFramebuffer(this);
-    glStencilBufferID=ogl.createRenderBufferObject();
+    renderer.pushFramebuffer();
+    renderer.setFramebuffer(this);
+    glStencilBufferID=renderer.createRenderBufferObject();
     pgl.bindRenderbuffer(glStencilBufferID);
     int glConst=PGL.STENCIL_1BIT;
     if (stencilBits == 1) {
@@ -19,12 +19,12 @@
       glConst=PGL.STENCIL_8BIT;
     }
     if (multisample) {
-      pgl.setRenderbufferNumSamples(nsamples,width,height);
+      pgl.setRenderbufferNumSamples(nsamples,glConst,width,height);
     }
  else {
       pgl.setRenderbufferStorage(glConst,width,height);
     }
     pgl.setRenderbufferStencilAttachment(glStencilBufferID);
-    ogl.popFramebuffer();
+    renderer.popFramebuffer();
   }
 }

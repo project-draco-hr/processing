@@ -1,12 +1,12 @@
 {
   if (screenFb)   return;
   if (fboMode) {
-    ogl.pushFramebuffer();
-    ogl.setFramebuffer(this);
-    glColorBufferMultisampleID=ogl.createRenderBufferObject();
+    renderer.pushFramebuffer();
+    renderer.setFramebuffer(this);
+    glColorBufferMultisampleID=renderer.createRenderBufferObject();
     pgl.bindRenderbuffer(glColorBufferMultisampleID);
-    pgl.setRenderbufferNumSamples(nsamples,width,height);
+    pgl.setRenderbufferNumSamples(nsamples,PGL.RGBA8,width,height);
     pgl.setRenderbufferColorAttachment(glColorBufferMultisampleID);
-    ogl.popFramebuffer();
+    renderer.popFramebuffer();
   }
 }
