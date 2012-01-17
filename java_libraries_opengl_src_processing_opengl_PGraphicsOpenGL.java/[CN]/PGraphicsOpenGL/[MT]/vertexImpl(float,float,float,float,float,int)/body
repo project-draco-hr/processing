@@ -40,6 +40,10 @@
   if (textured && textureMode == IMAGE) {
     u/=textureImage.width;
     v/=textureImage.height;
+    PTexture tex=queryTexture(textureImage);
+    if (tex != null && tex.isFlippedY()) {
+      v=1 - v;
+    }
   }
   inGeo.addVertex(x,y,z,fR,fG,fB,fA,normalX,normalY,normalZ,u,v,sR,sG,sB,sA,sW,code);
 }
