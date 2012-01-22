@@ -3,18 +3,26 @@
     fps=getSourceFrameRate();
   }
   loadPixels();
-  if (copyBufferMode) {
-    if (natBuffer == null || copyBufferMethod == null) {
+  if (useBufferSink) {
+    if (natBuffer == null) {
       return;
     }
     if (firstFrame) {
-      super.init(bufWidth,bufHeight,RGB);
+      super.init(bufWidth,bufHeight,ARGB);
       loadPixels();
       firstFrame=false;
     }
-    IntBuffer rgbBuffer=natBuffer.getByteBuffer().asIntBuffer();
+    if (bufferSink == null) {
+      Object cache=getCache(parent.g);
+      if (cache == null) {
+        return;
+      }
+      setBufferSink(cache);
+      getSinkMethods();
+    }
+    ByteBuffer byteBuffer=natBuffer.getByteBuffer();
     try {
-      copyBufferMethod.invoke(copyHandler,new Object[]{natBuffer,rgbBuffer,bufWidth,bufHeight});
+      sinkCopyMethod.invoke(bufferSink,new Object[]{natBuffer,byteBuffer,bufWidth,bufHeight});
     }
  catch (    Exception e) {
       e.printStackTrace();

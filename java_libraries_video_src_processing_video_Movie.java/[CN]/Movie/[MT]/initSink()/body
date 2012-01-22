@@ -1,34 +1,23 @@
 {
-  if (copyHandler != null) {
-    try {
-      copyBufferMethod=copyHandler.getClass().getMethod("addPixelsToBuffer",new Class[]{Object.class,IntBuffer.class,int.class,int.class});
-      copyBufferMode=true;
+  if (bufferSink != null || (useGLSink && parent.g.isGL())) {
+    useBufferSink=true;
+    if (bufferSink != null) {
+      getSinkMethods();
     }
- catch (    Exception e) {
-      copyBufferMode=false;
+    if (copyMask == null || copyMask.equals("")) {
+      initCopyMask();
     }
-    if (copyBufferMode) {
-      try {
-        Method meth=copyHandler.getClass().getMethod("setPixelSource",new Class[]{Object.class});
-        meth.invoke(copyHandler,new Object[]{this});
+    natSink=new BufferDataAppSink("nat",copyMask,new BufferDataAppSink.Listener(){
+      public void bufferFrame(      int w,      int h,      Buffer buffer){
+        invokeEvent(w,h,buffer);
       }
- catch (      Exception e) {
-        copyBufferMode=false;
-      }
-      if (copyBufferMode) {
-        natSink=new BufferDataAppSink("nat",copyMask,new BufferDataAppSink.Listener(){
-          public void bufferFrame(          int w,          int h,          Buffer buffer){
-            invokeEvent(w,h,buffer);
-          }
-        }
+    }
 );
-        natSink.setAutoDisposeBuffer(false);
-        gplayer.setVideoSink(natSink);
-        natSink.dispose();
-      }
-    }
+    natSink.setAutoDisposeBuffer(false);
+    gplayer.setVideoSink(natSink);
+    natSink.dispose();
   }
-  if (!copyBufferMode) {
+ else {
     rgbSink=new RGBDataAppSink("rgb",new RGBDataAppSink.Listener(){
       public void rgbFrame(      int w,      int h,      IntBuffer buffer){
         invokeEvent(w,h,buffer);

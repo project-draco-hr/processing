@@ -3,37 +3,26 @@
   if (!fps.equals("")) {
     fpsStr=", framerate=" + fps;
   }
-  if (copyHandler != null) {
-    try {
-      copyBufferMethod=copyHandler.getClass().getMethod("addPixelsToBuffer",new Class[]{Object.class,IntBuffer.class,int.class,int.class});
-      copyBufferMode=true;
+  if (bufferSink != null || (useGLSink && parent.g.isGL())) {
+    useBufferSink=true;
+    if (bufferSink != null) {
+      getSinkMethods();
     }
- catch (    Exception e) {
-      copyBufferMode=false;
+    if (copyMask == null || copyMask.equals("")) {
+      initCopyMask();
     }
-    if (copyBufferMode) {
-      try {
-        Method meth=copyHandler.getClass().getMethod("setPixelSource",new Class[]{Object.class});
-        meth.invoke(copyHandler,new Object[]{this});
+    String caps="width=" + reqWidth + ", height="+ reqHeight+ fpsStr+ ", "+ copyMask;
+    natSink=new BufferDataAppSink("nat",caps,new BufferDataAppSink.Listener(){
+      public void bufferFrame(      int w,      int h,      Buffer buffer){
+        invokeEvent(w,h,buffer);
       }
- catch (      Exception e) {
-        copyBufferMode=false;
-      }
-      if (copyBufferMode) {
-        String caps="width=" + reqWidth + ", height="+ reqHeight+ ", "+ copyMask;
-        natSink=new BufferDataAppSink("nat",caps,new BufferDataAppSink.Listener(){
-          public void bufferFrame(          int w,          int h,          Buffer buffer){
-            invokeEvent(w,h,buffer);
-          }
-        }
+    }
 );
-        natSink.setAutoDisposeBuffer(false);
-        gpipeline.addMany(gsource,natSink);
-        Element.linkMany(gsource,natSink);
-      }
-    }
+    natSink.setAutoDisposeBuffer(false);
+    gpipeline.addMany(gsource,natSink);
+    Element.linkMany(gsource,natSink);
   }
-  if (!copyBufferMode) {
+ else {
     Element conv=ElementFactory.make("ffmpegcolorspace","ColorConverter");
     Element videofilter=ElementFactory.make("capsfilter","ColorFilter");
     videofilter.setCaps(new Caps("video/x-raw-rgb, width=" + reqWidth + ", height="+ reqHeight+ ", bpp=32, depth=24"+ fpsStr));
