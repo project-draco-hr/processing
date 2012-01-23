@@ -9,18 +9,17 @@
   }
   pgl.setViewport(savedViewport);
   if (primarySurface) {
+    pgl.endOnscreenDraw();
     pgl.flush();
-    if (drawable != null) {
-      drawable.swapBuffers();
-      releaseContext();
-    }
+    pgl.releaseContext();
   }
  else {
     if (offscreenMultisample) {
       offscreenFramebufferMultisample.copy(offscreenFramebuffer);
     }
     popFramebuffer();
-    renderer.restoreGLState();
+    pgl.endOffscreenDraw();
+    pg.restoreGLState();
   }
   drawing=false;
   report("bot endDraw()");

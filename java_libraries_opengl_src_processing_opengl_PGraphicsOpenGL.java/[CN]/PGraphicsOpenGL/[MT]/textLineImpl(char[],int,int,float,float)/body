@@ -1,11 +1,11 @@
 {
-  textTex=(PFontTexture)textFont.getCache(renderer);
+  textTex=(PFontTexture)textFont.getCache(pg);
   if (textTex == null) {
     textTex=new PFontTexture(parent,textFont,maxTextureSize,maxTextureSize);
     textFont.setCache(this,textTex);
   }
  else {
-    if (context.hashCode() != textTex.context.hashCode()) {
+    if (!pgl.contextIsCurrent(textTex.context)) {
       for (int i=0; i < textTex.textures.length; i++) {
         textTex.textures[i].glID=0;
         textTex.textures[i]=null;

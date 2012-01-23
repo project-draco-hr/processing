@@ -3,15 +3,27 @@
     showWarning("P3D: Already called beginDraw().");
     return;
   }
-  if (primarySurface && drawable != null) {
-    drawable.setRealized(parent.isDisplayable());
-    if (parent.isDisplayable()) {
-      drawable.setRealized(true);
+  if (primarySurface) {
+    if (!pgl.initialized) {
+      initPrimary();
+    }
+    boolean res=pgl.beginOnscreenDraw();
+    if (!res)     return;
+    pgl.detainContext();
+  }
+ else {
+    if (!pgl.initialized) {
+      initOffscreen();
+    }
+    pushFramebuffer();
+    if (offscreenMultisample) {
+      setFramebuffer(offscreenFramebufferMultisample);
+      pgl.setDrawBuffer(0);
     }
  else {
-      return;
+      setFramebuffer(offscreenFramebuffer);
     }
-    detainContext();
+    pgl.beginOffscreenDraw();
   }
   updateGLInterfaces();
   if (!glParamsRead) {
@@ -22,8 +34,8 @@
   }
   report("top beginDraw()");
   if (!primarySurface) {
-    renderer.saveGLState();
-    renderer.disableLights();
+    pg.saveGLState();
+    pg.disableLights();
   }
   inGeo.reset();
   tessGeo.reset();
@@ -58,8 +70,8 @@
   if (resized) {
     background(0);
     if (texture != null) {
-      this.removeCache(renderer);
-      this.removeParams(renderer);
+      this.removeCache(pg);
+      this.removeParams(pg);
       texture=null;
       loadTexture();
     }
@@ -82,18 +94,6 @@
   setSurfaceParams();
   normalX=normalY=0;
   normalZ=0;
-  if (primarySurface) {
-  }
- else {
-    pushFramebuffer();
-    if (offscreenMultisample) {
-      setFramebuffer(offscreenFramebufferMultisample);
-      pgl.setDrawBuffer(0);
-    }
- else {
-      setFramebuffer(offscreenFramebuffer);
-    }
-  }
   pgl.setClearColor(0,0,0,0);
   pgl.clearDepthAndStencilBuffers();
   drawing=true;

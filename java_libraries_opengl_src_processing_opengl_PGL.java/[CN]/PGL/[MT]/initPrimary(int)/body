@@ -1,0 +1,34 @@
+{
+  if (pg.parent.online) {
+    GLProfile.initSingleton(false);
+  }
+ else {
+    if (PApplet.platform == PConstants.LINUX) {
+      GLProfile.initSingleton(false);
+    }
+ else {
+      GLProfile.initSingleton(true);
+    }
+  }
+  profile=null;
+  profile=GLProfile.getDefault();
+  pipeline=PGL.FIXED;
+  if (profile == null) {
+    pg.parent.die("Cannot get a valid OpenGL profile");
+  }
+  capabilities=new GLCapabilities(profile);
+  if (1 < antialias) {
+    capabilities.setSampleBuffers(true);
+    capabilities.setNumSamples(antialias);
+  }
+ else {
+    capabilities.setSampleBuffers(false);
+  }
+  AWTGraphicsScreen screen=(AWTGraphicsScreen)AWTGraphicsScreen.createDefault();
+  AWTGraphicsConfiguration config=(AWTGraphicsConfiguration)GraphicsConfigurationFactory.getFactory(AWTGraphicsDevice.class).chooseGraphicsConfiguration(capabilities,capabilities,null,screen);
+  NativeWindow win=NativeWindowFactory.getNativeWindow(pg.parent,config);
+  GLDrawableFactory factory=GLDrawableFactory.getFactory(profile);
+  drawable=factory.createGLDrawable(win);
+  context=drawable.createContext(null);
+  initialized=true;
+}

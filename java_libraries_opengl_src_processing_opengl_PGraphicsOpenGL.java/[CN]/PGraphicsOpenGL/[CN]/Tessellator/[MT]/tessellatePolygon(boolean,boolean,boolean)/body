@@ -1,26 +1,26 @@
 {
   int nInVert=in.lastVertex - in.firstVertex + 1;
-  tessCallback.calcNormals=calcNormals;
+  callback.calcNormals=calcNormals;
   if (fill && 3 <= nInVert) {
-    GLU.gluTessBeginPolygon(gluTess,null);
+    gluTess.beginPolygon();
     if (solid) {
-      GLU.gluTessProperty(gluTess,GLU.GLU_TESS_WINDING_RULE,GLU.GLU_TESS_WINDING_NONZERO);
+      gluTess.setWindingRule(PGL.TESS_WINDING_NONZERO);
     }
  else {
-      GLU.gluTessProperty(gluTess,GLU.GLU_TESS_WINDING_RULE,GLU.GLU_TESS_WINDING_ODD);
+      gluTess.setWindingRule(PGL.TESS_WINDING_ODD);
     }
-    GLU.gluTessBeginContour(gluTess);
+    gluTess.beginContour();
     for (int i=in.firstVertex; i <= in.lastVertex; i++) {
       boolean breakPt=in.codes[i] == PShape.BREAK;
       if (breakPt) {
-        GLU.gluTessEndContour(gluTess);
-        GLU.gluTessBeginContour(gluTess);
+        gluTess.endContour();
+        gluTess.beginContour();
       }
       double[] vertex=new double[]{in.vertices[3 * i + 0],in.vertices[3 * i + 1],in.vertices[3 * i + 2],in.colors[4 * i + 0],in.colors[4 * i + 1],in.colors[4 * i + 2],in.colors[4 * i + 3],in.normals[3 * i + 0],in.normals[3 * i + 1],in.normals[3 * i + 2],in.texcoords[2 * i + 0],in.texcoords[2 * i + 1]};
-      GLU.gluTessVertex(gluTess,vertex,0,vertex);
+      gluTess.addVertex(vertex);
     }
-    GLU.gluTessEndContour(gluTess);
-    GLU.gluTessEndPolygon(gluTess);
+    gluTess.endContour();
+    gluTess.endPolygon();
   }
   if (stroke) {
     tess.isStroked=true;

@@ -1,10 +1,10 @@
 {
-  PTexture tex=(PTexture)img.getCache(renderer);
+  PTexture tex=(PTexture)img.getCache(pg);
   if (tex == null) {
     tex=addTexture(img);
   }
  else {
-    if (context.hashCode() != tex.context.hashCode()) {
+    if (!pgl.contextIsCurrent(tex.context)) {
       tex.glID=0;
       tex=addTexture(img);
     }

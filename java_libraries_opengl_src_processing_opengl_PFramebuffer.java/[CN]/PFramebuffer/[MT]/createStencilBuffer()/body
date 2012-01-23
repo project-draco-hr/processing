@@ -4,9 +4,9 @@
     throw new RuntimeException("PFramebuffer: size undefined.");
   }
   if (fboMode) {
-    renderer.pushFramebuffer();
-    renderer.setFramebuffer(this);
-    glStencilBufferID=renderer.createRenderBufferObject();
+    pg.pushFramebuffer();
+    pg.setFramebuffer(this);
+    glStencilBufferID=pg.createRenderBufferObject();
     pgl.bindRenderbuffer(glStencilBufferID);
     int glConst=PGL.STENCIL_1BIT;
     if (stencilBits == 1) {
@@ -25,6 +25,6 @@
       pgl.setRenderbufferStorage(glConst,width,height);
     }
     pgl.setRenderbufferStencilAttachment(glStencilBufferID);
-    renderer.popFramebuffer();
+    pg.popFramebuffer();
   }
 }

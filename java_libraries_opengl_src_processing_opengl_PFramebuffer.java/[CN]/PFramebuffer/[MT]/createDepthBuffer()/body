@@ -4,9 +4,9 @@
     throw new RuntimeException("PFramebuffer: size undefined.");
   }
   if (fboMode) {
-    renderer.pushFramebuffer();
-    renderer.setFramebuffer(this);
-    glDepthBufferID=renderer.createRenderBufferObject();
+    pg.pushFramebuffer();
+    pg.setFramebuffer(this);
+    glDepthBufferID=pg.createRenderBufferObject();
     pgl.bindRenderbuffer(glDepthBufferID);
     int glConst=PGL.DEPTH_16BIT;
     if (depthBits == 16) {
@@ -25,6 +25,6 @@
       pgl.setRenderbufferStorage(glConst,width,height);
     }
     pgl.setRenderbufferDepthAttachment(glDepthBufferID);
-    renderer.popFramebuffer();
+    pg.popFramebuffer();
   }
 }
