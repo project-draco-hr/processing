@@ -1,0 +1,30 @@
+{
+  EGLConfig bestConfig=null;
+  float bestScore=1000;
+  for (  EGLConfig config : configs) {
+    int d=findConfigAttrib(egl,display,config,EGL10.EGL_DEPTH_SIZE,0);
+    int s=findConfigAttrib(egl,display,config,EGL10.EGL_STENCIL_SIZE,0);
+    int r=findConfigAttrib(egl,display,config,EGL10.EGL_RED_SIZE,0);
+    int g=findConfigAttrib(egl,display,config,EGL10.EGL_GREEN_SIZE,0);
+    int b=findConfigAttrib(egl,display,config,EGL10.EGL_BLUE_SIZE,0);
+    int a=findConfigAttrib(egl,display,config,EGL10.EGL_ALPHA_SIZE,0);
+    float score=0.20f * PApplet.abs(r - redTarget) + 0.20f * PApplet.abs(g - greenTarget) + 0.20f * PApplet.abs(b - blueTarget) + 0.15f * PApplet.abs(a - blueTarget) + 0.15f * PApplet.abs(d - depthTarget) + 0.10f * PApplet.abs(s - stencilTarget);
+    if (score < bestScore) {
+      bestConfig=config;
+      bestScore=score;
+      redBits=r;
+      greenBits=g;
+      blueBits=b;
+      alphaBits=a;
+      depthBits=d;
+      stencilBits=s;
+      pg.offscreenDepthBits=d;
+      pg.offscreenStencilBits=s;
+    }
+  }
+  if (PApplet.DEBUG) {
+    String configStr="A3D - selected EGL config : " + printConfig(egl,display,bestConfig);
+    System.out.println(configStr);
+  }
+  return bestConfig;
+}

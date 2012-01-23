@@ -22,8 +22,12 @@
     }
     yindex-=width * 2;
   }
-  pixelBuffer.put(pixels);
   pixelBuffer.rewind();
+  pixelBuffer.put(pixels);
+  boolean outsideDraw=primarySurface && !drawing;
+  if (outsideDraw) {
+    beginGLOp();
+  }
   copyToTexture(pixelBuffer);
   boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
   if (notCurrent) {
@@ -33,5 +37,8 @@
   drawTexture();
   if (notCurrent) {
     popFramebuffer();
+  }
+  if (outsideDraw) {
+    endGLOp();
   }
 }

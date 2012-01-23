@@ -1,70 +1,101 @@
 {
-  if (!primarySurface) {
-    a3d.saveGLState();
-    gl=a3d.gl;
-    gl11=a3d.gl11;
-    gl11x=a3d.gl11x;
-    gl11xp=a3d.gl11xp;
-    a3d.disableLights();
+  if (drawing) {
+    showWarning("P3D: Already called beginDraw().");
+    return;
+  }
+  if (primarySurface) {
+    if (!pgl.initialized) {
+      initPrimary();
+    }
+    boolean res=pgl.beginOnscreenDraw();
+    if (!res)     return;
+    pgl.detainContext();
+  }
+ else {
+    if (!pgl.initialized) {
+      initOffscreen();
+    }
+    pushFramebuffer();
+    if (offscreenMultisample) {
+      setFramebuffer(offscreenFramebufferMultisample);
+      pgl.setDrawBuffer(0);
+    }
+ else {
+      setFramebuffer(offscreenFramebuffer);
+    }
+    pgl.beginOffscreenDraw();
+  }
+  updateGLInterfaces();
+  if (!glParamsRead) {
+    getGLParameters();
   }
   if (!settingsInited) {
     defaultSettings();
   }
   report("top beginDraw()");
-  vertexBuffer.rewind();
-  colorBuffer.rewind();
-  normalBuffer.rewind();
-  for (int t=0; t < numTexBuffers; t++) {
-    texCoordBuffer[t].rewind();
+  if (!primarySurface) {
+    pg.saveGLState();
+    pg.disableLights();
   }
-  if (USE_GEO_BUFFER) {
-    if (geoBuffer == null)     geoBuffer=new GeometryBuffer();
-    if (GEO_BUFFER_ACCUM_ALL) {
-      geoBuffer.init(TRIANGLES);
-    }
-    GEO_BUFFER_COUNT=0;
-    GEO_BUFFER_SIZE=0;
-  }
-  noTexture();
-  screenBlend(BLEND);
-  textureBlend(BLEND);
+  inGeo.reset();
+  tessGeo.reset();
+  texCache.reset();
+  super.noTexture();
+  setDefaultBlend();
   if (hints[DISABLE_DEPTH_TEST]) {
-    gl.glDisable(GL10.GL_DEPTH_TEST);
+    pgl.disableDepthTest();
   }
  else {
-    gl.glEnable(GL10.GL_DEPTH_TEST);
+    pgl.enableDepthTest();
   }
-  gl.glDepthFunc(GL10.GL_LEQUAL);
+  pgl.setDepthFunc(PGL.LESS_OR_EQUAL);
   if (hints[DISABLE_DEPTH_MASK]) {
-    gl.glDepthMask(false);
+    pgl.disableDepthMask();
   }
  else {
-    gl.glDepthMask(true);
+    pgl.enableDepthMask();
   }
-  gl.glGetIntegerv(GL11.GL_VIEWPORT,viewport,0);
-  gl.glViewport(0,0,width,height);
+  if (hints[ENABLE_ACCURATE_2D]) {
+    flushMode=FLUSH_CONTINUOUSLY;
+  }
+ else {
+    flushMode=FLUSH_WHEN_FULL;
+  }
+  pgl.getViweport(savedViewport);
+  viewport[0]=0;
+  viewport[1]=0;
+  viewport[2]=width;
+  viewport[3]=height;
+  pgl.setViewport(viewport);
+  if (resized) {
+    background(0);
+    if (texture != null) {
+      this.removeCache(pg);
+      this.removeParams(pg);
+      texture=null;
+      loadTexture();
+    }
+    resized=false;
+  }
   if (sizeChanged) {
     camera();
     perspective();
     sizeChanged=false;
   }
  else {
-    restoreCamera();
-    restoreProjection();
+    loadCamera();
+    modelview.set(camera);
+    loadProjection();
   }
   noLights();
   lightFalloff(1,0,0);
   lightSpecular(0,0,0);
-  gl.glFrontFace(GL10.GL_CW);
+  pgl.setFrontFace(PGL.CLOCKWISE);
   setSurfaceParams();
-  shapeFirst=0;
-  normalX=normalY=normalZ=0;
-  if (primarySurface) {
-    initPrimary();
-  }
- else {
-    initOffscreen();
-  }
-  clearColorBuffer0=clearColorBuffer;
+  normalX=normalY=0;
+  normalZ=0;
+  pgl.setClearColor(0,0,0,0);
+  pgl.clearDepthAndStencilBuffers();
+  drawing=true;
   report("bot beginDraw()");
 }

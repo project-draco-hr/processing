@@ -1,0 +1,26 @@
+{
+  int nInVert=in.lastVertex - in.firstVertex + 1;
+  if (fill && 4 <= nInVert) {
+    tess.addFillVertices(in);
+    int quadCount=nInVert / 4;
+    tess.addFillIndices(6 * quadCount);
+    int idx=tess.firstFillIndex;
+    int offset=tess.firstFillVertex;
+    for (int qd=0; qd < quadCount; qd++) {
+      int i0=offset + 4 * qd + 0;
+      int i1=offset + 4 * qd + 1;
+      int i2=offset + 4 * qd + 2;
+      int i3=offset + 4 * qd + 3;
+      tess.fillIndices[idx++]=i0;
+      tess.fillIndices[idx++]=i1;
+      tess.fillIndices[idx++]=i3;
+      tess.fillIndices[idx++]=i1;
+      tess.fillIndices[idx++]=i2;
+      tess.fillIndices[idx++]=i3;
+    }
+  }
+  if (stroke) {
+    tess.isStroked=true;
+    tessellateEdges();
+  }
+}

@@ -1,38 +1,26 @@
 {
   report("top endDraw()");
-  gl.glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
-  if (USE_GEO_BUFFER) {
-    if (GEO_BUFFER_ACCUM_ALL && geoBuffer != null && 0 < geoBuffer.vertCount) {
-      geoBuffer.pre();
-      geoBuffer.render();
-      geoBuffer.post();
-    }
+  if (flushMode == FLUSH_WHEN_FULL) {
+    flush();
   }
+  if (!drawing) {
+    showWarning("P3D: Cannot call endDraw() before beginDraw().");
+    return;
+  }
+  pgl.setViewport(savedViewport);
   if (primarySurface) {
-    if (!clearColorBuffer0) {
-      if (fboSupported) {
-        if (offscreenFramebuffer != null) {
-          popFramebuffer();
-          gl.glClearColor(0,0,0,0);
-          gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-          drawOffscreenTexture(offscreenIndex);
-          swapOffscreenIndex();
-        }
-      }
- else {
-        if (texture != null) {
-          copyFrameToTexture();
-        }
-      }
-    }
-    gl.glFlush();
+    pgl.endOnscreenDraw();
+    pgl.flush();
+    pgl.releaseContext();
   }
  else {
-    if (offscreenFramebuffer != null) {
-      popFramebuffer();
-      swapOffscreenIndex();
+    if (offscreenMultisample) {
+      offscreenFramebufferMultisample.copy(offscreenFramebuffer);
     }
-    a3d.restoreGLState();
+    popFramebuffer();
+    pgl.endOffscreenDraw();
+    pg.restoreGLState();
   }
+  drawing=false;
   report("bot endDraw()");
 }

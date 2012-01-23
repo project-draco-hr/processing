@@ -1,0 +1,49 @@
+{
+  boolean textured=textureImage != null;
+  float fR, fG, fB, fA;
+  fR=fG=fB=fA=0;
+  if (fill || textured) {
+    if (!textured) {
+      fR=fillR;
+      fG=fillG;
+      fB=fillB;
+      fA=fillA;
+    }
+ else {
+      if (tint) {
+        fR=tintR;
+        fG=tintG;
+        fB=tintB;
+        fA=tintA;
+      }
+ else {
+        fR=1;
+        fG=1;
+        fB=1;
+        fA=1;
+      }
+    }
+  }
+  float sR, sG, sB, sA, sW;
+  sR=sG=sB=sA=sW=0;
+  if (stroke) {
+    sR=strokeR;
+    sG=strokeG;
+    sB=strokeB;
+    sA=strokeA;
+    sW=strokeWeight;
+  }
+  if (breakShape) {
+    code=BREAK;
+    breakShape=false;
+  }
+  if (textured && textureMode == IMAGE) {
+    u/=textureImage.width;
+    v/=textureImage.height;
+    PTexture tex=queryTexture(textureImage);
+    if (tex != null && tex.isFlippedY()) {
+      v=1 - v;
+    }
+  }
+  inGeo.addVertex(x,y,z,fR,fG,fB,fA,normalX,normalY,normalZ,u,v,sR,sG,sB,sA,sW,code);
+}

@@ -1,14 +1,12 @@
 {
-  PTexture.Parameters params=(PTexture.Parameters)img.getParams(a3d);
+  PTexture.Parameters params=(PTexture.Parameters)img.getParams(pg);
   if (params == null) {
     params=PTexture.newParameters();
-    img.setParams(a3d,params);
+    img.setParams(pg,params);
   }
   PTexture tex=new PTexture(img.parent,img.width,img.height,params);
-  if (img.pixels == null) {
-    img.loadPixels();
-  }
-  tex.set(img.pixels);
-  img.setCache(a3d,tex);
+  img.loadPixels();
+  if (img.pixels != null)   tex.set(img.pixels);
+  img.setCache(pg,tex);
   return tex;
 }

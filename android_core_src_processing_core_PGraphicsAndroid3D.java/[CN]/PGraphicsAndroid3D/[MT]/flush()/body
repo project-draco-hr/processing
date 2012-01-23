@@ -1,0 +1,25 @@
+{
+  boolean hasPoints=0 < tessGeo.pointVertexCount && 0 < tessGeo.pointIndexCount;
+  boolean hasLines=0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount;
+  boolean hasFill=0 < tessGeo.fillVertexCount && 0 < tessGeo.fillIndexCount;
+  if (hasPoints || hasLines || hasFill) {
+    if (flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
+      pgl.pushMatrix();
+      pgl.loadIdentity();
+    }
+    if (hasFill) {
+      renderFill();
+    }
+    if (hasPoints) {
+      renderPoints();
+    }
+    if (hasLines) {
+      renderLines();
+    }
+    if (flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
+      pgl.popMatrix();
+    }
+  }
+  tessGeo.reset();
+  texCache.reset();
+}

@@ -1,0 +1,21 @@
+{
+  if (size == 0) {
+    offset=dataOffset;
+  }
+  int oldSize=data.length / ncoords;
+  if (size + dataSize >= oldSize) {
+    int newSize=expandSize(oldSize,size + dataSize);
+    expand(newSize);
+  }
+  if (2 <= ncoords) {
+    for (int i=0; i < dataSize; i++) {
+      int srcIndex=ncoords * i;
+      float x=newData[srcIndex++];
+      float y=newData[srcIndex];
+      int destIndex=ncoords * (size + i);
+      data[destIndex++]=x * tr.m00 + y * tr.m01 + tr.m02;
+      data[destIndex]=x * tr.m10 + y * tr.m11 + tr.m12;
+    }
+  }
+  size+=dataSize;
+}

@@ -1,17 +1,7 @@
 {
-  if (USE_GEO_BUFFER && GEO_BUFFER_ACCUM_ALL && UPDATE_GEO_BUFFER_MATRIX_STACK) {
-    geoBuffer.stack.translate(tx,ty,tz);
-    if (!UPDATE_GL_MATRIX_STACK)     return;
+  if (hints[DISABLE_TRANSFORM_CACHE]) {
+    flush();
   }
-  gl.glTranslatef(tx,ty,tz);
-  if (usingGLMatrixStack) {
-    if (matrixMode == PROJECTION) {
-      projectionStack.translate(tx,ty,tz);
-      projectionUpdated=false;
-    }
- else {
-      modelviewStack.translate(tx,ty,tz);
-      modelviewUpdated=false;
-    }
-  }
+  pgl.translate(tx,ty,tz);
+  modelview.translate(tx,ty,tz);
 }

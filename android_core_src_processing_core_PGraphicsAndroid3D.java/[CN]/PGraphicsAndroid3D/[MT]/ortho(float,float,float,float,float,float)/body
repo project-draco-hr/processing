@@ -1,4 +1,5 @@
 {
+  flush();
   left-=width / 2;
   right-=width / 2;
   bottom-=height / 2;
@@ -11,25 +12,6 @@
   float tx=-(right + left) / (right - left);
   float ty=-(top + bottom) / (top - bottom);
   float tz=-(far + near) / (far - near);
-  glprojection[0]=x;
-  glprojection[1]=0.0f;
-  glprojection[2]=0.0f;
-  glprojection[3]=0.0f;
-  glprojection[4]=0.0f;
-  glprojection[5]=-y;
-  glprojection[6]=0.0f;
-  glprojection[7]=0.0f;
-  glprojection[8]=0;
-  glprojection[9]=0;
-  glprojection[10]=z;
-  glprojection[11]=0.0f;
-  glprojection[12]=tx;
-  glprojection[13]=ty;
-  glprojection[14]=tz;
-  glprojection[15]=1.0f;
-  gl.glMatrixMode(GL10.GL_PROJECTION);
-  gl.glLoadMatrixf(glprojection,0);
-  copyGLArrayToPMatrix(glprojection,projection);
-  projectionUpdated=true;
-  gl.glMatrixMode(GL10.GL_MODELVIEW);
+  projection.set(x,0,0,tx,0,-y,0,ty,0,0,z,tz,0,0,0,1);
+  loadProjection();
 }

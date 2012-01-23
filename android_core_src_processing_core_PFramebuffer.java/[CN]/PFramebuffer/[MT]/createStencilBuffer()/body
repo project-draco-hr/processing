@@ -4,22 +4,27 @@
     throw new RuntimeException("PFramebuffer: size undefined.");
   }
   if (fboMode) {
-    a3d.pushFramebuffer();
-    a3d.setFramebuffer(this);
-    glStencilBufferID=a3d.createGLResource(PGraphicsAndroid3D.GL_RENDER_BUFFER);
-    getGlx().glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glStencilBufferID);
-    int glConst=GL11ExtensionPack.GL_STENCIL_INDEX1_OES;
+    renderer.pushFramebuffer();
+    renderer.setFramebuffer(this);
+    glStencilBufferID=renderer.createRenderBufferObject();
+    pgl.bindRenderbuffer(glStencilBufferID);
+    int glConst=PGL.STENCIL_1BIT;
     if (stencilBits == 1) {
-      glConst=GL11ExtensionPack.GL_STENCIL_INDEX1_OES;
+      glConst=PGL.STENCIL_1BIT;
     }
  else     if (stencilBits == 4) {
-      glConst=GL11ExtensionPack.GL_STENCIL_INDEX4_OES;
+      glConst=PGL.STENCIL_4BIT;
     }
  else     if (stencilBits == 8) {
-      glConst=GL11ExtensionPack.GL_STENCIL_INDEX8_OES;
+      glConst=PGL.STENCIL_8BIT;
     }
-    getGlx().glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glConst,width,height);
-    getGlx().glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,GL11ExtensionPack.GL_STENCIL_ATTACHMENT_OES,GL11ExtensionPack.GL_RENDERBUFFER_OES,glStencilBufferID);
-    a3d.popFramebuffer();
+    if (multisample) {
+      pgl.setRenderbufferNumSamples(nsamples,glConst,width,height);
+    }
+ else {
+      pgl.setRenderbufferStorage(glConst,width,height);
+    }
+    pgl.setRenderbufferStencilAttachment(glStencilBufferID);
+    renderer.popFramebuffer();
   }
 }

@@ -1,5 +1,22 @@
 {
-  deleteFbo();
-  deleteDepthBuffer();
-  deleteStencilBuffer();
+  if (glFboID != 0) {
+    renderer.finalizeFrameBufferObject(glFboID);
+    glFboID=0;
+  }
+  if (glDepthBufferID != 0) {
+    renderer.finalizeRenderBufferObject(glDepthBufferID);
+    glDepthBufferID=0;
+  }
+  if (glStencilBufferID != 0) {
+    renderer.finalizeRenderBufferObject(glStencilBufferID);
+    glStencilBufferID=0;
+  }
+  if (glColorBufferMultisampleID != 0) {
+    renderer.finalizeRenderBufferObject(glColorBufferMultisampleID);
+    glColorBufferMultisampleID=0;
+  }
+  if (glDepthStencilBufferID != 0) {
+    renderer.finalizeRenderBufferObject(glDepthStencilBufferID);
+    glDepthStencilBufferID=0;
+  }
 }

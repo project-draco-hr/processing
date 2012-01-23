@@ -1,0 +1,24 @@
+{
+  smooth=true;
+  if (antialias != level) {
+    antialias=level;
+    if (primarySurface) {
+      restartContext();
+    }
+ else {
+      initOffscreen();
+    }
+  }
+  int[] temp={0};
+  pgl.getNumSamples(temp);
+  if (antialias != temp[0]) {
+    antialias=temp[0];
+    PApplet.println("Effective multisampling level: " + antialias);
+  }
+  if (antialias < 2) {
+    pgl.enableMultisample();
+    pgl.enablePointSmooth();
+    pgl.enableLineSmooth();
+    pgl.enablePolygonSmooth();
+  }
+}

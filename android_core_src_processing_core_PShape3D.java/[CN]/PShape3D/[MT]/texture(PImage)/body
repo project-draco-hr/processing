@@ -1,0 +1,18 @@
+{
+  if (family == GROUP) {
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.texture(tex);
+    }
+  }
+ else {
+    PImage tex0=texture;
+    texture=tex;
+    if (tex0 != tex && parent != null) {
+      ((PShape3D)parent).removeTexture(tex);
+    }
+    if (parent != null) {
+      ((PShape3D)parent).addTexture(texture);
+    }
+  }
+}

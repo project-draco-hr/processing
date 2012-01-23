@@ -1,0 +1,51 @@
+{
+  int index;
+  float cx0=0;
+  float cy0=0;
+  for (int i=0; i < fillVertexCount; i++) {
+    index=3 * i;
+    cx0+=fillVertices[index++];
+    cy0+=fillVertices[index];
+  }
+  for (int i=0; i < lineVertexCount; i++) {
+    index=3 * i;
+    cx0+=lineVertices[index++];
+    cy0+=lineVertices[index];
+  }
+  for (int i=0; i < pointVertexCount; i++) {
+    index=3 * i;
+    cx0+=pointVertices[index++];
+    cy0+=pointVertices[index];
+  }
+  int nt=fillVertexCount + lineVertexCount + pointVertexCount;
+  if (0 < nt) {
+    cx0/=nt;
+    cy0/=nt;
+  }
+  float tx=cx - cx0;
+  float ty=cy - cy0;
+  if (0 < fillVertexCount) {
+    for (int i=0; i < fillVertexCount; i++) {
+      index=3 * i;
+      fillVertices[index++]+=tx;
+      fillVertices[index]+=ty;
+    }
+  }
+  if (0 < lineVertexCount) {
+    for (int i=0; i < lineVertexCount; i++) {
+      index=3 * i;
+      lineVertices[index++]+=tx;
+      lineVertices[index]+=ty;
+      index=4 * i;
+      lineAttributes[index++]+=tx;
+      lineAttributes[index]+=ty;
+    }
+  }
+  if (0 < pointVertexCount) {
+    for (int i=0; i < pointVertexCount; i++) {
+      index=3 * i;
+      pointVertices[index++]+=tx;
+      pointVertices[index]+=ty;
+    }
+  }
+}

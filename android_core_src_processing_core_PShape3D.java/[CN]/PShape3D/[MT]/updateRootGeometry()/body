@@ -1,0 +1,152 @@
+{
+  if (family == GROUP) {
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.updateRootGeometry();
+    }
+  }
+ else {
+    if (0 < tess.fillVertexCount) {
+      if (modifiedFillVertices) {
+        if (root.fillVerticesCache == null) {
+          root.fillVerticesCache=new VertexCache(3);
+        }
+        root.fillVerticesCache.add(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillVertices);
+        modifiedFillVertices=false;
+      }
+ else       if (root.fillVerticesCache != null && root.fillVerticesCache.hasData()) {
+        root.copyFillVertices(root.fillVerticesCache.offset,root.fillVerticesCache.size,root.fillVerticesCache.data);
+        root.fillVerticesCache.reset();
+      }
+      if (modifiedFillColors) {
+        if (root.fillColorsCache == null) {
+          root.fillColorsCache=new VertexCache(4);
+        }
+        root.fillColorsCache.add(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillColors);
+        modifiedFillColors=false;
+      }
+ else       if (root.fillColorsCache != null && root.fillColorsCache.hasData()) {
+        root.copyFillColors(root.fillColorsCache.offset,root.fillColorsCache.size,root.fillColorsCache.data);
+        root.fillColorsCache.reset();
+      }
+      if (modifiedFillNormals) {
+        if (root.fillNormalsCache == null) {
+          root.fillNormalsCache=new VertexCache(3);
+        }
+        root.fillNormalsCache.add(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillNormals);
+        modifiedFillNormals=false;
+      }
+ else       if (root.fillNormalsCache != null && root.fillNormalsCache.hasData()) {
+        root.copyFillNormals(root.fillNormalsCache.offset,root.fillNormalsCache.size,root.fillNormalsCache.data);
+        root.fillNormalsCache.reset();
+      }
+      if (modifiedFillTexCoords) {
+        if (root.fillTexCoordsCache == null) {
+          root.fillTexCoordsCache=new VertexCache(2);
+        }
+        root.fillTexCoordsCache.add(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillTexcoords);
+        modifiedFillTexCoords=false;
+      }
+ else       if (root.fillTexCoordsCache != null && root.fillTexCoordsCache.hasData()) {
+        root.copyFillTexCoords(root.fillTexCoordsCache.offset,root.fillTexCoordsCache.size,root.fillTexCoordsCache.data);
+        root.fillTexCoordsCache.reset();
+      }
+    }
+    if (0 < tess.lineVertexCount) {
+      if (modifiedLineVertices) {
+        if (root.lineVerticesCache == null) {
+          root.lineVerticesCache=new VertexCache(3);
+        }
+        root.lineVerticesCache.add(root.lineVertCopyOffset,tess.lineVertexCount,tess.lineVertices);
+        modifiedLineVertices=false;
+      }
+ else       if (root.lineVerticesCache != null && root.lineVerticesCache.hasData()) {
+        root.copyLineVertices(root.lineVerticesCache.offset,root.lineVerticesCache.size,root.lineVerticesCache.data);
+        root.lineVerticesCache.reset();
+      }
+      if (modifiedLineColors) {
+        if (root.lineColorsCache == null) {
+          root.lineColorsCache=new VertexCache(4);
+        }
+        root.lineColorsCache.add(root.lineVertCopyOffset,tess.lineVertexCount,tess.lineColors);
+        modifiedLineColors=false;
+      }
+ else       if (root.lineColorsCache != null && root.lineColorsCache.hasData()) {
+        root.copyLineColors(root.lineColorsCache.offset,root.lineColorsCache.size,root.lineColorsCache.data);
+        root.lineColorsCache.reset();
+      }
+      if (modifiedLineNormals) {
+        if (root.lineNormalsCache == null) {
+          root.lineNormalsCache=new VertexCache(3);
+        }
+        root.lineNormalsCache.add(root.lineVertCopyOffset,tess.lineVertexCount,tess.lineNormals);
+        modifiedLineNormals=false;
+      }
+ else       if (root.lineNormalsCache != null && root.lineNormalsCache.hasData()) {
+        root.copyLineNormals(root.lineNormalsCache.offset,root.lineNormalsCache.size,root.lineNormalsCache.data);
+        root.lineNormalsCache.reset();
+      }
+      if (modifiedLineAttributes) {
+        if (root.lineAttributesCache == null) {
+          root.lineAttributesCache=new VertexCache(4);
+        }
+        root.lineAttributesCache.add(root.lineVertCopyOffset,tess.lineVertexCount,tess.lineAttributes);
+        modifiedLineAttributes=false;
+      }
+ else       if (root.lineAttributesCache != null && root.lineAttributesCache.hasData()) {
+        root.copyLineAttributes(root.lineAttributesCache.offset,root.lineAttributesCache.size,root.lineAttributesCache.data);
+        root.lineAttributesCache.reset();
+      }
+    }
+    if (0 < tess.pointVertexCount) {
+      if (modifiedPointVertices) {
+        if (root.pointVerticesCache == null) {
+          root.pointVerticesCache=new VertexCache(3);
+        }
+        root.pointVerticesCache.add(root.pointVertCopyOffset,tess.pointVertexCount,tess.pointVertices);
+        modifiedPointVertices=false;
+      }
+ else       if (root.pointVerticesCache != null && root.pointVerticesCache.hasData()) {
+        root.copyPointVertices(root.pointVerticesCache.offset,root.pointVerticesCache.size,root.pointVerticesCache.data);
+        root.pointVerticesCache.reset();
+      }
+      if (modifiedPointColors) {
+        if (root.pointColorsCache == null) {
+          root.pointColorsCache=new VertexCache(4);
+        }
+        root.pointColorsCache.add(root.pointVertCopyOffset,tess.pointVertexCount,tess.pointColors);
+        modifiedPointColors=false;
+      }
+ else       if (root.pointColorsCache != null && root.pointColorsCache.hasData()) {
+        root.copyPointColors(root.pointColorsCache.offset,root.pointColorsCache.size,root.pointColorsCache.data);
+        root.pointColorsCache.reset();
+      }
+      if (modifiedPointNormals) {
+        if (root.pointNormalsCache == null) {
+          root.pointNormalsCache=new VertexCache(3);
+        }
+        root.pointNormalsCache.add(root.pointVertCopyOffset,tess.pointVertexCount,tess.pointNormals);
+        modifiedPointNormals=false;
+      }
+ else       if (root.pointNormalsCache != null && root.pointNormalsCache.hasData()) {
+        root.copyPointNormals(root.pointNormalsCache.offset,root.pointNormalsCache.size,root.pointNormalsCache.data);
+        root.pointNormalsCache.reset();
+      }
+      if (modifiedPointAttributes) {
+        if (root.pointAttributesCache == null) {
+          root.pointAttributesCache=new VertexCache(3);
+        }
+        root.pointAttributesCache.add(root.pointVertCopyOffset,tess.pointVertexCount,tess.pointAttributes);
+        modifiedPointAttributes=false;
+      }
+ else       if (root.pointAttributesCache != null && root.pointAttributesCache.hasData()) {
+        root.copyPointAttributes(root.pointAttributesCache.offset,root.pointAttributesCache.size,root.pointAttributesCache.data);
+        root.pointAttributesCache.reset();
+      }
+    }
+    root.fillVertCopyOffset+=tess.fillVertexCount;
+    root.lineVertCopyOffset+=tess.lineVertexCount;
+    root.pointVertCopyOffset+=tess.pointVertexCount;
+  }
+  modified=false;
+}

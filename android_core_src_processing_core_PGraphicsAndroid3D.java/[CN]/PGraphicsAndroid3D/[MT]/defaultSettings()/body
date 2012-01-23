@@ -1,20 +1,16 @@
 {
   super.defaultSettings();
   manipulatingCamera=false;
-  scalingDuringCamManip=false;
-  clearColorBuffer=false;
   if (fbStack == null) {
     fbStack=new Stack<PFramebuffer>();
     screenFramebuffer=new PFramebuffer(parent,width,height,true);
     setFramebuffer(screenFramebuffer);
   }
-  if (usingGLMatrixStack) {
-    if (modelviewStack == null) {
-      modelviewStack=new GLMatrixStack();
-    }
-    if (projectionStack == null) {
-      projectionStack=new GLMatrixStack();
-    }
+  if (modelviewStack == null) {
+    modelviewStack=new Stack<PMatrix3D>();
+  }
+  if (projectionStack == null) {
+    projectionStack=new Stack<PMatrix3D>();
   }
   textureMode(IMAGE);
 }

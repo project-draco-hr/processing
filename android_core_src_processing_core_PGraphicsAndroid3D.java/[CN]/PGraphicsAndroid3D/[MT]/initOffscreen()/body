@@ -1,16 +1,26 @@
 {
-  if (offscreenFramebuffer == null) {
-    createOffscreenFramebuffer();
+  pg=(PGraphicsAndroid3D)parent.g;
+  pgl.initOffscreen(pg.pgl);
+  updateGLInterfaces();
+  loadTextureImpl(BILINEAR);
+  if (offscreenFramebuffer != null) {
+    offscreenFramebuffer=null;
   }
-  pushFramebuffer();
-  setFramebuffer(offscreenFramebuffer);
-  offscreenFramebuffer.setColorBuffer(offscreenTextures[offscreenIndex]);
-  gl.glClearColor(0,0,0,0);
-  if (clearColorBuffer || parent.frameCount == 0) {
-    gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+  if (offscreenFramebufferMultisample != null) {
+    offscreenFramebufferMultisample=null;
+  }
+  if (PGraphicsAndroid3D.fboMultisampleSupported && 1 < antialias) {
+    int nsamples=antialias;
+    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,nsamples,0,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
+    offscreenFramebufferMultisample.clear();
+    offscreenMultisample=true;
+    pg.report("after cleaning fbm");
+    offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
   }
  else {
-    gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
-    drawOffscreenTexture((offscreenIndex + 1) % 2);
+    offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
+    offscreenMultisample=false;
   }
+  offscreenFramebuffer.setColorBuffer(texture);
+  offscreenFramebuffer.clear();
 }

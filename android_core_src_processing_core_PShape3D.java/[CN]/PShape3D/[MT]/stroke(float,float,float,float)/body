@@ -1,5 +1,12 @@
 {
-  a3d.saveDrawingState();
-  a3d.stroke(x,y,z,a);
-  a3d.restoreDrawingState();
+  if (family == GROUP) {
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.stroke(x,y,z,alpha);
+    }
+  }
+ else {
+    colorCalc(x,y,z,alpha);
+    strokeFromCalc();
+  }
 }

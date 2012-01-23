@@ -1,0 +1,21 @@
+{
+  if (screenFb)   return;
+  if (width == 0 || height == 0) {
+    throw new RuntimeException("PFramebuffer: size undefined.");
+  }
+  if (fboMode) {
+    renderer.pushFramebuffer();
+    renderer.setFramebuffer(this);
+    glDepthStencilBufferID=renderer.createRenderBufferObject();
+    pgl.bindRenderbuffer(glDepthStencilBufferID);
+    if (multisample) {
+      pgl.setRenderbufferNumSamples(nsamples,PGL.DEPTH_24BIT_STENCIL_8BIT,width,height);
+    }
+ else {
+      pgl.setRenderbufferStorage(PGL.DEPTH_24BIT_STENCIL_8BIT,width,height);
+    }
+    pgl.setRenderbufferDepthAttachment(glDepthStencilBufferID);
+    pgl.setRenderbufferStencilAttachment(glDepthStencilBufferID);
+    renderer.popFramebuffer();
+  }
+}

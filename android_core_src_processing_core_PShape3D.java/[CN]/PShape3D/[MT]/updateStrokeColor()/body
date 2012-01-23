@@ -1,0 +1,33 @@
+{
+  if (shapeEnded) {
+    updateTesselation();
+    if (0 < tess.lineVertexCount) {
+      int size=tess.lineVertexCount;
+      float[] colors=tess.lineColors;
+      int index;
+      for (int i=0; i < size; i++) {
+        index=4 * i;
+        colors[index++]=strokeR;
+        colors[index++]=strokeG;
+        colors[index++]=strokeB;
+        colors[index]=strokeA;
+      }
+      modifiedLineColors=true;
+      modified();
+    }
+    if (0 < tess.pointVertexCount) {
+      int size=tess.pointVertexCount;
+      float[] colors=tess.pointColors;
+      int index;
+      for (int i=0; i < size; i++) {
+        index=4 * i;
+        colors[index++]=strokeR;
+        colors[index++]=strokeG;
+        colors[index++]=strokeB;
+        colors[index]=strokeA;
+      }
+      modifiedPointColors=true;
+      modified();
+    }
+  }
+}

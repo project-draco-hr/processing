@@ -1,18 +1,18 @@
 {
   if (noDepth) {
-    if (a3d.hints[DISABLE_DEPTH_TEST]) {
-      getGl().glDisable(GL10.GL_DEPTH_TEST);
+    if (renderer.hintEnabled(DISABLE_DEPTH_TEST)) {
+      pgl.disableDepthTest();
     }
  else {
-      getGl().glEnable(GL10.GL_DEPTH_TEST);
+      pgl.enableDepthTest();
     }
   }
   if (!screenFb && !fboMode) {
     copyToColorBuffers();
     restoreBackup();
     if (!noDepth) {
-      getGl().glClearColor(0,0,0,0);
-      getGl().glClear(GL10.GL_DEPTH_BUFFER_BIT);
+      pgl.setClearColor(0,0,0,0);
+      pgl.clearDepthBuffer();
     }
   }
 }

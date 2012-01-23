@@ -2,17 +2,8 @@
   if (!manipulatingCamera) {
     throw new RuntimeException("Cannot call endCamera() " + "without first calling beginCamera()");
   }
-  getModelviewMatrix();
-  if (scalingDuringCamManip) {
-    calculateModelviewInverse();
-  }
- else {
-    calculateModelviewInvNoScaling();
-  }
-  PApplet.arrayCopy(glmodelview,pcamera);
-  PApplet.arrayCopy(glmodelviewInv,pcameraInv);
-  copyGLArrayToPMatrix(pcamera,camera);
-  copyGLArrayToPMatrix(pcameraInv,cameraInv);
+  camera.set(modelview);
+  cameraInv.set(camera);
+  cameraInv.invert();
   manipulatingCamera=false;
-  scalingDuringCamManip=false;
 }

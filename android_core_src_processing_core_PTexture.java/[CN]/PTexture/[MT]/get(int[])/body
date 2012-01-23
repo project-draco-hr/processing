@@ -8,17 +8,17 @@
   }
   if (PGraphicsAndroid3D.fboSupported) {
     tempFbo.setColorBuffer(this);
-    a3d.pushFramebuffer();
-    a3d.setFramebuffer(tempFbo);
+    renderer.pushFramebuffer();
+    renderer.setFramebuffer(tempFbo);
     tempFbo.readPixels();
-    a3d.popFramebuffer();
+    renderer.popFramebuffer();
   }
  else {
-    a3d.pushFramebuffer();
-    a3d.setFramebuffer(tempFbo);
-    a3d.drawTexture(this,0,0,glWidth,glHeight,0,0,glWidth,glHeight);
+    renderer.pushFramebuffer();
+    renderer.setFramebuffer(tempFbo);
+    renderer.drawTexture(this,0,0,glWidth,glHeight,0,0,glWidth,glHeight);
     tempFbo.readPixels();
-    a3d.popFramebuffer();
+    renderer.popFramebuffer();
   }
   if (tempPixels == null) {
     tempPixels=new int[size];

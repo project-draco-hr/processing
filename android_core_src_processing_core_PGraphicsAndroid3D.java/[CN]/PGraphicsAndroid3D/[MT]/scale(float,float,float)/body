@@ -1,20 +1,7 @@
 {
-  if (USE_GEO_BUFFER && GEO_BUFFER_ACCUM_ALL && UPDATE_GEO_BUFFER_MATRIX_STACK) {
-    geoBuffer.stack.scale(sx,sy,sz);
-    if (!UPDATE_GL_MATRIX_STACK)     return;
+  if (hints[DISABLE_TRANSFORM_CACHE]) {
+    flush();
   }
-  if (manipulatingCamera) {
-    scalingDuringCamManip=true;
-  }
-  gl.glScalef(sx,sy,sz);
-  if (usingGLMatrixStack) {
-    if (matrixMode == PROJECTION) {
-      projectionStack.scale(sx,sy,sz);
-      projectionUpdated=false;
-    }
- else {
-      modelviewStack.scale(sx,sy,sz);
-      modelviewUpdated=false;
-    }
-  }
+  pgl.scale(sx,sy,sz);
+  modelview.scale(sx,sy,sz);
 }

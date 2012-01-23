@@ -1,0 +1,16 @@
+{
+  if (family == GROUP) {
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.copyFillGeometryToRoot();
+    }
+  }
+ else {
+    if (0 < tess.fillVertexCount && 0 < tess.fillIndexCount) {
+      root.copyFillGeometry(root.fillVertCopyOffset,tess.fillVertexCount,tess.fillVertices,tess.fillColors,tess.fillNormals,tess.fillTexcoords);
+      root.fillVertCopyOffset+=tess.fillVertexCount;
+      root.copyFillIndices(root.fillIndCopyOffset,tess.fillIndexCount,tess.fillIndices);
+      root.fillIndCopyOffset+=tess.fillIndexCount;
+    }
+  }
+}

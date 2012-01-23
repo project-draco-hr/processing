@@ -1,0 +1,48 @@
+{
+  int nInVert=in.lastVertex - in.firstVertex + 1;
+  if (stroke && 1 <= nInVert) {
+    tess.isStroked=true;
+    int nvertTot=0;
+    int nindTot=0;
+    for (int i=in.firstVertex; i <= in.lastVertex; i++) {
+      int perim=PApplet.max(MIN_ACCURACY,(int)(TWO_PI * strokeWeight / 20));
+      int nvert=perim + 1;
+      nvertTot+=nvert;
+      nindTot+=3 * (nvert - 1);
+    }
+    tess.addPointVertices(nvertTot);
+    tess.addPointIndices(nindTot);
+    int vertIdx=tess.firstPointVertex;
+    int attribIdx=tess.firstPointVertex;
+    int indIdx=tess.firstPointIndex;
+    int firstVert=tess.firstPointVertex;
+    for (int i=in.firstVertex; i <= in.lastVertex; i++) {
+      int perim=PApplet.max(MIN_ACCURACY,(int)(TWO_PI * strokeWeight / 20));
+      int nvert=perim + 1;
+      for (int k=0; k < nvert; k++) {
+        tess.putPointVertex(in,i,vertIdx);
+        vertIdx++;
+      }
+      tess.pointAttributes[2 * attribIdx + 0]=0;
+      tess.pointAttributes[2 * attribIdx + 1]=0;
+      attribIdx++;
+      float val=0;
+      float inc=(float)SINCOS_LENGTH / perim;
+      for (int k=0; k < perim; k++) {
+        tess.pointAttributes[2 * attribIdx + 0]=0.5f * cosLUT[(int)val] * strokeWeight;
+        tess.pointAttributes[2 * attribIdx + 1]=0.5f * sinLUT[(int)val] * strokeWeight;
+        val=(val + inc) % SINCOS_LENGTH;
+        attribIdx++;
+      }
+      for (int k=1; k < nvert - 1; k++) {
+        tess.pointIndices[indIdx++]=firstVert + 0;
+        tess.pointIndices[indIdx++]=firstVert + k;
+        tess.pointIndices[indIdx++]=firstVert + k + 1;
+      }
+      tess.pointIndices[indIdx++]=firstVert + 0;
+      tess.pointIndices[indIdx++]=firstVert + 1;
+      tess.pointIndices[indIdx++]=firstVert + nvert - 1;
+      firstVert=vertIdx;
+    }
+  }
+}

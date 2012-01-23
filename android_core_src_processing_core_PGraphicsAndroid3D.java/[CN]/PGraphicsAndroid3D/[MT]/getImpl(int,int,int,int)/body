@@ -1,19 +1,22 @@
 {
+  flush();
   PImage newbie=parent.createImage(w,h,ARGB);
-  PTexture newbieTex=addTexture(newbie);
   IntBuffer newbieBuffer=IntBuffer.allocate(w * h);
   boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
   if (notCurrent) {
     pushFramebuffer();
     setFramebuffer(offscreenFramebuffer);
   }
-  gl.glReadPixels(x,height - y - h,w,h,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,newbieBuffer);
+  newbieBuffer.rewind();
+  if (primarySurface) {
+    pgl.setReadBuffer(PGL.FRONT);
+  }
+  pgl.readPixels(newbieBuffer,x,height - y - h,w,h);
   if (notCurrent) {
     popFramebuffer();
   }
-  copyToTexture(newbieTex,newbieBuffer,0,0,w,h);
   newbie.loadPixels();
-  newbieTex.flippedY=true;
-  newbieTex.get(newbie.pixels);
+  newbieBuffer.get(newbie.pixels);
+  nativeToJavaARGB(newbie);
   return newbie;
 }

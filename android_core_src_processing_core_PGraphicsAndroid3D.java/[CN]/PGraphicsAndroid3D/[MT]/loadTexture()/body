@@ -1,7 +1,13 @@
 {
-  if (primarySurface && !fboSupported) {
+  if (primarySurface) {
+    if (!drawing) {
+      beginGLOp();
+    }
     loadTextureImpl(POINT);
     loadPixels();
     pixelsToTexture();
+    if (!drawing) {
+      endGLOp();
+    }
   }
 }

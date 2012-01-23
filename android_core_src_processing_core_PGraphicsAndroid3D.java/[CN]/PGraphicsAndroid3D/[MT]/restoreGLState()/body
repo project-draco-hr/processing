@@ -1,21 +1,21 @@
 {
-  gl.glViewport(0,0,width,height);
+  pgl.setViewport(viewport);
   restoreGLMatrices();
   if (hints[DISABLE_DEPTH_TEST]) {
-    gl.glDisable(GL10.GL_DEPTH_TEST);
-    gl.glClearColor(0,0,0,0);
-    gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
+    pgl.disableDepthTest();
+    pgl.setClearColor(0,0,0,0);
+    pgl.clearDepthBuffer();
   }
  else {
-    gl.glEnable(GL10.GL_DEPTH_TEST);
+    pgl.enableDepthTest();
   }
   if (hints[DISABLE_DEPTH_MASK]) {
-    gl.glDepthMask(false);
+    pgl.disableDepthMask();
   }
  else {
-    gl.glDepthMask(true);
+    pgl.enableDepthMask();
   }
-  screenBlend(screenBlendMode);
+  blendMode(blendMode);
   if (fill) {
     calcR=fillR;
     calcG=fillG;
@@ -83,7 +83,7 @@
  else {
     noLights();
   }
-  gl.glFrontFace(GL10.GL_CW);
-  gl.glDepthFunc(GL10.GL_LEQUAL);
+  pgl.setFrontFace(PGL.CLOCKWISE);
+  pgl.setDepthFunc(PGL.LESS_OR_EQUAL);
   setSurfaceParams();
 }

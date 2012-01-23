@@ -1,0 +1,57 @@
+{
+  if (family == GROUP) {
+    tess.reset();
+    boolean firstGeom=true;
+    boolean firstStroke=true;
+    boolean firstPoint=true;
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.aggregateImpl();
+      tess.addCounts(child.tess);
+      if (0 < child.tess.fillVertexCount) {
+        if (firstGeom) {
+          tess.setFirstFill(child.tess);
+          firstGeom=false;
+        }
+        tess.setLastFill(child.tess);
+      }
+      if (0 < child.tess.lineVertexCount) {
+        if (firstStroke) {
+          tess.setFirstLine(child.tess);
+          firstStroke=false;
+        }
+        tess.setLastLine(child.tess);
+      }
+      if (0 < child.tess.pointVertexCount) {
+        if (firstPoint) {
+          tess.setFirstPoint(child.tess);
+          firstPoint=false;
+        }
+        tess.setLastPoint(child.tess);
+      }
+    }
+  }
+ else {
+    if (0 < tess.fillVertexCount) {
+      root.lastFillVertexOffset=tess.setFillVertex(root.lastFillVertexOffset);
+    }
+    if (0 < tess.fillIndexCount) {
+      root.lastFillIndexOffset=tess.setFillIndex(root.lastFillIndexOffset);
+    }
+    if (0 < tess.lineVertexCount) {
+      root.lastLineVertexOffset=tess.setLineVertex(root.lastLineVertexOffset);
+    }
+    if (0 < tess.lineIndexCount) {
+      root.lastLineIndexOffset=tess.setLineIndex(root.lastLineIndexOffset);
+    }
+    if (0 < tess.pointVertexCount) {
+      root.lastPointVertexOffset=tess.setPointVertex(root.lastPointVertexOffset);
+    }
+    if (0 < tess.pointIndexCount) {
+      root.lastPointIndexOffset=tess.setPointIndex(root.lastPointIndexOffset);
+    }
+  }
+  hasFill=0 < tess.fillVertexCount && 0 < tess.fillIndexCount;
+  hasLines=0 < tess.lineVertexCount && 0 < tess.lineIndexCount;
+  hasPoints=0 < tess.pointVertexCount && 0 < tess.pointIndexCount;
+}

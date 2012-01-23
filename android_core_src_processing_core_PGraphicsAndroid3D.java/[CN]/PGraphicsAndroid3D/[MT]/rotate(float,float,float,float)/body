@@ -1,17 +1,7 @@
 {
-  if (USE_GEO_BUFFER && GEO_BUFFER_ACCUM_ALL && UPDATE_GEO_BUFFER_MATRIX_STACK) {
-    geoBuffer.stack.rotate(angle,v0,v1,v2);
-    if (!UPDATE_GL_MATRIX_STACK)     return;
+  if (hints[DISABLE_TRANSFORM_CACHE]) {
+    flush();
   }
-  gl.glRotatef(PApplet.degrees(angle),v0,v1,v2);
-  if (usingGLMatrixStack) {
-    if (matrixMode == PROJECTION) {
-      projectionStack.rotate(angle,v0,v1,v2);
-      projectionUpdated=false;
-    }
- else {
-      modelviewStack.rotate(angle,v0,v1,v2);
-      modelviewUpdated=false;
-    }
-  }
+  pgl.rotate(angle,v0,v1,v2);
+  modelview.rotate(angle,v0,v1,v2);
 }

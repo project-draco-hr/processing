@@ -1,0 +1,31 @@
+{
+  if (!lineVBOsCreated) {
+    createLineBuffers();
+    lineVBOsCreated=true;
+  }
+  startLineShader();
+  pgl.enableVertexArrays();
+  pgl.enableColorArrays();
+  pgl.enableNormalArrays();
+  int size=tessGeo.lineVertexCount;
+  pgl.bindVertexBuffer(glLineVertexBufferID);
+  pgl.copyVertexBufferData(tessGeo.lineVertices,3 * size,vboMode);
+  pgl.setVertexFormat(3,0,0);
+  pgl.bindVertexBuffer(glLineColorBufferID);
+  pgl.copyVertexBufferData(tessGeo.lineColors,4 * size,vboMode);
+  pgl.setColorFormat(4,0,0);
+  pgl.bindVertexBuffer(glLineNormalBufferID);
+  pgl.copyVertexBufferData(tessGeo.lineNormals,3 * size,vboMode);
+  pgl.setNormalFormat(3,0,0);
+  setupLineShader(glLineAttribBufferID,tessGeo.lineAttributes,size);
+  size=tessGeo.lineIndexCount;
+  pgl.bindIndexBuffer(glLineIndexBufferID);
+  pgl.copyIndexBufferData(tessGeo.lineIndices,size,vboMode);
+  pgl.renderIndexBuffer(size);
+  pgl.unbindIndexBuffer();
+  pgl.unbindVertexBuffer();
+  pgl.disableVertexArrays();
+  pgl.disableColorArrays();
+  pgl.disableNormalArrays();
+  stopLineShader();
+}

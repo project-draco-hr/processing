@@ -1,0 +1,37 @@
+{
+  pgl.enableVertexArrays();
+  pgl.enableColorArrays();
+  pgl.enableNormalArrays();
+  pgl.enableTexCoordArrays();
+  pgl.bindVertexBuffer(root.glFillVertexBufferID);
+  pgl.setVertexFormat(3,0,0);
+  pgl.bindVertexBuffer(root.glFillColorBufferID);
+  pgl.setColorFormat(4,0,0);
+  pgl.bindVertexBuffer(root.glFillNormalBufferID);
+  pgl.setNormalFormat(3,0,0);
+  pgl.bindVertexBuffer(root.glFillTexCoordBufferID);
+  pgl.setTexCoordFormat(2,0,0);
+  PTexture tex=null;
+  if (textureImage != null) {
+    tex=renderer.getTexture(textureImage);
+    if (tex != null) {
+      pgl.enableTexturing(tex.glTarget);
+      pgl.setActiveTexUnit(0);
+      pgl.bindTexture(tex.glTarget,tex.glID);
+    }
+  }
+  int offset=tess.firstFillIndex;
+  int size=tess.lastFillIndex - tess.firstFillIndex + 1;
+  pgl.bindIndexBuffer(root.glFillIndexBufferID);
+  pgl.renderIndexBuffer(offset,size);
+  if (tex != null) {
+    pgl.unbindTexture(tex.glTarget);
+    pgl.disableTexturing(tex.glTarget);
+  }
+  pgl.unbindIndexBuffer();
+  pgl.unbindVertexBuffer();
+  pgl.disableVertexArrays();
+  pgl.disableColorArrays();
+  pgl.disableNormalArrays();
+  pgl.disableTexCoordArrays();
+}

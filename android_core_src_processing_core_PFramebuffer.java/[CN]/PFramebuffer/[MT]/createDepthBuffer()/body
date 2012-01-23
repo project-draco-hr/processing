@@ -4,22 +4,27 @@
     throw new RuntimeException("PFramebuffer: size undefined.");
   }
   if (fboMode) {
-    a3d.pushFramebuffer();
-    a3d.setFramebuffer(this);
-    glDepthBufferID=a3d.createGLResource(PGraphicsAndroid3D.GL_RENDER_BUFFER);
-    getGlx().glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glDepthBufferID);
-    int glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT16;
+    renderer.pushFramebuffer();
+    renderer.setFramebuffer(this);
+    glDepthBufferID=renderer.createRenderBufferObject();
+    pgl.bindRenderbuffer(glDepthBufferID);
+    int glConst=PGL.DEPTH_16BIT;
     if (depthBits == 16) {
-      glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT16;
+      glConst=PGL.DEPTH_16BIT;
     }
  else     if (depthBits == 24) {
-      glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT24;
+      glConst=PGL.DEPTH_24BIT;
     }
  else     if (depthBits == 32) {
-      glConst=GL11ExtensionPack.GL_DEPTH_COMPONENT32;
+      glConst=PGL.DEPTH_32BIT;
     }
-    getGlx().glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,glConst,width,height);
-    getGlx().glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,GL11ExtensionPack.GL_DEPTH_ATTACHMENT_OES,GL11ExtensionPack.GL_RENDERBUFFER_OES,glDepthBufferID);
-    a3d.popFramebuffer();
+    if (multisample) {
+      pgl.setRenderbufferNumSamples(nsamples,glConst,width,height);
+    }
+ else {
+      pgl.setRenderbufferStorage(glConst,width,height);
+    }
+    pgl.setRenderbufferDepthAttachment(glDepthBufferID);
+    renderer.popFramebuffer();
   }
 }

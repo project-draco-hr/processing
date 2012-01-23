@@ -1,20 +1,27 @@
 {
+  flush();
   if ((pixels == null) || (pixels.length != width * height)) {
     pixels=new int[width * height];
     pixelBuffer=IntBuffer.allocate(pixels.length);
-    pixelBuffer.rewind();
+  }
+  boolean outsideDraw=primarySurface && !drawing;
+  if (outsideDraw) {
+    beginGLOp();
   }
   boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
   if (notCurrent) {
     pushFramebuffer();
     setFramebuffer(offscreenFramebuffer);
   }
-  gl.glReadPixels(0,0,width,height,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,pixelBuffer);
+  pixelBuffer.rewind();
+  if (primarySurface) {
+    pgl.setReadBuffer(PGL.FRONT);
+  }
+  pgl.readPixels(pixelBuffer,0,0,width,height);
   if (notCurrent) {
     popFramebuffer();
   }
   pixelBuffer.get(pixels);
-  pixelBuffer.rewind();
   int index=0;
   int yindex=(height - 1) * width;
   for (int y=0; y < height / 2; y++) {
@@ -51,8 +58,11 @@
       }
     }
   }
-  if (primarySurface && !fboSupported) {
+  if (primarySurface) {
     loadTextureImpl(POINT);
     pixelsToTexture();
+  }
+  if (outsideDraw) {
+    endGLOp();
   }
 }

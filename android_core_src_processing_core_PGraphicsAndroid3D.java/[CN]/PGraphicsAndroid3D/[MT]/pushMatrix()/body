@@ -1,15 +1,4 @@
 {
-  if (USE_GEO_BUFFER && GEO_BUFFER_ACCUM_ALL && UPDATE_GEO_BUFFER_MATRIX_STACK) {
-    geoBuffer.stack.push();
-    if (!UPDATE_GL_MATRIX_STACK)     return;
-  }
-  gl.glPushMatrix();
-  if (usingGLMatrixStack) {
-    if (matrixMode == PROJECTION) {
-      projectionStack.push();
-    }
- else {
-      modelviewStack.push();
-    }
-  }
+  pgl.pushMatrix();
+  modelviewStack.push(new PMatrix3D(modelview));
 }

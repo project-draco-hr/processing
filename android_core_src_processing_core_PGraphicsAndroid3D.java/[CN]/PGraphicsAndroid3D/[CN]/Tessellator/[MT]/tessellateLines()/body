@@ -1,0 +1,21 @@
+{
+  int nInVert=in.lastVertex - in.firstVertex + 1;
+  if (stroke && 2 <= nInVert) {
+    tess.isStroked=true;
+    int lineCount=nInVert / 2;
+    int first=in.firstVertex;
+    int nvert=lineCount * 4;
+    int nind=lineCount * 2 * 3;
+    tess.addLineVertices(nvert);
+    tess.addLineIndices(nind);
+    int vcount=tess.firstLineVertex;
+    int icount=tess.firstLineIndex;
+    for (int ln=0; ln < lineCount; ln++) {
+      int i0=first + 2 * ln + 0;
+      int i1=first + 2 * ln + 1;
+      addLine(i0,i1,vcount,icount);
+      vcount+=4;
+      icount+=6;
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  if (blendMode != mode) {
+    flush();
+    blendMode=mode;
+    pgl.enableBlend();
+    if (mode == REPLACE) {
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGL.BLEND_EQ_ADD);
+      }
+      pgl.setReplaceBlend();
+    }
+ else     if (mode == BLEND) {
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGL.BLEND_EQ_ADD);
+      }
+      pgl.setDefaultBlend();
+    }
+ else     if (mode == ADD) {
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGL.BLEND_EQ_ADD);
+      }
+      pgl.setAdditiveBlend();
+    }
+ else     if (mode == SUBTRACT) {
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGL.BLEND_EQ_ADD);
+      }
+      pgl.setSubstractiveBlend();
+    }
+ else     if (mode == LIGHTEST) {
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGL.BLEND_EQ_MAX);
+        pgl.setLightestBlend();
+      }
+ else {
+        PGraphics.showWarning("P3D: This blend mode is currently unsupported.");
+      }
+    }
+ else     if (mode == DARKEST) {
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGL.BLEND_EQ_MIN);
+        pgl.setDarkestBlend();
+      }
+ else {
+        PGraphics.showWarning("P3D: This blend mode is currently unsupported.");
+      }
+    }
+ else     if (mode == DIFFERENCE) {
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGL.BLEND_EQ_REVERSE_SUBTRACT);
+        pgl.setDifferenceBlend();
+      }
+ else {
+        PGraphics.showWarning("P3D: This blend mode is currently unsupported.");
+      }
+    }
+ else     if (mode == EXCLUSION) {
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGL.BLEND_EQ_ADD);
+      }
+      pgl.setExclussionBlend();
+    }
+ else     if (mode == MULTIPLY) {
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGL.BLEND_EQ_ADD);
+      }
+      pgl.setMultiplyBlend();
+    }
+ else     if (mode == SCREEN) {
+      if (blendEqSupported) {
+        pgl.setBlendEquation(PGL.BLEND_EQ_ADD);
+      }
+      pgl.setScreenBlend();
+    }
+  }
+}

@@ -1,4 +1,7 @@
 {
+  if (hints[DISABLE_TRANSFORM_CACHE]) {
+    flush();
+  }
   float z0=eyeX - centerX;
   float z1=eyeY - centerY;
   float z2=eyeZ - centerZ;
@@ -8,6 +11,9 @@
     z1/=mag;
     z2/=mag;
   }
+  cameraEyeX=eyeX;
+  cameraEyeY=eyeY;
+  cameraEyeZ=eyeZ;
   cameraDepth=mag;
   float y0=upX;
   float y1=upY;
@@ -30,40 +36,13 @@
     y1/=mag;
     y2/=mag;
   }
-  float[] m=glmodelview;
-  m[0]=x0;
-  m[1]=y0;
-  m[2]=z0;
-  m[3]=0.0f;
-  m[4]=x1;
-  m[5]=y1;
-  m[6]=z1;
-  m[7]=0.0f;
-  m[8]=x2;
-  m[9]=y2;
-  m[10]=z2;
-  m[11]=0;
-  m[12]=0.0f;
-  m[13]=0.0f;
-  m[14]=0.0f;
-  m[15]=1.0f;
+  modelview.set(x0,x1,x2,0,y0,y1,y2,0,z0,z1,z2,0,0,0,0,1);
   float tx=-eyeX;
   float ty=-eyeY;
   float tz=-eyeZ;
-  m[12]+=tx * m[0] + ty * m[4] + tz * m[8];
-  m[13]+=tx * m[1] + ty * m[5] + tz * m[9];
-  m[14]+=tx * m[2] + ty * m[6] + tz * m[10];
-  m[15]+=tx * m[3] + ty * m[7] + tz * m[11];
-  gl.glMatrixMode(GL10.GL_MODELVIEW);
-  gl.glLoadMatrixf(glmodelview,0);
-  if (usingGLMatrixStack) {
-    modelviewStack.set(glmodelview);
-  }
-  copyGLArrayToPMatrix(glmodelview,modelview);
-  modelviewUpdated=true;
-  calculateModelviewInvNoScaling();
-  PApplet.arrayCopy(glmodelview,pcamera);
-  PApplet.arrayCopy(glmodelviewInv,pcameraInv);
-  copyGLArrayToPMatrix(pcamera,camera);
-  copyGLArrayToPMatrix(pcameraInv,cameraInv);
+  modelview.translate(tx,ty,tz);
+  loadModelview();
+  camera.set(modelview);
+  cameraInv.set(camera);
+  cameraInv.invert();
 }

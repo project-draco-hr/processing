@@ -1,48 +1,46 @@
 {
   int mtlIdxCur=-1;
   OBJMaterial mtl=null;
-  a3d.saveDrawingState();
-  a3d.mergeRecShapes=false;
-  a3d.colorMode=RGB;
-  a3d.stroke=false;
-  a3d.autoNormal(true);
-  a3d.textureMode=NORMAL;
-  a3d.beginShapeRecorderImpl();
+  renderer.saveDrawingState();
+  renderer.colorMode=RGB;
+  renderer.stroke=false;
+  renderer.autoNormal(true);
+  renderer.textureMode=NORMAL;
   for (int i=0; i < faces.size(); i++) {
-    OBJFace face=(OBJFace)faces.get(i);
+    OBJFace face=faces.get(i);
     if (mtlIdxCur != face.matIdx) {
       mtlIdxCur=PApplet.max(0,face.matIdx);
-      mtl=(OBJMaterial)materials.get(mtlIdxCur);
-      a3d.specular(mtl.ks.x * 255.0f,mtl.ks.y * 255.0f,mtl.ks.z * 255.0f);
-      a3d.ambient(mtl.ka.x * 255.0f,mtl.ka.y * 255.0f,mtl.ka.z * 255.0f);
-      if (a3d.fill) {
-        a3d.fill(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
+      mtl=materials.get(mtlIdxCur);
+      renderer.specular(mtl.ks.x * 255.0f,mtl.ks.y * 255.0f,mtl.ks.z * 255.0f);
+      renderer.ambient(mtl.ka.x * 255.0f,mtl.ka.y * 255.0f,mtl.ka.z * 255.0f);
+      if (renderer.fill) {
+        renderer.fill(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
       }
-      a3d.shininess(mtl.ns);
-      if (a3d.tint && mtl.kdMap != null) {
-        a3d.tint(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
+      renderer.shininess(mtl.ns);
+      if (renderer.tint && mtl.kdMap != null) {
+        renderer.tint(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
       }
     }
     if (face.vertIdx.size() == 3) {
-      a3d.beginShape(TRIANGLES);
+      renderer.beginShape(TRIANGLES);
     }
  else     if (face.vertIdx.size() == 4) {
-      a3d.beginShape(QUADS);
+      renderer.beginShape(QUADS);
     }
  else {
-      a3d.beginShape();
+      renderer.beginShape();
     }
-    a3d.shapeName(face.name);
+    renderer.shapeName(face.name);
     for (int j=0; j < face.vertIdx.size(); j++) {
       int vertIdx, normIdx;
       PVector vert, norms;
       vert=norms=null;
       vertIdx=face.vertIdx.get(j).intValue() - 1;
-      vert=(PVector)vertices.get(vertIdx);
+      vert=vertices.get(vertIdx);
       if (j < face.normIdx.size()) {
         normIdx=face.normIdx.get(j).intValue() - 1;
         if (-1 < normIdx) {
-          norms=(PVector)normals.get(normIdx);
+          norms=normals.get(normIdx);
         }
       }
       if (mtl != null && mtl.kdMap != null) {
@@ -51,40 +49,33 @@
         if (j < face.texIdx.size()) {
           texIdx=face.texIdx.get(j).intValue() - 1;
           if (-1 < texIdx) {
-            tex=(PVector)textures.get(texIdx);
+            tex=textures.get(texIdx);
           }
         }
-        PTexture texMtl=(PTexture)mtl.kdMap.getCache(a3d);
+        PTexture texMtl=(PTexture)mtl.kdMap.getCache(renderer);
         if (texMtl != null) {
           texMtl.setFlippedY(true);
         }
-        a3d.texture(mtl.kdMap);
+        renderer.texture(mtl.kdMap);
         if (norms != null) {
-          a3d.normal(norms.x,norms.y,norms.z);
+          renderer.normal(norms.x,norms.y,norms.z);
         }
         if (tex != null) {
-          a3d.vertex(vert.x,vert.y,vert.z,tex.x,tex.y);
+          renderer.vertex(vert.x,vert.y,vert.z,tex.x,tex.y);
         }
  else {
-          a3d.vertex(vert.x,vert.y,vert.z);
+          renderer.vertex(vert.x,vert.y,vert.z);
         }
       }
  else {
         if (norms != null) {
-          a3d.normal(norms.x,norms.y,norms.z);
+          renderer.normal(norms.x,norms.y,norms.z);
         }
-        a3d.vertex(vert.x,vert.y,vert.z);
+        renderer.vertex(vert.x,vert.y,vert.z);
       }
     }
-    a3d.endShape(CLOSE);
+    renderer.endShape(CLOSE);
   }
-  setSize(a3d.recordedVertices.size());
-  allocate();
-  initChildrenData();
-  updateElement=-1;
   width=height=depth=0;
-  xmin=ymin=zmin=10000;
-  xmax=ymax=zmax=-10000;
-  a3d.endShapeRecorderImpl(this);
-  a3d.restoreDrawingState();
+  renderer.restoreDrawingState();
 }

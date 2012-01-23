@@ -1,18 +1,11 @@
 {
   super.allocate();
   if (!matricesAllocated) {
-    glprojection=new float[16];
-    glmodelview=new float[16];
-    glmodelviewInv=new float[16];
-    pcamera=new float[16];
-    pcameraInv=new float[16];
-    pprojection=new float[16];
-    gltemp=new float[16];
+    glMatrix=new float[16];
     projection=new PMatrix3D();
-    modelview=new PMatrix3D();
-    modelviewInv=new PMatrix3D();
     camera=new PMatrix3D();
     cameraInv=new PMatrix3D();
+    modelview=new PMatrix3D();
     matricesAllocated=true;
   }
   if (!lightsAllocated) {
@@ -30,34 +23,15 @@
     currentLightSpecular=new float[4];
     lightsAllocated=true;
   }
-  if (!geometryAllocated) {
-    ByteBuffer vbb=ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE * 3 * SIZEOF_INT);
-    vbb.order(ByteOrder.nativeOrder());
-    vertexBuffer=vbb.asIntBuffer();
-    ByteBuffer cbb=ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE * 4 * SIZEOF_INT);
-    cbb.order(ByteOrder.nativeOrder());
-    colorBuffer=cbb.asIntBuffer();
-    ByteBuffer nbb=ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE * 3 * SIZEOF_INT);
-    nbb.order(ByteOrder.nativeOrder());
-    normalBuffer=nbb.asIntBuffer();
-    texCoordBuffer=new IntBuffer[MAX_TEXTURES];
-    ByteBuffer tbb=ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE * 2 * SIZEOF_INT);
-    tbb.order(ByteOrder.nativeOrder());
-    texCoordBuffer[0]=tbb.asIntBuffer();
-    vertexArray=new int[DEFAULT_BUFFER_SIZE * 3];
-    colorArray=new int[DEFAULT_BUFFER_SIZE * 4];
-    normalArray=new int[DEFAULT_BUFFER_SIZE * 3];
-    texCoordArray=new int[1][DEFAULT_BUFFER_SIZE * 2];
-    numTexBuffers=1;
-    geometryAllocated=true;
-  }
   if (primarySurface) {
-    a3d=this;
+    if (pgl.initialized) {
+      reapplySettings();
+    }
   }
  else {
-    if (a3d == null) {
-      registerPGLObject(this);
+    if (pgl.initialized) {
+      updateOffscreenContext();
+      reapplySettings();
     }
-    a3d=(PGraphicsAndroid3D)parent.g;
   }
 }

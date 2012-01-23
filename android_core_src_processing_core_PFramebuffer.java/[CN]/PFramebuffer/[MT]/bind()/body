@@ -1,16 +1,19 @@
 {
   if (screenFb) {
     if (PGraphicsAndroid3D.fboSupported) {
-      getGlx().glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,0);
+      pgl.bindFramebuffer(0);
     }
   }
  else   if (fboMode) {
-    getGlx().glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,glFboID);
+    pgl.bindFramebuffer(glFboID);
   }
  else {
     backupScreen();
+    if (0 < numColorBuffers) {
+      renderer.drawTexture(colorBufferTex[0].glTarget,colorBufferTex[0].glID,width,height,0,0,width,height,0,0,width,height);
+    }
     if (noDepth) {
-      getGl().glDisable(GL10.GL_DEPTH_TEST);
+      pgl.disableDepthTest();
     }
   }
 }

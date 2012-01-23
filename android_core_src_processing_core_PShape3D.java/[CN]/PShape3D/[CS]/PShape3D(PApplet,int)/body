@@ -1,3 +1,54 @@
 {
-  this(parent,numVert,new Parameters());
+  renderer=(PGraphicsAndroid3D)parent.g;
+  pgl=renderer.pgl;
+  glMode=PGL.STATIC_DRAW;
+  glFillVertexBufferID=0;
+  glFillColorBufferID=0;
+  glFillNormalBufferID=0;
+  glFillTexCoordBufferID=0;
+  glFillIndexBufferID=0;
+  glLineVertexBufferID=0;
+  glLineColorBufferID=0;
+  glLineNormalBufferID=0;
+  glLineAttribBufferID=0;
+  glLineIndexBufferID=0;
+  glPointVertexBufferID=0;
+  glPointColorBufferID=0;
+  glPointNormalBufferID=0;
+  glPointAttribBufferID=0;
+  glPointIndexBufferID=0;
+  this.tessellator=renderer.tessellator;
+  this.family=family;
+  this.root=this;
+  this.parent=null;
+  this.tessellated=false;
+  tess=renderer.newTessGeometry(RETAINED);
+  if (family == GEOMETRY || family == PRIMITIVE || family == PATH) {
+    in=renderer.newInGeometry();
+  }
+  textureMode=renderer.textureMode;
+  rectMode=renderer.rectMode;
+  ellipseMode=renderer.ellipseMode;
+  shapeMode=renderer.shapeMode;
+  imageMode=renderer.imageMode;
+  colorMode(renderer.colorMode,renderer.colorModeX,renderer.colorModeY,renderer.colorModeZ,renderer.colorModeA);
+  fill=renderer.fill;
+  fillR=((renderer.fillColor >> 16) & 0xFF) / 255.0f;
+  fillG=((renderer.fillColor >> 8) & 0xFF) / 255.0f;
+  fillB=((renderer.fillColor >> 0) & 0xFF) / 255.0f;
+  fillA=((renderer.fillColor >> 24) & 0xFF) / 255.0f;
+  stroke=renderer.stroke;
+  strokeR=((renderer.strokeColor >> 16) & 0xFF) / 255.0f;
+  strokeG=((renderer.strokeColor >> 8) & 0xFF) / 255.0f;
+  strokeB=((renderer.strokeColor >> 0) & 0xFF) / 255.0f;
+  strokeA=((renderer.strokeColor >> 24) & 0xFF) / 255.0f;
+  strokeWeight=renderer.strokeWeight;
+  tint=renderer.tint;
+  tintR=((renderer.tintColor >> 16) & 0xFF) / 255.0f;
+  tintG=((renderer.tintColor >> 8) & 0xFF) / 255.0f;
+  tintB=((renderer.tintColor >> 0) & 0xFF) / 255.0f;
+  tintA=((renderer.tintColor >> 24) & 0xFF) / 255.0f;
+  normalX=normalY=0;
+  normalZ=1;
+  normalMode=NORMAL_MODE_AUTO;
 }

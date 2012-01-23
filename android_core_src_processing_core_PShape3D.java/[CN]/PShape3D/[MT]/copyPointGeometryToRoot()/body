@@ -1,0 +1,16 @@
+{
+  if (family == GROUP) {
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.copyPointGeometryToRoot();
+    }
+  }
+ else {
+    if (hasPoints) {
+      root.copyPointGeometry(root.pointVertCopyOffset,tess.pointVertexCount,tess.pointVertices,tess.pointColors,tess.pointNormals,tess.pointAttributes);
+      root.pointVertCopyOffset+=tess.pointVertexCount;
+      root.copyPointIndices(root.pointIndCopyOffset,tess.pointIndexCount,tess.pointIndices);
+      root.pointIndCopyOffset+=tess.pointIndexCount;
+    }
+  }
+}

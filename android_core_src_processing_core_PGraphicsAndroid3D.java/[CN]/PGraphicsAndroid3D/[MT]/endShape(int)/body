@@ -1,38 +1,11 @@
 {
-  shapeLast=vertexCount;
-  if (vertexCount == 0) {
-    shape=0;
-    return;
+  if (flushMode == FLUSH_WHEN_FULL && hints[DISABLE_TEXTURE_CACHE] && textureImage0 != null && textureImage == null) {
+    textureImage=textureImage0;
+    flush();
+    textureImage=null;
   }
-  if (stroke) {
-    endShapeStroke(mode);
+  tessellate(mode);
+  if (flushMode == FLUSH_CONTINUOUSLY || (flushMode == FLUSH_WHEN_FULL && tessGeo.isFull())) {
+    flush();
   }
-  if (fill || 0 < shapeTextures) {
-    endShapeFill();
-  }
-  if (!hints[ENABLE_DEPTH_SORT]) {
-    if (fill || 0 < shapeTextures) {
-      renderTriangles(0,faceCount);
-      if (raw != null) {
-      }
-      vertexCount=0;
-      triangleCount=0;
-      shapeTextures=0;
-    }
-    if (stroke) {
-      if (pointCount > 0) {
-        renderPoints(0,pointCount);
-        if (raw != null) {
-        }
-        pointCount=0;
-      }
-      renderLines(0,pathCount);
-      if (raw != null) {
-      }
-      lineCount=0;
-    }
-    pathCount=0;
-    faceCount=0;
-  }
-  shape=0;
 }

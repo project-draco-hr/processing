@@ -1,23 +1,47 @@
 {
+  boolean oldValue=hints[which];
   super.hint(which);
+  boolean newValue=hints[which];
+  if (oldValue == newValue) {
+    return;
+  }
   if (which == DISABLE_DEPTH_TEST) {
-    gl.glDisable(GL10.GL_DEPTH_TEST);
-    gl.glClearColor(0,0,0,0);
-    gl.glClear(GL10.GL_DEPTH_BUFFER_BIT);
+    flush();
+    pgl.disableDepthTest();
+    pgl.setClearColor(0,0,0,0);
+    pgl.clearDepthBuffer();
   }
  else   if (which == ENABLE_DEPTH_TEST) {
-    gl.glEnable(GL10.GL_DEPTH_TEST);
+    flush();
+    pgl.enableDepthTest();
   }
  else   if (which == DISABLE_DEPTH_MASK) {
-    gl.glDepthMask(false);
+    flush();
+    pgl.disableDepthMask();
   }
  else   if (which == ENABLE_DEPTH_MASK) {
-    gl.glDepthMask(true);
+    flush();
+    pgl.enableDepthMask();
   }
- else   if (which == DISABLE_OPENGL_2X_SMOOTH) {
+ else   if (which == DISABLE_ACCURATE_2D) {
+    flush();
+    setFlushMode(FLUSH_WHEN_FULL);
   }
- else   if (which == ENABLE_OPENGL_2X_SMOOTH) {
+ else   if (which == ENABLE_ACCURATE_2D) {
+    flush();
+    setFlushMode(FLUSH_CONTINUOUSLY);
   }
- else   if (which == ENABLE_OPENGL_4X_SMOOTH) {
+ else   if (which == DISABLE_TEXTURE_CACHE) {
+    flush();
+  }
+ else   if (which == DISABLE_PERSPECTIVE_CORRECTED_LINES) {
+    if (0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount) {
+      flush();
+    }
+  }
+ else   if (which == ENABLE_PERSPECTIVE_CORRECTED_LINES) {
+    if (0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount) {
+      flush();
+    }
   }
 }

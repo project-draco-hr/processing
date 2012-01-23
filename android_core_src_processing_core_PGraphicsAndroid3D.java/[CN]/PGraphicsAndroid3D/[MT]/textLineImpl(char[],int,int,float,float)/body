@@ -1,39 +1,52 @@
 {
-  if (gl11 == null || gl11x == null) {
-    throw new RuntimeException("A3D: Text rendering requires OpenGL ES 1.1");
-  }
-  gl.glEnable(GL10.GL_TEXTURE_2D);
-  if (screenBlendMode != BLEND) {
-    gl.glEnable(GL10.GL_BLEND);
-    if (blendEqSupported)     gl11xp.glBlendEquation(GL11ExtensionPack.GL_FUNC_ADD);
-    gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_ONE_MINUS_SRC_ALPHA);
-  }
-  textTex=(PFontTexture)textFont.getCache(a3d);
+  textTex=(PFontTexture)textFont.getCache(pg);
   if (textTex == null) {
     textTex=new PFontTexture(parent,textFont,maxTextureSize,maxTextureSize);
     textFont.setCache(this,textTex);
   }
-  textTex.setFirstTexture();
-  setFillColor();
-  if (textMode == MODEL) {
-    if (textVertexBuffer == null) {
-      allocateTextModel();
-    }
-    setDefNormals(0,0,1);
-    if (!textBlockMode) {
-      textVertexCount=0;
-    }
-  }
-  super.textLineImpl(buffer,start,stop,x,y);
-  if (textMode == MODEL && 0 < textVertexCount) {
-    if (!textBlockMode) {
-      renderTextModel();
-    }
  else {
-      textBlockTex=textTex.currentTex;
+    if (!pgl.contextIsCurrent(textTex.context)) {
+      for (int i=0; i < textTex.textures.length; i++) {
+        textTex.textures[i].glID=0;
+        textTex.textures[i]=null;
+      }
+      textTex=new PFontTexture(parent,textFont,maxTextureSize,maxTextureSize);
+      textFont.setCache(this,textTex);
     }
   }
-  screenBlend(screenBlendMode);
-  gl.glBindTexture(GL10.GL_TEXTURE_2D,0);
-  gl.glDisable(GL10.GL_TEXTURE_2D);
+  textTex.setFirstTexture();
+  int savedTextureMode=textureMode;
+  boolean savedStroke=stroke;
+  float savedNormalX=normalX;
+  float savedNormalY=normalY;
+  float savedNormalZ=normalZ;
+  boolean savedTint=tint;
+  float savedTintR=tintR;
+  float savedTintG=tintG;
+  float savedTintB=tintB;
+  float savedTintA=tintA;
+  int savedBlendMode=blendMode;
+  textureMode=NORMAL;
+  stroke=false;
+  normalX=0;
+  normalY=0;
+  normalZ=1;
+  tint=true;
+  tintR=fillR;
+  tintG=fillG;
+  tintB=fillB;
+  tintA=fillA;
+  blendMode(BLEND);
+  super.textLineImpl(buffer,start,stop,x,y);
+  textureMode=savedTextureMode;
+  stroke=savedStroke;
+  normalX=savedNormalX;
+  normalY=savedNormalY;
+  normalZ=savedNormalZ;
+  tint=savedTint;
+  tintR=savedTintR;
+  tintG=savedTintG;
+  tintB=savedTintB;
+  tintA=savedTintA;
+  blendMode(savedBlendMode);
 }

@@ -1,17 +1,8 @@
 {
-  if (USE_GEO_BUFFER && GEO_BUFFER_ACCUM_ALL && UPDATE_GEO_BUFFER_MATRIX_STACK) {
-    geoBuffer.stack.pop();
-    if (!UPDATE_GL_MATRIX_STACK)     return;
+  if (hints[DISABLE_TRANSFORM_CACHE]) {
+    flush();
   }
-  gl.glPopMatrix();
-  if (usingGLMatrixStack) {
-    if (matrixMode == PROJECTION) {
-      projectionStack.pop();
-      projectionUpdated=false;
-    }
- else {
-      modelviewStack.pop();
-      modelviewUpdated=false;
-    }
-  }
+  pgl.popMatrix();
+  PMatrix3D mat=modelviewStack.pop();
+  modelview.set(mat);
 }

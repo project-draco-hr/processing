@@ -1,17 +1,16 @@
 {
   release();
-  getGl().glEnable(glTarget);
-  glID=a3d.createGLResource(PGraphicsAndroid3D.GL_TEXTURE_OBJECT);
-  getGl().glBindTexture(glTarget,glID);
-  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_MIN_FILTER,glMinFilter);
-  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_MAG_FILTER,glMagFilter);
-  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_S,glWrapS);
-  getGl().glTexParameterf(glTarget,GL10.GL_TEXTURE_WRAP_T,glWrapT);
-  getGl().glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,GL10.GL_RGBA,GL10.GL_UNSIGNED_BYTE,null);
+  pgl.enableTexturing(glTarget);
+  glID=renderer.createTextureObject();
+  pgl.bindTexture(glTarget,glID);
+  pgl.setTexMinFilter(glTarget,glMinFilter);
+  pgl.setTexMagFilter(glTarget,glMagFilter);
+  pgl.setTexWrapS(glTarget,glWrapS);
+  pgl.setTexWrapT(glTarget,glWrapT);
+  pgl.initTex(glTarget,glFormat,glWidth,glHeight);
   int[] texels=new int[width * height];
-  java.util.Arrays.fill(texels,0,width * height,0x00000000);
-  setTexels(0,0,width,height,texels);
+  setTexels(texels,0,0,width,height);
   texels=null;
-  getGl().glBindTexture(glTarget,0);
-  getGl().glDisable(glTarget);
+  pgl.unbindTexture(glTarget);
+  pgl.disableTexturing(glTarget);
 }
