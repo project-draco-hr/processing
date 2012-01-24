@@ -7,8 +7,9 @@
     if (!pgl.initialized) {
       initPrimary();
     }
-    boolean res=pgl.beginOnscreenDraw();
-    if (!res)     return;
+    if (!pgl.initOnscreenDraw()) {
+      return;
+    }
     pgl.detainContext();
   }
  else {
@@ -25,7 +26,7 @@
     }
     pgl.beginOffscreenDraw();
   }
-  updateGLInterfaces();
+  updatePGL();
   if (!glParamsRead) {
     getGLParameters();
   }
@@ -96,6 +97,12 @@
   normalZ=0;
   pgl.setClearColor(0,0,0,0);
   pgl.clearDepthAndStencilBuffers();
+  if (primarySurface) {
+    pgl.beginOnscreenDraw();
+  }
+ else {
+    pgl.beginOffscreenDraw();
+  }
   drawing=true;
   report("bot beginDraw()");
 }
