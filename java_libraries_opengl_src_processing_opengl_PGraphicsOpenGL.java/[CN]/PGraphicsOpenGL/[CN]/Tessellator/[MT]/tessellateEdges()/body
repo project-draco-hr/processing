@@ -1,6 +1,9 @@
 {
-  tess.addLineVertices(in.getNumLineVertices());
-  tess.addLineIndices(in.getNumLineIndices());
+  int nInVert=in.getNumLineVertices();
+  int nInInd=in.getNumLineIndices();
+  checkForFlush(tess.lineVertexCount + nInVert,tess.lineIndexCount + nInInd);
+  tess.addLineVertices(nInVert);
+  tess.addLineIndices(nInInd);
   int vcount=tess.firstLineVertex;
   int icount=tess.firstLineIndex;
   for (int i=in.firstEdge; i <= in.lastEdge; i++) {

@@ -1,3 +1,8 @@
 {
-  tess.addFillIndex(tessFirst + tessIdx);
+  if (tess.fillVertexCount < PGL.MAX_TESS_INDICES) {
+    tess.addFillIndex(tessFirst + tessIdx);
+  }
+ else {
+    throw new RuntimeException("P3D: the tessellator is generating too many indices, reduce complexity of shape.");
+  }
 }

@@ -7,7 +7,7 @@
   tessellator.setStrokeCap(strokeCap);
   tessellator.setStrokeJoin(strokeJoin);
   tessellator.setStrokeColor(strokeR,strokeG,strokeB,strokeA);
-  int first=tessGeo.fillIndexCount;
+  setFirstTexIndex(tessGeo.fillIndexCount);
   if (shape == POINTS) {
     if (normalMode == NORMAL_MODE_AUTO)     inGeo.calcPointsNormals();
     tessellator.tessellatePoints();
@@ -45,11 +45,5 @@
     if (stroke && defaultEdges)     inGeo.addPolygonEdges(mode == CLOSE);
     tessellator.tessellatePolygon(false,mode == CLOSE,normalMode == NORMAL_MODE_AUTO);
   }
-  int last=tessGeo.lastFillIndex;
-  if (textureImage0 != textureImage || texCache.count == 0) {
-    texCache.addTexture(textureImage,first,last);
-  }
- else {
-    texCache.setLastIndex(last);
-  }
+  setLastTexIndex(tessGeo.lastFillIndex);
 }
