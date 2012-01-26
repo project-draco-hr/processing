@@ -1,0 +1,25 @@
+{
+  if (fillIndexData == null) {
+    fillIndexData=new ArrayList<IndexData>();
+  }
+  IndexData gdata=null;
+  for (int i=0; i < childCount; i++) {
+    PShape3D child=(PShape3D)children[i];
+    for (int j=0; j < child.fillIndexData.size(); j++) {
+      IndexData cdata=child.fillIndexData.get(j);
+      if (gdata == null) {
+        gdata=new IndexData(cdata.first,cdata.offset,cdata.size);
+        fillIndexData.add(gdata);
+      }
+ else {
+        if (gdata.first == cdata.first) {
+          gdata.size+=cdata.size;
+        }
+ else {
+          gdata=new IndexData(cdata.first,cdata.offset,cdata.size);
+          fillIndexData.add(gdata);
+        }
+      }
+    }
+  }
+}
