@@ -34,9 +34,6 @@
  else {
     if (0 < tess.fillVertexCount) {
       root.lastFillVertexOffset=tess.setFillVertex(root.lastFillVertexOffset);
-      if (32767 < root.lastFillVertexOffset) {
-        PApplet.println("problems " + root.lastFillVertexOffset);
-      }
     }
     if (0 < tess.fillIndexCount) {
       root.lastFillIndexOffset=tess.setFillIndex(root.lastFillIndexOffset);
@@ -53,6 +50,7 @@
     if (0 < tess.pointIndexCount) {
       root.lastPointIndexOffset=tess.setPointIndex(root.lastPointIndexOffset);
     }
+    addFillIndexData(tess.firstFillVertex,tess.firstFillIndex,tess.lastFillIndex - tess.firstFillIndex + 1);
   }
   hasFill=0 < tess.fillVertexCount && 0 < tess.fillIndexCount;
   hasLines=0 < tess.lineVertexCount && 0 < tess.lineIndexCount;
