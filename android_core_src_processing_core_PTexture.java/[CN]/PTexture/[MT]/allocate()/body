@@ -8,8 +8,14 @@
   pgl.setTexWrapS(glTarget,glWrapS);
   pgl.setTexWrapT(glTarget,glWrapT);
   pgl.initTex(glTarget,glFormat,glWidth,glHeight);
-  int[] texels=new int[width * height];
-  setTexels(texels,0,0,width,height);
+  int[] texels=new int[16 * 16];
+  for (int y=0; y < height + 16; y+=16) {
+    int h=PApplet.min(16,height - y);
+    for (int x=0; x < width + 16; x+=16) {
+      int w=PApplet.min(16,width - x);
+      setTexels(texels,x,y,w,h);
+    }
+  }
   texels=null;
   pgl.unbindTexture(glTarget);
   pgl.disableTexturing(glTarget);
