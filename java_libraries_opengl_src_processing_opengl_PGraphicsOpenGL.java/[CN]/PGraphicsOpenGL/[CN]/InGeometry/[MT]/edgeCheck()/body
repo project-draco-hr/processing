@@ -1,6 +1,13 @@
 {
   if (edgeCount == edges.length) {
-    int temp[][]=new int[edgeCount << 1][3];
+    int newLen=edgeCount;
+    if (renderMode == IMMEDIATE) {
+      newLen<<=1;
+    }
+ else {
+      newLen+=PGL.IN_EDGES_INCREMENT;
+    }
+    int temp[][]=new int[newLen][3];
     PApplet.arrayCopy(edges,0,temp,0,edgeCount);
     edges=temp;
   }

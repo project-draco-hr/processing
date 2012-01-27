@@ -1,6 +1,12 @@
 {
   if (vertexCount == vertices.length / 3) {
-    int newSize=vertexCount << 1;
+    int newSize=vertexCount;
+    if (renderMode == IMMEDIATE) {
+      newSize<<=1;
+    }
+ else {
+      newSize+=PGL.IN_VERTICES_INCREMENT;
+    }
     expandCodes(newSize);
     expandVertices(newSize);
     expandColors(newSize);
