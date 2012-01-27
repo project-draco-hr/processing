@@ -3,20 +3,19 @@
   pgl.enableColorArrays();
   pgl.enableNormalArrays();
   pgl.enableTexCoordArrays();
-  PApplet.println("Number of vertices: " + tess.fillVertexCount);
   for (int i=0; i < fillIndexData.size(); i++) {
     IndexData index=(IndexData)fillIndexData.get(i);
     int first=index.first;
     int offset=index.offset;
     int size=index.size;
     pgl.bindVertexBuffer(root.glFillVertexBufferID);
-    pgl.setVertexFormat(3,0,3 * first);
+    pgl.setVertexFormat(3,first);
     pgl.bindVertexBuffer(root.glFillColorBufferID);
-    pgl.setColorFormat(4,0,4 * first);
+    pgl.setColorFormat(4,first);
     pgl.bindVertexBuffer(root.glFillNormalBufferID);
-    pgl.setNormalFormat(3,0,3 * first);
+    pgl.setNormalFormat(3,first);
     pgl.bindVertexBuffer(root.glFillTexCoordBufferID);
-    pgl.setTexCoordFormat(2,0,2 * first);
+    pgl.setTexCoordFormat(2,first);
     PTexture tex=null;
     if (textureImage != null) {
       tex=renderer.getTexture(textureImage);

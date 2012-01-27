@@ -1,23 +1,27 @@
 {
-  pg.startPointShader();
+  renderer.startPointShader();
   pgl.enableVertexArrays();
   pgl.enableColorArrays();
   pgl.enableNormalArrays();
-  pgl.bindVertexBuffer(root.glPointVertexBufferID);
-  pgl.setVertexFormat(3,0,0);
-  pgl.bindVertexBuffer(root.glPointColorBufferID);
-  pgl.setColorFormat(4,0,0);
-  pgl.bindVertexBuffer(root.glPointNormalBufferID);
-  pgl.setNormalFormat(3,0,0);
-  pg.setupPointShader(root.glPointAttribBufferID);
-  int offset=tess.firstPointIndex;
-  int size=tess.lastPointIndex - tess.firstPointIndex + 1;
-  pgl.bindIndexBuffer(root.glPointIndexBufferID);
-  pgl.renderIndexBuffer(offset,size);
-  pgl.unbindIndexBuffer();
-  pgl.unbindVertexBuffer();
+  for (int i=0; i < pointIndexData.size(); i++) {
+    IndexData index=(IndexData)pointIndexData.get(i);
+    int first=index.first;
+    int offset=index.offset;
+    int size=index.size;
+    pgl.bindVertexBuffer(root.glPointVertexBufferID);
+    pgl.setVertexFormat(3,first);
+    pgl.bindVertexBuffer(root.glPointColorBufferID);
+    pgl.setColorFormat(4,first);
+    pgl.bindVertexBuffer(root.glPointNormalBufferID);
+    pgl.setNormalFormat(3,first);
+    renderer.setupPointShader(root.glPointAttribBufferID);
+    pgl.bindIndexBuffer(root.glPointIndexBufferID);
+    pgl.renderIndexBuffer(offset,size);
+    pgl.unbindIndexBuffer();
+    pgl.unbindVertexBuffer();
+  }
   pgl.disableVertexArrays();
   pgl.disableColorArrays();
   pgl.disableNormalArrays();
-  pg.stopPointShader();
+  renderer.stopPointShader();
 }

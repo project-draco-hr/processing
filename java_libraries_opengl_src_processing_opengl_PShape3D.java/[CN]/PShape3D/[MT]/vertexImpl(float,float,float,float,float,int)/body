@@ -1,4 +1,8 @@
 {
+  if (in.isFull()) {
+    PGraphics.showWarning("P3D: Too many vertices, try creating smaller shapes");
+    return;
+  }
   if (family == GROUP) {
     PGraphics.showWarning("Cannot add vertices to GROUP shape");
     return;
@@ -31,7 +35,7 @@
   if (texture != null && textureMode == IMAGE) {
     u/=texture.width;
     v/=texture.height;
-    PTexture tex=pg.queryTexture(texture);
+    PTexture tex=renderer.queryTexture(texture);
     if (tex != null && tex.isFlippedY()) {
       v=1 - v;
     }
