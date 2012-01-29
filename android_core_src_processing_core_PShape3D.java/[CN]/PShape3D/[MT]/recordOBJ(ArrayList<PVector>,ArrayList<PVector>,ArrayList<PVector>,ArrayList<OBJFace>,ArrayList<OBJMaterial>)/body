@@ -1,33 +1,33 @@
 {
   int mtlIdxCur=-1;
   OBJMaterial mtl=null;
-  renderer.saveDrawingState();
-  renderer.colorMode=RGB;
-  renderer.stroke=false;
-  renderer.textureMode=NORMAL;
+  pg.saveDrawingState();
+  pg.colorMode=RGB;
+  pg.stroke=false;
+  pg.textureMode=NORMAL;
   for (int i=0; i < faces.size(); i++) {
     OBJFace face=faces.get(i);
     if (mtlIdxCur != face.matIdx) {
       mtlIdxCur=PApplet.max(0,face.matIdx);
       mtl=materials.get(mtlIdxCur);
-      renderer.specular(mtl.ks.x * 255.0f,mtl.ks.y * 255.0f,mtl.ks.z * 255.0f);
-      renderer.ambient(mtl.ka.x * 255.0f,mtl.ka.y * 255.0f,mtl.ka.z * 255.0f);
-      if (renderer.fill) {
-        renderer.fill(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
+      pg.specular(mtl.ks.x * 255.0f,mtl.ks.y * 255.0f,mtl.ks.z * 255.0f);
+      pg.ambient(mtl.ka.x * 255.0f,mtl.ka.y * 255.0f,mtl.ka.z * 255.0f);
+      if (pg.fill) {
+        pg.fill(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
       }
-      renderer.shininess(mtl.ns);
-      if (renderer.tint && mtl.kdMap != null) {
-        renderer.tint(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
+      pg.shininess(mtl.ns);
+      if (pg.tint && mtl.kdMap != null) {
+        pg.tint(mtl.kd.x * 255.0f,mtl.kd.y * 255.0f,mtl.kd.z * 255.0f,mtl.d * 255.0f);
       }
     }
     if (face.vertIdx.size() == 3) {
-      renderer.beginShape(TRIANGLES);
+      pg.beginShape(TRIANGLES);
     }
  else     if (face.vertIdx.size() == 4) {
-      renderer.beginShape(QUADS);
+      pg.beginShape(QUADS);
     }
  else {
-      renderer.beginShape();
+      pg.beginShape();
     }
     for (int j=0; j < face.vertIdx.size(); j++) {
       int vertIdx, normIdx;
@@ -50,30 +50,30 @@
             tex=textures.get(texIdx);
           }
         }
-        PTexture texMtl=(PTexture)mtl.kdMap.getCache(renderer);
+        PTexture texMtl=(PTexture)mtl.kdMap.getCache(pg);
         if (texMtl != null) {
           texMtl.setFlippedY(true);
         }
-        renderer.texture(mtl.kdMap);
+        pg.texture(mtl.kdMap);
         if (norms != null) {
-          renderer.normal(norms.x,norms.y,norms.z);
+          pg.normal(norms.x,norms.y,norms.z);
         }
         if (tex != null) {
-          renderer.vertex(vert.x,vert.y,vert.z,tex.x,tex.y);
+          pg.vertex(vert.x,vert.y,vert.z,tex.x,tex.y);
         }
  else {
-          renderer.vertex(vert.x,vert.y,vert.z);
+          pg.vertex(vert.x,vert.y,vert.z);
         }
       }
  else {
         if (norms != null) {
-          renderer.normal(norms.x,norms.y,norms.z);
+          pg.normal(norms.x,norms.y,norms.z);
         }
-        renderer.vertex(vert.x,vert.y,vert.z);
+        pg.vertex(vert.x,vert.y,vert.z);
       }
     }
-    renderer.endShape(CLOSE);
+    pg.endShape(CLOSE);
   }
   width=height=depth=0;
-  renderer.restoreDrawingState();
+  pg.restoreDrawingState();
 }
