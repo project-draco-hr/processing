@@ -1,27 +1,30 @@
 {
   pg.startPointShader();
-  pgl.enableVertexArrays();
-  pgl.enableColorArrays();
-  pgl.enableNormalArrays();
+  pg.enablePointVertex();
+  pg.enablePointColor();
+  pg.enablePointNormal();
+  pg.enablePointSize();
   for (int i=0; i < pointIndexData.size(); i++) {
     IndexData index=(IndexData)pointIndexData.get(i);
     int first=index.first;
     int offset=index.offset;
     int size=index.size;
     pgl.bindVertexBuffer(root.glPointVertexBufferID);
-    pgl.setVertexFormat(3,first);
+    pg.setPointVertexFormat(3,first);
     pgl.bindVertexBuffer(root.glPointColorBufferID);
-    pgl.setColorFormat(4,first);
+    pg.setPointColorFormat(4,first);
     pgl.bindVertexBuffer(root.glPointNormalBufferID);
-    pgl.setNormalFormat(3,first);
-    pg.setupPointShader(root.glPointAttribBufferID);
+    pg.setPointNormalFormat(4,first);
+    pgl.bindVertexBuffer(root.glPointAttribBufferID);
+    pg.setPointSizeFormat(2,first);
     pgl.bindIndexBuffer(root.glPointIndexBufferID);
     pgl.renderIndexBuffer(offset,size);
     pgl.unbindIndexBuffer();
     pgl.unbindVertexBuffer();
   }
-  pgl.disableVertexArrays();
-  pgl.disableColorArrays();
-  pgl.disableNormalArrays();
+  pg.disablePointVertex();
+  pg.disablePointColor();
+  pg.disablePointNormal();
+  pg.disablePointSize();
   pg.stopPointShader();
 }

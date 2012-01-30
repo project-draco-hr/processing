@@ -1,27 +1,30 @@
 {
   pg.startLineShader();
-  pgl.enableVertexArrays();
-  pgl.enableColorArrays();
-  pgl.enableNormalArrays();
+  pg.enableLineVertex();
+  pg.enableLineColor();
+  pg.enableLineNormal();
+  pg.enableLineDirWidth();
   for (int i=0; i < lineIndexData.size(); i++) {
     IndexData index=(IndexData)lineIndexData.get(i);
     int first=index.first;
     int offset=index.offset;
     int size=index.size;
     pgl.bindVertexBuffer(root.glLineVertexBufferID);
-    pgl.setVertexFormat(3,first);
+    pg.setLineVertexFormat(3,first);
     pgl.bindVertexBuffer(root.glLineColorBufferID);
-    pgl.setColorFormat(4,first);
+    pg.setLineColorFormat(4,first);
     pgl.bindVertexBuffer(root.glLineNormalBufferID);
-    pgl.setNormalFormat(3,first);
-    pg.setupLineShader(root.glLineAttribBufferID);
+    pg.setLineNormalFormat(3,first);
+    pgl.bindVertexBuffer(root.glLineAttribBufferID);
+    pg.setLineDirWidthFormat(2,0);
     pgl.bindIndexBuffer(root.glLineIndexBufferID);
     pgl.renderIndexBuffer(offset,size);
     pgl.unbindIndexBuffer();
     pgl.unbindVertexBuffer();
   }
-  pgl.disableVertexArrays();
-  pgl.disableColorArrays();
-  pgl.disableNormalArrays();
+  pg.disableLineVertex();
+  pg.disableLineColor();
+  pg.disableLineNormal();
+  pg.disableLineDirWidth();
   pg.stopLineShader();
 }

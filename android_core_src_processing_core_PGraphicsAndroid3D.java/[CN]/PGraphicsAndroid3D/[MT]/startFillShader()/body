@@ -1,0 +1,17 @@
+{
+  if (fillShader == null) {
+    fillShader=new PShader(parent);
+    fillShader.loadVertexShader(PGraphicsAndroid3D.class.getResource("FillShaderVert.glsl"));
+    fillShader.loadFragmentShader(PGraphicsAndroid3D.class.getResource("FillShaderFrag.glsl"));
+    fillShader.setup();
+    fillModelviewLoc=fillShader.getUniformLocation("modelviewMatrix");
+    fillProjectionLoc=fillShader.getUniformLocation("projectionMatrix");
+    fillVertexAttribLoc=fillShader.getAttribLocation("inVertex");
+    fillColorAttribLoc=fillShader.getAttribLocation("inColor");
+    fillNormalAttribLoc=fillShader.getAttribLocation("inNormal");
+    fillTexCoordAttribLoc=fillShader.getAttribLocation("inTexcoord");
+  }
+  fillShader.start();
+  fillShader.setMatUniform(fillModelviewLoc,modelview.m00,modelview.m01,modelview.m02,modelview.m03,modelview.m10,modelview.m11,modelview.m12,modelview.m13,modelview.m20,modelview.m21,modelview.m22,modelview.m23,modelview.m30,modelview.m31,modelview.m32,modelview.m33);
+  fillShader.setMatUniform(fillProjectionLoc,projection.m00,projection.m01,projection.m02,projection.m03,projection.m10,projection.m11,projection.m12,projection.m13,projection.m20,projection.m21,projection.m22,projection.m23,projection.m30,projection.m31,projection.m32,projection.m33);
+}
