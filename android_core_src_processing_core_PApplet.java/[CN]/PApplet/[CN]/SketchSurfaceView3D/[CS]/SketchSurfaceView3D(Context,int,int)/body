@@ -1,5 +1,11 @@
 {
   super(context);
+  final ActivityManager activityManager=(ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+  final ConfigurationInfo configurationInfo=activityManager.getDeviceConfigurationInfo();
+  final boolean supportsEs2=configurationInfo.reqGlEsVersion >= 0x20000;
+  if (!supportsEs2) {
+    throw new RuntimeException("GLES2 NOT SUPPORTED!!!");
+  }
   surfaceHolder=getHolder();
   surfaceHolder.addCallback(this);
   g3=new PGraphicsAndroid3D();
