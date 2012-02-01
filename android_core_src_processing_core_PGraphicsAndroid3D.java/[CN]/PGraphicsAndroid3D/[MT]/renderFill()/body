@@ -6,7 +6,6 @@
   startFillShader();
   enableFillVertex();
   enableFillColor();
-  enableFillNormal();
   int size=tessGeo.fillVertexCount;
   pgl.bindVertexBuffer(glFillVertexBufferID);
   pgl.copyVertexBufferData(tessGeo.fillVertices,3 * size,vboMode);
@@ -14,9 +13,6 @@
   pgl.bindVertexBuffer(glFillColorBufferID);
   pgl.copyVertexBufferData(tessGeo.fillColors,4 * size,vboMode);
   setFillColorFormat(4,0);
-  pgl.bindVertexBuffer(glFillNormalBufferID);
-  pgl.copyVertexBufferData(tessGeo.fillNormals,3 * size,vboMode);
-  setFillNormalFormat(3,0);
   if (texCache.hasTexture) {
     pgl.setActiveTexUnit(0);
     enableFillTexCoord();
@@ -34,7 +30,14 @@
       if (tex != null) {
         tex.bind();
         tex0=tex;
+        enableFillTexturing();
       }
+ else {
+        disableFillTexturing();
+      }
+    }
+ else {
+      disableFillTexturing();
     }
     if (tex == null && tex0 != null) {
       tex0.unbind();
@@ -65,11 +68,11 @@
       }
     }
     disableFillTexCoord();
+    disableFillTexturing();
   }
   pgl.unbindIndexBuffer();
   pgl.unbindVertexBuffer();
   disableFillVertex();
   disableFillColor();
-  disableFillNormal();
   stopFillShader();
 }
