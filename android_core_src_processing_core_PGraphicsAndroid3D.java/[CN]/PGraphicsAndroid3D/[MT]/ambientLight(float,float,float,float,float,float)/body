@@ -3,25 +3,32 @@
   if (lightCount == PGL.MAX_LIGHTS) {
     throw new RuntimeException("can only create " + PGL.MAX_LIGHTS + " lights");
   }
-  colorCalc(r,g,b);
-  lightDiffuse[lightCount][0]=calcR;
-  lightDiffuse[lightCount][1]=calcG;
-  lightDiffuse[lightCount][2]=calcB;
-  lightDiffuse[lightCount][3]=1.0f;
   lightType[lightCount]=AMBIENT;
-  lightFalloffConstant[lightCount]=currentLightFalloffConstant;
-  lightFalloffLinear[lightCount]=currentLightFalloffLinear;
-  lightFalloffQuadratic[lightCount]=currentLightFalloffQuadratic;
+  colorCalc(r,g,b);
+  lightAmbient[lightCount][0]=calcR;
+  lightAmbient[lightCount][1]=calcG;
+  lightAmbient[lightCount][2]=calcB;
+  lightAmbient[lightCount][3]=1.0f;
   lightPosition[lightCount][0]=x;
   lightPosition[lightCount][1]=y;
   lightPosition[lightCount][2]=z;
   lightPosition[lightCount][3]=1.0f;
-  lightEnable(lightCount);
-  lightAmbient(lightCount);
-  lightPosition(lightCount);
-  lightFalloff(lightCount);
-  lightNoSpot(lightCount);
-  lightNoDiffuse(lightCount);
-  lightNoSpecular(lightCount);
+  lightFalloffConstant[lightCount]=currentLightFalloffConstant;
+  lightFalloffLinear[lightCount]=currentLightFalloffLinear;
+  lightFalloffQuadratic[lightCount]=currentLightFalloffQuadratic;
+  lightDiffuse[lightCount][0]=0;
+  lightDiffuse[lightCount][1]=0;
+  lightDiffuse[lightCount][2]=0;
+  lightDiffuse[lightCount][3]=1;
+  lightSpotAngle[lightCount]=180;
+  lightSpotConcentration[lightCount]=0;
+  lightSpecular[lightCount][0]=0;
+  lightSpecular[lightCount][1]=0;
+  lightSpecular[lightCount][2]=0;
+  lightSpecular[lightCount][3]=1;
+  lightNormal[lightCount][0]=0;
+  lightNormal[lightCount][1]=0;
+  lightNormal[lightCount][2]=0;
+  lightNormal[lightCount][3]=0;
   lightCount++;
 }
