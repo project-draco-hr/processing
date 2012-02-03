@@ -6,7 +6,19 @@
     fillShader.setup();
     fillModelviewLoc=fillShader.getUniformLocation("modelviewMatrix");
     fillProjectionLoc=fillShader.getUniformLocation("projectionMatrix");
+    fillProjmodelviewLoc=fillShader.getUniformLocation("projmodelviewMatrix");
     fillTexturedLoc=fillShader.getUniformLocation("textured");
+    fillLightCountLoc=fillShader.getUniformLocation("lightCount");
+    fillLightPositionLoc=fillShader.getUniformLocation("lightPosition");
+    fillLightNormalLoc=fillShader.getUniformLocation("lightNormal");
+    fillLightAmbientLoc=fillShader.getUniformLocation("lightAmbient");
+    fillLightDiffuseLoc=fillShader.getUniformLocation("lightDiffuse");
+    fillLightSpecularLoc=fillShader.getUniformLocation("lightSpecular");
+    fillLightFalloffConstantLoc=fillShader.getUniformLocation("lightFalloffConstant");
+    fillLightFalloffLinearLoc=fillShader.getUniformLocation("lightFalloffLinear");
+    fillLightFalloffQuadraticLoc=fillShader.getUniformLocation("lightFalloffQuadratic");
+    fillLightSpotAngleLoc=fillShader.getUniformLocation("lightSpotAngle");
+    fillLightSpotConcentrationLoc=fillShader.getUniformLocation("lightSpotConcentration");
     fillVertexAttribLoc=fillShader.getAttribLocation("inVertex");
     fillColorAttribLoc=fillShader.getAttribLocation("inColor");
     fillNormalAttribLoc=fillShader.getAttribLocation("inNormal");
@@ -15,6 +27,36 @@
   fillShader.start();
   fillShader.setMatUniform(fillModelviewLoc,modelview.m00,modelview.m01,modelview.m02,modelview.m03,modelview.m10,modelview.m11,modelview.m12,modelview.m13,modelview.m20,modelview.m21,modelview.m22,modelview.m23,modelview.m30,modelview.m31,modelview.m32,modelview.m33);
   fillShader.setMatUniform(fillProjectionLoc,projection.m00,projection.m01,projection.m02,projection.m03,projection.m10,projection.m11,projection.m12,projection.m13,projection.m20,projection.m21,projection.m22,projection.m23,projection.m30,projection.m31,projection.m32,projection.m33);
-  for (int i=0; i < lightCount; i++) {
-  }
+  projmodelview.set(projection);
+  projmodelview.apply(modelview);
+  fillShader.setMatUniform(fillProjmodelviewLoc,projmodelview.m00,projmodelview.m01,projmodelview.m02,projmodelview.m03,projmodelview.m10,projmodelview.m11,projmodelview.m12,projmodelview.m13,projmodelview.m20,projmodelview.m21,projmodelview.m22,projmodelview.m23,projmodelview.m30,projmodelview.m31,projmodelview.m32,projmodelview.m33);
+  fillShader.setIntUniform(fillLightCountLoc,8);
+  lightAmbient[0]=0.5f;
+  lightAmbient[1]=0;
+  lightAmbient[2]=0;
+  lightAmbient[3]=0;
+  lightFalloffConstant[0]=1;
+  lightFalloffLinear[0]=1;
+  lightFalloffQuadratic[0]=1;
+  lightSpotAngle[0]=1;
+  lightSpotConcentration[0]=1;
+  lightAmbient[4 + 0]=0;
+  lightAmbient[4 + 1]=0;
+  lightAmbient[4 + 2]=0.5f;
+  lightAmbient[4 + 3]=0;
+  lightFalloffConstant[1]=1;
+  lightFalloffLinear[1]=1;
+  lightFalloffQuadratic[1]=1;
+  lightSpotAngle[1]=1;
+  lightSpotConcentration[1]=1;
+  fillShader.setVec4ArrayUniform(fillLightPositionLoc,lightPosition);
+  fillShader.setVec4ArrayUniform(fillLightNormalLoc,lightNormal);
+  fillShader.setVec4ArrayUniform(fillLightAmbientLoc,lightAmbient);
+  fillShader.setVec4ArrayUniform(fillLightDiffuseLoc,lightDiffuse);
+  fillShader.setVec4ArrayUniform(fillLightSpecularLoc,lightSpecular);
+  fillShader.setFloatArrayUniform(fillLightFalloffConstantLoc,lightFalloffConstant);
+  fillShader.setFloatArrayUniform(fillLightFalloffLinearLoc,lightFalloffLinear);
+  fillShader.setFloatArrayUniform(fillLightFalloffQuadraticLoc,lightFalloffQuadratic);
+  fillShader.setFloatArrayUniform(fillLightSpotAngleLoc,lightSpotAngle);
+  fillShader.setFloatArrayUniform(fillLightSpotConcentrationLoc,lightSpotConcentration);
 }
