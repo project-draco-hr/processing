@@ -7,6 +7,7 @@
     fillModelviewLoc=fillShader.getUniformLocation("modelviewMatrix");
     fillProjectionLoc=fillShader.getUniformLocation("projectionMatrix");
     fillProjmodelviewLoc=fillShader.getUniformLocation("projmodelviewMatrix");
+    fillNormalLoc=fillShader.getUniformLocation("normalMatrix");
     fillTexturedLoc=fillShader.getUniformLocation("textured");
     fillLightCountLoc=fillShader.getUniformLocation("lightCount");
     fillLightPositionLoc=fillShader.getUniformLocation("lightPosition");
@@ -17,7 +18,7 @@
     fillLightFalloffConstantLoc=fillShader.getUniformLocation("lightFalloffConstant");
     fillLightFalloffLinearLoc=fillShader.getUniformLocation("lightFalloffLinear");
     fillLightFalloffQuadraticLoc=fillShader.getUniformLocation("lightFalloffQuadratic");
-    fillLightSpotAngleLoc=fillShader.getUniformLocation("lightSpotAngle");
+    fillLightSpotAngleCosLoc=fillShader.getUniformLocation("lightSpotAngleCos");
     fillLightSpotConcentrationLoc=fillShader.getUniformLocation("lightSpotConcentration");
     fillVertexAttribLoc=fillShader.getAttribLocation("inVertex");
     fillColorAttribLoc=fillShader.getAttribLocation("inColor");
@@ -30,6 +31,7 @@
   projmodelview.set(projection);
   projmodelview.apply(modelview);
   fillShader.setMatUniform(fillProjmodelviewLoc,projmodelview.m00,projmodelview.m01,projmodelview.m02,projmodelview.m03,projmodelview.m10,projmodelview.m11,projmodelview.m12,projmodelview.m13,projmodelview.m20,projmodelview.m21,projmodelview.m22,projmodelview.m23,projmodelview.m30,projmodelview.m31,projmodelview.m32,projmodelview.m33);
+  fillShader.setMatUniform(fillNormalLoc,modelviewInv.m00,modelviewInv.m10,modelviewInv.m20,modelviewInv.m01,modelviewInv.m11,modelviewInv.m21,modelviewInv.m02,modelviewInv.m12,modelviewInv.m22);
   fillShader.setIntUniform(fillLightCountLoc,8);
   for (int i=0; i < lightCount; i++) {
   }
@@ -41,6 +43,6 @@
   fillShader.setFloatArrayUniform(fillLightFalloffConstantLoc,lightFalloffConstant);
   fillShader.setFloatArrayUniform(fillLightFalloffLinearLoc,lightFalloffLinear);
   fillShader.setFloatArrayUniform(fillLightFalloffQuadraticLoc,lightFalloffQuadratic);
-  fillShader.setFloatArrayUniform(fillLightSpotAngleLoc,lightSpotAngle);
+  fillShader.setFloatArrayUniform(fillLightSpotAngleCosLoc,lightSpotAngleCos);
   fillShader.setFloatArrayUniform(fillLightSpotConcentrationLoc,lightSpotConcentration);
 }
