@@ -75,10 +75,18 @@
       index=2 * tessIdx;
       fillTexcoords[index++]=u;
       fillTexcoords[index]=v;
+      fillAmbient[tessIdx]=in.ambient[inIdx];
+      fillSpecular[tessIdx]=in.specular[inIdx];
+      fillEmissive[tessIdx]=in.emissive[inIdx];
+      fillShininess[tessIdx]=in.shininess[inIdx];
     }
   }
  else {
     PApplet.arrayCopy(in.colors,4 * i0,fillColors,4 * firstFillVertex,4 * nvert);
     PApplet.arrayCopy(in.texcoords,2 * i0,fillTexcoords,2 * firstFillVertex,2 * nvert);
+    PApplet.arrayCopy(in.ambient,i0,fillAmbient,firstFillVertex,nvert);
+    PApplet.arrayCopy(in.specular,i0,fillSpecular,firstFillVertex,nvert);
+    PApplet.arrayCopy(in.emissive,i0,fillEmissive,firstFillVertex,nvert);
+    PApplet.arrayCopy(in.shininess,i0,fillShininess,firstFillVertex,nvert);
   }
 }

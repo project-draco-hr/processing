@@ -6,6 +6,10 @@
   startFillShader();
   enableFillVertex();
   enableFillColor();
+  if (lights) {
+    enableFillNormal();
+    enableFillMaterials();
+  }
   int size=tessGeo.fillVertexCount;
   pgl.bindVertexBuffer(glFillVertexBufferID);
   pgl.copyVertexBufferData(tessGeo.fillVertices,3 * size,vboMode);
@@ -13,6 +17,11 @@
   pgl.bindVertexBuffer(glFillColorBufferID);
   pgl.copyVertexBufferData(tessGeo.fillColors,4 * size,vboMode);
   setFillColorFormat(4,0);
+  if (lights) {
+    pgl.bindVertexBuffer(glFillNormalBufferID);
+    pgl.copyVertexBufferData(tessGeo.fillNormals,3 * size,vboMode);
+    setFillNormalFormat(3,0);
+  }
   if (texCache.hasTexture) {
     pgl.setActiveTexUnit(0);
     enableFillTexCoord();
@@ -74,5 +83,8 @@
   pgl.unbindVertexBuffer();
   disableFillVertex();
   disableFillColor();
+  if (lights) {
+    disableFillNormal();
+  }
   stopFillShader();
 }

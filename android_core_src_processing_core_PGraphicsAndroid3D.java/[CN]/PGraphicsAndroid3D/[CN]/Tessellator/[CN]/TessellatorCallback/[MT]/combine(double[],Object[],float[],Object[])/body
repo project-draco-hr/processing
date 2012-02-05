@@ -3,12 +3,31 @@
   vertex[0]=coords[0];
   vertex[1]=coords[1];
   vertex[2]=coords[2];
-  for (int i=3; i < 12; i++) {
+  for (int i=3; i < 16; i++) {
     vertex[i]=0;
     for (int j=0; j < 4; j++) {
       double[] vertData=(double[])data[j];
       if (vertData != null) {
-        vertex[i]+=weight[j] * vertData[i];
+        if (11 < i && i < 15) {
+          int colorj=(int)vertData[i];
+          int aj=(colorj >> 24) & 0xFF;
+          int rj=(colorj >> 16) & 0xFF;
+          int gj=(colorj >> 8) & 0xFF;
+          int bj=(colorj >> 0) & 0xFF;
+          int colori=(int)vertex[i];
+          int ai=(colori >> 24) & 0xFF;
+          int ri=(colori >> 16) & 0xFF;
+          int gi=(colori >> 8) & 0xFF;
+          int bi=(colori >> 0) & 0xFF;
+          ri+=weight[j] * rj;
+          bi+=weight[j] * bj;
+          gi+=weight[j] * gj;
+          ai+=weight[j] * aj;
+          colori=(ai << 24) | (ri << 16) | (gi << 8)| bi;
+        }
+ else {
+          vertex[i]+=weight[j] * vertData[i];
+        }
       }
     }
   }
