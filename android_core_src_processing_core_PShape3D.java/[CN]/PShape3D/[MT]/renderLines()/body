@@ -9,18 +9,18 @@
     int first=index.first;
     int offset=index.offset;
     int size=index.size;
-    pgl.bindVertexBuffer(root.glLineVertexBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glLineVertexBufferID);
     pg.setLineVertexFormat(3,first);
-    pgl.bindVertexBuffer(root.glLineColorBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glLineColorBufferID);
     pg.setLineColorFormat(4,first);
-    pgl.bindVertexBuffer(root.glLineNormalBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glLineNormalBufferID);
     pg.setLineNormalFormat(3,first);
-    pgl.bindVertexBuffer(root.glLineAttribBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glLineAttribBufferID);
     pg.setLineDirWidthFormat(2,0);
-    pgl.bindIndexBuffer(root.glLineIndexBufferID);
-    pgl.renderIndexBuffer(offset,size);
-    pgl.unbindIndexBuffer();
-    pgl.unbindVertexBuffer();
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glLineIndexBufferID);
+    pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.GL_UNSIGNED_SHORT,offset * PGL.SIZEOF_INDEX);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,0);
   }
   pg.disableLineVertex();
   pg.disableLineColor();

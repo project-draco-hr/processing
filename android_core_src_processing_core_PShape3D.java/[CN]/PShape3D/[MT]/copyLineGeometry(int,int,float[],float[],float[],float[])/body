@@ -1,11 +1,13 @@
 {
-  pgl.bindVertexBuffer(glLineVertexBufferID);
-  pgl.copyVertexBufferSubData(vertices,3 * offset,3 * size,glMode);
-  pgl.bindVertexBuffer(glLineColorBufferID);
-  pgl.copyVertexBufferSubData(colors,4 * offset,4 * size,glMode);
-  pgl.bindVertexBuffer(glLineNormalBufferID);
-  pgl.copyVertexBufferSubData(normals,3 * offset,3 * size,glMode);
-  pgl.bindVertexBuffer(glLineAttribBufferID);
-  pgl.copyVertexBufferSubData(attribs,4 * offset,4 * size,glMode);
-  pgl.unbindVertexBuffer();
+  int offsetf=offset * PGL.SIZEOF_FLOAT;
+  int sizef=size * PGL.SIZEOF_FLOAT;
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glLineVertexBufferID);
+  pgl.glBufferSubData(PGL.GL_ARRAY_BUFFER,3 * offsetf,3 * sizef,FloatBuffer.wrap(vertices,0,3 * size));
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glLineColorBufferID);
+  pgl.glBufferSubData(PGL.GL_ARRAY_BUFFER,4 * offsetf,4 * sizef,FloatBuffer.wrap(colors,0,4 * size));
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glLineNormalBufferID);
+  pgl.glBufferSubData(PGL.GL_ARRAY_BUFFER,3 * offsetf,3 * sizef,FloatBuffer.wrap(normals,0,3 * size));
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glLineAttribBufferID);
+  pgl.glBufferSubData(PGL.GL_ARRAY_BUFFER,4 * offsetf,4 * sizef,FloatBuffer.wrap(attribs,0,4 * size));
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,0);
 }

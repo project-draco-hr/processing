@@ -1,21 +1,20 @@
 {
-  pgl.setViewport(viewport);
+  pgl.glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
   if (hints[DISABLE_DEPTH_TEST]) {
-    pgl.disableDepthTest();
-    pgl.setClearColor(0,0,0,0);
-    pgl.clearDepthBuffer();
+    pgl.glDisable(PGL.GL_DEPTH_TEST);
+    pgl.glClearColor(0,0,0,0);
+    pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT);
   }
  else {
-    pgl.enableDepthTest();
+    pgl.glEnable(PGL.GL_DEPTH_TEST);
   }
   if (hints[DISABLE_DEPTH_MASK]) {
-    pgl.disableDepthMask();
+    pgl.glDepthMask(false);
   }
  else {
-    pgl.enableDepthMask();
+    pgl.glDepthMask(true);
   }
   blendMode(blendMode);
-  pgl.setFrontFace(PGL.CLOCKWISE);
-  pgl.setDepthFunc(PGL.LESS_OR_EQUAL);
-  setSurfaceParams();
+  pgl.setFrontFace(PGL.GL_CW);
+  pgl.setDepthFunc(PGL.GL_LEQUAL);
 }

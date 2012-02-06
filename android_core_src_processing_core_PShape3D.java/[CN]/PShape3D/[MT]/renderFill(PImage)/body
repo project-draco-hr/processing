@@ -10,31 +10,31 @@
     int first=index.first;
     int offset=index.offset;
     int size=index.size;
-    pgl.bindVertexBuffer(root.glFillVertexBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glFillVertexBufferID);
     pg.setFillVertexFormat(3,first);
-    pgl.bindVertexBuffer(root.glFillColorBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glFillColorBufferID);
     pg.setFillColorFormat(4,first);
-    pgl.bindVertexBuffer(root.glFillNormalBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glFillNormalBufferID);
     pg.setFillNormalFormat(3,first);
-    pgl.bindVertexBuffer(root.glFillTexCoordBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glFillTexCoordBufferID);
     pg.setFillTexCoordFormat(2,first);
     PTexture tex=null;
     if (textureImage != null) {
-      pgl.setActiveTexUnit(0);
+      pgl.glActiveTexture(PGL.GL_TEXTURE0);
       tex=pg.getTexture(textureImage);
       if (tex != null) {
-        pgl.enableTexturing(tex.glTarget);
-        pgl.bindTexture(tex.glTarget,tex.glID);
+        pgl.glEnable(tex.glTarget);
+        pgl.glBindTexture(tex.glTarget,tex.glID);
       }
     }
-    pgl.bindIndexBuffer(root.glFillIndexBufferID);
-    pgl.renderIndexBuffer(offset,size);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glFillIndexBufferID);
+    pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.GL_UNSIGNED_SHORT,offset * PGL.SIZEOF_INDEX);
     if (tex != null) {
-      pgl.unbindTexture(tex.glTarget);
-      pgl.disableTexturing(tex.glTarget);
+      pgl.glBindTexture(tex.glTarget,0);
+      pgl.glDisable(tex.glTarget);
     }
-    pgl.unbindIndexBuffer();
-    pgl.unbindVertexBuffer();
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,0);
   }
   pg.disableFillVertex();
   pg.disableFillColor();

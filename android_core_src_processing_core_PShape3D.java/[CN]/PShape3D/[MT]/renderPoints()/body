@@ -9,18 +9,18 @@
     int first=index.first;
     int offset=index.offset;
     int size=index.size;
-    pgl.bindVertexBuffer(root.glPointVertexBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glPointVertexBufferID);
     pg.setPointVertexFormat(3,first);
-    pgl.bindVertexBuffer(root.glPointColorBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glPointColorBufferID);
     pg.setPointColorFormat(4,first);
-    pgl.bindVertexBuffer(root.glPointNormalBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glPointNormalBufferID);
     pg.setPointNormalFormat(4,first);
-    pgl.bindVertexBuffer(root.glPointAttribBufferID);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,root.glPointAttribBufferID);
     pg.setPointSizeFormat(2,first);
-    pgl.bindIndexBuffer(root.glPointIndexBufferID);
-    pgl.renderIndexBuffer(offset,size);
-    pgl.unbindIndexBuffer();
-    pgl.unbindVertexBuffer();
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glPointIndexBufferID);
+    pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.GL_UNSIGNED_SHORT,offset * PGL.SIZEOF_INDEX);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,0);
   }
   pg.disablePointVertex();
   pg.disablePointColor();

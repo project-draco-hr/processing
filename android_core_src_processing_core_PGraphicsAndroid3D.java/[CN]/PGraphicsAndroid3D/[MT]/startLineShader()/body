@@ -14,9 +14,11 @@
     lineDirWidthAttribLoc=lineShader.getAttribLocation("inDirWidth");
   }
   lineShader.start();
-  lineShader.setMatUniform(lineModelviewLoc,modelview.m00,modelview.m01,modelview.m02,modelview.m03,modelview.m10,modelview.m11,modelview.m12,modelview.m13,modelview.m20,modelview.m21,modelview.m22,modelview.m23,modelview.m30,modelview.m31,modelview.m32,modelview.m33);
-  lineShader.setMatUniform(lineProjectionLoc,projection.m00,projection.m01,projection.m02,projection.m03,projection.m10,projection.m11,projection.m12,projection.m13,projection.m20,projection.m21,projection.m22,projection.m23,projection.m30,projection.m31,projection.m32,projection.m33);
-  lineShader.setVecUniform(lineViewportLoc,viewport[0],viewport[1],viewport[2],viewport[3]);
+  modelview.get(glModelview);
+  lineShader.set4x4MatUniform(lineModelviewLoc,glModelview);
+  projection.get(glProjection);
+  lineShader.set4x4MatUniform(lineProjectionLoc,glProjection);
+  lineShader.set4FloatUniform(lineViewportLoc,viewport[0],viewport[1],viewport[2],viewport[3]);
   if (hints[ENABLE_PERSPECTIVE_CORRECTED_LINES]) {
     lineShader.setIntUniform(linePerspectiveLoc,1);
   }

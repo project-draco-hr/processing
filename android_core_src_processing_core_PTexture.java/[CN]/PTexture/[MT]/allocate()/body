@@ -1,13 +1,13 @@
 {
   release();
-  pgl.enableTexturing(glTarget);
+  pgl.glEnable(glTarget);
   glID=pg.createTextureObject();
-  pgl.bindTexture(glTarget,glID);
-  pgl.setTexMinFilter(glTarget,glMinFilter);
-  pgl.setTexMagFilter(glTarget,glMagFilter);
-  pgl.setTexWrapS(glTarget,glWrapS);
-  pgl.setTexWrapT(glTarget,glWrapT);
-  pgl.initTex(glTarget,glFormat,glWidth,glHeight);
+  pgl.glBindTexture(glTarget,glID);
+  pgl.glTexParameterf(glTarget,PGL.GL_TEXTURE_MIN_FILTER,glMinFilter);
+  pgl.glTexParameterf(glTarget,PGL.GL_TEXTURE_MAG_FILTER,glMagFilter);
+  pgl.glTexParameterf(glTarget,PGL.GL_TEXTURE_WRAP_S,glWrapS);
+  pgl.glTexParameterf(glTarget,PGL.GL_TEXTURE_WRAP_T,glWrapT);
+  pgl.glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,null);
   int[] texels=new int[16 * 16];
   for (int y=0; y < height + 16; y+=16) {
     int h=PApplet.min(16,height - y);
@@ -17,6 +17,6 @@
     }
   }
   texels=null;
-  pgl.unbindTexture(glTarget);
-  pgl.disableTexturing(glTarget);
+  pgl.glBindTexture(glTarget,0);
+  pgl.glDisable(glTarget);
 }

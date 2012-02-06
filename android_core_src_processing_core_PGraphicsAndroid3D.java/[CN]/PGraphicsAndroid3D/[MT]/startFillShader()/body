@@ -26,23 +26,33 @@
     fillTexCoordAttribLoc=fillShader.getAttribLocation("inTexcoord");
   }
   fillShader.start();
-  fillShader.setMatUniform(fillModelviewLoc,modelview.m00,modelview.m01,modelview.m02,modelview.m03,modelview.m10,modelview.m11,modelview.m12,modelview.m13,modelview.m20,modelview.m21,modelview.m22,modelview.m23,modelview.m30,modelview.m31,modelview.m32,modelview.m33);
-  fillShader.setMatUniform(fillProjectionLoc,projection.m00,projection.m01,projection.m02,projection.m03,projection.m10,projection.m11,projection.m12,projection.m13,projection.m20,projection.m21,projection.m22,projection.m23,projection.m30,projection.m31,projection.m32,projection.m33);
+  modelview.get(glModelview);
+  fillShader.set4x4MatUniform(fillModelviewLoc,glModelview);
+  projection.get(glProjection);
+  fillShader.set4x4MatUniform(fillProjectionLoc,glProjection);
   projmodelview.set(projection);
   projmodelview.apply(modelview);
-  fillShader.setMatUniform(fillProjmodelviewLoc,projmodelview.m00,projmodelview.m01,projmodelview.m02,projmodelview.m03,projmodelview.m10,projmodelview.m11,projmodelview.m12,projmodelview.m13,projmodelview.m20,projmodelview.m21,projmodelview.m22,projmodelview.m23,projmodelview.m30,projmodelview.m31,projmodelview.m32,projmodelview.m33);
-  fillShader.setMatUniform(fillNormalLoc,modelviewInv.m00,modelviewInv.m10,modelviewInv.m20,modelviewInv.m01,modelviewInv.m11,modelviewInv.m21,modelviewInv.m02,modelviewInv.m12,modelviewInv.m22);
-  fillShader.setIntUniform(fillLightCountLoc,8);
-  for (int i=0; i < lightCount; i++) {
-  }
-  fillShader.setVec4ArrayUniform(fillLightPositionLoc,lightPosition);
-  fillShader.setVec4ArrayUniform(fillLightNormalLoc,lightNormal);
-  fillShader.setVec4ArrayUniform(fillLightAmbientLoc,lightAmbient);
-  fillShader.setVec4ArrayUniform(fillLightDiffuseLoc,lightDiffuse);
-  fillShader.setVec4ArrayUniform(fillLightSpecularLoc,lightSpecular);
-  fillShader.setFloatArrayUniform(fillLightFalloffConstantLoc,lightFalloffConstant);
-  fillShader.setFloatArrayUniform(fillLightFalloffLinearLoc,lightFalloffLinear);
-  fillShader.setFloatArrayUniform(fillLightFalloffQuadraticLoc,lightFalloffQuadratic);
-  fillShader.setFloatArrayUniform(fillLightSpotAngleCosLoc,lightSpotAngleCos);
-  fillShader.setFloatArrayUniform(fillLightSpotConcentrationLoc,lightSpotConcentration);
+  projmodelview.get(glProjmodelview);
+  fillShader.set4x4MatUniform(fillProjmodelviewLoc,glProjmodelview);
+  glNormal[0]=modelviewInv.m00;
+  glNormal[1]=modelviewInv.m10;
+  glNormal[2]=modelviewInv.m20;
+  glNormal[3]=modelviewInv.m01;
+  glNormal[4]=modelviewInv.m11;
+  glNormal[5]=modelviewInv.m21;
+  glNormal[6]=modelviewInv.m02;
+  glNormal[7]=modelviewInv.m12;
+  glNormal[8]=modelviewInv.m22;
+  fillShader.set3x3MatUniform(fillNormalLoc,glNormal);
+  fillShader.setIntUniform(fillLightCountLoc,lightCount);
+  fillShader.set4FloatVecUniform(fillLightPositionLoc,lightPosition);
+  fillShader.set3FloatVecUniform(fillLightNormalLoc,lightNormal);
+  fillShader.set4FloatVecUniform(fillLightAmbientLoc,lightAmbient);
+  fillShader.set4FloatVecUniform(fillLightDiffuseLoc,lightDiffuse);
+  fillShader.set4FloatVecUniform(fillLightSpecularLoc,lightSpecular);
+  fillShader.set1FloatVecUniform(fillLightFalloffConstantLoc,lightFalloffConstant);
+  fillShader.set1FloatVecUniform(fillLightFalloffLinearLoc,lightFalloffLinear);
+  fillShader.set1FloatVecUniform(fillLightFalloffQuadraticLoc,lightFalloffQuadratic);
+  fillShader.set1FloatVecUniform(fillLightSpotAngleCosLoc,lightSpotAngleCos);
+  fillShader.set1FloatVecUniform(fillLightSpotConcentrationLoc,lightSpotConcentration);
 }

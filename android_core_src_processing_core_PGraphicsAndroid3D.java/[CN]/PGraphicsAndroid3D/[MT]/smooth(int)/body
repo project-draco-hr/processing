@@ -10,15 +10,15 @@
     }
   }
   int[] temp={0};
-  pgl.getNumSamples(temp);
+  pgl.glGetIntegerv(PGL.GL_SAMPLES,temp,0);
   if (antialias != temp[0]) {
     antialias=temp[0];
     PApplet.println("Effective multisampling level: " + antialias);
   }
   if (antialias < 2) {
-    pgl.enableMultisample();
-    pgl.enablePointSmooth();
-    pgl.enableLineSmooth();
-    pgl.enablePolygonSmooth();
+    pgl.glEnable(PGL.GL_MULTISAMPLE);
+    pgl.glEnable(PGL.GL_POINT_SMOOTH);
+    pgl.glEnable(PGL.GL_LINE_SMOOTH);
+    pgl.glEnable(PGL.GL_POLYGON_SMOOTH);
   }
 }

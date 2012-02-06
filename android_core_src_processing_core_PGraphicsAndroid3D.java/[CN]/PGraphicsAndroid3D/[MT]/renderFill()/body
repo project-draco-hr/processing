@@ -3,6 +3,7 @@
     createFillBuffers();
     fillVBOsCreated=true;
   }
+  int size, sizef, sizex;
   startFillShader();
   enableFillVertex();
   enableFillColor();
@@ -10,26 +11,27 @@
     enableFillNormal();
     enableFillMaterials();
   }
-  int size=tessGeo.fillVertexCount;
-  pgl.bindVertexBuffer(glFillVertexBufferID);
-  pgl.copyVertexBufferData(tessGeo.fillVertices,3 * size,vboMode);
+  size=tessGeo.fillVertexCount;
+  sizef=size * PGL.SIZEOF_FLOAT;
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillVertexBufferID);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,FloatBuffer.wrap(tessGeo.fillVertices,0,3 * size),vboMode);
   setFillVertexFormat(3,0);
-  pgl.bindVertexBuffer(glFillColorBufferID);
-  pgl.copyVertexBufferData(tessGeo.fillColors,4 * size,vboMode);
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillColorBufferID);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,4 * sizef,FloatBuffer.wrap(tessGeo.fillColors,0,4 * size),vboMode);
   setFillColorFormat(4,0);
   if (lights) {
-    pgl.bindVertexBuffer(glFillNormalBufferID);
-    pgl.copyVertexBufferData(tessGeo.fillNormals,3 * size,vboMode);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillNormalBufferID);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,FloatBuffer.wrap(tessGeo.fillNormals,0,3 * size),vboMode);
     setFillNormalFormat(3,0);
   }
   if (texCache.hasTexture) {
-    pgl.setActiveTexUnit(0);
+    pgl.glActiveTexture(PGL.GL_TEXTURE0);
     enableFillTexCoord();
-    pgl.bindVertexBuffer(glFillTexCoordBufferID);
-    pgl.copyVertexBufferData(tessGeo.fillTexcoords,2 * size,vboMode);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillTexCoordBufferID);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,2 * sizef,FloatBuffer.wrap(tessGeo.fillTexcoords,0,2 * size),vboMode);
     setFillTexCoordFormat(2,0);
   }
-  pgl.bindIndexBuffer(glFillIndexBufferID);
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glFillIndexBufferID);
   PTexture tex0=null;
   for (int i=0; i < texCache.count; i++) {
     PImage img=texCache.textures[i];
@@ -50,12 +52,13 @@
     }
     if (tex == null && tex0 != null) {
       tex0.unbind();
-      pgl.disableTexturing(tex0.glTarget);
+      pgl.glDisable(tex0.glTarget);
     }
     int offset=texCache.firstIndex[i];
     size=texCache.lastIndex[i] - texCache.firstIndex[i] + 1;
-    pgl.copyIndexBufferData(tessGeo.fillIndices,offset,size,vboMode);
-    pgl.renderIndexBuffer(size);
+    sizex=size * PGL.SIZEOF_INDEX;
+    pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,sizex,ShortBuffer.wrap(tessGeo.fillIndices,offset,size),vboMode);
+    pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.GL_UNSIGNED_SHORT,0);
   }
   if (texCache.hasTexture) {
     for (int i=0; i < texCache.count; i++) {
@@ -72,15 +75,15 @@
       if (img != null) {
         PTexture tex=pg.getTexture(img);
         if (tex != null) {
-          pgl.disableTexturing(tex.glTarget);
+          pgl.glDisable(tex.glTarget);
         }
       }
     }
     disableFillTexCoord();
     disableFillTexturing();
   }
-  pgl.unbindIndexBuffer();
-  pgl.unbindVertexBuffer();
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,0);
   disableFillVertex();
   disableFillColor();
   if (lights) {

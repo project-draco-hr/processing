@@ -7,24 +7,24 @@
     pg.pushFramebuffer();
     pg.setFramebuffer(this);
     glStencilBufferID=pg.createRenderBufferObject();
-    pgl.bindRenderbuffer(glStencilBufferID);
-    int glConst=PGL.STENCIL_1BIT;
+    pgl.glBindRenderbuffer(PGL.GL_RENDERBUFFER,glStencilBufferID);
+    int glConst=PGL.GL_STENCIL_INDEX1;
     if (stencilBits == 1) {
-      glConst=PGL.STENCIL_1BIT;
+      glConst=PGL.GL_STENCIL_INDEX1;
     }
  else     if (stencilBits == 4) {
-      glConst=PGL.STENCIL_4BIT;
+      glConst=PGL.GL_STENCIL_INDEX4;
     }
  else     if (stencilBits == 8) {
-      glConst=PGL.STENCIL_8BIT;
+      glConst=PGL.GL_STENCIL_INDEX8;
     }
     if (multisample) {
-      pgl.setRenderbufferNumSamples(nsamples,glConst,width,height);
+      pgl.glRenderbufferStorageMultisample(PGL.GL_RENDERBUFFER,nsamples,glConst,width,height);
     }
  else {
-      pgl.setRenderbufferStorage(glConst,width,height);
+      pgl.glRenderbufferStorage(PGL.GL_RENDERBUFFER,glConst,width,height);
     }
-    pgl.setRenderbufferStencilAttachment(glStencilBufferID);
+    pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_STENCIL_ATTACHMENT,PGL.GL_RENDERBUFFER,glStencilBufferID);
     pg.popFramebuffer();
   }
 }
