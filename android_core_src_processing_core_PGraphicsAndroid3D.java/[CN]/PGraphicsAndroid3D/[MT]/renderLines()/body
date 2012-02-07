@@ -1,2 +1,19 @@
 {
+  if (!lineVBOsCreated) {
+    createLineBuffers();
+    lineVBOsCreated=true;
+  }
+  updateLineBuffers();
+  LineShader shader=getLineShader();
+  shader.start();
+  shader.setVertexAttribute(glLineVertexBufferID,3,PGL.GL_FLOAT,0,0);
+  shader.setColorAttribute(glLineColorBufferID,4,PGL.GL_FLOAT,0,0);
+  shader.setDirWidthAttribute(glLineAttribBufferID,4,PGL.GL_FLOAT,0,0);
+  int size=tessGeo.lineIndexCount;
+  int sizex=size * PGL.SIZEOF_INDEX;
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glLineIndexBufferID);
+  pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,sizex,ShortBuffer.wrap(tessGeo.lineIndices,0,size),vboMode);
+  pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.GL_UNSIGNED_SHORT,0);
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+  shader.stop();
 }

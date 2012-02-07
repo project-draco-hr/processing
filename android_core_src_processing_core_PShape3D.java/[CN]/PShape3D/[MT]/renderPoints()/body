@@ -1,2 +1,17 @@
 {
+  PointShader shader=pg.getPointShader();
+  shader.start();
+  for (int i=0; i < pointIndexData.size(); i++) {
+    IndexData index=(IndexData)pointIndexData.get(i);
+    int first=index.first;
+    int offset=index.offset;
+    int size=index.size;
+    shader.setVertexAttribute(root.glPointVertexBufferID,3,PGL.GL_FLOAT,0,3 * first);
+    shader.setColorAttribute(root.glPointColorBufferID,4,PGL.GL_FLOAT,0,4 * first);
+    shader.setSizeAttribute(root.glPointAttribBufferID,2,PGL.GL_FLOAT,0,2 * first);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glPointIndexBufferID);
+    pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.GL_UNSIGNED_SHORT,offset * PGL.SIZEOF_INDEX);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+  }
+  shader.stop();
 }

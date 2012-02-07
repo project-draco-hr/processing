@@ -1,2 +1,19 @@
 {
+  if (!pointVBOsCreated) {
+    createPointBuffers();
+    pointVBOsCreated=true;
+  }
+  updatePointBuffers();
+  PointShader shader=getPointShader();
+  shader.start();
+  shader.setVertexAttribute(glPointVertexBufferID,3,PGL.GL_FLOAT,0,0);
+  shader.setColorAttribute(glPointColorBufferID,4,PGL.GL_FLOAT,0,0);
+  shader.setSizeAttribute(glPointAttribBufferID,2,PGL.GL_FLOAT,0,0);
+  int size=tessGeo.pointIndexCount;
+  int sizex=size * PGL.SIZEOF_INDEX;
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glPointIndexBufferID);
+  pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,sizex,ShortBuffer.wrap(tessGeo.pointIndices,0,size),vboMode);
+  pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.GL_UNSIGNED_SHORT,0);
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+  shader.stop();
 }

@@ -1,0 +1,17 @@
+{
+  super.start();
+  pgl.glEnableVertexAttribArray(inVertexLoc);
+  pgl.glEnableVertexAttribArray(inColorLoc);
+  pgl.glEnableVertexAttribArray(inDirWidthLoc);
+  projection.get(glProjection);
+  set4x4MatUniform(projectionMatrixLoc,glProjection);
+  modelview.get(glModelview);
+  set4x4MatUniform(modelviewMatrixLoc,glModelview);
+  set4FloatUniform(viewportLoc,viewport[0],viewport[1],viewport[2],viewport[3]);
+  if (hints[DISABLE_PERSPECTIVE_CORRECTED_LINES]) {
+    setIntUniform(perspectiveLoc,1);
+  }
+ else {
+    setIntUniform(perspectiveLoc,0);
+  }
+}
