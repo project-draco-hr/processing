@@ -1,10 +1,11 @@
 {
   int size=tessGeo.pointVertexCount;
   int sizef=size * PGL.SIZEOF_FLOAT;
+  int sizei=size * PGL.SIZEOF_INT;
   pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPointVertexBufferID);
   pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,FloatBuffer.wrap(tessGeo.pointVertices,0,3 * size),vboMode);
   pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPointColorBufferID);
-  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,4 * sizef,FloatBuffer.wrap(tessGeo.pointColors,0,4 * size),vboMode);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,IntBuffer.wrap(tessGeo.pointColors,0,size),vboMode);
   pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPointSizeBufferID);
   pgl.glBufferData(PGL.GL_ARRAY_BUFFER,2 * sizef,FloatBuffer.wrap(tessGeo.pointSizes,0,2 * size),vboMode);
 }
