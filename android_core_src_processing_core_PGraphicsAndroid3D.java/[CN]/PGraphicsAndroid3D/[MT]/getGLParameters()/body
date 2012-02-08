@@ -8,6 +8,13 @@
   vboSupported=-1 < OPENGL_EXTENSIONS.indexOf("vertex_buffer_object");
   fboSupported=-1 < OPENGL_EXTENSIONS.indexOf("framebuffer_object");
   fboMultisampleSupported=-1 < OPENGL_EXTENSIONS.indexOf("framebuffer_multisample");
+  try {
+    pgl.glBlendEquation(PGL.GL_FUNC_ADD);
+    blendEqSupported=true;
+  }
+ catch (  UnsupportedOperationException e) {
+    blendEqSupported=false;
+  }
   int temp[]=new int[2];
   pgl.glGetIntegerv(PGL.GL_MAX_TEXTURE_SIZE,temp,0);
   maxTextureSize=temp[0];
