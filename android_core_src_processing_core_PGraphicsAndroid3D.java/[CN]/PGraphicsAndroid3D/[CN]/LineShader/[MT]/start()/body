@@ -3,12 +3,12 @@
   pgl.glEnableVertexAttribArray(inVertexLoc);
   pgl.glEnableVertexAttribArray(inColorLoc);
   pgl.glEnableVertexAttribArray(inDirWidthLoc);
-  projection.get(glProjection);
+  updateProjection();
   set4x4MatUniform(projectionMatrixLoc,glProjection);
-  modelview.get(glModelview);
+  updateModelview();
   set4x4MatUniform(modelviewMatrixLoc,glModelview);
   set4FloatUniform(viewportLoc,viewport[0],viewport[1],viewport[2],viewport[3]);
-  if (hints[DISABLE_PERSPECTIVE_CORRECTED_LINES]) {
+  if (hints[ENABLE_PERSPECTIVE_CORRECTED_LINES]) {
     setIntUniform(perspectiveLoc,1);
   }
  else {
