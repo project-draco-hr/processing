@@ -5,6 +5,7 @@
   }
   updateFillBuffers(lights,texCache.hasTexture);
   pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glFillIndexBufferID);
+  pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,tessGeo.fillIndexCount * PGL.SIZEOF_INDEX,ShortBuffer.wrap(tessGeo.fillIndices,0,tessGeo.fillIndexCount),vboMode);
   texCache.beginRender();
   for (int i=0; i < texCache.count; i++) {
     PTexture tex=texCache.getTexture(i);
@@ -24,9 +25,7 @@
     }
     int offset=texCache.firstIndex[i];
     int size=texCache.lastIndex[i] - texCache.firstIndex[i] + 1;
-    int sizex=size * PGL.SIZEOF_INDEX;
-    pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,sizex,ShortBuffer.wrap(tessGeo.fillIndices,offset,size),vboMode);
-    pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.INDEX_TYPE,0);
+    pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.INDEX_TYPE,offset * PGL.SIZEOF_INDEX);
     shader.stop();
   }
   texCache.endRender();
