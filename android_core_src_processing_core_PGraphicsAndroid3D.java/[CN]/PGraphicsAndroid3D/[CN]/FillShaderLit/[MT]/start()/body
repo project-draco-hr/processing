@@ -11,8 +11,15 @@
   set4x4MatUniform(projmodelviewMatrixLoc,glProjmodelview);
   updateModelview();
   set4x4MatUniform(modelviewMatrixLoc,glModelview);
-  updateNormal();
-  set3x3MatUniform(inNormalLoc,glNormal);
+  set3x3MatUniform(normalMatrixLoc,glNormal);
+  PApplet.println("light uniforms");
+  PApplet.println("lightCount: " + lightCount);
+  for (int i=0; i < lightCount; i++) {
+    PApplet.println("light pos : " + lightPosition[4 * i + 0] + " "+ lightPosition[4 * i + 1]+ " "+ lightPosition[4 * i + 2]+ " "+ lightPosition[4 * i + 3]);
+    PApplet.println("light normal : " + lightNormal[3 * i + 0] + " "+ lightNormal[3 * i + 1]+ " "+ lightNormal[3 * i + 2]);
+  }
+  PApplet.println("normal matrix");
+  PApplet.println(glNormal[0] + " " + glNormal[3]+ " "+ glNormal[6]+ '\n'+ glNormal[1]+ " "+ glNormal[4]+ " "+ glNormal[7]+ '\n'+ glNormal[2]+ " "+ glNormal[5]+ " "+ glNormal[8]);
   setIntUniform(lightCountLoc,lightCount);
   set4FloatVecUniform(lightPositionLoc,lightPosition);
   set3FloatVecUniform(lightNormalLoc,lightNormal);
