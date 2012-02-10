@@ -5,11 +5,11 @@
   float y=in.vertices[index++];
   float z=in.vertices[index];
   if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
-    PMatrix3D tr=modelview;
+    PMatrix3D mm=modelview;
     index=3 * tessIdx;
-    pointVertices[index++]=x * tr.m00 + y * tr.m01 + z * tr.m02 + tr.m03;
-    pointVertices[index++]=x * tr.m10 + y * tr.m11 + z * tr.m12 + tr.m13;
-    pointVertices[index]=x * tr.m20 + y * tr.m21 + z * tr.m22 + tr.m23;
+    pointVertices[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
+    pointVertices[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
+    pointVertices[index]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
   }
  else {
     index=3 * tessIdx;
