@@ -1,7 +1,5 @@
 {
-  System.out.println();
   statusEmpty();
-  System.out.println();
   if (!handleExport(false))   return;
   File serverRoot=getExportFolder();
   if (jsServer != null && (!jsServer.isRunning() || !jsServer.getRoot().equals(serverRoot))) {
@@ -11,6 +9,9 @@
   if (jsServer == null) {
     jsServer=createJavaScriptServer();
     jsServer.start();
+    long ts=System.currentTimeMillis();
+    while (System.currentTimeMillis() - ts < 200) {
+    }
     while (!jsServer.isRunning()) {
     }
     String location=jsServer.getAddress();
