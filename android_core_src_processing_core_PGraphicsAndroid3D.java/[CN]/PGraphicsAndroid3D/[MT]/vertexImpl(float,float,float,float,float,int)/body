@@ -29,12 +29,8 @@
     breakShape=false;
   }
   if (textured && textureMode == IMAGE) {
-    u/=textureImage.width;
-    v/=textureImage.height;
-    PTexture tex=queryTexture(textureImage);
-    if (tex != null && tex.isFlippedY()) {
-      v=1 - v;
-    }
+    u=PApplet.min(1,u / textureImage.width);
+    v=PApplet.min(1,v / textureImage.height);
   }
   inGeo.addVertex(x,y,z,fcolor,normalX,normalY,normalZ,u,v,scolor,sweight,ambientColor,specularColor,emissiveColor,shininess,code);
 }
