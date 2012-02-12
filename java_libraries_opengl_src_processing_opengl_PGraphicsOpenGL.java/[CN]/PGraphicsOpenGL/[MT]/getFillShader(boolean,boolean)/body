@@ -1,0 +1,46 @@
+{
+  FillShader shader;
+  if (lit) {
+    if (tex) {
+      if (fillShaderFull == null) {
+        if (defFillShaderFull == null) {
+          defFillShaderFull=new FillShaderFull(parent,defFillShaderVertFullURL,defFillShaderFragTexURL);
+        }
+        fillShaderFull=defFillShaderFull;
+      }
+      shader=fillShaderFull;
+    }
+ else {
+      if (defFillShaderLit == null) {
+        if (defFillShaderLit == null) {
+          defFillShaderLit=new FillShaderLit(parent,defFillShaderVertLitURL,defFillShaderFragNoTexURL);
+        }
+        fillShaderLit=defFillShaderLit;
+      }
+      shader=fillShaderLit;
+    }
+  }
+ else {
+    if (tex) {
+      if (fillShaderTex == null) {
+        if (defFillShaderTex == null) {
+          defFillShaderTex=new FillShaderTex(parent,defFillShaderVertTexURL,defFillShaderFragTexURL);
+        }
+        fillShaderTex=defFillShaderTex;
+      }
+      shader=fillShaderTex;
+    }
+ else {
+      if (fillShaderSimple == null) {
+        if (defFillShaderSimple == null) {
+          defFillShaderSimple=new FillShaderSimple(parent,defFillShaderVertSimpleURL,defFillShaderFragNoTexURL);
+        }
+        fillShaderSimple=defFillShaderSimple;
+      }
+      shader=fillShaderSimple;
+    }
+  }
+  shader.loadAttributes();
+  shader.loadUniforms();
+  return shader;
+}

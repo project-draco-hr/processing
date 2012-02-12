@@ -1,0 +1,20 @@
+{
+  if (programObject == 0) {
+    programObject=pg.createGLSLProgramObject();
+    if (vertexFilename != null && fragmentFilename != null) {
+      loadVertexShader(vertexFilename);
+      loadFragmentShader(fragmentFilename);
+    }
+ else     if (vertexURL != null && fragmentURL != null) {
+      loadVertexShader(vertexURL);
+      loadFragmentShader(fragmentURL);
+    }
+ else {
+      PGraphics.showException("Shader filenames and URLs are both null!");
+    }
+    checkLogInfo("Vertex shader " + vertexFilename + " compilation: ",vertexShader);
+    checkLogInfo("Fragment shader " + fragmentFilename + " compilation: ",fragmentShader);
+    pgl.glLinkProgram(programObject);
+    pgl.glValidateProgram(programObject);
+  }
+}

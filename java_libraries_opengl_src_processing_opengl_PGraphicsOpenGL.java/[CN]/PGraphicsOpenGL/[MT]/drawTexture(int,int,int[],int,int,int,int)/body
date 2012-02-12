@@ -1,25 +1,4 @@
 {
   flush();
-  pgl.disableDepthMask();
-  pgl.setProjectionMode();
-  pgl.pushMatrix();
-  pgl.loadIdentity();
-  pgl.setOrthographicProjection(0,width,0,height,-1,1);
-  pgl.setModelviewMode();
-  pgl.pushMatrix();
-  pgl.loadIdentity();
-  pgl.translate(x,y,0);
-  pgl.scale(w,h,1);
-  float s0=(float)crop[0] / tw;
-  float s1=(float)(crop[0] + crop[2]) / tw;
-  float t0=(float)crop[1] / th;
-  float t1=(float)(crop[1] + crop[3]) / th;
-  drawTexQuad(s0,t0,s1,t1);
-  pgl.setProjectionMode();
-  pgl.popMatrix();
-  pgl.setModelviewMode();
-  pgl.popMatrix();
-  if (hintEnabled(ENABLE_DEPTH_MASK)) {
-    pgl.enableDepthMask();
-  }
+  pgl.glDepthMask(false);
 }

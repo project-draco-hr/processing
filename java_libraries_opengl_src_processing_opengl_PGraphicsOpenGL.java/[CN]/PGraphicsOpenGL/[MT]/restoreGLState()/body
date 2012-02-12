@@ -1,89 +1,20 @@
 {
-  pgl.setViewport(viewport);
-  restoreGLMatrices();
+  pgl.glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
   if (hints[DISABLE_DEPTH_TEST]) {
-    pgl.disableDepthTest();
-    pgl.setClearColor(0,0,0,0);
-    pgl.clearDepthBuffer();
+    pgl.glDisable(PGL.GL_DEPTH_TEST);
+    pgl.glClearColor(0,0,0,0);
+    pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT);
   }
  else {
-    pgl.enableDepthTest();
+    pgl.glEnable(PGL.GL_DEPTH_TEST);
   }
   if (hints[DISABLE_DEPTH_MASK]) {
-    pgl.disableDepthMask();
+    pgl.glDepthMask(false);
   }
  else {
-    pgl.enableDepthMask();
+    pgl.glDepthMask(true);
   }
   blendMode(blendMode);
-  if (fill) {
-    calcR=fillR;
-    calcG=fillG;
-    calcB=fillB;
-    calcA=fillA;
-    fillFromCalc();
-  }
-  calcR=ambientR;
-  calcG=ambientG;
-  calcB=ambientB;
-  ambientFromCalc();
-  calcR=specularR;
-  calcG=specularG;
-  calcB=specularB;
-  specularFromCalc();
-  shininess(shininess);
-  calcR=emissiveR;
-  calcG=emissiveG;
-  calcB=emissiveB;
-  emissiveFromCalc();
-  if (lights) {
-    lights();
-    for (int i=0; i < lightCount; i++) {
-      lightEnable(i);
-      if (lightType[i] == AMBIENT) {
-        lightEnable(i);
-        lightAmbient(i);
-        lightPosition(i);
-        lightFalloff(i);
-        lightNoSpot(i);
-        lightNoDiffuse(i);
-        lightNoSpecular(i);
-      }
- else       if (lightType[i] == DIRECTIONAL) {
-        lightEnable(i);
-        lightNoAmbient(i);
-        lightDirection(i);
-        lightDiffuse(i);
-        lightSpecular(i);
-        lightFalloff(i);
-        lightNoSpot(i);
-      }
- else       if (lightType[i] == POINT) {
-        lightEnable(i);
-        lightNoAmbient(i);
-        lightPosition(i);
-        lightDiffuse(i);
-        lightSpecular(i);
-        lightFalloff(i);
-        lightNoSpot(i);
-      }
- else       if (lightType[i] == SPOT) {
-        lightEnable(i);
-        lightNoAmbient(i);
-        lightPosition(i);
-        lightDirection(i);
-        lightDiffuse(i);
-        lightSpecular(i);
-        lightFalloff(i);
-        lightSpotAngle(i);
-        lightSpotConcentration(i);
-      }
-    }
-  }
- else {
-    noLights();
-  }
-  pgl.setFrontFace(PGL.CLOCKWISE);
-  pgl.setDepthFunc(PGL.LESS_OR_EQUAL);
-  setSurfaceParams();
+  pgl.setFrontFace(PGL.GL_CW);
+  pgl.setDepthFunc(PGL.GL_LEQUAL);
 }

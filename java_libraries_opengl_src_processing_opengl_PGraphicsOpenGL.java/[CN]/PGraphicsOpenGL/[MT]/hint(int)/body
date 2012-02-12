@@ -1,27 +1,27 @@
 {
-  boolean oldValue=hints[Math.abs(which)];
+  boolean oldValue=hints[PApplet.abs(which)];
   super.hint(which);
-  boolean newValue=hints[Math.abs(which)];
+  boolean newValue=hints[PApplet.abs(which)];
   if (oldValue == newValue) {
     return;
   }
   if (which == DISABLE_DEPTH_TEST) {
     flush();
-    pgl.disableDepthTest();
-    pgl.setClearColor(0,0,0,0);
-    pgl.clearDepthBuffer();
+    pgl.glDisable(PGL.GL_DEPTH_TEST);
+    pgl.glClearColor(0,0,0,0);
+    pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT);
   }
  else   if (which == ENABLE_DEPTH_TEST) {
     flush();
-    pgl.enableDepthTest();
+    pgl.glEnable(PGL.GL_DEPTH_TEST);
   }
  else   if (which == DISABLE_DEPTH_MASK) {
     flush();
-    pgl.disableDepthMask();
+    pgl.glDepthMask(false);
   }
  else   if (which == ENABLE_DEPTH_MASK) {
     flush();
-    pgl.enableDepthMask();
+    pgl.glDepthMask(true);
   }
  else   if (which == DISABLE_ACCURATE_2D) {
     flush();

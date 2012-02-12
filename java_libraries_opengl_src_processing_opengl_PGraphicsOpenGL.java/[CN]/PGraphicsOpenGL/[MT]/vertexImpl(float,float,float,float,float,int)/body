@@ -4,38 +4,25 @@
     return;
   }
   boolean textured=textureImage != null;
-  float fR, fG, fB, fA;
-  fR=fG=fB=fA=0;
+  int fcolor=0x00;
   if (fill || textured) {
     if (!textured) {
-      fR=fillR;
-      fG=fillG;
-      fB=fillB;
-      fA=fillA;
+      fcolor=fillColor;
     }
  else {
       if (tint) {
-        fR=tintR;
-        fG=tintG;
-        fB=tintB;
-        fA=tintA;
+        fcolor=tintColor;
       }
  else {
-        fR=1;
-        fG=1;
-        fB=1;
-        fA=1;
+        fcolor=0xffFFFFFF;
       }
     }
   }
-  float sR, sG, sB, sA, sW;
-  sR=sG=sB=sA=sW=0;
+  int scolor=0x00;
+  float sweight=0;
   if (stroke) {
-    sR=strokeR;
-    sG=strokeG;
-    sB=strokeB;
-    sA=strokeA;
-    sW=strokeWeight;
+    scolor=strokeColor;
+    sweight=strokeWeight;
   }
   if (breakShape) {
     code=BREAK;
@@ -49,5 +36,5 @@
       v=1 - v;
     }
   }
-  inGeo.addVertex(x,y,z,fR,fG,fB,fA,normalX,normalY,normalZ,u,v,sR,sG,sB,sA,sW,code);
+  inGeo.addVertex(x,y,z,fcolor,normalX,normalY,normalZ,u,v,scolor,sweight,ambientColor,specularColor,emissiveColor,shininess,code);
 }

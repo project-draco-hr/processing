@@ -1,19 +1,19 @@
 {
+  int sizef=PGL.MAX_TESS_VERTICES * PGL.SIZEOF_FLOAT;
+  int sizex=PGL.MAX_TESS_INDICES * PGL.SIZEOF_INDEX;
+  int sizei=PGL.MAX_TESS_INDICES * PGL.SIZEOF_INT;
   glLineVertexBufferID=createVertexBufferObject();
-  pgl.bindVertexBuffer(glLineVertexBufferID);
-  pgl.initVertexBuffer(3 * PGL.MAX_TESS_VERTICES,vboMode);
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glLineVertexBufferID);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,null,vboMode);
   glLineColorBufferID=createVertexBufferObject();
-  pgl.bindVertexBuffer(glLineColorBufferID);
-  pgl.initVertexBuffer(4 * PGL.MAX_TESS_VERTICES,vboMode);
-  glLineNormalBufferID=createVertexBufferObject();
-  pgl.bindVertexBuffer(glLineNormalBufferID);
-  pgl.initVertexBuffer(3 * PGL.MAX_TESS_VERTICES,vboMode);
-  glLineAttribBufferID=createVertexBufferObject();
-  pgl.bindVertexBuffer(glLineAttribBufferID);
-  pgl.initVertexBuffer(4 * PGL.MAX_TESS_VERTICES,vboMode);
-  pgl.unbindVertexBuffer();
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glLineColorBufferID);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,null,vboMode);
+  glLineDirWidthBufferID=createVertexBufferObject();
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glLineDirWidthBufferID);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,4 * sizef,null,vboMode);
+  pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,0);
   glLineIndexBufferID=createVertexBufferObject();
-  pgl.bindIndexBuffer(glLineIndexBufferID);
-  pgl.initIndexBuffer(PGL.MAX_TESS_INDICES,vboMode);
-  pgl.unbindIndexBuffer();
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glLineIndexBufferID);
+  pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,sizex,null,vboMode);
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
 }

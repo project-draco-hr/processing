@@ -41,8 +41,9 @@
   float ty=-eyeY;
   float tz=-eyeZ;
   modelview.translate(tx,ty,tz);
-  loadModelview();
+  modelviewInv.set(modelview);
+  modelviewInv.invert();
   camera.set(modelview);
-  cameraInv.set(camera);
-  cameraInv.invert();
+  cameraInv.set(modelviewInv);
+  calcProjmodelview();
 }

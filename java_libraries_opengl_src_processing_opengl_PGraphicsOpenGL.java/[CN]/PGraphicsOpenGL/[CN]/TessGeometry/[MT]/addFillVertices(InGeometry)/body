@@ -5,7 +5,8 @@
   int nvert=i1 - i0 + 1;
   addFillVertices(nvert);
   if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
-    PMatrix3D tr=modelview;
+    PMatrix3D mm=modelview;
+    PMatrix3D nm=modelviewInv;
     for (int i=0; i < nvert; i++) {
       int inIdx=i0 + i;
       int tessIdx=firstFillVertex + i;
@@ -18,13 +19,13 @@
       float ny=in.normals[index++];
       float nz=in.normals[index];
       index=3 * tessIdx;
-      fillVertices[index++]=x * tr.m00 + y * tr.m01 + z * tr.m02 + tr.m03;
-      fillVertices[index++]=x * tr.m10 + y * tr.m11 + z * tr.m12 + tr.m13;
-      fillVertices[index]=x * tr.m20 + y * tr.m21 + z * tr.m22 + tr.m23;
+      fillVertices[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
+      fillVertices[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
+      fillVertices[index]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
       index=3 * tessIdx;
-      fillNormals[index++]=nx * tr.m00 + ny * tr.m01 + nz * tr.m02;
-      fillNormals[index++]=nx * tr.m10 + ny * tr.m11 + nz * tr.m12;
-      fillNormals[index]=nx * tr.m20 + ny * tr.m21 + nz * tr.m22;
+      fillNormals[index++]=nx * nm.m00 + ny * nm.m10 + nz * nm.m20;
+      fillNormals[index++]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
+      fillNormals[index]=nx * nm.m02 + ny * nm.m12 + nz * nm.m22;
     }
   }
  else {
@@ -59,26 +60,25 @@
     for (int i=0; i < nvert; i++) {
       int inIdx=i0 + i;
       int tessIdx=firstFillVertex + i;
-      index=4 * inIdx;
-      float r=in.colors[index++];
-      float g=in.colors[index++];
-      float b=in.colors[index++];
-      float a=in.colors[index];
       index=2 * inIdx;
       float u=in.texcoords[index++];
       float v=in.texcoords[index];
-      index=4 * tessIdx;
-      fillColors[index++]=r;
-      fillColors[index++]=g;
-      fillColors[index++]=b;
-      fillColors[index]=a;
+      fillColors[tessIdx]=in.colors[inIdx];
       index=2 * tessIdx;
       fillTexcoords[index++]=u;
       fillTexcoords[index]=v;
+      fillAmbient[tessIdx]=in.ambient[inIdx];
+      fillSpecular[tessIdx]=in.specular[inIdx];
+      fillEmissive[tessIdx]=in.emissive[inIdx];
+      fillShininess[tessIdx]=in.shininess[inIdx];
     }
   }
  else {
-    PApplet.arrayCopy(in.colors,4 * i0,fillColors,4 * firstFillVertex,4 * nvert);
+    PApplet.arrayCopy(in.colors,i0,fillColors,firstFillVertex,nvert);
     PApplet.arrayCopy(in.texcoords,2 * i0,fillTexcoords,2 * firstFillVertex,2 * nvert);
+    PApplet.arrayCopy(in.ambient,i0,fillAmbient,firstFillVertex,nvert);
+    PApplet.arrayCopy(in.specular,i0,fillSpecular,firstFillVertex,nvert);
+    PApplet.arrayCopy(in.emissive,i0,fillEmissive,firstFillVertex,nvert);
+    PApplet.arrayCopy(in.shininess,i0,fillShininess,firstFillVertex,nvert);
   }
 }

@@ -1,14 +1,33 @@
 {
-  double[] vertex=new double[12];
+  double[] vertex=new double[13];
   vertex[0]=coords[0];
   vertex[1]=coords[1];
   vertex[2]=coords[2];
-  for (int i=3; i < 12; i++) {
+  for (int i=3; i < 13; i++) {
     vertex[i]=0;
     for (int j=0; j < 4; j++) {
       double[] vertData=(double[])data[j];
       if (vertData != null) {
-        vertex[i]+=weight[j] * vertData[i];
+        if (i == 3 || 8 < i) {
+          int colorj=(int)vertData[i];
+          int xj=(colorj >> 24) & 0xFF;
+          int yj=(colorj >> 16) & 0xFF;
+          int zj=(colorj >> 8) & 0xFF;
+          int wj=(colorj >> 0) & 0xFF;
+          int colori=(int)vertex[i];
+          int xi=(colori >> 24) & 0xFF;
+          int yi=(colori >> 16) & 0xFF;
+          int zi=(colori >> 8) & 0xFF;
+          int wi=(colori >> 0) & 0xFF;
+          xi+=weight[j] * xj;
+          yi+=weight[j] * yj;
+          zi+=weight[j] * zj;
+          wi+=weight[j] * wj;
+          vertex[i]=(xi << 24) | (yi << 16) | (zi << 8)| wi;
+        }
+ else {
+          vertex[i]+=weight[j] * vertData[i];
+        }
       }
     }
   }

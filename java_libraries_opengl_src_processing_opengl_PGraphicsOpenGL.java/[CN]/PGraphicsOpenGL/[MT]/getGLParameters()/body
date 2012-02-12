@@ -1,19 +1,26 @@
 {
-  OPENGL_VENDOR=pgl.getVendorString();
-  OPENGL_RENDERER=pgl.getRendererString();
-  OPENGL_VERSION=pgl.getVersionString();
-  OPENGL_EXTENSIONS=pgl.getExtensionsString();
-  npotTexSupported=pgl.isNpotTexSupported();
-  mipmapGeneration=pgl.hasMipmapGeneration();
-  matrixGetSupported=pgl.isMatrixGetSupported();
-  texenvCrossbarSupported=pgl.isTexenvCrossbarSupported();
-  vboSupported=pgl.isVboSupported();
-  fboSupported=pgl.isFboSupported();
-  fboMultisampleSupported=pgl.isFboMultisampleSupported();
-  blendEqSupported=pgl.isBlendEqSupported();
-  maxTextureSize=pgl.getMaxTexureSize();
-  maxLineWidth=pgl.getMaxAliasedLineWidth();
-  maxPointSize=pgl.getMaxAliasedPointSize();
-  maxTextureUnits=pgl.getMaxTextureUnits();
+  OPENGL_VENDOR=pgl.glGetString(PGL.GL_VENDOR);
+  OPENGL_RENDERER=pgl.glGetString(PGL.GL_RENDERER);
+  OPENGL_VERSION=pgl.glGetString(PGL.GL_VERSION);
+  OPENGL_EXTENSIONS=pgl.glGetString(PGL.GL_EXTENSIONS);
+  npotTexSupported=-1 < OPENGL_EXTENSIONS.indexOf("texture_non_power_of_two");
+  mipmapGeneration=-1 < OPENGL_EXTENSIONS.indexOf("generate_mipmap");
+  vboSupported=-1 < OPENGL_EXTENSIONS.indexOf("vertex_buffer_object");
+  fboSupported=-1 < OPENGL_EXTENSIONS.indexOf("framebuffer_object");
+  fboMultisampleSupported=-1 < OPENGL_EXTENSIONS.indexOf("framebuffer_multisample");
+  try {
+    pgl.glBlendEquation(PGL.GL_FUNC_ADD);
+    blendEqSupported=true;
+  }
+ catch (  UnsupportedOperationException e) {
+    blendEqSupported=false;
+  }
+  int temp[]=new int[2];
+  pgl.glGetIntegerv(PGL.GL_MAX_TEXTURE_SIZE,temp,0);
+  maxTextureSize=temp[0];
+  pgl.glGetIntegerv(PGL.GL_ALIASED_LINE_WIDTH_RANGE,temp,0);
+  maxLineWidth=temp[1];
+  pgl.glGetIntegerv(PGL.GL_ALIASED_POINT_SIZE_RANGE,temp,0);
+  maxPointSize=temp[1];
   glParamsRead=true;
 }

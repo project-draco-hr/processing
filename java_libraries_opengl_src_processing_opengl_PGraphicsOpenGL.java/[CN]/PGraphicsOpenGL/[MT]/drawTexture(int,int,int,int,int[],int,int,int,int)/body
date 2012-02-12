@@ -1,12 +1,10 @@
 {
   pgl.enableTexturing(target);
-  pgl.bindTexture(target,id);
+  pgl.glBindTexture(target,id);
   int savedBlendMode=blendMode;
   blendMode(REPLACE);
-  pgl.setTexEnvironmentMode(PGL.REPLACE);
   drawTexture(tw,th,crop,x,y,w,h);
-  pgl.setTexEnvironmentMode(PGL.MODULATE);
-  pgl.unbindTexture(target);
+  pgl.glBindTexture(target,0);
   pgl.disableTexturing(target);
   blendMode(savedBlendMode);
 }

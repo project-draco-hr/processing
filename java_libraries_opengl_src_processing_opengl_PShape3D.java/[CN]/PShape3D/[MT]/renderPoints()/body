@@ -1,27 +1,17 @@
 {
-  pg.startPointShader();
-  pgl.enableVertexArrays();
-  pgl.enableColorArrays();
-  pgl.enableNormalArrays();
+  PointShader shader=pg.getPointShader();
+  shader.start();
   for (int i=0; i < pointIndexData.size(); i++) {
     IndexData index=(IndexData)pointIndexData.get(i);
     int first=index.first;
     int offset=index.offset;
     int size=index.size;
-    pgl.bindVertexBuffer(root.glPointVertexBufferID);
-    pgl.setVertexFormat(3,first);
-    pgl.bindVertexBuffer(root.glPointColorBufferID);
-    pgl.setColorFormat(4,first);
-    pgl.bindVertexBuffer(root.glPointNormalBufferID);
-    pgl.setNormalFormat(3,first);
-    pg.setupPointShader(root.glPointAttribBufferID);
-    pgl.bindIndexBuffer(root.glPointIndexBufferID);
-    pgl.renderIndexBuffer(offset,size);
-    pgl.unbindIndexBuffer();
-    pgl.unbindVertexBuffer();
+    shader.setVertexAttribute(root.glPointVertexBufferID,3,PGL.GL_FLOAT,0,3 * first * PGL.SIZEOF_FLOAT);
+    shader.setColorAttribute(root.glPointColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * first);
+    shader.setSizeAttribute(root.glPointSizeBufferID,2,PGL.GL_FLOAT,0,2 * first * PGL.SIZEOF_FLOAT);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glPointIndexBufferID);
+    pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.INDEX_TYPE,offset * PGL.SIZEOF_INDEX);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
   }
-  pgl.disableVertexArrays();
-  pgl.disableColorArrays();
-  pgl.disableNormalArrays();
-  pg.stopPointShader();
+  shader.stop();
 }
