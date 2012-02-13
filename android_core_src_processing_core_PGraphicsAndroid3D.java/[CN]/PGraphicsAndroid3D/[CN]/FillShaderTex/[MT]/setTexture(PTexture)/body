@@ -1,13 +1,31 @@
 {
-  texture=tex;
   float scaleu=tex.maxTexCoordU;
   float scalev=tex.maxTexCoordV;
-  float offsetu=0;
-  float offsetv=0;
+  float dispu=0;
+  float dispv=0;
   if (tex.isFlippedY()) {
     scalev*=-1;
-    offsetv=1;
+    dispv=1;
   }
-  set2FloatUniform(texcoordScaleLoc,scaleu,scalev);
-  set2FloatUniform(texcoordOffsetLoc,offsetu,offsetv);
+  if (tcmat == null) {
+    tcmat=new float[16];
+  }
+  tcmat[0]=scaleu;
+  tcmat[4]=0;
+  tcmat[8]=0;
+  tcmat[12]=dispu;
+  tcmat[1]=0;
+  tcmat[5]=scalev;
+  tcmat[9]=0;
+  tcmat[13]=dispv;
+  tcmat[2]=0;
+  tcmat[6]=0;
+  tcmat[10]=0;
+  tcmat[14]=0;
+  tcmat[3]=0;
+  tcmat[7]=0;
+  tcmat[11]=0;
+  tcmat[15]=0;
+  set4x4MatUniform(texcoordMatrixLoc,tcmat);
+  set2FloatUniform(texcoordOffsetLoc,1.0f / tex.width,1.0f / tex.height);
 }

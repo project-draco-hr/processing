@@ -1,0 +1,33 @@
+{
+  PShader shader;
+  if (kind == FILL_SHADER_SIMPLE) {
+    shader=new FillShaderSimple(parent);
+    shader.setVertexShader(defFillShaderVertSimpleURL);
+  }
+ else   if (kind == FILL_SHADER_LIT) {
+    shader=new FillShaderLit(parent);
+    shader.setVertexShader(defFillShaderVertLitURL);
+  }
+ else   if (kind == FILL_SHADER_TEX) {
+    shader=new FillShaderTex(parent);
+    shader.setVertexShader(defFillShaderVertTexURL);
+  }
+ else   if (kind == FILL_SHADER_FULL) {
+    shader=new FillShaderFull(parent);
+    shader.setVertexShader(defFillShaderVertFullURL);
+  }
+ else   if (kind == LINE_SHADER) {
+    shader=new LineShader(parent);
+    shader.setVertexShader(defLineShaderVertURL);
+  }
+ else   if (kind == POINT_SHADER) {
+    shader=new PointShader(parent);
+    shader.setVertexShader(defPointShaderVertURL);
+  }
+ else {
+    PGraphics.showWarning("Wrong shader type");
+    return null;
+  }
+  shader.setFragmentShader(fragFilename);
+  return shader;
+}
