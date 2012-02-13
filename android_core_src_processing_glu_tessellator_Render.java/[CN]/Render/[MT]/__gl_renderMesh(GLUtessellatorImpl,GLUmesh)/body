@@ -1,0 +1,17 @@
+{
+  GLUface f;
+  tess.lonelyTriList=null;
+  for (f=mesh.fHead.next; f != mesh.fHead; f=f.next) {
+    f.marked=false;
+  }
+  for (f=mesh.fHead.next; f != mesh.fHead; f=f.next) {
+    if (f.inside && !f.marked) {
+      RenderMaximumFaceGroup(tess,f);
+      assert(f.marked);
+    }
+  }
+  if (tess.lonelyTriList != null) {
+    RenderLonelyTriangles(tess,tess.lonelyTriList);
+    tess.lonelyTriList=null;
+  }
+}

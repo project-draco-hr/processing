@@ -1,0 +1,22 @@
+{
+  GLUhalfEdge e;
+  int newState;
+  int edgeState=-1;
+  tess.callBeginOrBeginData(GLES20.GL_TRIANGLES);
+  for (; f != null; f=f.trail) {
+    e=f.anEdge;
+    do {
+      if (tess.flagBoundary) {
+        newState=(!e.Sym.Lface.inside) ? 1 : 0;
+        if (edgeState != newState) {
+          edgeState=newState;
+          tess.callEdgeFlagOrEdgeFlagData(edgeState != 0);
+        }
+      }
+      tess.callVertexOrVertexData(e.Org.data);
+      e=e.Lnext;
+    }
+ while (e != f.anEdge);
+  }
+  tess.callEndOrEndData();
+}

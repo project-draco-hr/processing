@@ -1,0 +1,24 @@
+{
+  while (state != newState) {
+    if (state < newState) {
+      if (state == TessState.T_DORMANT) {
+        callErrorOrErrorData(PGLU.GLU_TESS_MISSING_BEGIN_POLYGON);
+        gluTessBeginPolygon(null);
+      }
+ else       if (state == TessState.T_IN_POLYGON) {
+        callErrorOrErrorData(PGLU.GLU_TESS_MISSING_BEGIN_CONTOUR);
+        gluTessBeginContour();
+      }
+    }
+ else {
+      if (state == TessState.T_IN_CONTOUR) {
+        callErrorOrErrorData(PGLU.GLU_TESS_MISSING_END_CONTOUR);
+        gluTessEndContour();
+      }
+ else       if (state == TessState.T_IN_POLYGON) {
+        callErrorOrErrorData(PGLU.GLU_TESS_MISSING_END_POLYGON);
+        makeDormant();
+      }
+    }
+  }
+}

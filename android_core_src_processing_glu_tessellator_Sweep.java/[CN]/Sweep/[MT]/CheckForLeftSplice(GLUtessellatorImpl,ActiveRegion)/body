@@ -1,0 +1,24 @@
+{
+  ActiveRegion regLo=RegionBelow(regUp);
+  GLUhalfEdge eUp=regUp.eUp;
+  GLUhalfEdge eLo=regLo.eUp;
+  GLUhalfEdge e;
+  assert(!Geom.VertEq(eUp.Sym.Org,eLo.Sym.Org));
+  if (Geom.VertLeq(eUp.Sym.Org,eLo.Sym.Org)) {
+    if (Geom.EdgeSign(eUp.Sym.Org,eLo.Sym.Org,eUp.Org) < 0)     return false;
+    RegionAbove(regUp).dirty=regUp.dirty=true;
+    e=Mesh.__gl_meshSplitEdge(eUp);
+    if (e == null)     throw new RuntimeException();
+    if (!Mesh.__gl_meshSplice(eLo.Sym,e))     throw new RuntimeException();
+    e.Lface.inside=regUp.inside;
+  }
+ else {
+    if (Geom.EdgeSign(eLo.Sym.Org,eUp.Sym.Org,eLo.Org) > 0)     return false;
+    regUp.dirty=regLo.dirty=true;
+    e=Mesh.__gl_meshSplitEdge(eLo);
+    if (e == null)     throw new RuntimeException();
+    if (!Mesh.__gl_meshSplice(eUp.Lnext,eLo.Sym))     throw new RuntimeException();
+    e.Sym.Lface.inside=regUp.inside;
+  }
+  return true;
+}

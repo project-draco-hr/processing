@@ -1,0 +1,42 @@
+{
+  ActiveRegion reg, regPrev;
+  GLUhalfEdge e, ePrev;
+  boolean firstTime=true;
+  e=eFirst;
+  do {
+    assert(Geom.VertLeq(e.Org,e.Sym.Org));
+    AddRegionBelow(tess,regUp,e.Sym);
+    e=e.Onext;
+  }
+ while (e != eLast);
+  if (eTopLeft == null) {
+    eTopLeft=RegionBelow(regUp).eUp.Sym.Onext;
+  }
+  regPrev=regUp;
+  ePrev=eTopLeft;
+  for (; ; ) {
+    reg=RegionBelow(regPrev);
+    e=reg.eUp.Sym;
+    if (e.Org != ePrev.Org)     break;
+    if (e.Onext != ePrev) {
+      if (!Mesh.__gl_meshSplice(e.Sym.Lnext,e))       throw new RuntimeException();
+      if (!Mesh.__gl_meshSplice(ePrev.Sym.Lnext,e))       throw new RuntimeException();
+    }
+    reg.windingNumber=regPrev.windingNumber - e.winding;
+    reg.inside=IsWindingInside(tess,reg.windingNumber);
+    regPrev.dirty=true;
+    if (!firstTime && CheckForRightSplice(tess,regPrev)) {
+      AddWinding(e,ePrev);
+      DeleteRegion(tess,regPrev);
+      if (!Mesh.__gl_meshDelete(ePrev))       throw new RuntimeException();
+    }
+    firstTime=false;
+    regPrev=reg;
+    ePrev=e;
+  }
+  regPrev.dirty=true;
+  assert(regPrev.windingNumber - e.winding == reg.windingNumber);
+  if (cleanUp) {
+    WalkDirtyRegions(tess,regPrev);
+  }
+}

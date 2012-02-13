@@ -1,0 +1,34 @@
+{
+  GLUhalfEdge eStart=fZap.anEdge;
+  GLUhalfEdge e, eNext, eSym;
+  GLUface fPrev, fNext;
+  eNext=eStart.Lnext;
+  do {
+    e=eNext;
+    eNext=e.Lnext;
+    e.Lface=null;
+    if (e.Sym.Lface == null) {
+      if (e.Onext == e) {
+        KillVertex(e.Org,null);
+      }
+ else {
+        e.Org.anEdge=e.Onext;
+        Splice(e,e.Sym.Lnext);
+      }
+      eSym=e.Sym;
+      if (eSym.Onext == eSym) {
+        KillVertex(eSym.Org,null);
+      }
+ else {
+        eSym.Org.anEdge=eSym.Onext;
+        Splice(eSym,eSym.Sym.Lnext);
+      }
+      KillEdge(e);
+    }
+  }
+ while (e != eStart);
+  fPrev=fZap.prev;
+  fNext=fZap.next;
+  fNext.prev=fPrev;
+  fPrev.next=fNext;
+}

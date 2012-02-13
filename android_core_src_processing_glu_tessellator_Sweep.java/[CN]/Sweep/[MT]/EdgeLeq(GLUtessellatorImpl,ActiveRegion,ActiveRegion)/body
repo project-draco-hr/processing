@@ -1,0 +1,22 @@
+{
+  GLUvertex event=tess.event;
+  GLUhalfEdge e1, e2;
+  double t1, t2;
+  e1=reg1.eUp;
+  e2=reg2.eUp;
+  if (e1.Sym.Org == event) {
+    if (e2.Sym.Org == event) {
+      if (Geom.VertLeq(e1.Org,e2.Org)) {
+        return Geom.EdgeSign(e2.Sym.Org,e1.Org,e2.Org) <= 0;
+      }
+      return Geom.EdgeSign(e1.Sym.Org,e2.Org,e1.Org) >= 0;
+    }
+    return Geom.EdgeSign(e2.Sym.Org,event,e2.Org) <= 0;
+  }
+  if (e2.Sym.Org == event) {
+    return Geom.EdgeSign(e1.Sym.Org,event,e1.Org) >= 0;
+  }
+  t1=Geom.EdgeEval(e1.Sym.Org,event,e1.Org);
+  t2=Geom.EdgeEval(e2.Sym.Org,event,e2.Org);
+  return (t1 >= t2);
+}

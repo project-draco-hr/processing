@@ -1,0 +1,35 @@
+{
+  GLUhalfEdge e=fOrig.anEdge;
+  FaceCount max=new FaceCount();
+  FaceCount newFace=new FaceCount();
+  max.size=1;
+  max.eStart=e;
+  max.render=renderTriangle;
+  if (!tess.flagBoundary) {
+    newFace=MaximumFan(e);
+    if (newFace.size > max.size) {
+      max=newFace;
+    }
+    newFace=MaximumFan(e.Lnext);
+    if (newFace.size > max.size) {
+      max=newFace;
+    }
+    newFace=MaximumFan(e.Onext.Sym);
+    if (newFace.size > max.size) {
+      max=newFace;
+    }
+    newFace=MaximumStrip(e);
+    if (newFace.size > max.size) {
+      max=newFace;
+    }
+    newFace=MaximumStrip(e.Lnext);
+    if (newFace.size > max.size) {
+      max=newFace;
+    }
+    newFace=MaximumStrip(e.Onext.Sym);
+    if (newFace.size > max.size) {
+      max=newFace;
+    }
+  }
+  max.render.render(tess,max.eStart,max.size);
+}

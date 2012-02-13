@@ -1,0 +1,25 @@
+{
+  boolean joiningLoops=false;
+  boolean joiningVertices=false;
+  if (eOrg == eDst)   return true;
+  if (eDst.Org != eOrg.Org) {
+    joiningVertices=true;
+    KillVertex(eDst.Org,eOrg.Org);
+  }
+  if (eDst.Lface != eOrg.Lface) {
+    joiningLoops=true;
+    KillFace(eDst.Lface,eOrg.Lface);
+  }
+  Splice(eDst,eOrg);
+  if (!joiningVertices) {
+    GLUvertex newVertex=new GLUvertex();
+    MakeVertex(newVertex,eDst,eOrg.Org);
+    eOrg.Org.anEdge=eOrg;
+  }
+  if (!joiningLoops) {
+    GLUface newFace=new GLUface();
+    MakeFace(newFace,eDst,eOrg.Lface);
+    eOrg.Lface.anEdge=eOrg;
+  }
+  return true;
+}

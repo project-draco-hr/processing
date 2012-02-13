@@ -1,0 +1,21 @@
+{
+  GLUhalfEdge e;
+  e=lastEdge;
+  if (e == null) {
+    e=Mesh.__gl_meshMakeEdge(mesh);
+    if (e == null)     return false;
+    if (!Mesh.__gl_meshSplice(e,e.Sym))     return false;
+  }
+ else {
+    if (Mesh.__gl_meshSplitEdge(e) == null)     return false;
+    e=e.Lnext;
+  }
+  e.Org.data=vertexData;
+  e.Org.coords[0]=coords[0];
+  e.Org.coords[1]=coords[1];
+  e.Org.coords[2]=coords[2];
+  e.winding=1;
+  e.Sym.winding=-1;
+  lastEdge=e;
+  return true;
+}

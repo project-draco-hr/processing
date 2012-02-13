@@ -1,0 +1,97 @@
+{
+  ActiveRegion regLo=RegionBelow(regUp);
+  GLUhalfEdge eUp=regUp.eUp;
+  GLUhalfEdge eLo=regLo.eUp;
+  GLUvertex orgUp=eUp.Org;
+  GLUvertex orgLo=eLo.Org;
+  GLUvertex dstUp=eUp.Sym.Org;
+  GLUvertex dstLo=eLo.Sym.Org;
+  double tMinUp, tMaxLo;
+  GLUvertex isect=new GLUvertex();
+  GLUvertex orgMin;
+  GLUhalfEdge e;
+  assert(!Geom.VertEq(dstLo,dstUp));
+  assert(Geom.EdgeSign(dstUp,tess.event,orgUp) <= 0);
+  assert(Geom.EdgeSign(dstLo,tess.event,orgLo) >= 0);
+  assert(orgUp != tess.event && orgLo != tess.event);
+  assert(!regUp.fixUpperEdge && !regLo.fixUpperEdge);
+  if (orgUp == orgLo)   return false;
+  tMinUp=Math.min(orgUp.t,dstUp.t);
+  tMaxLo=Math.max(orgLo.t,dstLo.t);
+  if (tMinUp > tMaxLo)   return false;
+  if (Geom.VertLeq(orgUp,orgLo)) {
+    if (Geom.EdgeSign(dstLo,orgUp,orgLo) > 0)     return false;
+  }
+ else {
+    if (Geom.EdgeSign(dstUp,orgLo,orgUp) < 0)     return false;
+  }
+  DebugEvent(tess);
+  Geom.EdgeIntersect(dstUp,orgUp,dstLo,orgLo,isect);
+  assert(Math.min(orgUp.t,dstUp.t) <= isect.t);
+  assert(isect.t <= Math.max(orgLo.t,dstLo.t));
+  assert(Math.min(dstLo.s,dstUp.s) <= isect.s);
+  assert(isect.s <= Math.max(orgLo.s,orgUp.s));
+  if (Geom.VertLeq(isect,tess.event)) {
+    isect.s=tess.event.s;
+    isect.t=tess.event.t;
+  }
+  orgMin=Geom.VertLeq(orgUp,orgLo) ? orgUp : orgLo;
+  if (Geom.VertLeq(orgMin,isect)) {
+    isect.s=orgMin.s;
+    isect.t=orgMin.t;
+  }
+  if (Geom.VertEq(isect,orgUp) || Geom.VertEq(isect,orgLo)) {
+    CheckForRightSplice(tess,regUp);
+    return false;
+  }
+  if ((!Geom.VertEq(dstUp,tess.event) && Geom.EdgeSign(dstUp,tess.event,isect) >= 0) || (!Geom.VertEq(dstLo,tess.event) && Geom.EdgeSign(dstLo,tess.event,isect) <= 0)) {
+    if (dstLo == tess.event) {
+      if (Mesh.__gl_meshSplitEdge(eUp.Sym) == null)       throw new RuntimeException();
+      if (!Mesh.__gl_meshSplice(eLo.Sym,eUp))       throw new RuntimeException();
+      regUp=TopLeftRegion(regUp);
+      if (regUp == null)       throw new RuntimeException();
+      eUp=RegionBelow(regUp).eUp;
+      FinishLeftRegions(tess,RegionBelow(regUp),regLo);
+      AddRightEdges(tess,regUp,eUp.Sym.Lnext,eUp,eUp,true);
+      return true;
+    }
+    if (dstUp == tess.event) {
+      if (Mesh.__gl_meshSplitEdge(eLo.Sym) == null)       throw new RuntimeException();
+      if (!Mesh.__gl_meshSplice(eUp.Lnext,eLo.Sym.Lnext))       throw new RuntimeException();
+      regLo=regUp;
+      regUp=TopRightRegion(regUp);
+      e=RegionBelow(regUp).eUp.Sym.Onext;
+      regLo.eUp=eLo.Sym.Lnext;
+      eLo=FinishLeftRegions(tess,regLo,null);
+      AddRightEdges(tess,regUp,eLo.Onext,eUp.Sym.Onext,e,true);
+      return true;
+    }
+    if (Geom.EdgeSign(dstUp,tess.event,isect) >= 0) {
+      RegionAbove(regUp).dirty=regUp.dirty=true;
+      if (Mesh.__gl_meshSplitEdge(eUp.Sym) == null)       throw new RuntimeException();
+      eUp.Org.s=tess.event.s;
+      eUp.Org.t=tess.event.t;
+    }
+    if (Geom.EdgeSign(dstLo,tess.event,isect) <= 0) {
+      regUp.dirty=regLo.dirty=true;
+      if (Mesh.__gl_meshSplitEdge(eLo.Sym) == null)       throw new RuntimeException();
+      eLo.Org.s=tess.event.s;
+      eLo.Org.t=tess.event.t;
+    }
+    return false;
+  }
+  if (Mesh.__gl_meshSplitEdge(eUp.Sym) == null)   throw new RuntimeException();
+  if (Mesh.__gl_meshSplitEdge(eLo.Sym) == null)   throw new RuntimeException();
+  if (!Mesh.__gl_meshSplice(eLo.Sym.Lnext,eUp))   throw new RuntimeException();
+  eUp.Org.s=isect.s;
+  eUp.Org.t=isect.t;
+  eUp.Org.pqHandle=tess.pq.pqInsert(eUp.Org);
+  if (eUp.Org.pqHandle == Long.MAX_VALUE) {
+    tess.pq.pqDeletePriorityQ();
+    tess.pq=null;
+    throw new RuntimeException();
+  }
+  GetIntersectData(tess,eUp.Org,orgUp,dstUp,orgLo,dstLo);
+  RegionAbove(regUp).dirty=regUp.dirty=regLo.dirty=true;
+  return false;
+}

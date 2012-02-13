@@ -1,0 +1,21 @@
+{
+  GLUhalfEdge eNewSym;
+  boolean joiningLoops=false;
+  GLUhalfEdge eNew=MakeEdge(eOrg);
+  eNewSym=eNew.Sym;
+  if (eDst.Lface != eOrg.Lface) {
+    joiningLoops=true;
+    KillFace(eDst.Lface,eOrg.Lface);
+  }
+  Splice(eNew,eOrg.Lnext);
+  Splice(eNewSym,eDst);
+  eNew.Org=eOrg.Sym.Org;
+  eNewSym.Org=eDst.Org;
+  eNew.Lface=eNewSym.Lface=eOrg.Lface;
+  eOrg.Lface.anEdge=eNewSym;
+  if (!joiningLoops) {
+    GLUface newFace=new GLUface();
+    MakeFace(newFace,eNew,eOrg.Lface);
+  }
+  return eNew;
+}

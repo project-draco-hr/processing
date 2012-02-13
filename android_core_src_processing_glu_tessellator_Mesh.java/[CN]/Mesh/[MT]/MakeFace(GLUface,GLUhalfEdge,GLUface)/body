@@ -1,0 +1,22 @@
+{
+  GLUhalfEdge e;
+  GLUface fPrev;
+  GLUface fNew=newFace;
+  assert(fNew != null);
+  fPrev=fNext.prev;
+  fNew.prev=fPrev;
+  fPrev.next=fNew;
+  fNew.next=fNext;
+  fNext.prev=fNew;
+  fNew.anEdge=eOrig;
+  fNew.data=null;
+  fNew.trail=null;
+  fNew.marked=false;
+  fNew.inside=fNext.inside;
+  e=eOrig;
+  do {
+    e.Lface=fNew;
+    e=e.Lnext;
+  }
+ while (e != eOrig);
+}

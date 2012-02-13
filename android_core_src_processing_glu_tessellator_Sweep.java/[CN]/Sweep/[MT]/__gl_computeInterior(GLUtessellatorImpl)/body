@@ -1,0 +1,23 @@
+{
+  GLUvertex v, vNext;
+  tess.fatalError=false;
+  RemoveDegenerateEdges(tess);
+  if (!InitPriorityQ(tess))   return false;
+  InitEdgeDict(tess);
+  while ((v=(GLUvertex)tess.pq.pqExtractMin()) != null) {
+    for (; ; ) {
+      vNext=(GLUvertex)tess.pq.pqMinimum();
+      if (vNext == null || !Geom.VertEq(vNext,v))       break;
+      vNext=(GLUvertex)tess.pq.pqExtractMin();
+      SpliceMergeVertices(tess,v.anEdge,vNext.anEdge);
+    }
+    SweepEvent(tess,v);
+  }
+  tess.event=((ActiveRegion)Dict.dictKey(Dict.dictMin(tess.dict))).eUp.Org;
+  DebugEvent(tess);
+  DoneEdgeDict(tess);
+  DonePriorityQ(tess);
+  if (!RemoveDegenerateFaces(tess.mesh))   return false;
+  Mesh.__gl_meshCheckMesh(tess.mesh);
+  return true;
+}

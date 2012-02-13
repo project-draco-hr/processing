@@ -1,0 +1,18 @@
+{
+  GLUhalfEdge e, eNext;
+  for (e=mesh.eHead.next; e != mesh.eHead; e=eNext) {
+    eNext=e.next;
+    if (e.Sym.Lface.inside != e.Lface.inside) {
+      e.winding=(e.Lface.inside) ? value : -value;
+    }
+ else {
+      if (!keepOnlyBoundary) {
+        e.winding=0;
+      }
+ else {
+        if (!Mesh.__gl_meshDelete(e))         return false;
+      }
+    }
+  }
+  return true;
+}

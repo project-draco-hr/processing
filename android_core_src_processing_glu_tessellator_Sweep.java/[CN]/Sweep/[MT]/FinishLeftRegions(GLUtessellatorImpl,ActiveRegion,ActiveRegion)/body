@@ -1,0 +1,28 @@
+{
+  ActiveRegion reg, regPrev;
+  GLUhalfEdge e, ePrev;
+  regPrev=regFirst;
+  ePrev=regFirst.eUp;
+  while (regPrev != regLast) {
+    regPrev.fixUpperEdge=false;
+    reg=RegionBelow(regPrev);
+    e=reg.eUp;
+    if (e.Org != ePrev.Org) {
+      if (!reg.fixUpperEdge) {
+        FinishRegion(tess,regPrev);
+        break;
+      }
+      e=Mesh.__gl_meshConnect(ePrev.Onext.Sym,e.Sym);
+      if (e == null)       throw new RuntimeException();
+      if (!FixUpperEdge(reg,e))       throw new RuntimeException();
+    }
+    if (ePrev.Onext != e) {
+      if (!Mesh.__gl_meshSplice(e.Sym.Lnext,e))       throw new RuntimeException();
+      if (!Mesh.__gl_meshSplice(ePrev,e))       throw new RuntimeException();
+    }
+    FinishRegion(tess,regPrev);
+    ePrev=reg.eUp;
+    regPrev=reg;
+  }
+  return ePrev;
+}

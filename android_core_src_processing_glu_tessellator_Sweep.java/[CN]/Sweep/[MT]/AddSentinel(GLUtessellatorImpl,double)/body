@@ -1,0 +1,20 @@
+{
+  GLUhalfEdge e;
+  ActiveRegion reg=new ActiveRegion();
+  if (reg == null)   throw new RuntimeException();
+  e=Mesh.__gl_meshMakeEdge(tess.mesh);
+  if (e == null)   throw new RuntimeException();
+  e.Org.s=SENTINEL_COORD;
+  e.Org.t=t;
+  e.Sym.Org.s=-SENTINEL_COORD;
+  e.Sym.Org.t=t;
+  tess.event=e.Sym.Org;
+  reg.eUp=e;
+  reg.windingNumber=0;
+  reg.inside=false;
+  reg.fixUpperEdge=false;
+  reg.sentinel=true;
+  reg.dirty=false;
+  reg.nodeUp=Dict.dictInsert(tess.dict,reg);
+  if (reg.nodeUp == null)   throw new RuntimeException();
+}

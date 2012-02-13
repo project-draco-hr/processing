@@ -1,0 +1,18 @@
+{
+  if (errorCode == 0) {
+    return ("no error");
+  }
+  if ((errorCode >= GLES20.GL_INVALID_ENUM) && (errorCode <= GLES20.GL_INVALID_FRAMEBUFFER_OPERATION)) {
+    return (glErrorStrings[errorCode - GLES20.GL_INVALID_ENUM]);
+  }
+  if (errorCode == 0x8031) {
+    return ("table too large");
+  }
+  if ((errorCode >= GLU_INVALID_ENUM) && (errorCode <= GLU_INVALID_OPERATION)) {
+    return (gluErrorStrings[errorCode - GLU_INVALID_ENUM]);
+  }
+  if ((errorCode >= GLU_TESS_ERROR1) && (errorCode <= GLU_TESS_ERROR8)) {
+    return (gluTessErrors[errorCode - (GLU_TESS_ERROR1 - 1)]);
+  }
+  return ("error (" + errorCode + ")");
+}

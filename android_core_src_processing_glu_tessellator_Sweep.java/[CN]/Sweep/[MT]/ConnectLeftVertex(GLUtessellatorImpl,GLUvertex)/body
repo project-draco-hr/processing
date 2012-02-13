@@ -1,0 +1,36 @@
+{
+  ActiveRegion regUp, regLo, reg;
+  GLUhalfEdge eUp, eLo, eNew;
+  ActiveRegion tmp=new ActiveRegion();
+  tmp.eUp=vEvent.anEdge.Sym;
+  regUp=(ActiveRegion)Dict.dictKey(Dict.dictSearch(tess.dict,tmp));
+  regLo=RegionBelow(regUp);
+  eUp=regUp.eUp;
+  eLo=regLo.eUp;
+  if (Geom.EdgeSign(eUp.Sym.Org,vEvent,eUp.Org) == 0) {
+    ConnectLeftDegenerate(tess,regUp,vEvent);
+    return;
+  }
+  reg=Geom.VertLeq(eLo.Sym.Org,eUp.Sym.Org) ? regUp : regLo;
+  if (regUp.inside || reg.fixUpperEdge) {
+    if (reg == regUp) {
+      eNew=Mesh.__gl_meshConnect(vEvent.anEdge.Sym,eUp.Lnext);
+      if (eNew == null)       throw new RuntimeException();
+    }
+ else {
+      GLUhalfEdge tempHalfEdge=Mesh.__gl_meshConnect(eLo.Sym.Onext.Sym,vEvent.anEdge);
+      if (tempHalfEdge == null)       throw new RuntimeException();
+      eNew=tempHalfEdge.Sym;
+    }
+    if (reg.fixUpperEdge) {
+      if (!FixUpperEdge(reg,eNew))       throw new RuntimeException();
+    }
+ else {
+      ComputeWinding(tess,AddRegionBelow(tess,regUp,eNew));
+    }
+    SweepEvent(tess,vEvent);
+  }
+ else {
+    AddRightEdges(tess,regUp,vEvent.anEdge,vEvent.anEdge,null,true);
+  }
+}

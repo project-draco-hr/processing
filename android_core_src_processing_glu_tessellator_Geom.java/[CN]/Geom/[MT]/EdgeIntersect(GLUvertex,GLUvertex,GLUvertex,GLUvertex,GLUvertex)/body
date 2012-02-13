@@ -1,0 +1,81 @@
+{
+  double z1, z2;
+  if (!VertLeq(o1,d1)) {
+    GLUvertex temp=o1;
+    o1=d1;
+    d1=temp;
+  }
+  if (!VertLeq(o2,d2)) {
+    GLUvertex temp=o2;
+    o2=d2;
+    d2=temp;
+  }
+  if (!VertLeq(o1,o2)) {
+    GLUvertex temp=o1;
+    o1=o2;
+    o2=temp;
+    temp=d1;
+    d1=d2;
+    d2=temp;
+  }
+  if (!VertLeq(o2,d1)) {
+    v.s=(o2.s + d1.s) / 2.0;
+  }
+ else   if (VertLeq(d1,d2)) {
+    z1=EdgeEval(o1,o2,d1);
+    z2=EdgeEval(o2,d1,d2);
+    if (z1 + z2 < 0) {
+      z1=-z1;
+      z2=-z2;
+    }
+    v.s=Interpolate(z1,o2.s,z2,d1.s);
+  }
+ else {
+    z1=EdgeSign(o1,o2,d1);
+    z2=-EdgeSign(o1,d2,d1);
+    if (z1 + z2 < 0) {
+      z1=-z1;
+      z2=-z2;
+    }
+    v.s=Interpolate(z1,o2.s,z2,d2.s);
+  }
+  if (!TransLeq(o1,d1)) {
+    GLUvertex temp=o1;
+    o1=d1;
+    d1=temp;
+  }
+  if (!TransLeq(o2,d2)) {
+    GLUvertex temp=o2;
+    o2=d2;
+    d2=temp;
+  }
+  if (!TransLeq(o1,o2)) {
+    GLUvertex temp=o2;
+    o2=o1;
+    o1=temp;
+    temp=d2;
+    d2=d1;
+    d1=temp;
+  }
+  if (!TransLeq(o2,d1)) {
+    v.t=(o2.t + d1.t) / 2.0;
+  }
+ else   if (TransLeq(d1,d2)) {
+    z1=TransEval(o1,o2,d1);
+    z2=TransEval(o2,d1,d2);
+    if (z1 + z2 < 0) {
+      z1=-z1;
+      z2=-z2;
+    }
+    v.t=Interpolate(z1,o2.t,z2,d1.t);
+  }
+ else {
+    z1=TransSign(o1,o2,d1);
+    z2=-TransSign(o1,d2,d1);
+    if (z1 + z2 < 0) {
+      z1=-z1;
+      z2=-z2;
+    }
+    v.t=Interpolate(z1,o2.t,z2,d2.t);
+  }
+}

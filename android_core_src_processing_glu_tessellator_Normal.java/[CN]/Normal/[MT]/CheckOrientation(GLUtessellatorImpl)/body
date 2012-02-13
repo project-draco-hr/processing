@@ -1,0 +1,24 @@
+{
+  double area;
+  GLUface f, fHead=tess.mesh.fHead;
+  GLUvertex v, vHead=tess.mesh.vHead;
+  GLUhalfEdge e;
+  area=0;
+  for (f=fHead.next; f != fHead; f=f.next) {
+    e=f.anEdge;
+    if (e.winding <= 0)     continue;
+    do {
+      area+=(e.Org.s - e.Sym.Org.s) * (e.Org.t + e.Sym.Org.t);
+      e=e.Lnext;
+    }
+ while (e != f.anEdge);
+  }
+  if (area < 0) {
+    for (v=vHead.next; v != vHead; v=v.next) {
+      v.t=-v.t;
+    }
+    tess.tUnit[0]=-tess.tUnit[0];
+    tess.tUnit[1]=-tess.tUnit[1];
+    tess.tUnit[2]=-tess.tUnit[2];
+  }
+}

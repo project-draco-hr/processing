@@ -1,0 +1,18 @@
+{
+  tess.callBeginOrBeginData(GLES20.GL_TRIANGLE_STRIP);
+  tess.callVertexOrVertexData(e.Org.data);
+  tess.callVertexOrVertexData(e.Sym.Org.data);
+  while (!Marked(e.Lface)) {
+    e.Lface.marked=true;
+    --size;
+    e=e.Lnext.Sym;
+    tess.callVertexOrVertexData(e.Org.data);
+    if (Marked(e.Lface))     break;
+    e.Lface.marked=true;
+    --size;
+    e=e.Onext;
+    tess.callVertexOrVertexData(e.Sym.Org.data);
+  }
+  assert(size == 0);
+  tess.callEndOrEndData();
+}

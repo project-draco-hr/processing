@@ -1,0 +1,55 @@
+{
+  CachedVertex[] v=tess.cache;
+  int vn=tess.cacheCount;
+  int vc;
+  double[] norm=new double[3];
+  int sign;
+  if (tess.cacheCount < 3) {
+    return true;
+  }
+  norm[0]=tess.normal[0];
+  norm[1]=tess.normal[1];
+  norm[2]=tess.normal[2];
+  if (norm[0] == 0 && norm[1] == 0 && norm[2] == 0) {
+    ComputeNormal(tess,norm,false);
+  }
+  sign=ComputeNormal(tess,norm,true);
+  if (sign == SIGN_INCONSISTENT) {
+    return false;
+  }
+  if (sign == 0) {
+    return true;
+  }
+  if (!USE_OPTIMIZED_CODE_PATH) {
+    return false;
+  }
+ else {
+switch (tess.windingRule) {
+case PGLU.GLU_TESS_WINDING_ODD:
+case PGLU.GLU_TESS_WINDING_NONZERO:
+      break;
+case PGLU.GLU_TESS_WINDING_POSITIVE:
+    if (sign < 0)     return true;
+  break;
+case PGLU.GLU_TESS_WINDING_NEGATIVE:
+if (sign > 0) return true;
+break;
+case PGLU.GLU_TESS_WINDING_ABS_GEQ_TWO:
+return true;
+}
+tess.callBeginOrBeginData(tess.boundaryOnly ? GLES20.GL_LINE_LOOP : (tess.cacheCount > 3) ? GLES20.GL_TRIANGLE_FAN : GLES20.GL_TRIANGLES);
+tess.callVertexOrVertexData(v[0].data);
+if (sign > 0) {
+for (vc=1; vc < vn; ++vc) {
+tess.callVertexOrVertexData(v[vc].data);
+}
+}
+ else {
+for (vc=vn - 1; vc > 0; --vc) {
+tess.callVertexOrVertexData(v[vc].data);
+}
+}
+tess.callEndOrEndData();
+return true;
+}
+}

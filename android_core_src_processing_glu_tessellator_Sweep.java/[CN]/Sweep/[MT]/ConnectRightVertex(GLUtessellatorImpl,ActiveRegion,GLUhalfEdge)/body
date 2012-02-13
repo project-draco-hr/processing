@@ -1,0 +1,39 @@
+{
+  GLUhalfEdge eNew;
+  GLUhalfEdge eTopLeft=eBottomLeft.Onext;
+  ActiveRegion regLo=RegionBelow(regUp);
+  GLUhalfEdge eUp=regUp.eUp;
+  GLUhalfEdge eLo=regLo.eUp;
+  boolean degenerate=false;
+  if (eUp.Sym.Org != eLo.Sym.Org) {
+    CheckForIntersect(tess,regUp);
+  }
+  if (Geom.VertEq(eUp.Org,tess.event)) {
+    if (!Mesh.__gl_meshSplice(eTopLeft.Sym.Lnext,eUp))     throw new RuntimeException();
+    regUp=TopLeftRegion(regUp);
+    if (regUp == null)     throw new RuntimeException();
+    eTopLeft=RegionBelow(regUp).eUp;
+    FinishLeftRegions(tess,RegionBelow(regUp),regLo);
+    degenerate=true;
+  }
+  if (Geom.VertEq(eLo.Org,tess.event)) {
+    if (!Mesh.__gl_meshSplice(eBottomLeft,eLo.Sym.Lnext))     throw new RuntimeException();
+    eBottomLeft=FinishLeftRegions(tess,regLo,null);
+    degenerate=true;
+  }
+  if (degenerate) {
+    AddRightEdges(tess,regUp,eBottomLeft.Onext,eTopLeft,eTopLeft,true);
+    return;
+  }
+  if (Geom.VertLeq(eLo.Org,eUp.Org)) {
+    eNew=eLo.Sym.Lnext;
+  }
+ else {
+    eNew=eUp;
+  }
+  eNew=Mesh.__gl_meshConnect(eBottomLeft.Onext.Sym,eNew);
+  if (eNew == null)   throw new RuntimeException();
+  AddRightEdges(tess,regUp,eNew,eNew.Onext,eNew.Onext,false);
+  eNew.Sym.activeRegion.fixUpperEdge=true;
+  WalkDirtyRegions(tess,regUp);
+}

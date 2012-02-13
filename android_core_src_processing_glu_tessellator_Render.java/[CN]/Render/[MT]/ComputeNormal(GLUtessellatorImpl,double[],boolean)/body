@@ -1,0 +1,50 @@
+{
+  CachedVertex[] v=tess.cache;
+  int vn=tess.cacheCount;
+  int vc;
+  double dot, xc, yc, zc, xp, yp, zp;
+  double[] n=new double[3];
+  int sign=0;
+  if (!check) {
+    norm[0]=norm[1]=norm[2]=0.0;
+  }
+  vc=1;
+  xc=v[vc].coords[0] - v[0].coords[0];
+  yc=v[vc].coords[1] - v[0].coords[1];
+  zc=v[vc].coords[2] - v[0].coords[2];
+  while (++vc < vn) {
+    xp=xc;
+    yp=yc;
+    zp=zc;
+    xc=v[vc].coords[0] - v[0].coords[0];
+    yc=v[vc].coords[1] - v[0].coords[1];
+    zc=v[vc].coords[2] - v[0].coords[2];
+    n[0]=yp * zc - zp * yc;
+    n[1]=zp * xc - xp * zc;
+    n[2]=xp * yc - yp * xc;
+    dot=n[0] * norm[0] + n[1] * norm[1] + n[2] * norm[2];
+    if (!check) {
+      if (dot >= 0) {
+        norm[0]+=n[0];
+        norm[1]+=n[1];
+        norm[2]+=n[2];
+      }
+ else {
+        norm[0]-=n[0];
+        norm[1]-=n[1];
+        norm[2]-=n[2];
+      }
+    }
+ else     if (dot != 0) {
+      if (dot > 0) {
+        if (sign < 0)         return SIGN_INCONSISTENT;
+        sign=1;
+      }
+ else {
+        if (sign > 0)         return SIGN_INCONSISTENT;
+        sign=-1;
+      }
+    }
+  }
+  return sign;
+}

@@ -1,0 +1,30 @@
+{
+  GLUhalfEdge e;
+  GLUhalfEdge eSym;
+  GLUhalfEdge ePrev;
+  e=new GLUhalfEdge(true);
+  eSym=new GLUhalfEdge(false);
+  if (!eNext.first) {
+    eNext=eNext.Sym;
+  }
+  ePrev=eNext.Sym.next;
+  eSym.next=ePrev;
+  ePrev.Sym.next=e;
+  e.next=eNext;
+  eNext.Sym.next=eSym;
+  e.Sym=eSym;
+  e.Onext=e;
+  e.Lnext=eSym;
+  e.Org=null;
+  e.Lface=null;
+  e.winding=0;
+  e.activeRegion=null;
+  eSym.Sym=e;
+  eSym.Onext=eSym;
+  eSym.Lnext=e;
+  eSym.Org=null;
+  eSym.Lface=null;
+  eSym.winding=0;
+  eSym.activeRegion=null;
+  return e;
+}

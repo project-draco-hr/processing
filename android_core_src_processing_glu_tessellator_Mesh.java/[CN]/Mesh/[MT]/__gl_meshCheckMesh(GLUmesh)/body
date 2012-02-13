@@ -1,0 +1,49 @@
+{
+  GLUface fHead=mesh.fHead;
+  GLUvertex vHead=mesh.vHead;
+  GLUhalfEdge eHead=mesh.eHead;
+  GLUface f, fPrev;
+  GLUvertex v, vPrev;
+  GLUhalfEdge e, ePrev;
+  fPrev=fHead;
+  for (fPrev=fHead; (f=fPrev.next) != fHead; fPrev=f) {
+    assert(f.prev == fPrev);
+    e=f.anEdge;
+    do {
+      assert(e.Sym != e);
+      assert(e.Sym.Sym == e);
+      assert(e.Lnext.Onext.Sym == e);
+      assert(e.Onext.Sym.Lnext == e);
+      assert(e.Lface == f);
+      e=e.Lnext;
+    }
+ while (e != f.anEdge);
+  }
+  assert(f.prev == fPrev && f.anEdge == null && f.data == null);
+  vPrev=vHead;
+  for (vPrev=vHead; (v=vPrev.next) != vHead; vPrev=v) {
+    assert(v.prev == vPrev);
+    e=v.anEdge;
+    do {
+      assert(e.Sym != e);
+      assert(e.Sym.Sym == e);
+      assert(e.Lnext.Onext.Sym == e);
+      assert(e.Onext.Sym.Lnext == e);
+      assert(e.Org == v);
+      e=e.Onext;
+    }
+ while (e != v.anEdge);
+  }
+  assert(v.prev == vPrev && v.anEdge == null && v.data == null);
+  ePrev=eHead;
+  for (ePrev=eHead; (e=ePrev.next) != eHead; ePrev=e) {
+    assert(e.Sym.next == ePrev.Sym);
+    assert(e.Sym != e);
+    assert(e.Sym.Sym == e);
+    assert(e.Org != null);
+    assert(e.Sym.Org != null);
+    assert(e.Lnext.Onext.Sym == e);
+    assert(e.Onext.Sym.Lnext == e);
+  }
+  assert(e.Sym.next == ePrev.Sym && e.Sym == mesh.eHeadSym && e.Sym.Sym == e && e.Org == null && e.Sym.Org == null && e.Lface == null && e.Sym.Lface == null);
+}

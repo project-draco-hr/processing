@@ -1,0 +1,14 @@
+{
+  GLUface f, fNext;
+  GLUhalfEdge e;
+  for (f=mesh.fHead.next; f != mesh.fHead; f=fNext) {
+    fNext=f.next;
+    e=f.anEdge;
+    assert(e.Lnext != e);
+    if (e.Lnext.Lnext == e) {
+      AddWinding(e.Onext,e);
+      if (!Mesh.__gl_meshDelete(e))       return false;
+    }
+  }
+  return true;
+}

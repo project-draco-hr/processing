@@ -1,0 +1,16 @@
+{
+  Object[] data=new Object[4];
+  float[] weights=new float[4];
+  float[] weights1=new float[2];
+  float[] weights2=new float[2];
+  data[0]=orgUp.data;
+  data[1]=dstUp.data;
+  data[2]=orgLo.data;
+  data[3]=dstLo.data;
+  isect.coords[0]=isect.coords[1]=isect.coords[2]=0;
+  VertexWeights(isect,orgUp,dstUp,weights1);
+  VertexWeights(isect,orgLo,dstLo,weights2);
+  System.arraycopy(weights1,0,weights,0,2);
+  System.arraycopy(weights2,0,weights,2,2);
+  CallCombine(tess,isect,data,weights,true);
+}

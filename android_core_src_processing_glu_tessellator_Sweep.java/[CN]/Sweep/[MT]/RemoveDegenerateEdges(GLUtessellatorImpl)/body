@@ -1,0 +1,26 @@
+{
+  GLUhalfEdge e, eNext, eLnext;
+  GLUhalfEdge eHead=tess.mesh.eHead;
+  for (e=eHead.next; e != eHead; e=eNext) {
+    eNext=e.next;
+    eLnext=e.Lnext;
+    if (Geom.VertEq(e.Org,e.Sym.Org) && e.Lnext.Lnext != e) {
+      SpliceMergeVertices(tess,eLnext,e);
+      if (!Mesh.__gl_meshDelete(e))       throw new RuntimeException();
+      e=eLnext;
+      eLnext=e.Lnext;
+    }
+    if (eLnext.Lnext == e) {
+      if (eLnext != e) {
+        if (eLnext == eNext || eLnext == eNext.Sym) {
+          eNext=eNext.next;
+        }
+        if (!Mesh.__gl_meshDelete(eLnext))         throw new RuntimeException();
+      }
+      if (e == eNext || e == eNext.Sym) {
+        eNext=eNext.next;
+      }
+      if (!Mesh.__gl_meshDelete(e))       throw new RuntimeException();
+    }
+  }
+}
