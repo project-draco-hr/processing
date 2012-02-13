@@ -47,7 +47,7 @@
  else {
     pgl.glEnable(PGL.GL_DEPTH_TEST);
   }
-  pgl.setDepthFunc(PGL.GL_LEQUAL);
+  pgl.glDepthFunc(PGL.GL_LEQUAL);
   if (hints[DISABLE_DEPTH_MASK]) {
     pgl.glDepthMask(false);
   }
@@ -89,17 +89,19 @@
   noLights();
   lightFalloff(1,0,0);
   lightSpecular(0,0,0);
-  pgl.setFrontFace(PGL.GL_CW);
+  pgl.glFrontFace(PGL.GL_CW);
   pgl.glActiveTexture(PGL.GL_TEXTURE0);
   normalX=normalY=normalZ=0;
   pgl.glClearColor(0,0,0,0);
   pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT | PGL.GL_STENCIL_BUFFER_BIT);
   if (primarySurface) {
-    pgl.beginOnscreenDraw();
+    pgl.beginOnscreenDraw(clearColorBuffer,parent.frameCount);
   }
  else {
-    pgl.beginOffscreenDraw();
+    pgl.beginOffscreenDraw(clearColorBuffer,parent.frameCount);
   }
   drawing=true;
+  clearColorBuffer0=clearColorBuffer;
+  clearColorBuffer=false;
   report("bot beginDraw()");
 }

@@ -95,11 +95,13 @@
   pgl.glClearColor(0,0,0,0);
   pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT | PGL.GL_STENCIL_BUFFER_BIT);
   if (primarySurface) {
-    pgl.beginOnscreenDraw();
+    pgl.beginOnscreenDraw(clearColorBuffer,parent.frameCount);
   }
  else {
-    pgl.beginOffscreenDraw();
+    pgl.beginOffscreenDraw(clearColorBuffer,parent.frameCount);
   }
   drawing=true;
+  clearColorBuffer0=clearColorBuffer;
+  clearColorBuffer=false;
   report("bot beginDraw()");
 }
