@@ -4,10 +4,7 @@
     File cFile=new File(cPath);
     if (!cFile.exists()) {
       try {
-        if (cFile.createNewFile()) {
-          path=cPath;
-        }
- else {
+        if (!cFile.createNewFile()) {
           System.err.println("CoffeeScriptMode: " + "unable to create .coffee file for .pde file at:\n" + cPath);
         }
       }
@@ -15,6 +12,7 @@
         ioe.printStackTrace();
       }
     }
+    path=cPath;
   }
   csEditor=new CoffeeScriptEditor(base,path,state,this);
   return csEditor;
