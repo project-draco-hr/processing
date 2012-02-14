@@ -1,27 +1,13 @@
 {
   statusEmpty();
-  String pString=null;
-  String msg="Set the server port (1024 < port < 65535)";
-  int currentPort=-1;
-  if (jsServer != null)   currentPort=jsServer.getPort();
-  if (currentPort > 0)   pString=JOptionPane.showInputDialog(msg,(currentPort + ""));
- else   pString=JOptionPane.showInputDialog(msg);
-  if (pString == null)   return;
-  int port=-1;
-  try {
-    port=Integer.parseInt(pString);
+  boolean wasRunning=serverRunning();
+  if (wasRunning) {
+    statusNotice("Server was running, changing the port requires a restart.");
+    stopServer();
   }
- catch (  Exception e) {
-    statusError("That number was not okay ..");
-    return;
-  }
-  if (port < 0 || port > 65535) {
-    statusError("That port number is out of range");
-    return;
-  }
-  createJavaScriptServer();
-  if (jsServer != null) {
-    jsServer.setPort(port);
-  }
+  setServerPort();
   saveSketchSettings();
+  if (wasRunning) {
+    startServer(getExportFolder());
+  }
 }

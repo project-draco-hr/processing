@@ -1,0 +1,19 @@
+{
+  if (server != null)   return server;
+  server=new BasicServer(root);
+  File sketchProps=getSketchPropertiesFile();
+  if (sketchProps.exists()) {
+    try {
+      Settings props=new Settings(sketchProps);
+      String portString=props.get(PROP_KEY_SERVER_PORT);
+      if (portString != null && !portString.trim().equals("")) {
+        int port=Integer.parseInt(portString);
+        server.setPort(port);
+      }
+    }
+ catch (    IOException ioe) {
+      statusError(ioe);
+    }
+  }
+  return server;
+}

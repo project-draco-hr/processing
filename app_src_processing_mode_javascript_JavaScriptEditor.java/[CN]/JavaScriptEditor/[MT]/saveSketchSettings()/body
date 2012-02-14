@@ -1,16 +1,6 @@
 {
   statusEmpty();
   File sketchProps=getSketchPropertiesFile();
-  if (!sketchProps.exists()) {
-    try {
-      sketchProps.createNewFile();
-    }
- catch (    IOException ioe) {
-      ioe.printStackTrace();
-      statusError("Unable to create sketch properties file!");
-      return;
-    }
-  }
   Settings settings;
   try {
     settings=new Settings(sketchProps);
@@ -24,9 +14,7 @@
     return;
   }
   settings.set(PROP_KEY_MODE,PROP_VAL_MODE);
-  if (jsServer != null) {
-    int port=jsServer.getPort();
-    if (port > 0)     settings.set(PROP_KEY_SERVER_PORT,(port + ""));
-  }
+  int port=getServerPort();
+  if (port > 0)   settings.set(PROP_KEY_SERVER_PORT,(port + ""));
   settings.save();
 }

@@ -1,0 +1,26 @@
+{
+  if (!handleExportCheckModified()) {
+    return false;
+  }
+ else {
+    toolbar.activate(CoffeeScriptToolbar.EXPORT);
+    try {
+      boolean success=csMode.handleExport(sketch);
+      if (success && openFolder) {
+        File exportFolder=getExportFolder();
+        Base.openFolder(exportFolder);
+        statusNotice("Finished exporting.");
+      }
+ else       if (!success) {
+        return false;
+      }
+    }
+ catch (    Exception e) {
+      statusError(e);
+      toolbar.deactivate(CoffeeScriptToolbar.EXPORT);
+      return false;
+    }
+    toolbar.deactivate(CoffeeScriptToolbar.EXPORT);
+  }
+  return true;
+}

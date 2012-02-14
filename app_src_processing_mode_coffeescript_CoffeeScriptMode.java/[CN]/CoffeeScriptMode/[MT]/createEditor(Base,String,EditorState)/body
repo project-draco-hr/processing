@@ -1,0 +1,21 @@
+{
+  if (path != null && !path.endsWith(".coffee")) {
+    String cPath=path.replace(".pde",".coffee");
+    File cFile=new File(cPath);
+    if (!cFile.exists()) {
+      try {
+        if (cFile.createNewFile()) {
+          path=cPath;
+        }
+ else {
+          System.err.println("CoffeeScriptMode: " + "unable to create .coffee file for .pde file at:\n" + cPath);
+        }
+      }
+ catch (      java.io.IOException ioe) {
+        ioe.printStackTrace();
+      }
+    }
+  }
+  csEditor=new CoffeeScriptEditor(base,path,state,this);
+  return csEditor;
+}

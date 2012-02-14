@@ -1,25 +1,6 @@
 {
   statusEmpty();
   if (!handleExport(false))   return;
-  File serverRoot=getExportFolder();
-  if (jsServer != null && (!jsServer.isRunning() || !jsServer.getRoot().equals(serverRoot))) {
-    jsServer.shutDown();
-    jsServer=null;
-  }
-  if (jsServer == null) {
-    jsServer=createJavaScriptServer();
-    jsServer.start();
-    long ts=System.currentTimeMillis();
-    while (System.currentTimeMillis() - ts < 200) {
-    }
-    while (!jsServer.isRunning()) {
-    }
-    String location=jsServer.getAddress();
-    statusNotice("Server started: " + location);
-    Base.openURL(location);
-  }
- else   if (jsServer.isRunning()) {
-    statusNotice("Server running (" + jsServer.getAddress() + "), reload your browser window.");
-  }
+  startServer(getExportFolder());
   toolbar.activate(JavaScriptToolbar.RUN);
 }
