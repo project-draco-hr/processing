@@ -1,15 +1,4 @@
 {
-  if (pg.parent.online) {
-    GLProfile.initSingleton(false);
-  }
- else {
-    if (PApplet.platform == PConstants.LINUX) {
-      GLProfile.initSingleton(false);
-    }
- else {
-      GLProfile.initSingleton(true);
-    }
-  }
   profile=GLProfile.getMaxFixedFunc();
   if (profile == null) {
     pg.parent.die("Cannot get a valid OpenGL profile");
@@ -22,11 +11,13 @@
  else {
     capabilities.setSampleBuffers(false);
   }
-  AWTGraphicsScreen screen=(AWTGraphicsScreen)AWTGraphicsScreen.createDefault();
-  AWTGraphicsConfiguration config=(AWTGraphicsConfiguration)GraphicsConfigurationFactory.getFactory(AWTGraphicsDevice.class).chooseGraphicsConfiguration(capabilities,capabilities,null,screen);
-  NativeWindow win=NativeWindowFactory.getNativeWindow(pg.parent,config);
-  GLDrawableFactory factory=GLDrawableFactory.getFactory(profile);
-  drawable=factory.createGLDrawable(win);
-  context=drawable.createContext(null);
+  canvas=new GLCanvas(capabilities);
+  canvas.addGLEventListener(new JavaRenderer());
+  pg.parent.add(canvas);
+  canvas.setBounds(0,0,pg.parent.width,pg.parent.height);
+  canvas.addMouseListener(pg.parent);
+  canvas.addMouseMotionListener(pg.parent);
+  canvas.addKeyListener(pg.parent);
+  canvas.addFocusListener(pg.parent);
   initialized=true;
 }
