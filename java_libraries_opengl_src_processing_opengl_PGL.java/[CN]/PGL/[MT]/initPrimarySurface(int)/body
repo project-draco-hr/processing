@@ -11,9 +11,16 @@
  else {
     capabilities.setSampleBuffers(false);
   }
-  windows=GLWindow.create(capabilities);
-  windows.addGLEventListener(new JavaRenderer());
-  canvas=new NewtCanvasAWT(windows);
-  pg.parent.add(canvas);
+  AWTGraphicsScreen screen=(AWTGraphicsScreen)AWTGraphicsScreen.createDefault();
+  AWTGraphicsConfiguration config=(AWTGraphicsConfiguration)GraphicsConfigurationFactory.getFactory(AWTGraphicsDevice.class).chooseGraphicsConfiguration(capabilities,capabilities,null,screen);
+  NativeWindow win=NativeWindowFactory.getNativeWindow(pg.parent.frame,config);
+  window=GLWindow.create(win,capabilities);
+  canvas=new NewtCanvasAWT(window);
+  pg.parent.frame.add(canvas);
+  pg.parent.frame.validate();
+  window.addGLEventListener(new PGLEventListener());
+  animator=new CustomAnimator(window);
+  animator.setThreadName("Processing-OpenGL");
+  animator.start();
   initialized=true;
 }
