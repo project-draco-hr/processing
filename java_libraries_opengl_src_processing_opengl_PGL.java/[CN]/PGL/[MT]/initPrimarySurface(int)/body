@@ -11,13 +11,9 @@
  else {
     capabilities.setSampleBuffers(false);
   }
-  canvas=new GLCanvas(capabilities);
-  canvas.addGLEventListener(new JavaRenderer());
+  windows=GLWindow.create(capabilities);
+  windows.addGLEventListener(new JavaRenderer());
+  canvas=new NewtCanvasAWT(windows);
   pg.parent.add(canvas);
-  canvas.setBounds(0,0,pg.parent.width,pg.parent.height);
-  canvas.addMouseListener(pg.parent);
-  canvas.addMouseMotionListener(pg.parent);
-  canvas.addKeyListener(pg.parent);
-  canvas.addFocusListener(pg.parent);
   initialized=true;
 }
