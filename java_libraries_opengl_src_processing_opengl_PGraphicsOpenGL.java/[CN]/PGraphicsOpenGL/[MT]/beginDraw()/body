@@ -4,7 +4,13 @@
     return;
   }
   if (primarySurface) {
-    pgl.beginOnscreenDraw(clearColorBuffer,parent.frameCount);
+    if (!pgl.initialized) {
+      initPrimary();
+    }
+    if (!pgl.initOnscreenDraw()) {
+      return;
+    }
+    pgl.detainContext();
   }
  else {
     if (!pgl.initialized) {
@@ -18,7 +24,6 @@
  else {
       setFramebuffer(offscreenFramebuffer);
     }
-    pgl.beginOffscreenDraw(clearColorBuffer,parent.frameCount);
   }
   updatePGL();
   if (!glParamsRead) {
@@ -89,7 +94,14 @@
   normalX=normalY=normalZ=0;
   pgl.glClearColor(0,0,0,0);
   pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT | PGL.GL_STENCIL_BUFFER_BIT);
+  if (primarySurface) {
+    pgl.beginOnscreenDraw(clearColorBuffer,parent.frameCount);
+  }
+ else {
+    pgl.beginOffscreenDraw(clearColorBuffer,parent.frameCount);
+  }
   drawing=true;
   clearColorBuffer0=clearColorBuffer;
+  clearColorBuffer=false;
   report("bot beginDraw()");
 }

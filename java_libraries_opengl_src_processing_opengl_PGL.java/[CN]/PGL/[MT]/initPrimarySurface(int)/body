@@ -1,5 +1,15 @@
 {
-  if (printThreadInfo)   System.out.println("Current thread at PGL.initPrimarySurface(): " + Thread.currentThread());
+  if (pg.parent.online) {
+    GLProfile.initSingleton(false);
+  }
+ else {
+    if (PApplet.platform == PConstants.LINUX) {
+      GLProfile.initSingleton(false);
+    }
+ else {
+      GLProfile.initSingleton(true);
+    }
+  }
   profile=GLProfile.getMaxFixedFunc();
   if (profile == null) {
     pg.parent.die("Cannot get a valid OpenGL profile");
@@ -14,51 +24,9 @@
   }
   AWTGraphicsScreen screen=(AWTGraphicsScreen)AWTGraphicsScreen.createDefault();
   AWTGraphicsConfiguration config=(AWTGraphicsConfiguration)GraphicsConfigurationFactory.getFactory(AWTGraphicsDevice.class).chooseGraphicsConfiguration(capabilities,capabilities,null,screen);
-  NativeWindow natWin=NativeWindowFactory.getNativeWindow(pg.parent.frame,config);
-  if (useNewtCanvas) {
-    window=GLWindow.create(natWin,capabilities);
-    newtCanvas=new NewtCanvasAWT(window);
-    newtCanvas.setBounds(0,0,pg.parent.width,pg.parent.height);
-    Insets insets=pg.parent.frame.getInsets();
-    newtCanvas.setLocation(insets.left,insets.top);
-    if (addCanvasToFrame) {
-      pg.parent.frame.add(newtCanvas,pg.parent.frame.getComponentCount() - 1);
-      pg.parent.frame.validate();
-    }
- else {
-      pg.parent.add(newtCanvas,pg.parent.getComponentCount() - 1);
-      pg.parent.validate();
-    }
-    window.addGLEventListener(new PGLListener());
-    animator=new PGLAnimator(window);
-    animator.setThreadName("Processing-OpenGL");
-    animator.start();
-    newtCanvas.addMouseListener(pg.parent);
-    newtCanvas.addMouseMotionListener(pg.parent);
-    newtCanvas.addKeyListener(pg.parent);
-    newtCanvas.addFocusListener(pg.parent);
-  }
- else {
-    awtCanvas=new GLCanvas(capabilities);
-    awtCanvas.setBounds(0,0,pg.parent.width,pg.parent.height);
-    Insets insets=pg.parent.frame.getInsets();
-    awtCanvas.setLocation(insets.left,insets.top);
-    if (addCanvasToFrame) {
-      pg.parent.frame.add(awtCanvas,pg.parent.frame.getComponentCount() - 1);
-      pg.parent.frame.validate();
-    }
- else {
-      pg.parent.add(awtCanvas,pg.parent.getComponentCount() - 1);
-      pg.parent.validate();
-    }
-    awtCanvas.addGLEventListener(new PGLListener());
-    animator=new PGLAnimator(awtCanvas);
-    animator.setThreadName("Processing-OpenGL");
-    animator.start();
-    awtCanvas.addMouseListener(pg.parent);
-    awtCanvas.addMouseMotionListener(pg.parent);
-    awtCanvas.addKeyListener(pg.parent);
-    awtCanvas.addFocusListener(pg.parent);
-  }
+  NativeWindow win=NativeWindowFactory.getNativeWindow(pg.parent,config);
+  GLDrawableFactory factory=GLDrawableFactory.getFactory(profile);
+  drawable=factory.createGLDrawable(win);
+  context=drawable.createContext(null);
   initialized=true;
 }
