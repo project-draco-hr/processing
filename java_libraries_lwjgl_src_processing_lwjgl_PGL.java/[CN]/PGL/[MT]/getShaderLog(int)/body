@@ -1,0 +1,14 @@
+{
+  IntBuffer val=createIntBuffer(1);
+  ARBShaderObjects.glGetObjectParameterARB(id,ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB,val);
+  int length=val.get();
+  if (length <= 1) {
+    return "";
+  }
+  ByteBuffer infoLog=ByteBuffer.allocate(length);
+  val.flip();
+  ARBShaderObjects.glGetInfoLogARB(id,val,infoLog);
+  byte[] infoBytes=new byte[length];
+  infoLog.get(infoBytes);
+  return new String(infoBytes);
+}

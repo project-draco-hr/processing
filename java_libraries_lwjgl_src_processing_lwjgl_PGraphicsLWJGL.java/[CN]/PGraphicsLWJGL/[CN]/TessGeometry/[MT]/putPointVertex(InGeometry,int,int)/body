@@ -1,0 +1,21 @@
+{
+  int index;
+  index=3 * inIdx;
+  float x=in.vertices[index++];
+  float y=in.vertices[index++];
+  float z=in.vertices[index];
+  if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
+    PMatrix3D mm=modelview;
+    index=3 * tessIdx;
+    float[] vert={x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03,x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13,x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23};
+    pointVertices.position(3 * tessIdx);
+    pointVertices.put(vert,0,3);
+  }
+ else {
+    index=3 * tessIdx;
+    pointVertices.position(3 * tessIdx);
+    pointVertices.put(in.vertices,3 * inIdx,3);
+  }
+  pointColors.position(tessIdx);
+  pointColors.put(in.scolors[inIdx]);
+}

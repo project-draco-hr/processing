@@ -1,0 +1,35 @@
+{
+  if (root == this && parent == null) {
+    lastFillVertexOffset=0;
+    lastFillIndexOffset=0;
+    firstFillVertexRel=0;
+    firstFillVertexAbs=0;
+    lastLineVertexOffset=0;
+    lastLineIndexOffset=0;
+    firstLineVertexRel=0;
+    firstLineVertexAbs=0;
+    lastPointVertexOffset=0;
+    lastPointIndexOffset=0;
+    firstPointVertexRel=0;
+    firstPointVertexAbs=0;
+    aggregateImpl();
+    if (0 < tess.fillVertexCount && 0 < tess.fillIndexCount) {
+      initFillBuffers(tess.fillVertexCount,tess.fillIndexCount);
+      fillVertCopyOffset=0;
+      fillIndCopyOffset=0;
+      copyFillGeometryToRoot();
+    }
+    if (0 < tess.lineVertexCount && 0 < tess.lineIndexCount) {
+      initLineBuffers(tess.lineVertexCount,tess.lineIndexCount);
+      lineVertCopyOffset=0;
+      lineIndCopyOffset=0;
+      copyLineGeometryToRoot();
+    }
+    if (0 < tess.pointVertexCount && 0 < tess.pointIndexCount) {
+      initPointBuffers(tess.pointVertexCount,tess.pointIndexCount);
+      pointVertCopyOffset=0;
+      pointIndCopyOffset=0;
+      copyPointGeometryToRoot();
+    }
+  }
+}

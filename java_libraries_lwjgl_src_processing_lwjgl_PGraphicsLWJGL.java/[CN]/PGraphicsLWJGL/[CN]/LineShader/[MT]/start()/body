@@ -1,0 +1,17 @@
+{
+  super.start();
+  if (-1 < inVertexLoc)   pgl.glEnableVertexAttribArray(inVertexLoc);
+  if (-1 < inColorLoc)   pgl.glEnableVertexAttribArray(inColorLoc);
+  if (-1 < inDirWidthLoc)   pgl.glEnableVertexAttribArray(inDirWidthLoc);
+  updateGLProjection();
+  set4x4MatUniform(projectionMatrixLoc,glProjection);
+  updateGLModelview();
+  set4x4MatUniform(modelviewMatrixLoc,glModelview);
+  set4FloatUniform(viewportLoc,viewport.get(0),viewport.get(1),viewport.get(2),viewport.get(3));
+  if (hints[ENABLE_PERSPECTIVE_CORRECTED_LINES]) {
+    setIntUniform(perspectiveLoc,1);
+  }
+ else {
+    setIntUniform(perspectiveLoc,0);
+  }
+}

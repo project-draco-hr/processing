@@ -1,0 +1,22 @@
+{
+  flush();
+  PImage newbie=parent.createImage(w,h,ARGB);
+  IntBuffer newbieBuffer=IntBuffer.allocate(w * h);
+  boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
+  if (notCurrent) {
+    pushFramebuffer();
+    setFramebuffer(offscreenFramebuffer);
+  }
+  newbieBuffer.rewind();
+  if (primarySurface) {
+    pgl.setReadBuffer(PGL.GL_FRONT);
+  }
+  pgl.glReadPixels(x,height - y - h,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,newbieBuffer);
+  if (notCurrent) {
+    popFramebuffer();
+  }
+  newbie.loadPixels();
+  newbieBuffer.get(newbie.pixels);
+  nativeToJavaARGB(newbie);
+  return newbie;
+}

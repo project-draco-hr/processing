@@ -1,0 +1,24 @@
+{
+  flush();
+  PTexture tex=getTexture(source);
+  if (tex != null) {
+    int w=source.width;
+    int h=source.height;
+    boolean outsideDraw=primarySurface && !drawing;
+    if (outsideDraw) {
+      beginGLOp();
+    }
+    boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
+    if (notCurrent) {
+      pushFramebuffer();
+      setFramebuffer(offscreenFramebuffer);
+    }
+    drawTexture(tex,0,0,w,h,x,height - y,w,-h);
+    if (notCurrent) {
+      popFramebuffer();
+    }
+    if (outsideDraw) {
+      endGLOp();
+    }
+  }
+}

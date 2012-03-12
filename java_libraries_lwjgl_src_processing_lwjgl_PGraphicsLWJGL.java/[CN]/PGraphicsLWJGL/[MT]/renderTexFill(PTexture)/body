@@ -1,0 +1,27 @@
+{
+  if (!fillVBOsCreated) {
+    createFillBuffers();
+    fillVBOsCreated=true;
+  }
+  updateFillBuffers(lights,true);
+  FillShader shader=getFillShader(lights,true);
+  shader.start();
+  shader.setVertexAttribute(glFillVertexBufferID,3,PGL.GL_FLOAT,0,0);
+  shader.setColorAttribute(glFillColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,0);
+  shader.setTexCoordAttribute(glFillTexCoordBufferID,2,PGL.GL_FLOAT,0,0);
+  shader.setTexture(tex);
+  if (lights) {
+    shader.setNormalAttribute(glFillNormalBufferID,3,PGL.GL_FLOAT,0,0);
+    shader.setAmbientAttribute(glFillAmbientBufferID,4,PGL.GL_UNSIGNED_BYTE,0,0);
+    shader.setSpecularAttribute(glFillSpecularBufferID,4,PGL.GL_UNSIGNED_BYTE,0,0);
+    shader.setEmissiveAttribute(glFillEmissiveBufferID,4,PGL.GL_UNSIGNED_BYTE,0,0);
+    shader.setShininessAttribute(glFillShininessBufferID,1,PGL.GL_FLOAT,0,0);
+  }
+  int size=tessGeo.fillIndexCount;
+  int sizex=size * PGL.SIZEOF_INDEX;
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glFillIndexBufferID);
+  pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,sizex,tessGeo.fillIndices,vboMode);
+  pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.INDEX_TYPE,0);
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+  shader.stop();
+}

@@ -1,0 +1,68 @@
+{
+  flush();
+  if ((pixels == null) || (pixels.length != width * height)) {
+    pixels=new int[width * height];
+    pixelBuffer=IntBuffer.allocate(pixels.length);
+  }
+  boolean outsideDraw=primarySurface && !drawing;
+  if (outsideDraw) {
+    beginGLOp();
+  }
+  boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
+  if (notCurrent) {
+    pushFramebuffer();
+    setFramebuffer(offscreenFramebuffer);
+  }
+  pixelBuffer.rewind();
+  if (primarySurface) {
+    pgl.setReadBuffer(PGL.GL_FRONT);
+  }
+  pgl.glReadPixels(0,0,width,height,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,pixelBuffer);
+  if (notCurrent) {
+    popFramebuffer();
+  }
+  pixelBuffer.get(pixels);
+  int index=0;
+  int yindex=(height - 1) * width;
+  for (int y=0; y < height / 2; y++) {
+    if (BIG_ENDIAN) {
+      for (int x=0; x < width; x++) {
+        int temp=pixels[index];
+        pixels[index]=0xff000000 | ((pixels[yindex] >> 8) & 0x00ffffff);
+        pixels[yindex]=0xff000000 | ((temp >> 8) & 0x00ffffff);
+        index++;
+        yindex++;
+      }
+    }
+ else {
+      for (int x=0; x < width; x++) {
+        int temp=pixels[index];
+        pixels[index]=0xff000000 | ((pixels[yindex] << 16) & 0xff0000) | (pixels[yindex] & 0xff00)| ((pixels[yindex] >> 16) & 0xff);
+        pixels[yindex]=0xff000000 | ((temp << 16) & 0xff0000) | (temp & 0xff00)| ((temp >> 16) & 0xff);
+        index++;
+        yindex++;
+      }
+    }
+    yindex-=width * 2;
+  }
+  if ((height % 2) == 1) {
+    index=(height / 2) * width;
+    if (BIG_ENDIAN) {
+      for (int x=0; x < width; x++) {
+        pixels[index]=0xff000000 | ((pixels[index] >> 8) & 0x00ffffff);
+      }
+    }
+ else {
+      for (int x=0; x < width; x++) {
+        pixels[index]=0xff000000 | ((pixels[index] << 16) & 0xff0000) | (pixels[index] & 0xff00)| ((pixels[index] >> 16) & 0xff);
+      }
+    }
+  }
+  if (primarySurface) {
+    loadTextureImpl(POINT);
+    pixelsToTexture();
+  }
+  if (outsideDraw) {
+    endGLOp();
+  }
+}

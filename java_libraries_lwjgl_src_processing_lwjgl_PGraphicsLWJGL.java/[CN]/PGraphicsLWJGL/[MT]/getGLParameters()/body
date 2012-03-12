@@ -1,0 +1,25 @@
+{
+  OPENGL_VENDOR=pgl.glGetString(PGL.GL_VENDOR);
+  OPENGL_RENDERER=pgl.glGetString(PGL.GL_RENDERER);
+  OPENGL_VERSION=pgl.glGetString(PGL.GL_VERSION);
+  OPENGL_EXTENSIONS=pgl.glGetString(PGL.GL_EXTENSIONS);
+  npotTexSupported=-1 < OPENGL_EXTENSIONS.indexOf("texture_non_power_of_two");
+  mipmapGeneration=-1 < OPENGL_EXTENSIONS.indexOf("generate_mipmap");
+  vboSupported=-1 < OPENGL_EXTENSIONS.indexOf("vertex_buffer_object");
+  fboSupported=-1 < OPENGL_EXTENSIONS.indexOf("framebuffer_object");
+  fboMultisampleSupported=-1 < OPENGL_EXTENSIONS.indexOf("framebuffer_multisample");
+  try {
+    pgl.glBlendEquation(PGL.GL_FUNC_ADD);
+    blendEqSupported=true;
+  }
+ catch (  UnsupportedOperationException e) {
+    blendEqSupported=false;
+  }
+  pgl.glGetIntegerv(PGL.GL_MAX_TEXTURE_SIZE,getBuf);
+  maxTextureSize=getBuf.get(0);
+  pgl.glGetIntegerv(PGL.GL_ALIASED_LINE_WIDTH_RANGE,getBuf);
+  maxLineWidth=getBuf.get(0);
+  pgl.glGetIntegerv(PGL.GL_ALIASED_POINT_SIZE_RANGE,getBuf);
+  maxPointSize=getBuf.get(0);
+  glParamsRead=true;
+}

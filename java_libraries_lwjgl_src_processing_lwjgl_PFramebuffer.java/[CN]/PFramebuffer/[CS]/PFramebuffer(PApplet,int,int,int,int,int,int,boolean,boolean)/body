@@ -1,0 +1,53 @@
+{
+  this.parent=parent;
+  pg=(PGraphicsLWJGL)parent.g;
+  pgl=pg.pgl;
+  glFboID=0;
+  glDepthBufferID=0;
+  glStencilBufferID=0;
+  glDepthStencilBufferID=0;
+  glColorBufferMultisampleID=0;
+  fboMode=PGraphicsLWJGL.fboSupported;
+  if (screen) {
+    depthBits=stencilBits=samples=colorBuffers=0;
+  }
+  width=w;
+  height=h;
+  if (1 < samples) {
+    multisample=true;
+    nsamples=samples;
+  }
+ else {
+    multisample=false;
+    nsamples=1;
+  }
+  numColorBuffers=colorBuffers;
+  colorBufferTex=new PTexture[numColorBuffers];
+  for (int i=0; i < numColorBuffers; i++) {
+    colorBufferTex[i]=null;
+  }
+  if (depthBits < 1 && stencilBits < 1) {
+    this.depthBits=0;
+    this.stencilBits=0;
+    this.combinedDepthStencil=false;
+  }
+ else {
+    if (combinedDepthStencil) {
+      this.depthBits=24;
+      this.stencilBits=8;
+      this.combinedDepthStencil=true;
+    }
+ else {
+      this.depthBits=depthBits;
+      this.stencilBits=stencilBits;
+      this.combinedDepthStencil=false;
+    }
+  }
+  screenFb=screen;
+  allocate();
+  noDepth=false;
+  pixelBuffer=null;
+  if (!screenFb && !fboMode) {
+    backupTexture=new PTexture(parent,width,height,new PTexture.Parameters(ARGB,POINT));
+  }
+}

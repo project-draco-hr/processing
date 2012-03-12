@@ -1,0 +1,35 @@
+{
+  int index;
+  float[] v0=new float[3];
+  float[] v1=new float[3];
+  float[] v2=new float[3];
+  fillVertices.position(3 * i0);
+  fillVertices.get(v0,0,3);
+  fillVertices.position(3 * i1);
+  fillVertices.get(v1,0,3);
+  fillVertices.position(3 * i2);
+  fillVertices.get(v2,0,3);
+  float v12x=v2[0] - v1[0];
+  float v12y=v2[1] - v1[1];
+  float v12z=v2[2] - v1[2];
+  float v10x=v0[0] - v1[0];
+  float v10y=v0[1] - v1[1];
+  float v10z=v0[2] - v1[2];
+  float[] normal=new float[3];
+  normal[0]=v12y * v10z - v10y * v12z;
+  normal[1]=v12z * v10x - v10z * v12x;
+  normal[2]=v12x * v10y - v10x * v12y;
+  float d=PApplet.sqrt(normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2]);
+  normal[0]/=d;
+  normal[1]/=d;
+  normal[2]/=d;
+  index=3 * i0;
+  fillNormals.position(3 * i0);
+  fillNormals.put(normal);
+  index=3 * i1;
+  fillNormals.position(3 * i1);
+  fillNormals.put(normal);
+  index=3 * i2;
+  fillNormals.position(3 * i2);
+  fillNormals.put(normal);
+}

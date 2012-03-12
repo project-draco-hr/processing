@@ -1,0 +1,13 @@
+{
+  Set<Integer> finalized=new HashSet<Integer>();
+  for (  Integer id : glFrameBuffers.keySet()) {
+    if (glFrameBuffers.get(id)) {
+      finalized.add(id);
+      getBuf.put(0,id.intValue());
+      pgl.glDeleteFramebuffers(1,getBuf);
+    }
+  }
+  for (  Integer id : finalized) {
+    glFrameBuffers.remove(id);
+  }
+}

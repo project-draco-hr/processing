@@ -1,0 +1,19 @@
+{
+  flush();
+  boolean outsideDraw=primarySurface && !drawing;
+  if (outsideDraw) {
+    beginGLOp();
+  }
+  boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
+  if (notCurrent) {
+    pushFramebuffer();
+    setFramebuffer(offscreenFramebuffer);
+  }
+  drawTexture();
+  if (notCurrent) {
+    popFramebuffer();
+  }
+  if (outsideDraw) {
+    endGLOp();
+  }
+}

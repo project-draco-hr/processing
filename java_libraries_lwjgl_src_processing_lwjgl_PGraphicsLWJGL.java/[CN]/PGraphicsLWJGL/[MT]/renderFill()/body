@@ -1,0 +1,32 @@
+{
+  if (!fillVBOsCreated) {
+    createFillBuffers();
+    fillVBOsCreated=true;
+  }
+  updateFillBuffers(lights,texCache.hasTexture);
+  texCache.beginRender();
+  for (int i=0; i < texCache.count; i++) {
+    PTexture tex=texCache.getTexture(i);
+    FillShader shader=getFillShader(lights,tex != null);
+    shader.start();
+    shader.setVertexAttribute(glFillVertexBufferID,3,PGL.GL_FLOAT,0,0);
+    shader.setColorAttribute(glFillColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,0);
+    if (lights) {
+      shader.setNormalAttribute(glFillNormalBufferID,3,PGL.GL_FLOAT,0,0);
+      shader.setAmbientAttribute(glFillAmbientBufferID,4,PGL.GL_UNSIGNED_BYTE,0,0);
+      shader.setSpecularAttribute(glFillSpecularBufferID,4,PGL.GL_UNSIGNED_BYTE,0,0);
+      shader.setEmissiveAttribute(glFillEmissiveBufferID,4,PGL.GL_UNSIGNED_BYTE,0,0);
+      shader.setShininessAttribute(glFillShininessBufferID,1,PGL.GL_FLOAT,0,0);
+    }
+    if (tex != null) {
+      shader.setTexCoordAttribute(glFillTexCoordBufferID,2,PGL.GL_FLOAT,0,0);
+      shader.setTexture(tex);
+    }
+    int offset=texCache.firstIndex[i];
+    int size=texCache.lastIndex[i] - texCache.firstIndex[i] + 1;
+    pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.INDEX_TYPE,offset * PGL.SIZEOF_INDEX);
+    shader.stop();
+  }
+  texCache.endRender();
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+}

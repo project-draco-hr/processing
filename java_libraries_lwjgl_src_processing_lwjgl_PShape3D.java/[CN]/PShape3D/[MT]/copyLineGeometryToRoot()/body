@@ -1,0 +1,16 @@
+{
+  if (family == GROUP) {
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.copyLineGeometryToRoot();
+    }
+  }
+ else {
+    if (hasLines) {
+      root.copyLineGeometry(root.lineVertCopyOffset,tess.lineVertexCount,tess.lineVertices,tess.lineColors,tess.lineDirWidths);
+      root.lineVertCopyOffset+=tess.lineVertexCount;
+      root.copyLineIndices(root.lineIndCopyOffset,tess.lineIndexCount,tess.lineIndices);
+      root.lineIndCopyOffset+=tess.lineIndexCount;
+    }
+  }
+}

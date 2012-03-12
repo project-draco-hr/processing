@@ -1,0 +1,26 @@
+{
+  release();
+  if (screenFb) {
+    glFboID=0;
+  }
+ else   if (fboMode) {
+    glFboID=pg.createFrameBufferObject();
+  }
+ else {
+    glFboID=0;
+  }
+  if (multisample) {
+    createColorBufferMultisample();
+  }
+  if (combinedDepthStencil) {
+    createCombinedDepthStencilBuffer();
+  }
+ else {
+    if (0 < depthBits) {
+      createDepthBuffer();
+    }
+    if (0 < stencilBits) {
+      createStencilBuffer();
+    }
+  }
+}

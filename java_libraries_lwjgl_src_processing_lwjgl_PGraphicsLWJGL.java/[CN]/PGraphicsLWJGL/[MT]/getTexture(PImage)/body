@@ -1,0 +1,22 @@
+{
+  PTexture tex=(PTexture)img.getCache(pg);
+  if (tex == null) {
+    tex=addTexture(img);
+  }
+ else {
+    if (!pgl.contextIsCurrent(tex.context)) {
+      tex.glID=0;
+      tex=addTexture(img);
+    }
+    if (img.isModified()) {
+      if (img.width != tex.width || img.height != tex.height) {
+        tex.init(img.width,img.height);
+      }
+      updateTexture(img,tex);
+    }
+    if (tex.hasBuffers()) {
+      tex.bufferUpdate();
+    }
+  }
+  return tex;
+}

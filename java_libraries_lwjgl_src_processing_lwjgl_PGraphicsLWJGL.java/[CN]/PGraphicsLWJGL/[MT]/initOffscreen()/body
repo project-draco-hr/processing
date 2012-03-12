@@ -1,0 +1,25 @@
+{
+  pg=(PGraphicsLWJGL)parent.g;
+  pgl.initOffscreenSurface(pg.pgl);
+  updatePGL();
+  loadTextureImpl(BILINEAR);
+  if (offscreenFramebuffer != null) {
+    offscreenFramebuffer=null;
+  }
+  if (offscreenFramebufferMultisample != null) {
+    offscreenFramebufferMultisample=null;
+  }
+  if (PGraphicsLWJGL.fboMultisampleSupported && 1 < antialias) {
+    int nsamples=antialias;
+    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,nsamples,0,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
+    offscreenFramebufferMultisample.clear();
+    offscreenMultisample=true;
+    offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
+  }
+ else {
+    offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
+    offscreenMultisample=false;
+  }
+  offscreenFramebuffer.setColorBuffer(texture);
+  offscreenFramebuffer.clear();
+}

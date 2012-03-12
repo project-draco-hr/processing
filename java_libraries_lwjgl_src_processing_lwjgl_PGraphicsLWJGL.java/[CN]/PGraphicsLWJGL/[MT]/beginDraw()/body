@@ -1,0 +1,107 @@
+{
+  if (drawing) {
+    showWarning("P3D: Already called beginDraw().");
+    return;
+  }
+  if (primarySurface) {
+    if (!pgl.initialized) {
+      initPrimary();
+    }
+    if (!pgl.initOnscreenDraw()) {
+      return;
+    }
+    pgl.detainContext();
+  }
+ else {
+    if (!pgl.initialized) {
+      initOffscreen();
+    }
+    pushFramebuffer();
+    if (offscreenMultisample) {
+      setFramebuffer(offscreenFramebufferMultisample);
+      pgl.setDrawBuffer(0);
+    }
+ else {
+      setFramebuffer(offscreenFramebuffer);
+    }
+  }
+  updatePGL();
+  if (!glParamsRead) {
+    getGLParameters();
+  }
+  if (!settingsInited) {
+    defaultSettings();
+  }
+  report("top beginDraw()");
+  if (!primarySurface) {
+    pg.saveGLState();
+  }
+  inGeo.reset();
+  tessGeo.reset();
+  texCache.reset();
+  super.noTexture();
+  setDefaultBlend();
+  if (hints[DISABLE_DEPTH_TEST]) {
+    pgl.glDisable(PGL.GL_DEPTH_TEST);
+  }
+ else {
+    pgl.glEnable(PGL.GL_DEPTH_TEST);
+  }
+  pgl.glDepthFunc(PGL.GL_LEQUAL);
+  if (hints[DISABLE_DEPTH_MASK]) {
+    pgl.glDepthMask(false);
+  }
+ else {
+    pgl.glDepthMask(true);
+  }
+  if (hints[ENABLE_ACCURATE_2D]) {
+    flushMode=FLUSH_CONTINUOUSLY;
+  }
+ else {
+    flushMode=FLUSH_WHEN_FULL;
+  }
+  pgl.glGetIntegerv(PGL.GL_VIEWPORT,savedViewport);
+  viewport.put(0,0);
+  viewport.put(1,0);
+  viewport.put(2,width);
+  viewport.put(3,height);
+  pgl.glViewport(viewport.get(0),viewport.get(1),viewport.get(2),viewport.get(3));
+  if (resized) {
+    background(0);
+    if (texture != null) {
+      this.removeCache(pg);
+      this.removeParams(pg);
+      texture=null;
+      loadTexture();
+    }
+    resized=false;
+  }
+  if (sizeChanged) {
+    perspective();
+    camera();
+    sizeChanged=false;
+  }
+ else {
+    modelview.set(camera);
+    modelviewInv.set(cameraInv);
+    calcProjmodelview();
+  }
+  noLights();
+  lightFalloff(1,0,0);
+  lightSpecular(0,0,0);
+  pgl.glFrontFace(PGL.GL_CW);
+  pgl.glActiveTexture(PGL.GL_TEXTURE0);
+  normalX=normalY=normalZ=0;
+  pgl.glClearColor(0,0,0,0);
+  pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT | PGL.GL_STENCIL_BUFFER_BIT);
+  if (primarySurface) {
+    pgl.beginOnscreenDraw(clearColorBuffer,parent.frameCount);
+  }
+ else {
+    pgl.beginOffscreenDraw(clearColorBuffer,parent.frameCount);
+  }
+  drawing=true;
+  clearColorBuffer0=clearColorBuffer;
+  clearColorBuffer=false;
+  report("bot beginDraw()");
+}

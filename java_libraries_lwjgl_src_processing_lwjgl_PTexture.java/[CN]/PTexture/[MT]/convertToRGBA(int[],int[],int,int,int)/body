@@ -1,0 +1,44 @@
+{
+  if (PGraphicsLWJGL.BIG_ENDIAN) {
+switch (arrayFormat) {
+case ALPHA:
+      for (int i=0; i < intArray.length; i++) {
+        tIntArray[i]=0xFFFFFF00 | intArray[i];
+      }
+    break;
+case RGB:
+  for (int i=0; i < intArray.length; i++) {
+    int pixel=intArray[i];
+    tIntArray[i]=(pixel << 8) | 0xFF;
+  }
+break;
+case ARGB:
+for (int i=0; i < intArray.length; i++) {
+int pixel=intArray[i];
+tIntArray[i]=(pixel << 8) | ((pixel >> 24) & 0xFF);
+}
+break;
+}
+}
+ else {
+switch (arrayFormat) {
+case ALPHA:
+for (int i=0; i < intArray.length; i++) {
+tIntArray[i]=(intArray[i] << 24) | 0x00FFFFFF;
+}
+break;
+case RGB:
+for (int i=0; i < intArray.length; i++) {
+int pixel=intArray[i];
+tIntArray[i]=0xFF000000 | ((pixel & 0xFF) << 16) | ((pixel & 0xFF0000) >> 16)| (pixel & 0x0000FF00);
+}
+break;
+case ARGB:
+for (int i=0; i < intArray.length; i++) {
+int pixel=intArray[i];
+tIntArray[i]=((pixel & 0xFF) << 16) | ((pixel & 0xFF0000) >> 16) | (pixel & 0xFF00FF00);
+}
+break;
+}
+}
+}

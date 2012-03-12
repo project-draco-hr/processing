@@ -1,0 +1,47 @@
+{
+  boolean oldValue=hints[PApplet.abs(which)];
+  super.hint(which);
+  boolean newValue=hints[PApplet.abs(which)];
+  if (oldValue == newValue) {
+    return;
+  }
+  if (which == DISABLE_DEPTH_TEST) {
+    flush();
+    pgl.glDisable(PGL.GL_DEPTH_TEST);
+    pgl.glClearColor(0,0,0,0);
+    pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT);
+  }
+ else   if (which == ENABLE_DEPTH_TEST) {
+    flush();
+    pgl.glEnable(PGL.GL_DEPTH_TEST);
+  }
+ else   if (which == DISABLE_DEPTH_MASK) {
+    flush();
+    pgl.glDepthMask(false);
+  }
+ else   if (which == ENABLE_DEPTH_MASK) {
+    flush();
+    pgl.glDepthMask(true);
+  }
+ else   if (which == DISABLE_ACCURATE_2D) {
+    flush();
+    setFlushMode(FLUSH_WHEN_FULL);
+  }
+ else   if (which == ENABLE_ACCURATE_2D) {
+    flush();
+    setFlushMode(FLUSH_CONTINUOUSLY);
+  }
+ else   if (which == DISABLE_TEXTURE_CACHE) {
+    flush();
+  }
+ else   if (which == DISABLE_PERSPECTIVE_CORRECTED_LINES) {
+    if (0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount) {
+      flush();
+    }
+  }
+ else   if (which == ENABLE_PERSPECTIVE_CORRECTED_LINES) {
+    if (0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount) {
+      flush();
+    }
+  }
+}

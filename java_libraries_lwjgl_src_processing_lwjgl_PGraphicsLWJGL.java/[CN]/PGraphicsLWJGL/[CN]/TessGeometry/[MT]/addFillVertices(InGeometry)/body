@@ -1,0 +1,55 @@
+{
+  int index;
+  int i0=in.firstVertex;
+  int i1=in.lastVertex;
+  int nvert=i1 - i0 + 1;
+  addFillVertices(nvert);
+  float[] vert=new float[3];
+  float[] norm=new float[3];
+  if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
+    PMatrix3D mm=modelview;
+    PMatrix3D nm=modelviewInv;
+    for (int i=0; i < nvert; i++) {
+      int inIdx=i0 + i;
+      int tessIdx=firstFillVertex + i;
+      index=3 * inIdx;
+      float x=in.vertices[index++];
+      float y=in.vertices[index++];
+      float z=in.vertices[index];
+      index=3 * inIdx;
+      float nx=in.normals[index++];
+      float ny=in.normals[index++];
+      float nz=in.normals[index];
+      index=3 * tessIdx;
+      vert[0]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
+      vert[1]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
+      vert[2]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
+      index=3 * tessIdx;
+      norm[0]=nx * nm.m00 + ny * nm.m10 + nz * nm.m20;
+      norm[1]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
+      norm[2]=nx * nm.m02 + ny * nm.m12 + nz * nm.m22;
+      fillVertices.position(3 * tessIdx);
+      fillVertices.put(vert,0,3);
+      fillNormals.position(3 * tessIdx);
+      fillNormals.put(norm,0,3);
+    }
+  }
+ else {
+    fillVertices.position(3 * firstFillVertex);
+    fillVertices.put(in.vertices,3 * i0,3 * nvert);
+    fillNormals.position(3 * firstFillVertex);
+    fillNormals.put(in.normals,3 * i0,3 * nvert);
+  }
+  fillColors.position(firstFillVertex);
+  fillColors.put(in.colors,i0,nvert);
+  fillTexcoords.position(2 * firstFillVertex);
+  fillTexcoords.put(in.texcoords,2 * i0,2 * nvert);
+  fillAmbient.position(firstFillVertex);
+  fillAmbient.put(in.ambient,i0,nvert);
+  fillSpecular.position(firstFillVertex);
+  fillSpecular.put(in.specular,i0,nvert);
+  fillEmissive.position(firstFillVertex);
+  fillEmissive.put(in.emissive,i0,nvert);
+  fillShininess.position(firstFillVertex);
+  fillShininess.put(in.shininess,i0,nvert);
+}

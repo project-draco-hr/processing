@@ -1,0 +1,33 @@
+{
+  flush();
+  if (getsetBuffer == null) {
+    getsetBuffer=IntBuffer.allocate(1);
+  }
+  boolean outsideDraw=primarySurface && !drawing;
+  if (outsideDraw) {
+    beginGLOp();
+  }
+  boolean notCurrent=!primarySurface && offscreenFramebuffer != currentFramebuffer;
+  if (notCurrent) {
+    pushFramebuffer();
+    setFramebuffer(offscreenFramebuffer);
+  }
+  getsetBuffer.rewind();
+  if (primarySurface) {
+    pgl.setReadBuffer(PGL.GL_FRONT);
+  }
+  pgl.glReadPixels(x,height - y - 1,1,1,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,getsetBuffer);
+  if (notCurrent) {
+    popFramebuffer();
+  }
+  int getset=getsetBuffer.get(0);
+  if (outsideDraw) {
+    endGLOp();
+  }
+  if (BIG_ENDIAN) {
+    return 0xff000000 | ((getset >> 8) & 0x00ffffff);
+  }
+ else {
+    return 0xff000000 | ((getset << 16) & 0xff0000) | (getset & 0xff00)| ((getset >> 16) & 0xff);
+  }
+}
