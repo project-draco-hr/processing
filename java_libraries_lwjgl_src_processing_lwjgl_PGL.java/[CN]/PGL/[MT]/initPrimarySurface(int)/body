@@ -1,10 +1,11 @@
 {
   canvas=new Canvas();
-  pg.parent.add(canvas);
   canvas.setBounds(0,0,pg.parent.width,pg.parent.height);
   canvas.setFocusable(true);
   canvas.requestFocus();
   canvas.setIgnoreRepaint(true);
+  pg.parent.setLayout(new BorderLayout());
+  pg.parent.add(canvas,BorderLayout.CENTER);
   try {
     Display.setParent(canvas);
     PixelFormat format=new PixelFormat(32,0,24,8,antialias);
@@ -14,5 +15,9 @@
  catch (  LWJGLException e) {
     e.printStackTrace();
   }
+  canvas.addMouseListener(pg.parent);
+  canvas.addMouseMotionListener(pg.parent);
+  canvas.addKeyListener(pg.parent);
+  canvas.addFocusListener(pg.parent);
   initialized=true;
 }
