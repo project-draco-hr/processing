@@ -10,20 +10,16 @@
   float z1=in.vertices[index];
   if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
     PMatrix3D mm=modelview;
-    index=3 * tessIdx;
     float[] vert={x0 * mm.m00 + y0 * mm.m01 + z0 * mm.m02 + mm.m03,x0 * mm.m10 + y0 * mm.m11 + z0 * mm.m12 + mm.m13,x0 * mm.m20 + y0 * mm.m21 + z0 * mm.m22 + mm.m23};
-    index=4 * tessIdx;
     float[] attr={x1 * mm.m00 + y1 * mm.m01 + z1 * mm.m02 + mm.m03,x1 * mm.m10 + y1 * mm.m11 + z1 * mm.m12 + mm.m13,x1 * mm.m20 + y1 * mm.m21 + z1 * mm.m22 + mm.m23};
     lineVertices.position(3 * tessIdx);
-    lineVertices.put(vert,0,3);
+    lineVertices.put(vert);
     lineVertices.position(4 * tessIdx);
-    lineVertices.put(attr,0,3);
+    lineVertices.put(attr);
   }
  else {
-    index=3 * tessIdx;
     lineVertices.position(3 * tessIdx);
     lineVertices.put(in.vertices,3 * inIdx0,3);
-    index=4 * tessIdx;
     lineVertices.position(4 * tessIdx);
     lineVertices.put(in.vertices,3 * inIdx1,3);
   }

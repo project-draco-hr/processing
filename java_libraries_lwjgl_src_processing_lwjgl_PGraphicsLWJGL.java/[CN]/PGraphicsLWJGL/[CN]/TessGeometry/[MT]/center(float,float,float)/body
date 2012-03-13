@@ -3,30 +3,23 @@
   float cx0=0;
   float cy0=0;
   float cz0=0;
-  float[] vert=new float[3];
   for (int i=0; i < fillVertexCount; i++) {
     index=3 * i;
-    fillVertices.position(3 * i);
-    fillVertices.get(vert,0,3);
-    cx0+=vert[0];
-    cy0+=vert[1];
-    cz0+=vert[2];
+    cx0+=fillVertices.get(index++);
+    cy0+=fillVertices.get(index++);
+    cz0+=fillVertices.get(index);
   }
   for (int i=0; i < lineVertexCount; i++) {
     index=3 * i;
-    lineVertices.position(3 * i);
-    lineVertices.get(vert,0,3);
-    cx0+=vert[0];
-    cy0+=vert[1];
-    cz0+=vert[2];
+    cx0+=lineVertices.get(index++);
+    cy0+=lineVertices.get(index++);
+    cz0+=lineVertices.get(index);
   }
   for (int i=0; i < pointVertexCount; i++) {
     index=3 * i;
-    pointVertices.position(3 * i);
-    pointVertices.get(vert,0,3);
-    cx0+=vert[0];
-    cy0+=vert[1];
-    cz0+=vert[2];
+    cx0+=pointVertices.get(index++);
+    cy0+=pointVertices.get(index++);
+    cz0+=pointVertices.get(index);
   }
   int nt=fillVertexCount + lineVertexCount + pointVertexCount;
   if (0 < nt) {
@@ -34,18 +27,13 @@
     cy0/=nt;
     cz0/=nt;
   }
-  float tx=cx - cx0;
-  float ty=cy - cy0;
-  float tz=cz - cz0;
-  vert[0]=tx;
-  vert[1]=ty;
-  vert[2]=tz;
+  float[] tvec={cx - cx0,cy - cy0,cz - cz0};
   if (0 < fillVertexCount) {
     for (int i=0; i < fillVertexCount; i++) {
       index=3 * i;
       for (int j=0; j < 3; j++) {
         fillVertices.position(index + j);
-        fillVertices.put(fillVertices.get(index + j) + vert[j]);
+        fillVertices.put(fillVertices.get(index + j) + tvec[j]);
       }
     }
   }
@@ -54,12 +42,12 @@
       index=3 * i;
       for (int j=0; j < 3; j++) {
         lineVertices.position(index + j);
-        lineVertices.put(lineVertices.get(index + j) + vert[j]);
+        lineVertices.put(lineVertices.get(index + j) + tvec[j]);
       }
       index=4 * i;
       for (int j=0; j < 3; j++) {
         lineDirWidths.position(index + j);
-        lineDirWidths.put(lineDirWidths.get(index + j) + vert[j]);
+        lineDirWidths.put(lineDirWidths.get(index + j) + tvec[j]);
       }
     }
   }
@@ -68,7 +56,7 @@
       index=3 * i;
       for (int j=0; j < 3; j++) {
         pointVertices.position(index + j);
-        pointVertices.put(pointVertices.get(index + j) + vert[j]);
+        pointVertices.put(pointVertices.get(index + j) + tvec[j]);
       }
     }
   }

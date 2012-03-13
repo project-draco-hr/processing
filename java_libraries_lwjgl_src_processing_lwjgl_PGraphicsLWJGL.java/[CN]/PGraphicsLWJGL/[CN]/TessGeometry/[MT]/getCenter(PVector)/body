@@ -1,29 +1,26 @@
 {
   int index;
-  float[] vert=new float[3];
   for (int i=0; i < fillVertexCount; i++) {
     index=3 * i;
-    fillVertices.position(3 * i);
-    fillVertices.get(vert,0,3);
-    v.x+=vert[0];
-    v.y+=vert[1];
-    v.z+=vert[2];
+    v.x+=fillVertices.get(index++);
+    v.y+=fillVertices.get(index++);
+    v.z+=fillVertices.get(index);
   }
   for (int i=0; i < lineVertexCount; i++) {
     index=3 * i;
-    lineVertices.position(3 * i);
-    lineVertices.get(vert,0,3);
-    v.x+=vert[0];
-    v.y+=vert[1];
-    v.z+=vert[2];
+    v.x+=lineVertices.get(index++);
+    v.y+=lineVertices.get(index++);
+    v.z+=lineVertices.get(index);
   }
   for (int i=0; i < pointVertexCount; i++) {
     index=3 * i;
-    pointVertices.position(3 * i);
-    pointVertices.get(vert,0,3);
-    v.x+=vert[0];
-    v.y+=vert[1];
-    v.z+=vert[2];
+    v.x+=pointVertices.get(index++);
+    v.y+=pointVertices.get(index++);
+    v.z+=pointVertices.get(index);
   }
-  return fillVertexCount + lineVertexCount + pointVertexCount;
+  int ntot=fillVertexCount + lineVertexCount + pointVertexCount;
+  v.x/=ntot;
+  v.y/=ntot;
+  v.z/=ntot;
+  return ntot;
 }

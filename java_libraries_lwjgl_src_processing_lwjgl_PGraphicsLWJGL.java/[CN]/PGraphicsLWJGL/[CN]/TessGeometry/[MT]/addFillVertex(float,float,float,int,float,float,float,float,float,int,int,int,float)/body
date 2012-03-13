@@ -1,40 +1,34 @@
 {
   fillVertexCheck();
-  int index;
   float[] vert=new float[3];
   float[] norm=new float[3];
+  float[] tcoord={u,v};
   if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
     PMatrix3D mm=modelview;
     PMatrix3D nm=modelviewInv;
-    index=3 * fillVertexCount;
     vert[0]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
     vert[1]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
     vert[2]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
-    index=3 * fillVertexCount;
     norm[0]=nx * nm.m00 + ny * nm.m10 + nz * nm.m20;
     norm[1]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
     norm[2]=nx * nm.m02 + ny * nm.m12 + nz * nm.m22;
   }
  else {
-    index=3 * fillVertexCount;
     vert[0]=x;
     vert[1]=y;
     vert[2]=z;
-    index=3 * fillVertexCount;
     norm[0]=nx;
     norm[1]=ny;
     norm[2]=nz;
   }
   fillVertices.position(3 * fillVertexCount);
-  fillVertices.put(vert,0,3);
+  fillVertices.put(vert);
   fillColors.position(fillVertexCount);
   fillColors.put(rgba);
   fillNormals.position(3 * fillVertexCount);
-  fillNormals.put(norm,0,3);
-  index=2 * fillVertexCount;
-  float[] uv={u,v};
+  fillNormals.put(norm);
   fillTexcoords.position(2 * fillVertexCount);
-  fillTexcoords.put(uv);
+  fillTexcoords.put(tcoord);
   fillAmbient.position(fillVertexCount);
   fillAmbient.put(am);
   fillSpecular.position(fillVertexCount);
