@@ -3,7 +3,10 @@
     return;
   }
   updateTesselation();
-  Arrays.fill(tess.fillEmissive.array(),0,tess.fillVertexCount,emissiveColor);
+  int[] temp=new int[tess.fillVertexCount];
+  Arrays.fill(temp,0,tess.fillVertexCount,emissiveColor);
+  tess.fillEmissive.rewind();
+  tess.fillEmissive.put(temp);
   modifiedFillEmissive=true;
   modified();
 }

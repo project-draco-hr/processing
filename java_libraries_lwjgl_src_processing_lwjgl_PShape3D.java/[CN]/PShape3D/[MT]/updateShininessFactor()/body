@@ -3,7 +3,10 @@
     return;
   }
   updateTesselation();
-  Arrays.fill(tess.fillShininess.array(),0,tess.fillVertexCount,shininess);
+  float[] temp=new float[tess.fillVertexCount];
+  Arrays.fill(temp,0,tess.fillVertexCount,shininess);
+  tess.fillShininess.rewind();
+  tess.fillShininess.put(temp);
   modifiedFillShininess=true;
   modified();
 }

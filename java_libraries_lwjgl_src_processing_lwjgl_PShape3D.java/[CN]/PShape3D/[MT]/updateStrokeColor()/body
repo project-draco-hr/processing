@@ -2,12 +2,18 @@
   if (shapeEnded) {
     updateTesselation();
     if (0 < tess.lineVertexCount) {
-      Arrays.fill(tess.lineColors.array(),0,tess.lineVertexCount,strokeColor);
+      int[] temp=new int[tess.lineVertexCount];
+      Arrays.fill(temp,0,tess.lineVertexCount,strokeColor);
+      tess.lineColors.rewind();
+      tess.lineColors.put(temp);
       modifiedLineColors=true;
       modified();
     }
     if (0 < tess.pointVertexCount) {
-      Arrays.fill(tess.pointColors.array(),0,tess.pointVertexCount,strokeColor);
+      int[] temp=new int[tess.pointVertexCount];
+      Arrays.fill(temp,0,tess.pointVertexCount,strokeColor);
+      tess.pointColors.rewind();
+      tess.pointColors.put(temp);
       modifiedPointColors=true;
       modified();
     }
