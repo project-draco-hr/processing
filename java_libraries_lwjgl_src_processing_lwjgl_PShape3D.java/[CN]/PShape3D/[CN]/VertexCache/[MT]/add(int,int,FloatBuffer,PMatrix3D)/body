@@ -5,21 +5,19 @@
   int oldSize=floatData.capacity() / ncoords;
   if (size + dataSize >= oldSize) {
     int newSize=expandSize(oldSize,size + dataSize);
+    prepareIntDataForCopy();
     expand(newSize);
   }
   if (3 <= ncoords) {
     float[] data0=new float[3];
     float[] data1=new float[3];
     for (int i=0; i < dataSize; i++) {
-      int srcIndex=ncoords * i;
-      newData.position(ncoords * i);
-      newData.get(data0,0,3);
-      int destIndex=ncoords * (size + i);
+      newData.get(data0);
       data1[0]=data0[0] * tr.m00 + data0[1] * tr.m01 + data0[2] * tr.m02 + tr.m03;
       data1[1]=data0[0] * tr.m10 + data0[1] * tr.m11 + data0[2] * tr.m12 + tr.m13;
       data1[2]=data0[0] * tr.m20 + data0[1] * tr.m21 + data0[2] * tr.m22 + tr.m23;
       floatData.position(ncoords * (size + i));
-      floatData.put(data1,0,3);
+      floatData.put(data1);
     }
   }
   size+=dataSize;
