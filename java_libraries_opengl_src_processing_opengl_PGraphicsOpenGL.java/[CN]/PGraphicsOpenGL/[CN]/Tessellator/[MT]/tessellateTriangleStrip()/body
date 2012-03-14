@@ -9,14 +9,14 @@
     int idx=tess.firstFillIndex;
     int offset=tess.firstFillVertex;
     for (int i=in.firstVertex + 1; i < in.lastVertex; i++) {
-      tess.fillIndices[idx++]=PGL.makeIndex(offset + i);
+      tess.fillIndices.put(idx++,PGL.makeIndex(offset + i));
       if (i % 2 == 0) {
-        tess.fillIndices[idx++]=PGL.makeIndex(offset + i - 1);
-        tess.fillIndices[idx++]=PGL.makeIndex(offset + i + 1);
+        tess.fillIndices.put(idx++,PGL.makeIndex(offset + i - 1));
+        tess.fillIndices.put(idx++,PGL.makeIndex(offset + i + 1));
       }
  else {
-        tess.fillIndices[idx++]=PGL.makeIndex(offset + i + 1);
-        tess.fillIndices[idx++]=PGL.makeIndex(offset + i - 1);
+        tess.fillIndices.put(idx++,PGL.makeIndex(offset + i + 1));
+        tess.fillIndices.put(idx++,PGL.makeIndex(offset + i - 1));
       }
     }
   }

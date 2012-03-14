@@ -4,48 +4,56 @@
   float cy0=0;
   for (int i=0; i < fillVertexCount; i++) {
     index=3 * i;
-    cx0+=fillVertices[index++];
-    cy0+=fillVertices[index];
+    cx0+=fillVertices.get(index++);
+    cy0+=fillVertices.get(index);
   }
   for (int i=0; i < lineVertexCount; i++) {
     index=3 * i;
-    cx0+=lineVertices[index++];
-    cy0+=lineVertices[index];
+    cx0+=lineVertices.get(index++);
+    cy0+=lineVertices.get(index);
   }
   for (int i=0; i < pointVertexCount; i++) {
     index=3 * i;
-    cx0+=pointVertices[index++];
-    cy0+=pointVertices[index];
+    cx0+=pointVertices.get(index++);
+    cy0+=pointVertices.get(index);
   }
   int nt=fillVertexCount + lineVertexCount + pointVertexCount;
   if (0 < nt) {
     cx0/=nt;
     cy0/=nt;
   }
-  float tx=cx - cx0;
-  float ty=cy - cy0;
+  float[] tvect={cx - cx0,cy - cy0};
   if (0 < fillVertexCount) {
     for (int i=0; i < fillVertexCount; i++) {
       index=3 * i;
-      fillVertices[index++]+=tx;
-      fillVertices[index]+=ty;
+      for (int j=0; j < 2; j++) {
+        float v=fillVertices.get(index + j);
+        fillVertices.position(index + j);
+        fillVertices.put(v + 100);
+      }
     }
   }
   if (0 < lineVertexCount) {
     for (int i=0; i < lineVertexCount; i++) {
       index=3 * i;
-      lineVertices[index++]+=tx;
-      lineVertices[index]+=ty;
+      for (int j=0; j < 2; j++) {
+        lineVertices.position(index + j);
+        lineVertices.put(lineVertices.get(index + j) + tvect[j]);
+      }
       index=4 * i;
-      lineDirWidths[index++]+=tx;
-      lineDirWidths[index]+=ty;
+      for (int j=0; j < 2; j++) {
+        lineDirWidths.position(index + j);
+        lineDirWidths.put(lineDirWidths.get(index + j) + tvect[j]);
+      }
     }
   }
   if (0 < pointVertexCount) {
     for (int i=0; i < pointVertexCount; i++) {
       index=3 * i;
-      pointVertices[index++]+=tx;
-      pointVertices[index]+=ty;
+      for (int j=0; j < 2; j++) {
+        pointVertices.position(index + j);
+        pointVertices.put(pointVertices.get(index + j) + tvect[j]);
+      }
     }
   }
 }

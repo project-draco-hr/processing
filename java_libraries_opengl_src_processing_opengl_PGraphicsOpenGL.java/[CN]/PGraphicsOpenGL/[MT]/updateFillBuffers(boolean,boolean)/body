@@ -2,24 +2,28 @@
   int size=tessGeo.fillVertexCount;
   int sizef=size * PGL.SIZEOF_FLOAT;
   int sizei=size * PGL.SIZEOF_INT;
+  tessGeo.prepareFillVerticesForCopy();
   pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillVertexBufferID);
-  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,FloatBuffer.wrap(tessGeo.fillVertices,0,3 * size),vboMode);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,tessGeo.fillVertices,vboMode);
   pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillColorBufferID);
-  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,IntBuffer.wrap(tessGeo.fillColors,0,size),vboMode);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,tessGeo.fillColors,vboMode);
   if (lit) {
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillNormalBufferID);
-    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,FloatBuffer.wrap(tessGeo.fillNormals,0,3 * size),vboMode);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,tessGeo.fillNormals,vboMode);
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillAmbientBufferID);
-    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,IntBuffer.wrap(tessGeo.fillAmbient,0,size),vboMode);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,tessGeo.fillAmbient,vboMode);
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillSpecularBufferID);
-    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,IntBuffer.wrap(tessGeo.fillSpecular,0,size),vboMode);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,tessGeo.fillSpecular,vboMode);
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillEmissiveBufferID);
-    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,IntBuffer.wrap(tessGeo.fillEmissive,0,size),vboMode);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,tessGeo.fillEmissive,vboMode);
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillShininessBufferID);
-    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizef,FloatBuffer.wrap(tessGeo.fillShininess,0,size),vboMode);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizef,tessGeo.fillShininess,vboMode);
   }
   if (tex) {
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glFillTexCoordBufferID);
-    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,2 * sizef,FloatBuffer.wrap(tessGeo.fillTexcoords,0,2 * size),vboMode);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,2 * sizef,tessGeo.fillTexcoords,vboMode);
   }
+  tessGeo.prepareFillIndicesForCopy();
+  pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glFillIndexBufferID);
+  pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,tessGeo.fillIndexCount * PGL.SIZEOF_INDEX,tessGeo.fillIndices,vboMode);
 }

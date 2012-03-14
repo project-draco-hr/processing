@@ -3,7 +3,10 @@
     return;
   }
   updateTesselation();
-  Arrays.fill(tess.fillSpecular,0,tess.fillVertexCount,specularColor);
+  int[] temp=new int[tess.fillVertexCount];
+  Arrays.fill(temp,0,tess.fillVertexCount,specularColor);
+  tess.fillSpecular.rewind();
+  tess.fillSpecular.put(temp);
   modifiedFillSpecular=true;
   modified();
 }

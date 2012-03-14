@@ -3,7 +3,10 @@
     return;
   }
   updateTesselation();
-  Arrays.fill(tess.fillAmbient,0,tess.fillVertexCount,ambientColor);
+  int[] temp=new int[tess.fillVertexCount];
+  Arrays.fill(temp,0,tess.fillVertexCount,ambientColor);
+  tess.fillAmbient.rewind();
+  tess.fillAmbient.put(temp);
   modifiedFillAmbient=true;
   modified();
 }

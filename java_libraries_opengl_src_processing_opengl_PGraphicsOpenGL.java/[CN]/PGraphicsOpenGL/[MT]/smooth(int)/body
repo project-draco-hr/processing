@@ -9,10 +9,10 @@
       initOffscreen();
     }
   }
-  int[] temp={0};
-  pgl.glGetIntegerv(PGL.GL_SAMPLES,temp,0);
-  if (antialias != temp[0]) {
-    antialias=temp[0];
+  pgl.glGetIntegerv(PGL.GL_SAMPLES,getBuffer);
+  int newAntialias=getBuffer.get(0);
+  if (antialias != newAntialias) {
+    antialias=newAntialias;
     PApplet.println("Effective multisampling level: " + antialias);
   }
   if (antialias < 2) {
