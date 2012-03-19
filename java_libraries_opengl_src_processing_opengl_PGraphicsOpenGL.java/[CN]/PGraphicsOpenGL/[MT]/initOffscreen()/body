@@ -2,22 +2,21 @@
   pg=(PGraphicsOpenGL)parent.g;
   pgl.initOffscreenSurface(pg.pgl);
   pgl.updateOffscreen(pg.pgl);
-  ;
   loadTextureImpl(BILINEAR);
   if (offscreenFramebuffer != null) {
-    offscreenFramebuffer=null;
+    offscreenFramebuffer.release();
   }
   if (offscreenFramebufferMultisample != null) {
-    offscreenFramebufferMultisample=null;
+    offscreenFramebufferMultisample.release();
   }
   if (PGraphicsOpenGL.fboMultisampleSupported && 1 < antialias) {
-    int nsamples=antialias;
-    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,nsamples,0,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
+    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,antialias,0,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
     offscreenFramebufferMultisample.clear();
     offscreenMultisample=true;
     offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
   }
  else {
+    antialias=0;
     offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
     offscreenMultisample=false;
   }
