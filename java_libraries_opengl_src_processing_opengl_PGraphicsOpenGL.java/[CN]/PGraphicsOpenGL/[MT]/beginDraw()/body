@@ -45,11 +45,13 @@
  else {
     flushMode=FLUSH_WHEN_FULL;
   }
-  int[] temp={0};
-  pgl.glGetIntegerv(PGL.GL_SAMPLES,temp,0);
-  if (antialias != temp[0]) {
-    PGraphics.showWarning("Smooth level " + antialias + " not supported. Using "+ temp[0]+ " instead.");
-    antialias=temp[0];
+  if (primarySurface) {
+    int[] temp={0};
+    pgl.glGetIntegerv(PGL.GL_SAMPLES,temp,0);
+    if (antialias != temp[0]) {
+      PGraphics.showWarning("Smooth level " + antialias + " not supported. Using "+ temp[0]+ " instead.");
+      antialias=temp[0];
+    }
   }
   if (antialias < 2) {
     pgl.glDisable(PGL.GL_MULTISAMPLE);
