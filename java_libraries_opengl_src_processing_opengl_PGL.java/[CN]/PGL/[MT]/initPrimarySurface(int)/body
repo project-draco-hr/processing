@@ -1,18 +1,21 @@
 {
-  if (pg.parent.online) {
-    GLProfile.initSingleton(false);
-  }
- else {
-    if (PApplet.platform == PConstants.LINUX) {
-      GLProfile.initSingleton(false);
-    }
- else {
-      GLProfile.initSingleton(true);
-    }
-  }
-  profile=GLProfile.getMaxFixedFunc();
   if (profile == null) {
-    pg.parent.die("Cannot get a valid OpenGL profile");
+    profile=GLProfile.getDefault();
+  }
+ else {
+    if (toolkit == AWT) {
+      canvasAWT.removeGLEventListener(listener);
+      pg.parent.removeListeners(canvasAWT);
+      pg.parent.remove(canvasAWT);
+    }
+ else     if (toolkit == NEWT) {
+      animator.stop();
+      animator.remove(window);
+      window.removeGLEventListener(listener);
+      pg.parent.removeListeners(canvasNEWT);
+      pg.parent.remove(canvasNEWT);
+    }
+    setFramerate=false;
   }
   capabilities=new GLCapabilities(profile);
   if (1 < antialias) {
@@ -22,11 +25,29 @@
  else {
     capabilities.setSampleBuffers(false);
   }
-  AWTGraphicsScreen screen=(AWTGraphicsScreen)AWTGraphicsScreen.createDefault();
-  AWTGraphicsConfiguration config=(AWTGraphicsConfiguration)GraphicsConfigurationFactory.getFactory(AWTGraphicsDevice.class).chooseGraphicsConfiguration(capabilities,capabilities,null,screen);
-  NativeWindow win=NativeWindowFactory.getNativeWindow(pg.parent,config);
-  GLDrawableFactory factory=GLDrawableFactory.getFactory(profile);
-  drawable=factory.createGLDrawable(win);
-  context=drawable.createContext(null);
+  if (toolkit == AWT) {
+    canvasAWT=new GLCanvas(capabilities);
+    canvasAWT.setBounds(0,0,pg.width,pg.height);
+    pg.parent.setLayout(new BorderLayout());
+    pg.parent.add(canvasAWT,BorderLayout.CENTER);
+    pg.parent.removeListeners();
+    pg.parent.addListeners(canvasAWT);
+    listener=new PGLListener();
+    canvasAWT.addGLEventListener(listener);
+    canvas=canvasAWT;
+  }
+ else   if (toolkit == NEWT) {
+    window=GLWindow.create(capabilities);
+    canvasNEWT=new NewtCanvasAWT(window);
+    pg.parent.setLayout(new BorderLayout());
+    pg.parent.add(canvasNEWT,BorderLayout.CENTER);
+    pg.parent.removeListeners();
+    pg.parent.addListeners(canvasNEWT);
+    listener=new PGLListener();
+    window.addGLEventListener(listener);
+    animator=new NEWTAnimator(window);
+    animator.start();
+    canvas=canvasNEWT;
+  }
   initialized=true;
 }

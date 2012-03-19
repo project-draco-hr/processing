@@ -1,46 +1,47 @@
 {
-  float[] vec0=new float[2];
-  float[] vec1=new float[2];
   if (0 < fillVertexCount) {
+    int index;
     for (int i=0; i < fillVertexCount; i++) {
-      fillVertices.position(3 * i);
-      fillVertices.get(vec0);
-      vec1[0]=vec0[0] * tr.m00 + vec0[1] * tr.m01 + tr.m02;
-      vec1[1]=vec0[0] * tr.m10 + vec0[1] * tr.m11 + tr.m12;
-      fillVertices.position(3 * i);
-      fillVertices.put(vec1);
-      fillNormals.position(3 * i);
-      fillNormals.get(vec0);
-      vec1[0]=vec0[0] * tr.m00 + vec0[1] * tr.m01 + tr.m02;
-      vec1[1]=vec0[0] * tr.m10 + vec0[1] * tr.m11 + tr.m12;
-      fillNormals.position(3 * i);
-      fillNormals.put(vec1);
+      index=3 * i;
+      float x=fillVertices[index++];
+      float y=fillVertices[index];
+      index=3 * i;
+      float nx=fillNormals[index++];
+      float ny=fillNormals[index];
+      index=3 * i;
+      fillVertices[index++]=x * tr.m00 + y * tr.m01 + tr.m02;
+      fillVertices[index]=x * tr.m10 + y * tr.m11 + tr.m12;
+      index=3 * i;
+      fillNormals[index++]=nx * tr.m00 + ny * tr.m01;
+      fillNormals[index]=nx * tr.m10 + ny * tr.m11;
     }
   }
   if (0 < lineVertexCount) {
+    int index;
     for (int i=0; i < lineVertexCount; i++) {
-      lineVertices.position(3 * i);
-      lineVertices.get(vec0);
-      vec1[0]=vec0[0] * tr.m00 + vec0[1] * tr.m01 + tr.m02;
-      vec1[1]=vec0[0] * tr.m10 + vec0[1] * tr.m11 + tr.m12;
-      lineVertices.position(3 * i);
-      lineVertices.put(vec1);
-      lineDirWidths.position(4 * i);
-      lineDirWidths.get(vec0);
-      vec1[0]=vec0[0] * tr.m00 + vec0[1] * tr.m01 + tr.m02;
-      vec1[1]=vec0[0] * tr.m10 + vec0[1] * tr.m11 + tr.m12;
-      lineDirWidths.position(4 * i);
-      lineDirWidths.put(vec1,0,2);
+      index=3 * i;
+      float x=lineVertices[index++];
+      float y=lineVertices[index];
+      index=4 * i;
+      float xa=lineDirWidths[index++];
+      float ya=lineDirWidths[index];
+      index=3 * i;
+      lineVertices[index++]=x * tr.m00 + y * tr.m01 + tr.m02;
+      lineVertices[index]=x * tr.m10 + y * tr.m11 + tr.m12;
+      index=4 * i;
+      lineDirWidths[index++]=xa * tr.m00 + ya * tr.m01 + tr.m02;
+      lineDirWidths[index]=xa * tr.m10 + ya * tr.m11 + tr.m12;
     }
   }
   if (0 < pointVertexCount) {
+    int index;
     for (int i=0; i < pointVertexCount; i++) {
-      pointVertices.position(3 * i);
-      pointVertices.get(vec0);
-      vec1[0]=vec0[0] * tr.m00 + vec0[1] * tr.m01 + tr.m02;
-      vec1[1]=vec0[0] * tr.m10 + vec0[1] * tr.m11 + tr.m12;
-      pointVertices.position(3 * i);
-      pointVertices.put(vec1,0,2);
+      index=3 * i;
+      float x=pointVertices[index++];
+      float y=pointVertices[index];
+      index=3 * i;
+      pointVertices[index++]=x * tr.m00 + y * tr.m01 + tr.m02;
+      pointVertices[index]=x * tr.m10 + y * tr.m11 + tr.m12;
     }
   }
 }

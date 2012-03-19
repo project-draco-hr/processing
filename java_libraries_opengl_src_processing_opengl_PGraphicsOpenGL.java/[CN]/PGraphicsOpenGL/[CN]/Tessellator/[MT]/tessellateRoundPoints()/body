@@ -24,25 +24,25 @@
         tess.putPointVertex(in,i,vertIdx);
         vertIdx++;
       }
-      tess.pointSizes.put(2 * attribIdx + 0,0);
-      tess.pointSizes.put(2 * attribIdx + 1,0);
+      tess.pointSizes[2 * attribIdx + 0]=0;
+      tess.pointSizes[2 * attribIdx + 1]=0;
       attribIdx++;
       float val=0;
       float inc=(float)SINCOS_LENGTH / perim;
       for (int k=0; k < perim; k++) {
-        tess.pointSizes.put(2 * attribIdx + 0,0.5f * cosLUT[(int)val] * strokeWeight);
-        tess.pointSizes.put(2 * attribIdx + 1,0.5f * sinLUT[(int)val] * strokeWeight);
+        tess.pointSizes[2 * attribIdx + 0]=0.5f * cosLUT[(int)val] * strokeWeight;
+        tess.pointSizes[2 * attribIdx + 1]=0.5f * sinLUT[(int)val] * strokeWeight;
         val=(val + inc) % SINCOS_LENGTH;
         attribIdx++;
       }
       for (int k=1; k < nvert - 1; k++) {
-        tess.pointIndices.put(indIdx++,PGL.makeIndex(firstVert + 0));
-        tess.pointIndices.put(indIdx++,PGL.makeIndex(firstVert + k));
-        tess.pointIndices.put(indIdx++,PGL.makeIndex(firstVert + k + 1));
+        tess.pointIndices[indIdx++]=PGL.makeIndex(firstVert + 0);
+        tess.pointIndices[indIdx++]=PGL.makeIndex(firstVert + k);
+        tess.pointIndices[indIdx++]=PGL.makeIndex(firstVert + k + 1);
       }
-      tess.pointIndices.put(indIdx++,PGL.makeIndex(firstVert + 0));
-      tess.pointIndices.put(indIdx++,PGL.makeIndex(firstVert + 1));
-      tess.pointIndices.put(indIdx++,PGL.makeIndex(firstVert + nvert - 1));
+      tess.pointIndices[indIdx++]=PGL.makeIndex(firstVert + 0);
+      tess.pointIndices[indIdx++]=PGL.makeIndex(firstVert + 1);
+      tess.pointIndices[indIdx++]=PGL.makeIndex(firstVert + nvert - 1);
       firstVert=vertIdx;
     }
   }

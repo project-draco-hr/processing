@@ -1,9 +1,8 @@
 {
   updateTesselation();
-  if (vertices == null || vertices.length != tess.pointVertices.capacity()) {
-    vertices=new float[tess.pointVertices.capacity()];
+  if (vertices == null || vertices.length != tess.pointVertices.length) {
+    vertices=new float[tess.pointVertices.length];
   }
-  tess.pointVertices.rewind();
-  tess.pointVertices.get(vertices);
+  PApplet.arrayCopy(tess.pointVertices,vertices);
   return vertices;
 }

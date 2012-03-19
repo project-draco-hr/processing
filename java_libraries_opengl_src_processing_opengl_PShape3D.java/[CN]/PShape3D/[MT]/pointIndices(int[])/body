@@ -1,9 +1,8 @@
 {
   updateTesselation();
-  if (indices == null || indices.length != tess.pointIndices.capacity()) {
-    indices=new int[tess.pointIndices.capacity()];
+  if (indices == null || indices.length != tess.pointIndices.length) {
+    indices=new int[tess.pointIndices.length];
   }
-  tess.pointIndices.rewind();
-  tess.pointIndices.get(indices);
+  PApplet.arrayCopy(tess.pointIndices,indices);
   return indices;
 }

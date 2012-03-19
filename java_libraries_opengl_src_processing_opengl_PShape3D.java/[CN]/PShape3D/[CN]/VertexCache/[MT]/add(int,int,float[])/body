@@ -1,0 +1,40 @@
+{
+  if (size == 0) {
+    offset=dataOffset;
+  }
+  int oldSize=floatData.length / ncoords;
+  if (size + dataSize >= oldSize) {
+    int newSize=expandSize(oldSize,size + dataSize);
+    expand(newSize);
+  }
+  if (dataSize <= PGraphicsOpenGL.MIN_ARRAYCOPY_SIZE) {
+    for (int i=0; i < dataSize; i++) {
+      int srcIndex=ncoords * i;
+      int destIndex=ncoords * (size + i);
+      if (ncoords == 2) {
+        floatData[destIndex++]=newData[srcIndex++];
+        floatData[destIndex]=newData[srcIndex];
+      }
+ else       if (ncoords == 3) {
+        floatData[destIndex++]=newData[srcIndex++];
+        floatData[destIndex++]=newData[srcIndex++];
+        floatData[destIndex]=newData[srcIndex];
+      }
+ else       if (ncoords == 4) {
+        floatData[destIndex++]=newData[srcIndex++];
+        floatData[destIndex++]=newData[srcIndex++];
+        floatData[destIndex++]=newData[srcIndex++];
+        floatData[destIndex]=newData[srcIndex];
+      }
+ else {
+        for (int j=0; j < ncoords; j++) {
+          floatData[destIndex++]=newData[srcIndex++];
+        }
+      }
+    }
+  }
+ else {
+    PApplet.arrayCopy(newData,0,floatData,ncoords * size,ncoords * dataSize);
+  }
+  size+=dataSize;
+}

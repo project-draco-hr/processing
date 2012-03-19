@@ -2,23 +2,9 @@
   smooth=true;
   if (antialias != level) {
     antialias=level;
-    if (primarySurface) {
-      restartContext();
+    if (antialias == 1) {
+      antialias=0;
     }
- else {
-      initOffscreen();
-    }
-  }
-  pgl.glGetIntegerv(PGL.GL_SAMPLES,getBuffer);
-  int newAntialias=getBuffer.get(0);
-  if (antialias != newAntialias) {
-    antialias=newAntialias;
-    PApplet.println("Effective multisampling level: " + antialias);
-  }
-  if (antialias < 2) {
-    pgl.glEnable(PGL.GL_MULTISAMPLE);
-    pgl.glEnable(PGL.GL_POINT_SMOOTH);
-    pgl.glEnable(PGL.GL_LINE_SMOOTH);
-    pgl.glEnable(PGL.GL_POLYGON_SMOOTH);
+    pgl.initialized=false;
   }
 }

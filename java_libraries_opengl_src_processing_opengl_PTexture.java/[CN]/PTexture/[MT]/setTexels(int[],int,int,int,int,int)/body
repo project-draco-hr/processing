@@ -1,10 +1,3 @@
 {
-  if (texels == null || texels.capacity() != width * height) {
-    texels=pgl.createIntBuffer(width * height);
-  }
-  texels.position(0);
-  texels.limit(pix.length);
-  texels.put(pix);
-  texels.flip();
-  pgl.glTexSubImage2D(glTarget,level,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,texels);
+  pgl.glTexSubImage2D(glTarget,level,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,IntBuffer.wrap(pix));
 }
