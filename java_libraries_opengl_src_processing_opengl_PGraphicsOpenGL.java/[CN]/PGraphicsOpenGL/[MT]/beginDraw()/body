@@ -10,6 +10,14 @@
     if (!pgl.initialized) {
       initOffscreen();
     }
+ else {
+      boolean outdated=offscreenFramebuffer != null && offscreenFramebuffer.contextIsOutdated();
+      boolean outdatedMulti=offscreenFramebufferMultisample != null && offscreenFramebufferMultisample.contextIsOutdated();
+      if (outdated || outdatedMulti) {
+        pgl.initialized=false;
+        initOffscreen();
+      }
+    }
     pushFramebuffer();
     if (offscreenMultisample) {
       setFramebuffer(offscreenFramebufferMultisample);
