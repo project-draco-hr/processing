@@ -1,12 +1,10 @@
 {
   if (screenFb)   return;
-  if (fboMode) {
-    pg.pushFramebuffer();
-    pg.setFramebuffer(this);
-    glColorBufferMultisampleID=pg.createRenderBufferObject();
-    pgl.glBindRenderbuffer(PGL.GL_RENDERBUFFER,glColorBufferMultisampleID);
-    pgl.glRenderbufferStorageMultisample(PGL.GL_RENDERBUFFER,nsamples,PGL.GL_RGBA8,width,height);
-    pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_COLOR_ATTACHMENT0,PGL.GL_RENDERBUFFER,glColorBufferMultisampleID);
-    pg.popFramebuffer();
-  }
+  pg.pushFramebuffer();
+  pg.setFramebuffer(this);
+  glColorBufferMultisampleID=pg.createRenderBufferObject();
+  pgl.glBindRenderbuffer(PGL.GL_RENDERBUFFER,glColorBufferMultisampleID);
+  pgl.glRenderbufferStorageMultisample(PGL.GL_RENDERBUFFER,nsamples,PGL.GL_RGBA8,width,height);
+  pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_COLOR_ATTACHMENT0,PGL.GL_RENDERBUFFER,glColorBufferMultisampleID);
+  pg.popFramebuffer();
 }

@@ -10,14 +10,14 @@
     offscreenFramebufferMultisample.release();
   }
   if (PGraphicsOpenGL.fboMultisampleSupported && 1 < antialias) {
-    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,antialias,0,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
+    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,antialias,0,PGL.DEFAULT_DEPTH_BITS,PGL.DEFAULT_STENCIL_BITS,PGL.DEFAULT_DEPTH_BITS == 24 && PGL.DEFAULT_STENCIL_BITS == 8,false);
     offscreenFramebufferMultisample.clear();
     offscreenMultisample=true;
     offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
   }
  else {
     antialias=0;
-    offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,offscreenDepthBits,offscreenStencilBits,offscreenDepthBits == 24 && offscreenStencilBits == 8,false);
+    offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,PGL.DEFAULT_DEPTH_BITS,PGL.DEFAULT_STENCIL_BITS,PGL.DEFAULT_DEPTH_BITS == 24 && PGL.DEFAULT_STENCIL_BITS == 8,false);
     offscreenMultisample=false;
   }
   offscreenFramebuffer.setColorBuffer(texture);
