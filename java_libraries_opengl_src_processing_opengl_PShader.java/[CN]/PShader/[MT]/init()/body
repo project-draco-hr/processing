@@ -2,27 +2,53 @@
   if (programObject == 0 || contextIsOutdated()) {
     context=pgl.getContext();
     programObject=pg.createGLSLProgramObject();
+    boolean hasVert=false;
     if (vertexFilename != null) {
-      loadVertexShader(vertexFilename);
+      hasVert=loadVertexShader(vertexFilename);
     }
  else     if (vertexURL != null) {
-      loadVertexShader(vertexURL);
+      hasVert=loadVertexShader(vertexURL);
     }
  else {
       PGraphics.showException("Vertex shader filenames and URLs are both null!");
     }
+    boolean hasFrag=false;
     if (fragmentFilename != null) {
-      loadFragmentShader(fragmentFilename);
+      hasFrag=loadFragmentShader(fragmentFilename);
     }
  else     if (fragmentURL != null) {
-      loadFragmentShader(fragmentURL);
+      hasFrag=loadFragmentShader(fragmentURL);
     }
  else {
       PGraphics.showException("Fragment shader filenames and URLs are both null!");
     }
-    checkLogInfo("Vertex shader " + vertexFilename + " compilation: ",vertexShader);
-    checkLogInfo("Fragment shader " + fragmentFilename + " compilation: ",fragmentShader);
-    pgl.glLinkProgram(programObject);
-    pgl.glValidateProgram(programObject);
+    boolean vertRes=true;
+    if (hasVert) {
+      vertRes=compileVertexShader();
+    }
+    boolean fragRes=true;
+    if (hasFrag) {
+      fragRes=compileFragmentShader();
+    }
+    if (vertRes && fragRes) {
+      if (hasVert) {
+        pgl.glAttachShader(programObject,vertexShader);
+      }
+      if (hasFrag) {
+        pgl.glAttachShader(programObject,fragmentShader);
+      }
+      pgl.glLinkProgram(programObject);
+      int[] linked=new int[1];
+      pgl.glGetProgramiv(programObject,PGL.GL_LINK_STATUS,linked,0);
+      if (linked[0] == PGL.GL_FALSE) {
+        PGraphics.showException("Cannot link shader program:\n" + pgl.glGetProgramInfoLog(programObject));
+      }
+      pgl.glValidateProgram(programObject);
+      int[] validated=new int[1];
+      pgl.glGetProgramiv(programObject,PGL.GL_VALIDATE_STATUS,validated,0);
+      if (validated[0] == PGL.GL_FALSE) {
+        PGraphics.showException("Cannot validate shader program:\n" + pgl.glGetProgramInfoLog(programObject));
+      }
+    }
   }
 }
