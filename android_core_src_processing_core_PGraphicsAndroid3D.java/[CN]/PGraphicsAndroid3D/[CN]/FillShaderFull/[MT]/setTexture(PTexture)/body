@@ -1,12 +1,20 @@
 {
-  float scaleu=tex.maxTexCoordU;
-  float scalev=tex.maxTexCoordV;
+  float scaleu=1;
+  float scalev=1;
   float dispu=0;
   float dispv=0;
+  if (tex.isFlippedX()) {
+    scaleu=-1;
+    dispu=1;
+  }
   if (tex.isFlippedY()) {
-    scalev*=-1;
+    scalev=-1;
     dispv=1;
   }
+  scaleu*=tex.maxTexCoordU;
+  dispu*=tex.maxTexCoordU;
+  scalev*=tex.maxTexCoordV;
+  dispv*=tex.maxTexCoordV;
   if (tcmat == null) {
     tcmat=new float[16];
   }
