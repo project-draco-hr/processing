@@ -107,17 +107,17 @@
   pgl.glDepthMask(true);
   pgl.glClearColor(0,0,0,0);
   pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT | PGL.GL_STENCIL_BUFFER_BIT);
+  if (primarySurface) {
+    pgl.beginOnscreenDraw(clearColorBuffer);
+  }
+ else {
+    pgl.beginOffscreenDraw(clearColorBuffer);
+  }
   if (hints[DISABLE_DEPTH_MASK]) {
     pgl.glDepthMask(false);
   }
  else {
     pgl.glDepthMask(true);
-  }
-  if (primarySurface) {
-    pgl.beginOnscreenDraw(clearColorBuffer,parent.frameCount);
-  }
- else {
-    pgl.beginOffscreenDraw(clearColorBuffer,parent.frameCount);
   }
   drawing=true;
   clearColorBuffer0=clearColorBuffer;

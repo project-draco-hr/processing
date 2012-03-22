@@ -6,20 +6,11 @@
   if (tempFbo == null) {
     tempFbo=new PFramebuffer(parent,glWidth,glHeight);
   }
-  if (PGraphicsAndroid3D.fboSupported) {
-    tempFbo.setColorBuffer(this);
-    pg.pushFramebuffer();
-    pg.setFramebuffer(tempFbo);
-    tempFbo.readPixels();
-    pg.popFramebuffer();
-  }
- else {
-    pg.pushFramebuffer();
-    pg.setFramebuffer(tempFbo);
-    pg.drawTexture(this,0,0,glWidth,glHeight,0,0,glWidth,glHeight);
-    tempFbo.readPixels();
-    pg.popFramebuffer();
-  }
+  tempFbo.setColorBuffer(this);
+  pg.pushFramebuffer();
+  pg.setFramebuffer(tempFbo);
+  tempFbo.readPixels();
+  pg.popFramebuffer();
   if (tempPixels == null) {
     tempPixels=new int[size];
   }

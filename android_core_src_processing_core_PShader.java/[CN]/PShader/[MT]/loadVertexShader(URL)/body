@@ -1,9 +1,10 @@
 {
   try {
-    String shaderSource=PApplet.join(PApplet.loadStrings(url.openStream()),"\n");
-    attachVertexShader(shaderSource);
+    vertexShaderSource=PApplet.join(PApplet.loadStrings(url.openStream()),"\n");
+    return vertexShaderSource != null;
   }
  catch (  IOException e) {
-    PGraphics.showException("Cannot load shader " + url.getFile());
+    PGraphics.showException("Cannot load vertex shader " + url.getFile());
+    return false;
   }
 }

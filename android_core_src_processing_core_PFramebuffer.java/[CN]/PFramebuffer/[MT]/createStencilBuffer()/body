@@ -3,28 +3,26 @@
   if (width == 0 || height == 0) {
     throw new RuntimeException("PFramebuffer: size undefined.");
   }
-  if (fboMode) {
-    pg.pushFramebuffer();
-    pg.setFramebuffer(this);
-    glStencilBufferID=pg.createRenderBufferObject();
-    pgl.glBindRenderbuffer(PGL.GL_RENDERBUFFER,glStencilBufferID);
-    int glConst=PGL.GL_STENCIL_INDEX1;
-    if (stencilBits == 1) {
-      glConst=PGL.GL_STENCIL_INDEX1;
-    }
- else     if (stencilBits == 4) {
-      glConst=PGL.GL_STENCIL_INDEX4;
-    }
- else     if (stencilBits == 8) {
-      glConst=PGL.GL_STENCIL_INDEX8;
-    }
-    if (multisample) {
-      pgl.glRenderbufferStorageMultisample(PGL.GL_RENDERBUFFER,nsamples,glConst,width,height);
-    }
- else {
-      pgl.glRenderbufferStorage(PGL.GL_RENDERBUFFER,glConst,width,height);
-    }
-    pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_STENCIL_ATTACHMENT,PGL.GL_RENDERBUFFER,glStencilBufferID);
-    pg.popFramebuffer();
+  pg.pushFramebuffer();
+  pg.setFramebuffer(this);
+  glStencilBufferID=pg.createRenderBufferObject();
+  pgl.glBindRenderbuffer(PGL.GL_RENDERBUFFER,glStencilBufferID);
+  int glConst=PGL.GL_STENCIL_INDEX1;
+  if (stencilBits == 1) {
+    glConst=PGL.GL_STENCIL_INDEX1;
   }
+ else   if (stencilBits == 4) {
+    glConst=PGL.GL_STENCIL_INDEX4;
+  }
+ else   if (stencilBits == 8) {
+    glConst=PGL.GL_STENCIL_INDEX8;
+  }
+  if (multisample) {
+    pgl.glRenderbufferStorageMultisample(PGL.GL_RENDERBUFFER,nsamples,glConst,width,height);
+  }
+ else {
+    pgl.glRenderbufferStorage(PGL.GL_RENDERBUFFER,glConst,width,height);
+  }
+  pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_STENCIL_ATTACHMENT,PGL.GL_RENDERBUFFER,glStencilBufferID);
+  pg.popFramebuffer();
 }

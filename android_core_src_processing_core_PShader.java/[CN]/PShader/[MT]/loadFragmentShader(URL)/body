@@ -1,9 +1,10 @@
 {
   try {
-    String shaderSource=PApplet.join(PApplet.loadStrings(url.openStream()),"\n");
-    attachFragmentShader(shaderSource);
+    fragmentShaderSource=PApplet.join(PApplet.loadStrings(url.openStream()),"\n");
+    return fragmentShaderSource != null;
   }
  catch (  IOException e) {
-    PGraphics.showException("Cannot load shader " + url.getFile());
+    PGraphics.showException("Cannot load fragment shader " + url.getFile());
+    return false;
   }
 }
