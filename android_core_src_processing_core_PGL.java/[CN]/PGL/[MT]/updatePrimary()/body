@@ -22,17 +22,23 @@
     GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
     GLES20.glGenFramebuffers(1,fbo,0);
     GLES20.glGenRenderbuffers(1,depth,0);
-    GLES20.glGenRenderbuffers(1,stencil,0);
     GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,fbo[0]);
     GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER,depth[0]);
     GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER,GLES20.GL_DEPTH_COMPONENT16,texWidth,texHeight);
     GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER,GLES20.GL_DEPTH_ATTACHMENT,GLES20.GL_RENDERBUFFER,depth[0]);
-    GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER,stencil[0]);
-    GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER,GLES20.GL_STENCIL_INDEX8,texWidth,texHeight);
-    GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER,GLES20.GL_STENCIL_ATTACHMENT,GLES20.GL_RENDERBUFFER,stencil[0]);
+    int[] temp=new int[1];
+    GLES20.glGetIntegerv(GLES20.GL_STENCIL_BITS,temp,0);
+    int stencilBits=temp[0];
+    if (stencilBits == 8) {
+      GLES20.glGenRenderbuffers(1,stencil,0);
+      GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER,stencil[0]);
+      GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER,GLES20.GL_STENCIL_INDEX8,texWidth,texHeight);
+      GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER,GLES20.GL_STENCIL_ATTACHMENT,GLES20.GL_RENDERBUFFER,stencil[0]);
+    }
     GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,0);
     backTex=1;
     frontTex=0;
+    PGraphicsAndroid3D.screenFramebuffer.glFboID=fbo[0];
     initialized=true;
   }
 }
