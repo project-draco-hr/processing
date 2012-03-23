@@ -1,6 +1,12 @@
 {
   try {
-    String[] cmd=new String[]{"java","-cp",System.getProperty("java.class.path"),"org.apache.tools.ant.Main",target};
+    String cp=System.getProperty("java.class.path");
+    String[] cpp=PApplet.split(cp,File.pathSeparatorChar);
+    for (int i=0; i < cpp.length; i++) {
+      cpp[i]=new File(cpp[i]).getAbsolutePath();
+    }
+    cp=PApplet.join(cpp,File.pathSeparator);
+    String[] cmd=new String[]{"java","-cp",cp,"org.apache.tools.ant.Main",target};
     ProcessHelper helper=new ProcessHelper(tmpFolder,cmd);
     ProcessResult pr=helper.execute();
     if (pr.getResult() != 0) {
