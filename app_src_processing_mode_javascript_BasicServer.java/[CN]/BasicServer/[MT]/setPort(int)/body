@@ -1,5 +1,13 @@
 {
   if (!isRunning()) {
-    port=newPort;
+    if (port >= 0) {
+      if (!available(port)) {
+        System.err.println("BasicServer: " + "that port (" + port + ") seems to be taken "+ "or is out of range (<1025 or >49151)");
+        System.out.println("... if it works anyway, ignore the warning.");
+      }
+ else {
+        port=newPort;
+      }
+    }
   }
 }

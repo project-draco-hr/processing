@@ -1,6 +1,9 @@
 {
   if (server != null)   return server;
+  if (!root.exists() && !root.mkdir()) {
+  }
   server=new BasicServer(root);
+  server.addListener(this);
   File sketchProps=getSketchPropertiesFile();
   if (sketchProps.exists()) {
     try {

@@ -1,26 +1,28 @@
 {
-  if (port < 0 || port > 65535) {
+  if (port < 1025 || port > 49151) {
     return false;
   }
-  ServerSocket ss=null;
-  DatagramSocket ds=null;
+  ServerSocket servSocket=null;
+  DatagramSocket dataSock=null;
   try {
-    ss=new ServerSocket(port);
-    ss.setReuseAddress(true);
-    ds=new DatagramSocket(port);
-    ds.setReuseAddress(true);
+    servSocket=new ServerSocket(port);
+    servSocket.setReuseAddress(true);
+    servSocket.close();
+    dataSock=new DatagramSocket(port);
+    dataSock.setReuseAddress(true);
+    dataSock.close();
     return true;
   }
  catch (  IOException e) {
     e.printStackTrace();
   }
  finally {
-    if (ds != null) {
-      ds.close();
+    if (dataSock != null) {
+      dataSock.close();
     }
-    if (ss != null) {
+    if (servSocket != null) {
       try {
-        ss.close();
+        servSocket.close();
       }
  catch (      IOException e) {
       }

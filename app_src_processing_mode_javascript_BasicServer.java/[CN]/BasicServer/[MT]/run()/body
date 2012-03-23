@@ -1,8 +1,4 @@
 {
-  if (virtualRoot == null) {
-    System.err.println("ProcessingJSServer: virtual root is null.");
-    return;
-  }
   try {
     running=true;
     if (port < 0) {
@@ -22,11 +18,16 @@ catch (  SecurityException se) {
   try {
     if (server != null) {
       inited=true;
+      if (listeners != null) {
+        for (        BasicServerListener l : listeners) {
+          l.serverStarted();
+        }
+      }
       while (thread != null) {
         Socket s=server.accept();
         Worker ws=new Worker(virtualRoot);
         ws.setSocket(s);
-        (new Thread(ws,"ProcessingJSServer Worker")).start();
+        (new Thread(ws,"Processing.BasicServer.Worker")).start();
       }
     }
  else {

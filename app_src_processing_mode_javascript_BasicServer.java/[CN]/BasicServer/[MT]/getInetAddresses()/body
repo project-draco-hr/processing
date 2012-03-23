@@ -1,0 +1,19 @@
+{
+  addresses=new ArrayList<String>();
+  try {
+    NetworkInterface ni=NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+    Enumeration<InetAddress> ia=ni.getInetAddresses();
+    while (ia.hasMoreElements()) {
+      InetAddress elem=ia.nextElement();
+      if (elem instanceof Inet6Address) {
+        continue;
+      }
+ else {
+        addresses.add(elem.getHostAddress());
+      }
+    }
+  }
+ catch (  Exception e) {
+  }
+  return addresses;
+}

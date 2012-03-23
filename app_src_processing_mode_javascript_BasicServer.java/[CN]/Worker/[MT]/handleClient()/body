@@ -1,8 +1,8 @@
 {
-  InputStream is=new BufferedInputStream(s.getInputStream());
-  PrintStream ps=new PrintStream(s.getOutputStream());
-  s.setSoTimeout(getTimeout());
-  s.setTcpNoDelay(true);
+  InputStream is=new BufferedInputStream(socket.getInputStream());
+  PrintStream ps=new PrintStream(socket.getOutputStream());
+  socket.setSoTimeout(getTimeout());
+  socket.setTcpNoDelay(true);
   for (int i=0; i < BUF_SIZE; i++) {
     buf[i]=0;
   }
@@ -36,7 +36,7 @@
       ps.write(buf,0,5);
       ps.write(EOL);
       ps.flush();
-      s.close();
+      socket.close();
       return;
     }
     int i=0;
@@ -73,6 +73,6 @@
     }
   }
   finally {
-    s.close();
+    socket.close();
   }
 }

@@ -5,15 +5,11 @@
   }
   if (server == null) {
     server=createServer(root);
+  }
+  if (!server.isRunning()) {
+    server.setRoot(root);
     server.start();
-    long ts=System.currentTimeMillis();
-    while (System.currentTimeMillis() - ts < 200) {
-    }
-    while (!server.isRunning()) {
-    }
-    String location=server.getAddress();
-    statusNotice("Server started: " + location);
-    openBrowserForServer();
+    statusNotice("Waiting for server to start ...");
   }
  else   if (server.isRunning()) {
     statusNotice("Server running (" + server.getAddress() + "), reload your browser window.");
