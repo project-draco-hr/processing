@@ -3,6 +3,12 @@
     showWarning("P3D: Already called beginDraw().");
     return;
   }
+  if (!glParamsRead) {
+    getGLParameters();
+  }
+  if (!settingsInited) {
+    defaultSettings();
+  }
   if (primarySurface) {
     pgl.updatePrimary();
   }
@@ -27,12 +33,6 @@
       setFramebuffer(offscreenFramebuffer);
     }
     pgl.updateOffscreen(pg.pgl);
-  }
-  if (!glParamsRead) {
-    getGLParameters();
-  }
-  if (!settingsInited) {
-    defaultSettings();
   }
   report("top beginDraw()");
   inGeo.clear();
