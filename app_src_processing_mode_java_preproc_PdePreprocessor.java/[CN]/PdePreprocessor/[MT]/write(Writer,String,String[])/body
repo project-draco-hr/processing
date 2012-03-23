@@ -13,7 +13,9 @@
     if (pieces == null)     break;
     String piece=pieces[1] + pieces[2] + pieces[3];
     int len=piece.length();
-    programImports.add(pieces[2]);
+    if (!ignoreImport(pieces[2])) {
+      programImports.add(pieces[2]);
+    }
     int idx=program.indexOf(piece);
     program=program.substring(0,idx) + program.substring(idx + len);
   }
