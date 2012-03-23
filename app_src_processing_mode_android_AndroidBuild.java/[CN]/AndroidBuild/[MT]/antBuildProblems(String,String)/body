@@ -1,5 +1,6 @@
 {
   final String[] outLines=outPile.split(System.getProperty("line.separator"));
+  final String[] errLines=errPile.split(System.getProperty("line.separator"));
   for (  final String line : outLines) {
     final String javacPrefix="[javac]";
     final int javacIndex=line.indexOf(javacPrefix);
@@ -17,7 +18,15 @@
       }
     }
   }
-  SketchException skex=new SketchException("Error from inside the Android tools, check the console.");
+  SketchException skex=new SketchException("Error from inside the Android tools, " + "check the console.");
+  for (  final String line : errLines) {
+    if (line.contains("Unable to resolve target '" + sdkTarget + "'")) {
+      System.err.println("Use the Android SDK Manager (under the Android");
+      System.err.println("menu) to install the SDK platform and ");
+      System.err.println("Google APIs for Android " + sdkName + " (API "+ sdkVersion+ ")");
+      skex=new SketchException("Please install the SDK platform and " + "Google APIs for API " + sdkVersion);
+    }
+  }
   skex.hideStackTrace();
   throw skex;
 }
