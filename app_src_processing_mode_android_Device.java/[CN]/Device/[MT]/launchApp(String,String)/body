@@ -2,7 +2,8 @@
   if (!isAlive()) {
     return false;
   }
-  ProcessResult pr=adb("shell","am","start","-e","debug","true","-a","android.intent.action.MAIN","-c","android.intent.category.LAUNCHER","-n",packageName + "/." + className);
+  String[] cmd={"shell","am","start","-e","debug","true","-a","android.intent.action.MAIN","-c","android.intent.category.LAUNCHER","-n",packageName + "/." + className};
+  ProcessResult pr=adb(cmd);
   if (Base.DEBUG) {
     System.out.println(pr.toString());
   }

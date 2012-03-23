@@ -3,10 +3,10 @@
   final StringWriter errWriter=new StringWriter();
   final long startTime=System.currentTimeMillis();
   final String prettyCommand=toString();
-  final Process process=Runtime.getRuntime().exec(cmd);
+  final Process process=dir == null ? Runtime.getRuntime().exec(cmd) : Runtime.getRuntime().exec(cmd,new String[]{},dir);
   ProcessRegistry.watch(process);
   try {
-    String title=PApplet.join(cmd,' ');
+    String title=prettyCommand;
     new StreamPump(process.getInputStream(),"out: " + title).addTarget(outWriter).start();
     new StreamPump(process.getErrorStream(),"err: " + title).addTarget(errWriter).start();
     try {
