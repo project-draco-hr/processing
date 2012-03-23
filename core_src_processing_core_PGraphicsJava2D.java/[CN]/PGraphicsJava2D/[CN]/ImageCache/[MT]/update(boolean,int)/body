@@ -33,36 +33,48 @@
       }
     }
  else     if (bufferType == BufferedImage.TYPE_INT_ARGB) {
-      int index=0;
-      for (int y=0; y < source.height; y++) {
-        if (source.format == RGB) {
-          int alpha=tintColor & 0xFF000000;
+      if (source.format == RGB && (tintColor & 0xffffff) == 0xffffff) {
+        int hi=tintColor & 0xff000000;
+        int index=0;
+        for (int y=0; y < source.height; y++) {
           for (int x=0; x < source.width; x++) {
-            int argb1=source.pixels[index++];
-            int r1=(argb1 >> 16) & 0xff;
-            int g1=(argb1 >> 8) & 0xff;
-            int b1=(argb1) & 0xff;
-            tintedPixels[x]=alpha | (((r2 * r1) & 0xff00) << 8) | ((g2 * g1) & 0xff00)| (((b2 * b1) & 0xff00) >> 8);
+            tintedPixels[x]=hi | (source.pixels[index++] & 0xFFFFFF);
           }
+          wr.setDataElements(0,y,source.width,1,tintedPixels);
         }
- else         if (source.format == ARGB) {
-          for (int x=0; x < source.width; x++) {
-            int argb1=source.pixels[index++];
-            int a1=(argb1 >> 24) & 0xff;
-            int r1=(argb1 >> 16) & 0xff;
-            int g1=(argb1 >> 8) & 0xff;
-            int b1=(argb1) & 0xff;
-            tintedPixels[x]=(((a2 * a1) & 0xff00) << 16) | (((r2 * r1) & 0xff00) << 8) | ((g2 * g1) & 0xff00)| (((b2 * b1) & 0xff00) >> 8);
+      }
+ else {
+        int index=0;
+        for (int y=0; y < source.height; y++) {
+          if (source.format == RGB) {
+            int alpha=tintColor & 0xFF000000;
+            for (int x=0; x < source.width; x++) {
+              int argb1=source.pixels[index++];
+              int r1=(argb1 >> 16) & 0xff;
+              int g1=(argb1 >> 8) & 0xff;
+              int b1=(argb1) & 0xff;
+              tintedPixels[x]=alpha | (((r2 * r1) & 0xff00) << 8) | ((g2 * g1) & 0xff00)| (((b2 * b1) & 0xff00) >> 8);
+            }
           }
-        }
- else         if (source.format == ALPHA) {
-          int lower=tintColor & 0xFFFFFF;
-          for (int x=0; x < source.width; x++) {
-            int a1=source.pixels[index++];
-            tintedPixels[x]=(((a2 * a1) & 0xff00) << 16) | lower;
+ else           if (source.format == ARGB) {
+            for (int x=0; x < source.width; x++) {
+              int argb1=source.pixels[index++];
+              int a1=(argb1 >> 24) & 0xff;
+              int r1=(argb1 >> 16) & 0xff;
+              int g1=(argb1 >> 8) & 0xff;
+              int b1=(argb1) & 0xff;
+              tintedPixels[x]=(((a2 * a1) & 0xff00) << 16) | (((r2 * r1) & 0xff00) << 8) | ((g2 * g1) & 0xff00)| (((b2 * b1) & 0xff00) >> 8);
+            }
           }
+ else           if (source.format == ALPHA) {
+            int lower=tintColor & 0xFFFFFF;
+            for (int x=0; x < source.width; x++) {
+              int a1=source.pixels[index++];
+              tintedPixels[x]=(((a2 * a1) & 0xff00) << 16) | lower;
+            }
+          }
+          wr.setDataElements(0,y,source.width,1,tintedPixels);
         }
-        wr.setDataElements(0,y,source.width,1,tintedPixels);
       }
     }
   }
