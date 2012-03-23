@@ -7,18 +7,20 @@
   if (-1 < inSpecularLoc)   pgl.glEnableVertexAttribArray(inSpecularLoc);
   if (-1 < inEmissiveLoc)   pgl.glEnableVertexAttribArray(inEmissiveLoc);
   if (-1 < inShineLoc)   pgl.glEnableVertexAttribArray(inShineLoc);
-  updateGLProjmodelview();
-  set4x4MatUniform(projmodelviewMatrixLoc,glProjmodelview);
-  updateGLModelview();
-  set4x4MatUniform(modelviewMatrixLoc,glModelview);
-  updateGLNormal();
-  set3x3MatUniform(normalMatrixLoc,glNormal);
-  setIntUniform(lightCountLoc,lightCount);
-  set4FloatVecUniform(lightPositionLoc,lightPosition);
-  set3FloatVecUniform(lightNormalLoc,lightNormal);
-  set3FloatVecUniform(lightAmbientLoc,lightAmbient);
-  set3FloatVecUniform(lightDiffuseLoc,lightDiffuse);
-  set3FloatVecUniform(lightSpecularLoc,lightSpecular);
-  set3FloatVecUniform(lightFalloffCoefficientsLoc,lightFalloffCoefficients);
-  set2FloatVecUniform(lightSpotParametersLoc,lightSpotParameters);
+  if (renderer != null) {
+    renderer.updateGLProjmodelview();
+    set4x4MatUniform(projmodelviewMatrixLoc,renderer.glProjmodelview);
+    renderer.updateGLModelview();
+    set4x4MatUniform(modelviewMatrixLoc,renderer.glModelview);
+    renderer.updateGLNormal();
+    set3x3MatUniform(normalMatrixLoc,renderer.glNormal);
+    setIntUniform(lightCountLoc,renderer.lightCount);
+    set4FloatVecUniform(lightPositionLoc,renderer.lightPosition);
+    set3FloatVecUniform(lightNormalLoc,renderer.lightNormal);
+    set3FloatVecUniform(lightAmbientLoc,renderer.lightAmbient);
+    set3FloatVecUniform(lightDiffuseLoc,renderer.lightDiffuse);
+    set3FloatVecUniform(lightSpecularLoc,renderer.lightSpecular);
+    set3FloatVecUniform(lightFalloffCoefficientsLoc,renderer.lightFalloffCoefficients);
+    set2FloatVecUniform(lightSpotParametersLoc,renderer.lightSpotParameters);
+  }
 }

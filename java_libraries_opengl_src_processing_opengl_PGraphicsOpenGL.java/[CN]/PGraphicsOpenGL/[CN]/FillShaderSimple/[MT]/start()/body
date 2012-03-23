@@ -2,6 +2,8 @@
   super.start();
   if (-1 < inVertexLoc)   pgl.glEnableVertexAttribArray(inVertexLoc);
   if (-1 < inColorLoc)   pgl.glEnableVertexAttribArray(inColorLoc);
-  updateGLProjmodelview();
-  set4x4MatUniform(projmodelviewMatrixLoc,glProjmodelview);
+  if (renderer != null) {
+    renderer.updateGLProjmodelview();
+    set4x4MatUniform(projmodelviewMatrixLoc,renderer.glProjmodelview);
+  }
 }
