@@ -12,7 +12,7 @@
   int[] editorLocation=null;
   String name=null;
   boolean present=false;
-  Color backgroundColor=Color.BLACK;
+  Color backgroundColor=null;
   Color stopColor=Color.GRAY;
   GraphicsDevice displayDevice=null;
   boolean hideStop=false;
@@ -114,7 +114,9 @@
       japplemenubar.JAppleMenuBar.hide();
     }
     frame.setUndecorated(true);
-    frame.setBackground(backgroundColor);
+    if (backgroundColor != null) {
+      frame.setBackground(backgroundColor);
+    }
     frame.setBounds(screenRect);
     frame.setVisible(true);
   }
@@ -188,10 +190,9 @@
     if (frameLoc.y < 0) {
       frame.setLocation(frameLoc.x,30);
     }
-    if (backgroundColor == Color.black) {
-      backgroundColor=SystemColor.control;
+    if (backgroundColor != null) {
+      frame.setBackground(backgroundColor);
     }
-    frame.setBackground(backgroundColor);
     int usableWindowH=windowH - insets.top - insets.bottom;
     applet.setBounds((windowW - applet.width) / 2,insets.top + (usableWindowH - applet.height) / 2,applet.width,applet.height);
     if (external) {
