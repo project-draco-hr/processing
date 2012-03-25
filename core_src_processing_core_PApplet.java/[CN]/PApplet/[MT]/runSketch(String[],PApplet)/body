@@ -12,7 +12,6 @@
   int[] editorLocation=null;
   String name=null;
   boolean present=false;
-  boolean exclusive=false;
   Color backgroundColor=Color.BLACK;
   Color stopColor=Color.GRAY;
   GraphicsDevice displayDevice=null;
@@ -64,8 +63,8 @@
       if (args[argIndex].equals(ARGS_PRESENT)) {
         present=true;
       }
- else       if (args[argIndex].equals(ARGS_EXCLUSIVE)) {
-        exclusive=true;
+ else       if (args[argIndex].equals(ARGS_FULL_SCREEN)) {
+        present=true;
       }
  else       if (args[argIndex].equals(ARGS_HIDE_STOP)) {
         hideStop=true;
@@ -103,22 +102,23 @@
   }
   applet.frame=frame;
   applet.sketchPath=folder;
+  present|=applet.sketchFullScreen();
   applet.args=PApplet.subset(args,argIndex + 1);
   applet.external=external;
   Rectangle fullScreenRect=null;
+  DisplayMode mode=displayDevice.getDisplayMode();
+  fullScreenRect=new Rectangle(0,0,mode.getWidth(),mode.getHeight());
+  if (mode.getWidth() == applet.sketchWidth() && mode.getHeight() == applet.sketchHeight()) {
+    present=true;
+  }
   if (present) {
+    if (platform == MACOSX) {
+      japplemenubar.JAppleMenuBar.hide();
+    }
     frame.setUndecorated(true);
     frame.setBackground(backgroundColor);
-    if (exclusive) {
-      displayDevice.setFullScreenWindow(frame);
-      fullScreenRect=frame.getBounds();
-    }
- else {
-      DisplayMode mode=displayDevice.getDisplayMode();
-      fullScreenRect=new Rectangle(0,0,mode.getWidth(),mode.getHeight());
-      frame.setBounds(fullScreenRect);
-      frame.setVisible(true);
-    }
+    frame.setBounds(fullScreenRect);
+    frame.setVisible(true);
   }
   frame.setLayout(null);
   frame.add(applet);
