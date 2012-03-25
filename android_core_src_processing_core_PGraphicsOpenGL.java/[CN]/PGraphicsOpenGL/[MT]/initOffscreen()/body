@@ -1,5 +1,5 @@
 {
-  pg=(PGraphicsAndroid3D)parent.g;
+  pg=(PGraphicsOpenGL)parent.g;
   pgl.initOffscreenSurface(pg.pgl);
   pgl.updateOffscreen(pg.pgl);
   loadTextureImpl(BILINEAR);
@@ -9,7 +9,7 @@
   if (offscreenFramebufferMultisample != null) {
     offscreenFramebufferMultisample.release();
   }
-  if (PGraphicsAndroid3D.fboMultisampleSupported && 1 < antialias) {
+  if (PGraphicsOpenGL.fboMultisampleSupported && 1 < antialias) {
     offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,antialias,0,depthBits,stencilBits,depthBits == 24 && stencilBits == 8 && packedDepthStencilSupported,false);
     offscreenFramebufferMultisample.clear();
     offscreenMultisample=true;
