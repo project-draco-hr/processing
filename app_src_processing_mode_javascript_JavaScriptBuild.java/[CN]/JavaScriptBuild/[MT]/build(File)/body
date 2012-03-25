@@ -1,9 +1,6 @@
 {
   sketch.ensureExistence();
   this.binFolder=bin;
-  JavaScriptMode jsMode=(JavaScriptMode)mode;
-  JavaScriptEditor jsEditor=(JavaScriptEditor)jsMode.getEditor();
-  BasicServer jsServer=jsEditor.getServer();
   if (bin.exists()) {
     Base.removeDescendants(bin);
   }
@@ -119,8 +116,6 @@
   String sketchID=sketch.getName().replaceAll("[^a-zA-Z0-9]+","").replaceAll("^[^a-zA-Z]+","");
   String scriptFiles="<script type=\"text/javascript\">\n";
   scriptFiles+="// convenience function to fetch ID of sketch html element\n" + "function getProcessingSketchID () { return '" + sketchID + "'; }\n";
-  ArrayList<String> addresses=jsServer.getInetAddresses();
-  int port=jsServer.getPort();
   scriptFiles+="</script>\n";
   for (  String importScript : jsImports) {
     scriptFiles+="<script type=\"text/javascript\" src=\"" + importScript + "\"></script>";
