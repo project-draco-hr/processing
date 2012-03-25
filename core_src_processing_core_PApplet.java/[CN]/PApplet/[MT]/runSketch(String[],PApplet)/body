@@ -105,10 +105,8 @@
   present|=applet.sketchFullScreen();
   applet.args=PApplet.subset(args,argIndex + 1);
   applet.external=external;
-  Rectangle fullScreenRect=null;
-  DisplayMode mode=displayDevice.getDisplayMode();
-  fullScreenRect=new Rectangle(0,0,mode.getWidth(),mode.getHeight());
-  if (mode.getWidth() == applet.sketchWidth() && mode.getHeight() == applet.sketchHeight()) {
+  Rectangle screenRect=displayDevice.getDefaultConfiguration().getBounds();
+  if (screenRect.width == applet.sketchWidth() && screenRect.height == applet.sketchHeight()) {
     present=true;
   }
   if (present) {
@@ -117,7 +115,7 @@
     }
     frame.setUndecorated(true);
     frame.setBackground(backgroundColor);
-    frame.setBounds(fullScreenRect);
+    frame.setBounds(screenRect);
     frame.setVisible(true);
   }
   frame.setLayout(null);
@@ -138,8 +136,8 @@
     }
   }
   if (present) {
-    frame.setBounds(fullScreenRect);
-    applet.setBounds((fullScreenRect.width - applet.width) / 2,(fullScreenRect.height - applet.height) / 2,applet.width,applet.height);
+    frame.setBounds(screenRect);
+    applet.setBounds((screenRect.width - applet.width) / 2,(screenRect.height - applet.height) / 2,applet.width,applet.height);
     if (!hideStop) {
       Label label=new Label("stop");
       label.setForeground(stopColor);
@@ -153,7 +151,7 @@
       Dimension labelSize=label.getPreferredSize();
       labelSize=new Dimension(100,labelSize.height);
       label.setSize(labelSize);
-      label.setLocation(20,fullScreenRect.height - labelSize.height - 20);
+      label.setLocation(20,screenRect.height - labelSize.height - 20);
     }
     if (external) {
       applet.setupExternalMessages();
@@ -184,7 +182,7 @@
       }
     }
  else {
-      frame.setLocation((applet.screenWidth - applet.width) / 2,(applet.screenHeight - applet.height) / 2);
+      frame.setLocation(screenRect.x + (screenRect.width - applet.width) / 2,screenRect.y + (screenRect.height - applet.height) / 2);
     }
     Point frameLoc=frame.getLocation();
     if (frameLoc.y < 0) {
