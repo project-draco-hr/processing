@@ -5,18 +5,27 @@
   }
  else {
     params.add("processing.core.PApplet");
+    int runDisplay=Preferences.getInteger("run.display") - 1;
     if (editor != null) {
+      GraphicsDevice editorDevice=editor.getGraphicsConfiguration().getDevice();
+      GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+      GraphicsDevice[] devices=ge.getScreenDevices();
+      GraphicsDevice runDevice=(runDisplay >= 0 && runDisplay < devices.length) ? devices[runDisplay] : editorDevice;
       Point windowLocation=editor.getSketchLocation();
-      if (windowLocation != null) {
-        params.add(PApplet.ARGS_LOCATION + "=" + windowLocation.x+ ","+ windowLocation.y);
+      if (windowLocation == null) {
+        if (editorDevice == runDevice) {
+          Point editorLocation=editor.getLocation();
+          params.add(PApplet.ARGS_EDITOR_LOCATION + "=" + editorLocation.x+ ","+ editorLocation.y);
+        }
+ else {
+        }
       }
  else {
-        Point editorLocation=editor.getLocation();
-        params.add(PApplet.ARGS_EDITOR_LOCATION + "=" + editorLocation.x+ ","+ editorLocation.y);
+        params.add(PApplet.ARGS_LOCATION + "=" + windowLocation.x+ ","+ windowLocation.y);
       }
       params.add(PApplet.ARGS_EXTERNAL);
     }
-    params.add(PApplet.ARGS_DISPLAY + "=" + Preferences.get("run.display"));
+    params.add(PApplet.ARGS_DISPLAY + "=" + runDisplay);
     params.add(PApplet.ARGS_SKETCH_FOLDER + "=" + build.getSketchPath());
     if (presenting) {
       params.add(PApplet.ARGS_FULL_SCREEN);
