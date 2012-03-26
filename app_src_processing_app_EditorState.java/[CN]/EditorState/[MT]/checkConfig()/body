@@ -1,11 +1,13 @@
 {
-  GraphicsEnvironment graphicsEnvironment=GraphicsEnvironment.getLocalGraphicsEnvironment();
-  GraphicsDevice[] screenDevices=graphicsEnvironment.getScreenDevices();
-  for (  GraphicsDevice device : screenDevices) {
-    GraphicsConfiguration[] configurations=device.getConfigurations();
-    for (    GraphicsConfiguration config : configurations) {
-      if (deviceBounds != null && config.getBounds().equals(deviceBounds)) {
-        return config;
+  if (deviceBounds != null) {
+    GraphicsEnvironment graphicsEnvironment=GraphicsEnvironment.getLocalGraphicsEnvironment();
+    GraphicsDevice[] screenDevices=graphicsEnvironment.getScreenDevices();
+    for (    GraphicsDevice device : screenDevices) {
+      GraphicsConfiguration[] configurations=device.getConfigurations();
+      for (      GraphicsConfiguration config : configurations) {
+        if (config.getBounds().equals(deviceBounds)) {
+          return config;
+        }
       }
     }
   }
