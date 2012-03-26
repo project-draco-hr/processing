@@ -23,7 +23,7 @@
   if (!mode.isDefaultExtension(newExtension)) {
     if (renamingCode) {
       if (current == code[0]) {
-        Base.showWarning("Problem with rename","The first tab cannot be ." + newExtension + " file.\n"+ "(It may be time for your to graduate to a\n"+ "\"real\" programming environment, hotshot.)",null);
+        Base.showWarning("Problem with rename","The first tab cannot be a ." + newExtension + " file.\n"+ "(It may be time for your to graduate to a\n"+ "\"real\" programming environment, hotshot.)",null);
         return;
       }
     }
@@ -33,10 +33,12 @@
   if (!shortName.equals(sanitaryName)) {
     newName=sanitaryName + "." + newExtension;
   }
-  for (  SketchCode c : code) {
-    if (sanitaryName.equalsIgnoreCase(c.getPrettyName())) {
-      Base.showMessage("Nope","A file named \"" + c.getFileName() + "\" already exists\n"+ "in \""+ folder.getAbsolutePath()+ "\"");
-      return;
+  if (!(renamingCode && sanitaryName.equals(current.getPrettyName()))) {
+    for (    SketchCode c : code) {
+      if (sanitaryName.equalsIgnoreCase(c.getPrettyName())) {
+        Base.showMessage("Nope","A file named \"" + c.getFileName() + "\" already exists at\n"+ "\""+ folder.getAbsolutePath()+ "\"");
+        return;
+      }
     }
   }
   File newFile=new File(folder,newName);
