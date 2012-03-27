@@ -2,11 +2,26 @@
   if (editable) {
     Clipboard clipboard=getToolkit().getSystemClipboard();
     try {
-      String selection=((String)clipboard.getContents(this).getTransferData(DataFlavor.stringFlavor)).replace('\r','\n');
+      String selection=((String)clipboard.getContents(this).getTransferData(DataFlavor.stringFlavor));
+      if (selection.contains("\r\n")) {
+        selection=selection.replaceAll("\r\n","\n");
+      }
+ else       if (selection.contains("\r")) {
+        selection=selection.replace('\r','\n');
+      }
+      if (selection.contains("\t")) {
+        int tabSize=Preferences.getInteger("editor.tabs.size");
+        char[] c=new char[tabSize];
+        Arrays.fill(c,' ');
+        String tabString=new String(c);
+        selection=selection.replaceAll("\t",tabString);
+      }
       selection=selection.replace('\u00A0',' ');
       int repeatCount=inputHandler.getRepeatCount();
       StringBuffer buf=new StringBuffer();
-      for (int i=0; i < repeatCount; i++)       buf.append(selection);
+      for (int i=0; i < repeatCount; i++) {
+        buf.append(selection);
+      }
       selection=buf.toString();
       setSelectedText(selection);
     }
