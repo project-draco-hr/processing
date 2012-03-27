@@ -10,9 +10,11 @@
         if (newPath.startsWith(basePath)) {
           newPath=newPath.substring(basePath.length());
         }
-        vector.add(newPath);
+        if (extension == null || item.toLowerCase().endsWith(extension)) {
+          vector.add(newPath);
+        }
         if (file.isDirectory()) {
-          listFiles(basePath,newPath,extension,vector);
+          listFiles(basePath,file.getAbsolutePath(),extension,vector);
         }
       }
     }
