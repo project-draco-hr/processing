@@ -17,16 +17,19 @@
     }
     setFramerate=false;
   }
-  capabilities=new GLCapabilities(profile);
+  GLCapabilities caps=new GLCapabilities(profile);
   if (1 < antialias) {
-    capabilities.setSampleBuffers(true);
-    capabilities.setNumSamples(antialias);
+    caps.setSampleBuffers(true);
+    caps.setNumSamples(antialias);
   }
  else {
-    capabilities.setSampleBuffers(false);
+    caps.setSampleBuffers(false);
   }
+  caps.setDepthBits(24);
+  caps.setStencilBits(8);
+  caps.setAlphaBits(8);
   if (toolkit == AWT) {
-    canvasAWT=new GLCanvas(capabilities);
+    canvasAWT=new GLCanvas(caps);
     canvasAWT.setBounds(0,0,pg.width,pg.height);
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasAWT,BorderLayout.CENTER);
@@ -34,6 +37,7 @@
     pg.parent.addListeners(canvasAWT);
     listener=new PGLListener();
     canvasAWT.addGLEventListener(listener);
+    capabilities=canvasAWT.getChosenGLCapabilities();
     canvas=canvasAWT;
   }
  else   if (toolkit == NEWT) {
@@ -47,6 +51,7 @@
     window.addGLEventListener(listener);
     animator=new NEWTAnimator(window);
     animator.start();
+    capabilities=window.getChosenGLCapabilities();
     canvas=canvasNEWT;
   }
   initialized=true;
