@@ -45,9 +45,14 @@ catch (  ClassNotFoundException cnfe) {
   }
 catch (  Exception e) {
     if ((e instanceof IllegalArgumentException) || (e instanceof NoSuchMethodException) || (e instanceof IllegalAccessException)) {
-      e.printStackTrace();
-      String msg=irenderer + " needs to be updated " + "for the current release of Processing.";
-      throw new RuntimeException(msg);
+      if (e.getMessage().contains("cannot be <= 0")) {
+        throw new RuntimeException(e);
+      }
+ else {
+        e.printStackTrace();
+        String msg=irenderer + " needs to be updated " + "for the current release of Processing.";
+        throw new RuntimeException(msg);
+      }
     }
  else {
       if (platform == MACOSX)       e.printStackTrace(System.out);
