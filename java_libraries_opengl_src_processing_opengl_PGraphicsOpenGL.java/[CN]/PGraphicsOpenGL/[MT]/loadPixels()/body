@@ -6,9 +6,8 @@
     pixelsAreDirty=true;
   }
   if (pixelsAreDirty) {
-    beginScreenOp();
+    beginScreenOp(OP_READ);
     pixelBuffer.rewind();
-    pgl.glReadBuffer(PGL.GL_FRONT);
     pgl.glReadPixels(0,0,width,height,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,pixelBuffer);
     endScreenOp();
     PGL.nativeToJavaARGB(pixels,width,height);

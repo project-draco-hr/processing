@@ -27,11 +27,11 @@
     pushFramebuffer();
     if (offscreenMultisample) {
       setFramebuffer(offscreenFramebufferMultisample);
-      pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
     }
  else {
       setFramebuffer(offscreenFramebuffer);
     }
+    pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
     pgl.updateOffscreen(pg.pgl);
   }
   report("top beginDraw()");
@@ -120,7 +120,7 @@
     pgl.glDepthMask(true);
   }
   drawing=true;
-  screenOp=false;
+  screenOp=OP_NONE;
   pixelsAreDirty=true;
   settingPixels=false;
   clearColorBuffer0=clearColorBuffer;
