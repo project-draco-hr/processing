@@ -1,11 +1,12 @@
 {
-  flush();
+  if (!setgetPixels) {
+    flush();
+  }
   if ((pixels == null) || (pixels.length != width * height)) {
     pixels=new int[width * height];
     pixelBuffer=IntBuffer.wrap(pixels);
-    pixelsAreDirty=true;
   }
-  if (pixelsAreDirty) {
+  if (!setgetPixels) {
     beginScreenOp(OP_READ);
     pixelBuffer.rewind();
     pgl.glReadPixels(0,0,width,height,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,pixelBuffer);
@@ -15,6 +16,5 @@
       loadTextureImpl(POINT);
       pixelsToTexture();
     }
-    pixelsAreDirty=false;
   }
 }
