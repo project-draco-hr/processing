@@ -7,10 +7,10 @@
     pixelBuffer=IntBuffer.wrap(pixels);
   }
   if (!setgetPixels) {
-    beginScreenOp(OP_READ);
+    beginPixelsOp(OP_READ);
     pixelBuffer.rewind();
     pgl.glReadPixels(0,0,width,height,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,pixelBuffer);
-    endScreenOp();
+    endPixelsOp();
     PGL.nativeToJavaARGB(pixels,width,height);
     if (primarySurface) {
       loadTextureImpl(POINT);
