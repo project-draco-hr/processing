@@ -1,25 +1,5 @@
 {
-  int index=0;
-  int yindex=(image.height - 1) * image.width;
-  for (int y=0; y < image.height / 2; y++) {
-    if (BIG_ENDIAN) {
-      for (int x=0; x < image.width; x++) {
-        int temp=image.pixels[index];
-        image.pixels[index]=0xff000000 | ((image.pixels[yindex] >> 8) & 0x00ffffff);
-        image.pixels[yindex]=0xff000000 | ((temp >> 8) & 0x00ffffff);
-        index++;
-        yindex++;
-      }
-    }
- else {
-      for (int x=0; x < image.width; x++) {
-        int temp=image.pixels[index];
-        image.pixels[index]=0xff000000 | ((image.pixels[yindex] << 16) & 0xff0000) | (image.pixels[yindex] & 0xff00)| ((image.pixels[yindex] >> 16) & 0xff);
-        image.pixels[yindex]=0xff000000 | ((temp << 16) & 0xff0000) | (temp & 0xff00)| ((temp >> 16) & 0xff);
-        index++;
-        yindex++;
-      }
-    }
-    yindex-=image.width * 2;
+  if (image.pixels != null) {
+    PGL.nativeToJavaRGB(image.pixels,image.width,image.height);
   }
 }

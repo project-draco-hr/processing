@@ -1,0 +1,40 @@
+{
+  int index=0;
+  int yindex=(height - 1) * width;
+  for (int y=0; y < height / 2; y++) {
+    if (BIG_ENDIAN) {
+      for (int x=0; x < width; x++) {
+        int temp=pixels[index];
+        pixels[index]=(pixels[yindex] & 0xff000000) | ((pixels[yindex] >> 8) & 0x00ffffff);
+        pixels[yindex]=(temp & 0xff000000) | ((temp >> 8) & 0x00ffffff);
+        index++;
+        yindex++;
+      }
+    }
+ else {
+      for (int x=0; x < width; x++) {
+        int temp=pixels[index];
+        pixels[index]=(pixels[yindex] & 0xff000000) | ((pixels[yindex] << 16) & 0xff0000) | (pixels[yindex] & 0xff00)| ((pixels[yindex] >> 16) & 0xff);
+        pixels[yindex]=(temp & 0xff000000) | ((temp << 16) & 0xff0000) | (temp & 0xff00)| ((temp >> 16) & 0xff);
+        index++;
+        yindex++;
+      }
+    }
+    yindex-=width * 2;
+  }
+  if ((height % 2) == 1) {
+    index=(height / 2) * width;
+    if (BIG_ENDIAN) {
+      for (int x=0; x < width; x++) {
+        pixels[index]=(pixels[index] & 0xff000000) | ((pixels[index] >> 8) & 0x00ffffff);
+        index++;
+      }
+    }
+ else {
+      for (int x=0; x < width; x++) {
+        pixels[index]=(pixels[index] & 0xff000000) | ((pixels[index] << 16) & 0xff0000) | (pixels[index] & 0xff00)| ((pixels[index] >> 16) & 0xff);
+        index++;
+      }
+    }
+  }
+}

@@ -27,11 +27,11 @@
     pushFramebuffer();
     if (offscreenMultisample) {
       setFramebuffer(offscreenFramebufferMultisample);
-      pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
     }
  else {
       setFramebuffer(offscreenFramebuffer);
     }
+    pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
     pgl.updateOffscreen(pg.pgl);
   }
   report("top beginDraw()");
@@ -103,6 +103,7 @@
   pgl.glFrontFace(PGL.GL_CW);
   pgl.glActiveTexture(PGL.GL_TEXTURE0);
   normalX=normalY=normalZ=0;
+  perspectiveCorrectedLines=hints[ENABLE_PERSPECTIVE_CORRECTED_LINES];
   pgl.glDepthMask(true);
   pgl.glClearColor(0,0,0,0);
   pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT | PGL.GL_STENCIL_BUFFER_BIT);
@@ -120,6 +121,9 @@
     pgl.glDepthMask(true);
   }
   drawing=true;
+  pixelsOp=OP_NONE;
+  modified=false;
+  setgetPixels=false;
   clearColorBuffer0=clearColorBuffer;
   clearColorBuffer=false;
   report("bot beginDraw()");

@@ -1,0 +1,42 @@
+{
+  if (primarySurface) {
+    if (op == OP_READ) {
+      pgl.glReadBuffer(PGL.GL_FRONT);
+    }
+ else {
+      pgl.glDrawBuffer(PGL.GL_BACK);
+    }
+    offscreenNotCurrent=false;
+  }
+ else {
+    if (op == OP_READ) {
+      offscreenNotCurrent=offscreenFramebuffer != currentFramebuffer;
+      if (offscreenNotCurrent) {
+        pushFramebuffer();
+        setFramebuffer(offscreenFramebuffer);
+        pgl.updateOffscreen(pg.pgl);
+      }
+      pgl.glReadBuffer(PGL.GL_COLOR_ATTACHMENT0);
+    }
+ else {
+      if (offscreenMultisample) {
+        offscreenNotCurrent=offscreenFramebufferMultisample != currentFramebuffer;
+      }
+ else {
+        offscreenNotCurrent=offscreenFramebuffer != currentFramebuffer;
+      }
+      if (offscreenNotCurrent) {
+        pushFramebuffer();
+        if (offscreenMultisample) {
+          setFramebuffer(offscreenFramebufferMultisample);
+        }
+ else {
+          setFramebuffer(offscreenFramebuffer);
+        }
+        pgl.updateOffscreen(pg.pgl);
+      }
+      pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
+    }
+  }
+  pixelsOp=op;
+}
