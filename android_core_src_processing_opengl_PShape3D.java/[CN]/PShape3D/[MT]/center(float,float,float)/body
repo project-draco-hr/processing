@@ -1,26 +1,29 @@
 {
-  if (family == GROUP) {
-    PVector center0=new PVector();
-    int count=updateCenter(center0,0);
-    center0.x/=count;
-    center0.y/=count;
-    center0.z/=count;
-    float tx=cx - center0.x;
-    float ty=cy - center0.y;
-    float tz=cz - center0.z;
-    childHasMatrix();
-    applyMatrix=true;
-    super.translate(tx,ty,tz);
-  }
+  if (shapeEnded) {
+    updateTesselation();
+    if (family == GROUP) {
+      PVector center0=new PVector();
+      int count=updateCenter(center0,0);
+      center0.x/=count;
+      center0.y/=count;
+      center0.z/=count;
+      float tx=cx - center0.x;
+      float ty=cy - center0.y;
+      float tz=cz - center0.z;
+      childHasMatrix();
+      applyMatrix=true;
+      super.translate(tx,ty,tz);
+    }
  else {
-    PVector vec=new PVector();
-    int count=tess.getCenter(vec);
-    vec.x/=count;
-    vec.y/=count;
-    vec.z/=count;
-    float tx=cx - vec.x;
-    float ty=cy - vec.y;
-    float tz=cz - vec.z;
-    translate(tx,ty,tz);
+      PVector vec=new PVector();
+      int count=tess.getCenter(vec);
+      vec.x/=count;
+      vec.y/=count;
+      vec.z/=count;
+      float tx=cx - vec.x;
+      float ty=cy - vec.y;
+      float tz=cz - vec.z;
+      translate(tx,ty,tz);
+    }
   }
 }
