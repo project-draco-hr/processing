@@ -8,21 +8,32 @@
     Base.showWarning("Error during export","Sketch name is " + sketch.getName() + " but the\n"+ "name found in the code was "+ foundName+ ".",null);
     return false;
   }
-  int wide=PApplet.DEFAULT_WIDTH;
-  int high=PApplet.DEFAULT_HEIGHT;
-  String renderer="";
-  String scrubbed=scrubComments(sketch.getCode(0).getProgram());
-  String[] matches=PApplet.match(scrubbed,SIZE_REGEX);
-  if (matches != null) {
+  String[] sizeInfo=PdePreprocessor.parseSketchSize(sketch.getMainProgram(),false);
+  int sketchWidth=PApplet.DEFAULT_WIDTH;
+  int sketchHeight=PApplet.DEFAULT_HEIGHT;
+  boolean openglApplet=false;
+  boolean foundSize=false;
+  if (sizeInfo != null) {
     try {
-      wide=Integer.parseInt(matches[1]);
-      high=Integer.parseInt(matches[2]);
-      if (matches.length == 4)       renderer=matches[3].trim();
+      if (sizeInfo[1] != null && sizeInfo[2] != null) {
+        sketchWidth=Integer.parseInt(sizeInfo[1]);
+        sketchHeight=Integer.parseInt(sizeInfo[2]);
+        foundSize=true;
+      }
     }
- catch (    NumberFormatException e) {
-      final String message="The size of this applet could not automatically be\n" + "determined from your code. You'll have to edit the\n" + "HTML file to set the size of the applet.\n"+ "Use only numeric values (not variables) for the size()\n"+ "command. See the size() reference for an explanation.";
-      Base.showWarning("Could not find applet size",message,null);
+ catch (    Exception e) {
+      e.printStackTrace();
     }
+    String sketchRenderer=sizeInfo[3];
+    if (sketchRenderer != null) {
+      if (sketchRenderer.equals("P2D") || sketchRenderer.equals("P3D") || sketchRenderer.equals("OPENGL")) {
+        openglApplet=true;
+      }
+    }
+  }
+  if (!foundSize) {
+    final String message="The size of this applet could not automatically be\n" + "determined from your code. You'll have to edit the\n" + "HTML file to set the size of the applet.\n"+ "Use only numeric values (not variables) for the size()\n"+ "command. See the size() reference for an explanation.";
+    Base.showWarning("Could not find applet size",message,null);
   }
   String description="";
   String[] javadoc=PApplet.match(sketch.getCode(0).getProgram(),"/\\*{2,}(.*?)\\*+/");
@@ -71,7 +82,6 @@
   StringBuffer archives=new StringBuffer();
   archives.append(sketch.getName() + ".jar");
   addManifest(zos);
-  boolean openglApplet=false;
   HashMap<String,Object> zipFileContents=new HashMap<String,Object>();
   for (  Library library : importedLibraries) {
     if (library.getName().equals("OpenGL")) {
@@ -136,9 +146,6 @@
   if (customHtml.exists()) {
     is=new FileInputStream(customHtml);
   }
-  if (renderer.equals("P3D") || renderer.equals("OPENGL")) {
-    openglApplet=true;
-  }
   if (is == null) {
     if (openglApplet) {
       is=mode.getContentStream("applet/template-opengl.html");
@@ -163,10 +170,10 @@
         sb.replace(index,index + "@@archive@@".length(),archives.toString());
       }
       while ((index=sb.indexOf("@@width@@")) != -1) {
-        sb.replace(index,index + "@@width@@".length(),String.valueOf(wide));
+        sb.replace(index,index + "@@width@@".length(),String.valueOf(sketchWidth));
       }
       while ((index=sb.indexOf("@@height@@")) != -1) {
-        sb.replace(index,index + "@@height@@".length(),String.valueOf(high));
+        sb.replace(index,index + "@@height@@".length(),String.valueOf(sketchHeight));
       }
       while ((index=sb.indexOf("@@description@@")) != -1) {
         sb.replace(index,index + "@@description@@".length(),description);

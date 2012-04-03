@@ -4,7 +4,16 @@
     out.println("} ");
   }
   if ((mode == Mode.STATIC) || (mode == Mode.ACTIVE)) {
-    if (!foundMain) {
+    if (sketchWidth != null && !hasMethod("sketchWidth")) {
+      out.println(indent + "public int sketchWidth() { return " + sketchWidth+ "; }");
+    }
+    if (sketchHeight != null && !hasMethod("sketchHeight")) {
+      out.println(indent + "public int sketchHeight() { return " + sketchHeight+ "; }");
+    }
+    if (sketchRenderer != null && !hasMethod("sketchRenderer")) {
+      out.println(indent + "public String sketchRenderer() { return " + sketchRenderer+ "; }");
+    }
+    if (!hasMethod("main")) {
       out.println(indent + "static public void main(String args[]) {");
       out.print(indent + indent + "PApplet.main(new String[] { ");
       if (Preferences.getBoolean("export.application.fullscreen")) {
