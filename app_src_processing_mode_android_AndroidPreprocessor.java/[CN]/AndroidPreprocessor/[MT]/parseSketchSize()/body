@@ -3,10 +3,15 @@
   String[] matches=PApplet.match(scrubbed,processing.mode.java.JavaBuild.SIZE_REGEX);
   if (matches != null) {
     boolean badSize=false;
-    if (!matches[1].equals("screenWidth") && !matches[1].equals("screenHeight") && PApplet.parseInt(matches[1],-1) == -1) {
+    if (matches[1].equals("screenWidth") || matches[1].equals("screenHeight") || matches[2].equals("screenWidth")|| matches[2].equals("screenHeight")) {
+      final String message="The screenWidth and screenHeight variables are named\n" + "displayWidth and displayHeight in this release of Processing.";
+      Base.showWarning("Time for a quick update",message,null);
+      return false;
+    }
+    if (!matches[1].equals("displayWidth") && !matches[1].equals("displayHeight") && PApplet.parseInt(matches[1],-1) == -1) {
       badSize=true;
     }
-    if (!matches[2].equals("screenWidth") && !matches[2].equals("screenHeight") && PApplet.parseInt(matches[2],-1) == -1) {
+    if (!matches[2].equals("displayWidth") && !matches[2].equals("displayHeight") && PApplet.parseInt(matches[2],-1) == -1) {
       badSize=true;
     }
     if (badSize) {
