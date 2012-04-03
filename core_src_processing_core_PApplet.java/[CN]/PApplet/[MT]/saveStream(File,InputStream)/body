@@ -1,19 +1,19 @@
 {
   File tempFile=null;
   try {
-    File parentDir=targetFile.getParentFile();
-    createPath(targetFile);
-    tempFile=File.createTempFile(targetFile.getName(),null,parentDir);
+    File parentDir=target.getParentFile();
+    createPath(target);
+    tempFile=File.createTempFile(target.getName(),null,parentDir);
     FileOutputStream targetStream=new FileOutputStream(tempFile);
-    saveStream(targetStream,sourceStream);
+    saveStream(targetStream,source);
     targetStream.close();
     targetStream=null;
-    if (targetFile.exists()) {
-      if (!targetFile.delete()) {
-        System.err.println("Could not replace " + targetFile.getAbsolutePath() + ".");
+    if (target.exists()) {
+      if (!target.delete()) {
+        System.err.println("Could not replace " + target.getAbsolutePath() + ".");
       }
     }
-    if (!tempFile.renameTo(targetFile)) {
+    if (!tempFile.renameTo(target)) {
       System.err.println("Could not rename temporary file " + tempFile.getAbsolutePath());
       return false;
     }
