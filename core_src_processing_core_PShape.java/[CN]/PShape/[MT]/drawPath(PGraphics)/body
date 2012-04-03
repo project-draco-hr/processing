@@ -1,5 +1,6 @@
 {
   if (vertices == null)   return;
+  boolean insideContour=false;
   g.beginShape();
   if (vertexCodeCount == 0) {
     if (vertices[0].length == 2) {
@@ -34,7 +35,11 @@ case CURVE_VERTEX:
 g.curveVertex(vertices[index][X],vertices[index][Y]);
 index++;
 case BREAK:
-g.breakShape();
+if (insideContour) {
+g.endContour();
+}
+g.beginContour();
+insideContour=true;
 }
 }
 }
@@ -57,10 +62,17 @@ case CURVE_VERTEX:
 g.curveVertex(vertices[index][X],vertices[index][Y],vertices[index][Z]);
 index++;
 case BREAK:
-g.breakShape();
+if (insideContour) {
+g.endContour();
+}
+g.beginContour();
+insideContour=true;
 }
 }
 }
+}
+if (insideContour) {
+g.endContour();
 }
 g.endShape(close ? CLOSE : OPEN);
 }
