@@ -1,0 +1,17 @@
+{
+  checkBounds(row,column);
+  if (columnTypes[column] == LONG) {
+    long[] longData=(long[])columns[column];
+    return longData[row];
+  }
+  String str=getString(row,column);
+  if (str == null || str.equals(missingString)) {
+    return missingLong;
+  }
+  try {
+    return Long.parseLong(str);
+  }
+ catch (  NumberFormatException nfe) {
+    return missingLong;
+  }
+}

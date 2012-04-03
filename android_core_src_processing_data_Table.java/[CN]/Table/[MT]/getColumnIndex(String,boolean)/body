@@ -1,0 +1,20 @@
+{
+  if (columnTitles == null) {
+    System.err.println("Can't get column indices because no column titles are set.");
+    return -1;
+  }
+  if (columnIndices == null) {
+    columnIndices=new HashMap<String,Integer>();
+    for (int col=0; col < columns.length; col++) {
+      columnIndices.put(columnTitles[col],col);
+    }
+  }
+  Integer index=columnIndices.get(name);
+  if (index == null) {
+    if (report) {
+      System.err.println("No column named '" + name + "' was found.");
+    }
+    return -1;
+  }
+  return index.intValue();
+}

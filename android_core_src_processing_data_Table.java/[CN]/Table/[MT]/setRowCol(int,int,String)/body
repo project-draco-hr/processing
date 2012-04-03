@@ -1,0 +1,40 @@
+{
+switch (columnTypes[col]) {
+case STRING:
+    String[] stringData=(String[])columns[col];
+  stringData[row]=piece;
+break;
+case INT:
+int[] intData=(int[])columns[col];
+intData[row]=PApplet.parseInt(piece,missingInt);
+break;
+case LONG:
+long[] longData=(long[])columns[col];
+try {
+longData[row]=Long.parseLong(piece);
+}
+ catch (NumberFormatException nfe) {
+longData[row]=missingLong;
+}
+break;
+case FLOAT:
+float[] floatData=(float[])columns[col];
+floatData[row]=PApplet.parseFloat(piece,missingFloat);
+break;
+case DOUBLE:
+double[] doubleData=(double[])columns[col];
+try {
+doubleData[row]=Double.parseDouble(piece);
+}
+ catch (NumberFormatException nfe) {
+doubleData[row]=missingDouble;
+}
+break;
+case CATEGORICAL:
+int[] indexData=(int[])columns[col];
+indexData[row]=columnCategories[col].index(piece);
+break;
+default :
+throw new IllegalArgumentException("That's not a valid column type.");
+}
+}

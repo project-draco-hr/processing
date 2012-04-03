@@ -1,0 +1,33 @@
+{
+  String line=null;
+  int row=0;
+  if (rowCount == 0) {
+    setRowCount(10);
+  }
+  int prev=0;
+  while ((line=reader.readLine()) != null) {
+    if (row == getRowCount()) {
+      setRowCount(row << 1);
+    }
+    setRow(row,tsv ? PApplet.split(line,'\t') : splitLineCSV(line));
+    row++;
+    if (row % 10000 == 0) {
+      if (row < rowCount) {
+        int pct=(100 * row) / rowCount;
+        if (pct != prev) {
+          System.out.println(pct + "%");
+          prev=pct;
+        }
+      }
+      try {
+        Thread.sleep(5);
+      }
+ catch (      InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+  if (row != getRowCount()) {
+    setRowCount(row);
+  }
+}
