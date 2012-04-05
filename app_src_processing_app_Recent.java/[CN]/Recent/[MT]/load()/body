@@ -6,10 +6,14 @@
     if (version != null && version.equals(VERSION)) {
       String line=null;
       while ((line=reader.readLine()) != null) {
-        String[] pieces=PApplet.split(line,'\t');
-        Record record=new Record(pieces[0],new EditorState(pieces[1]));
-        records.add(record);
+        if (new File(line).exists()) {
+          records.add(new Record(line));
+        }
+ else {
+          Base.log(this,"ghost file: " + line);
+        }
       }
     }
   }
+  updateMenu();
 }

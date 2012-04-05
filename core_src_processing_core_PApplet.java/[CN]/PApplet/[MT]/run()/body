@@ -17,7 +17,12 @@
     }
     if (g != null)     g.requestDraw();
     if (frameCount == 1) {
-      requestFocusInWindow();
+      EventQueue.invokeLater(new Runnable(){
+        public void run(){
+          requestFocusInWindow();
+        }
+      }
+);
     }
     long afterTime=System.nanoTime();
     long timeDiff=afterTime - beforeTime;

@@ -16,17 +16,14 @@
   JPopupMenu.setDefaultLightWeightPopupEnabled(false);
   initRequirements();
   Preferences.init(null);
-  if (!SingleInstance.exists(args)) {
-    SingleInstance.createServer(platform);
+  if (!SingleInstance.alreadyRunning(args)) {
     try {
       platform.setLookAndFeel();
     }
  catch (    Exception e) {
       String mess=e.getMessage();
-      if (mess.indexOf("ch.randelshofer.quaqua.QuaquaLookAndFeel") == -1) {
-        System.err.println("Non-fatal error while setting the Look & Feel.");
-        System.err.println("The error message follows, however Processing should run fine.");
-        System.err.println(mess);
+      if (!mess.contains("ch.randelshofer.quaqua.QuaquaLookAndFeel")) {
+        log("Could not set the Look & Feel",e);
       }
     }
     try {
@@ -36,6 +33,9 @@
  catch (    IOException e) {
       Base.showError("Trouble without a name","Could not create a place to store untitled sketches.\n" + "That's gonna prevent us from continuing.",e);
     }
-    new Base(args);
+    log("about to create base...");
+    Base base=new Base(args);
+    SingleInstance.startServer(base);
+    log("done creating base...");
   }
 }

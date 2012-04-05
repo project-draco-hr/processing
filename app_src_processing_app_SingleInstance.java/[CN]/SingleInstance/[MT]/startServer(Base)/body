@@ -1,0 +1,57 @@
+{
+  try {
+    final ServerSocket ss=new ServerSocket(0,0,InetAddress.getByName(null));
+    Preferences.set(SERVER_PORT,"" + ss.getLocalPort());
+    final String key="" + Math.random();
+    Preferences.set(SERVER_KEY,key);
+    Preferences.save();
+    new Thread(new Runnable(){
+      public void run(){
+        while (true) {
+          try {
+            Socket s=ss.accept();
+            final BufferedReader reader=PApplet.createReader(s.getInputStream());
+            String receivedKey=reader.readLine();
+            Base.log(this,"key is " + key + ", received is "+ receivedKey);
+            if (key.equals(receivedKey)) {
+              SwingUtilities.invokeLater(new Runnable(){
+                public void run(){
+                  try {
+                    Base.log(this,"about to read line");
+                    String path=reader.readLine();
+                    if (path == null) {
+                      Base.log(this,"opening new empty sketch");
+                      base.handleNew();
+                    }
+ else {
+                      do {
+                        Base.log(this,"calling open with " + path);
+                        base.handleOpen(path);
+                        path=reader.readLine();
+                      }
+ while (path != null);
+                    }
+                  }
+ catch (                  IOException e) {
+                    e.printStackTrace();
+                  }
+                }
+              }
+);
+            }
+ else {
+              Base.log(this,"keys do not match");
+            }
+          }
+ catch (          IOException e) {
+            Base.log("SingleInstance error while listening",e);
+          }
+        }
+      }
+    }
+).start();
+  }
+ catch (  IOException e) {
+    Base.log("Could not create single instance server.",e);
+  }
+}

@@ -95,9 +95,13 @@
     File newFile=new File(newFolder,code[i].getFileName());
     code[i].saveAs(newFile);
   }
+  if (!isUntitled()) {
+    editor.removeRecent();
+  }
   File newFile=new File(newFolder,newName + ".pde");
   code[0].saveAs(newFile);
   updateInternal(newName,newFolder);
   setUntitled(false);
+  editor.addRecent();
   return true;
 }
