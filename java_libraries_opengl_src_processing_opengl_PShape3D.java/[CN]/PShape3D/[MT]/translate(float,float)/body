@@ -1,30 +1,3 @@
 {
-  if (shapeEnded) {
-    updateTesselation();
-    if (family == GROUP) {
-      childHasMatrix();
-      applyMatrix=true;
-      super.translate(tx,ty);
-    }
- else {
-      checkMatrix(2);
-      matrix.reset();
-      matrix.translate(tx,ty);
-      tess.applyMatrix((PMatrix2D)matrix);
-      modified();
-      if (0 < tess.fillVertexCount) {
-        modifiedFillVertices=true;
-        modifiedFillNormals=true;
-      }
-      if (0 < tess.lineVertexCount) {
-        modifiedLineVertices=true;
-        modifiedLineAttributes=true;
-      }
-      if (0 < tess.pointVertexCount) {
-        modifiedPointVertices=true;
-        modifiedPointNormals=true;
-      }
-      applyMatrix=false;
-    }
-  }
+  transform(TRANSLATE,tx,ty);
 }

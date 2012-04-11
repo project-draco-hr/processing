@@ -25,6 +25,13 @@
     y+=h;
     h=-h;
   }
+  this.fillColor=fillColor;
+  this.strokeColor=strokeColor;
+  this.strokeWeight=strokeWeight;
+  this.ambientColor=ambientColor;
+  this.specularColor=specularColor;
+  this.emissiveColor=emissiveColor;
+  this.shininessFactor=shininessFactor;
   float radiusH=w / 2;
   float radiusV=h / 2;
   float centerX=x + radiusH;
@@ -39,13 +46,13 @@
   }
   float inc=(float)PGraphicsOpenGL.SINCOS_LENGTH / accuracy;
   if (fill) {
-    addVertex(centerX,centerY,fillColor,strokeColor,strokeWeight,ambient,specular,emissive,shininess,VERTEX);
+    addVertex(centerX,centerY,VERTEX);
   }
   int idx0, pidx, idx;
   idx0=pidx=idx=0;
   float val=0;
   for (int i=0; i < accuracy; i++) {
-    idx=addVertex(centerX + PGraphicsOpenGL.cosLUT[(int)val] * radiusH,centerY + PGraphicsOpenGL.sinLUT[(int)val] * radiusV,fillColor,strokeColor,strokeWeight,ambient,specular,emissive,shininess,VERTEX);
+    idx=addVertex(centerX + PGraphicsOpenGL.cosLUT[(int)val] * radiusH,centerY + PGraphicsOpenGL.sinLUT[(int)val] * radiusV,VERTEX);
     val=(val + inc) % PGraphicsOpenGL.SINCOS_LENGTH;
     if (0 < i) {
       if (stroke)       addEdge(pidx,idx,i == 1,false);
@@ -55,6 +62,6 @@
     }
     pidx=idx;
   }
-  addVertex(centerX + PGraphicsOpenGL.cosLUT[0] * radiusH,centerY + PGraphicsOpenGL.sinLUT[0] * radiusV,fillColor,strokeColor,strokeWeight,ambient,specular,emissive,shininess,VERTEX);
+  addVertex(centerX + PGraphicsOpenGL.cosLUT[0] * radiusH,centerY + PGraphicsOpenGL.sinLUT[0] * radiusV,VERTEX);
   if (stroke)   addEdge(idx,idx0,false,true);
 }

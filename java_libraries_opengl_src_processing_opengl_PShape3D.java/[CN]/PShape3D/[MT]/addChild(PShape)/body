@@ -5,7 +5,9 @@
       child.updateRoot(root);
       root.tessellated=false;
       tessellated=false;
-      ((PShape3D)child).tessellated=false;
+      if (!cacheTransformations && ((PShape3D)child).hasMatrix()) {
+        setChildHasMatrix(true);
+      }
     }
  else {
       PGraphics.showWarning("Cannot add child shape to non-group shape.");
