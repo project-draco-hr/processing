@@ -1,9 +1,7 @@
 {
-  if (!shapeEnded || tess.fillVertexCount == 0 || texture == null) {
-    return;
+  if (shapeEnded && 0 < tess.fillVertexCount && texture != null) {
+    Arrays.fill(tess.fillColors,0,tess.fillVertexCount,PGL.javaToNativeARGB(tintColor));
+    modifiedFillColors=true;
+    modified();
   }
-  updateTessellation();
-  Arrays.fill(tess.fillColors,0,tess.pointVertexCount,tintColor);
-  modifiedFillColors=true;
-  modified();
 }

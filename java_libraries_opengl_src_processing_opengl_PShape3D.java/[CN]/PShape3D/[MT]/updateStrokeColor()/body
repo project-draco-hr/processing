@@ -1,13 +1,12 @@
 {
-  if (shapeEnded || (tess.lineVertexCount == 0 && tess.pointVertexCount == 0)) {
-    updateTessellation();
+  if (shapeEnded && (0 < tess.lineVertexCount || 0 < tess.pointVertexCount)) {
     if (0 < tess.lineVertexCount) {
-      Arrays.fill(tess.lineColors,0,tess.lineVertexCount,strokeColor);
+      Arrays.fill(tess.lineColors,0,tess.lineVertexCount,PGL.javaToNativeARGB(strokeColor));
       modifiedLineColors=true;
       modified();
     }
     if (0 < tess.pointVertexCount) {
-      Arrays.fill(tess.pointColors,0,tess.pointVertexCount,strokeColor);
+      Arrays.fill(tess.pointColors,0,tess.pointVertexCount,PGL.javaToNativeARGB(strokeColor));
       modifiedPointColors=true;
       modified();
     }

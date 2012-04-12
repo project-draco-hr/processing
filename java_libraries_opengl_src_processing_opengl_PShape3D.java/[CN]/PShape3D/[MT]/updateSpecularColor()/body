@@ -1,9 +1,7 @@
 {
-  if (!shapeEnded || tess.fillVertexCount == 0) {
-    return;
+  if (shapeEnded && 0 < tess.fillVertexCount) {
+    Arrays.fill(tess.fillSpecular,0,tess.fillVertexCount,PGL.javaToNativeARGB(specularColor));
+    modifiedFillSpecular=true;
+    modified();
   }
-  updateTessellation();
-  Arrays.fill(tess.fillSpecular,0,tess.fillVertexCount,specularColor);
-  modifiedFillSpecular=true;
-  modified();
 }
