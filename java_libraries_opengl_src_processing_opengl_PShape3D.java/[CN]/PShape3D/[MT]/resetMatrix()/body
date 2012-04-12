@@ -3,8 +3,8 @@
     ((PShape3D)parent).setChildHasMatrix(false);
   }
   if (shapeEnded) {
-    updateTesselation();
     if (family == GROUP) {
+      updateTessellation();
       for (int i=0; i < childCount; i++) {
         PShape3D child=(PShape3D)children[i];
         child.resetMatrix();
@@ -18,7 +18,9 @@
       if (cacheTransformations) {
         boolean res=matrix.invert();
         if (res) {
-          applyMatrix(matrix);
+          if (tessellated) {
+            applyMatrix(matrix);
+          }
           matrix.reset();
         }
  else {

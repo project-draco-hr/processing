@@ -1,12 +1,16 @@
 {
   if (child instanceof PShape3D) {
     if (family == GROUP) {
-      super.addChild(child);
-      child.updateRoot(root);
+      PShape3D c3d=(PShape3D)child;
+      super.addChild(c3d);
+      c3d.updateRoot(root);
       root.tessellated=false;
       tessellated=false;
-      if (!cacheTransformations && ((PShape3D)child).hasMatrix()) {
+      if (!cacheTransformations && c3d.hasMatrix()) {
         setChildHasMatrix(true);
+      }
+      if (c3d.texture != null) {
+        addTexture(c3d.texture);
       }
     }
  else {
