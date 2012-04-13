@@ -1,8 +1,9 @@
 {
   if (visible) {
     updateTessellation();
+    initBuffers();
     updateGeometry();
-    if (applyMatrix && matrix != null) {
+    if (!cacheTransformations && matrix != null) {
       g.pushMatrix();
       g.applyMatrix(matrix);
     }
@@ -25,8 +26,9 @@
  else {
       render(texture);
     }
-    if (applyMatrix && matrix != null) {
+    if (!cacheTransformations && matrix != null) {
       g.popMatrix();
     }
+    modeCheck();
   }
 }

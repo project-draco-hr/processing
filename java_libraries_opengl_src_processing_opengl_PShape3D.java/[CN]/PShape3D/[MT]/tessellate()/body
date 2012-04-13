@@ -1,4 +1,8 @@
 {
+  if (tess == null) {
+    tess=pg.newTessGeometry(PGraphicsOpenGL.RETAINED,family == GROUP);
+  }
+  tess.clear();
   if (family == GROUP) {
     for (int i=0; i < childCount; i++) {
       PShape3D child=(PShape3D)children[i];
@@ -6,7 +10,8 @@
     }
   }
  else {
-    if (shapeEnded && !tessellated) {
+    if (shapeEnded) {
+      in.clearEdges();
       tessellator.setInGeometry(in);
       tessellator.setTessGeometry(tess);
       tessellator.setFill(fill || texture != null);
@@ -52,6 +57,7 @@
         }
       }
  else       if (family == PRIMITIVE) {
+        in.clear();
         if (kind == POINT) {
           tessellatePoint();
         }
@@ -86,9 +92,8 @@
       if (texture != null && parent != null) {
         ((PShape3D)parent).addTexture(texture);
       }
-      if (cacheTransformations && applyMatrix) {
+      if (cacheTransformations && matrix != null) {
         tess.applyMatrix(matrix);
-        applyMatrix=false;
       }
     }
   }
