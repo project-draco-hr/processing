@@ -1,0 +1,57 @@
+{
+  if (family == GROUP) {
+    PGraphics.showWarning("GROUP shapes don't have any vertices");
+    return;
+  }
+  updateTessellation();
+  if (hasPoints) {
+    int[] indices=in.pointIndices[index];
+    for (int i=0; i < indices.length; i++) {
+      int tessIdx=indices[i];
+      tess.pointVertices[3 * tessIdx + 0]=x;
+      tess.pointVertices[3 * tessIdx + 1]=y;
+      tess.pointVertices[3 * tessIdx + 2]=z;
+    }
+    modifiedPointVertices=true;
+  }
+  if (hasLines) {
+    int[] indices=in.lineIndices[index];
+    for (int i=0; i < indices.length; i++) {
+      int tessIdx=indices[i];
+      tess.lineVertices[3 * tessIdx + 0]=x;
+      tess.lineVertices[3 * tessIdx + 1]=y;
+      tess.lineVertices[3 * tessIdx + 2]=z;
+    }
+    modifiedLineVertices=true;
+  }
+  if (hasFill) {
+    if (-1 < in.firstFillIndex) {
+      int tessIdx=in.firstFillIndex + index;
+      tess.fillVertices[3 * tessIdx + 0]=x;
+      tess.fillVertices[3 * tessIdx + 1]=y;
+      tess.fillVertices[3 * tessIdx + 2]=z;
+    }
+ else {
+      float x0=in.vertices[3 * index + 0];
+      float y0=in.vertices[3 * index + 1];
+      float z0=in.vertices[3 * index + 2];
+      int[] indices=in.fillIndices[index];
+      float[] weigths=in.fillWeights[index];
+      for (int i=0; i < indices.length; i++) {
+        int tessIdx=indices[i];
+        float weight=weigths[i];
+        float tx0=tess.fillVertices[3 * tessIdx + 0];
+        float ty0=tess.fillVertices[3 * tessIdx + 1];
+        float tz0=tess.fillVertices[3 * tessIdx + 2];
+        tess.fillVertices[3 * tessIdx + 0]=tx0 + weight * (x - x0);
+        tess.fillVertices[3 * tessIdx + 1]=ty0 + weight * (y - y0);
+        tess.fillVertices[3 * tessIdx + 2]=tz0 + weight * (z - z0);
+      }
+    }
+    modifiedFillVertices=true;
+  }
+  in.vertices[3 * index + 0]=x;
+  in.vertices[3 * index + 1]=y;
+  in.vertices[3 * index + 2]=z;
+  modified();
+}

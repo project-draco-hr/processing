@@ -1,5 +1,5 @@
 {
-  double[] vertex=new double[25];
+  double[] vertex=new double[25 + 8];
   vertex[0]=coords[0];
   vertex[1]=coords[1];
   vertex[2]=coords[2];
@@ -11,6 +11,11 @@
         vertex[i]+=weight[j] * vertData[i];
       }
     }
+  }
+  for (int j=0; j < 4; j++) {
+    double[] vertData=(double[])data[j];
+    vertex[25 + 2 * j + 0]=vertData[25];
+    vertex[25 + 2 * j + 1]=weight[j];
   }
   double sum=vertex[7] * vertex[7] + vertex[8] * vertex[8] + vertex[9] * vertex[9];
   double len=Math.sqrt(sum);

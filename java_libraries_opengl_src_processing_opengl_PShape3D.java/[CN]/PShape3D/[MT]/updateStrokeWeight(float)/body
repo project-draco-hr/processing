@@ -1,0 +1,21 @@
+{
+  if (shapeEnded && tessellated && (0 < tess.lineVertexCount || 0 < tess.pointVertexCount)) {
+    float resizeFactor=strokeWeight / prevStrokeWeight;
+    Arrays.fill(in.sweights,0,in.vertexCount,strokeWeight);
+    if (0 < tess.lineVertexCount) {
+      for (int i=0; i < tess.lineVertexCount; i++) {
+        tess.lineDirWidths[4 * i + 3]*=resizeFactor;
+      }
+      modifiedLineAttributes=true;
+      modified();
+    }
+    if (0 < tess.pointVertexCount) {
+      for (int i=0; i < tess.pointVertexCount; i++) {
+        tess.pointSizes[2 * i + 0]*=resizeFactor;
+        tess.pointSizes[2 * i + 1]*=resizeFactor;
+      }
+      modifiedPointAttributes=true;
+      modified();
+    }
+  }
+}

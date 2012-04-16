@@ -1,0 +1,13 @@
+{
+  if (family == GROUP) {
+    PGraphics.showWarning("GROUP shapes don't have any vertices");
+    return indices;
+  }
+  updateTessellation();
+  if (indices == null || indices.length != tess.fillIndices.length) {
+    indices=new int[tess.fillIndices.length];
+  }
+  PApplet.arrayCopy(tess.fillIndices,indices);
+  removeIndexOffset(indices);
+  return indices;
+}
