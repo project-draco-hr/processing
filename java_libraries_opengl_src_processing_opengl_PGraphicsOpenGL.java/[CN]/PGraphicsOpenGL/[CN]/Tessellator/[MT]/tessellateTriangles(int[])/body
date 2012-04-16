@@ -1,15 +1,14 @@
 {
   int nInVert=in.lastVertex - in.firstVertex + 1;
   if (fill && 3 <= nInVert) {
-    int nInInd=nInVert;
+    int nInInd=indices.length;
     checkForFlush(tess.fillVertexCount + nInVert,tess.fillIndexCount + nInInd);
     tess.addFillVertices(in);
-    in.addFillIndices(tess.firstFillVertex);
     tess.addFillIndices(nInInd);
     int idx0=tess.firstFillIndex;
     int offset=tess.firstFillVertex;
-    for (int i=in.firstVertex; i <= in.lastVertex; i++) {
-      tess.fillIndices[idx0 + i]=PGL.makeIndex(offset + i);
+    for (int i=0; i <= nInInd; i++) {
+      tess.fillIndices[idx0 + i]=PGL.makeIndex(offset + indices[i]);
     }
   }
   if (stroke) {

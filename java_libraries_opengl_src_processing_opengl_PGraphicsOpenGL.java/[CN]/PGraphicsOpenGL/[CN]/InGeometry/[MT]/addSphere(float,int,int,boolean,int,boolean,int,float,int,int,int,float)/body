@@ -1,2 +1,63 @@
 {
+  if ((detU < 3) || (detV < 3)) {
+    detU=detV=30;
+  }
+  this.fillColor=fillColor;
+  this.strokeColor=strokeColor;
+  this.strokeWeight=strokeWeight;
+  this.ambientColor=ambientColor;
+  this.specularColor=specularColor;
+  this.emissiveColor=emissiveColor;
+  this.shininessFactor=shininessFactor;
+  float startLat=-90;
+  float startLon=0.0f;
+  float latInc=180.0f / detU;
+  float lonInc=360.0f / detV;
+  float phi1, phi2;
+  float theta1, theta2;
+  float x0, y0, z0;
+  float x1, y1, z1;
+  float x2, y2, z2;
+  float x3, y3, z3;
+  float u1, v1, u2, v2, v3;
+  int nind=detV * detU * 6;
+  int[] indices=new int[nind];
+  int icount=0;
+  int vcount=0;
+  for (int col=0; col < detU; col++) {
+    phi1=(startLon + col * lonInc) * DEG_TO_RAD;
+    phi2=(startLon + (col + 1) * lonInc) * DEG_TO_RAD;
+    for (int row=0; row < detV; row++) {
+      theta1=(startLat + row * latInc) * DEG_TO_RAD;
+      theta2=(startLat + (row + 1) * latInc) * DEG_TO_RAD;
+      x0=PApplet.cos(phi1) * PApplet.cos(theta1);
+      x1=PApplet.cos(phi1) * PApplet.cos(theta2);
+      x2=PApplet.cos(phi2) * PApplet.cos(theta2);
+      y0=PApplet.sin(theta1);
+      y1=PApplet.sin(theta2);
+      y2=PApplet.sin(theta2);
+      z0=PApplet.sin(phi1) * PApplet.cos(theta1);
+      z1=PApplet.sin(phi1) * PApplet.cos(theta2);
+      z2=PApplet.sin(phi2) * PApplet.cos(theta2);
+      x3=PApplet.cos(phi2) * PApplet.cos(theta1);
+      y3=PApplet.sin(theta1);
+      z3=PApplet.sin(phi2) * PApplet.cos(theta1);
+      u1=PApplet.map(phi1,TWO_PI,0,0,1);
+      u2=PApplet.map(phi2,TWO_PI,0,0,1);
+      v1=PApplet.map(theta1,-HALF_PI,HALF_PI,0,1);
+      v2=PApplet.map(theta2,-HALF_PI,HALF_PI,0,1);
+      v3=PApplet.map(theta1,-HALF_PI,HALF_PI,0,1);
+      addVertex(rad * x0,rad * y0,rad * z0,x0,y0,z0,u1,v1,VERTEX);
+      indices[icount++]=vcount++;
+      addVertex(rad * x1,rad * y1,rad * z1,x1,y1,z1,u1,v2,VERTEX);
+      indices[icount++]=vcount++;
+      addVertex(rad * x2,rad * y2,rad * z2,x2,y2,z2,u2,v2,VERTEX);
+      indices[icount++]=vcount++;
+      indices[icount++]=vcount - 2;
+      indices[icount++]=vcount - 1;
+      addVertex(rad * x3,rad * y3,rad * z3,x3,y3,z3,u2,v3,VERTEX);
+      indices[icount++]=vcount++;
+    }
+  }
+  return indices;
 }
