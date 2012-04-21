@@ -1,0 +1,17 @@
+{
+  if (shape != TRIANGLE && shape != TRIANGLES) {
+    throw new RuntimeException("Indices and edges can only be set for TRIANGLE shapes");
+  }
+  if (flushMode == FLUSH_WHEN_FULL && hints[DISABLE_TEXTURE_CACHE] && textureImage0 != null && textureImage == null) {
+    textureImage=textureImage0;
+    flush();
+    textureImage=null;
+  }
+  tessellate(indices,edges);
+  if (flushMode == FLUSH_CONTINUOUSLY || (flushMode == FLUSH_WHEN_FULL && tessGeo.isFull())) {
+    if (flushMode == FLUSH_WHEN_FULL && tessGeo.isOverflow()) {
+      PGraphics.showWarning("P3D: tessellated arrays are overflowing");
+    }
+    flush();
+  }
+}

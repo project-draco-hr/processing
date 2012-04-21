@@ -4,10 +4,11 @@
     int nInInd=indices.length;
     checkForFlush(tess.fillVertexCount + nInVert,tess.fillIndexCount + nInInd);
     tess.addFillVertices(in);
+    in.addFillIndices(tess.firstFillVertex);
     tess.addFillIndices(nInInd);
     int idx0=tess.firstFillIndex;
     int offset=tess.firstFillVertex;
-    for (int i=0; i <= nInInd; i++) {
+    for (int i=0; i < nInInd; i++) {
       tess.fillIndices[idx0 + i]=PGL.makeIndex(offset + indices[i]);
     }
   }

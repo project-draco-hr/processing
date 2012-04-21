@@ -1,6 +1,6 @@
 {
-  if ((detU < 3) || (detV < 3)) {
-    detU=detV=30;
+  if ((detU < 3) || (detV < 2)) {
+    sphereDetail(30);
   }
   this.fillColor=fillColor;
   this.strokeColor=strokeColor;
@@ -9,55 +9,94 @@
   this.specularColor=specularColor;
   this.emissiveColor=emissiveColor;
   this.shininessFactor=shininessFactor;
-  float startLat=-90;
-  float startLon=0.0f;
-  float latInc=180.0f / detU;
-  float lonInc=360.0f / detV;
-  float phi1, phi2;
-  float theta1, theta2;
-  float x0, y0, z0;
-  float x1, y1, z1;
-  float x2, y2, z2;
-  float x3, y3, z3;
-  float u1, v1, u2, v2, v3;
-  int nind=detV * detU * 6;
+  int nind=3 * sphereDetailU + (6 * sphereDetailU + 3) * (sphereDetailV - 2) + 3 * sphereDetailU;
   int[] indices=new int[nind];
-  int icount=0;
-  int vcount=0;
-  for (int col=0; col < detU; col++) {
-    phi1=(startLon + col * lonInc) * DEG_TO_RAD;
-    phi2=(startLon + (col + 1) * lonInc) * DEG_TO_RAD;
-    for (int row=0; row < detV; row++) {
-      theta1=(startLat + row * latInc) * DEG_TO_RAD;
-      theta2=(startLat + (row + 1) * latInc) * DEG_TO_RAD;
-      x0=PApplet.cos(phi1) * PApplet.cos(theta1);
-      x1=PApplet.cos(phi1) * PApplet.cos(theta2);
-      x2=PApplet.cos(phi2) * PApplet.cos(theta2);
-      y0=PApplet.sin(theta1);
-      y1=PApplet.sin(theta2);
-      y2=PApplet.sin(theta2);
-      z0=PApplet.sin(phi1) * PApplet.cos(theta1);
-      z1=PApplet.sin(phi1) * PApplet.cos(theta2);
-      z2=PApplet.sin(phi2) * PApplet.cos(theta2);
-      x3=PApplet.cos(phi2) * PApplet.cos(theta1);
-      y3=PApplet.sin(theta1);
-      z3=PApplet.sin(phi2) * PApplet.cos(theta1);
-      u1=PApplet.map(phi1,TWO_PI,0,0,1);
-      u2=PApplet.map(phi2,TWO_PI,0,0,1);
-      v1=PApplet.map(theta1,-HALF_PI,HALF_PI,0,1);
-      v2=PApplet.map(theta2,-HALF_PI,HALF_PI,0,1);
-      v3=PApplet.map(theta1,-HALF_PI,HALF_PI,0,1);
-      addVertex(rad * x0,rad * y0,rad * z0,x0,y0,z0,u1,v1,VERTEX);
-      indices[icount++]=vcount++;
-      addVertex(rad * x1,rad * y1,rad * z1,x1,y1,z1,u1,v2,VERTEX);
-      indices[icount++]=vcount++;
-      addVertex(rad * x2,rad * y2,rad * z2,x2,y2,z2,u2,v2,VERTEX);
-      indices[icount++]=vcount++;
-      indices[icount++]=vcount - 2;
-      indices[icount++]=vcount - 1;
-      addVertex(rad * x3,rad * y3,rad * z3,x3,y3,z3,u2,v3,VERTEX);
-      indices[icount++]=vcount++;
-    }
+  int vertCount=0;
+  int indCount=0;
+  int vert0, vert1;
+  float u, v;
+  float du=1.0f / (sphereDetailU);
+  float dv=1.0f / (sphereDetailV);
+  u=1;
+  v=1;
+  for (int i=0; i < sphereDetailU; i++) {
+    addVertex(0,r,0,0,1,0,u,v,VERTEX);
+    u-=du;
   }
+  vertCount=sphereDetailU;
+  vert0=vertCount;
+  u=1;
+  v-=dv;
+  for (int i=0; i < sphereDetailU; i++) {
+    addVertex(r * sphereX[i],r * sphereY[i],r * sphereZ[i],sphereX[i],sphereY[i],sphereZ[i],u,v,VERTEX);
+    u-=du;
+  }
+  vertCount+=sphereDetailU;
+  vert1=vertCount;
+  addVertex(r * sphereX[0],r * sphereY[0],r * sphereZ[0],sphereX[0],sphereY[0],sphereZ[0],u,v,VERTEX);
+  vertCount++;
+  for (int i=0; i < sphereDetailU; i++) {
+    int i1=vert0 + i;
+    int i0=vert0 + i - sphereDetailU;
+    indices[3 * i + 0]=i1;
+    indices[3 * i + 1]=i0;
+    indices[3 * i + 2]=i1 + 1;
+    addEdge(i0,i1,i == 0,false);
+    addEdge(i1,i1 + 1,false,false);
+  }
+  indCount+=3 * sphereDetailU;
+  int offset=0;
+  for (int j=2; j < sphereDetailV; j++) {
+    offset+=sphereDetailU;
+    vert0=vertCount;
+    u=1;
+    v-=dv;
+    for (int i=0; i < sphereDetailU; i++) {
+      int ioff=offset + i;
+      addVertex(r * sphereX[ioff],r * sphereY[ioff],r * sphereZ[ioff],sphereX[ioff],sphereY[ioff],sphereZ[ioff],u,v,VERTEX);
+      u-=du;
+    }
+    vertCount+=sphereDetailU;
+    vert1=vertCount;
+    addVertex(r * sphereX[offset],r * sphereY[offset],r * sphereZ[offset],sphereX[offset],sphereY[offset],sphereZ[offset],u,v,VERTEX);
+    vertCount++;
+    for (int i=0; i < sphereDetailU; i++) {
+      int i1=vert0 + i;
+      int i0=vert0 + i - sphereDetailU - 1;
+      indices[indCount + 6 * i + 0]=i1;
+      indices[indCount + 6 * i + 1]=i0;
+      indices[indCount + 6 * i + 2]=i0 + 1;
+      indices[indCount + 6 * i + 3]=i1;
+      indices[indCount + 6 * i + 4]=i0 + 1;
+      indices[indCount + 6 * i + 5]=i1 + 1;
+      addEdge(i0,i1,false,false);
+      addEdge(i1,i1 + 1,false,false);
+      addEdge(i0 + 1,i1,false,false);
+    }
+    indCount+=6 * sphereDetailU;
+    indices[indCount + 0]=vert1;
+    indices[indCount + 1]=vert1 - sphereDetailU;
+    indices[indCount + 2]=vert1 - 1;
+    indCount+=3;
+    addEdge(vert1 - sphereDetailU,vert1 - 1,false,false);
+    addEdge(vert1 - 1,vert1,false,false);
+  }
+  u=1;
+  v=0;
+  for (int i=0; i < sphereDetailU; i++) {
+    addVertex(0,-r,0,0,-1,0,u,v,VERTEX);
+    u-=du;
+  }
+  vertCount+=sphereDetailU;
+  for (int i=0; i < sphereDetailU; i++) {
+    int i0=vert0 + i;
+    int i1=vert0 + i + sphereDetailU+ 1;
+    indices[indCount + 3 * i + 0]=i0;
+    indices[indCount + 3 * i + 1]=i1;
+    indices[indCount + 3 * i + 2]=i0 + 1;
+    addEdge(i0,i0 + 1,false,false);
+    addEdge(i0,i1,false,i == sphereDetailU - 1);
+  }
+  indCount+=3 * sphereDetailU;
   return indices;
 }
