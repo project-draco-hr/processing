@@ -9,6 +9,9 @@
   }
   PApplet.arrayCopy(pixels,mi1,rgbaPixels,0,mlen);
   PGL.javaToNativeARGB(rgbaPixels,mw,mh);
+  if (primarySurface) {
+    loadTextureImpl(POINT);
+  }
   pgl.copyToTexture(texture.glTarget,texture.glFormat,texture.glID,mx1,my1,mw,mh,IntBuffer.wrap(rgbaPixels));
   if (primarySurface || offscreenMultisample) {
     beginPixelsOp(OP_WRITE);
