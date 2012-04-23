@@ -1,5 +1,5 @@
 {
-  if (!loadedTexShader) {
+  if (!loadedTexShader || texShaderContext.hashCode() != context.hashCode()) {
     texVertShader=createShader(GL_VERTEX_SHADER,texVertShaderSource);
     texFragShader=createShader(GL_FRAGMENT_SHADER,texFragShaderSource);
     if (0 < texVertShader && 0 < texFragShader) {
@@ -11,6 +11,7 @@
     }
     texData=ByteBuffer.allocateDirect(texCoords.length * SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
     loadedTexShader=true;
+    texShaderContext=context;
   }
   if (0 < texShaderProgram) {
     boolean[] val=new boolean[1];

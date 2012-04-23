@@ -1,5 +1,5 @@
 {
-  if (!loadedRectShader) {
+  if (!loadedRectShader || rectShaderContext.hashCode() != context.hashCode()) {
     rectVertShader=createShader(GL_VERTEX_SHADER,rectVertShaderSource);
     rectFragShader=createShader(GL_FRAGMENT_SHADER,rectFragShaderSource);
     if (0 < rectVertShader && 0 < rectFragShader) {
@@ -11,6 +11,7 @@
     }
     rectData=ByteBuffer.allocateDirect(rectCoords.length * SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
     loadedRectShader=true;
+    rectShaderContext=context;
   }
   if (0 < rectShaderProgram) {
     boolean[] val=new boolean[1];
