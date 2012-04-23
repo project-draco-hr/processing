@@ -9,7 +9,7 @@
   }
   if (primarySurface) {
     pgl.endOnscreenDraw(clearColorBuffer0);
-    if (!pgl.initialized) {
+    if (!pgl.initialized || parent.frameCount == 0) {
       saveSurfaceToPixels();
       restoreSurface=true;
     }
@@ -18,6 +18,10 @@
  else {
     if (offscreenMultisample) {
       offscreenFramebufferMultisample.copy(offscreenFramebuffer);
+    }
+    if (!pgl.initialized || !pg.pgl.initialized || parent.frameCount == 0) {
+      saveSurfaceToPixels();
+      restoreSurface=true;
     }
     popFramebuffer();
     pgl.endOffscreenDraw(pg.clearColorBuffer0);

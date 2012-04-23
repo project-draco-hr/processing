@@ -110,14 +110,14 @@
   pgl.glClear(PGL.GL_DEPTH_BUFFER_BIT | PGL.GL_STENCIL_BUFFER_BIT);
   if (primarySurface) {
     pgl.beginOnscreenDraw(clearColorBuffer);
-    if (restoreSurface) {
-      restoreSurfaceFromPixels();
-      restoreSurface=false;
-    }
   }
  else {
     pgl.beginOffscreenDraw(pg.clearColorBuffer);
     offscreenFramebuffer.setColorBuffer(texture);
+  }
+  if (restoreSurface) {
+    restoreSurfaceFromPixels();
+    restoreSurface=false;
   }
   if (hints[DISABLE_DEPTH_MASK]) {
     pgl.glDepthMask(false);
