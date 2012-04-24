@@ -1,14 +1,13 @@
 {
-  Set<Integer> finalized=new HashSet<Integer>();
-  for (  Integer id : glRenderBuffers.keySet()) {
-    if (glRenderBuffers.get(id)) {
-      finalized.add(id);
-      int[] temp=new int[1];
-      temp[0]=id.intValue();
+  Set<GLResource> finalized=new HashSet<GLResource>();
+  for (  GLResource res : glRenderBuffers.keySet()) {
+    if (glRenderBuffers.get(res)) {
+      finalized.add(res);
+      int[] temp={res.id};
       pgl.glDeleteRenderbuffers(1,temp,0);
     }
   }
-  for (  Integer id : finalized) {
-    glRenderBuffers.remove(id);
+  for (  GLResource res : finalized) {
+    glRenderBuffers.remove(res);
   }
 }

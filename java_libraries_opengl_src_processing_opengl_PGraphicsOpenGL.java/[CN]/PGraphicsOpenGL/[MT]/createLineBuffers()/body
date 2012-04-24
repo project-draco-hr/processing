@@ -1,20 +1,20 @@
 {
   if (!lineBuffersCreated || lineBufferContextIsOutdated()) {
-    lineBuffersContext=pgl.getContext();
+    lineBuffersContext=pgl.getCurrentContext();
     int sizef=PGL.MAX_TESS_VERTICES * PGL.SIZEOF_FLOAT;
     int sizex=PGL.MAX_TESS_INDICES * PGL.SIZEOF_INDEX;
     int sizei=PGL.MAX_TESS_INDICES * PGL.SIZEOF_INT;
-    glLineVertexBufferID=createVertexBufferObject();
+    glLineVertexBufferID=createVertexBufferObject(lineBuffersContext.code());
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glLineVertexBufferID);
     pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,null,PGL.GL_STATIC_DRAW);
-    glLineColorBufferID=createVertexBufferObject();
+    glLineColorBufferID=createVertexBufferObject(lineBuffersContext.code());
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glLineColorBufferID);
     pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,null,PGL.GL_STATIC_DRAW);
-    glLineDirWidthBufferID=createVertexBufferObject();
+    glLineDirWidthBufferID=createVertexBufferObject(lineBuffersContext.code());
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glLineDirWidthBufferID);
     pgl.glBufferData(PGL.GL_ARRAY_BUFFER,4 * sizef,null,PGL.GL_STATIC_DRAW);
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,0);
-    glLineIndexBufferID=createVertexBufferObject();
+    glLineIndexBufferID=createVertexBufferObject(lineBuffersContext.code());
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glLineIndexBufferID);
     pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,sizex,null,PGL.GL_STATIC_DRAW);
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);

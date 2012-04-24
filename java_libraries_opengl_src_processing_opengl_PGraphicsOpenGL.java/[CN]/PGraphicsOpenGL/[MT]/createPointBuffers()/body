@@ -1,20 +1,20 @@
 {
   if (!pointBuffersCreated || pointBuffersContextIsOutdated()) {
-    pointBuffersContext=pgl.getContext();
+    pointBuffersContext=pgl.getCurrentContext();
     int sizef=PGL.MAX_TESS_VERTICES * PGL.SIZEOF_FLOAT;
     int sizex=PGL.MAX_TESS_INDICES * PGL.SIZEOF_INDEX;
     int sizei=PGL.MAX_TESS_INDICES * PGL.SIZEOF_INT;
-    glPointVertexBufferID=createVertexBufferObject();
+    glPointVertexBufferID=createVertexBufferObject(pointBuffersContext.code());
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPointVertexBufferID);
     pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,null,PGL.GL_STATIC_DRAW);
-    glPointColorBufferID=createVertexBufferObject();
+    glPointColorBufferID=createVertexBufferObject(pointBuffersContext.code());
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPointColorBufferID);
     pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,null,PGL.GL_STATIC_DRAW);
-    glPointSizeBufferID=createVertexBufferObject();
+    glPointSizeBufferID=createVertexBufferObject(pointBuffersContext.code());
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPointSizeBufferID);
     pgl.glBufferData(PGL.GL_ARRAY_BUFFER,2 * sizef,null,PGL.GL_STATIC_DRAW);
     pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,0);
-    glPointIndexBufferID=createVertexBufferObject();
+    glPointIndexBufferID=createVertexBufferObject(pointBuffersContext.code());
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glPointIndexBufferID);
     pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,sizex,null,PGL.GL_STATIC_DRAW);
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);

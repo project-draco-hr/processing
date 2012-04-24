@@ -1,0 +1,14 @@
+{
+  deleteFinalizedVertexBufferObjects();
+  int[] temp=new int[1];
+  pgl.glGenBuffers(1,temp,0);
+  int id=temp[0];
+  GLResource res=new GLResource(id,context);
+  if (glVertexBuffers.containsKey(res)) {
+    showWarning("Adding same VBO twice");
+  }
+ else {
+    glVertexBuffers.put(res,false);
+  }
+  return id;
+}
