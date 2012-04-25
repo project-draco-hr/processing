@@ -1,14 +1,15 @@
 {
-  float w, h, d;
+  float w=0, h=0, d=0;
   if (params.length == 1) {
     w=h=d=params[0];
   }
- else {
+ else   if (params.length == 3) {
     w=params[0];
     h=params[1];
     d=params[2];
   }
-  in.addBox(w,h,d,fill,fillColor,stroke,strokeColor,strokeWeight,ambientColor,specularColor,emissiveColor,shininess);
+  in.setColors(fillColor,strokeColor,strokeWeight,ambientColor,specularColor,emissiveColor,shininess);
+  in.addBox(w,h,d,fill,stroke);
   in.initTessMaps();
   tessellator.tessellateQuads();
 }

@@ -1,9 +1,14 @@
 {
-  float a=params[0];
-  float b=params[1];
-  float c=params[2];
-  float d=params[3];
-  in.addEllipse(ellipseMode,a,b,c,d,fill,fillColor,stroke,strokeColor,strokeWeight,ambientColor,specularColor,emissiveColor,shininess);
+  float a=0, b=0, c=0, d=0;
+  if (params.length == 4) {
+    a=params[0];
+    b=params[1];
+    c=params[2];
+    d=params[3];
+  }
+  in.setColors(fillColor,strokeColor,strokeWeight,ambientColor,specularColor,emissiveColor,shininess);
+  in.setNormal(normalX,normalY,normalZ);
+  in.addEllipse(a,b,c,d,fill,stroke,ellipseMode);
   in.initTessMaps();
   tessellator.tessellateTriangleFan();
 }

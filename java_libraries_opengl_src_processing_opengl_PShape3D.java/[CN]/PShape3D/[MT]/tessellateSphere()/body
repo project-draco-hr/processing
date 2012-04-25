@@ -1,8 +1,12 @@
 {
-  float r=params[0];
   int nu=pg.sphereDetailU;
   int nv=pg.sphereDetailV;
-  int[] indices=in.addSphere(r,nu,nv,fill,fillColor,stroke,strokeColor,strokeWeight,ambientColor,specularColor,emissiveColor,shininess);
+  float r=0;
+  if (params.length == 1) {
+    r=params[0];
+  }
+  in.setColors(fillColor,strokeColor,strokeWeight,ambientColor,specularColor,emissiveColor,shininess);
+  int[] indices=in.addSphere(r,nu,nv,fill,stroke);
   in.initTessMaps();
   tessellator.tessellateTriangles(indices);
 }
