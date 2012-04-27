@@ -29,9 +29,9 @@
         tess.setLastPoint(child.tess);
       }
     }
-    addFillIndexData();
-    addLineIndexData();
-    addPointIndexData();
+    addFillIndexBlocks();
+    addLineIndexBlocks();
+    addPointIndexBlocks();
   }
  else {
     if (0 < tess.fillVertexCount && 0 < tess.fillIndexCount) {
@@ -42,7 +42,7 @@
       root.lastFillVertexOffset=tess.setFillVertex(root.lastFillVertexOffset);
       root.lastFillIndexOffset=tess.setFillIndex(root.firstFillVertexRel,root.lastFillIndexOffset);
       root.firstFillVertexRel+=tess.fillVertexCount;
-      addFillIndexData(root.firstFillVertexAbs,tess.firstFillIndex,tess.lastFillIndex - tess.firstFillIndex + 1);
+      addFillIndexBlock(tess.lastFillIndex - tess.firstFillIndex + 1,tess.firstFillIndex,root.firstFillVertexAbs);
     }
     if (0 < tess.lineVertexCount && 0 < tess.lineIndexCount) {
       if (PGL.MAX_TESS_VERTICES < root.firstLineVertexRel + tess.lineVertexCount) {
@@ -52,7 +52,7 @@
       root.lastLineVertexOffset=tess.setLineVertex(root.lastLineVertexOffset);
       root.lastLineIndexOffset=tess.setLineIndex(root.firstLineVertexRel,root.lastLineIndexOffset);
       root.firstLineVertexRel+=tess.lineVertexCount;
-      addLineIndexData(root.firstLineVertexAbs,tess.firstLineIndex,tess.lastLineIndex - tess.firstLineIndex + 1);
+      addLineIndexBlock(tess.lastLineIndex - tess.firstLineIndex + 1,tess.firstLineIndex,root.firstLineVertexAbs);
     }
     if (0 < tess.pointVertexCount && 0 < tess.pointIndexCount) {
       if (PGL.MAX_TESS_VERTICES < root.firstPointVertexRel + tess.pointVertexCount) {
@@ -62,7 +62,7 @@
       root.lastPointVertexOffset=tess.setPointVertex(root.lastPointVertexOffset);
       root.lastPointIndexOffset=tess.setPointIndex(root.firstPointVertexRel,root.lastPointIndexOffset);
       root.firstPointVertexRel+=tess.pointVertexCount;
-      addPointIndexData(root.firstPointVertexAbs,tess.firstPointIndex,tess.lastPointIndex - tess.firstPointIndex + 1);
+      addPointIndexBlock(tess.lastPointIndex - tess.firstPointIndex + 1,tess.firstPointIndex,root.firstPointVertexAbs);
     }
   }
   hasFill=0 < tess.fillVertexCount && 0 < tess.fillIndexCount;

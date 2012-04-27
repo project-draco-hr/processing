@@ -1,0 +1,23 @@
+{
+  fillIndexBlocks.clear();
+  IndexBlock gdata=null;
+  for (int i=0; i < childCount; i++) {
+    PShape3D child=(PShape3D)children[i];
+    for (int j=0; j < child.fillIndexBlocks.size(); j++) {
+      IndexBlock cdata=child.fillIndexBlocks.get(j);
+      if (gdata == null) {
+        gdata=new IndexBlock(cdata.indexCount,cdata.indexOffset,cdata.vertexOffset);
+        fillIndexBlocks.add(gdata);
+      }
+ else {
+        if (gdata.vertexOffset == cdata.vertexOffset) {
+          gdata.indexCount+=cdata.indexCount;
+        }
+ else {
+          gdata=new IndexBlock(cdata.indexCount,cdata.indexOffset,cdata.vertexOffset);
+          fillIndexBlocks.add(gdata);
+        }
+      }
+    }
+  }
+}

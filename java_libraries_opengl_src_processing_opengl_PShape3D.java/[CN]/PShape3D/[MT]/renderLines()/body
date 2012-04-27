@@ -1,11 +1,11 @@
 {
   LineShader shader=pg.getLineShader();
   shader.start();
-  for (int i=0; i < lineIndexData.size(); i++) {
-    IndexData index=lineIndexData.get(i);
-    int first=index.first;
-    int offset=index.offset;
-    int size=index.size;
+  for (int i=0; i < lineIndexBlocks.size(); i++) {
+    IndexBlock index=lineIndexBlocks.get(i);
+    int first=index.vertexOffset;
+    int offset=index.indexOffset;
+    int size=index.indexCount;
     shader.setVertexAttribute(root.glLineVertexBufferID,3,PGL.GL_FLOAT,0,3 * first * PGL.SIZEOF_FLOAT);
     shader.setColorAttribute(root.glLineColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * first);
     shader.setDirWidthAttribute(root.glLineDirWidthBufferID,4,PGL.GL_FLOAT,0,4 * first * PGL.SIZEOF_FLOAT);
