@@ -1,0 +1,82 @@
+{
+  int index;
+  int nvert=i1 - i0 + 1;
+  fillVertexCheck(nvert);
+  if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
+    PMatrix3D mm=modelview;
+    PMatrix3D nm=modelviewInv;
+    for (int i=0; i < nvert; i++) {
+      int inIdx=i0 + i;
+      int tessIdx=firstFillVertex + i;
+      index=3 * inIdx;
+      float x=in.vertices[index++];
+      float y=in.vertices[index++];
+      float z=in.vertices[index];
+      index=3 * inIdx;
+      float nx=in.normals[index++];
+      float ny=in.normals[index++];
+      float nz=in.normals[index];
+      index=3 * tessIdx;
+      fillVertices[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
+      fillVertices[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
+      fillVertices[index]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
+      index=3 * tessIdx;
+      fillNormals[index++]=nx * nm.m00 + ny * nm.m10 + nz * nm.m20;
+      fillNormals[index++]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
+      fillNormals[index]=nx * nm.m02 + ny * nm.m12 + nz * nm.m22;
+    }
+  }
+ else {
+    if (nvert <= PGL.MIN_ARRAYCOPY_SIZE) {
+      for (int i=0; i < nvert; i++) {
+        int inIdx=i0 + i;
+        int tessIdx=firstFillVertex + i;
+        index=3 * inIdx;
+        float x=in.vertices[index++];
+        float y=in.vertices[index++];
+        float z=in.vertices[index];
+        index=3 * inIdx;
+        float nx=in.normals[index++];
+        float ny=in.normals[index++];
+        float nz=in.normals[index];
+        index=3 * tessIdx;
+        fillVertices[index++]=x;
+        fillVertices[index++]=y;
+        fillVertices[index]=z;
+        index=3 * tessIdx;
+        fillNormals[index++]=nx;
+        fillNormals[index++]=ny;
+        fillNormals[index]=nz;
+      }
+    }
+ else {
+      PApplet.arrayCopy(in.vertices,3 * i0,fillVertices,3 * firstFillVertex,3 * nvert);
+      PApplet.arrayCopy(in.normals,3 * i0,fillNormals,3 * firstFillVertex,3 * nvert);
+    }
+  }
+  if (nvert <= PGL.MIN_ARRAYCOPY_SIZE) {
+    for (int i=0; i < nvert; i++) {
+      int inIdx=i0 + i;
+      int tessIdx=firstFillVertex + i;
+      index=2 * inIdx;
+      float u=in.texcoords[index++];
+      float v=in.texcoords[index];
+      fillColors[tessIdx]=in.colors[inIdx];
+      index=2 * tessIdx;
+      fillTexcoords[index++]=u;
+      fillTexcoords[index]=v;
+      fillAmbient[tessIdx]=in.ambient[inIdx];
+      fillSpecular[tessIdx]=in.specular[inIdx];
+      fillEmissive[tessIdx]=in.emissive[inIdx];
+      fillShininess[tessIdx]=in.shininess[inIdx];
+    }
+  }
+ else {
+    PApplet.arrayCopy(in.colors,i0,fillColors,firstFillVertex,nvert);
+    PApplet.arrayCopy(in.texcoords,2 * i0,fillTexcoords,2 * firstFillVertex,2 * nvert);
+    PApplet.arrayCopy(in.ambient,i0,fillAmbient,firstFillVertex,nvert);
+    PApplet.arrayCopy(in.specular,i0,fillSpecular,firstFillVertex,nvert);
+    PApplet.arrayCopy(in.emissive,i0,fillEmissive,firstFillVertex,nvert);
+    PApplet.arrayCopy(in.shininess,i0,fillShininess,firstFillVertex,nvert);
+  }
+}
