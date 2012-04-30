@@ -1,0 +1,85 @@
+{
+  int nInInd=indices.length;
+  short[] testIndices=new short[indices.length];
+  int inInd0, inInd1;
+  int inMaxVert0, inMaxVert1;
+  int inMaxRel;
+  inInd0=inInd1=0;
+  inMaxVert0=inMaxVert1=in.firstVertex;
+  inMaxRel=0;
+  Set<Integer> inDupSet=new HashSet<Integer>();
+  IndexBlock block0=null;
+  IndexBlock block=tess.getLastFillIndexBlock();
+  int trCount=nInInd / 3;
+  for (int tr=0; tr < trCount; tr++) {
+    if (block == null) {
+      block=new IndexBlock();
+      if (block0 != null) {
+        block.indexOffset=block0.indexOffset + block0.indexCount;
+        block.vertexOffset=block0.vertexOffset + block0.vertexCount;
+      }
+    }
+    int i0=indices[3 * tr + 0];
+    int i1=indices[3 * tr + 1];
+    int i2=indices[3 * tr + 2];
+    int ii0=i0 - inMaxVert0;
+    int ii1=i1 - inMaxVert0;
+    int ii2=i2 - inMaxVert0;
+    int ri0, ri1, ri2;
+    if (ii0 < 0) {
+      inDupSet.add(ii0);
+      ri0=ii0;
+    }
+ else {
+      ri0=block.relativeVertexIndex(ii0);
+    }
+    if (ii1 < 0) {
+      inDupSet.add(ii1);
+      ri1=ii1;
+    }
+ else {
+      ri1=block.relativeVertexIndex(ii1);
+    }
+    if (ii2 < 0) {
+      inDupSet.add(ii2);
+      ri2=ii2;
+    }
+ else {
+      ri2=block.relativeVertexIndex(ii2);
+    }
+    testIndices[3 * tr + 0]=(short)ri0;
+    testIndices[3 * tr + 1]=(short)ri1;
+    testIndices[3 * tr + 2]=(short)ri2;
+    inInd1=3 * tr + 2;
+    inMaxVert1=PApplet.max(i0,i1,i2);
+    inMaxRel=PApplet.max(inMaxRel,PApplet.max(ri0,ri1,ri2));
+    int dup=inDupSet.size();
+    if (PGL.MAX_TESS_VERTICES - 3 <= inMaxRel + dup && inMaxRel + dup < PGL.MAX_TESS_VERTICES) {
+      if (0 < dup) {
+        ArrayList<Integer> inDupList=new ArrayList<Integer>(inDupSet);
+        Collections.sort(inDupList);
+        for (int i=inInd0; i <= inInd1; i++) {
+          int ri=testIndices[i];
+          if (ri < 0) {
+            testIndices[i]=(short)(inMaxRel + 1 + inDupList.indexOf(ri));
+          }
+        }
+      }
+      block.indexCount+=inInd1 - inInd0 + 1;
+      block.vertexCount+=inMaxVert1 - inMaxVert0 + 1;
+      block0=block;
+      block=null;
+      inMaxRel=0;
+      inMaxVert0=inMaxVert1 + 1;
+      inInd0=inInd1 + 1;
+      inDupSet.clear();
+    }
+  }
+  for (int i=0; i < indices.length; i++) {
+    PApplet.print(PApplet.nf(indices[i],2) + " ");
+  }
+  PApplet.print('\n');
+  for (int i=0; i < testIndices.length; i++) {
+    PApplet.print(PApplet.nf(testIndices[i],2) + " ");
+  }
+}
