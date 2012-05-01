@@ -1,13 +1,13 @@
 {
-  if (!stroke)   return;
-  int nInVert=in.getNumLineVertices();
-  int nInInd=in.getNumLineIndices();
-  tess.lineVertexCheck(nInVert);
-  tess.lineIndexCheck(nInInd);
-  IndexBlock block=tess.getLastLineIndexBlock();
-  for (int i=in.firstEdge; i <= in.lastEdge; i++) {
-    int[] edge=in.edges[i];
-    block=addLine(edge[0],edge[1],block);
+  if (stroke) {
+    int nInVert=in.getNumLineVertices();
+    int nInInd=in.getNumLineIndices();
+    tess.lineVertexCheck(nInVert);
+    tess.lineIndexCheck(nInInd);
+    IndexBlock block=tess.getLastLineIndexBlock();
+    for (int i=in.firstEdge; i <= in.lastEdge; i++) {
+      int[] edge=in.edges[i];
+      block=addLine(edge[0],edge[1],block);
+    }
   }
-  tess.isStroked=true;
 }
