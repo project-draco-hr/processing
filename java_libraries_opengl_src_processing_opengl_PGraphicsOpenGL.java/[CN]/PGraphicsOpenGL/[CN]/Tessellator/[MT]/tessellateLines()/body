@@ -6,17 +6,13 @@
     int first=in.firstVertex;
     int nvert=lineCount * 4;
     int nind=lineCount * 2 * 3;
-    checkForFlush(tess.lineVertexCount + nvert,tess.lineIndexCount + nvert);
     tess.lineVertexCheck(nvert);
     tess.lineIndexCheck(nind);
-    int vcount=tess.firstLineVertex;
-    int icount=tess.firstLineIndex;
+    IndexBlock block=tess.getLastLineIndexBlock();
     for (int ln=0; ln < lineCount; ln++) {
       int i0=first + 2 * ln + 0;
       int i1=first + 2 * ln + 1;
-      addLine(i0,i1,vcount,icount);
-      vcount+=4;
-      icount+=6;
+      block=addLine(i0,i1,block);
     }
   }
 }

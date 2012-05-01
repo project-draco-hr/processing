@@ -1,74 +1,7 @@
 {
-  int nInVert=in.lastVertex - in.firstVertex + 1;
-  if (fill && 3 <= nInVert) {
-    int nInInd=indices.length;
-    int inInd0=0, inInd1=0;
-    int inMaxVert0=in.firstVertex, inMaxVert1=in.firstVertex;
-    int inMaxRel=0;
-    Set<Integer> inDupSet=null;
-    IndexBlock block0=null;
-    IndexBlock block=tess.getLastFillIndexBlock();
-    tess.fillIndexCheck(nInInd);
-    int trCount=nInInd / 3;
-    for (int tr=0; tr < trCount; tr++) {
-      if (block == null)       block=tess.addFillIndexBlock(block0);
-      int i0=indices[3 * tr + 0];
-      int i1=indices[3 * tr + 1];
-      int i2=indices[3 * tr + 2];
-      int ii0=i0 - inMaxVert0;
-      int ii1=i1 - inMaxVert0;
-      int ii2=i2 - inMaxVert0;
-      int ri0, ri1, ri2;
-      if (ii0 < 0) {
-        if (inDupSet == null)         inDupSet=new HashSet<Integer>();
-        inDupSet.add(ii0);
-        ri0=ii0;
-      }
- else       ri0=block.newVertexIndex(ii0);
-      if (ii1 < 0) {
-        if (inDupSet == null)         inDupSet=new HashSet<Integer>();
-        inDupSet.add(ii1);
-        ri1=ii1;
-      }
- else       ri1=block.newVertexIndex(ii1);
-      if (ii2 < 0) {
-        if (inDupSet == null)         inDupSet=new HashSet<Integer>();
-        inDupSet.add(ii2);
-        ri2=ii2;
-      }
- else       ri2=block.newVertexIndex(ii2);
-      tess.fillIndices[3 * tr + 0]=(short)ri0;
-      tess.fillIndices[3 * tr + 1]=(short)ri1;
-      tess.fillIndices[3 * tr + 2]=(short)ri2;
-      inInd1=3 * tr + 2;
-      inMaxVert1=PApplet.max(i0,i1,i2);
-      inMaxRel=PApplet.max(inMaxRel,PApplet.max(ri0,ri1,ri2));
-      int dup=inDupSet == null ? 0 : inDupSet.size();
-      if ((PGL.MAX_VERTEX_INDEX1 - 3 <= inMaxRel + dup && inMaxRel + dup < PGL.MAX_VERTEX_INDEX1) || (tr == trCount - 1)) {
-        tess.addFillVertices(in,inMaxVert0,inMaxVert1);
-        if (0 < dup) {
-          ArrayList<Integer> inDupList=new ArrayList<Integer>(inDupSet);
-          Collections.sort(inDupList);
-          for (int i=inInd0; i <= inInd1; i++) {
-            int ri=tess.fillIndices[i];
-            if (ri < 0) {
-              tess.fillIndices[i]=(short)(inMaxRel + 1 + inDupList.indexOf(ri));
-            }
-          }
-          for (int i=0; i < inDupList.size(); i++) {
-            int ri=inDupList.get(i);
-            tess.addFillVertex(in,ri + inMaxVert0);
-          }
-        }
-        block.indexCount+=inInd1 - inInd0 + 1;
-        block.vertexCount+=inMaxVert1 - inMaxVert0 + 1 + dup;
-        block0=block;
-        block=null;
-        inMaxRel=0;
-        inMaxVert0=inMaxVert1 + 1;
-        inInd0=inInd1 + 1;
-        if (inDupSet != null)         inDupSet.clear();
-      }
-    }
-  }
+  int nInInd=indices.length;
+  setRawSize(nInInd);
+  PApplet.arrayCopy(indices,rawIndices,nInInd);
+  partitionRawIndices();
+  tessellateEdges();
 }

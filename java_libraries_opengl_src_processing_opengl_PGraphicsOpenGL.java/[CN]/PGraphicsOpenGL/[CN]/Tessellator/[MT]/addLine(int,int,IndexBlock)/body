@@ -1,0 +1,31 @@
+{
+  if (PGL.MAX_VERTEX_INDEX1 <= block.vertexCount + 4) {
+    block=tess.addLineIndexBlock(block);
+  }
+  int iidx=block.indexOffset + block.indexCount;
+  int vidx=block.vertexOffset + block.vertexCount;
+  tess.putLineVertex(in,i0,i1,vidx);
+  tess.lineDirWidths[4 * vidx + 3]=+strokeWeight;
+  tess.lineIndices[iidx++]=(short)(block.vertexCount + 0);
+  in.addLineIndexToTessMap(i0,vidx);
+  vidx++;
+  tess.putLineVertex(in,i0,i1,vidx);
+  tess.lineDirWidths[4 * vidx + 3]=-strokeWeight;
+  tess.lineIndices[iidx++]=(short)(block.vertexCount + 1);
+  in.addLineIndexToTessMap(i0,vidx);
+  vidx++;
+  tess.putLineVertex(in,i1,i0,vidx);
+  tess.lineDirWidths[4 * vidx + 3]=-strokeWeight;
+  tess.lineIndices[iidx++]=(short)(block.vertexCount + 2);
+  in.addLineIndexToTessMap(i1,vidx);
+  tess.lineIndices[iidx++]=(short)(block.vertexCount + 2);
+  tess.lineIndices[iidx++]=(short)(block.vertexCount + 1);
+  vidx++;
+  tess.putLineVertex(in,i1,i0,vidx);
+  tess.lineDirWidths[4 * vidx + 3]=+strokeWeight;
+  tess.lineIndices[iidx++]=(short)(block.vertexCount + 3);
+  in.addLineIndexToTessMap(i1,vidx);
+  block.indexCount+=6;
+  block.vertexCount+=4;
+  return block;
+}

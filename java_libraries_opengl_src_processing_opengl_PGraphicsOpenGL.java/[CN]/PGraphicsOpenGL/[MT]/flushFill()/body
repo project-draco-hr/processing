@@ -9,23 +9,23 @@
     int last=texCache.lastBlock[i];
     for (int b=first; b <= last; b++) {
       IndexBlock block=tessGeo.getFillIndexBlock(b);
-      int indexOffset=b == first ? texCache.firstIndex[i] : block.indexOffset;
-      int indexCount=b == last ? texCache.lastIndex[i] - indexOffset + 1 : block.indexOffset + block.indexCount - indexOffset;
-      int vertOffset=block.vertexOffset;
-      shader.setVertexAttribute(glFillVertexBufferID,3,PGL.GL_FLOAT,0,3 * vertOffset * PGL.SIZEOF_FLOAT);
-      shader.setColorAttribute(glFillColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * vertOffset * PGL.SIZEOF_BYTE);
+      int ioffset=b == first ? texCache.firstIndex[i] : block.indexOffset;
+      int icount=b == last ? texCache.lastIndex[i] - ioffset + 1 : block.indexOffset + block.indexCount - ioffset;
+      int voffset=block.vertexOffset;
+      shader.setVertexAttribute(glFillVertexBufferID,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setColorAttribute(glFillColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
       if (lights) {
-        shader.setNormalAttribute(glFillNormalBufferID,3,PGL.GL_FLOAT,0,3 * vertOffset * PGL.SIZEOF_FLOAT);
-        shader.setAmbientAttribute(glFillAmbientBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * vertOffset * PGL.SIZEOF_BYTE);
-        shader.setSpecularAttribute(glFillSpecularBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * vertOffset * PGL.SIZEOF_BYTE);
-        shader.setEmissiveAttribute(glFillEmissiveBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * vertOffset * PGL.SIZEOF_BYTE);
-        shader.setShininessAttribute(glFillShininessBufferID,1,PGL.GL_FLOAT,0,vertOffset * PGL.SIZEOF_FLOAT);
+        shader.setNormalAttribute(glFillNormalBufferID,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+        shader.setAmbientAttribute(glFillAmbientBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+        shader.setSpecularAttribute(glFillSpecularBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+        shader.setEmissiveAttribute(glFillEmissiveBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+        shader.setShininessAttribute(glFillShininessBufferID,1,PGL.GL_FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
       }
       if (tex != null) {
-        shader.setTexCoordAttribute(glFillTexCoordBufferID,2,PGL.GL_FLOAT,0,2 * vertOffset * PGL.SIZEOF_FLOAT);
+        shader.setTexCoordAttribute(glFillTexCoordBufferID,2,PGL.GL_FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
         shader.setTexture(tex);
       }
-      pgl.glDrawElements(PGL.GL_TRIANGLES,indexCount,PGL.INDEX_TYPE,indexOffset * PGL.SIZEOF_INDEX);
+      pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
     }
     shader.stop();
   }
