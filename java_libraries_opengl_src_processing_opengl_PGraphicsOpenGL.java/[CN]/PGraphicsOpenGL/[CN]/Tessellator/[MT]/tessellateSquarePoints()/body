@@ -9,11 +9,14 @@
     int vertIdx=tess.firstPointVertex;
     int attribIdx=tess.firstPointVertex;
     int indIdx=tess.firstPointIndex;
-    IndexBlock block=tess.getLastPointIndexBlock();
+    IndexCache cache=tess.pointIndexCache;
+    int index=cache.getLast();
     for (int i=in.firstVertex; i <= in.lastVertex; i++) {
       int nvert=5;
-      if (PGL.MAX_VERTEX_INDEX1 <= block.vertexCount + nvert) {
-        block=tess.addPointIndexBlock(block);
+      int count=cache.vertexCount[index];
+      if (PGL.MAX_VERTEX_INDEX1 <= count + nvert) {
+        index=cache.addNew();
+        count=0;
       }
       for (int k=0; k < nvert; k++) {
         tess.putPointVertex(in,i,vertIdx);
@@ -29,15 +32,14 @@
         attribIdx++;
       }
       for (int k=1; k < nvert - 1; k++) {
-        tess.pointIndices[indIdx++]=(short)(block.vertexCount + 0);
-        tess.pointIndices[indIdx++]=(short)(block.vertexCount + k);
-        tess.pointIndices[indIdx++]=(short)(block.vertexCount + k + 1);
+        tess.pointIndices[indIdx++]=(short)(count + 0);
+        tess.pointIndices[indIdx++]=(short)(count + k);
+        tess.pointIndices[indIdx++]=(short)(count + k + 1);
       }
-      tess.pointIndices[indIdx++]=(short)(block.vertexCount + 0);
-      tess.pointIndices[indIdx++]=(short)(block.vertexCount + 1);
-      tess.pointIndices[indIdx++]=(short)(block.vertexCount + nvert - 1);
-      block.indexCount+=12;
-      block.vertexCount+=nvert;
+      tess.pointIndices[indIdx++]=(short)(count + 0);
+      tess.pointIndices[indIdx++]=(short)(count + 1);
+      tess.pointIndices[indIdx++]=(short)(count + nvert - 1);
+      cache.incCounts(index,12,5);
     }
   }
 }
