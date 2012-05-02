@@ -5,13 +5,13 @@
     PTexture tex=texCache.getTexture(i);
     FillShader shader=getFillShader(lights,tex != null);
     shader.start();
-    int first=texCache.firstBlock[i];
-    int last=texCache.lastBlock[i];
-    for (int b=first; b <= last; b++) {
-      IndexBlock block=tessGeo.getFillIndexBlock(b);
-      int ioffset=b == first ? texCache.firstIndex[i] : block.indexOffset;
-      int icount=b == last ? texCache.lastIndex[i] - ioffset + 1 : block.indexOffset + block.indexCount - ioffset;
-      int voffset=block.vertexOffset;
+    int first=texCache.firstCache[i];
+    int last=texCache.lastCache[i];
+    IndexCache cache=tessGeo.fillIndexCache;
+    for (int n=first; n <= last; n++) {
+      int ioffset=n == first ? texCache.firstIndex[i] : cache.indexOffset[n];
+      int icount=n == last ? texCache.lastIndex[i] - ioffset + 1 : cache.indexOffset[n] + cache.indexCount[n] - ioffset;
+      int voffset=cache.vertexOffset[n];
       shader.setVertexAttribute(glFillVertexBufferID,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
       shader.setColorAttribute(glFillColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
       if (lights) {
