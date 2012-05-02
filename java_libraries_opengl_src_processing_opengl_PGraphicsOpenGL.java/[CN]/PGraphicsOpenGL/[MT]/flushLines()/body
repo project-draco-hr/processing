@@ -2,11 +2,11 @@
   updateLineBuffers();
   LineShader shader=getLineShader();
   shader.start();
-  for (int b=0; b < tessGeo.getLineIndexBlockCount(); b++) {
-    IndexBlock block=tessGeo.getLineIndexBlock(b);
-    int ioffset=block.indexOffset;
-    int icount=block.indexCount;
-    int voffset=block.vertexOffset;
+  IndexCache cache=tessGeo.lineIndexCache;
+  for (int n=0; n < cache.count; n++) {
+    int ioffset=cache.indexOffset[n];
+    int icount=cache.indexCount[n];
+    int voffset=cache.vertexOffset[n];
     shader.setVertexAttribute(glLineVertexBufferID,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
     shader.setColorAttribute(glLineColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
     shader.setDirWidthAttribute(glLineDirWidthBufferID,4,PGL.GL_FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
