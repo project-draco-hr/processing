@@ -1,9 +1,12 @@
 {
-  int nInInd=in.lastVertex - in.firstVertex + 1;
-  setRawSize(nInInd);
-  for (int i=in.firstVertex; i <= in.lastVertex; i++) {
-    rawIndices[i - in.firstVertex]=i;
+  int nInVert=in.lastVertex - in.firstVertex + 1;
+  if (fill && 3 <= nInVert) {
+    int nInInd=nInVert;
+    setRawSize(nInInd);
+    for (int i=in.firstVertex; i <= in.lastVertex; i++) {
+      rawIndices[i - in.firstVertex]=i;
+    }
+    partitionRawIndices();
   }
-  partitionRawIndices();
   tessellateEdges();
 }

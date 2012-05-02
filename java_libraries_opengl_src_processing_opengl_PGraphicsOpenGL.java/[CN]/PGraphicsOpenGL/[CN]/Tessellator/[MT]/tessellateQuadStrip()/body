@@ -3,23 +3,22 @@
   if (fill && 4 <= nInVert) {
     int quadCount=nInVert / 2 - 1;
     int nInInd=6 * quadCount;
-    tess.addFillVertices(in);
-    in.addFillIndicesToTessMap(tess.firstFillVertex);
-    tess.fillIndexCheck(nInInd);
-    int idx=tess.firstFillIndex;
+    setRawSize(nInInd);
+    int idx=0;
     int offset=tess.firstFillVertex;
     for (int qd=1; qd < nInVert / 2; qd++) {
       int i0=offset + 2 * (qd - 1);
       int i1=offset + 2 * (qd - 1) + 1;
       int i2=offset + 2 * qd + 1;
       int i3=offset + 2 * qd;
-      tess.fillIndices[idx++]=PGL.makeIndex(i0);
-      tess.fillIndices[idx++]=PGL.makeIndex(i1);
-      tess.fillIndices[idx++]=PGL.makeIndex(i3);
-      tess.fillIndices[idx++]=PGL.makeIndex(i1);
-      tess.fillIndices[idx++]=PGL.makeIndex(i2);
-      tess.fillIndices[idx++]=PGL.makeIndex(i3);
+      rawIndices[idx++]=i0;
+      rawIndices[idx++]=i1;
+      rawIndices[idx++]=i3;
+      rawIndices[idx++]=i1;
+      rawIndices[idx++]=i2;
+      rawIndices[idx++]=i3;
     }
+    partitionRawIndices();
   }
   tessellateEdges();
 }
