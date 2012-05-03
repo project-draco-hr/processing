@@ -5,24 +5,24 @@
   }
   updateTessellation();
   if (hasFill) {
-    if (-1 < in.firstFillIndex) {
-      int tessIdx=in.firstFillIndex + index;
-      tess.fillNormals[3 * tessIdx + 0]=nx;
-      tess.fillNormals[3 * tessIdx + 1]=ny;
-      tess.fillNormals[3 * tessIdx + 2]=nz;
+    if (-1 < inGeo.firstFillIndex) {
+      int tessIdx=inGeo.firstFillIndex + index;
+      tessGeo.fillNormals[3 * tessIdx + 0]=nx;
+      tessGeo.fillNormals[3 * tessIdx + 1]=ny;
+      tessGeo.fillNormals[3 * tessIdx + 2]=nz;
     }
  else {
-      float nx0=in.normals[3 * index + 0];
-      float ny0=in.normals[3 * index + 1];
-      float nz0=in.normals[3 * index + 2];
-      int[] indices=in.fillIndices[index];
-      float[] weigths=in.fillWeights[index];
+      float nx0=inGeo.normals[3 * index + 0];
+      float ny0=inGeo.normals[3 * index + 1];
+      float nz0=inGeo.normals[3 * index + 2];
+      int[] indices=inGeo.fillIndices[index];
+      float[] weigths=inGeo.fillWeights[index];
       for (int i=0; i < indices.length; i++) {
         int tessIdx=indices[i];
         float weight=weigths[i];
-        float tnx0=tess.fillNormals[3 * tessIdx + 0];
-        float tny0=tess.fillNormals[3 * tessIdx + 1];
-        float tnz0=tess.fillNormals[3 * tessIdx + 2];
+        float tnx0=tessGeo.fillNormals[3 * tessIdx + 0];
+        float tny0=tessGeo.fillNormals[3 * tessIdx + 1];
+        float tnz0=tessGeo.fillNormals[3 * tessIdx + 2];
         float tnx=tnx0 + weight * (nx - nx0);
         float tny=tny0 + weight * (ny - ny0);
         float tnz=tnz0 + weight * (nz - nz0);
@@ -31,15 +31,15 @@
         tnx/=len;
         tny/=len;
         tnz/=len;
-        tess.fillNormals[3 * tessIdx + 0]=tnx;
-        tess.fillNormals[3 * tessIdx + 1]=tny;
-        tess.fillNormals[3 * tessIdx + 2]=tnz;
+        tessGeo.fillNormals[3 * tessIdx + 0]=tnx;
+        tessGeo.fillNormals[3 * tessIdx + 1]=tny;
+        tessGeo.fillNormals[3 * tessIdx + 2]=tnz;
       }
     }
     modifiedFillNormals=true;
   }
-  in.normals[3 * index + 0]=nx;
-  in.normals[3 * index + 1]=ny;
-  in.normals[3 * index + 2]=nz;
+  inGeo.normals[3 * index + 0]=nx;
+  inGeo.normals[3 * index + 1]=ny;
+  inGeo.normals[3 * index + 2]=nz;
   modified();
 }

@@ -1,8 +1,8 @@
 {
-  if (tess == null) {
-    tess=pg.newTessGeometry(PGraphicsOpenGL.RETAINED,family == GROUP);
+  if (tessGeo == null) {
+    tessGeo=pg.newTessGeometry(PGraphicsOpenGL.RETAINED,family == GROUP);
   }
-  tess.clear();
+  tessGeo.clear();
   if (family == GROUP) {
     for (int i=0; i < childCount; i++) {
       PShape3D child=(PShape3D)children[i];
@@ -11,16 +11,16 @@
   }
  else {
     if (shapeEnded) {
-      in.clearEdges();
-      tessellator.setInGeometry(in);
-      tessellator.setTessGeometry(tess);
+      inGeo.clearEdges();
+      tessellator.setInGeometry(inGeo);
+      tessellator.setTessGeometry(tessGeo);
       tessellator.setFill(fill || texture != null);
       tessellator.setStroke(stroke);
       tessellator.setStrokeWeight(strokeWeight);
       tessellator.setStrokeCap(strokeCap);
       tessellator.setStrokeJoin(strokeJoin);
       if (family == GEOMETRY) {
-        in.initTessMaps();
+        inGeo.initTessMaps();
         if (kind == POINTS) {
           tessellator.tessellatePoints();
         }
@@ -28,37 +28,37 @@
           tessellator.tessellateLines();
         }
  else         if (kind == TRIANGLE || kind == TRIANGLES) {
-          if (stroke)           in.addTrianglesEdges();
-          if (normalMode == NORMAL_MODE_AUTO)           in.calcTrianglesNormals();
+          if (stroke)           inGeo.addTrianglesEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcTrianglesNormals();
           tessellator.tessellateTriangles();
         }
  else         if (kind == TRIANGLE_FAN) {
-          if (stroke)           in.addTriangleFanEdges();
-          if (normalMode == NORMAL_MODE_AUTO)           in.calcTriangleFanNormals();
+          if (stroke)           inGeo.addTriangleFanEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcTriangleFanNormals();
           tessellator.tessellateTriangleFan();
         }
  else         if (kind == TRIANGLE_STRIP) {
-          if (stroke)           in.addTriangleStripEdges();
-          if (normalMode == NORMAL_MODE_AUTO)           in.calcTriangleStripNormals();
+          if (stroke)           inGeo.addTriangleStripEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcTriangleStripNormals();
           tessellator.tessellateTriangleStrip();
         }
  else         if (kind == QUAD || kind == QUADS) {
-          if (stroke)           in.addQuadsEdges();
-          if (normalMode == NORMAL_MODE_AUTO)           in.calcQuadsNormals();
+          if (stroke)           inGeo.addQuadsEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcQuadsNormals();
           tessellator.tessellateQuads();
         }
  else         if (kind == QUAD_STRIP) {
-          if (stroke)           in.addQuadStripEdges();
-          if (normalMode == NORMAL_MODE_AUTO)           in.calcQuadStripNormals();
+          if (stroke)           inGeo.addQuadStripEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcQuadStripNormals();
           tessellator.tessellateQuadStrip();
         }
  else         if (kind == POLYGON) {
-          if (stroke)           in.addPolygonEdges(isClosed);
+          if (stroke)           inGeo.addPolygonEdges(isClosed);
           tessellator.tessellatePolygon(isSolid,isClosed,normalMode == NORMAL_MODE_AUTO);
         }
       }
  else       if (family == PRIMITIVE) {
-        in.clear();
+        inGeo.clear();
         if (kind == POINT) {
           tessellatePoint();
         }
@@ -90,14 +90,14 @@
  else       if (family == PATH) {
         tessellatePath();
       }
-      tess.trim();
+      tessGeo.trim();
       if (texture != null && parent != null) {
         ((PShape3D)parent).addTexture(texture);
       }
       if (cacheTransformations && matrix != null) {
-        tess.applyMatrix(matrix);
+        tessGeo.applyMatrix(matrix);
       }
-      in.compactTessMaps();
+      inGeo.compactTessMaps();
     }
   }
   tessellated=true;

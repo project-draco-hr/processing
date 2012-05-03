@@ -5,29 +5,29 @@
   }
   updateTessellation();
   if (hasFill) {
-    if (-1 < in.firstFillIndex) {
-      int tessIdx=in.firstFillIndex + index;
-      tess.fillTexcoords[2 * tessIdx + 0]=u;
-      tess.fillTexcoords[2 * tessIdx + 1]=v;
+    if (-1 < inGeo.firstFillIndex) {
+      int tessIdx=inGeo.firstFillIndex + index;
+      tessGeo.fillTexcoords[2 * tessIdx + 0]=u;
+      tessGeo.fillTexcoords[2 * tessIdx + 1]=v;
     }
  else {
-      float u0=in.normals[2 * index + 0];
-      float v0=in.normals[2 * index + 1];
-      int[] indices=in.fillIndices[index];
-      float[] weigths=in.fillWeights[index];
+      float u0=inGeo.normals[2 * index + 0];
+      float v0=inGeo.normals[2 * index + 1];
+      int[] indices=inGeo.fillIndices[index];
+      float[] weigths=inGeo.fillWeights[index];
       for (int i=0; i < indices.length; i++) {
         int tessIdx=indices[i];
         float weight=weigths[i];
-        float tu0=tess.fillTexcoords[2 * tessIdx + 0];
-        float tv0=tess.fillTexcoords[2 * tessIdx + 1];
+        float tu0=tessGeo.fillTexcoords[2 * tessIdx + 0];
+        float tv0=tessGeo.fillTexcoords[2 * tessIdx + 1];
         float tu=tu0 + weight * (u - u0);
         float tv=tv0 + weight * (v - v0);
-        tess.fillTexcoords[2 * tessIdx + 0]=tu;
-        tess.fillTexcoords[2 * tessIdx + 1]=tv;
+        tessGeo.fillTexcoords[2 * tessIdx + 0]=tu;
+        tessGeo.fillTexcoords[2 * tessIdx + 1]=tv;
       }
     }
     modifiedFillTexCoords=true;
   }
-  in.texcoords[3 * index + 0]=u;
-  in.texcoords[3 * index + 1]=v;
+  inGeo.texcoords[3 * index + 0]=u;
+  inGeo.texcoords[3 * index + 1]=v;
 }
