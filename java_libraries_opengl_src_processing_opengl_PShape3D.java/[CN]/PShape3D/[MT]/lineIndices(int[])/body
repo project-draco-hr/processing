@@ -7,9 +7,14 @@
   if (indices == null || indices.length != tessGeo.lineIndices.length) {
     indices=new int[tessGeo.lineIndices.length];
   }
-  for (int i=0; i < tessGeo.lineIndices.length; i++) {
-    indices[i]=tessGeo.lineIndices[i];
+  IndexCache cache=tessGeo.lineIndexCache;
+  for (int n=0; n < cache.size; n++) {
+    int ioffset=cache.indexOffset[n];
+    int icount=cache.indexCount[n];
+    int voffset=cache.vertexOffset[n];
+    for (int i=ioffset; i < ioffset + icount; i++) {
+      indices[i]=voffset + tessGeo.lineIndices[i];
+    }
   }
-  removeIndexOffset(indices);
   return indices;
 }
