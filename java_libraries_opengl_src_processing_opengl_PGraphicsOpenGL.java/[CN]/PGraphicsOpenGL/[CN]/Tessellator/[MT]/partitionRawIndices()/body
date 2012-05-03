@@ -5,17 +5,18 @@
   int inMaxVert0=in.firstVertex, inMaxVert1=in.firstVertex;
   int inMaxRel=0;
   Set<Integer> inDupSet=null;
-  int index=tess.fillIndexCache.getLast();
+  IndexCache cache=tess.fillIndexCache;
+  int index=cache.getLast();
   int trCount=rawSize / 3;
   for (int tr=0; tr < trCount; tr++) {
-    if (index == -1)     index=tess.fillIndexCache.addNew();
+    if (index == -1)     index=cache.addNew();
     int i0=rawIndices[3 * tr + 0];
     int i1=rawIndices[3 * tr + 1];
     int i2=rawIndices[3 * tr + 2];
     int ii0=i0 - inMaxVert0;
     int ii1=i1 - inMaxVert0;
     int ii2=i2 - inMaxVert0;
-    int count=tess.fillIndexCache.vertexCount[index];
+    int count=cache.vertexCount[index];
     int ri0, ri1, ri2;
     if (ii0 < 0) {
       if (inDupSet == null)       inDupSet=new HashSet<Integer>();
@@ -58,7 +59,7 @@
           tess.addFillVertex(in,ri + inMaxVert0);
         }
       }
-      tess.fillIndexCache.incCounts(index,inInd1 - inInd0 + 1,inMaxVert1 - inMaxVert0 + 1 + dup);
+      cache.incCounts(index,inInd1 - inInd0 + 1,inMaxVert1 - inMaxVert0 + 1 + dup);
       index=-1;
       inMaxRel=0;
       inMaxVert0=inMaxVert1 + 1;

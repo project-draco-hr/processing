@@ -1,16 +1,16 @@
 {
   PointShader shader=pg.getPointShader();
   shader.start();
-  for (int i=0; i < pointIndexBlocks.size(); i++) {
-    IndexBlock index=pointIndexBlocks.get(i);
-    int first=index.vertexOffset;
-    int offset=index.indexOffset;
-    int size=index.indexCount;
-    shader.setVertexAttribute(root.glPointVertexBufferID,3,PGL.GL_FLOAT,0,3 * first * PGL.SIZEOF_FLOAT);
-    shader.setColorAttribute(root.glPointColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * first);
-    shader.setSizeAttribute(root.glPointSizeBufferID,2,PGL.GL_FLOAT,0,2 * first * PGL.SIZEOF_FLOAT);
+  IndexCache cache=tess.pointIndexCache;
+  for (int n=0; n < cache.count; n++) {
+    int ioffset=cache.indexOffset[n];
+    int icount=cache.indexCount[n];
+    int voffset=cache.vertexOffset[n];
+    shader.setVertexAttribute(root.glPointVertexBufferID,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+    shader.setColorAttribute(root.glPointColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+    shader.setSizeAttribute(root.glPointSizeBufferID,2,PGL.GL_FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glPointIndexBufferID);
-    pgl.glDrawElements(PGL.GL_TRIANGLES,size,PGL.INDEX_TYPE,offset * PGL.SIZEOF_INDEX);
+    pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
   }
   shader.stop();

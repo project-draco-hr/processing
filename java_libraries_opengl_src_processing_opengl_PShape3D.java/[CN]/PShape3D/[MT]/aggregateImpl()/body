@@ -29,20 +29,35 @@
         tess.setLastPoint(child.tess);
       }
     }
-    addFillIndexBlocks();
-    addLineIndexBlocks();
-    addPointIndexBlocks();
+    buildFillIndexCache();
+    buildLineIndexCache();
+    buildPointIndexCache();
   }
  else {
     if (0 < tess.fillVertexCount && 0 < tess.fillIndexCount) {
-      if (PGL.MAX_VERTEX_INDEX1 < root.firstFillVertexRel + tess.fillVertexCount) {
-        root.firstFillVertexRel=0;
-        root.firstFillVertexAbs=root.lastFillVertexOffset + 1;
+      IndexCache cache=tess.fillIndexCache;
+      for (int n=0; n < cache.count; n++) {
+        int ioffset=cache.indexOffset[n];
+        int icount=cache.indexCount[n];
+        int vcount=cache.vertexCount[n];
+        if (PGL.MAX_VERTEX_INDEX1 <= root.fillVertexRel + vcount) {
+          root.fillVertexRel=0;
+        }
+        if (0 < root.fillVertexRel) {
+          for (int i=0; i < icount; i++) {
+            tess.fillIndices[ioffset + i]+=root.fillVertexRel;
+          }
+        }
+        cache.indexOffset[n]=root.fillIndexOffset;
+        cache.vertexOffset[n]=root.fillVertexOffset;
+        root.fillIndexOffset+=icount;
+        root.fillVertexOffset+=vcount;
+        root.fillVertexRel+=vcount;
       }
-      root.lastFillVertexOffset=tess.setFillVertex(root.lastFillVertexOffset);
-      root.lastFillIndexOffset=tess.setFillIndex(root.firstFillVertexRel,root.lastFillIndexOffset);
-      root.firstFillVertexRel+=tess.fillVertexCount;
-      addFillIndexBlock(tess.lastFillIndex - tess.firstFillIndex + 1,tess.firstFillIndex,root.firstFillVertexAbs);
+      tess.firstFillVertex=cache.vertexOffset[0];
+      tess.lastFillVertex=tess.firstFillVertex + tess.fillVertexCount;
+      tess.firstFillIndex=cache.indexOffset[0];
+      tess.lastFillIndex=tess.firstFillIndex + tess.fillIndexCount;
     }
     if (0 < tess.lineVertexCount && 0 < tess.lineIndexCount) {
       if (PGL.MAX_VERTEX_INDEX1 < root.firstLineVertexRel + tess.lineVertexCount) {
@@ -52,7 +67,6 @@
       root.lastLineVertexOffset=tess.setLineVertex(root.lastLineVertexOffset);
       root.lastLineIndexOffset=tess.setLineIndex(root.firstLineVertexRel,root.lastLineIndexOffset);
       root.firstLineVertexRel+=tess.lineVertexCount;
-      addLineIndexBlock(tess.lastLineIndex - tess.firstLineIndex + 1,tess.firstLineIndex,root.firstLineVertexAbs);
     }
     if (0 < tess.pointVertexCount && 0 < tess.pointIndexCount) {
       if (PGL.MAX_VERTEX_INDEX1 < root.firstPointVertexRel + tess.pointVertexCount) {
@@ -62,7 +76,6 @@
       root.lastPointVertexOffset=tess.setPointVertex(root.lastPointVertexOffset);
       root.lastPointIndexOffset=tess.setPointIndex(root.firstPointVertexRel,root.lastPointIndexOffset);
       root.firstPointVertexRel+=tess.pointVertexCount;
-      addPointIndexBlock(tess.lastPointIndex - tess.firstPointIndex + 1,tess.firstPointIndex,root.firstPointVertexAbs);
     }
   }
   hasFill=0 < tess.fillVertexCount && 0 < tess.fillIndexCount;
