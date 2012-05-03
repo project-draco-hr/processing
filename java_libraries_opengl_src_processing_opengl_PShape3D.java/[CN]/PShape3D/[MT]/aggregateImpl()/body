@@ -54,22 +54,42 @@
       tess.updateFillFromCache();
     }
     if (0 < tess.lineVertexCount && 0 < tess.lineIndexCount) {
-      if (PGL.MAX_VERTEX_INDEX1 < root.firstLineVertexRel + tess.lineVertexCount) {
-        root.firstLineVertexRel=0;
-        root.firstLineVertexAbs=root.lastLineVertexOffset + 1;
+      IndexCache cache=tess.lineIndexCache;
+      for (int n=0; n < cache.count; n++) {
+        int ioffset=cache.indexOffset[n];
+        int icount=cache.indexCount[n];
+        int vcount=cache.vertexCount[n];
+        if (PGL.MAX_VERTEX_INDEX1 <= root.lineVertexRel + vcount) {
+          root.lineVertexRel=0;
+          root.lineVertexOffset=root.lineVertexAbs;
+          cache.indexOffset[n]=root.lineIndexOffset;
+        }
+ else         tess.incLineIndices(ioffset,ioffset + icount - 1,root.lineVertexRel);
+        cache.vertexOffset[n]=root.lineVertexOffset;
+        root.lineIndexOffset+=icount;
+        root.lineVertexAbs+=vcount;
+        root.lineVertexRel+=vcount;
       }
-      root.lastLineVertexOffset=tess.setLineVertex(root.lastLineVertexOffset);
-      root.lastLineIndexOffset=tess.setLineIndex(root.firstLineVertexRel,root.lastLineIndexOffset);
-      root.firstLineVertexRel+=tess.lineVertexCount;
+      tess.updateLineFromCache();
     }
     if (0 < tess.pointVertexCount && 0 < tess.pointIndexCount) {
-      if (PGL.MAX_VERTEX_INDEX1 < root.firstPointVertexRel + tess.pointVertexCount) {
-        root.firstPointVertexRel=0;
-        root.firstPointVertexAbs=root.lastPointVertexOffset + 1;
+      IndexCache cache=tess.pointIndexCache;
+      for (int n=0; n < cache.count; n++) {
+        int ioffset=cache.indexOffset[n];
+        int icount=cache.indexCount[n];
+        int vcount=cache.vertexCount[n];
+        if (PGL.MAX_VERTEX_INDEX1 <= root.pointVertexRel + vcount) {
+          root.pointVertexRel=0;
+          root.pointVertexOffset=root.pointVertexAbs;
+          cache.indexOffset[n]=root.pointIndexOffset;
+        }
+ else         tess.incPointIndices(ioffset,ioffset + icount - 1,root.pointVertexRel);
+        cache.vertexOffset[n]=root.pointVertexOffset;
+        root.pointIndexOffset+=icount;
+        root.pointVertexAbs+=vcount;
+        root.pointVertexRel+=vcount;
       }
-      root.lastPointVertexOffset=tess.setPointVertex(root.lastPointVertexOffset);
-      root.lastPointIndexOffset=tess.setPointIndex(root.firstPointVertexRel,root.lastPointIndexOffset);
-      root.firstPointVertexRel+=tess.pointVertexCount;
+      tess.updatePointFromCache();
     }
   }
   hasFill=0 < tess.fillVertexCount && 0 < tess.fillIndexCount;
