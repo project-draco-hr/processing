@@ -1,13 +1,14 @@
 {
+  createPointBuffers();
   int size=tessGeo.pointVertexCount;
   int sizef=size * PGL.SIZEOF_FLOAT;
   int sizei=size * PGL.SIZEOF_INT;
   pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPointVertexBufferID);
-  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,FloatBuffer.wrap(tessGeo.pointVertices,0,3 * size),vboMode);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,FloatBuffer.wrap(tessGeo.pointVertices,0,3 * size),PGL.GL_STATIC_DRAW);
   pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPointColorBufferID);
-  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,IntBuffer.wrap(tessGeo.pointColors,0,size),vboMode);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,IntBuffer.wrap(tessGeo.pointColors,0,size),PGL.GL_STATIC_DRAW);
   pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPointSizeBufferID);
-  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,2 * sizef,FloatBuffer.wrap(tessGeo.pointSizes,0,2 * size),vboMode);
+  pgl.glBufferData(PGL.GL_ARRAY_BUFFER,2 * sizef,FloatBuffer.wrap(tessGeo.pointSizes,0,2 * size),PGL.GL_STATIC_DRAW);
   pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glPointIndexBufferID);
-  pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,tessGeo.pointIndexCount * PGL.SIZEOF_INDEX,ShortBuffer.wrap(tessGeo.pointIndices,0,tessGeo.pointIndexCount),vboMode);
+  pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,tessGeo.pointIndexCount * PGL.SIZEOF_INDEX,ShortBuffer.wrap(tessGeo.pointIndices,0,tessGeo.pointIndexCount),PGL.GL_STATIC_DRAW);
 }

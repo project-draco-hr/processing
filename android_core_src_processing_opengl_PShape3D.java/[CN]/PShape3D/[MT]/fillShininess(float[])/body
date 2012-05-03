@@ -1,8 +1,12 @@
 {
-  updateTesselation();
-  if (shininess == null || shininess.length != tess.fillShininess.length) {
-    shininess=new float[tess.fillShininess.length];
+  if (family == GROUP) {
+    PGraphics.showWarning("GROUP shapes don't have any vertices");
+    return shininess;
   }
-  PApplet.arrayCopy(tess.fillShininess,shininess);
+  updateTessellation();
+  if (shininess == null || shininess.length != tessGeo.fillShininess.length) {
+    shininess=new float[tessGeo.fillShininess.length];
+  }
+  PApplet.arrayCopy(tessGeo.fillShininess,shininess);
   return shininess;
 }

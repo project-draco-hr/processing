@@ -1,7 +1,8 @@
 {
   pg=(PGraphicsOpenGL)parent.g;
   pgl=pg.pgl;
-  glMode=PGL.GL_STATIC_DRAW;
+  context=pgl.createEmptyContext();
+  prevMode=mode=DYNAMIC;
   glFillVertexBufferID=0;
   glFillColorBufferID=0;
   glFillNormalBufferID=0;
@@ -25,12 +26,8 @@
   this.parent=null;
   this.tessellated=false;
   if (family == GEOMETRY || family == PRIMITIVE || family == PATH) {
-    in=pg.newInGeometry(PGraphicsOpenGL.RETAINED);
+    inGeo=pg.newInGeometry(PGraphicsOpenGL.RETAINED);
   }
-  tess=pg.newTessGeometry(PGraphicsOpenGL.RETAINED);
-  fillIndexData=new ArrayList<IndexData>();
-  lineIndexData=new ArrayList<IndexData>();
-  pointIndexData=new ArrayList<IndexData>();
   textureMode=pg.textureMode;
   rectMode=pg.rectMode;
   ellipseMode=pg.ellipseMode;
@@ -51,4 +48,8 @@
   normalX=normalY=0;
   normalZ=1;
   normalMode=NORMAL_MODE_AUTO;
+  cacheTransformations=pg.hintEnabled(ENABLE_TRANSFORM_CACHE);
+  if (family == GROUP) {
+    shapeEnded=true;
+  }
 }

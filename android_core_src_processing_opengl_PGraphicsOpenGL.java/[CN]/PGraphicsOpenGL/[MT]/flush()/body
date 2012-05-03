@@ -4,7 +4,7 @@
   boolean hasFill=0 < tessGeo.fillVertexCount && 0 < tessGeo.fillIndexCount;
   boolean hasPixels=modified && pixels != null;
   if (hasPixels) {
-    renderPixels();
+    flushPixels();
     setgetPixels=false;
   }
   if (hasPoints || hasLines || hasFill) {
@@ -13,13 +13,13 @@
       resetMatrix();
     }
     if (hasFill) {
-      renderFill();
+      flushFill();
     }
     if (hasPoints) {
-      renderPoints();
+      flushPoints();
     }
     if (hasLines) {
-      renderLines();
+      flushLines();
     }
     if (flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
       popMatrix();

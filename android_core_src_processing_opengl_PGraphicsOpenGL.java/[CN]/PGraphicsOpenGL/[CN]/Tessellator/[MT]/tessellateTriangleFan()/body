@@ -2,19 +2,14 @@
   int nInVert=in.lastVertex - in.firstVertex + 1;
   if (fill && 3 <= nInVert) {
     int nInInd=3 * (nInVert - 2);
-    checkForFlush(tess.fillVertexCount + nInVert,tess.fillIndexCount + nInInd);
-    tess.addFillVertices(in);
-    tess.addFillIndices(nInInd);
-    int idx=tess.firstFillIndex;
-    int offset=tess.firstFillVertex;
+    setRawSize(nInInd);
+    int idx=0;
     for (int i=in.firstVertex + 1; i < in.lastVertex; i++) {
-      tess.fillIndices[idx++]=PGL.makeIndex(offset + in.firstVertex);
-      tess.fillIndices[idx++]=PGL.makeIndex(offset + i);
-      tess.fillIndices[idx++]=PGL.makeIndex(offset + i + 1);
+      rawIndices[idx++]=in.firstVertex;
+      rawIndices[idx++]=i;
+      rawIndices[idx++]=i + 1;
     }
+    partitionRawIndices();
   }
-  if (stroke) {
-    tess.isStroked=true;
-    tessellateEdges();
-  }
+  tessellateEdges();
 }

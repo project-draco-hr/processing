@@ -1,8 +1,12 @@
 {
-  updateTesselation();
-  if (emissive == null || emissive.length != tess.fillEmissive.length) {
-    emissive=new int[tess.fillEmissive.length];
+  if (family == GROUP) {
+    PGraphics.showWarning("GROUP shapes don't have any vertices");
+    return emissive;
   }
-  PApplet.arrayCopy(tess.fillEmissive,emissive);
+  updateTessellation();
+  if (emissive == null || emissive.length != tessGeo.fillEmissive.length) {
+    emissive=new int[tessGeo.fillEmissive.length];
+  }
+  PApplet.arrayCopy(tessGeo.fillEmissive,emissive);
   return emissive;
 }

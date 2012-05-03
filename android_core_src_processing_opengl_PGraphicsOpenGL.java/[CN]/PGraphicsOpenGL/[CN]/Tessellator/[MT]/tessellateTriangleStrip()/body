@@ -1,27 +1,21 @@
 {
   int nInVert=in.lastVertex - in.firstVertex + 1;
   if (fill && 3 <= nInVert) {
-    int triCount=nInVert - 2;
-    int nInInd=3 * triCount;
-    checkForFlush(tess.fillVertexCount + nInVert,tess.fillIndexCount + nInInd);
-    tess.addFillVertices(in);
-    tess.addFillIndices(nInInd);
-    int idx=tess.firstFillIndex;
-    int offset=tess.firstFillVertex;
+    int nInInd=3 * (nInVert - 2);
+    setRawSize(nInInd);
+    int idx=0;
     for (int i=in.firstVertex + 1; i < in.lastVertex; i++) {
-      tess.fillIndices[idx++]=PGL.makeIndex(offset + i);
+      rawIndices[idx++]=i;
       if (i % 2 == 0) {
-        tess.fillIndices[idx++]=PGL.makeIndex(offset + i - 1);
-        tess.fillIndices[idx++]=PGL.makeIndex(offset + i + 1);
+        rawIndices[idx++]=i - 1;
+        rawIndices[idx++]=i + 1;
       }
  else {
-        tess.fillIndices[idx++]=PGL.makeIndex(offset + i + 1);
-        tess.fillIndices[idx++]=PGL.makeIndex(offset + i - 1);
+        rawIndices[idx++]=i + 1;
+        rawIndices[idx++]=i - 1;
       }
     }
+    partitionRawIndices();
   }
-  if (stroke) {
-    tess.isStroked=true;
-    tessellateEdges();
-  }
+  tessellateEdges();
 }

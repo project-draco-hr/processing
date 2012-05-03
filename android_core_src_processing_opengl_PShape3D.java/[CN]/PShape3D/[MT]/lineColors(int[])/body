@@ -1,8 +1,12 @@
 {
-  updateTesselation();
-  if (colors == null || colors.length != tess.lineColors.length) {
-    colors=new int[tess.lineColors.length];
+  if (family == GROUP) {
+    PGraphics.showWarning("GROUP shapes don't have any vertices");
+    return colors;
   }
-  PApplet.arrayCopy(tess.lineColors,colors);
+  updateTessellation();
+  if (colors == null || colors.length != tessGeo.lineColors.length) {
+    colors=new int[tessGeo.lineColors.length];
+  }
+  PApplet.arrayCopy(tessGeo.lineColors,colors);
   return colors;
 }

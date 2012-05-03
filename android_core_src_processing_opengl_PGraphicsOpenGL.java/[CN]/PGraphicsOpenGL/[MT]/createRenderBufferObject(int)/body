@@ -1,0 +1,14 @@
+{
+  deleteFinalizedRenderBufferObjects();
+  int[] temp=new int[1];
+  pgl.glGenRenderbuffers(1,temp,0);
+  int id=temp[0];
+  GLResource res=new GLResource(id,context);
+  if (glRenderBuffers.containsKey(res)) {
+    showWarning("Adding same renderbuffer twice");
+  }
+ else {
+    glRenderBuffers.put(res,false);
+  }
+  return id;
+}

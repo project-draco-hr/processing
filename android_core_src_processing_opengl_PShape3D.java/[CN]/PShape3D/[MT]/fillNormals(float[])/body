@@ -1,8 +1,12 @@
 {
-  updateTesselation();
-  if (normals == null || normals.length != tess.fillNormals.length) {
-    normals=new float[tess.fillNormals.length];
+  if (family == GROUP) {
+    PGraphics.showWarning("GROUP shapes don't have any vertices");
+    return normals;
   }
-  PApplet.arrayCopy(tess.fillNormals,normals);
+  updateTessellation();
+  if (normals == null || normals.length != tessGeo.fillNormals.length) {
+    normals=new float[tessGeo.fillNormals.length];
+  }
+  PApplet.arrayCopy(tessGeo.fillNormals,normals);
   return normals;
 }

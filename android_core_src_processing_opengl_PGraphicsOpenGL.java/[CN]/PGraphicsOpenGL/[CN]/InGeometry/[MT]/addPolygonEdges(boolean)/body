@@ -6,10 +6,10 @@
   if (!closed)   lnMax--;
   for (int ln=0; ln < lnMax; ln++) {
     int i=first + ln + 1;
-    if ((i == lnMax || codes[i] == PShape.BREAK) && closed) {
+    if ((i == lnMax || breaks[i]) && closed) {
       i=first + ln;
     }
-    if (codes[i] != PShape.BREAK) {
+    if (!breaks[i]) {
       edgeCount++;
     }
   }
@@ -19,19 +19,19 @@
     for (int ln=0; ln < lnMax; ln++) {
       int i0=first + ln;
       int i1=first + ln + 1;
-      if (codes[i0] == PShape.BREAK)       contour0=i0;
-      if (i1 == lnMax || codes[i1] == PShape.BREAK) {
+      if (breaks[i0])       contour0=i0;
+      if (i1 == lnMax || breaks[i1]) {
         if (closed) {
           i0=first + ln;
           i1=contour0;
           addEdge(i0,i1,begin,true);
         }
- else         if (codes[i1] != PShape.BREAK) {
+ else         if (!breaks[i1]) {
           addEdge(i0,i1,begin,false);
         }
         begin=true;
       }
- else       if (codes[i1] != PShape.BREAK) {
+ else       if (!breaks[i1]) {
         addEdge(i0,i1,begin,false);
       }
     }

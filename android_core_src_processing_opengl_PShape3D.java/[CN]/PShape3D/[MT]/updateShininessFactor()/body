@@ -1,9 +1,8 @@
 {
-  if (!shapeEnded || tess.fillVertexCount == 0 || texture == null) {
-    return;
+  if (shapeEnded && tessellated && 0 < tessGeo.fillVertexCount) {
+    Arrays.fill(inGeo.shininess,0,inGeo.vertexCount,shininess);
+    Arrays.fill(tessGeo.fillShininess,0,tessGeo.fillVertexCount,shininess);
+    modifiedFillShininess=true;
+    modified();
   }
-  updateTesselation();
-  Arrays.fill(tess.fillShininess,0,tess.fillVertexCount,shininess);
-  modifiedFillShininess=true;
-  modified();
 }

@@ -31,8 +31,8 @@
  else {
       setFramebuffer(offscreenFramebuffer);
     }
-    pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
     pgl.updateOffscreen(pg.pgl);
+    pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
   }
   report("top beginDraw()");
   inGeo.clear();
@@ -54,7 +54,7 @@
     flushMode=FLUSH_WHEN_FULL;
   }
   if (primarySurface) {
-    int[] temp={0};
+    int[] temp=new int[1];
     pgl.glGetIntegerv(PGL.GL_SAMPLES,temp,0);
     if (antialias != temp[0] && 1 < temp[0] && 1 < antialias) {
       antialias=temp[0];
@@ -114,6 +114,10 @@
  else {
     pgl.beginOffscreenDraw(pg.clearColorBuffer);
     offscreenFramebuffer.setColorBuffer(texture);
+  }
+  if (restoreSurface) {
+    restoreSurfaceFromPixels();
+    restoreSurface=false;
   }
   if (hints[DISABLE_DEPTH_MASK]) {
     pgl.glDepthMask(false);

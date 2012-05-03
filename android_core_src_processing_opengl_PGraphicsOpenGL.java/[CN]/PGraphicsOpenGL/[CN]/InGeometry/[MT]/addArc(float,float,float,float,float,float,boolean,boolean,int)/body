@@ -1,0 +1,53 @@
+{
+  float x=a;
+  float y=b;
+  float w=c;
+  float h=d;
+  if (ellipseMode == CORNERS) {
+    w=c - a;
+    h=d - b;
+  }
+ else   if (ellipseMode == RADIUS) {
+    x=a - c;
+    y=b - d;
+    w=c * 2;
+    h=d * 2;
+  }
+ else   if (ellipseMode == CENTER) {
+    x=a - c / 2f;
+    y=b - d / 2f;
+  }
+  if (Float.isInfinite(start) || Float.isInfinite(stop))   return;
+  if (stop < start)   return;
+  while (start < 0) {
+    start+=TWO_PI;
+    stop+=TWO_PI;
+  }
+  if (stop - start > TWO_PI) {
+    start=0;
+    stop=TWO_PI;
+  }
+  float hr=w / 2f;
+  float vr=h / 2f;
+  float centerX=x + hr;
+  float centerY=y + vr;
+  int startLUT=(int)(0.5f + (start / TWO_PI) * SINCOS_LENGTH);
+  int stopLUT=(int)(0.5f + (stop / TWO_PI) * SINCOS_LENGTH);
+  if (fill) {
+    vertex(centerX,centerY,VERTEX);
+  }
+  int increment=1;
+  int pidx, idx;
+  pidx=idx=0;
+  for (int i=startLUT; i < stopLUT; i+=increment) {
+    int ii=i % SINCOS_LENGTH;
+    if (ii < 0)     ii+=SINCOS_LENGTH;
+    idx=addVertex(centerX + cosLUT[ii] * hr,centerY + sinLUT[ii] * vr,VERTEX);
+    if (0 < i) {
+      if (stroke)       addEdge(pidx,idx,i == 1,false);
+    }
+    pidx=idx;
+  }
+  idx=addVertex(centerX + cosLUT[stopLUT % SINCOS_LENGTH] * hr,centerY + sinLUT[stopLUT % SINCOS_LENGTH] * vr,VERTEX);
+  if (stroke)   addEdge(pidx,idx,false,true);
+}

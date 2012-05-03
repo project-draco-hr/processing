@@ -1,8 +1,12 @@
 {
-  updateTesselation();
-  if (attribs == null || attribs.length != tess.lineDirWidths.length) {
-    attribs=new float[tess.lineDirWidths.length];
+  if (family == GROUP) {
+    PGraphics.showWarning("GROUP shapes don't have any vertices");
+    return attribs;
   }
-  PApplet.arrayCopy(tess.lineDirWidths,attribs);
+  updateTessellation();
+  if (attribs == null || attribs.length != tessGeo.lineDirWidths.length) {
+    attribs=new float[tessGeo.lineDirWidths.length];
+  }
+  PApplet.arrayCopy(tessGeo.lineDirWidths,attribs);
   return attribs;
 }

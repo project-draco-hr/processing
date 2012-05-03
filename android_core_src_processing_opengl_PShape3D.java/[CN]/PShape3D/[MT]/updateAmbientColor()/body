@@ -1,9 +1,8 @@
 {
-  if (!shapeEnded || tess.fillVertexCount == 0 || texture == null) {
-    return;
+  if (shapeEnded && tessellated && 0 < tessGeo.fillVertexCount) {
+    Arrays.fill(inGeo.ambient,0,inGeo.vertexCount,PGL.javaToNativeARGB(ambientColor));
+    Arrays.fill(tessGeo.fillAmbient,0,tessGeo.fillVertexCount,PGL.javaToNativeARGB(ambientColor));
+    modifiedFillAmbient=true;
+    modified();
   }
-  updateTesselation();
-  Arrays.fill(tess.fillAmbient,0,tess.fillVertexCount,ambientColor);
-  modifiedFillAmbient=true;
-  modified();
 }

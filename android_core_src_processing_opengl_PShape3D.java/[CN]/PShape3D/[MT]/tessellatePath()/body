@@ -1,0 +1,78 @@
+{
+  if (vertices == null)   return;
+  inGeo.setMaterial(fillColor,strokeColor,strokeWeight,ambientColor,specularColor,emissiveColor,shininess);
+  boolean insideContour=false;
+  if (vertexCodeCount == 0) {
+    if (vertices[0].length == 2) {
+      for (int i=0; i < vertexCount; i++) {
+        inGeo.addVertex(vertices[i][X],vertices[i][Y],VERTEX);
+      }
+    }
+ else {
+      for (int i=0; i < vertexCount; i++) {
+        inGeo.addVertex(vertices[i][X],vertices[i][Y],vertices[i][Z],VERTEX);
+      }
+    }
+  }
+ else {
+    int index=0;
+    int code=VERTEX;
+    if (vertices[0].length == 2) {
+      for (int j=0; j < vertexCodeCount; j++) {
+switch (vertexCodes[j]) {
+case VERTEX:
+          inGeo.addVertex(vertices[index][X],vertices[index][Y],code);
+        index++;
+      break;
+case QUAD_BEZIER_VERTEX:
+    inGeo.addQuadraticVertex(vertices[index + 0][X],vertices[index + 0][Y],0,vertices[index + 1][X],vertices[index + 1][Y],0,fill,stroke,bezierDetail,code);
+  index+=2;
+break;
+case BEZIER_VERTEX:
+inGeo.addBezierVertex(vertices[index + 0][X],vertices[index + 0][Y],0,vertices[index + 1][X],vertices[index + 1][Y],0,vertices[index + 2][X],vertices[index + 2][Y],0,fill,stroke,bezierDetail,code);
+index+=3;
+break;
+case CURVE_VERTEX:
+inGeo.addCurveVertex(vertices[index][X],vertices[index][Y],0,fill,stroke,curveDetail,code);
+index++;
+case BREAK:
+if (insideContour) {
+code=VERTEX;
+}
+code=BREAK;
+insideContour=true;
+}
+}
+}
+ else {
+for (int j=0; j < vertexCodeCount; j++) {
+switch (vertexCodes[j]) {
+case VERTEX:
+inGeo.addVertex(vertices[index][X],vertices[index][Y],vertices[index][Z],code);
+index++;
+break;
+case QUAD_BEZIER_VERTEX:
+inGeo.addQuadraticVertex(vertices[index + 0][X],vertices[index + 0][Y],vertices[index + 0][Z],vertices[index + 1][X],vertices[index + 1][Y],vertices[index + 0][Z],fill,stroke,bezierDetail,code);
+index+=2;
+break;
+case BEZIER_VERTEX:
+inGeo.addBezierVertex(vertices[index + 0][X],vertices[index + 0][Y],vertices[index + 0][Z],vertices[index + 1][X],vertices[index + 1][Y],vertices[index + 1][Z],vertices[index + 2][X],vertices[index + 2][Y],vertices[index + 2][Z],fill,stroke,bezierDetail,code);
+index+=3;
+break;
+case CURVE_VERTEX:
+inGeo.addCurveVertex(vertices[index][X],vertices[index][Y],vertices[index][Z],fill,stroke,curveDetail,code);
+index++;
+case BREAK:
+if (insideContour) {
+code=VERTEX;
+}
+code=BREAK;
+insideContour=true;
+}
+}
+}
+}
+if (stroke) inGeo.addPolygonEdges(isClosed);
+inGeo.initTessMap(tessGeo);
+tessellator.tessellatePolygon(false,isClosed,true);
+}

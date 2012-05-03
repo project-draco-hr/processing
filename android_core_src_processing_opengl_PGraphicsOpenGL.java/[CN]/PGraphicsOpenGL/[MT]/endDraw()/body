@@ -1,19 +1,25 @@
 {
   report("top endDraw()");
-  if (flushMode == FLUSH_WHEN_FULL) {
-    flush();
-  }
+  flush();
   if (!drawing) {
     showWarning("P3D: Cannot call endDraw() before beginDraw().");
     return;
   }
   if (primarySurface) {
     pgl.endOnscreenDraw(clearColorBuffer0);
+    if (!pgl.initialized || parent.frameCount == 0) {
+      saveSurfaceToPixels();
+      restoreSurface=true;
+    }
     pgl.glFlush();
   }
  else {
     if (offscreenMultisample) {
       offscreenFramebufferMultisample.copy(offscreenFramebuffer);
+    }
+    if (!pgl.initialized || !pg.pgl.initialized || parent.frameCount == 0) {
+      saveSurfaceToPixels();
+      restoreSurface=true;
     }
     popFramebuffer();
     pgl.endOffscreenDraw(pg.clearColorBuffer0);

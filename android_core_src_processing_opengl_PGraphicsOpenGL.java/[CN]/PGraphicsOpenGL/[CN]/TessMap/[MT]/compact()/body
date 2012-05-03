@@ -1,0 +1,30 @@
+{
+  firstPointIndex=-1;
+  firstLineIndex=-1;
+  boolean contiguous=true;
+  for (int i=in.firstVertex; i <= in.lastVertex; i++) {
+    int[] indices=fillIndices[i];
+    float[] weigths=fillWeights[i];
+    if (indices.length == 1 && weigths[0] == 1) {
+      if (i < in.lastVertex) {
+        int[] indices1=fillIndices[i + 1];
+        if (indices[0] + 1 != indices1[0]) {
+          contiguous=false;
+          break;
+        }
+      }
+    }
+ else {
+      contiguous=false;
+      break;
+    }
+  }
+  if (contiguous) {
+    firstFillIndex=0 < fillIndices.length ? fillIndices[in.firstVertex][0] : 0;
+    fillIndices=null;
+    fillWeights=null;
+  }
+ else {
+    firstFillIndex=-1;
+  }
+}

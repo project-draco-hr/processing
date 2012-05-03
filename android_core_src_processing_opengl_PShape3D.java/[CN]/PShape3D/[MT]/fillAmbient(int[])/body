@@ -1,8 +1,12 @@
 {
-  updateTesselation();
-  if (ambient == null || ambient.length != tess.fillAmbient.length) {
-    ambient=new int[tess.fillAmbient.length];
+  if (family == GROUP) {
+    PGraphics.showWarning("GROUP shapes don't have any vertices");
+    return ambient;
   }
-  PApplet.arrayCopy(tess.fillAmbient,ambient);
+  updateTessellation();
+  if (ambient == null || ambient.length != tessGeo.fillAmbient.length) {
+    ambient=new int[tessGeo.fillAmbient.length];
+  }
+  PApplet.arrayCopy(tessGeo.fillAmbient,ambient);
   return ambient;
 }

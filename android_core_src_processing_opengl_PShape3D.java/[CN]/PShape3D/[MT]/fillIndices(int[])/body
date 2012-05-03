@@ -1,8 +1,20 @@
 {
-  updateTesselation();
-  if (indices == null || indices.length != tess.fillIndices.length) {
-    indices=new int[tess.fillIndices.length];
+  if (family == GROUP) {
+    PGraphics.showWarning("GROUP shapes don't have any vertices");
+    return indices;
   }
-  PApplet.arrayCopy(tess.fillIndexCount,indices);
+  updateTessellation();
+  if (indices == null || indices.length != tessGeo.fillIndices.length) {
+    indices=new int[tessGeo.fillIndices.length];
+  }
+  IndexCache cache=tessGeo.fillIndexCache;
+  for (int n=0; n < cache.size; n++) {
+    int ioffset=cache.indexOffset[n];
+    int icount=cache.indexCount[n];
+    int voffset=cache.vertexOffset[n];
+    for (int i=ioffset; i < ioffset + icount; i++) {
+      indices[i]=voffset + tessGeo.fillIndices[i];
+    }
+  }
   return indices;
 }
