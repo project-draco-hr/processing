@@ -42,22 +42,16 @@
         int vcount=cache.vertexCount[n];
         if (PGL.MAX_VERTEX_INDEX1 <= root.fillVertexRel + vcount) {
           root.fillVertexRel=0;
+          root.fillVertexOffset=root.fillVertexAbs;
+          cache.indexOffset[n]=root.fillIndexOffset;
         }
-        if (0 < root.fillVertexRel) {
-          for (int i=0; i < icount; i++) {
-            tess.fillIndices[ioffset + i]+=root.fillVertexRel;
-          }
-        }
-        cache.indexOffset[n]=root.fillIndexOffset;
+ else         tess.incFillIndices(ioffset,ioffset + icount - 1,root.fillVertexRel);
         cache.vertexOffset[n]=root.fillVertexOffset;
         root.fillIndexOffset+=icount;
-        root.fillVertexOffset+=vcount;
+        root.fillVertexAbs+=vcount;
         root.fillVertexRel+=vcount;
       }
-      tess.firstFillVertex=cache.vertexOffset[0];
-      tess.lastFillVertex=tess.firstFillVertex + tess.fillVertexCount;
-      tess.firstFillIndex=cache.indexOffset[0];
-      tess.lastFillIndex=tess.firstFillIndex + tess.fillIndexCount;
+      tess.updateFillFromCache();
     }
     if (0 < tess.lineVertexCount && 0 < tess.lineIndexCount) {
       if (PGL.MAX_VERTEX_INDEX1 < root.firstLineVertexRel + tess.lineVertexCount) {
