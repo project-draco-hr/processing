@@ -1,2 +1,19 @@
 {
+  float[] shininess=tess.fillShininess;
+  if (-1 < firstFillIndex) {
+    int tessIdx=firstFillIndex + inIdx;
+    shininess[tessIdx]=shine;
+  }
+ else {
+    float shine0=in.shininess[inIdx];
+    int[] indices=fillIndices[inIdx];
+    float[] weights=fillWeights[inIdx];
+    for (int i=0; i < indices.length; i++) {
+      int tessIdx=indices[i];
+      float weight=weights[i];
+      float tshine0=shininess[tessIdx];
+      float tshine=tshine0 + weight * (shine - shine0);
+      shininess[tessIdx]=tshine;
+    }
+  }
 }

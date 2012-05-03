@@ -1,6 +1,8 @@
 {
   int[] indices;
+  int[] indices1;
   float[] vertices;
+  float[] attribs;
   indices=pointIndices[inIdx];
   vertices=tess.pointVertices;
   for (int i=0; i < indices.length; i++) {
@@ -9,13 +11,19 @@
     vertices[3 * tessIdx + 1]=y;
     vertices[3 * tessIdx + 2]=z;
   }
-  indices=lineIndices[inIdx];
+  indices=lineIndices0[inIdx];
+  indices1=lineIndices1[inIdx];
   vertices=tess.lineVertices;
+  attribs=tess.lineDirWidths;
   for (int i=0; i < indices.length; i++) {
     int tessIdx=indices[i];
     vertices[3 * tessIdx + 0]=x;
     vertices[3 * tessIdx + 1]=y;
     vertices[3 * tessIdx + 2]=z;
+    int tessIdx1=indices1[i];
+    attribs[4 * tessIdx1 + 0]=x;
+    attribs[4 * tessIdx1 + 1]=y;
+    attribs[4 * tessIdx1 + 2]=z;
   }
   vertices=tess.fillVertices;
   if (-1 < firstFillIndex) {
