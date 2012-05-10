@@ -1,5 +1,15 @@
 {
-  if (root.needBufferInit) {
-    root.copyGeometryToRoot();
+  if (needBufferInit) {
+    context=pgl.getCurrentContext();
+    if (0 < tessGeo.fillVertexCount && 0 < tessGeo.fillIndexCount) {
+      initFillBuffers();
+    }
+    if (0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount) {
+      initLineBuffers();
+    }
+    if (0 < tessGeo.pointVertexCount && 0 < tessGeo.pointIndexCount) {
+      initPointBuffers();
+    }
+    needBufferInit=false;
   }
 }

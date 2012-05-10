@@ -8,18 +8,20 @@
     for (int i=0; i < nvert; i++) {
       int inIdx=i0 + i;
       int tessIdx=firstFillVertex + i;
-      index=3 * inIdx;
+      index=4 * inIdx;
       float x=in.vertices[index++];
       float y=in.vertices[index++];
-      float z=in.vertices[index];
+      float z=in.vertices[index++];
+      float w=in.vertices[index];
       index=3 * inIdx;
       float nx=in.normals[index++];
       float ny=in.normals[index++];
       float nz=in.normals[index];
-      index=3 * tessIdx;
-      fillVertices[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
-      fillVertices[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
-      fillVertices[index]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
+      index=4 * tessIdx;
+      fillVertices[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + w * mm.m03;
+      fillVertices[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + w * mm.m13;
+      fillVertices[index++]=x * mm.m20 + y * mm.m21 + z * mm.m22 + w * mm.m23;
+      fillVertices[index]=x * mm.m30 + y * mm.m31 + z * mm.m32 + w * mm.m33;
       index=3 * tessIdx;
       fillNormals[index++]=nx * nm.m00 + ny * nm.m10 + nz * nm.m20;
       fillNormals[index++]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
@@ -31,18 +33,20 @@
       for (int i=0; i < nvert; i++) {
         int inIdx=i0 + i;
         int tessIdx=firstFillVertex + i;
-        index=3 * inIdx;
+        index=4 * inIdx;
         float x=in.vertices[index++];
         float y=in.vertices[index++];
-        float z=in.vertices[index];
+        float z=in.vertices[index++];
+        float w=in.vertices[index];
         index=3 * inIdx;
         float nx=in.normals[index++];
         float ny=in.normals[index++];
         float nz=in.normals[index];
-        index=3 * tessIdx;
+        index=4 * tessIdx;
         fillVertices[index++]=x;
         fillVertices[index++]=y;
-        fillVertices[index]=z;
+        fillVertices[index++]=z;
+        fillVertices[index]=w;
         index=3 * tessIdx;
         fillNormals[index++]=nx;
         fillNormals[index++]=ny;
@@ -50,7 +54,7 @@
       }
     }
  else {
-      PApplet.arrayCopy(in.vertices,3 * i0,fillVertices,3 * firstFillVertex,3 * nvert);
+      PApplet.arrayCopy(in.vertices,4 * i0,fillVertices,4 * firstFillVertex,4 * nvert);
       PApplet.arrayCopy(in.normals,3 * i0,fillNormals,3 * firstFillVertex,3 * nvert);
     }
   }

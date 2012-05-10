@@ -1,0 +1,116 @@
+{
+  tessGeo=root.tessGeo;
+  if (family == GROUP) {
+    for (int i=0; i < childCount; i++) {
+      PShape3D child=(PShape3D)children[i];
+      child.tessellateImpl();
+    }
+    firstPointIndexCache=-1;
+    lastPointIndexCache=-1;
+    firstLineIndexCache=-1;
+    lastLineIndexCache=-1;
+    firstFillIndexCache=-1;
+    lastFillIndexCache=-1;
+  }
+ else {
+    if (shapeEnded) {
+      inGeo.clearEdges();
+      tessellator.setInGeometry(inGeo);
+      tessellator.setTessGeometry(tessGeo);
+      tessellator.setFill(fill || texture != null);
+      tessellator.setStroke(stroke);
+      tessellator.setStrokeColor(strokeColor);
+      tessellator.setStrokeWeight(strokeWeight);
+      tessellator.setStrokeCap(strokeCap);
+      tessellator.setStrokeJoin(strokeJoin);
+      if (family == GEOMETRY) {
+        inGeo.initTessMap(tessGeo);
+        if (kind == POINTS) {
+          tessellator.tessellatePoints();
+        }
+ else         if (kind == LINES) {
+          tessellator.tessellateLines();
+        }
+ else         if (kind == LINE_STRIP) {
+          tessellator.tessellateLineStrip();
+        }
+ else         if (kind == LINE_LOOP) {
+          tessellator.tessellateLineLoop();
+        }
+ else         if (kind == TRIANGLE || kind == TRIANGLES) {
+          if (stroke)           inGeo.addTrianglesEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcTrianglesNormals();
+          tessellator.tessellateTriangles();
+        }
+ else         if (kind == TRIANGLE_FAN) {
+          if (stroke)           inGeo.addTriangleFanEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcTriangleFanNormals();
+          tessellator.tessellateTriangleFan();
+        }
+ else         if (kind == TRIANGLE_STRIP) {
+          if (stroke)           inGeo.addTriangleStripEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcTriangleStripNormals();
+          tessellator.tessellateTriangleStrip();
+        }
+ else         if (kind == QUAD || kind == QUADS) {
+          if (stroke)           inGeo.addQuadsEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcQuadsNormals();
+          tessellator.tessellateQuads();
+        }
+ else         if (kind == QUAD_STRIP) {
+          if (stroke)           inGeo.addQuadStripEdges();
+          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcQuadStripNormals();
+          tessellator.tessellateQuadStrip();
+        }
+ else         if (kind == POLYGON) {
+          if (stroke)           inGeo.addPolygonEdges(isClosed);
+          tessellator.tessellatePolygon(isSolid,isClosed,normalMode == NORMAL_MODE_AUTO);
+        }
+      }
+ else       if (family == PRIMITIVE) {
+        inGeo.clear();
+        if (kind == POINT) {
+          tessellatePoint();
+        }
+ else         if (kind == LINE) {
+          tessellateLine();
+        }
+ else         if (kind == TRIANGLE) {
+          tessellateTriangle();
+        }
+ else         if (kind == QUAD) {
+          tessellateQuad();
+        }
+ else         if (kind == RECT) {
+          tessellateRect();
+        }
+ else         if (kind == ELLIPSE) {
+          tessellateEllipse();
+        }
+ else         if (kind == ARC) {
+          tessellateArc();
+        }
+ else         if (kind == BOX) {
+          tessellateBox();
+        }
+ else         if (kind == SPHERE) {
+          tessellateSphere();
+        }
+      }
+ else       if (family == PATH) {
+        tessellatePath();
+      }
+      if (texture != null && parent != null) {
+        ((PShape3D)parent).addTexture(texture);
+      }
+      inGeo.compactTessMap();
+      firstPointIndexCache=tessellator.firstPointIndexCache;
+      lastPointIndexCache=tessellator.lastPointIndexCache;
+      firstLineIndexCache=tessellator.firstLineIndexCache;
+      lastLineIndexCache=tessellator.lastLineIndexCache;
+      firstFillIndexCache=tessellator.firstFillIndexCache;
+      lastFillIndexCache=tessellator.lastFillIndexCache;
+    }
+  }
+  tessellated=true;
+}

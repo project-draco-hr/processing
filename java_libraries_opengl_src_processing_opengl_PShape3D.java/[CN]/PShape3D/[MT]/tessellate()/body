@@ -1,106 +1,54 @@
 {
-  if (tessGeo == null) {
-    tessGeo=pg.newTessGeometry(PGraphicsOpenGL.RETAINED,family == GROUP);
-  }
-  tessGeo.clear();
-  if (family == GROUP) {
-    for (int i=0; i < childCount; i++) {
-      PShape3D child=(PShape3D)children[i];
-      child.tessellate();
+  if (root == this && parent == null) {
+    if (tessGeo == null) {
+      tessGeo=pg.newTessGeometry(PGraphicsOpenGL.RETAINED);
     }
+    tessGeo.clear();
+    tessellateImpl();
+    tessGeo.trim();
+    needBufferInit=true;
+    modified=false;
+    modifiedFillVertices=false;
+    modifiedFillColors=false;
+    modifiedFillNormals=false;
+    modifiedFillTexCoords=false;
+    modifiedFillAmbient=false;
+    modifiedFillSpecular=false;
+    modifiedFillEmissive=false;
+    modifiedFillShininess=false;
+    modifiedLineVertices=false;
+    modifiedLineColors=false;
+    modifiedLineAttributes=false;
+    modifiedPointVertices=false;
+    modifiedPointColors=false;
+    modifiedPointAttributes=false;
+    firstModifiedFillVertex=PConstants.MAX_INT;
+    lastModifiedFillVertex=PConstants.MIN_INT;
+    firstModifiedFillColor=PConstants.MAX_INT;
+    lastModifiedFillColor=PConstants.MIN_INT;
+    firstModifiedFillNormal=PConstants.MAX_INT;
+    lastModifiedFillNormal=PConstants.MIN_INT;
+    firstModifiedFillTexCoord=PConstants.MAX_INT;
+    lastModifiedFillTexCoord=PConstants.MIN_INT;
+    firstModifiedFillAmbient=PConstants.MAX_INT;
+    lastModifiedFillAmbient=PConstants.MIN_INT;
+    firstModifiedFillSpecular=PConstants.MAX_INT;
+    lastModifiedFillSpecular=PConstants.MIN_INT;
+    firstModifiedFillEmissive=PConstants.MAX_INT;
+    lastModifiedFillEmissive=PConstants.MIN_INT;
+    firstModifiedFillShininess=PConstants.MAX_INT;
+    lastModifiedFillShininess=PConstants.MIN_INT;
+    firstModifiedLineVertex=PConstants.MAX_INT;
+    lastModifiedLineVertex=PConstants.MIN_INT;
+    firstModifiedLineColor=PConstants.MAX_INT;
+    lastModifiedLineColor=PConstants.MIN_INT;
+    firstModifiedLineAttribute=PConstants.MAX_INT;
+    lastModifiedLineAttribute=PConstants.MIN_INT;
+    firstModifiedPointVertex=PConstants.MAX_INT;
+    lastModifiedPointVertex=PConstants.MIN_INT;
+    firstModifiedPointColor=PConstants.MAX_INT;
+    lastModifiedPointColor=PConstants.MIN_INT;
+    firstModifiedPointAttribute=PConstants.MAX_INT;
+    lastModifiedPointAttribute=PConstants.MIN_INT;
   }
- else {
-    if (shapeEnded) {
-      inGeo.clearEdges();
-      tessellator.setInGeometry(inGeo);
-      tessellator.setTessGeometry(tessGeo);
-      tessellator.setFill(fill || texture != null);
-      tessellator.setStroke(stroke);
-      tessellator.setStrokeColor(strokeColor);
-      tessellator.setStrokeWeight(strokeWeight);
-      tessellator.setStrokeCap(strokeCap);
-      tessellator.setStrokeJoin(strokeJoin);
-      if (family == GEOMETRY) {
-        inGeo.initTessMap(tessGeo);
-        if (kind == POINTS) {
-          tessellator.tessellatePoints();
-        }
- else         if (kind == LINES) {
-          tessellator.tessellateLines();
-        }
- else         if (kind == TRIANGLE || kind == TRIANGLES) {
-          if (stroke)           inGeo.addTrianglesEdges();
-          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcTrianglesNormals();
-          tessellator.tessellateTriangles();
-        }
- else         if (kind == TRIANGLE_FAN) {
-          if (stroke)           inGeo.addTriangleFanEdges();
-          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcTriangleFanNormals();
-          tessellator.tessellateTriangleFan();
-        }
- else         if (kind == TRIANGLE_STRIP) {
-          if (stroke)           inGeo.addTriangleStripEdges();
-          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcTriangleStripNormals();
-          tessellator.tessellateTriangleStrip();
-        }
- else         if (kind == QUAD || kind == QUADS) {
-          if (stroke)           inGeo.addQuadsEdges();
-          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcQuadsNormals();
-          tessellator.tessellateQuads();
-        }
- else         if (kind == QUAD_STRIP) {
-          if (stroke)           inGeo.addQuadStripEdges();
-          if (normalMode == NORMAL_MODE_AUTO)           inGeo.calcQuadStripNormals();
-          tessellator.tessellateQuadStrip();
-        }
- else         if (kind == POLYGON) {
-          if (stroke)           inGeo.addPolygonEdges(isClosed);
-          tessellator.tessellatePolygon(isSolid,isClosed,normalMode == NORMAL_MODE_AUTO);
-        }
-      }
- else       if (family == PRIMITIVE) {
-        inGeo.clear();
-        if (kind == POINT) {
-          tessellatePoint();
-        }
- else         if (kind == LINE) {
-          tessellateLine();
-        }
- else         if (kind == TRIANGLE) {
-          tessellateTriangle();
-        }
- else         if (kind == QUAD) {
-          tessellateQuad();
-        }
- else         if (kind == RECT) {
-          tessellateRect();
-        }
- else         if (kind == ELLIPSE) {
-          tessellateEllipse();
-        }
- else         if (kind == ARC) {
-          tessellateArc();
-        }
- else         if (kind == BOX) {
-          tessellateBox();
-        }
- else         if (kind == SPHERE) {
-          tessellateSphere();
-        }
-      }
- else       if (family == PATH) {
-        tessellatePath();
-      }
-      tessGeo.trim();
-      if (texture != null && parent != null) {
-        ((PShape3D)parent).addTexture(texture);
-      }
-      if (cacheTransformations && matrix != null) {
-        tessGeo.applyMatrix(matrix);
-      }
-      inGeo.compactTessMap();
-    }
-  }
-  tessellated=true;
-  modified=false;
 }

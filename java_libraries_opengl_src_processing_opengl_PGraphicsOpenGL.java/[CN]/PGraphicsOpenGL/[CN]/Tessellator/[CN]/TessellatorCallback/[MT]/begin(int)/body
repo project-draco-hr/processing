@@ -1,6 +1,9 @@
 {
   cache=tess.fillIndexCache;
-  cacheIndex=cache.getLast();
+  cacheIndex=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
+  if (cacheIndex < firstFillIndexCache) {
+    firstFillIndexCache=cacheIndex;
+  }
   vertFirst=cache.vertexCount[cacheIndex];
   vertCount=0;
 switch (type) {

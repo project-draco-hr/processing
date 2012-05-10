@@ -1,8 +1,7 @@
 {
-  if (shapeEnded && tessellated && 0 < tessGeo.fillVertexCount && texture != null) {
+  if (shapeEnded && tessellated && haveFill&& texture != null) {
     Arrays.fill(inGeo.colors,0,inGeo.vertexCount,PGL.javaToNativeARGB(tintColor));
-    Arrays.fill(tessGeo.fillColors,0,tessGeo.fillVertexCount,PGL.javaToNativeARGB(tintColor));
-    modifiedFillColors=true;
-    modified();
+    Arrays.fill(tessGeo.fillColors,firstFillVertex,lastFillVertex,PGL.javaToNativeARGB(tintColor));
+    root.setModifiedFillColors(firstFillVertex,lastFillVertex);
   }
 }

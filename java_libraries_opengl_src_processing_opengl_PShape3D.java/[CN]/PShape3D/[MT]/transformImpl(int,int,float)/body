@@ -2,43 +2,11 @@
   if (shapeEnded) {
     if (family == GROUP) {
       updateTessellation();
-      if (cacheTransformations) {
-        for (int i=0; i < childCount; i++) {
-          PShape3D child=(PShape3D)children[i];
-          child.transformImpl(type,ncoords,args);
-        }
-      }
- else {
-        checkMatrix(ncoords);
-        calcTransform(type,ncoords,args);
-      }
     }
- else {
-      checkMatrix(ncoords);
-      if (cacheTransformations) {
-        calcTransform(type,ncoords,args);
-        if (tessellated) {
-          applyTransform(ncoords);
-          modified();
-          if (0 < tessGeo.fillVertexCount) {
-            modifiedFillVertices=true;
-            modifiedFillNormals=true;
-          }
-          if (0 < tessGeo.lineVertexCount) {
-            modifiedLineVertices=true;
-            modifiedLineAttributes=true;
-          }
-          if (0 < tessGeo.pointVertexCount) {
-            modifiedPointVertices=true;
-          }
-        }
-      }
- else {
-        calcTransform(type,ncoords,args);
-      }
-    }
-    if (!cacheTransformations && parent != null && hasMatrix()) {
-      ((PShape3D)parent).setChildHasMatrix(true);
+    checkMatrix(ncoords);
+    calcTransform(type,ncoords,args);
+    if (tessellated) {
+      applyMatrixImpl(transform);
     }
   }
 }

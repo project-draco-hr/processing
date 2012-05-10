@@ -6,7 +6,8 @@
   int inMaxRel=0;
   Set<Integer> inDupSet=null;
   IndexCache cache=tess.fillIndexCache;
-  int index=cache.getLast();
+  int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
+  firstFillIndexCache=index;
   int trCount=rawSize / 3;
   for (int tr=0; tr < trCount; tr++) {
     if (index == -1)     index=cache.addNew();
@@ -60,6 +61,7 @@
         }
       }
       cache.incCounts(index,inInd1 - inInd0 + 1,inMaxVert1 - inMaxVert0 + 1 + dup);
+      lastFillIndexCache=index;
       index=-1;
       inMaxRel=0;
       inMaxVert0=inMaxVert1 + 1;

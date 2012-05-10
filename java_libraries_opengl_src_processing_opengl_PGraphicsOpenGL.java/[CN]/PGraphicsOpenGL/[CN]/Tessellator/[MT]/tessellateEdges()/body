@@ -4,10 +4,12 @@
     int nInInd=in.getNumLineIndices();
     tess.lineVertexCheck(nInVert);
     tess.lineIndexCheck(nInInd);
-    int index=tess.lineIndexCache.getLast();
+    int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
+    firstLineIndexCache=index;
     for (int i=in.firstEdge; i <= in.lastEdge; i++) {
       int[] edge=in.edges[i];
       index=addLine(edge[0],edge[1],index,true);
     }
+    lastLineIndexCache=index;
   }
 }

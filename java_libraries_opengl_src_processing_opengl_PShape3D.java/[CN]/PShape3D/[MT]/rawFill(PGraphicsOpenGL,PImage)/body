@@ -1,0 +1,80 @@
+{
+  PGraphics raw=g.getRaw();
+  raw.colorMode(RGB);
+  raw.noStroke();
+  raw.beginShape(TRIANGLES);
+  float[] vertices=tessGeo.fillVertices;
+  int[] color=tessGeo.fillColors;
+  float[] uv=tessGeo.fillTexcoords;
+  short[] indices=tessGeo.fillIndices;
+  IndexCache cache=tessGeo.fillIndexCache;
+  for (int n=firstFillIndexCache; n <= lastFillIndexCache; n++) {
+    int ioffset=cache.indexOffset[n];
+    int icount=cache.indexCount[n];
+    int voffset=cache.vertexOffset[n];
+    for (int tr=ioffset / 3; tr < (ioffset + icount) / 3; tr++) {
+      int i0=voffset + indices[3 * tr + 0];
+      int i1=voffset + indices[3 * tr + 1];
+      int i2=voffset + indices[3 * tr + 2];
+      float[] src0={0,0,0,0};
+      float[] src1={0,0,0,0};
+      float[] src2={0,0,0,0};
+      float[] pt0={0,0,0,0};
+      float[] pt1={0,0,0,0};
+      float[] pt2={0,0,0,0};
+      int argb0=PGL.nativeToJavaARGB(color[i0]);
+      int argb1=PGL.nativeToJavaARGB(color[i1]);
+      int argb2=PGL.nativeToJavaARGB(color[i2]);
+      PApplet.arrayCopy(vertices,4 * i0,src0,0,4);
+      PApplet.arrayCopy(vertices,4 * i1,src1,0,4);
+      PApplet.arrayCopy(vertices,4 * i2,src2,0,4);
+      g.modelview.mult(src0,pt0);
+      g.modelview.mult(src1,pt1);
+      g.modelview.mult(src2,pt2);
+      if (textureImage != null) {
+        raw.texture(textureImage);
+        if (raw.is3D()) {
+          raw.fill(argb0);
+          raw.vertex(pt0[X],pt0[Y],pt0[Z],uv[2 * i0 + 0],uv[2 * i0 + 1]);
+          raw.fill(argb1);
+          raw.vertex(pt1[X],pt1[Y],pt1[Z],uv[2 * i1 + 0],uv[2 * i1 + 1]);
+          raw.fill(argb2);
+          raw.vertex(pt2[X],pt2[Y],pt2[Z],uv[2 * i2 + 0],uv[2 * i2 + 1]);
+        }
+ else         if (raw.is2D()) {
+          float sx0=g.screenX(pt0[0],pt0[1],pt0[2],pt0[3]), sy0=g.screenY(pt0[0],pt0[1],pt0[2],pt0[3]);
+          float sx1=g.screenX(pt1[0],pt1[1],pt1[2],pt1[3]), sy1=g.screenY(pt1[0],pt1[1],pt1[2],pt1[3]);
+          float sx2=g.screenX(pt2[0],pt2[1],pt2[2],pt2[3]), sy2=g.screenY(pt2[0],pt2[1],pt2[2],pt2[3]);
+          raw.fill(argb0);
+          raw.vertex(sx0,sy0,uv[2 * i0 + 0],uv[2 * i0 + 1]);
+          raw.fill(argb1);
+          raw.vertex(sx1,sy1,uv[2 * i1 + 0],uv[2 * i1 + 1]);
+          raw.fill(argb1);
+          raw.vertex(sx2,sy2,uv[2 * i2 + 0],uv[2 * i2 + 1]);
+        }
+      }
+ else {
+        if (raw.is3D()) {
+          raw.fill(argb0);
+          raw.vertex(pt0[X],pt0[Y],pt0[Z]);
+          raw.fill(argb1);
+          raw.vertex(pt1[X],pt1[Y],pt1[Z]);
+          raw.fill(argb2);
+          raw.vertex(pt2[X],pt2[Y],pt2[Z]);
+        }
+ else         if (raw.is2D()) {
+          float sx0=g.screenX(pt0[0],pt0[1],pt0[2],pt0[3]), sy0=g.screenY(pt0[0],pt0[1],pt0[2],pt0[3]);
+          float sx1=g.screenX(pt1[0],pt1[1],pt1[2],pt1[3]), sy1=g.screenY(pt1[0],pt1[1],pt1[2],pt1[3]);
+          float sx2=g.screenX(pt2[0],pt2[1],pt2[2],pt2[3]), sy2=g.screenY(pt2[0],pt2[1],pt2[2],pt2[3]);
+          raw.fill(argb0);
+          raw.vertex(sx0,sy0);
+          raw.fill(argb1);
+          raw.vertex(sx1,sy1);
+          raw.fill(argb2);
+          raw.vertex(sx2,sy2);
+        }
+      }
+    }
+  }
+  raw.endShape();
+}

@@ -1,21 +1,19 @@
 {
-  if (shapeEnded && tessellated && (0 < tessGeo.lineVertexCount || 0 < tessGeo.pointVertexCount)) {
+  if (shapeEnded && tessellated && (haveLines || havePoints)) {
     float resizeFactor=strokeWeight / prevStrokeWeight;
     Arrays.fill(inGeo.sweights,0,inGeo.vertexCount,strokeWeight);
-    if (0 < tessGeo.lineVertexCount) {
-      for (int i=0; i < tessGeo.lineVertexCount; i++) {
+    if (haveLines) {
+      for (int i=firstLineVertex; i <= lastLineVertex; i++) {
         tessGeo.lineDirWidths[4 * i + 3]*=resizeFactor;
       }
-      modifiedLineAttributes=true;
-      modified();
+      root.setModifiedLineAttributes(firstLineVertex,lastLineVertex);
     }
-    if (0 < tessGeo.pointVertexCount) {
-      for (int i=0; i < tessGeo.pointVertexCount; i++) {
+    if (havePoints) {
+      for (int i=firstPointVertex; i <= lastPointVertex; i++) {
         tessGeo.pointSizes[2 * i + 0]*=resizeFactor;
         tessGeo.pointSizes[2 * i + 1]*=resizeFactor;
       }
-      modifiedPointAttributes=true;
-      modified();
+      root.setModifiedPointAttributes(firstPointVertex,lastPointVertex);
     }
   }
 }

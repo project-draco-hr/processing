@@ -1,0 +1,19 @@
+{
+  int nInVert=in.lastVertex - in.firstVertex + 1;
+  if (stroke && 2 <= nInVert) {
+    int lineCount=nInVert - 1;
+    int nvert=lineCount * 4;
+    int nind=lineCount * 2 * 3;
+    tess.lineVertexCheck(nvert);
+    tess.lineIndexCheck(nind);
+    int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
+    firstLineIndexCache=index;
+    int i0=in.firstVertex;
+    for (int ln=0; ln < lineCount; ln++) {
+      int i1=in.firstVertex + ln + 1;
+      index=addLine(i0,i1,index,false);
+      i0=i1;
+    }
+    lastLineIndexCache=index;
+  }
+}

@@ -1,9 +1,42 @@
 {
   updateTessellation();
-  inGeo.tessMap.setNormal(index,nx,ny,nz);
+  if (haveFill) {
+    float[] normals=tessGeo.fillNormals;
+    if (-1 < inGeo.tessMap.firstFillIndex) {
+      int tessIdx=inGeo.tessMap.firstFillIndex + index;
+      normals[3 * tessIdx + 0]=nx;
+      normals[3 * tessIdx + 1]=ny;
+      normals[3 * tessIdx + 2]=nz;
+      root.setModifiedFillNormals(tessIdx,tessIdx);
+    }
+ else {
+      float nx0=inGeo.normals[3 * index + 0];
+      float ny0=inGeo.normals[3 * index + 1];
+      float nz0=inGeo.normals[3 * index + 2];
+      int[] indices=inGeo.tessMap.fillIndices[index];
+      float[] weights=inGeo.tessMap.fillWeights[index];
+      for (int i=0; i < indices.length; i++) {
+        int tessIdx=indices[i];
+        float weight=weights[i];
+        float tnx0=normals[3 * tessIdx + 0];
+        float tny0=normals[3 * tessIdx + 1];
+        float tnz0=normals[3 * tessIdx + 2];
+        float tnx=tnx0 + weight * (nx - nx0);
+        float tny=tny0 + weight * (ny - ny0);
+        float tnz=tnz0 + weight * (nz - nz0);
+        float sum=tnx * tnx + tny * tny + tnz * tnz;
+        float len=PApplet.sqrt(sum);
+        tnx/=len;
+        tny/=len;
+        tnz/=len;
+        normals[3 * tessIdx + 0]=tnx;
+        normals[3 * tessIdx + 1]=tny;
+        normals[3 * tessIdx + 2]=tnz;
+        root.setModifiedFillNormals(tessIdx,tessIdx);
+      }
+    }
+  }
   inGeo.normals[3 * index + 0]=nx;
   inGeo.normals[3 * index + 1]=ny;
   inGeo.normals[3 * index + 2]=nz;
-  if (hasFill)   modifiedFillNormals=true;
-  modified();
 }

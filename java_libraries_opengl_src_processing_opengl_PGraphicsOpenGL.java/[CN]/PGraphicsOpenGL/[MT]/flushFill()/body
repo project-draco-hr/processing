@@ -1,5 +1,5 @@
 {
-  updateFillBuffers(lights,texCache.hasTexture);
+  updateFillBuffers(lights,texCache.haveTexture);
   texCache.beginRender();
   for (int i=0; i < texCache.size; i++) {
     PTexture tex=texCache.getTexture(i);
@@ -12,7 +12,7 @@
       int ioffset=n == first ? texCache.firstIndex[i] : cache.indexOffset[n];
       int icount=n == last ? texCache.lastIndex[i] - ioffset + 1 : cache.indexOffset[n] + cache.indexCount[n] - ioffset;
       int voffset=cache.vertexOffset[n];
-      shader.setVertexAttribute(glFillVertexBufferID,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setVertexAttribute(glFillVertexBufferID,4,PGL.GL_FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
       shader.setColorAttribute(glFillColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
       if (lights) {
         shader.setNormalAttribute(glFillNormalBufferID,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
