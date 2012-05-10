@@ -10,7 +10,8 @@
     int attribIdx=tess.firstPointVertex;
     int indIdx=tess.firstPointIndex;
     IndexCache cache=tess.pointIndexCache;
-    int index=cache.getLast();
+    int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
+    firstPointIndexCache=index;
     for (int i=in.firstVertex; i <= in.lastVertex; i++) {
       int nvert=5;
       int count=cache.vertexCount[index];
@@ -40,5 +41,6 @@
       tess.pointIndices[indIdx++]=(short)(count + nvert - 1);
       cache.incCounts(index,12,5);
     }
+    lastPointIndexCache=index;
   }
 }

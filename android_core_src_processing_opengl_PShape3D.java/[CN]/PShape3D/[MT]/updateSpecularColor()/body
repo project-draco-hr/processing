@@ -1,8 +1,7 @@
 {
-  if (shapeEnded && tessellated && 0 < tessGeo.fillVertexCount) {
+  if (shapeEnded && tessellated && haveFill) {
     Arrays.fill(inGeo.specular,0,inGeo.vertexCount,PGL.javaToNativeARGB(specularColor));
-    Arrays.fill(tessGeo.fillSpecular,0,tessGeo.fillVertexCount,PGL.javaToNativeARGB(specularColor));
-    modifiedFillSpecular=true;
-    modified();
+    Arrays.fill(tessGeo.fillSpecular,firstFillVertex,lastFillVertex,PGL.javaToNativeARGB(specularColor));
+    root.setModifiedFillSpecular(firstFillVertex,lastFillVertex);
   }
 }

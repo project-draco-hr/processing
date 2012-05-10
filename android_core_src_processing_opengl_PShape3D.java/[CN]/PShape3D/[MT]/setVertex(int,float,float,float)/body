@@ -1,11 +1,67 @@
 {
   updateTessellation();
-  inGeo.tessMap.setVertex(index,x,y,z);
-  inGeo.vertices[3 * index + 0]=x;
-  inGeo.vertices[3 * index + 1]=y;
-  inGeo.vertices[3 * index + 2]=z;
-  if (hasPoints)   modifiedPointVertices=true;
-  if (hasLines)   modifiedLineVertices=true;
-  if (hasFill)   modifiedFillVertices=true;
-  modified();
+  int[] indices;
+  int[] indices1;
+  float[] vertices;
+  float[] attribs;
+  if (havePoints) {
+    indices=inGeo.tessMap.pointIndices[index];
+    vertices=tessGeo.pointVertices;
+    for (int i=0; i < indices.length; i++) {
+      int tessIdx=indices[i];
+      vertices[4 * tessIdx + 0]=x;
+      vertices[4 * tessIdx + 1]=y;
+      vertices[4 * tessIdx + 2]=z;
+      root.setModifiedPointVertices(tessIdx,tessIdx);
+    }
+  }
+  if (haveLines) {
+    indices=inGeo.tessMap.lineIndices0[index];
+    indices1=inGeo.tessMap.lineIndices1[index];
+    vertices=tessGeo.lineVertices;
+    attribs=tessGeo.lineDirWidths;
+    for (int i=0; i < indices.length; i++) {
+      int tessIdx=indices[i];
+      vertices[4 * tessIdx + 0]=x;
+      vertices[4 * tessIdx + 1]=y;
+      vertices[4 * tessIdx + 2]=z;
+      root.setModifiedLineVertices(tessIdx,tessIdx);
+      int tessIdx1=indices1[i];
+      attribs[4 * tessIdx1 + 0]=x;
+      attribs[4 * tessIdx1 + 1]=y;
+      attribs[4 * tessIdx1 + 2]=z;
+      root.setModifiedLineAttributes(tessIdx1,tessIdx1);
+    }
+  }
+  if (haveFill) {
+    vertices=tessGeo.fillVertices;
+    if (-1 < inGeo.tessMap.firstFillIndex) {
+      int tessIdx=inGeo.tessMap.firstFillIndex + index;
+      vertices[4 * tessIdx + 0]=x;
+      vertices[4 * tessIdx + 1]=y;
+      vertices[4 * tessIdx + 2]=z;
+      root.setModifiedFillVertices(tessIdx,tessIdx);
+    }
+ else {
+      float x0=inGeo.vertices[4 * index + 0];
+      float y0=inGeo.vertices[4 * index + 1];
+      float z0=inGeo.vertices[4 * index + 2];
+      indices=inGeo.tessMap.fillIndices[index];
+      float[] weights=inGeo.tessMap.fillWeights[index];
+      for (int i=0; i < indices.length; i++) {
+        int tessIdx=indices[i];
+        float weight=weights[i];
+        float tx0=vertices[4 * tessIdx + 0];
+        float ty0=vertices[4 * tessIdx + 1];
+        float tz0=vertices[4 * tessIdx + 2];
+        vertices[4 * tessIdx + 0]=tx0 + weight * (x - x0);
+        vertices[4 * tessIdx + 1]=ty0 + weight * (y - y0);
+        vertices[4 * tessIdx + 2]=tz0 + weight * (z - z0);
+        root.setModifiedFillVertices(tessIdx,tessIdx);
+      }
+    }
+  }
+  inGeo.vertices[4 * index + 0]=x;
+  inGeo.vertices[4 * index + 1]=y;
+  inGeo.vertices[4 * index + 2]=z;
 }

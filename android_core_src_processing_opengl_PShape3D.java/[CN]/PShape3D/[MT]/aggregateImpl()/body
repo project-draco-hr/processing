@@ -1,98 +1,27 @@
 {
   if (family == GROUP) {
-    boolean firstGeom=true;
-    boolean firstStroke=true;
-    boolean firstPoint=true;
+    haveFill=false;
+    haveLines=false;
+    havePoints=false;
     for (int i=0; i < childCount; i++) {
       PShape3D child=(PShape3D)children[i];
       child.aggregateImpl();
-      tessGeo.addCounts(child.tessGeo);
-      if (0 < child.tessGeo.fillVertexCount) {
-        if (firstGeom) {
-          tessGeo.setFirstFill(child.tessGeo);
-          firstGeom=false;
-        }
-        tessGeo.setLastFill(child.tessGeo);
-      }
-      if (0 < child.tessGeo.lineVertexCount) {
-        if (firstStroke) {
-          tessGeo.setFirstLine(child.tessGeo);
-          firstStroke=false;
-        }
-        tessGeo.setLastLine(child.tessGeo);
-      }
-      if (0 < child.tessGeo.pointVertexCount) {
-        if (firstPoint) {
-          tessGeo.setFirstPoint(child.tessGeo);
-          firstPoint=false;
-        }
-        tessGeo.setLastPoint(child.tessGeo);
-      }
+      haveFill|=child.haveFill;
+      haveLines|=child.haveLines;
+      havePoints|=child.havePoints;
     }
-    buildFillIndexCache();
-    buildLineIndexCache();
-    buildPointIndexCache();
   }
  else {
-    if (0 < tessGeo.fillVertexCount && 0 < tessGeo.fillIndexCount) {
-      IndexCache cache=tessGeo.fillIndexCache;
-      for (int n=0; n < cache.size; n++) {
-        int ioffset=cache.indexOffset[n];
-        int icount=cache.indexCount[n];
-        int vcount=cache.vertexCount[n];
-        if (PGL.MAX_VERTEX_INDEX1 <= root.fillVertexRel + vcount) {
-          root.fillVertexRel=0;
-          root.fillVertexOffset=root.fillVertexAbs;
-          cache.indexOffset[n]=root.fillIndexOffset;
-        }
- else         tessGeo.incFillIndices(ioffset,ioffset + icount - 1,root.fillVertexRel);
-        cache.vertexOffset[n]=root.fillVertexOffset;
-        root.fillIndexOffset+=icount;
-        root.fillVertexAbs+=vcount;
-        root.fillVertexRel+=vcount;
-      }
-      tessGeo.updateFillFromCache();
-    }
-    if (0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount) {
-      IndexCache cache=tessGeo.lineIndexCache;
-      for (int n=0; n < cache.size; n++) {
-        int ioffset=cache.indexOffset[n];
-        int icount=cache.indexCount[n];
-        int vcount=cache.vertexCount[n];
-        if (PGL.MAX_VERTEX_INDEX1 <= root.lineVertexRel + vcount) {
-          root.lineVertexRel=0;
-          root.lineVertexOffset=root.lineVertexAbs;
-          cache.indexOffset[n]=root.lineIndexOffset;
-        }
- else         tessGeo.incLineIndices(ioffset,ioffset + icount - 1,root.lineVertexRel);
-        cache.vertexOffset[n]=root.lineVertexOffset;
-        root.lineIndexOffset+=icount;
-        root.lineVertexAbs+=vcount;
-        root.lineVertexRel+=vcount;
-      }
-      tessGeo.updateLineFromCache();
-    }
-    if (0 < tessGeo.pointVertexCount && 0 < tessGeo.pointIndexCount) {
-      IndexCache cache=tessGeo.pointIndexCache;
-      for (int n=0; n < cache.size; n++) {
-        int ioffset=cache.indexOffset[n];
-        int icount=cache.indexCount[n];
-        int vcount=cache.vertexCount[n];
-        if (PGL.MAX_VERTEX_INDEX1 <= root.pointVertexRel + vcount) {
-          root.pointVertexRel=0;
-          root.pointVertexOffset=root.pointVertexAbs;
-          cache.indexOffset[n]=root.pointIndexOffset;
-        }
- else         tessGeo.incPointIndices(ioffset,ioffset + icount - 1,root.pointVertexRel);
-        cache.vertexOffset[n]=root.pointVertexOffset;
-        root.pointIndexOffset+=icount;
-        root.pointVertexAbs+=vcount;
-        root.pointVertexRel+=vcount;
-      }
-      tessGeo.updatePointFromCache();
-    }
+    haveFill=-1 < firstFillIndexCache && -1 < lastFillIndexCache;
+    haveLines=-1 < firstLineIndexCache && -1 < lastLineIndexCache;
+    havePoints=-1 < firstPointIndexCache && -1 < lastPointIndexCache;
   }
-  hasFill=0 < tessGeo.fillVertexCount && 0 < tessGeo.fillIndexCount;
-  hasLines=0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount;
-  hasPoints=0 < tessGeo.pointVertexCount && 0 < tessGeo.pointIndexCount;
+  if (haveFill)   updateFillIndexCache();
+  if (haveLines)   updateLineIndexCache();
+  if (havePoints)   updatePointIndexCache();
+  if (matrix != null) {
+    if (haveFill)     tessGeo.applyMatrixOnFillGeometry(matrix,firstFillVertex,lastFillVertex);
+    if (haveLines)     tessGeo.applyMatrixOnLineGeometry(matrix,firstLineVertex,lastLineVertex);
+    if (havePoints)     tessGeo.applyMatrixOnPointGeometry(matrix,firstPointVertex,lastPointVertex);
+  }
 }

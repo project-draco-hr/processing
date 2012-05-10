@@ -1,36 +1,17 @@
 {
-  if (!cacheTransformations && parent != null && hasMatrix()) {
-    ((PShape3D)parent).setChildHasMatrix(false);
-  }
-  if (shapeEnded) {
+  if (shapeEnded && matrix != null) {
     if (family == GROUP) {
       updateTessellation();
-      for (int i=0; i < childCount; i++) {
-        PShape3D child=(PShape3D)children[i];
-        child.resetMatrix();
+    }
+    boolean res=matrix.invert();
+    if (res) {
+      if (tessellated) {
+        applyMatrixImpl(matrix);
       }
-      if (matrix != null) {
-        matrix.reset();
-      }
+      matrix=null;
     }
  else {
-      if (cacheTransformations) {
-        boolean res=matrix.invert();
-        if (res) {
-          if (tessellated) {
-            applyMatrix(matrix);
-          }
-          matrix.reset();
-        }
- else {
-          PGraphics.showWarning("The transformation matrix cannot be inverted");
-        }
-      }
- else {
-        if (hasMatrix()) {
-          matrix.reset();
-        }
-      }
+      PGraphics.showWarning("The transformation matrix cannot be inverted");
     }
   }
 }

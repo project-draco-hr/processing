@@ -1,8 +1,7 @@
 {
-  if (shapeEnded && tessellated && 0 < tessGeo.fillVertexCount) {
+  if (shapeEnded && tessellated && haveFill) {
     Arrays.fill(inGeo.ambient,0,inGeo.vertexCount,PGL.javaToNativeARGB(ambientColor));
-    Arrays.fill(tessGeo.fillAmbient,0,tessGeo.fillVertexCount,PGL.javaToNativeARGB(ambientColor));
-    modifiedFillAmbient=true;
-    modified();
+    Arrays.fill(tessGeo.fillAmbient,firstFillVertex,lastFillVertex,PGL.javaToNativeARGB(ambientColor));
+    root.setModifiedFillAmbient(firstFillVertex,lastFillVertex);
   }
 }

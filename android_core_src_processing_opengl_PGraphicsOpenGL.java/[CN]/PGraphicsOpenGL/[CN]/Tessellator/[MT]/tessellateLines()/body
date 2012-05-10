@@ -7,11 +7,13 @@
     int nind=lineCount * 2 * 3;
     tess.lineVertexCheck(nvert);
     tess.lineIndexCheck(nind);
-    int index=tess.lineIndexCache.getLast();
+    int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
+    firstLineIndexCache=index;
     for (int ln=0; ln < lineCount; ln++) {
       int i0=first + 2 * ln + 0;
       int i1=first + 2 * ln + 1;
       index=addLine(i0,i1,index,false);
     }
+    lastLineIndexCache=index;
   }
 }
