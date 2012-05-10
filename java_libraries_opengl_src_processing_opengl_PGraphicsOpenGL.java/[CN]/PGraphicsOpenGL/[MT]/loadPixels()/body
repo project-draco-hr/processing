@@ -1,4 +1,9 @@
 {
+  boolean needEndDraw=false;
+  if (!drawing) {
+    beginDraw();
+    needEndDraw=true;
+  }
   if (!setgetPixels) {
     flush();
   }
@@ -9,5 +14,8 @@
       loadTextureImpl(POINT);
       pixelsToTexture();
     }
+  }
+  if (needEndDraw) {
+    endDraw();
   }
 }
