@@ -1,0 +1,26 @@
+{
+  if (matrix != null) {
+    s.applyMatrix(matrix);
+  }
+  copyStyles(s);
+  copyImage(s);
+  if (style) {
+    for (int i=0; i < vertexCount; i++) {
+      float[] vert=vertices[i];
+      s.normal(vert[NX],vert[NY],vert[NZ]);
+      s.vertex(vert[X],vert[Y],vert[Z],vert[U],vert[V]);
+    }
+  }
+ else {
+    for (int i=0; i < vertexCount; i++) {
+      float[] vert=vertices[i];
+      if (vert[PGraphics.Z] == 0) {
+        s.vertex(vert[X],vert[Y]);
+      }
+ else {
+        s.vertex(vert[X],vert[Y],vert[Z]);
+      }
+    }
+  }
+  s.end();
+}
