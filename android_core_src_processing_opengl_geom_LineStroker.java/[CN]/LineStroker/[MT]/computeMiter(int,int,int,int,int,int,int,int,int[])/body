@@ -1,0 +1,23 @@
+{
+  long x0=ix0;
+  long y0=iy0;
+  long x1=ix1;
+  long y1=iy1;
+  long x0p=ix0p;
+  long y0p=iy0p;
+  long x1p=ix1p;
+  long y1p=iy1p;
+  long x10=x1 - x0;
+  long y10=y1 - y0;
+  long x10p=x1p - x0p;
+  long y10p=y1p - y0p;
+  long den=(x10 * y10p - x10p * y10) >> 16;
+  if (den == 0) {
+    m[0]=ix0;
+    m[1]=iy0;
+    return;
+  }
+  long t=(x1p * (y0 - y0p) - x0 * y10p + x0p * (y1p - y0)) >> 16;
+  m[0]=(int)(x0 + (t * x10) / den);
+  m[1]=(int)(y0 + (t * y10) / den);
+}

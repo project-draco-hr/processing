@@ -1,0 +1,24 @@
+{
+  if (needMove && numTypes == 0) {
+    throw new RuntimeException("missing initial moveto " + "in path definition");
+  }
+  int size=pointTypes.length;
+  if (numTypes >= size) {
+    int grow=size;
+    if (grow > EXPAND_MAX) {
+      grow=EXPAND_MAX;
+    }
+    pointTypes=copyOf(pointTypes,size + grow);
+  }
+  size=floatCoords.length;
+  if (numCoords + newCoords > size) {
+    int grow=size;
+    if (grow > EXPAND_MAX * 2) {
+      grow=EXPAND_MAX * 2;
+    }
+    if (grow < newCoords) {
+      grow=newCoords;
+    }
+    floatCoords=copyOf(floatCoords,size + grow);
+  }
+}

@@ -1,0 +1,22 @@
+{
+  float coords[]=new float[2];
+  while (!pi.isDone()) {
+switch (pi.currentSegment(coords)) {
+case SEG_MOVETO:
+      lsink.moveTo(FloatToS15_16(coords[0]),FloatToS15_16(coords[1]));
+    break;
+case SEG_LINETO:
+  lsink.lineJoin();
+lsink.lineTo(FloatToS15_16(coords[0]),FloatToS15_16(coords[1]));
+break;
+case SEG_CLOSE:
+lsink.lineJoin();
+lsink.close();
+break;
+default :
+throw new InternalError("unknown flattened segment type");
+}
+pi.next();
+}
+lsink.end();
+}

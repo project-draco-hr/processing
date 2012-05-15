@@ -1,0 +1,57 @@
+{
+  if (lineToOrigin) {
+    lineToOrigin=false;
+  }
+  if (!started) {
+    finish();
+    return;
+  }
+  computeOffset(x0,y0,sx0,sy0,offset);
+  int mx=offset[0];
+  int my=offset[1];
+  boolean ccw=isCCW(px0,py0,x0,y0,sx0,sy0);
+  if (joinSegment) {
+    if (joinStyle == LinePath.JOIN_MITER) {
+      drawMiter(px0,py0,x0,y0,sx0,sy0,omx,omy,mx,my,ccw);
+    }
+ else     if (joinStyle == LinePath.JOIN_ROUND) {
+      drawRoundJoin(x0,y0,omx,omy,mx,my,0,false,ccw,ROUND_JOIN_THRESHOLD);
+    }
+  }
+ else {
+    drawRoundJoin(x0,y0,omx,omy,mx,my,0,false,ccw,ROUND_JOIN_INTERNAL_THRESHOLD);
+  }
+  emitLineTo(x0 + mx,y0 + my);
+  emitLineTo(sx0 + mx,sy0 + my);
+  ccw=isCCW(x0,y0,sx0,sy0,sx1,sy1);
+  if (!ccw) {
+    if (joinStyle == LinePath.JOIN_MITER) {
+      drawMiter(x0,y0,sx0,sy0,sx1,sy1,mx,my,mx0,my0,false);
+    }
+ else     if (joinStyle == LinePath.JOIN_ROUND) {
+      drawRoundJoin(sx0,sy0,mx,my,mx0,my0,0,false,false,ROUND_JOIN_THRESHOLD);
+    }
+  }
+  emitLineTo(sx0 + mx0,sy0 + my0);
+  emitLineTo(sx0 - mx0,sy0 - my0);
+  if (ccw) {
+    if (joinStyle == LinePath.JOIN_MITER) {
+      drawMiter(x0,y0,sx0,sy0,sx1,sy1,-mx,-my,-mx0,-my0,false);
+    }
+ else     if (joinStyle == LinePath.JOIN_ROUND) {
+      drawRoundJoin(sx0,sy0,-mx,-my,-mx0,-my0,0,true,false,ROUND_JOIN_THRESHOLD);
+    }
+  }
+  emitLineTo(sx0 - mx,sy0 - my);
+  emitLineTo(x0 - mx,y0 - my);
+  for (int i=rindex - 2; i >= 0; i-=2) {
+    emitLineTo(reverse[i],reverse[i + 1]);
+  }
+  this.x0=this.sx0;
+  this.y0=this.sy0;
+  this.rindex=0;
+  this.started=false;
+  this.joinSegment=false;
+  this.prev=LinePath.SEG_CLOSE;
+  emitClose();
+}
