@@ -8,45 +8,89 @@
     }
     int nvertTot=nPtVert * nInVert;
     int nindTot=3 * (nPtVert - 1) * nInVert;
-    tess.pointVertexCheck(nvertTot);
-    tess.pointIndexCheck(nindTot);
-    int vertIdx=tess.firstPointVertex;
-    int attribIdx=tess.firstPointVertex;
-    int indIdx=tess.firstPointIndex;
-    IndexCache cache=tess.pointIndexCache;
-    int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
-    firstPointIndexCache=index;
-    for (int i=in.firstVertex; i <= in.lastVertex; i++) {
-      int count=cache.vertexCount[index];
-      if (PGL.MAX_VERTEX_INDEX1 <= count + nPtVert) {
-        index=cache.addNew();
-        count=0;
-      }
-      for (int k=0; k < nPtVert; k++) {
-        tess.setPointVertex(vertIdx,in,i);
-        vertIdx++;
-      }
-      tess.pointSizes[2 * attribIdx + 0]=0;
-      tess.pointSizes[2 * attribIdx + 1]=0;
-      attribIdx++;
-      float val=0;
-      float inc=(float)SINCOS_LENGTH / perim;
-      for (int k=0; k < perim; k++) {
-        tess.pointSizes[2 * attribIdx + 0]=0.5f * cosLUT[(int)val] * strokeWeight;
-        tess.pointSizes[2 * attribIdx + 1]=0.5f * sinLUT[(int)val] * strokeWeight;
-        val=(val + inc) % SINCOS_LENGTH;
+    if (is3D()) {
+      tess.pointVertexCheck(nvertTot);
+      tess.pointIndexCheck(nindTot);
+      int vertIdx=tess.firstPointVertex;
+      int attribIdx=tess.firstPointVertex;
+      int indIdx=tess.firstPointIndex;
+      IndexCache cache=tess.pointIndexCache;
+      int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
+      firstPointIndexCache=index;
+      for (int i=in.firstVertex; i <= in.lastVertex; i++) {
+        int count=cache.vertexCount[index];
+        if (PGL.MAX_VERTEX_INDEX1 <= count + nPtVert) {
+          index=cache.addNew();
+          count=0;
+        }
+        for (int k=0; k < nPtVert; k++) {
+          tess.setPointVertex(vertIdx,in,i);
+          vertIdx++;
+        }
+        tess.pointSizes[2 * attribIdx + 0]=0;
+        tess.pointSizes[2 * attribIdx + 1]=0;
         attribIdx++;
-      }
-      for (int k=1; k < nPtVert - 1; k++) {
+        float val=0;
+        float inc=(float)SINCOS_LENGTH / perim;
+        for (int k=0; k < perim; k++) {
+          tess.pointSizes[2 * attribIdx + 0]=0.5f * cosLUT[(int)val] * strokeWeight;
+          tess.pointSizes[2 * attribIdx + 1]=0.5f * sinLUT[(int)val] * strokeWeight;
+          val=(val + inc) % SINCOS_LENGTH;
+          attribIdx++;
+        }
+        for (int k=1; k < nPtVert - 1; k++) {
+          tess.pointIndices[indIdx++]=(short)(count + 0);
+          tess.pointIndices[indIdx++]=(short)(count + k);
+          tess.pointIndices[indIdx++]=(short)(count + k + 1);
+        }
         tess.pointIndices[indIdx++]=(short)(count + 0);
-        tess.pointIndices[indIdx++]=(short)(count + k);
-        tess.pointIndices[indIdx++]=(short)(count + k + 1);
+        tess.pointIndices[indIdx++]=(short)(count + 1);
+        tess.pointIndices[indIdx++]=(short)(count + nPtVert - 1);
+        cache.incCounts(index,3 * (nPtVert - 1),nPtVert);
       }
-      tess.pointIndices[indIdx++]=(short)(count + 0);
-      tess.pointIndices[indIdx++]=(short)(count + 1);
-      tess.pointIndices[indIdx++]=(short)(count + nPtVert - 1);
-      cache.incCounts(index,3 * (nPtVert - 1),nPtVert);
+      lastPointIndexCache=index;
     }
-    lastPointIndexCache=index;
+ else {
+      tess.fillVertexCheck(nvertTot);
+      tess.fillIndexCheck(nindTot);
+      int vertIdx=tess.firstFillVertex;
+      int indIdx=tess.firstFillIndex;
+      IndexCache cache=tess.fillIndexCache;
+      int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
+      firstFillIndexCache=index;
+      for (int i=in.firstVertex; i <= in.lastVertex; i++) {
+        int count=cache.vertexCount[index];
+        if (PGL.MAX_VERTEX_INDEX1 <= count + nPtVert) {
+          index=cache.addNew();
+          count=0;
+        }
+        float x0=in.vertices[4 * i + 0];
+        float y0=in.vertices[4 * i + 1];
+        float w0=in.vertices[4 * i + 3];
+        int rgba=in.scolors[i];
+        if (in.renderMode == RETAINED) {
+          in.tessMap.addFillIndex(i,-1);
+        }
+        float val=0;
+        float inc=(float)SINCOS_LENGTH / perim;
+        tess.setFillVertex(vertIdx,x0,y0,0,w0,rgba,in,null);
+        vertIdx++;
+        for (int k=0; k < perim; k++) {
+          tess.setFillVertex(vertIdx,x0 + 0.5f * cosLUT[(int)val] * strokeWeight,y0 + 0.5f * sinLUT[(int)val] * strokeWeight,0,w0,rgba,in,null);
+          vertIdx++;
+          val=(val + inc) % SINCOS_LENGTH;
+        }
+        for (int k=1; k < nPtVert - 1; k++) {
+          tess.fillIndices[indIdx++]=(short)(count + 0);
+          tess.fillIndices[indIdx++]=(short)(count + k);
+          tess.fillIndices[indIdx++]=(short)(count + k + 1);
+        }
+        tess.fillIndices[indIdx++]=(short)(count + 0);
+        tess.fillIndices[indIdx++]=(short)(count + 1);
+        tess.fillIndices[indIdx++]=(short)(count + nPtVert - 1);
+        cache.incCounts(index,3 * (nPtVert - 1),nPtVert);
+      }
+      lastFillIndexCache=index;
+    }
   }
 }
