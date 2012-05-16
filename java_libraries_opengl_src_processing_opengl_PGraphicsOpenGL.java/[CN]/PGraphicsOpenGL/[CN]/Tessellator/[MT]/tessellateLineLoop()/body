@@ -37,12 +37,18 @@
         int first=in.firstVertex;
         LinePath path=new LinePath(LinePath.WIND_NON_ZERO);
         path.moveTo(in.vertices[4 * first + 0],in.vertices[4 * first + 1]);
+        if (tess.renderMode == RETAINED) {
+          in.tessMap.addFillIndex(first,-1);
+        }
         for (int ln=0; ln < lineCount - 1; ln++) {
           int i1=first + ln + 1;
           path.lineTo(in.vertices[4 * i1 + 0],in.vertices[4 * i1 + 1]);
+          if (tess.renderMode == RETAINED) {
+            in.tessMap.addFillIndex(i1,-1);
+          }
         }
         path.closePath();
-        tessellateLinePath(path);
+        tessellateLinePath(path,false);
       }
     }
   }

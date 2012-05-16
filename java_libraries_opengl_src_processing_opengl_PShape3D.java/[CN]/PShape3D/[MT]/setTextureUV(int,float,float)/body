@@ -15,14 +15,16 @@
       float[] weights=inGeo.tessMap.fillWeights[index];
       for (int i=0; i < indices.length; i++) {
         int tessIdx=indices[i];
-        float weight=weights[i];
-        float tu0=texcoords[2 * tessIdx + 0];
-        float tv0=texcoords[2 * tessIdx + 1];
-        float tu=tu0 + weight * (u - u0);
-        float tv=tv0 + weight * (v - v0);
-        texcoords[2 * tessIdx + 0]=tu;
-        texcoords[2 * tessIdx + 1]=tv;
-        root.setModifiedFillTexcoords(tessIdx,tessIdx);
+        if (-1 < tessIdx) {
+          float weight=weights[i];
+          float tu0=texcoords[2 * tessIdx + 0];
+          float tv0=texcoords[2 * tessIdx + 1];
+          float tu=tu0 + weight * (u - u0);
+          float tv=tv0 + weight * (v - v0);
+          texcoords[2 * tessIdx + 0]=tu;
+          texcoords[2 * tessIdx + 1]=tv;
+          root.setModifiedFillTexcoords(tessIdx,tessIdx);
+        }
       }
     }
   }

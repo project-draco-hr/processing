@@ -17,7 +17,7 @@
       if (strokeWeight < PGL.MIN_CAPS_JOINS_WEIGHT) {
         tess.fillVertexCheck(nInVert);
         tess.fillIndexCheck(nInInd);
-        int index=in.renderMode == RETAINED ? tess.fillIndexCache.addNew() : tess.fillIndexCache.getLast();
+        int index=in.renderMode == RETAINED && !haveFill ? tess.fillIndexCache.addNew() : tess.fillIndexCache.getLast();
         firstFillIndexCache=index;
         for (int i=in.firstEdge; i <= in.lastEdge; i++) {
           int[] edge=in.edges[i];
@@ -49,8 +49,12 @@ path.lineTo(in.vertices[4 * i1 + 0],in.vertices[4 * i1 + 1]);
 path.closePath();
 break;
 }
+if (tess.renderMode == RETAINED) {
+in.tessMap.addFillIndex(i0,-1);
+in.tessMap.addFillIndex(i1,-1);
 }
-tessellateLinePath(path);
+}
+tessellateLinePath(path,haveFill);
 }
 }
 }
