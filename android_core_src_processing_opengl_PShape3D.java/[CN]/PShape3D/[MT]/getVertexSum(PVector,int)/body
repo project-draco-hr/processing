@@ -1,4 +1,5 @@
 {
+  updateTessellation();
   if (family == GROUP) {
     for (int i=0; i < childCount; i++) {
       PShape3D child=(PShape3D)children[i];
@@ -6,14 +7,9 @@
     }
   }
  else {
-    if (tessellated) {
-      if (haveFill)       count+=tessGeo.getFillVertexSum(sum,firstFillVertex,lastFillVertex);
-      if (haveLines)       count+=tessGeo.getLineVertexSum(sum,firstLineVertex,lastLineVertex);
-      if (havePoints)       count+=tessGeo.getPointVertexSum(sum,firstPointVertex,lastPointVertex);
-    }
- else {
-      count+=inGeo.getVertexSum(sum);
-    }
+    if (haveFill)     count+=tessGeo.getFillVertexSum(sum,firstFillVertex,lastFillVertex);
+    if (haveLines)     count+=tessGeo.getLineVertexSum(sum,firstLineVertex,lastLineVertex);
+    if (havePoints)     count+=tessGeo.getPointVertexSum(sum,firstPointVertex,lastPointVertex);
   }
   return count;
 }

@@ -33,10 +33,7 @@
   float sy1=screenY(x,y);
   float sx2=screenX(x + w,y + h);
   float sy2=screenY(x + w,y + h);
-  int accuracy=(int)(TWO_PI * PApplet.dist(sx1,sy1,sx2,sy2) / 20);
-  if (accuracy < 6) {
-    accuracy=6;
-  }
+  int accuracy=PApplet.max(MIN_POINT_ACCURACY,(int)(TWO_PI * PApplet.dist(sx1,sy1,sx2,sy2) / 20));
   float inc=(float)PGraphicsOpenGL.SINCOS_LENGTH / accuracy;
   if (fill) {
     addVertex(centerX,centerY,VERTEX);

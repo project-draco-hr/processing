@@ -1,9 +1,10 @@
 {
   if (visible) {
+    pre(g);
     updateTessellation();
     updateGeometry();
     if (family == GROUP) {
-      if (textures != null && 1 < textures.size()) {
+      if ((textures != null && 1 < textures.size()) || pg.hintEnabled(ENABLE_ACCURATE_2D)) {
         for (int i=0; i < childCount; i++) {
           ((PShape3D)children[i]).draw(g);
         }
@@ -19,5 +20,6 @@
  else {
       render((PGraphicsOpenGL)g,texture);
     }
+    post(g);
   }
 }
