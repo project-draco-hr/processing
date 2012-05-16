@@ -1,30 +1,31 @@
 {
   raw.colorMode(RGB);
   raw.noFill();
+  raw.strokeCap(strokeCap);
   raw.beginShape(POINTS);
   float[] vertices=tessGeo.pointVertices;
   int[] color=tessGeo.pointColors;
   float[] attribs=tessGeo.pointSizes;
   short[] indices=tessGeo.pointIndices;
-  IndexCache cache=tessGeo.lineIndexCache;
+  IndexCache cache=tessGeo.pointIndexCache;
   for (int n=0; n < cache.size; n++) {
     int ioffset=cache.indexOffset[n];
     int icount=cache.indexCount[n];
     int voffset=cache.vertexOffset[n];
     int pt=ioffset;
-    while (pt < ioffset + icount) {
+    while (pt < (ioffset + icount) / 3) {
       float size=attribs[2 * pt + 2];
       float weight;
       int perim;
       if (0 < size) {
         weight=+size / 0.5f;
-        perim=PApplet.max(MIN_POINT_ACCURACY,(int)(TWO_PI * weight / 20));
+        perim=PApplet.max(MIN_POINT_ACCURACY,(int)(TWO_PI * weight / 20)) + 1;
       }
  else {
         weight=-size / 0.5f;
         perim=5;
       }
-      int i0=voffset + indices[pt];
+      int i0=voffset + indices[3 * pt];
       int argb0=PGL.nativeToJavaARGB(color[i0]);
       float[] pt0={0,0,0,0};
       if (flushMode == FLUSH_CONTINUOUSLY || hints[DISABLE_TRANSFORM_CACHE]) {
