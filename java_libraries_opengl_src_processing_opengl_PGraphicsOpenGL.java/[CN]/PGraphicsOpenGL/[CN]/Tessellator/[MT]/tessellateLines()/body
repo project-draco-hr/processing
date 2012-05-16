@@ -3,17 +3,29 @@
   if (stroke && 2 <= nInVert) {
     int lineCount=nInVert / 2;
     int first=in.firstVertex;
-    int nvert=lineCount * 4;
-    int nind=lineCount * 2 * 3;
-    tess.lineVertexCheck(nvert);
-    tess.lineIndexCheck(nind);
-    int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
-    firstLineIndexCache=index;
-    for (int ln=0; ln < lineCount; ln++) {
-      int i0=first + 2 * ln + 0;
-      int i1=first + 2 * ln + 1;
-      index=addLine(i0,i1,index,false);
+    if (is3D()) {
+      int nvert=lineCount * 4;
+      int nind=lineCount * 2 * 3;
+      tess.lineVertexCheck(nvert);
+      tess.lineIndexCheck(nind);
+      int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
+      firstLineIndexCache=index;
+      for (int ln=0; ln < lineCount; ln++) {
+        int i0=first + 2 * ln + 0;
+        int i1=first + 2 * ln + 1;
+        index=addLine(i0,i1,index,false);
+      }
+      lastLineIndexCache=index;
     }
-    lastLineIndexCache=index;
+ else {
+      LinePath path=new LinePath(LinePath.WIND_NON_ZERO);
+      for (int ln=0; ln < lineCount; ln++) {
+        int i0=first + 2 * ln + 0;
+        int i1=first + 2 * ln + 1;
+        path.moveTo(inGeo.vertices[4 * i0 + 0],inGeo.vertices[4 * i0 + 1]);
+        path.lineTo(inGeo.vertices[4 * i1 + 0],inGeo.vertices[4 * i1 + 1]);
+      }
+      tessellateLinePath(path);
+    }
   }
 }
