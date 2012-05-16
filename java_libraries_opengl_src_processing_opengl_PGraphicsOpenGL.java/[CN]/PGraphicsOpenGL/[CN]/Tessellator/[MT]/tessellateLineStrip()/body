@@ -1,10 +1,10 @@
 {
   int nInVert=in.lastVertex - in.firstVertex + 1;
-  int lineCount=nInVert - 1;
   if (stroke && 2 <= nInVert) {
+    int lineCount=nInVert - 1;
+    int nvert=lineCount * 4;
+    int nind=lineCount * 2 * 3;
     if (is3D()) {
-      int nvert=lineCount * 4;
-      int nind=lineCount * 2 * 3;
       tess.lineVertexCheck(nvert);
       tess.lineIndexCheck(nind);
       int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
@@ -18,14 +18,29 @@
       lastLineIndexCache=index;
     }
  else {
-      int first=in.firstVertex;
-      LinePath path=new LinePath(LinePath.WIND_NON_ZERO);
-      path.moveTo(inGeo.vertices[4 * first + 0],inGeo.vertices[4 * first + 1]);
-      for (int ln=0; ln < lineCount; ln++) {
-        int i1=first + ln + 1;
-        path.lineTo(inGeo.vertices[4 * i1 + 0],inGeo.vertices[4 * i1 + 1]);
+      if (strokeWeight < PGL.MIN_CAPS_JOINS_WEIGHT) {
+        tess.fillVertexCheck(nvert);
+        tess.fillIndexCheck(nind);
+        int index=in.renderMode == RETAINED ? tess.fillIndexCache.addNew() : tess.fillIndexCache.getLast();
+        firstFillIndexCache=index;
+        int i0=in.firstVertex;
+        for (int ln=0; ln < lineCount; ln++) {
+          int i1=in.firstVertex + ln + 1;
+          index=addLine2D(i0,i1,index,false);
+          i0=i1;
+        }
+        lastFillIndexCache=index;
       }
-      tessellateLinePath(path);
+ else {
+        int first=in.firstVertex;
+        LinePath path=new LinePath(LinePath.WIND_NON_ZERO);
+        path.moveTo(in.vertices[4 * first + 0],in.vertices[4 * first + 1]);
+        for (int ln=0; ln < lineCount; ln++) {
+          int i1=first + ln + 1;
+          path.lineTo(in.vertices[4 * i1 + 0],in.vertices[4 * i1 + 1]);
+        }
+        tessellateLinePath(path);
+      }
     }
   }
 }

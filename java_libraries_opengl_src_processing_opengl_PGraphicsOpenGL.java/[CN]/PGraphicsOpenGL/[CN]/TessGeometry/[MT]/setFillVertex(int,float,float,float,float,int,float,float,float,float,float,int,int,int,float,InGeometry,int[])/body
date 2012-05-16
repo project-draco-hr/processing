@@ -1,0 +1,41 @@
+{
+  int index;
+  if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
+    PMatrix3D mm=modelview;
+    PMatrix3D nm=modelviewInv;
+    index=4 * tessIdx;
+    fillVertices[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + w * mm.m03;
+    fillVertices[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + w * mm.m13;
+    fillVertices[index++]=x * mm.m20 + y * mm.m21 + z * mm.m22 + w * mm.m23;
+    fillVertices[index]=x * mm.m30 + y * mm.m31 + z * mm.m32 + w * mm.m33;
+    index=3 * tessIdx;
+    fillNormals[index++]=nx * nm.m00 + ny * nm.m10 + nz * nm.m20;
+    fillNormals[index++]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
+    fillNormals[index]=nx * nm.m02 + ny * nm.m12 + nz * nm.m22;
+  }
+ else {
+    index=4 * tessIdx;
+    fillVertices[index++]=x;
+    fillVertices[index++]=y;
+    fillVertices[index++]=z;
+    fillVertices[index]=w;
+    index=3 * tessIdx;
+    fillNormals[index++]=nx;
+    fillNormals[index++]=ny;
+    fillNormals[index]=nz;
+  }
+  fillColors[tessIdx]=rgba;
+  index=2 * tessIdx;
+  fillTexcoords[index++]=u;
+  fillTexcoords[index]=v;
+  fillAmbient[tessIdx]=am;
+  fillSpecular[tessIdx]=sp;
+  fillEmissive[tessIdx]=em;
+  fillShininess[tessIdx]=shine;
+  if (renderMode == RETAINED && vertices != null) {
+    int len=vertices.length;
+    for (int i=0; i < len; i++) {
+      in.tessMap.addFillIndex(vertices[i],tessIdx);
+    }
+  }
+}
