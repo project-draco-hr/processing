@@ -1,0 +1,15 @@
+{
+  updateTessellation();
+  if (family == GROUP) {
+    for (int i=0; i < childCount; i++) {
+      PShapeOpenGL child=(PShapeOpenGL)children[i];
+      count+=child.getVertexSum(sum,count);
+    }
+  }
+ else {
+    if (haveFill)     count+=tessGeo.getFillVertexSum(sum,firstFillVertex,lastFillVertex);
+    if (haveLines)     count+=tessGeo.getLineVertexSum(sum,firstLineVertex,lastLineVertex);
+    if (havePoints)     count+=tessGeo.getPointVertexSum(sum,firstPointVertex,lastPointVertex);
+  }
+  return count;
+}

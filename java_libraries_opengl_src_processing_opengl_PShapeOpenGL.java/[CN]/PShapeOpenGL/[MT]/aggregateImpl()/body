@@ -1,0 +1,27 @@
+{
+  if (family == GROUP) {
+    haveFill=false;
+    haveLines=false;
+    havePoints=false;
+    for (int i=0; i < childCount; i++) {
+      PShapeOpenGL child=(PShapeOpenGL)children[i];
+      child.aggregateImpl();
+      haveFill|=child.haveFill;
+      haveLines|=child.haveLines;
+      havePoints|=child.havePoints;
+    }
+  }
+ else {
+    haveFill=-1 < firstFillIndexCache && -1 < lastFillIndexCache;
+    haveLines=-1 < firstLineIndexCache && -1 < lastLineIndexCache;
+    havePoints=-1 < firstPointIndexCache && -1 < lastPointIndexCache;
+  }
+  if (haveFill)   updateFillIndexCache();
+  if (haveLines)   updateLineIndexCache();
+  if (havePoints)   updatePointIndexCache();
+  if (matrix != null) {
+    if (haveFill)     tessGeo.applyMatrixOnFillGeometry(matrix,firstFillVertex,lastFillVertex);
+    if (haveLines)     tessGeo.applyMatrixOnLineGeometry(matrix,firstLineVertex,lastLineVertex);
+    if (havePoints)     tessGeo.applyMatrixOnPointGeometry(matrix,firstPointVertex,lastPointVertex);
+  }
+}

@@ -1,0 +1,51 @@
+{
+  IndexCache cache=tessGeo.fillIndexCache;
+  if (family == GROUP) {
+    firstFillIndexCache=lastFillIndexCache=-1;
+    int gindex=-1;
+    for (int i=0; i < childCount; i++) {
+      PShapeOpenGL child=(PShapeOpenGL)children[i];
+      int first=child.firstFillIndexCache;
+      int count=-1 < first ? child.lastFillIndexCache - first + 1 : -1;
+      for (int n=first; n < first + count; n++) {
+        if (gindex == -1) {
+          gindex=cache.addNew(n);
+          firstFillIndexCache=gindex;
+        }
+ else {
+          if (cache.vertexOffset[gindex] == cache.vertexOffset[n]) {
+            cache.incCounts(gindex,cache.indexCount[n],cache.vertexCount[n]);
+          }
+ else {
+            gindex=cache.addNew(n);
+          }
+        }
+      }
+    }
+    lastFillIndexCache=gindex;
+    if (-1 < firstFillIndexCache && -1 < lastFillIndexCache) {
+      firstFillVertex=cache.vertexOffset[firstFillIndexCache];
+      lastFillVertex=cache.vertexOffset[lastFillIndexCache] + cache.vertexCount[lastFillIndexCache] - 1;
+    }
+  }
+ else {
+    firstFillVertex=lastFillVertex=cache.vertexOffset[firstFillIndexCache];
+    for (int n=firstFillIndexCache; n <= lastFillIndexCache; n++) {
+      int ioffset=cache.indexOffset[n];
+      int icount=cache.indexCount[n];
+      int vcount=cache.vertexCount[n];
+      if (PGL.MAX_VERTEX_INDEX1 <= root.fillVertexRel + vcount) {
+        root.fillVertexRel=0;
+        root.fillVertexOffset=root.fillVertexAbs;
+        cache.indexOffset[n]=root.fillIndexOffset;
+      }
+ else       tessGeo.incFillIndices(ioffset,ioffset + icount - 1,root.fillVertexRel);
+      cache.vertexOffset[n]=root.fillVertexOffset;
+      root.fillIndexOffset+=icount;
+      root.fillVertexAbs+=vcount;
+      root.fillVertexRel+=vcount;
+      lastFillVertex+=vcount;
+    }
+    lastFillVertex--;
+  }
+}

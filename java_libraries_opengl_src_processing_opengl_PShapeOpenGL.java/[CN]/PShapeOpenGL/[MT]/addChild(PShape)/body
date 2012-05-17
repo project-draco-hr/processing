@@ -1,0 +1,20 @@
+{
+  if (child instanceof PShapeOpenGL) {
+    if (family == GROUP) {
+      PShapeOpenGL c3d=(PShapeOpenGL)child;
+      super.addChild(c3d);
+      c3d.updateRoot(root);
+      root.tessellated=false;
+      tessellated=false;
+      if (c3d.texture != null) {
+        addTexture(c3d.texture);
+      }
+    }
+ else {
+      PGraphics.showWarning("Cannot add child shape to non-group shape.");
+    }
+  }
+ else {
+    PGraphics.showWarning("Shape must be 3D to be added to the group.");
+  }
+}
