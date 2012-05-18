@@ -1,5 +1,5 @@
 {
-  return new Iterator<Row>(){
+  return new Iterator<TableRow>(){
     boolean already;
     public boolean hasNext(){
       already=true;
@@ -10,7 +10,7 @@
         throw new RuntimeException(e);
       }
     }
-    public Row next(){
+    public TableRow next(){
       if (!already) {
         try {
           rs.next();
@@ -22,7 +22,7 @@
  else {
         already=false;
       }
-      return new Row(){
+      return new TableRow(){
         public double getDouble(        int column){
           try {
             return rs.getDouble(column);
@@ -87,7 +87,7 @@
             throw new RuntimeException(e);
           }
         }
-        public String getString(        int column){
+        public String get(        int column){
           try {
             return rs.getString(column);
           }
@@ -95,7 +95,7 @@
             throw new RuntimeException(e);
           }
         }
-        public String getString(        String columnName){
+        public String get(        String columnName){
           try {
             return rs.getString(columnName);
           }
