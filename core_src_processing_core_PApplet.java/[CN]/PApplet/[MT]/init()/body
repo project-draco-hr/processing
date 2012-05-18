@@ -4,7 +4,8 @@
   looping=true;
   redraw=true;
   firstMouse=true;
-  sizeMethods=new RegisteredMethods();
+  pauseMethods=new RegisteredMethods();
+  resumeMethods=new RegisteredMethods();
   preMethods=new RegisteredMethods();
   drawMethods=new RegisteredMethods();
   postMethods=new RegisteredMethods();
@@ -13,10 +14,10 @@
   disposeMethods=new RegisteredMethods();
   try {
     getAppletContext();
-    online=true;
+    appletViewer=true;
   }
  catch (  NullPointerException e) {
-    online=false;
+    appletViewer=false;
   }
   try {
     if (sketchPath == null) {
@@ -52,5 +53,6 @@
     }
   }
 );
-  start();
+  thread=new Thread(this,"Animation Thread");
+  thread.start();
 }

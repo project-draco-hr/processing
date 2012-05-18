@@ -1,8 +1,13 @@
 {
-  finished=false;
+  debug("start() called");
   paused=false;
-  if (thread == null) {
-    thread=new Thread(this,"Animation Thread");
-    thread.start();
+  resume();
+  resumeMethods.handle();
+  debug("un-pausing thread");
+synchronized (pauseObject) {
+    debug("un-pausing thread 2");
+    debug("start() calling pauseObject.notify()");
+    pauseObject.notifyAll();
+    debug("un-pausing thread 3");
   }
 }

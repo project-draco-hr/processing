@@ -1,5 +1,5 @@
 {
-  String openglError="Before using OpenGL, first select " + "Import Library > OpenGL from the Sketch menu.";
+  String openglError=external ? "Before using OpenGL, first select " + "Import Library > OpenGL from the Sketch menu." : "The Java classpath and native library path is not " + "properly set for using the OpenGL library.";
   try {
     Class<?> rendererClass=Thread.currentThread().getContextClassLoader().loadClass(renderer);
     Constructor<?> constructor=rendererClass.getConstructor(new Class[]{});
@@ -7,7 +7,6 @@
     pg.setParent(this);
     pg.setPrimary(primary);
     if (path != null)     pg.setPath(path);
-    pg.setAntiAlias(sketchSmooth());
     pg.setSize(w,h);
     return pg;
   }

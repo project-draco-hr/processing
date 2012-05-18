@@ -4,15 +4,16 @@
     if ((clearPixels == null) || (clearPixels.length < width)) {
       clearPixels=new int[width];
     }
-    java.util.Arrays.fill(clearPixels,backgroundColor);
+    Arrays.fill(clearPixels,backgroundColor);
     for (int i=0; i < height; i++) {
       raster.setDataElements(0,i,width,1,clearPixels);
     }
   }
  else {
+    Color bgColor=new Color(backgroundColor);
     pushMatrix();
     resetMatrix();
-    g2.setColor(new Color(backgroundColor));
+    g2.setColor(bgColor);
     g2.fillRect(0,0,width,height);
     popMatrix();
   }

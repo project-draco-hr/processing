@@ -6,9 +6,11 @@
         if (farm.isVisible()) {
           Insets insets=farm.getInsets();
           Dimension windowSize=farm.getSize();
-          int usableW=windowSize.width - insets.left - insets.right;
-          int usableH=windowSize.height - insets.top - insets.bottom;
-          setBounds(insets.left,insets.top,usableW,usableH);
+          Rectangle newBounds=new Rectangle(insets.left,insets.top,windowSize.width - insets.left - insets.right,windowSize.height - insets.top - insets.bottom);
+          Rectangle oldBounds=getBounds();
+          if (!newBounds.equals(oldBounds)) {
+            setBounds(newBounds);
+          }
         }
       }
     }
