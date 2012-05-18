@@ -3,12 +3,10 @@
   this.m01=LinePath.FloatToS15_16(transform.m01);
   this.m10=LinePath.FloatToS15_16(transform.m10);
   this.m11=LinePath.FloatToS15_16(transform.m11);
-  this.lineWidth=lineWidth;
   this.lineWidth2=lineWidth >> 1;
   this.scaledLineWidth2=((long)m00 * lineWidth2) >> 16;
   this.capStyle=capStyle;
   this.joinStyle=joinStyle;
-  this.miterLimit=miterLimit;
   this.m00_2_m01_2=(double)m00 * m00 + (double)m01 * m01;
   this.m10_2_m11_2=(double)m10 * m10 + (double)m11 * m11;
   this.m00_m10_m01_m11=(double)m00 * m10 + (double)m01 * m11;
@@ -31,7 +29,7 @@
   }
   for (int i=0; i < numPenSegments; i++) {
     double r=lineWidth / 2.0;
-    double theta=(double)i * 2.0 * Math.PI / numPenSegments;
+    double theta=i * 2 * Math.PI / numPenSegments;
     double cos=Math.cos(theta);
     double sin=Math.sin(theta);
     pen_dx[i]=(int)(r * (dm00 * cos + dm01 * sin));
