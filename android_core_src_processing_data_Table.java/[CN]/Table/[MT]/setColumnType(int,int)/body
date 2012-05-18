@@ -4,7 +4,7 @@ case INT:
 {
       int[] intData=new int[rowCount];
       for (int row=0; row < rowCount; row++) {
-        String s=getString(row,column);
+        String s=get(row,column);
         intData[row]=PApplet.parseInt(s,missingInt);
       }
       columns[column]=intData;
@@ -14,7 +14,7 @@ case LONG:
 {
     long[] longData=new long[rowCount];
     for (int row=0; row < rowCount; row++) {
-      String s=getString(row,column);
+      String s=get(row,column);
       try {
         longData[row]=Long.parseLong(s);
       }
@@ -29,7 +29,7 @@ case FLOAT:
 {
   float[] floatData=new float[rowCount];
   for (int row=0; row < rowCount; row++) {
-    String s=getString(row,column);
+    String s=get(row,column);
     floatData[row]=PApplet.parseFloat(s,missingFloat);
   }
   columns[column]=floatData;
@@ -39,7 +39,7 @@ case DOUBLE:
 {
 double[] doubleData=new double[rowCount];
 for (int row=0; row < rowCount; row++) {
-  String s=getString(row,column);
+  String s=get(row,column);
   try {
     doubleData[row]=Double.parseDouble(s);
   }
@@ -55,7 +55,7 @@ case STRING:
 if (columnTypes[column] != STRING) {
 String[] stringData=new String[rowCount];
 for (int row=0; row < rowCount; row++) {
-  stringData[row]=getString(row,column);
+  stringData[row]=get(row,column);
 }
 columns[column]=stringData;
 }
@@ -66,7 +66,7 @@ case CATEGORICAL:
 int[] indexData=new int[rowCount];
 HashMapBlows categories=new HashMapBlows();
 for (int row=0; row < rowCount; row++) {
-String s=getString(row,column);
+String s=get(row,column);
 indexData[row]=categories.index(s);
 }
 columnCategories[column]=categories;
