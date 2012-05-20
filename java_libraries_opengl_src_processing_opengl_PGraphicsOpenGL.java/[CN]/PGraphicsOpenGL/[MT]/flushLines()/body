@@ -10,7 +10,9 @@
     shader.setVertexAttribute(glLineVertexBufferID,4,PGL.GL_FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
     shader.setColorAttribute(glLineColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
     shader.setDirWidthAttribute(glLineDirWidthBufferID,4,PGL.GL_FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glLineIndexBufferID);
     pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
   }
   shader.stop();
   unbindLineBuffers();

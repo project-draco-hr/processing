@@ -18,6 +18,9 @@
       lastLineIndexCache=index;
     }
  else {
+      prevTexImage=newTexImage;
+      newTexImage=null;
+      setFirstTexIndex(tess.fillIndexCount,tess.fillIndexCache.size - 1);
       if (strokeWeight < PGL.MIN_CAPS_JOINS_WEIGHT) {
         tess.fillVertexCheck(nvert);
         tess.fillIndexCheck(nind);
@@ -48,5 +51,6 @@
         tessellateLinePath(path,false);
       }
     }
+    setLastTexIndex(tess.lastFillIndex,tess.fillIndexCache.size - 1);
   }
 }
