@@ -3,7 +3,7 @@
   int nInVert=in.lastVertex - in.firstVertex + 1;
   if (fill && 3 <= nInVert) {
     firstPolyIndexCache=-1;
-    callback.init(in.renderMode == RETAINED,calcNormals,FILL_VERTEX);
+    callback.init(in.renderMode == RETAINED,FILL_VERTEX,false,calcNormals);
     gluTess.beginPolygon();
     if (solid) {
       gluTess.setWindingRule(PGL.GLU_TESS_WINDING_NONZERO);
@@ -41,5 +41,5 @@
     gluTess.endPolygon();
   }
   setLastTexIndex(tess.lastPolyIndex,tess.polyIndexCache.size - 1);
-  tessellateEdges(fill && 3 <= nInVert);
+  tessellateEdges();
 }

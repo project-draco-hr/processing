@@ -1,12 +1,12 @@
 {
   IndexCache cache=tessGeo.polyIndexCache;
   if (family == GROUP) {
-    firstPolyIndexCache=lastpolyIndexCache=-1;
+    firstPolyIndexCache=lastPolyIndexCache=-1;
     int gindex=-1;
     for (int i=0; i < childCount; i++) {
       PShapeOpenGL child=(PShapeOpenGL)children[i];
       int first=child.firstPolyIndexCache;
-      int count=-1 < first ? child.lastpolyIndexCache - first + 1 : -1;
+      int count=-1 < first ? child.lastPolyIndexCache - first + 1 : -1;
       for (int n=first; n < first + count; n++) {
         if (gindex == -1) {
           gindex=cache.addNew(n);
@@ -22,15 +22,15 @@
         }
       }
     }
-    lastpolyIndexCache=gindex;
-    if (-1 < firstPolyIndexCache && -1 < lastpolyIndexCache) {
+    lastPolyIndexCache=gindex;
+    if (-1 < firstPolyIndexCache && -1 < lastPolyIndexCache) {
       firstPolyVertex=cache.vertexOffset[firstPolyIndexCache];
-      lastPolyVertex=cache.vertexOffset[lastpolyIndexCache] + cache.vertexCount[lastpolyIndexCache] - 1;
+      lastPolyVertex=cache.vertexOffset[lastPolyIndexCache] + cache.vertexCount[lastPolyIndexCache] - 1;
     }
   }
  else {
     firstPolyVertex=lastPolyVertex=cache.vertexOffset[firstPolyIndexCache];
-    for (int n=firstPolyIndexCache; n <= lastpolyIndexCache; n++) {
+    for (int n=firstPolyIndexCache; n <= lastPolyIndexCache; n++) {
       int ioffset=cache.indexOffset[n];
       int icount=cache.indexCount[n];
       int vcount=cache.vertexCount[n];

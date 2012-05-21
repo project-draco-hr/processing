@@ -5,86 +5,12 @@
     int nvertTot=5 * quadCount;
     int nindTot=12 * quadCount;
     if (is3D()) {
-      tess.pointVertexCheck(nvertTot);
-      tess.pointIndexCheck(nindTot);
-      int vertIdx=tess.firstPointVertex;
-      int attribIdx=tess.firstPointVertex;
-      int indIdx=tess.firstPointIndex;
-      IndexCache cache=tess.pointIndexCache;
-      int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
-      firstPointIndexCache=index;
-      for (int i=in.firstVertex; i <= in.lastVertex; i++) {
-        int nvert=5;
-        int count=cache.vertexCount[index];
-        if (PGL.MAX_VERTEX_INDEX1 <= count + nvert) {
-          index=cache.addNew();
-          count=0;
-        }
-        for (int k=0; k < nvert; k++) {
-          tess.setPointVertex(vertIdx,in,i);
-          vertIdx++;
-        }
-        tess.pointAttribs[2 * attribIdx + 0]=0;
-        tess.pointAttribs[2 * attribIdx + 1]=0;
-        attribIdx++;
-        for (int k=0; k < 4; k++) {
-          tess.pointAttribs[2 * attribIdx + 0]=0.5f * QUAD_POINT_SIGNS[k][0] * strokeWeight;
-          tess.pointAttribs[2 * attribIdx + 1]=0.5f * QUAD_POINT_SIGNS[k][1] * strokeWeight;
-          attribIdx++;
-        }
-        for (int k=1; k < nvert - 1; k++) {
-          tess.pointIndices[indIdx++]=(short)(count + 0);
-          tess.pointIndices[indIdx++]=(short)(count + k);
-          tess.pointIndices[indIdx++]=(short)(count + k + 1);
-        }
-        tess.pointIndices[indIdx++]=(short)(count + 0);
-        tess.pointIndices[indIdx++]=(short)(count + 1);
-        tess.pointIndices[indIdx++]=(short)(count + nvert - 1);
-        cache.incCounts(index,12,5);
-      }
-      lastPointIndexCache=index;
+      tessellateSquarePoints3D(nvertTot,nindTot);
     }
  else     if (is2D()) {
-      prevTexImage=newTexImage;
-      newTexImage=null;
-      setFirstTexIndex(tess.polyIndexCount,tess.polyIndexCache.size - 1);
-      tess.polyVertexCheck(nvertTot);
-      tess.polyIndexCheck(nindTot);
-      int vertIdx=tess.firstPolyVertex;
-      int indIdx=tess.firstPolyIndex;
-      IndexCache cache=tess.polyIndexCache;
-      int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
-      firstPolyIndexCache=index;
-      for (int i=in.firstVertex; i <= in.lastVertex; i++) {
-        int nvert=5;
-        int count=cache.vertexCount[index];
-        if (PGL.MAX_VERTEX_INDEX1 <= count + nvert) {
-          index=cache.addNew();
-          count=0;
-        }
-        float x0=in.vertices[3 * i + 0];
-        float y0=in.vertices[3 * i + 1];
-        int rgba=in.strokeColors[i];
-        if (in.renderMode == RETAINED) {
-        }
-        tess.setPolyVertex(vertIdx,x0,y0,0,rgba,POINT_VERTEX,in,null);
-        vertIdx++;
-        for (int k=0; k < nvert - 1; k++) {
-          tess.setPolyVertex(vertIdx,x0 + 0.5f * QUAD_POINT_SIGNS[k][0] * strokeWeight,y0 + 0.5f * QUAD_POINT_SIGNS[k][1] * strokeWeight,0,rgba,POINT_VERTEX,in,null);
-          vertIdx++;
-        }
-        for (int k=1; k < nvert - 1; k++) {
-          tess.polyIndices[indIdx++]=(short)(count + 0);
-          tess.polyIndices[indIdx++]=(short)(count + k);
-          tess.polyIndices[indIdx++]=(short)(count + k + 1);
-        }
-        tess.polyIndices[indIdx++]=(short)(count + 0);
-        tess.polyIndices[indIdx++]=(short)(count + 1);
-        tess.polyIndices[indIdx++]=(short)(count + nvert - 1);
-        cache.incCounts(index,12,5);
-      }
-      lastPolyIndexCache=index;
-      setLastTexIndex(tess.lastPolyIndex,tess.polyIndexCache.size - 1);
+      beginNoTex();
+      tessellateSquarePoints2D(nvertTot,nindTot);
+      endNoTex();
     }
   }
 }
