@@ -1,40 +1,39 @@
 {
-  polyVertexCheck();
   int index;
-  int count=polyVertexCount - 1;
   if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
     PMatrix3D mm=modelview;
     PMatrix3D nm=modelviewInv;
-    index=4 * count;
+    index=4 * tessIdx;
     polyVertices[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
     polyVertices[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
     polyVertices[index++]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
     polyVertices[index]=x * mm.m30 + y * mm.m31 + z * mm.m32 + mm.m33;
-    index=3 * count;
+    index=3 * tessIdx;
     polyNormals[index++]=nx * nm.m00 + ny * nm.m10 + nz * nm.m20;
     polyNormals[index++]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
     polyNormals[index]=nx * nm.m02 + ny * nm.m12 + nz * nm.m22;
   }
  else {
-    index=4 * count;
+    index=4 * tessIdx;
     polyVertices[index++]=x;
     polyVertices[index++]=y;
     polyVertices[index++]=z;
     polyVertices[index]=1;
-    index=3 * count;
+    index=3 * tessIdx;
     polyNormals[index++]=nx;
     polyNormals[index++]=ny;
     polyNormals[index]=nz;
   }
-  polyColors[count]=rgba;
-  index=2 * count;
+  polyTypes[tessIdx]=type;
+  polyColors[tessIdx]=rgba;
+  index=2 * tessIdx;
   polyTexcoords[index++]=u;
   polyTexcoords[index]=v;
-  polyAmbient[count]=am;
-  polySpecular[count]=sp;
-  polyEmissive[count]=em;
-  polyShininess[count]=shine;
-  if (renderMode == RETAINED && vertices != null && weights != null) {
+  polyAmbient[tessIdx]=am;
+  polySpecular[tessIdx]=sp;
+  polyEmissive[tessIdx]=em;
+  polyShininess[tessIdx]=shine;
+  if (renderMode == RETAINED && vertices != null) {
     int len=vertices.length;
     for (int i=0; i < len; i++) {
     }
