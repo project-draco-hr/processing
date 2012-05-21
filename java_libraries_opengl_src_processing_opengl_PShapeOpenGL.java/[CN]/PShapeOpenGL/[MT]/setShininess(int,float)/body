@@ -1,27 +1,4 @@
 {
   updateTessellation();
-  if (haveFill) {
-    float[] shininess=tessGeo.fillShininess;
-    if (-1 < inGeo.tessMap.firstFillIndex) {
-      int tessIdx=inGeo.tessMap.firstFillIndex + index;
-      shininess[tessIdx]=shine;
-      root.setModifiedFillShininess(tessIdx,tessIdx);
-    }
- else {
-      float shine0=inGeo.shininess[index];
-      int[] indices=inGeo.tessMap.fillIndices[index];
-      float[] weights=inGeo.tessMap.fillWeights[index];
-      for (int i=0; i < indices.length; i++) {
-        int tessIdx=indices[i];
-        if (-1 < tessIdx) {
-          float weight=weights[i];
-          float tshine0=shininess[tessIdx];
-          float tshine=tshine0 + weight * (shine - shine0);
-          shininess[tessIdx]=tshine;
-          root.setModifiedFillShininess(tessIdx,tessIdx);
-        }
-      }
-    }
-  }
   inGeo.shininess[index]=shine;
 }

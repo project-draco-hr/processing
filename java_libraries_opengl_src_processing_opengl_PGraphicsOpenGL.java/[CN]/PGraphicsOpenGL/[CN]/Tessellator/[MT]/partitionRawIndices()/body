@@ -1,13 +1,13 @@
 {
-  tess.fillIndexCheck(rawSize);
-  int offset=tess.firstFillIndex;
+  tess.polyIndexCheck(rawSize);
+  int offset=tess.firstPolyIndex;
   int inInd0=0, inInd1=0;
   int inMaxVert0=in.firstVertex, inMaxVert1=in.firstVertex;
   int inMaxRel=0;
   Set<Integer> inDupSet=null;
-  IndexCache cache=tess.fillIndexCache;
+  IndexCache cache=tess.polyIndexCache;
   int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
-  firstFillIndexCache=index;
+  firstPolyIndexCache=index;
   int trCount=rawSize / 3;
   for (int tr=0; tr < trCount; tr++) {
     if (index == -1)     index=cache.addNew();
@@ -37,31 +37,31 @@
       ri2=ii2;
     }
  else     ri2=count + ii2;
-    tess.fillIndices[offset + 3 * tr + 0]=(short)ri0;
-    tess.fillIndices[offset + 3 * tr + 1]=(short)ri1;
-    tess.fillIndices[offset + 3 * tr + 2]=(short)ri2;
+    tess.polyIndices[offset + 3 * tr + 0]=(short)ri0;
+    tess.polyIndices[offset + 3 * tr + 1]=(short)ri1;
+    tess.polyIndices[offset + 3 * tr + 2]=(short)ri2;
     inInd1=3 * tr + 2;
     inMaxVert1=PApplet.max(i0,i1,i2);
     inMaxRel=PApplet.max(inMaxRel,PApplet.max(ri0,ri1,ri2));
     int dup=inDupSet == null ? 0 : inDupSet.size();
     if ((PGL.MAX_VERTEX_INDEX1 - 3 <= inMaxRel + dup && inMaxRel + dup < PGL.MAX_VERTEX_INDEX1) || (tr == trCount - 1)) {
-      tess.addFillVertices(in,inMaxVert0,inMaxVert1);
+      tess.addPolyVertices(in,inMaxVert0,inMaxVert1);
       if (0 < dup) {
         ArrayList<Integer> inDupList=new ArrayList<Integer>(inDupSet);
         Collections.sort(inDupList);
         for (int i=inInd0; i <= inInd1; i++) {
-          int ri=tess.fillIndices[i];
+          int ri=tess.polyIndices[i];
           if (ri < 0) {
-            tess.fillIndices[i]=(short)(inMaxRel + 1 + inDupList.indexOf(ri));
+            tess.polyIndices[i]=(short)(inMaxRel + 1 + inDupList.indexOf(ri));
           }
         }
         for (int i=0; i < inDupList.size(); i++) {
           int ri=inDupList.get(i);
-          tess.addFillVertex(in,ri + inMaxVert0);
+          tess.addPolyVertex(in,ri + inMaxVert0);
         }
       }
       cache.incCounts(index,inInd1 - inInd0 + 1,inMaxVert1 - inMaxVert0 + 1 + dup);
-      lastFillIndexCache=index;
+      lastPolyIndexCache=index;
       index=-1;
       inMaxRel=0;
       inMaxVert0=inMaxVert1 + 1;

@@ -1,0 +1,19 @@
+{
+  if (first < last) {
+    int index;
+    for (int i=first; i <= last; i++) {
+      index=4 * i;
+      float x=polyVertices[index++];
+      float y=polyVertices[index];
+      index=3 * i;
+      float nx=polyNormals[index++];
+      float ny=polyNormals[index];
+      index=4 * i;
+      polyVertices[index++]=x * tr.m00 + y * tr.m01 + tr.m02;
+      polyVertices[index]=x * tr.m10 + y * tr.m11 + tr.m12;
+      index=3 * i;
+      polyNormals[index++]=nx * tr.m00 + ny * tr.m01;
+      polyNormals[index]=nx * tr.m10 + ny * tr.m11;
+    }
+  }
+}

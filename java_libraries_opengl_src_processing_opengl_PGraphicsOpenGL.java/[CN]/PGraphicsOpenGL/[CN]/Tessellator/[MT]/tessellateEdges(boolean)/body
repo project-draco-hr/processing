@@ -16,17 +16,17 @@
  else {
       prevTexImage=newTexImage;
       newTexImage=null;
-      setFirstTexIndex(tess.fillIndexCount,tess.fillIndexCache.size - 1);
+      setFirstTexIndex(tess.polyIndexCount,tess.polyIndexCache.size - 1);
       if (strokeWeight < PGL.MIN_CAPS_JOINS_WEIGHT) {
-        tess.fillVertexCheck(nInVert);
-        tess.fillIndexCheck(nInInd);
-        int index=in.renderMode == RETAINED && !haveFill ? tess.fillIndexCache.addNew() : tess.fillIndexCache.getLast();
-        firstFillIndexCache=index;
+        tess.polyVertexCheck(nInVert);
+        tess.polyIndexCheck(nInInd);
+        int index=in.renderMode == RETAINED && !haveFill ? tess.polyIndexCache.addNew() : tess.polyIndexCache.getLast();
+        firstPolyIndexCache=index;
         for (int i=in.firstEdge; i <= in.lastEdge; i++) {
           int[] edge=in.edges[i];
           index=addLine2D(edge[0],edge[1],index,true);
         }
-        lastFillIndexCache=index;
+        lastPolyIndexCache=index;
       }
  else {
         LinePath path=new LinePath(LinePath.WIND_NON_ZERO);
@@ -36,30 +36,28 @@
           int i1=edge[1];
 switch (edge[2]) {
 case EDGE_MIDDLE:
-            path.lineTo(in.vertices[4 * i1 + 0],in.vertices[4 * i1 + 1]);
+            path.lineTo(in.vertices[3 * i1 + 0],in.vertices[3 * i1 + 1]);
           break;
 case EDGE_START:
-        path.moveTo(in.vertices[4 * i0 + 0],in.vertices[4 * i0 + 1]);
-      path.lineTo(in.vertices[4 * i1 + 0],in.vertices[4 * i1 + 1]);
+        path.moveTo(in.vertices[3 * i0 + 0],in.vertices[3 * i0 + 1]);
+      path.lineTo(in.vertices[3 * i1 + 0],in.vertices[3 * i1 + 1]);
     break;
 case EDGE_STOP:
-  path.lineTo(in.vertices[4 * i1 + 0],in.vertices[4 * i1 + 1]);
+  path.lineTo(in.vertices[3 * i1 + 0],in.vertices[3 * i1 + 1]);
 path.closePath();
 break;
 case EDGE_SINGLE:
-path.moveTo(in.vertices[4 * i0 + 0],in.vertices[4 * i0 + 1]);
-path.lineTo(in.vertices[4 * i1 + 0],in.vertices[4 * i1 + 1]);
+path.moveTo(in.vertices[3 * i0 + 0],in.vertices[3 * i0 + 1]);
+path.lineTo(in.vertices[3 * i1 + 0],in.vertices[3 * i1 + 1]);
 path.closePath();
 break;
 }
 if (tess.renderMode == RETAINED) {
-in.tessMap.addFillIndex(i0,-1);
-in.tessMap.addFillIndex(i1,-1);
 }
 }
 tessellateLinePath(path,haveFill);
 }
-setLastTexIndex(tess.lastFillIndex,tess.fillIndexCache.size - 1);
+setLastTexIndex(tess.lastPolyIndex,tess.polyIndexCache.size - 1);
 }
 }
 }

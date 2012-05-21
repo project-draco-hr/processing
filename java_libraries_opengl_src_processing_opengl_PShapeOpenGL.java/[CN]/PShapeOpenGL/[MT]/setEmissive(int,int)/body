@@ -1,25 +1,5 @@
 {
   updateTessellation();
   emissive=PGL.javaToNativeARGB(emissive);
-  if (haveFill) {
-    int[] colors=tessGeo.fillEmissive;
-    if (-1 < inGeo.tessMap.firstFillIndex) {
-      int tessIdx=inGeo.tessMap.firstFillIndex + index;
-      colors[tessIdx]=emissive;
-      root.setModifiedFillEmissive(tessIdx,tessIdx);
-    }
- else {
-      int[] indices=inGeo.tessMap.fillIndices[index];
-      float[] weights=inGeo.tessMap.fillWeights[index];
-      int emissive0=inGeo.emissive[index];
-      setColorRGB(colors,emissive,emissive0,indices,weights);
-      for (int i=0; i < indices.length; i++) {
-        int tessIdx=indices[i];
-        if (-1 < tessIdx) {
-          root.setModifiedFillEmissive(tessIdx,indices[i]);
-        }
-      }
-    }
-  }
   inGeo.emissive[index]=emissive;
 }

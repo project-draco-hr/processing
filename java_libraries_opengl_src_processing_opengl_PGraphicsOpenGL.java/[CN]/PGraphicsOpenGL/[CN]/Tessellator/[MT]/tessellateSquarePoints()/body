@@ -47,14 +47,14 @@
  else {
       prevTexImage=newTexImage;
       newTexImage=null;
-      setFirstTexIndex(tess.fillIndexCount,tess.fillIndexCache.size - 1);
-      tess.fillVertexCheck(nvertTot);
-      tess.fillIndexCheck(nindTot);
-      int vertIdx=tess.firstFillVertex;
-      int indIdx=tess.firstFillIndex;
-      IndexCache cache=tess.fillIndexCache;
+      setFirstTexIndex(tess.polyIndexCount,tess.polyIndexCache.size - 1);
+      tess.polyVertexCheck(nvertTot);
+      tess.polyIndexCheck(nindTot);
+      int vertIdx=tess.firstPolyVertex;
+      int indIdx=tess.firstPolyIndex;
+      IndexCache cache=tess.polyIndexCache;
       int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
-      firstFillIndexCache=index;
+      firstPolyIndexCache=index;
       for (int i=in.firstVertex; i <= in.lastVertex; i++) {
         int nvert=5;
         int count=cache.vertexCount[index];
@@ -62,31 +62,29 @@
           index=cache.addNew();
           count=0;
         }
-        float x0=in.vertices[4 * i + 0];
-        float y0=in.vertices[4 * i + 1];
-        float w0=in.vertices[4 * i + 3];
+        float x0=in.vertices[3 * i + 0];
+        float y0=in.vertices[3 * i + 1];
         int rgba=in.scolors[i];
         if (in.renderMode == RETAINED) {
-          in.tessMap.addFillIndex(i,-1);
         }
-        tess.setFillVertex(vertIdx,x0,y0,0,w0,rgba,in,null);
+        tess.setPolyVertex(vertIdx,x0,y0,0,rgba,in,null);
         vertIdx++;
         for (int k=0; k < nvert - 1; k++) {
-          tess.setFillVertex(vertIdx,x0 + 0.5f * QUAD_POINT_SIGNS[k][0] * strokeWeight,y0 + 0.5f * QUAD_POINT_SIGNS[k][1] * strokeWeight,0,w0,rgba,in,null);
+          tess.setPolyVertex(vertIdx,x0 + 0.5f * QUAD_POINT_SIGNS[k][0] * strokeWeight,y0 + 0.5f * QUAD_POINT_SIGNS[k][1] * strokeWeight,0,rgba,in,null);
           vertIdx++;
         }
         for (int k=1; k < nvert - 1; k++) {
-          tess.fillIndices[indIdx++]=(short)(count + 0);
-          tess.fillIndices[indIdx++]=(short)(count + k);
-          tess.fillIndices[indIdx++]=(short)(count + k + 1);
+          tess.polyIndices[indIdx++]=(short)(count + 0);
+          tess.polyIndices[indIdx++]=(short)(count + k);
+          tess.polyIndices[indIdx++]=(short)(count + k + 1);
         }
-        tess.fillIndices[indIdx++]=(short)(count + 0);
-        tess.fillIndices[indIdx++]=(short)(count + 1);
-        tess.fillIndices[indIdx++]=(short)(count + nvert - 1);
+        tess.polyIndices[indIdx++]=(short)(count + 0);
+        tess.polyIndices[indIdx++]=(short)(count + 1);
+        tess.polyIndices[indIdx++]=(short)(count + nvert - 1);
         cache.incCounts(index,12,5);
       }
-      lastFillIndexCache=index;
-      setLastTexIndex(tess.lastFillIndex,tess.fillIndexCache.size - 1);
+      lastPolyIndexCache=index;
+      setLastTexIndex(tess.lastPolyIndex,tess.polyIndexCache.size - 1);
     }
   }
 }

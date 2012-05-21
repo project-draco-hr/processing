@@ -1,5 +1,5 @@
 {
-  IndexCache cache=tess.fillIndexCache;
+  IndexCache cache=tess.polyIndexCache;
   int count=cache.vertexCount[index];
   if (PGL.MAX_VERTEX_INDEX1 <= count + 4) {
     index=cache.addNew();
@@ -12,32 +12,30 @@
   color=constStroke ? strokeColor : in.scolors[i0];
   weight=constStroke ? strokeWeight : in.sweights[i0];
   int[] verts={i0,i1};
-  float x0=in.vertices[4 * i0 + 0];
-  float y0=in.vertices[4 * i0 + 1];
-  float w0=in.vertices[4 * i0 + 3];
-  float x1=in.vertices[4 * i1 + 0];
-  float y1=in.vertices[4 * i1 + 1];
-  float w1=in.vertices[4 * i1 + 3];
+  float x0=in.vertices[3 * i0 + 0];
+  float y0=in.vertices[3 * i0 + 1];
+  float x1=in.vertices[3 * i1 + 0];
+  float y1=in.vertices[3 * i1 + 1];
   float dirx=x1 - x0;
   float diry=y1 - y0;
   float llen=PApplet.sqrt(dirx * dirx + diry * diry);
   float normx=-diry / llen;
   float normy=+dirx / llen;
-  tess.setFillVertex(vidx,x0 + normx * weight / 2,y0 + normy * weight / 2,0,w0,color,in,verts);
-  tess.fillIndices[iidx++]=(short)(count + 0);
+  tess.setPolyVertex(vidx,x0 + normx * weight / 2,y0 + normy * weight / 2,0,color,in,verts);
+  tess.polyIndices[iidx++]=(short)(count + 0);
   vidx++;
-  tess.setFillVertex(vidx,x0 - normx * weight / 2,y0 - normy * weight / 2,0,w0,color,in,verts);
-  tess.fillIndices[iidx++]=(short)(count + 1);
+  tess.setPolyVertex(vidx,x0 - normx * weight / 2,y0 - normy * weight / 2,0,color,in,verts);
+  tess.polyIndices[iidx++]=(short)(count + 1);
   color=constStroke ? strokeColor : in.scolors[i1];
   weight=constStroke ? strokeWeight : in.sweights[i1];
   vidx++;
-  tess.setFillVertex(vidx,x1 - normx * weight / 2,y1 - normy * weight / 2,0,w1,color,in,verts);
-  tess.fillIndices[iidx++]=(short)(count + 2);
-  tess.fillIndices[iidx++]=(short)(count + 2);
-  tess.fillIndices[iidx++]=(short)(count + 0);
+  tess.setPolyVertex(vidx,x1 - normx * weight / 2,y1 - normy * weight / 2,0,color,in,verts);
+  tess.polyIndices[iidx++]=(short)(count + 2);
+  tess.polyIndices[iidx++]=(short)(count + 2);
+  tess.polyIndices[iidx++]=(short)(count + 0);
   vidx++;
-  tess.setFillVertex(vidx,x1 + normx * weight / 2,y1 + normy * weight / 2,0,w1,color,in,verts);
-  tess.fillIndices[iidx++]=(short)(count + 3);
+  tess.setPolyVertex(vidx,x1 + normx * weight / 2,y1 + normy * weight / 2,0,color,in,verts);
+  tess.polyIndices[iidx++]=(short)(count + 3);
   cache.incCounts(index,6,4);
   return index;
 }
