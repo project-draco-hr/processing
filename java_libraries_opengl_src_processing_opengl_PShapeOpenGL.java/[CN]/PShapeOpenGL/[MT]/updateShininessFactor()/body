@@ -1,7 +1,11 @@
 {
   if (shapeEnded && tessellated && havePolys) {
     Arrays.fill(inGeo.shininess,0,inGeo.vertexCount,shininess);
-    Arrays.fill(tessGeo.polyShininess,firstPolyVertex,lastPolyVertex + 1,shininess);
-    root.setModifiedPolyShininess(firstPolyVertex,lastPolyVertex);
+    if (is3D()) {
+      Arrays.fill(tessGeo.polyShininess,firstPolyVertex,lastPolyVertex + 1,shininess);
+      root.setModifiedPolyShininess(firstPolyVertex,lastPolyVertex);
+    }
+ else     if (is2D()) {
+    }
   }
 }

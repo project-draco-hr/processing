@@ -1,7 +1,11 @@
 {
   if (shapeEnded && tessellated && 0 < tessGeo.polyVertexCount) {
     Arrays.fill(inGeo.emissive,0,inGeo.vertexCount,PGL.javaToNativeARGB(emissiveColor));
-    Arrays.fill(tessGeo.polyEmissive,firstPolyVertex,lastPolyVertex + 1,PGL.javaToNativeARGB(emissiveColor));
-    root.setModifiedPolyEmissive(firstPolyVertex,lastPolyVertex);
+    if (is3D()) {
+      Arrays.fill(tessGeo.polyEmissive,firstPolyVertex,lastPolyVertex + 1,PGL.javaToNativeARGB(emissiveColor));
+      root.setModifiedPolyEmissive(firstPolyVertex,lastPolyVertex);
+    }
+ else     if (is2D()) {
+    }
   }
 }

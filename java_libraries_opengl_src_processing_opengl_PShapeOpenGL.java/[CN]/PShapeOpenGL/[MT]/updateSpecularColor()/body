@@ -1,7 +1,11 @@
 {
   if (shapeEnded && tessellated && havePolys) {
     Arrays.fill(inGeo.specular,0,inGeo.vertexCount,PGL.javaToNativeARGB(specularColor));
-    Arrays.fill(tessGeo.polySpecular,firstPolyVertex,lastPolyVertex + 1,PGL.javaToNativeARGB(specularColor));
-    root.setModifiedPolySpecular(firstPolyVertex,lastPolyVertex);
+    if (is3D()) {
+      Arrays.fill(tessGeo.polySpecular,firstPolyVertex,lastPolyVertex + 1,PGL.javaToNativeARGB(specularColor));
+      root.setModifiedPolySpecular(firstPolyVertex,lastPolyVertex);
+    }
+ else     if (is2D()) {
+    }
   }
 }

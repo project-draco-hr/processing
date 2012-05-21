@@ -27,14 +27,14 @@
           tess.setPointVertex(vertIdx,in,i);
           vertIdx++;
         }
-        tess.pointSizes[2 * attribIdx + 0]=0;
-        tess.pointSizes[2 * attribIdx + 1]=0;
+        tess.pointAttribs[2 * attribIdx + 0]=0;
+        tess.pointAttribs[2 * attribIdx + 1]=0;
         attribIdx++;
         float val=0;
         float inc=(float)SINCOS_LENGTH / perim;
         for (int k=0; k < perim; k++) {
-          tess.pointSizes[2 * attribIdx + 0]=0.5f * cosLUT[(int)val] * strokeWeight;
-          tess.pointSizes[2 * attribIdx + 1]=0.5f * sinLUT[(int)val] * strokeWeight;
+          tess.pointAttribs[2 * attribIdx + 0]=0.5f * cosLUT[(int)val] * strokeWeight;
+          tess.pointAttribs[2 * attribIdx + 1]=0.5f * sinLUT[(int)val] * strokeWeight;
           val=(val + inc) % SINCOS_LENGTH;
           attribIdx++;
         }
@@ -50,7 +50,7 @@
       }
       lastPointIndexCache=index;
     }
- else {
+ else     if (is2D()) {
       prevTexImage=newTexImage;
       newTexImage=null;
       setFirstTexIndex(tess.polyIndexCount,tess.polyIndexCache.size - 1);
@@ -69,7 +69,7 @@
         }
         float x0=in.vertices[3 * i + 0];
         float y0=in.vertices[3 * i + 1];
-        int rgba=in.scolors[i];
+        int rgba=in.strokeColors[i];
         if (in.renderMode == RETAINED) {
         }
         float val=0;

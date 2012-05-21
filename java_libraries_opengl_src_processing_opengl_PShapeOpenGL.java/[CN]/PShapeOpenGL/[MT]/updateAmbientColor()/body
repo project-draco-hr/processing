@@ -1,7 +1,11 @@
 {
   if (shapeEnded && tessellated && havePolys) {
     Arrays.fill(inGeo.ambient,0,inGeo.vertexCount,PGL.javaToNativeARGB(ambientColor));
-    Arrays.fill(tessGeo.polyAmbient,firstPolyVertex,lastPolyVertex=1,PGL.javaToNativeARGB(ambientColor));
-    root.setModifiedPolyAmbient(firstPolyVertex,lastPolyVertex);
+    if (is3D()) {
+      Arrays.fill(tessGeo.polyAmbient,firstPolyVertex,lastPolyVertex=1,PGL.javaToNativeARGB(ambientColor));
+      root.setModifiedPolyAmbient(firstPolyVertex,lastPolyVertex);
+    }
+ else     if (is2D()) {
+    }
   }
 }

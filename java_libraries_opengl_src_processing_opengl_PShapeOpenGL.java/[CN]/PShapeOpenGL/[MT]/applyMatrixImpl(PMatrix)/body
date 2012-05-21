@@ -4,13 +4,15 @@
     root.setModifiedPolyVertices(firstPolyVertex,lastPolyVertex);
     root.setModifiedPolyNormals(firstPolyVertex,lastPolyVertex);
   }
-  if (haveLines) {
-    tessGeo.applyMatrixOnLineGeometry(matrix,firstLineVertex,lastLineVertex);
-    root.setModifiedLineVertices(firstLineVertex,lastLineVertex);
-    root.setModifiedLineAttributes(firstLineVertex,lastLineVertex);
-  }
-  if (havePoints) {
-    tessGeo.applyMatrixOnPointGeometry(matrix,firstPointVertex,lastPointVertex);
-    root.setModifiedPointVertices(firstPointVertex,lastPointVertex);
+  if (is3D()) {
+    if (haveLines) {
+      tessGeo.applyMatrixOnLineGeometry(matrix,firstLineVertex,lastLineVertex);
+      root.setModifiedLineVertices(firstLineVertex,lastLineVertex);
+      root.setModifiedLineAttributes(firstLineVertex,lastLineVertex);
+    }
+    if (havePoints) {
+      tessGeo.applyMatrixOnPointGeometry(matrix,firstPointVertex,lastPointVertex);
+      root.setModifiedPointVertices(firstPointVertex,lastPointVertex);
+    }
   }
 }

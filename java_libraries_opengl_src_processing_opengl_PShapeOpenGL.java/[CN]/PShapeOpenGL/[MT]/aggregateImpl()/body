@@ -17,11 +17,15 @@
     havePoints=-1 < firstPointIndexCache && -1 < lastPointIndexCache;
   }
   if (havePolys)   updatePolyIndexCache();
-  if (haveLines)   updateLineIndexCache();
-  if (havePoints)   updatePointIndexCache();
+  if (is3D()) {
+    if (haveLines)     updateLineIndexCache();
+    if (havePoints)     updatePointIndexCache();
+  }
   if (matrix != null) {
     if (havePolys)     tessGeo.applyMatrixOnPolyGeometry(matrix,firstPolyVertex,lastPolyVertex);
-    if (haveLines)     tessGeo.applyMatrixOnLineGeometry(matrix,firstLineVertex,lastLineVertex);
-    if (havePoints)     tessGeo.applyMatrixOnPointGeometry(matrix,firstPointVertex,lastPointVertex);
+    if (is3D()) {
+      if (haveLines)       tessGeo.applyMatrixOnLineGeometry(matrix,firstLineVertex,lastLineVertex);
+      if (havePoints)       tessGeo.applyMatrixOnPointGeometry(matrix,firstPointVertex,lastPointVertex);
+    }
   }
 }

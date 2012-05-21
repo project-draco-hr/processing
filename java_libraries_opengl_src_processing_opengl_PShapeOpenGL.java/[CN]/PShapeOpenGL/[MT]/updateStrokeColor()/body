@@ -1,13 +1,21 @@
 {
   if (shapeEnded && tessellated && (haveLines || havePoints)) {
-    Arrays.fill(inGeo.scolors,0,inGeo.vertexCount,PGL.javaToNativeARGB(strokeColor));
+    Arrays.fill(inGeo.strokeColors,0,inGeo.vertexCount,PGL.javaToNativeARGB(strokeColor));
     if (haveLines) {
-      Arrays.fill(tessGeo.lineColors,firstLineVertex,lastLineVertex + 1,PGL.javaToNativeARGB(strokeColor));
-      root.setModifiedLineColors(firstLineVertex,lastLineVertex);
+      if (is3D()) {
+        Arrays.fill(tessGeo.lineColors,firstLineVertex,lastLineVertex + 1,PGL.javaToNativeARGB(strokeColor));
+        root.setModifiedLineColors(firstLineVertex,lastLineVertex);
+      }
+ else       if (is2D()) {
+      }
     }
     if (havePoints) {
-      Arrays.fill(tessGeo.pointColors,firstPointVertex,lastPointVertex + 1,PGL.javaToNativeARGB(strokeColor));
-      root.setModifiedPointColors(firstPointVertex,lastPointVertex);
+      if (is3D()) {
+        Arrays.fill(tessGeo.pointColors,firstPointVertex,lastPointVertex + 1,PGL.javaToNativeARGB(strokeColor));
+        root.setModifiedPointColors(firstPointVertex,lastPointVertex);
+      }
+ else       if (is2D()) {
+      }
     }
   }
 }
