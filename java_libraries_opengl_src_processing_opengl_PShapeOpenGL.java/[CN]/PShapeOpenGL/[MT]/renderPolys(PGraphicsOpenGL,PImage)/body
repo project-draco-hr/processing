@@ -1,24 +1,31 @@
 {
   PTexture tex=null;
-  boolean lights=false;
+  if (textureImage != null) {
+    tex=g.getTexture(textureImage);
+    if (tex != null) {
+      pgl.enableTexturing(tex.glTarget);
+      pgl.glBindTexture(tex.glTarget,tex.glID);
+    }
+  }
+  PolyShader shader=null;
   IndexCache cache=tessGeo.polyIndexCache;
   for (int n=firstPolyIndexCache; n <= lastPolyIndexCache; n++) {
-    if (n < firstLineIndexCache && n < firstPointIndexCache) {
-      if (textureImage != null) {
-        tex=g.getTexture(textureImage);
-        if (tex != null) {
-          pgl.enableTexturing(tex.glTarget);
-          pgl.glBindTexture(tex.glTarget,tex.glID);
-        }
-      }
-      lights=g.lights;
+    if (tex != null && (is3D() || n < firstLineIndexCache && n < firstPointIndexCache)) {
+      shader=g.getPolyShader(g.lights,tex != null);
+      shader.start();
     }
  else {
-      tex=null;
-      lights=false;
+      if (tex != null) {
+        pgl.glBindTexture(tex.glTarget,0);
+        pgl.disableTexturing(tex.glTarget);
+        tex=null;
+      }
+      if (shader != null) {
+        shader.stop();
+      }
+      shader=g.getPolyShader(g.lights,false);
+      shader.start();
     }
-    PolyShader shader=g.getPolyShader(lights,tex != null);
-    shader.start();
     int ioffset=cache.indexOffset[n];
     int icount=cache.indexCount[n];
     int voffset=cache.vertexOffset[n];
@@ -38,10 +45,10 @@
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glPolyIndexBufferID);
     pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
-    shader.stop();
-    if (tex != null) {
-      pgl.glBindTexture(tex.glTarget,0);
-      pgl.disableTexturing(tex.glTarget);
-    }
+  }
+  shader.stop();
+  if (tex != null) {
+    pgl.glBindTexture(tex.glTarget,0);
+    pgl.disableTexturing(tex.glTarget);
   }
 }
