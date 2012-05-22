@@ -6,8 +6,23 @@
       c3d.updateRoot(root);
       root.tessellated=false;
       tessellated=false;
-      if (c3d.texture != null) {
-        addTexture(c3d.texture);
+      if (c3d.family == GROUP) {
+        if (c3d.textures != null) {
+          for (          PImage tex : c3d.textures) {
+            addTexture(tex);
+          }
+        }
+        if (c3d.strokedTexture) {
+          strokedTexture(true);
+        }
+      }
+ else {
+        if (c3d.texture != null) {
+          addTexture(c3d.texture);
+          if (c3d.stroke) {
+            strokedTexture(true);
+          }
+        }
       }
     }
  else {
