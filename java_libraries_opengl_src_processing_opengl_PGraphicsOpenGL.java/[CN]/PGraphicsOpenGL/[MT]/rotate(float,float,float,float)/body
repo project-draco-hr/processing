@@ -1,18 +1,3 @@
 {
-  if (hints[DISABLE_TRANSFORM_CACHE]) {
-    flush();
-  }
-  float norm2=v0 * v0 + v1 * v1 + v2 * v2;
-  if (norm2 < EPSILON) {
-    return;
-  }
-  if (Math.abs(norm2 - 1) > EPSILON) {
-    float norm=PApplet.sqrt(norm2);
-    v0/=norm;
-    v1/=norm;
-    v2/=norm;
-  }
-  modelview.rotate(angle,v0,v1,v2);
-  invRotate(modelviewInv,angle,v0,v1,v2);
-  calcProjmodelview();
+  rotateImpl(angle,v0,v1,v2);
 }
