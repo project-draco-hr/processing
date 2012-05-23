@@ -1,7 +1,6 @@
 {
   if (vertices == null)   return;
   inGeo.setMaterial(fillColor,strokeColor,strokeWeight,ambientColor,specularColor,emissiveColor,shininess);
-  boolean insideContour=false;
   if (vertexCodeCount == 0) {
     if (vertices[0].length == 2) {
       for (int i=0; i < vertexCount; i++) {
@@ -16,7 +15,7 @@
   }
  else {
     int index=0;
-    int code=VERTEX;
+    int code=BREAK;
     if (vertices[0].length == 2) {
       for (int j=0; j < vertexCodeCount; j++) {
 switch (vertexCodes[j]) {
@@ -40,10 +39,7 @@ inGeo.addCurveVertex(vertices[index][X],vertices[index][Y],0,fill,stroke,curveDe
 code=VERTEX;
 index++;
 case BREAK:
-if (insideContour) {
 code=BREAK;
-}
-insideContour=true;
 }
 }
 }
@@ -70,10 +66,7 @@ inGeo.addCurveVertex(vertices[index][X],vertices[index][Y],vertices[index][Z],fi
 code=VERTEX;
 index++;
 case BREAK:
-if (insideContour) {
 code=BREAK;
-}
-insideContour=true;
 }
 }
 }
