@@ -5,7 +5,17 @@
   int[] color=tessGeo.polyColors;
   float[] uv=tessGeo.polyTexcoords;
   short[] indices=tessGeo.polyIndices;
-  PShape tess=pg.createShape(TRIANGLES);
+  PShape tess;
+  if (is3D()) {
+    tess=PGraphics3D.createShapeImpl(pg.parent,TRIANGLES);
+  }
+ else   if (is2D()) {
+    tess=PGraphics2D.createShapeImpl(pg.parent,TRIANGLES);
+  }
+ else {
+    PGraphics.showWarning("This shape is not either 2D or 3D!");
+    return null;
+  }
   tess.noStroke();
   IndexCache cache=tessGeo.polyIndexCache;
   for (int n=firstPolyIndexCache; n <= lastPolyIndexCache; n++) {

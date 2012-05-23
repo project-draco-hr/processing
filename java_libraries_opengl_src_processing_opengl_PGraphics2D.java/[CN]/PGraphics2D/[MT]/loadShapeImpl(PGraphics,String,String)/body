@@ -1,0 +1,23 @@
+{
+  PShapeSVG svg=null;
+  if (extension.equals("svg")) {
+    svg=new PShapeSVG(pg.parent,filename);
+  }
+ else   if (extension.equals("svgz")) {
+    try {
+      InputStream input=new GZIPInputStream(pg.parent.createInput(filename));
+      XML xml=new XML(PApplet.createReader(input));
+      svg=new PShapeSVG(xml);
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+  }
+  if (svg != null) {
+    PShape2D p2d=PShape2D.createShape(pg.parent,svg);
+    return p2d;
+  }
+ else {
+    return null;
+  }
+}
