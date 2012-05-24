@@ -21,8 +21,13 @@
           }
         }
       }
-      if (i == 0)       firstPointVertex=child.firstPointVertex;
-      if (i == childCount - 1)       lastPointVertex=child.lastPointVertex;
+      if (-1 < child.firstPointVertex) {
+        if (firstPointVertex == -1)         firstPointVertex=Integer.MAX_VALUE;
+        firstPointVertex=PApplet.min(firstPointVertex,child.firstPointVertex);
+      }
+      if (-1 < child.lastPointVertex) {
+        lastPointVertex=PApplet.max(lastPointVertex,child.lastPointVertex);
+      }
     }
     lastPointIndexCache=gindex;
   }

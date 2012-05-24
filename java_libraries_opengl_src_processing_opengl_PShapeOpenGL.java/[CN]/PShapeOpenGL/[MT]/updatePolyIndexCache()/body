@@ -21,8 +21,13 @@
           }
         }
       }
-      if (i == 0)       firstPolyVertex=child.firstPolyVertex;
-      if (i == childCount - 1)       lastPolyVertex=child.lastPolyVertex;
+      if (-1 < child.firstPolyVertex) {
+        if (firstPolyVertex == -1)         firstPolyVertex=Integer.MAX_VALUE;
+        firstPolyVertex=PApplet.min(firstPolyVertex,child.firstPolyVertex);
+      }
+      if (-1 < child.lastPolyVertex) {
+        lastPolyVertex=PApplet.max(lastPolyVertex,child.lastPolyVertex);
+      }
     }
     lastPolyIndexCache=gindex;
   }
