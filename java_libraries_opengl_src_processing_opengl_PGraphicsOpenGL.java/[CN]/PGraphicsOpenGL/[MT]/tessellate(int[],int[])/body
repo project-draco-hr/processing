@@ -7,7 +7,6 @@
       inGeo.addEdge(i0,i1,n == 0,n == nedges - 1);
     }
   }
-  tessellator.set3D(is3D());
   tessellator.setInGeometry(inGeo);
   tessellator.setTessGeometry(tessGeo);
   tessellator.setFill(fill || textureImage != null);
@@ -17,6 +16,8 @@
   tessellator.setStrokeCap(strokeCap);
   tessellator.setStrokeJoin(strokeJoin);
   tessellator.setTexCache(texCache,textureImage0,textureImage);
+  tessellator.setTransform(modelview);
+  tessellator.set3D(is3D());
   if (stroke && defaultEdges && edges == null)   inGeo.addTrianglesEdges();
   if (normalMode == NORMAL_MODE_AUTO)   inGeo.calcTrianglesNormals();
   tessellator.tessellateTriangles(indices);

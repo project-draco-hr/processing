@@ -1,12 +1,16 @@
 {
+  int nInVert=in.getNumEdgeVertices();
   if (noCapsJoins(nInVert)) {
+    int nInInd=in.getNumEdgeIndices();
     tess.polyVertexCheck(nInVert);
     tess.polyIndexCheck(nInInd);
     int index=in.renderMode == RETAINED ? tess.polyIndexCache.addNew() : tess.polyIndexCache.getLast();
     firstLineIndexCache=index;
     for (int i=in.firstEdge; i <= in.lastEdge; i++) {
       int[] edge=in.edges[i];
-      index=addLine2D(edge[0],edge[1],index,true);
+      int i0=edge[0];
+      int i1=edge[1];
+      index=addLine2D(i0,i1,index,true);
     }
     lastLineIndexCache=lastPolyIndexCache=index;
   }
