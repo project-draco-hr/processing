@@ -17,14 +17,20 @@
     if (offscreenMultisample) {
       offscreenFramebufferMultisample.copy(offscreenFramebuffer);
     }
-    if (!pgl.initialized || !pg.pgl.initialized || parent.frameCount == 0) {
+    if (!pgl.initialized || !pgPrimary.pgl.initialized || parent.frameCount == 0) {
       saveSurfaceToPixels();
       restoreSurface=true;
     }
     popFramebuffer();
-    pgl.endOffscreenDraw(pg.clearColorBuffer0);
-    pg.restoreGL();
+    pgl.endOffscreenDraw(pgPrimary.clearColorBuffer0);
+    pgPrimary.restoreGL();
   }
   drawing=false;
+  if (pgCurrent == pgPrimary) {
+    pgCurrent=null;
+  }
+ else {
+    pgCurrent=pgPrimary;
+  }
   report("bot endDraw()");
 }

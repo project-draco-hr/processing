@@ -3,6 +3,10 @@
     showWarning("P3D: Already called beginDraw().");
     return;
   }
+  if (pgCurrent != pgPrimary && this != pgPrimary) {
+    showWarning("P3D: Already called beginDraw() for another P3D object.");
+    return;
+  }
   if (!glParamsRead) {
     getGLParameters();
   }
@@ -31,10 +35,12 @@
  else {
       setFramebuffer(offscreenFramebuffer);
     }
-    pgl.updateOffscreen(pg.pgl);
+    pgl.updateOffscreen(pgPrimary.pgl);
     pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
   }
   report("top beginDraw()");
+  drawing=true;
+  pgCurrent=this;
   inGeo.clear();
   tessGeo.clear();
   texCache.clear();
@@ -77,8 +83,8 @@
   if (resized) {
     background(0);
     if (texture != null) {
-      this.removeCache(pg);
-      this.removeParams(pg);
+      this.removeCache(pgPrimary);
+      this.removeParams(pgPrimary);
       texture=null;
       loadTexture();
     }
@@ -111,7 +117,7 @@
     pgl.beginOnscreenDraw(clearColorBuffer);
   }
  else {
-    pgl.beginOffscreenDraw(pg.clearColorBuffer);
+    pgl.beginOffscreenDraw(pgPrimary.clearColorBuffer);
     offscreenFramebuffer.setColorBuffer(texture);
   }
   if (restoreSurface) {
@@ -124,7 +130,6 @@
  else {
     pgl.glDepthMask(true);
   }
-  drawing=true;
   pixelsOp=OP_NONE;
   modified=false;
   setgetPixels=false;
