@@ -37,21 +37,20 @@
       int ioffset=cache.indexOffset[n];
       int icount=cache.indexCount[n];
       int vcount=cache.vertexCount[n];
-      if (PGL.MAX_VERTEX_INDEX1 <= root.polyVertexRel + vcount || (is2D() && startStrokeCache(n))) {
+      if (PGL.MAX_VERTEX_INDEX1 <= root.polyVertexRel + vcount || (is2D() && startStrokedTex(n))) {
         root.polyVertexRel=0;
         root.polyVertexOffset=root.polyVertexAbs;
         cache.indexOffset[n]=root.polyIndexOffset;
-        if (is2D())         firstStrokeVertex(n);
       }
  else       tessGeo.incPolyIndices(ioffset,ioffset + icount - 1,root.polyVertexRel);
       cache.vertexOffset[n]=root.polyVertexOffset;
+      if (is2D())       setFirstStrokeVertex(n,lastPolyVertex);
       root.polyIndexOffset+=icount;
       root.polyVertexAbs+=vcount;
       root.polyVertexRel+=vcount;
       lastPolyVertex+=vcount;
-      if (is2D())       incStrokeVertex(vcount);
     }
     lastPolyVertex--;
-    if (is2D())     incStrokeVertex(-1);
+    if (is2D())     setLastStrokeVertex(lastPolyVertex);
   }
 }
