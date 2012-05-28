@@ -12,14 +12,29 @@
  else   if (glFormat == PGL.GL_ALPHA) {
     res.format=ALPHA;
   }
-  if (glMinFilter == PGL.GL_NEAREST) {
+  if (glMagFilter == PGL.GL_NEAREST && glMinFilter == PGL.GL_NEAREST) {
     res.sampling=POINT;
+    res.mipmaps=false;
   }
- else   if (glMinFilter == PGL.GL_LINEAR) {
+ else   if (glMagFilter == PGL.GL_NEAREST && glMinFilter == PGL.GL_LINEAR) {
+    res.sampling=LINEAR;
+    res.mipmaps=false;
+  }
+ else   if (glMagFilter == PGL.GL_NEAREST && glMinFilter == PGL.GL_LINEAR_MIPMAP_NEAREST) {
+    res.sampling=LINEAR;
+    res.mipmaps=true;
+  }
+ else   if (glMagFilter == PGL.GL_LINEAR && glMinFilter == PGL.GL_LINEAR) {
     res.sampling=BILINEAR;
+    res.mipmaps=false;
   }
- else   if (glMinFilter == PGL.GL_LINEAR_MIPMAP_LINEAR) {
+ else   if (glMagFilter == PGL.GL_LINEAR && glMinFilter == PGL.GL_LINEAR_MIPMAP_NEAREST) {
+    res.sampling=BILINEAR;
+    res.mipmaps=true;
+  }
+ else   if (glMagFilter == PGL.GL_LINEAR && glMinFilter == PGL.GL_LINEAR_MIPMAP_LINEAR) {
     res.sampling=TRILINEAR;
+    res.mipmaps=true;
   }
   if (glWrapS == PGL.GL_CLAMP_TO_EDGE) {
     res.wrapU=CLAMP;

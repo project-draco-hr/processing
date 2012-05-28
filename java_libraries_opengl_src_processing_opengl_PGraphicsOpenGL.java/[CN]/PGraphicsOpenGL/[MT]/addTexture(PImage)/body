@@ -1,7 +1,31 @@
 {
   PTexture.Parameters params=(PTexture.Parameters)img.getParams(pgPrimary);
   if (params == null) {
-    params=PTexture.newParameters();
+    params=new PTexture.Parameters();
+    if (hints[DISABLE_TEXTURE_MIPMAPS]) {
+      params.mipmaps=false;
+    }
+ else {
+      params.mipmaps=true;
+    }
+    if (textureQuality == LOW) {
+      params.sampling=POINT;
+    }
+ else     if (textureQuality == MEDIUM) {
+      params.sampling=LINEAR;
+    }
+ else     if (textureQuality == HIGH) {
+      params.sampling=BILINEAR;
+    }
+ else     if (textureQuality == BEST) {
+      if (params.mipmaps) {
+        params.sampling=TRILINEAR;
+      }
+ else {
+        params.sampling=BILINEAR;
+        PGraphics.showWarning("BEST texture quality requires mipmaps, will switch to HIGH.");
+      }
+    }
     params.wrapU=textureWrap;
     params.wrapV=textureWrap;
     img.setParams(pgPrimary,params);

@@ -10,7 +10,13 @@
     h=PApplet.min(PGraphicsOpenGL.maxTextureSize,512,maxTexHeight / 4);
     resize=false;
   }
-  PTexture tex=new PTexture(parent,w,h,new PTexture.Parameters(ARGB,BILINEAR));
+  PTexture tex;
+  if (is3D) {
+    tex=new PTexture(parent,w,h,new PTexture.Parameters(ARGB,BILINEAR,false));
+  }
+ else {
+    tex=new PTexture(parent,w,h,new PTexture.Parameters(ARGB,LINEAR,false));
+  }
   if (textures == null) {
     textures=new PTexture[1];
     textures[0]=tex;
