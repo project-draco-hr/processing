@@ -12,13 +12,12 @@
   if (DEBUG)   println("display metrics: " + dm);
   int sw=sketchWidth();
   int sh=sketchHeight();
-  if (sketchRenderer().equals(P2D)) {
-    surfaceView=new SketchSurfaceView2D(this,sw,sh);
+  if (sketchRenderer().equals(JAVA2D)) {
+    surfaceView=new SketchSurfaceView(this,sw,sh);
   }
- else   if (sketchRenderer().equals(P3D)) {
-    surfaceView=new SketchSurfaceView3D(this,sw,sh);
+ else   if (sketchRenderer().equals(P2D) || sketchRenderer().equals(P3D)) {
+    surfaceView=new SketchSurfaceViewGL(this,sw,sh);
   }
-  g=((SketchSurfaceView)surfaceView).getGraphics();
   if (sw == displayWidth && sh == displayHeight) {
     window.setContentView(surfaceView);
   }
