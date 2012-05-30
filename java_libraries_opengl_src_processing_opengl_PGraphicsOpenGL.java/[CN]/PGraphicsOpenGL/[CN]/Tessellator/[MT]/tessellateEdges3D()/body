@@ -1,13 +1,19 @@
 {
-  int nInVert=in.getNumEdgeVertices();
-  int nInInd=in.getNumEdgeIndices();
+  int nInVert=in.getNumEdgeVertices(true);
+  int nInInd=in.getNumEdgeIndices(true);
   tess.lineVertexCheck(nInVert);
   tess.lineIndexCheck(nInInd);
   int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
   firstLineIndexCache=index;
+  short[] lastInd={-1,-1};
   for (int i=in.firstEdge; i <= in.lastEdge; i++) {
     int[] edge=in.edges[i];
-    index=addLine3D(edge[0],edge[1],index,true);
+    int i0=edge[0];
+    int i1=edge[1];
+    index=addLine3D(i0,i1,index,lastInd,true);
+    if (edge[2] == EDGE_STOP || edge[2] == EDGE_SINGLE) {
+      lastInd[0]=lastInd[1]=-1;
+    }
   }
   lastLineIndexCache=index;
 }
