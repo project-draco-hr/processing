@@ -3,6 +3,10 @@
     showWarning("P3D: Already called beginDraw().");
     return;
   }
+  if (pgCurrent != pgPrimary && this != pgPrimary) {
+    showWarning("P3D: Already called beginDraw() for another P3D object.");
+    return;
+  }
   if (!glParamsRead) {
     getGLParameters();
   }
@@ -31,10 +35,12 @@
  else {
       setFramebuffer(offscreenFramebuffer);
     }
-    pgl.updateOffscreen(pg.pgl);
+    pgl.updateOffscreen(pgPrimary.pgl);
     pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
   }
   report("top beginDraw()");
+  drawing=true;
+  pgCurrent=this;
   inGeo.clear();
   tessGeo.clear();
   texCache.clear();
@@ -56,22 +62,19 @@
   if (primarySurface) {
     int[] temp=new int[1];
     pgl.glGetIntegerv(PGL.GL_SAMPLES,temp,0);
-    if (antialias != temp[0] && 1 < temp[0] && 1 < antialias) {
-      antialias=temp[0];
+    if (quality != temp[0] && 1 < temp[0] && 1 < quality) {
+      quality=temp[0];
     }
   }
-  if (antialias < 2) {
+  if (quality < 2) {
     pgl.glDisable(PGL.GL_MULTISAMPLE);
-    pgl.glEnable(PGL.GL_POINT_SMOOTH);
-    pgl.glEnable(PGL.GL_LINE_SMOOTH);
-    pgl.glEnable(PGL.GL_POLYGON_SMOOTH);
   }
  else {
     pgl.glEnable(PGL.GL_MULTISAMPLE);
-    pgl.glDisable(PGL.GL_POINT_SMOOTH);
-    pgl.glDisable(PGL.GL_LINE_SMOOTH);
-    pgl.glDisable(PGL.GL_POLYGON_SMOOTH);
   }
+  pgl.glDisable(PGL.GL_POINT_SMOOTH);
+  pgl.glDisable(PGL.GL_LINE_SMOOTH);
+  pgl.glDisable(PGL.GL_POLYGON_SMOOTH);
   viewport[0]=0;
   viewport[1]=0;
   viewport[2]=width;
@@ -80,8 +83,8 @@
   if (resized) {
     background(0);
     if (texture != null) {
-      this.removeCache(pg);
-      this.removeParams(pg);
+      this.removeCache(pgPrimary);
+      this.removeParams(pgPrimary);
       texture=null;
       loadTexture();
     }
@@ -97,9 +100,11 @@
     modelviewInv.set(cameraInv);
     calcProjmodelview();
   }
-  noLights();
-  lightFalloff(1,0,0);
-  lightSpecular(0,0,0);
+  if (is3D()) {
+    noLights();
+    lightFalloff(1,0,0);
+    lightSpecular(0,0,0);
+  }
   pgl.glFrontFace(PGL.GL_CW);
   pgl.glDisable(PGL.GL_CULL_FACE);
   pgl.glActiveTexture(PGL.GL_TEXTURE0);
@@ -112,7 +117,7 @@
     pgl.beginOnscreenDraw(clearColorBuffer);
   }
  else {
-    pgl.beginOffscreenDraw(pg.clearColorBuffer);
+    pgl.beginOffscreenDraw(pgPrimary.clearColorBuffer);
     offscreenFramebuffer.setColorBuffer(texture);
   }
   if (restoreSurface) {
@@ -125,7 +130,6 @@
  else {
     pgl.glDepthMask(true);
   }
-  drawing=true;
   pixelsOp=OP_NONE;
   modified=false;
   setgetPixels=false;

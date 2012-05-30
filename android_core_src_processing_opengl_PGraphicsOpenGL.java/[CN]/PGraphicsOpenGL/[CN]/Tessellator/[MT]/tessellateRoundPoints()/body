@@ -1,52 +1,19 @@
 {
   int nInVert=in.lastVertex - in.firstVertex + 1;
   if (stroke && 1 <= nInVert) {
-    int perim=PApplet.max(MIN_POINT_ACCURACY,(int)(TWO_PI * strokeWeight / 20));
-    int nPtVert=perim + 1;
+    int nPtVert=PApplet.max(MIN_POINT_ACCURACY,(int)(TWO_PI * strokeWeight / POINT_ACCURACY_FACTOR)) + 1;
     if (PGL.MAX_VERTEX_INDEX1 <= nPtVert) {
       throw new RuntimeException("P3D: error in point tessellation.");
     }
     int nvertTot=nPtVert * nInVert;
     int nindTot=3 * (nPtVert - 1) * nInVert;
-    tess.pointVertexCheck(nvertTot);
-    tess.pointIndexCheck(nindTot);
-    int vertIdx=tess.firstPointVertex;
-    int attribIdx=tess.firstPointVertex;
-    int indIdx=tess.firstPointIndex;
-    IndexCache cache=tess.pointIndexCache;
-    int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
-    firstPointIndexCache=index;
-    for (int i=in.firstVertex; i <= in.lastVertex; i++) {
-      int count=cache.vertexCount[index];
-      if (PGL.MAX_VERTEX_INDEX1 <= count + nPtVert) {
-        index=cache.addNew();
-        count=0;
-      }
-      for (int k=0; k < nPtVert; k++) {
-        tess.putPointVertex(in,i,vertIdx);
-        vertIdx++;
-      }
-      tess.pointSizes[2 * attribIdx + 0]=0;
-      tess.pointSizes[2 * attribIdx + 1]=0;
-      attribIdx++;
-      float val=0;
-      float inc=(float)SINCOS_LENGTH / perim;
-      for (int k=0; k < perim; k++) {
-        tess.pointSizes[2 * attribIdx + 0]=0.5f * cosLUT[(int)val] * strokeWeight;
-        tess.pointSizes[2 * attribIdx + 1]=0.5f * sinLUT[(int)val] * strokeWeight;
-        val=(val + inc) % SINCOS_LENGTH;
-        attribIdx++;
-      }
-      for (int k=1; k < nPtVert - 1; k++) {
-        tess.pointIndices[indIdx++]=(short)(count + 0);
-        tess.pointIndices[indIdx++]=(short)(count + k);
-        tess.pointIndices[indIdx++]=(short)(count + k + 1);
-      }
-      tess.pointIndices[indIdx++]=(short)(count + 0);
-      tess.pointIndices[indIdx++]=(short)(count + 1);
-      tess.pointIndices[indIdx++]=(short)(count + nPtVert - 1);
-      cache.incCounts(index,3 * (nPtVert - 1),nPtVert);
+    if (is3D) {
+      tessellateRoundPoints3D(nvertTot,nindTot,nPtVert);
     }
-    lastPointIndexCache=index;
+ else     if (is2D) {
+      beginNoTex();
+      tessellateRoundPoints2D(nvertTot,nindTot,nPtVert);
+      endNoTex();
+    }
   }
 }

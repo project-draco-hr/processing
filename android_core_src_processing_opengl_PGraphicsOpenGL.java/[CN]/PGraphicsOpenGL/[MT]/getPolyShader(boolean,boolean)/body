@@ -1,0 +1,47 @@
+{
+  PolyShader shader;
+  if (lit) {
+    if (tex) {
+      if (defPolyFullShader == null || defPolyFullShader.contextIsOutdated()) {
+        defPolyFullShader=new PolyFullShader(parent,defPolyFullShaderVertURL,defPolyTexShaderFragURL);
+      }
+      if (polyFullShader == null || polyFullShader.contextIsOutdated()) {
+        polyFullShader=defPolyFullShader;
+      }
+      shader=polyFullShader;
+    }
+ else {
+      if (defPolyLightShader == null || defPolyLightShader.contextIsOutdated()) {
+        defPolyLightShader=new PolyLightShader(parent,defPolyLightShaderVertURL,defPolyNoTexShaderFragURL);
+      }
+      if (polyLightShader == null || polyLightShader.contextIsOutdated()) {
+        polyLightShader=defPolyLightShader;
+      }
+      shader=polyLightShader;
+    }
+  }
+ else {
+    if (tex) {
+      if (defPolyTexShader == null || defPolyTexShader.contextIsOutdated()) {
+        defPolyTexShader=new PolyTexShader(parent,defPolyTexShaderVertURL,defPolyTexShaderFragURL);
+      }
+      if (polyTexShader == null || polyTexShader.contextIsOutdated()) {
+        polyTexShader=defPolyTexShader;
+      }
+      shader=polyTexShader;
+    }
+ else {
+      if (defPolyFlatShader == null || defPolyFlatShader.contextIsOutdated()) {
+        defPolyFlatShader=new PolyFlatShader(parent,defPolyFlatShaderVertURL,defPolyNoTexShaderFragURL);
+      }
+      if (polyFlatShader == null || polyFlatShader.contextIsOutdated()) {
+        polyFlatShader=defPolyFlatShader;
+      }
+      shader=polyFlatShader;
+    }
+  }
+  shader.setRenderer(this);
+  shader.loadAttributes();
+  shader.loadUniforms();
+  return shader;
+}

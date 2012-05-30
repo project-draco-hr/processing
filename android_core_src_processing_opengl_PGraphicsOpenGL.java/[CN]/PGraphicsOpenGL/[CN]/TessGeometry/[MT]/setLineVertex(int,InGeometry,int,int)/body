@@ -1,0 +1,28 @@
+{
+  int index;
+  index=3 * inIdx0;
+  float x0=in.vertices[index++];
+  float y0=in.vertices[index++];
+  float z0=in.vertices[index];
+  if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
+    PMatrix3D mm=modelview;
+    index=4 * tessIdx;
+    lineVertices[index++]=x0 * mm.m00 + y0 * mm.m01 + z0 * mm.m02 + mm.m03;
+    lineVertices[index++]=x0 * mm.m10 + y0 * mm.m11 + z0 * mm.m12 + mm.m13;
+    lineVertices[index++]=x0 * mm.m20 + y0 * mm.m21 + z0 * mm.m22 + mm.m23;
+    lineVertices[index]=x0 * mm.m30 + y0 * mm.m31 + z0 * mm.m32 + mm.m33;
+  }
+ else {
+    index=4 * tessIdx;
+    lineVertices[index++]=x0;
+    lineVertices[index++]=y0;
+    lineVertices[index++]=z0;
+    lineVertices[index]=1;
+  }
+  lineColors[tessIdx]=rgba;
+  index=4 * tessIdx;
+  lineAttribs[index++]=0;
+  lineAttribs[index++]=0;
+  lineAttribs[index++]=0;
+  lineAttribs[index]=0;
+}

@@ -1,0 +1,64 @@
+{
+  PTexture tex=null;
+  if (textureImage != null) {
+    tex=g.getTexture(textureImage);
+    if (tex != null) {
+      pgl.enableTexturing(tex.glTarget);
+      pgl.glBindTexture(tex.glTarget,tex.glID);
+    }
+  }
+  boolean renderingFill=false, renderingStroke=false;
+  PolyShader shader=null;
+  IndexCache cache=tessGeo.polyIndexCache;
+  for (int n=firstPolyIndexCache; n <= lastPolyIndexCache; n++) {
+    if (is3D() || (tex != null && (firstLineIndexCache == -1 || n < firstLineIndexCache) && (firstPointIndexCache == -1 || n < firstPointIndexCache))) {
+      if (!renderingFill) {
+        shader=g.getPolyShader(g.lights,tex != null);
+        shader.start();
+        renderingFill=true;
+      }
+    }
+ else {
+      if (!renderingStroke) {
+        if (tex != null) {
+          pgl.glBindTexture(tex.glTarget,0);
+          pgl.disableTexturing(tex.glTarget);
+          tex=null;
+        }
+        if (shader != null && shader.active()) {
+          shader.stop();
+        }
+        shader=g.getPolyShader(g.lights,false);
+        shader.start();
+        renderingFill=false;
+        renderingStroke=true;
+      }
+    }
+    int ioffset=cache.indexOffset[n];
+    int icount=cache.indexCount[n];
+    int voffset=cache.vertexOffset[n];
+    shader.setVertexAttribute(root.glPolyVertexBufferID,4,PGL.GL_FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
+    shader.setColorAttribute(root.glPolyColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+    if (g.lights) {
+      shader.setNormalAttribute(root.glPolyNormalBufferID,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setAmbientAttribute(root.glPolyAmbientBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setSpecularAttribute(root.glPolySpecularBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setEmissiveAttribute(root.glPolyEmissiveBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setShininessAttribute(root.glPolyShininessBufferID,1,PGL.GL_FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
+    }
+    if (tex != null) {
+      shader.setTexcoordAttribute(root.glPolyTexcoordBufferID,2,PGL.GL_FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setTexture(tex);
+    }
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glPolyIndexBufferID);
+    pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+  }
+  if (shader != null && shader.active()) {
+    shader.stop();
+  }
+  if (tex != null) {
+    pgl.glBindTexture(tex.glTarget,0);
+    pgl.disableTexturing(tex.glTarget);
+  }
+}

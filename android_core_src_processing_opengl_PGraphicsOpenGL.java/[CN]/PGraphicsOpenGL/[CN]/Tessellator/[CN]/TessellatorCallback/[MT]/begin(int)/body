@@ -1,8 +1,10 @@
 {
-  cache=tess.fillIndexCache;
-  cacheIndex=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
-  if (cacheIndex < firstFillIndexCache) {
-    firstFillIndexCache=cacheIndex;
+  cacheIndex=cache.getLast();
+  if (firstPolyIndexCache == -1) {
+    firstPolyIndexCache=cacheIndex;
+  }
+  if (strokeTess && firstLineIndexCache == -1) {
+    firstLineIndexCache=cacheIndex;
   }
   vertFirst=cache.vertexCount[cacheIndex];
   vertCount=0;

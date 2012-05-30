@@ -1,6 +1,5 @@
 {
-  firstFillIndexCache=Integer.MAX_VALUE;
-  callback.calcNormals=true;
+  callback.init(in.renderMode == RETAINED,true,false);
   int cap=strokeCap == ROUND ? LinePath.CAP_ROUND : strokeCap == PROJECT ? LinePath.CAP_SQUARE : LinePath.CAP_BUTT;
   int join=strokeJoin == ROUND ? LinePath.JOIN_ROUND : strokeJoin == BEVEL ? LinePath.JOIN_BEVEL : LinePath.JOIN_MITER;
   LinePath strokedPath=LinePath.createStrokedPath(path,strokeWeight,cap,join);
@@ -30,7 +29,7 @@ sa=(strokeColor >> 24) & 0xFF;
 sr=(strokeColor >> 16) & 0xFF;
 sg=(strokeColor >> 8) & 0xFF;
 sb=(strokeColor >> 0) & 0xFF;
-vertex=new double[]{coords[0],coords[1],0,sa,sr,sg,sb,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0};
+vertex=new double[]{coords[0],coords[1],0,sa,sr,sg,sb,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 gluTess.addVertex(vertex);
 break;
 case LinePath.SEG_CLOSE:

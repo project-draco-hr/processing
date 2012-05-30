@@ -1,0 +1,18 @@
+{
+  if (fillColor == newFillColor)   return;
+  fillColor=newFillColor;
+  if (shapeEnded && tessellated && hasPolys&& texture == null) {
+    Arrays.fill(inGeo.colors,0,inGeo.vertexCount,PGL.javaToNativeARGB(fillColor));
+    if (is3D()) {
+      Arrays.fill(tessGeo.polyColors,firstPolyVertex,lastPolyVertex + 1,PGL.javaToNativeARGB(fillColor));
+      root.setModifiedPolyColors(firstPolyVertex,lastPolyVertex);
+    }
+ else     if (is2D()) {
+      int last1=lastPolyVertex + 1;
+      if (-1 < firstLineVertex)       last1=firstLineVertex;
+      if (-1 < firstPointVertex)       last1=firstPointVertex;
+      Arrays.fill(tessGeo.polyColors,firstPolyVertex,last1,PGL.javaToNativeARGB(fillColor));
+      root.setModifiedPolyColors(firstPolyVertex,last1 - 1);
+    }
+  }
+}

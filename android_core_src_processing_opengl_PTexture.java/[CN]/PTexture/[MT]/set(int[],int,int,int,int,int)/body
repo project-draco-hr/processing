@@ -11,7 +11,7 @@
   pgl.enableTexturing(glTarget);
   pgl.glBindTexture(glTarget,glID);
   if (usingMipmaps) {
-    if (PGraphicsOpenGL.mipmapGeneration) {
+    if (PGraphicsOpenGL.autoMipmapGenSupported) {
       int[] rgbaPixels=new int[w * h];
       convertToRGBA(pixels,rgbaPixels,format,w,h);
       setTexels(rgbaPixels,x,y,w,h);
@@ -19,6 +19,10 @@
       rgbaPixels=null;
     }
  else {
+      int[] rgbaPixels=new int[w * h];
+      convertToRGBA(pixels,rgbaPixels,format,w,h);
+      setTexels(rgbaPixels,x,y,w,h);
+      rgbaPixels=null;
     }
   }
  else {

@@ -1,0 +1,16 @@
+{
+  int nvert=lineCount * 4 + (lineCount - 1);
+  int nind=lineCount * 2 * 3 + (lineCount - 1) * 2 * 3;
+  tess.lineVertexCheck(nvert);
+  tess.lineIndexCheck(nind);
+  int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
+  firstLineIndexCache=index;
+  int i0=in.firstVertex;
+  short[] lastInd={-1,-1};
+  for (int ln=0; ln < lineCount; ln++) {
+    int i1=in.firstVertex + ln + 1;
+    index=addLine3D(i0,i1,index,lastInd,false);
+    i0=i1;
+  }
+  lastLineIndexCache=index;
+}

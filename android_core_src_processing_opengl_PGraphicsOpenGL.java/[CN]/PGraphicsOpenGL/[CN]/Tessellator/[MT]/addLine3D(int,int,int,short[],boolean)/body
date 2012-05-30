@@ -1,0 +1,43 @@
+{
+  IndexCache cache=tess.lineIndexCache;
+  int count=cache.vertexCount[index];
+  boolean addBevel=lastInd != null && -1 < lastInd[0] && -1 < lastInd[1];
+  if (PGL.MAX_VERTEX_INDEX1 <= count + 4 + (addBevel ? 1 : 0)) {
+    index=cache.addNew();
+    count=0;
+  }
+  int iidx=cache.indexOffset[index] + cache.indexCount[index];
+  int vidx=cache.vertexOffset[index] + cache.vertexCount[index];
+  int color, color0;
+  float weight;
+  color0=color=constStroke ? strokeColor : in.strokeColors[i0];
+  weight=constStroke ? strokeWeight : in.strokeWeights[i0];
+  tess.setLineVertex(vidx++,in,i0,i1,color,+weight / 2);
+  tess.lineIndices[iidx++]=(short)(count + 0);
+  tess.setLineVertex(vidx++,in,i0,i1,color,-weight / 2);
+  tess.lineIndices[iidx++]=(short)(count + 1);
+  color=constStroke ? strokeColor : in.strokeColors[i1];
+  weight=constStroke ? strokeWeight : in.strokeWeights[i1];
+  tess.setLineVertex(vidx++,in,i1,i0,color,-weight / 2);
+  tess.lineIndices[iidx++]=(short)(count + 2);
+  tess.lineIndices[iidx++]=(short)(count + 2);
+  tess.lineIndices[iidx++]=(short)(count + 1);
+  tess.setLineVertex(vidx++,in,i1,i0,color,+weight / 2);
+  tess.lineIndices[iidx++]=(short)(count + 3);
+  cache.incCounts(index,6,4);
+  if (lastInd != null) {
+    if (-1 < lastInd[0] && -1 < lastInd[1]) {
+      tess.setLineVertex(vidx,in,i0,color0);
+      tess.lineIndices[iidx++]=(short)(count + 4);
+      tess.lineIndices[iidx++]=lastInd[0];
+      tess.lineIndices[iidx++]=(short)(count + 0);
+      tess.lineIndices[iidx++]=(short)(count + 4);
+      tess.lineIndices[iidx++]=lastInd[1];
+      tess.lineIndices[iidx]=(short)(count + 1);
+      cache.incCounts(index,6,1);
+    }
+    lastInd[0]=(short)(count + 2);
+    lastInd[1]=(short)(count + 3);
+  }
+  return index;
+}

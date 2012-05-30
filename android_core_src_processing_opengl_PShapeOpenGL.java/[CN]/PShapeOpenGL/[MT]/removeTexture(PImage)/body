@@ -1,0 +1,20 @@
+{
+  if (textures == null || !textures.contains(tex))   return;
+  boolean childHasTex=false;
+  for (int i=0; i < childCount; i++) {
+    PShapeOpenGL child=(PShapeOpenGL)children[i];
+    if (child.hasTexture(tex)) {
+      childHasTex=true;
+      break;
+    }
+  }
+  if (!childHasTex) {
+    textures.remove(tex);
+    if (textures.size() == 0) {
+      textures=null;
+    }
+  }
+  if (parent != null) {
+    ((PShapeOpenGL)parent).removeTexture(tex);
+  }
+}

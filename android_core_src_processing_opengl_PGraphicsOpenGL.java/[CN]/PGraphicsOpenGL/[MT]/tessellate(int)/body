@@ -7,7 +7,9 @@
   tessellator.setStrokeWeight(strokeWeight);
   tessellator.setStrokeCap(strokeCap);
   tessellator.setStrokeJoin(strokeJoin);
-  setFirstTexIndex(tessGeo.fillIndexCount,tessGeo.fillIndexCache.size - 1);
+  tessellator.setTexCache(texCache,textureImage0,textureImage);
+  tessellator.setTransform(modelview);
+  tessellator.set3D(is3D());
   if (shape == POINTS) {
     tessellator.tessellatePoints();
   }
@@ -49,5 +51,4 @@
     if (stroke && defaultEdges)     inGeo.addPolygonEdges(mode == CLOSE);
     tessellator.tessellatePolygon(false,mode == CLOSE,normalMode == NORMAL_MODE_AUTO);
   }
-  setLastTexIndex(tessGeo.lastFillIndex,tessGeo.fillIndexCache.size - 1);
 }

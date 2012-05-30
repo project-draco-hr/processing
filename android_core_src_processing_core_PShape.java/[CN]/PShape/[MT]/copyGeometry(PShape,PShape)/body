@@ -1,0 +1,24 @@
+{
+  copyMatrix(src,dest);
+  copyStyles(src,dest);
+  copyImage(src,dest);
+  if (src.style) {
+    for (int i=0; i < src.vertexCount; i++) {
+      float[] vert=src.vertices[i];
+      dest.normal(vert[NX],vert[NY],vert[NZ]);
+      dest.vertex(vert[X],vert[Y],vert[Z],vert[U],vert[V]);
+    }
+  }
+ else {
+    for (int i=0; i < src.vertexCount; i++) {
+      float[] vert=src.vertices[i];
+      if (vert[PGraphics.Z] == 0) {
+        dest.vertex(vert[X],vert[Y]);
+      }
+ else {
+        dest.vertex(vert[X],vert[Y],vert[Z]);
+      }
+    }
+  }
+  dest.end();
+}

@@ -1,0 +1,54 @@
+{
+  IndexCache cache=tessGeo.lineIndexCache;
+  if (family == GROUP) {
+    firstLineIndexCache=lastLineIndexCache=-1;
+    int gindex=-1;
+    for (int i=0; i < childCount; i++) {
+      PShapeOpenGL child=(PShapeOpenGL)children[i];
+      int first=child.firstLineIndexCache;
+      int count=-1 < first ? child.lastLineIndexCache - first + 1 : -1;
+      for (int n=first; n < first + count; n++) {
+        if (gindex == -1) {
+          gindex=cache.addNew(n);
+          firstLineIndexCache=gindex;
+        }
+ else {
+          if (cache.vertexOffset[gindex] == cache.vertexOffset[n]) {
+            cache.incCounts(gindex,cache.indexCount[n],cache.vertexCount[n]);
+          }
+ else {
+            gindex=cache.addNew(n);
+          }
+        }
+      }
+      if (-1 < child.firstLineVertex) {
+        if (firstLineVertex == -1)         firstLineVertex=Integer.MAX_VALUE;
+        firstLineVertex=PApplet.min(firstLineVertex,child.firstLineVertex);
+      }
+      if (-1 < child.lastLineVertex) {
+        lastLineVertex=PApplet.max(lastLineVertex,child.lastLineVertex);
+      }
+    }
+    lastLineIndexCache=gindex;
+  }
+ else {
+    firstLineVertex=lastLineVertex=cache.vertexOffset[firstLineIndexCache];
+    for (int n=firstLineIndexCache; n <= lastLineIndexCache; n++) {
+      int ioffset=cache.indexOffset[n];
+      int icount=cache.indexCount[n];
+      int vcount=cache.vertexCount[n];
+      if (PGL.MAX_VERTEX_INDEX1 <= root.lineVertexRel + vcount) {
+        root.lineVertexRel=0;
+        root.lineVertexOffset=root.lineVertexAbs;
+        cache.indexOffset[n]=root.lineIndexOffset;
+      }
+ else       tessGeo.incLineIndices(ioffset,ioffset + icount - 1,root.lineVertexRel);
+      cache.vertexOffset[n]=root.lineVertexOffset;
+      root.lineIndexOffset+=icount;
+      root.lineVertexAbs+=vcount;
+      root.lineVertexRel+=vcount;
+      lastLineVertex+=vcount;
+    }
+    lastLineVertex--;
+  }
+}

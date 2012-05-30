@@ -2,32 +2,13 @@
   int nInVert=in.lastVertex - in.firstVertex + 1;
   if (stroke && 2 <= nInVert) {
     int lineCount=nInVert;
-    if (is3D()) {
-      int nvert=lineCount * 4;
-      int nind=lineCount * 2 * 3;
-      tess.lineVertexCheck(nvert);
-      tess.lineIndexCheck(nind);
-      int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
-      firstLineIndexCache=index;
-      int i0=in.firstVertex;
-      for (int ln=0; ln < lineCount - 1; ln++) {
-        int i1=in.firstVertex + ln + 1;
-        index=addLine(i0,i1,index,false);
-        i0=i1;
-      }
-      index=addLine(in.lastVertex,in.firstVertex,index,false);
-      lastLineIndexCache=index;
+    if (is3D) {
+      tessellateLineLoop3D(lineCount);
     }
- else {
-      int first=in.firstVertex;
-      LinePath path=new LinePath(LinePath.WIND_NON_ZERO);
-      path.moveTo(inGeo.vertices[4 * first + 0],inGeo.vertices[4 * first + 1]);
-      for (int ln=0; ln < lineCount - 1; ln++) {
-        int i1=first + ln + 1;
-        path.lineTo(inGeo.vertices[4 * i1 + 0],inGeo.vertices[4 * i1 + 1]);
-      }
-      path.closePath();
-      tessellateLinePath(path);
+ else     if (is2D) {
+      beginNoTex();
+      tessellateLineLoop2D(lineCount);
+      endNoTex();
     }
   }
 }

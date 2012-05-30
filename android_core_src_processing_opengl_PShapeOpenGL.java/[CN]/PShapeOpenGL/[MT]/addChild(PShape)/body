@@ -1,0 +1,34 @@
+{
+  if (child instanceof PShapeOpenGL) {
+    if (family == GROUP) {
+      PShapeOpenGL c3d=(PShapeOpenGL)child;
+      super.addChild(c3d);
+      c3d.updateRoot(root);
+      markForTessellation();
+      if (c3d.family == GROUP) {
+        if (c3d.textures != null) {
+          for (          PImage tex : c3d.textures) {
+            addTexture(tex);
+          }
+        }
+        if (c3d.strokedTexture) {
+          strokedTexture(true);
+        }
+      }
+ else {
+        if (c3d.texture != null) {
+          addTexture(c3d.texture);
+          if (c3d.stroke) {
+            strokedTexture(true);
+          }
+        }
+      }
+    }
+ else {
+      PGraphics.showWarning("Cannot add child shape to non-group shape.");
+    }
+  }
+ else {
+    PGraphics.showWarning("Shape must be 3D to be added to the group.");
+  }
+}

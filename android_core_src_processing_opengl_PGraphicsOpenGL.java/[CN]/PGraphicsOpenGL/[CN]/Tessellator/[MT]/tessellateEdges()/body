@@ -1,44 +1,12 @@
 {
   if (stroke) {
-    if (is3D()) {
-      int nInVert=in.getNumLineVertices();
-      int nInInd=in.getNumLineIndices();
-      tess.lineVertexCheck(nInVert);
-      tess.lineIndexCheck(nInInd);
-      int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
-      firstLineIndexCache=index;
-      for (int i=in.firstEdge; i <= in.lastEdge; i++) {
-        int[] edge=in.edges[i];
-        index=addLine(edge[0],edge[1],index,true);
-      }
-      lastLineIndexCache=index;
+    if (is3D) {
+      tessellateEdges3D();
     }
- else {
-      LinePath path=new LinePath(LinePath.WIND_NON_ZERO);
-      for (int i=in.firstEdge; i <= in.lastEdge; i++) {
-        int[] edge=in.edges[i];
-        int i0=edge[0];
-        int i1=edge[1];
-switch (edge[2]) {
-case EDGE_MIDDLE:
-          path.lineTo(inGeo.vertices[4 * i1 + 0],inGeo.vertices[4 * i1 + 1]);
-        break;
-case EDGE_START:
-      path.moveTo(inGeo.vertices[4 * i0 + 0],inGeo.vertices[4 * i0 + 1]);
-    path.lineTo(inGeo.vertices[4 * i1 + 0],inGeo.vertices[4 * i1 + 1]);
-  break;
-case EDGE_STOP:
-path.lineTo(inGeo.vertices[4 * i1 + 0],inGeo.vertices[4 * i1 + 1]);
-path.closePath();
-break;
-case EDGE_SINGLE:
-path.moveTo(inGeo.vertices[4 * i0 + 0],inGeo.vertices[4 * i0 + 1]);
-path.lineTo(inGeo.vertices[4 * i1 + 0],inGeo.vertices[4 * i1 + 1]);
-path.closePath();
-break;
-}
-}
-tessellateLinePath(path);
-}
-}
+ else     if (is2D) {
+      beginNoTex();
+      tessellateEdges2D();
+      endNoTex();
+    }
+  }
 }

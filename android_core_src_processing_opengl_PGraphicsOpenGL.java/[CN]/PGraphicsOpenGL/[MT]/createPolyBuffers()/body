@@ -1,0 +1,38 @@
+{
+  if (!polyBuffersCreated || polyBuffersContextIsOutdated()) {
+    polyBuffersContext=pgl.getCurrentContext();
+    int sizef=INIT_VERTEX_BUFFER_SIZE * PGL.SIZEOF_FLOAT;
+    int sizei=INIT_VERTEX_BUFFER_SIZE * PGL.SIZEOF_INT;
+    int sizex=INIT_INDEX_BUFFER_SIZE * PGL.SIZEOF_INDEX;
+    glPolyVertexBufferID=createVertexBufferObject(polyBuffersContext.code());
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPolyVertexBufferID);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,null,PGL.GL_STATIC_DRAW);
+    glPolyColorBufferID=createVertexBufferObject(polyBuffersContext.code());
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPolyColorBufferID);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,null,PGL.GL_STATIC_DRAW);
+    glPolyNormalBufferID=createVertexBufferObject(polyBuffersContext.code());
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPolyNormalBufferID);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,3 * sizef,null,PGL.GL_STATIC_DRAW);
+    glPolyTexcoordBufferID=createVertexBufferObject(polyBuffersContext.code());
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPolyTexcoordBufferID);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,2 * sizef,null,PGL.GL_STATIC_DRAW);
+    glPolyAmbientBufferID=pgPrimary.createVertexBufferObject(polyBuffersContext.code());
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPolyAmbientBufferID);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,null,PGL.GL_STATIC_DRAW);
+    glPolySpecularBufferID=pgPrimary.createVertexBufferObject(polyBuffersContext.code());
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPolySpecularBufferID);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,null,PGL.GL_STATIC_DRAW);
+    glPolyEmissiveBufferID=pgPrimary.createVertexBufferObject(polyBuffersContext.code());
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPolyEmissiveBufferID);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizei,null,PGL.GL_STATIC_DRAW);
+    glPolyShininessBufferID=pgPrimary.createVertexBufferObject(polyBuffersContext.code());
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,glPolyShininessBufferID);
+    pgl.glBufferData(PGL.GL_ARRAY_BUFFER,sizef,null,PGL.GL_STATIC_DRAW);
+    pgl.glBindBuffer(PGL.GL_ARRAY_BUFFER,0);
+    glPolyIndexBufferID=createVertexBufferObject(polyBuffersContext.code());
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glPolyIndexBufferID);
+    pgl.glBufferData(PGL.GL_ELEMENT_ARRAY_BUFFER,sizex,null,PGL.GL_STATIC_DRAW);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+    polyBuffersCreated=true;
+  }
+}
