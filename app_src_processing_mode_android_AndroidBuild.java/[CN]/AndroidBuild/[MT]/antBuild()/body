@@ -1,27 +1,34 @@
 {
+  final Project p=new Project();
+  String path=buildFile.getAbsolutePath().replace('\\','/');
+  p.setUserProperty("ant.file",path);
+  p.setUserProperty("build.compiler","extJavac");
+  final DefaultLogger consoleLogger=new DefaultLogger();
+  consoleLogger.setErrorPrintStream(System.err);
+  consoleLogger.setOutputPrintStream(System.out);
+  consoleLogger.setMessageOutputLevel(Project.MSG_DEBUG);
+  p.addBuildListener(consoleLogger);
+  final DefaultLogger errorLogger=new DefaultLogger();
+  final ByteArrayOutputStream errb=new ByteArrayOutputStream();
+  final PrintStream errp=new PrintStream(errb);
+  errorLogger.setErrorPrintStream(errp);
+  final ByteArrayOutputStream outb=new ByteArrayOutputStream();
+  final PrintStream outp=new PrintStream(outb);
+  errorLogger.setOutputPrintStream(outp);
+  errorLogger.setMessageOutputLevel(Project.MSG_DEBUG);
+  p.addBuildListener(errorLogger);
   try {
-    String cp=System.getProperty("java.class.path");
-    String[] cpp=PApplet.split(cp,File.pathSeparatorChar);
-    for (int i=0; i < cpp.length; i++) {
-      cpp[i]=new File(cpp[i]).getAbsolutePath();
-    }
-    cp=PApplet.join(cpp,File.pathSeparator);
-    String[] cmd=new String[]{"java","-cp",cp,"org.apache.tools.ant.Main",target};
-    ProcessHelper helper=new ProcessHelper(tmpFolder,cmd);
-    ProcessResult pr=helper.execute();
-    if (pr.getResult() != 0) {
-      System.err.println(pr.getStderr());
-      System.out.println(pr.getStdout());
-      antBuildProblems(pr.getStdout(),pr.getStderr());
-      return false;
-    }
+    p.fireBuildStarted();
+    p.init();
+    final ProjectHelper helper=ProjectHelper.getProjectHelper();
+    p.addReference("ant.projectHelper",helper);
+    helper.parse(p,buildFile);
+    p.executeTarget(target);
+    return true;
   }
- catch (  InterruptedException e) {
-    return false;
+ catch (  final BuildException e) {
+    p.fireBuildFinished(e);
+    antBuildProblems(new String(outb.toByteArray()),new String(errb.toByteArray()));
   }
-catch (  IOException e) {
-    e.printStackTrace();
-    return false;
-  }
-  return true;
+  return false;
 }
