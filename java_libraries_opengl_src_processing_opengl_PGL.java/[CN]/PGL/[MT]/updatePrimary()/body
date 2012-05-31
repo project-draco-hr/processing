@@ -2,4 +2,45 @@
   if (!setFramerate) {
     setFramerate(targetFramerate);
   }
+  if (needFBO && colorFBO[0] == 0) {
+    numSamples=pg.quality;
+    String ext=gl.glGetString(GL.GL_EXTENSIONS);
+    if (-1 < ext.indexOf("texture_non_power_of_two")) {
+      fboWidth=pg.width;
+      fboHeight=pg.height;
+    }
+ else {
+      fboWidth=PGL.nextPowerOfTwo(pg.width);
+      fboHeight=PGL.nextPowerOfTwo(pg.height);
+    }
+    if (ext.indexOf("packed_depth_stencil") == -1 || gl2x == null) {
+      throw new RuntimeException("Catastrophic error: cannot create multisampled surface for rendering... sorry!");
+    }
+    gl.glGenTextures(1,colorTex,0);
+    gl.glBindTexture(GL.GL_TEXTURE_2D,colorTex[0]);
+    gl.glTexParameterf(GL.GL_TEXTURE_2D,GL.GL_TEXTURE_MIN_FILTER,GL.GL_NEAREST);
+    gl.glTexParameterf(GL.GL_TEXTURE_2D,GL.GL_TEXTURE_MAG_FILTER,GL.GL_NEAREST);
+    gl.glTexParameterf(GL.GL_TEXTURE_2D,GL.GL_TEXTURE_WRAP_S,GL.GL_CLAMP_TO_EDGE);
+    gl.glTexParameterf(GL.GL_TEXTURE_2D,GL.GL_TEXTURE_WRAP_T,GL.GL_CLAMP_TO_EDGE);
+    gl.glTexImage2D(GL.GL_TEXTURE_2D,0,GL.GL_RGBA,fboWidth,fboHeight,0,GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,null);
+    initTexture(GL.GL_TEXTURE_2D,GL.GL_RGBA,fboWidth,fboHeight);
+    gl.glBindTexture(GL.GL_TEXTURE_2D,0);
+    gl.glGenFramebuffers(1,colorFBO,0);
+    gl.glBindFramebuffer(GL.GL_FRAMEBUFFER,colorFBO[0]);
+    gl.glFramebufferTexture2D(GL.GL_FRAMEBUFFER,GL.GL_COLOR_ATTACHMENT0,GL.GL_TEXTURE_2D,colorTex[0],0);
+    gl.glBindFramebuffer(GL.GL_FRAMEBUFFER,0);
+    gl.glGenFramebuffers(1,multiFBO,0);
+    gl.glBindFramebuffer(GL.GL_FRAMEBUFFER,multiFBO[0]);
+    gl.glGenRenderbuffers(1,colorRenderBuffer,0);
+    gl.glBindRenderbuffer(GL.GL_RENDERBUFFER,colorRenderBuffer[0]);
+    gl2x.glRenderbufferStorageMultisample(GL.GL_RENDERBUFFER,numSamples,GL.GL_RGBA8,fboWidth,fboHeight);
+    gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,GL.GL_COLOR_ATTACHMENT0,GL.GL_RENDERBUFFER,colorRenderBuffer[0]);
+    gl.glGenRenderbuffers(1,packedDepthStencil,0);
+    gl.glBindRenderbuffer(GL.GL_RENDERBUFFER,packedDepthStencil[0]);
+    gl2x.glRenderbufferStorageMultisample(GL.GL_RENDERBUFFER,numSamples,GL.GL_DEPTH24_STENCIL8,fboWidth,fboHeight);
+    gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,GL.GL_DEPTH_ATTACHMENT,GL.GL_RENDERBUFFER,packedDepthStencil[0]);
+    gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,GL.GL_STENCIL_ATTACHMENT,GL.GL_RENDERBUFFER,packedDepthStencil[0]);
+    gl.glBindFramebuffer(GL.GL_FRAMEBUFFER,0);
+    PGraphicsOpenGL.screenFramebuffer.glFboID=colorFBO[0];
+  }
 }

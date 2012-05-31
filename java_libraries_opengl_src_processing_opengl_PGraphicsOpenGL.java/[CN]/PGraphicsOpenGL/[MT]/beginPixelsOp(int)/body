@@ -1,10 +1,12 @@
 {
   if (primarySurface) {
-    if (op == OP_READ) {
-      pgl.glReadBuffer(PGL.GL_BACK);
-    }
+    if (pgl.primaryIsDoubleBuffered()) {
+      if (op == OP_READ) {
+        pgl.glReadBuffer(PGL.GL_BACK);
+      }
  else {
-      pgl.glDrawBuffer(PGL.GL_BACK);
+        pgl.glDrawBuffer(PGL.GL_BACK);
+      }
     }
     offscreenNotCurrent=false;
   }

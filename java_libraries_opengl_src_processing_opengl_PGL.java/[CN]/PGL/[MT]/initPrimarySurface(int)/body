@@ -1,4 +1,10 @@
 {
+  needFBO=false;
+  if (1 < pg.quality && numSamples != pg.quality) {
+    needFBO=true;
+    if (colorFBO[0] != 0)     releaseFBO();
+    colorFBO[0]=0;
+  }
   if (profile == null) {
     profile=GLProfile.getDefault();
   }
@@ -18,7 +24,7 @@
     setFramerate=false;
   }
   GLCapabilities caps=new GLCapabilities(profile);
-  if (1 < antialias) {
+  if (1 < antialias && !needFBO) {
     caps.setSampleBuffers(true);
     caps.setNumSamples(antialias);
   }
