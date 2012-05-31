@@ -1,0 +1,21 @@
+{
+  if ((pixels == null) || (pixels.length != width * height)) {
+    pixels=new int[width * height];
+  }
+  int size=glWidth * glHeight;
+  if (tempFbo == null) {
+    tempFbo=new FrameBuffer(parent,glWidth,glHeight);
+  }
+  tempFbo.setColorBuffer(this);
+  pg.pushFramebuffer();
+  pg.setFramebuffer(tempFbo);
+  tempFbo.readPixels();
+  pg.popFramebuffer();
+  if (tempPixels == null) {
+    tempPixels=new int[size];
+  }
+  tempFbo.getPixels(tempPixels);
+  convertToARGB(tempPixels,pixels);
+  if (flippedX)   flipArrayOnX(pixels,1);
+  if (flippedY)   flipArrayOnY(pixels,1);
+}

@@ -1,28 +1,28 @@
 {
-  PTexture.Parameters params=(PTexture.Parameters)img.getParams(pgPrimary);
+  Texture.Parameters params=(Texture.Parameters)img.getParams(pgPrimary);
   if (params == null) {
-    params=new PTexture.Parameters();
+    params=new Texture.Parameters();
     if (hints[DISABLE_TEXTURE_MIPMAPS]) {
       params.mipmaps=false;
     }
  else {
       params.mipmaps=true;
     }
-    if (textureQuality == LOW) {
+    if (textureQuality == Texture.LOW) {
       params.sampling=POINT;
     }
- else     if (textureQuality == MEDIUM) {
-      params.sampling=LINEAR;
+ else     if (textureQuality == Texture.MEDIUM) {
+      params.sampling=Texture.LINEAR;
     }
- else     if (textureQuality == HIGH) {
-      params.sampling=BILINEAR;
+ else     if (textureQuality == Texture.HIGH) {
+      params.sampling=Texture.BILINEAR;
     }
- else     if (textureQuality == BEST) {
+ else     if (textureQuality == Texture.BEST) {
       if (params.mipmaps) {
-        params.sampling=TRILINEAR;
+        params.sampling=Texture.TRILINEAR;
       }
  else {
-        params.sampling=BILINEAR;
+        params.sampling=Texture.BILINEAR;
         PGraphics.showWarning("BEST texture quality requires mipmaps, will switch to HIGH.");
       }
     }
@@ -33,7 +33,7 @@
   if (img.parent == null) {
     img.parent=parent;
   }
-  PTexture tex=new PTexture(img.parent,img.width,img.height,params);
+  Texture tex=new Texture(img.parent,img.width,img.height,params);
   img.loadPixels();
   if (img.pixels != null)   tex.set(img.pixels);
   img.setCache(pgPrimary,tex);
