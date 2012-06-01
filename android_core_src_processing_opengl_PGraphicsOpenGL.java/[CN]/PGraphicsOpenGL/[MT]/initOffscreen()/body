@@ -10,14 +10,14 @@
     offscreenFramebufferMultisample.release();
   }
   if (PGraphicsOpenGL.fboMultisampleSupported && 1 < quality) {
-    offscreenFramebufferMultisample=new PFramebuffer(parent,texture.glWidth,texture.glHeight,quality,0,depthBits,stencilBits,depthBits == 24 && stencilBits == 8 && packedDepthStencilSupported,false);
+    offscreenFramebufferMultisample=new FrameBuffer(parent,texture.glWidth,texture.glHeight,quality,0,depthBits,stencilBits,depthBits == 24 && stencilBits == 8 && packedDepthStencilSupported,false);
     offscreenFramebufferMultisample.clear();
     offscreenMultisample=true;
-    offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
+    offscreenFramebuffer=new FrameBuffer(parent,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
   }
  else {
     quality=0;
-    offscreenFramebuffer=new PFramebuffer(parent,texture.glWidth,texture.glHeight,1,1,depthBits,stencilBits,depthBits == 24 && stencilBits == 8 && packedDepthStencilSupported,false);
+    offscreenFramebuffer=new FrameBuffer(parent,texture.glWidth,texture.glHeight,1,1,depthBits,stencilBits,depthBits == 24 && stencilBits == 8 && packedDepthStencilSupported,false);
     offscreenMultisample=false;
   }
   offscreenFramebuffer.setColorBuffer(texture);
