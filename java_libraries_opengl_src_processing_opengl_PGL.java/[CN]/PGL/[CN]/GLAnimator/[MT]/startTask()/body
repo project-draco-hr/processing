@@ -1,0 +1,20 @@
+{
+  if (null != task) {
+    return;
+  }
+  task=new TimerTask(){
+    public void run(){
+      if (GLAnimator.this.shouldRun) {
+        GLAnimator.this.animThread=Thread.currentThread();
+        display();
+synchronized (this) {
+          shouldRun=false;
+        }
+      }
+    }
+  }
+;
+  fpsCounter.resetFPSCounter();
+  shouldRun=false;
+  timer.schedule(task,0,1);
+}
