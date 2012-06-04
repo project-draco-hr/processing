@@ -1,16 +1,18 @@
 {
-  if (60 < framerate) {
-    gl.setSwapInterval(0);
-  }
- else   if (30 < framerate) {
-    gl.setSwapInterval(1);
-  }
+  if (targetFramerate != framerate) {
+    if (60 < framerate) {
+      gl.setSwapInterval(0);
+    }
+ else     if (30 < framerate) {
+      gl.setSwapInterval(1);
+    }
  else {
-    gl.setSwapInterval(2);
+      gl.setSwapInterval(2);
+    }
+    if ((60 < framerate && targetFramerate <= 60) || (framerate <= 60 && 60 < targetFramerate)) {
+      initialized=false;
+    }
+    targetFramerate=framerate;
+    setFramerate=true;
   }
-  if ((60 < framerate && targetFramerate <= 60) || (framerate <= 60 && 60 < targetFramerate)) {
-    initialized=false;
-  }
-  targetFramerate=framerate;
-  setFramerate=true;
 }
