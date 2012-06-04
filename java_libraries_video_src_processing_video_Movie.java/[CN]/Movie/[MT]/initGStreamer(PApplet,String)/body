@@ -25,14 +25,18 @@
         e.printStackTrace();
       }
     }
-    if (gplayer == null && filename.startsWith("http://")) {
-      try {
-        PApplet.println("network read");
-        gplayer=new PlayBin2("Movie Player");
-        gplayer.setURI(URI.create(filename));
-      }
- catch (      Exception e) {
-        e.printStackTrace();
+    if (gplayer == null) {
+      for (int i=0; i < supportedProtocols.length; i++) {
+        if (filename.startsWith(supportedProtocols[i] + "://")) {
+          try {
+            gplayer=new PlayBin2("Movie Player");
+            gplayer.setURI(URI.create(filename));
+            break;
+          }
+ catch (          Exception e) {
+            e.printStackTrace();
+          }
+        }
       }
     }
   }
