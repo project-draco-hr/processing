@@ -3,8 +3,8 @@
   String locPath=libPath.get();
   locPath=locPath.replace("/",System.getProperty("file.separator"));
   String[] searchPaths=null;
-  if (!globalGStreamerPath.equals("")) {
-    searchPaths=new String[]{globalGStreamerPath};
+  if (!systemGStreamerPath.equals("")) {
+    searchPaths=new String[]{systemGStreamerPath};
   }
   if (searchPaths == null) {
     String lpaths=System.getProperty("java.library.path");
@@ -14,7 +14,7 @@
   for (int i=0; i < searchPaths.length; i++) {
     String path=searchPaths[i];
     if ((locPath.equals("") || path.indexOf(locPath) == -1) && libgstreamerPresent(path,"libgstreamer")) {
-      globalGStreamerPath=path;
+      systemGStreamerPath=path;
       return true;
     }
   }

@@ -2,14 +2,12 @@
   if (fps <= 0) {
     fps=getSourceFrameRate();
   }
-  loadPixels();
   if (useBufferSink) {
     if (natBuffer == null) {
       return;
     }
     if (firstFrame) {
       super.init(bufWidth,bufHeight,ARGB);
-      loadPixels();
       firstFrame=false;
     }
     if (bufferSink == null) {
@@ -34,7 +32,7 @@
       return;
     }
     if (firstFrame) {
-      resize(bufWidth,bufHeight);
+      super.init(bufWidth,bufHeight,RGB);
       firstFrame=false;
     }
     int[] temp=pixels;
