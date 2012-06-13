@@ -1,8 +1,10 @@
 {
-  if ((pixels == null) || (pixels.length != width * height)) {
-    pixels=new int[width * height];
+  if (pixels == null) {
+    throw new RuntimeException("Trying to copy texture to null pixels array");
   }
-  int size=glWidth * glHeight;
+  if (pixels.length != width * height) {
+    throw new RuntimeException("Trying to copy texture to pixels array of wrong size");
+  }
   if (tempFbo == null) {
     tempFbo=new FrameBuffer(parent,glWidth,glHeight);
   }
@@ -11,11 +13,8 @@
   pg.setFramebuffer(tempFbo);
   tempFbo.readPixels();
   pg.popFramebuffer();
-  if (tempPixels == null) {
-    tempPixels=new int[size];
-  }
-  tempFbo.getPixels(tempPixels);
-  convertToARGB(tempPixels,pixels);
+  tempFbo.getPixels(pixels);
+  convertToARGB(pixels);
   if (flippedX)   flipArrayOnX(pixels,1);
   if (flippedY)   flipArrayOnY(pixels,1);
 }
