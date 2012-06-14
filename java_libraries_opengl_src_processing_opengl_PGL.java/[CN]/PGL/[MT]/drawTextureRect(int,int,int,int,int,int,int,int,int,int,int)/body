@@ -1,0 +1,60 @@
+{
+  if (!loadedTexRectShader || texRectShaderContext.hashCode() != context.hashCode()) {
+    texRectVertShader=createShader(GL_VERTEX_SHADER,texVertShaderSource);
+    texRectFragShader=createShader(GL_FRAGMENT_SHADER,texRectFragShaderSource);
+    if (0 < texRectVertShader && 0 < texRectFragShader) {
+      texRectShaderProgram=createProgram(texRectVertShader,texRectFragShader);
+    }
+    if (0 < texRectShaderProgram) {
+      texRectVertLoc=glGetAttribLocation(texRectShaderProgram,"inVertex");
+      texRectTCoordLoc=glGetAttribLocation(texRectShaderProgram,"inTexcoord");
+    }
+    loadedTexRectShader=true;
+    texRectShaderContext=context;
+  }
+  if (texData == null) {
+    texData=ByteBuffer.allocateDirect(texCoords.length * SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+  }
+  if (0 < texRectShaderProgram) {
+    boolean[] val=new boolean[1];
+    glGetBooleanv(GL_DEPTH_WRITEMASK,val,0);
+    boolean writeMask=val[0];
+    glDepthMask(false);
+    glUseProgram(texRectShaderProgram);
+    glEnableVertexAttribArray(texRectVertLoc);
+    glEnableVertexAttribArray(texRectTCoordLoc);
+    texCoords[0]=2 * (float)scrX0 / pg.width - 1;
+    texCoords[1]=2 * (float)scrY0 / pg.height - 1;
+    texCoords[2]=texX0;
+    texCoords[3]=texY0;
+    texCoords[4]=2 * (float)scrX1 / pg.width - 1;
+    texCoords[5]=2 * (float)scrY0 / pg.height - 1;
+    texCoords[6]=texX1;
+    texCoords[7]=texY0;
+    texCoords[8]=2 * (float)scrX0 / pg.width - 1;
+    texCoords[9]=2 * (float)scrY1 / pg.height - 1;
+    texCoords[10]=texX0;
+    texCoords[11]=texY1;
+    texCoords[12]=2 * (float)scrX1 / pg.width - 1;
+    texCoords[13]=2 * (float)scrY1 / pg.height - 1;
+    texCoords[14]=texX1;
+    texCoords[15]=texY1;
+    texData.rewind();
+    texData.put(texCoords);
+    enableTexturing(GL_TEXTURE_RECTANGLE);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_RECTANGLE,id);
+    glBindBuffer(GL_ARRAY_BUFFER,0);
+    texData.position(0);
+    glVertexAttribPointer(texRectVertLoc,2,GL_FLOAT,false,4 * SIZEOF_FLOAT,texData);
+    texData.position(2);
+    glVertexAttribPointer(texRectTCoordLoc,2,GL_FLOAT,false,4 * SIZEOF_FLOAT,texData);
+    glDrawArrays(GL_TRIANGLE_STRIP,0,4);
+    glBindTexture(GL_TEXTURE_RECTANGLE,0);
+    disableTexturing(GL_TEXTURE_RECTANGLE);
+    glDisableVertexAttribArray(texRectVertLoc);
+    glDisableVertexAttribArray(texRectTCoordLoc);
+    glUseProgram(0);
+    glDepthMask(writeMask);
+  }
+}
