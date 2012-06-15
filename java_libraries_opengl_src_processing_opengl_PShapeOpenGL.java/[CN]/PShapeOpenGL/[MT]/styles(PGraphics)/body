@@ -1,21 +1,26 @@
 {
-  if (stroke) {
-    stroke(g.strokeColor);
-    strokeWeight(g.strokeWeight);
-    strokeCap(g.strokeCap);
-    strokeJoin(g.strokeJoin);
+  if (g instanceof PGraphicsOpenGL) {
+    if (stroke) {
+      stroke(g.strokeColor);
+      strokeWeight(g.strokeWeight);
+      strokeCap(g.strokeCap);
+      strokeJoin(g.strokeJoin);
+    }
+ else {
+      noStroke();
+    }
+    if (fill) {
+      fill(g.fillColor);
+    }
+ else {
+      noFill();
+    }
+    ambient(g.ambientColor);
+    specular(g.specularColor);
+    emissive(g.emissiveColor);
+    shininess(g.shininess);
   }
  else {
-    noStroke();
+    super.styles(g);
   }
-  if (fill) {
-    fill(g.fillColor);
-  }
- else {
-    noFill();
-  }
-  ambient(g.ambientColor);
-  specular(g.specularColor);
-  emissive(g.emissiveColor);
-  shininess(g.shininess);
 }
