@@ -8,23 +8,10 @@
  else {
       params.mipmaps=true;
     }
-    if (textureQuality == Texture.LOW) {
-      params.sampling=POINT;
-    }
- else     if (textureQuality == Texture.MEDIUM) {
-      params.sampling=Texture.LINEAR;
-    }
- else     if (textureQuality == Texture.HIGH) {
+    params.sampling=textureSampling;
+    if (params.sampling == Texture.TRILINEAR && !params.mipmaps) {
       params.sampling=Texture.BILINEAR;
-    }
- else     if (textureQuality == Texture.BEST) {
-      if (params.mipmaps) {
-        params.sampling=Texture.TRILINEAR;
-      }
- else {
-        params.sampling=Texture.BILINEAR;
-        PGraphics.showWarning("BEST texture quality requires mipmaps, will switch to HIGH.");
-      }
+      PGraphics.showWarning("TRILINEAR texture sampling requires mipmaps, which are disabled. Will use BILINEAR instead.");
     }
     params.wrapU=textureWrap;
     params.wrapV=textureWrap;
