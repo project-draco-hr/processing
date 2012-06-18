@@ -1,5 +1,9 @@
 {
   flush();
-  projection.set((2 * znear) / (right - left),0,(right + left) / (right - left),0,0,-(2 * znear) / (top - bottom),(top + bottom) / (top - bottom),0,0,0,-(zfar + znear) / (zfar - znear),-(2 * zfar * znear) / (zfar - znear),0,0,-1,0);
+  float w=right - left;
+  float h=top - bottom;
+  float d=zfar - znear;
+  float n2=2 * znear;
+  projection.set(n2 / w,0,(right + left) / w,0,0,-n2 / h,(top + bottom) / h,0,0,0,-(zfar + znear) / d,-(n2 * zfar) / d,0,0,-1,0);
   calcProjmodelview();
 }
