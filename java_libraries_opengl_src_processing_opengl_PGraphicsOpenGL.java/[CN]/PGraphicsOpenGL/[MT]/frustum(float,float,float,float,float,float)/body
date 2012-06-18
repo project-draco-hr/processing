@@ -1,10 +1,5 @@
 {
   flush();
-  float temp, temp2, temp3, temp4;
-  temp=2.0f * znear;
-  temp2=right - left;
-  temp3=top - bottom;
-  temp4=zfar - znear;
-  projection.set(temp / temp2,0,(right + left) / temp2,0,0,-temp / temp3,(top + bottom) / temp3,0,0,0,(-zfar - znear) / temp4,(-temp * zfar) / temp4,0,0,-1,1);
+  projection.set((2 * znear) / (right - left),0,(right + left) / (right - left),0,0,-(2 * znear) / (top - bottom),(top + bottom) / (top - bottom),0,0,0,-(zfar + znear) / (zfar - znear),-(2 * zfar * znear) / (zfar - znear),0,0,-1,0);
   calcProjmodelview();
 }
