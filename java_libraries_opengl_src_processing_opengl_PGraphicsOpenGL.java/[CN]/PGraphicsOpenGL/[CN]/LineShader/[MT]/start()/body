@@ -3,12 +3,23 @@
   if (-1 < inVertexLoc)   pgl.glEnableVertexAttribArray(inVertexLoc);
   if (-1 < inColorLoc)   pgl.glEnableVertexAttribArray(inColorLoc);
   if (-1 < inAttribLoc)   pgl.glEnableVertexAttribArray(inAttribLoc);
-  if (renderer != null) {
-    renderer.updateGLProjection();
-    set4x4MatUniform(projectionMatrixLoc,renderer.glProjection);
-    renderer.updateGLModelview();
-    set4x4MatUniform(modelviewMatrixLoc,renderer.glModelview);
-    set4FloatUniform(viewportLoc,renderer.viewport[0],renderer.viewport[1],renderer.viewport[2],renderer.viewport[3]);
+  if (pgCurrent != null) {
+    pgCurrent.updateGLProjection();
+    set4x4MatUniform(projectionMatrixLoc,pgCurrent.glProjection);
+    pgCurrent.updateGLModelview();
+    set4x4MatUniform(modelviewMatrixLoc,pgCurrent.glModelview);
+    set4FloatUniform(viewportLoc,pgCurrent.viewport[0],pgCurrent.viewport[1],pgCurrent.viewport[2],pgCurrent.viewport[3]);
+    if (pgCurrent.hintEnabled(ENABLE_PERSPECTIVE_CORRECTED_LINES)) {
+      setIntUniform(perspectiveLoc,1);
+    }
+ else {
+      setIntUniform(perspectiveLoc,0);
+    }
+    if (pgCurrent.hintEnabled(ENABLE_ACCURATE_2D)) {
+      set1FloatUniform(zfactorLoc,1);
+    }
+ else {
+      set1FloatUniform(zfactorLoc,0.99f);
+    }
   }
-  setIntUniform(perspectiveLoc,perspectiveCorrectedLines ? 1 : 0);
 }
