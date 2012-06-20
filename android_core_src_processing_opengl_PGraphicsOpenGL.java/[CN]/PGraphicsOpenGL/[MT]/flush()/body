@@ -8,9 +8,13 @@
     setgetPixels=false;
   }
   if (hasPoints || hasLines || hasPolys) {
+    PMatrix3D modelview0=null;
+    PMatrix3D modelviewInv0=null;
     if (flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
-      pushMatrix();
-      resetMatrix();
+      modelview0=modelview;
+      modelviewInv0=modelviewInv;
+      modelview=modelviewInv=identity;
+      projmodelview.set(projection);
     }
     if (hasPolys) {
       flushPolys();
@@ -33,7 +37,8 @@
       }
     }
     if (flushMode == FLUSH_WHEN_FULL && !hints[DISABLE_TRANSFORM_CACHE]) {
-      popMatrix();
+      modelview=modelview0;
+      modelviewInv=modelviewInv0;
     }
   }
   tessGeo.clear();
