@@ -15,7 +15,9 @@
   }
   if (primarySurface) {
     pgl.updatePrimary();
-    pgl.glDrawBuffer(PGL.GL_BACK);
+    if (pgl.primaryIsDoubleBuffered()) {
+      pgl.glDrawBuffer(PGL.GL_BACK);
+    }
   }
  else {
     if (!pgl.initialized) {
