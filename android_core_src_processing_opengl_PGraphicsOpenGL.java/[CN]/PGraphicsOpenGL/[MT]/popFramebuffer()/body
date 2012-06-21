@@ -1,10 +1,9 @@
 {
-  try {
-    currentFramebuffer.finish();
-    currentFramebuffer=fbStack.pop();
-    currentFramebuffer.bind();
+  if (fbStackDepth == 0) {
+    throw new RuntimeException("popFramebuffer call is unbalanced.");
   }
- catch (  EmptyStackException e) {
-    PGraphics.showWarning("P3D: Empty framebuffer stack");
-  }
+  fbStackDepth--;
+  currentFramebuffer.finish();
+  currentFramebuffer=fbStack[fbStackDepth];
+  currentFramebuffer.bind();
 }

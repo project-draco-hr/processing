@@ -1,3 +1,7 @@
 {
-  fbStack.push(currentFramebuffer);
+  if (fbStackDepth == FB_STACK_DEPTH) {
+    throw new RuntimeException("Too many pushFramebuffer calls");
+  }
+  fbStack[fbStackDepth]=currentFramebuffer;
+  fbStackDepth++;
 }
