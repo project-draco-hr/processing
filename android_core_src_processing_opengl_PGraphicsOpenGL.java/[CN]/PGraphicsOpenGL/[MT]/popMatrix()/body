@@ -2,14 +2,13 @@
   if (hints[DISABLE_TRANSFORM_CACHE]) {
     flush();
   }
-  PMatrix3D mat;
-  mat=modelviewStack.pop();
-  modelview.set(mat);
-  mat=modelviewInvStack.pop();
-  modelviewInv.set(mat);
-  mat=cameraStack.pop();
-  camera.set(mat);
-  mat=cameraInvStack.pop();
-  cameraInv.set(mat);
+  if (modelviewStackDepth == 0) {
+    throw new RuntimeException(ERROR_PUSHMATRIX_UNDERFLOW);
+  }
+  modelviewStackDepth--;
+  modelview.set(modelviewStack[modelviewStackDepth]);
+  modelviewInv.set(modelviewInvStack[modelviewStackDepth]);
+  camera.set(cameraStack[modelviewStackDepth]);
+  cameraInv.set(cameraInvStack[modelviewStackDepth]);
   calcProjmodelview();
 }

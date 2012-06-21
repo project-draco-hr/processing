@@ -1,4 +1,7 @@
 {
-  PMatrix3D mat=projectionStack.pop();
-  projection.set(mat);
+  if (projectionStackDepth == 0) {
+    throw new RuntimeException(ERROR_PUSHMATRIX_UNDERFLOW);
+  }
+  projectionStackDepth--;
+  projection.set(projectionStack[projectionStackDepth]);
 }
