@@ -1,5 +1,9 @@
 {
   needFBO=false;
+  if (colorFBO[0] != 0) {
+    releaseFBO();
+    colorFBO[0]=0;
+  }
   String osName=System.getProperty("os.name");
   if (osName.equals("Mac OS X")) {
     String version=System.getProperty("os.version");
@@ -8,8 +12,6 @@
       int num=Integer.parseInt(parts[1]);
       if (7 <= num && 1 < pg.quality) {
         needFBO=true;
-        if (colorFBO[0] != 0)         releaseFBO();
-        colorFBO[0]=0;
       }
     }
   }
