@@ -17,11 +17,6 @@
     if (offscreenMultisample) {
       offscreenFramebufferMultisample.copy(offscreenFramebuffer);
     }
-    if (!pgl.initialized || !pgPrimary.pgl.initialized || parent.frameCount == 0) {
-      saveSurfaceToPixels();
-      restoreSurface=true;
-    }
-    popFramebuffer();
     if (offscreenMultisample) {
       pushFramebuffer();
       setFramebuffer(offscreenFramebuffer);
@@ -33,6 +28,11 @@
     if (offscreenMultisample) {
       popFramebuffer();
     }
+    if (!pgl.initialized || !pgPrimary.pgl.initialized || parent.frameCount == 0) {
+      saveSurfaceToPixels();
+      restoreSurface=true;
+    }
+    popFramebuffer();
     pgl.endOffscreenDraw(pgPrimary.clearColorBuffer0);
     pgPrimary.restoreGL();
   }
