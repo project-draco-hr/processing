@@ -1,17 +1,19 @@
 {
-  needScreenFBO=false;
-  if (colorFBO[0] != 0) {
-    releaseFBO();
-    colorFBO[0]=0;
-  }
-  String osName=System.getProperty("os.name");
-  if (osName.equals("Mac OS X")) {
-    String version=System.getProperty("os.version");
-    String[] parts=version.split("\\.");
-    if (2 <= parts.length) {
-      int num=Integer.parseInt(parts[1]);
-      if (7 <= num && 1 < pg.quality) {
-        needScreenFBO=true;
+  if (ENABLE_SMOOTH_LION_HACK) {
+    needScreenFBO=false;
+    if (colorFBO[0] != 0) {
+      releaseFBO();
+      colorFBO[0]=0;
+    }
+    String osName=System.getProperty("os.name");
+    if (osName.equals("Mac OS X")) {
+      String version=System.getProperty("os.version");
+      String[] parts=version.split("\\.");
+      if (2 <= parts.length) {
+        int num=Integer.parseInt(parts[1]);
+        if (7 <= num && 1 < pg.quality) {
+          needScreenFBO=true;
+        }
       }
     }
   }
