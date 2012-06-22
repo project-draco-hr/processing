@@ -7,8 +7,19 @@
  else {
         pgl.glDrawBuffer(PGL.GL_BACK);
       }
+      offscreenNotCurrent=false;
     }
-    offscreenNotCurrent=false;
+ else     if (pgl.usingPrimaryFBO()) {
+      if (op == OP_READ) {
+        offscreenNotCurrent=true;
+        pgl.bindPrimaryColorFBO();
+        pgl.glReadBuffer(PGL.GL_COLOR_ATTACHMENT0);
+      }
+ else {
+        offscreenNotCurrent=false;
+        pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
+      }
+    }
   }
  else {
     if (op == OP_READ) {
