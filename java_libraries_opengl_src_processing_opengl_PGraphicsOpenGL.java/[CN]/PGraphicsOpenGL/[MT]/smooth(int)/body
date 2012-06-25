@@ -1,10 +1,17 @@
 {
+  if (smoothDisabled)   return;
   smooth=true;
   if (maxSamples < level) {
     PGraphics.showWarning("Smooth level " + level + " is not supported by the hardware. Using "+ maxSamples+ " instead.");
     level=maxSamples;
   }
   if (quality != level) {
+    smoothCallCount++;
+    if (parent.frameCount - lastSmoothCall < 30 && 5 < smoothCallCount) {
+      smoothDisabled=true;
+      PGraphics.showWarning("The smooth/noSmooth functions are being called too often.\n" + "This results in screen flickering, so they will be disabled\n" + "for the rest of the sketch's execution.");
+    }
+    lastSmoothCall=parent.frameCount;
     quality=level;
     if (quality == 1) {
       quality=0;
