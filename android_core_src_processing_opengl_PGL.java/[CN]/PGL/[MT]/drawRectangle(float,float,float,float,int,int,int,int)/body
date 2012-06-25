@@ -13,9 +13,11 @@
     loadedRectShader=true;
   }
   if (0 < rectShaderProgram) {
-    boolean[] val=new boolean[1];
-    glGetBooleanv(GL_DEPTH_WRITEMASK,val,0);
-    boolean writeMask=val[0];
+    boolean[] depthTest=new boolean[1];
+    glGetBooleanv(GL_DEPTH_TEST,depthTest,0);
+    glDisable(GL_DEPTH_TEST);
+    boolean[] depthMask=new boolean[1];
+    glGetBooleanv(GL_DEPTH_WRITEMASK,depthMask,0);
     glDepthMask(false);
     glUseProgram(rectShaderProgram);
     glEnableVertexAttribArray(rectVertLoc);
@@ -35,6 +37,12 @@
     glDrawArrays(GL_TRIANGLE_STRIP,0,4);
     glDisableVertexAttribArray(rectVertLoc);
     glUseProgram(0);
-    glDepthMask(writeMask);
+    if (depthTest[0]) {
+      glEnable(GL_DEPTH_TEST);
+    }
+ else {
+      glDisable(GL_DEPTH_TEST);
+    }
+    glDepthMask(depthMask[0]);
   }
 }

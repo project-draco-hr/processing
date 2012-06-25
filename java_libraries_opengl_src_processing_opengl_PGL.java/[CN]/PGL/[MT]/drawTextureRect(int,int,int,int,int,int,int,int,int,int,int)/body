@@ -16,9 +16,11 @@
     texData=ByteBuffer.allocateDirect(texCoords.length * SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
   }
   if (0 < texRectShaderProgram) {
-    boolean[] val=new boolean[1];
-    glGetBooleanv(GL_DEPTH_WRITEMASK,val,0);
-    boolean writeMask=val[0];
+    boolean[] depthTest=new boolean[1];
+    glGetBooleanv(GL_DEPTH_TEST,depthTest,0);
+    glDisable(GL_DEPTH_TEST);
+    boolean[] depthMask=new boolean[1];
+    glGetBooleanv(GL_DEPTH_WRITEMASK,depthMask,0);
     glDepthMask(false);
     glUseProgram(texRectShaderProgram);
     glEnableVertexAttribArray(texRectVertLoc);
@@ -55,6 +57,12 @@
     glDisableVertexAttribArray(texRectVertLoc);
     glDisableVertexAttribArray(texRectTCoordLoc);
     glUseProgram(0);
-    glDepthMask(writeMask);
+    if (depthTest[0]) {
+      glEnable(GL_DEPTH_TEST);
+    }
+ else {
+      glDisable(GL_DEPTH_TEST);
+    }
+    glDepthMask(depthMask[0]);
   }
 }
