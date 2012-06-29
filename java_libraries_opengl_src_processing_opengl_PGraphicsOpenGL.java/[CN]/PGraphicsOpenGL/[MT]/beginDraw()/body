@@ -122,6 +122,13 @@
  else {
     pgl.beginOffscreenDraw(pgPrimary.clearColorBuffer);
     offscreenFramebuffer.setColorBuffer(texture);
+    if (clip) {
+      pgl.glEnable(PGL.GL_SCISSOR_TEST);
+      pgl.glScissor(clipRect[0],clipRect[1],clipRect[2],clipRect[3]);
+    }
+ else {
+      pgl.glDisable(PGL.GL_SCISSOR_TEST);
+    }
   }
   if (restoreSurface) {
     restoreSurfaceFromPixels();
