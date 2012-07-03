@@ -4,9 +4,17 @@
   if (-1 < inColorLoc)   pgl.glEnableVertexAttribArray(inColorLoc);
   if (-1 < inPointLoc)   pgl.glEnableVertexAttribArray(inPointLoc);
   if (pgCurrent != null) {
-    pgCurrent.updateGLProjection();
-    setMat4Uniform(projectionMatrixLoc,pgCurrent.glProjection);
-    pgCurrent.updateGLModelview();
-    setMat4Uniform(modelviewMatrixLoc,pgCurrent.glModelview);
+    if (-1 < projmodelviewMatrixLoc) {
+      pgCurrent.updateGLProjmodelview();
+      setMat4Uniform(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
+    }
+    if (-1 < modelviewMatrixLoc) {
+      pgCurrent.updateGLModelview();
+      setMat4Uniform(modelviewMatrixLoc,pgCurrent.glModelview);
+    }
+    if (-1 < projectionMatrixLoc) {
+      pgCurrent.updateGLProjection();
+      setMat4Uniform(projectionMatrixLoc,pgCurrent.glProjection);
+    }
   }
 }

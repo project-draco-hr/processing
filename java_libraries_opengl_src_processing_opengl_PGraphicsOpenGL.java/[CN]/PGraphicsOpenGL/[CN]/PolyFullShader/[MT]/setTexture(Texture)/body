@@ -15,25 +15,27 @@
   dispu*=tex.maxTexcoordU;
   scalev*=tex.maxTexcoordV;
   dispv*=tex.maxTexcoordV;
-  if (tcmat == null) {
-    tcmat=new float[16];
+  if (-1 < texcoordMatrixLoc) {
+    if (tcmat == null) {
+      tcmat=new float[16];
+    }
+    tcmat[0]=scaleu;
+    tcmat[4]=0;
+    tcmat[8]=0;
+    tcmat[12]=dispu;
+    tcmat[1]=0;
+    tcmat[5]=scalev;
+    tcmat[9]=0;
+    tcmat[13]=dispv;
+    tcmat[2]=0;
+    tcmat[6]=0;
+    tcmat[10]=0;
+    tcmat[14]=0;
+    tcmat[3]=0;
+    tcmat[7]=0;
+    tcmat[11]=0;
+    tcmat[15]=0;
+    setMat4Uniform(texcoordMatrixLoc,tcmat);
   }
-  tcmat[0]=scaleu;
-  tcmat[4]=0;
-  tcmat[8]=0;
-  tcmat[12]=dispu;
-  tcmat[1]=0;
-  tcmat[5]=scalev;
-  tcmat[9]=0;
-  tcmat[13]=dispv;
-  tcmat[2]=0;
-  tcmat[6]=0;
-  tcmat[10]=0;
-  tcmat[14]=0;
-  tcmat[3]=0;
-  tcmat[7]=0;
-  tcmat[11]=0;
-  tcmat[15]=0;
-  setMat4Uniform(texcoordMatrixLoc,tcmat);
   setFloatUniform(texcoordOffsetLoc,1.0f / tex.width,1.0f / tex.height);
 }
