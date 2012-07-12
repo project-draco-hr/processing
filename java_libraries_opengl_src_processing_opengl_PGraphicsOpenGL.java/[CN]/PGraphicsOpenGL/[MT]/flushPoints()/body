@@ -1,7 +1,7 @@
 {
   updatePointBuffers();
   PointShader shader=getPointShader();
-  shader.start();
+  shader.bind();
   IndexCache cache=tessGeo.pointIndexCache;
   for (int n=0; n < cache.size; n++) {
     int ioffset=cache.indexOffset[n];
@@ -14,6 +14,6 @@
     pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
   }
-  shader.stop();
+  shader.unbind();
   unbindPointBuffers();
 }

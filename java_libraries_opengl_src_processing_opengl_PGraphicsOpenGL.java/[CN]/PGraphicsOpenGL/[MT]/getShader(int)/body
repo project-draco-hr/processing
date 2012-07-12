@@ -1,0 +1,65 @@
+{
+  PShader shader;
+  if (kind == PShader.FLAT) {
+    if (polyFlatShader == null) {
+      if (defPolyFlatShader == null) {
+        defPolyFlatShader=new PolyFlatShader(parent,defPolyFlatShaderVertURL,defPolyNoTexShaderFragURL);
+      }
+      polyFlatShader=defPolyFlatShader;
+    }
+    shader=polyFlatShader;
+  }
+ else   if (kind == PShader.LIT) {
+    if (polyLightShader == null) {
+      if (defPolyLightShader == null) {
+        defPolyLightShader=new PolyLightShader(parent,defPolyLightShaderVertURL,defPolyNoTexShaderFragURL);
+      }
+      polyLightShader=defPolyLightShader;
+    }
+    shader=polyLightShader;
+  }
+ else   if (kind == PShader.TEXTURED) {
+    if (polyTexShader == null) {
+      if (defPolyTexShader == null) {
+        defPolyTexShader=new PolyTexShader(parent,defPolyTexShaderVertURL,defPolyTexShaderFragURL);
+      }
+      polyTexShader=defPolyTexShader;
+    }
+    shader=polyTexShader;
+  }
+ else   if (kind == PShader.FULL) {
+    if (polyFullShader == null) {
+      if (defPolyFullShader == null) {
+        defPolyFullShader=new PolyFullShader(parent,defPolyFullShaderVertURL,defPolyTexShaderFragURL);
+      }
+      polyFullShader=defPolyFullShader;
+    }
+    shader=polyFullShader;
+  }
+ else   if (kind == PShader.LINE) {
+    if (lineShader == null) {
+      if (defLineShader == null) {
+        defLineShader=new LineShader(parent,defLineShaderVertURL,defLineShaderFragURL);
+      }
+      lineShader=defLineShader;
+    }
+    shader=lineShader;
+  }
+ else   if (kind == PShader.POINT) {
+    if (pointShader == null) {
+      if (defPointShader == null) {
+        defPointShader=new PointShader(parent,defPointShaderVertURL,defPointShaderFragURL);
+      }
+      pointShader=defPointShader;
+    }
+    shader=pointShader;
+  }
+ else {
+    PGraphics.showWarning("Wrong shader type");
+    return null;
+  }
+  shader.setRenderer(this);
+  shader.loadAttributes();
+  shader.loadUniforms();
+  return shader;
+}
