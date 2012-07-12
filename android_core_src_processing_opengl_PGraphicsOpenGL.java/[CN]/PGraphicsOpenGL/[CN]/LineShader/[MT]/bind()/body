@@ -1,0 +1,33 @@
+{
+  super.bind();
+  if (-1 < inVertexLoc)   pgl.glEnableVertexAttribArray(inVertexLoc);
+  if (-1 < inColorLoc)   pgl.glEnableVertexAttribArray(inColorLoc);
+  if (-1 < inAttribLoc)   pgl.glEnableVertexAttribArray(inAttribLoc);
+  if (pgCurrent != null) {
+    if (-1 < projmodelviewMatrixLoc) {
+      pgCurrent.updateGLProjmodelview();
+      setMat4Uniform(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
+    }
+    if (-1 < modelviewMatrixLoc) {
+      pgCurrent.updateGLModelview();
+      setMat4Uniform(modelviewMatrixLoc,pgCurrent.glModelview);
+    }
+    if (-1 < projectionMatrixLoc) {
+      pgCurrent.updateGLProjection();
+      setMat4Uniform(projectionMatrixLoc,pgCurrent.glProjection);
+    }
+    setFloatUniform(viewportLoc,pgCurrent.viewport[0],pgCurrent.viewport[1],pgCurrent.viewport[2],pgCurrent.viewport[3]);
+    if (pgCurrent.hintEnabled(ENABLE_PERSPECTIVE_CORRECTED_LINES)) {
+      setIntUniform(perspectiveLoc,1);
+    }
+ else {
+      setIntUniform(perspectiveLoc,0);
+    }
+    if (pgCurrent.hintEnabled(ENABLE_ACCURATE_2D)) {
+      setFloatUniform(zfactorLoc,1);
+    }
+ else {
+      setFloatUniform(zfactorLoc,0.99f);
+    }
+  }
+}

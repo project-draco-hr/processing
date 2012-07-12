@@ -1,6 +1,6 @@
 {
   LineShader shader=g.getLineShader();
-  shader.start();
+  shader.bind();
   IndexCache cache=tessGeo.lineIndexCache;
   for (int n=firstLineIndexCache; n <= lastLineIndexCache; n++) {
     int ioffset=cache.indexOffset[n];
@@ -13,5 +13,5 @@
     pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
   }
-  shader.stop();
+  shader.unbind();
 }

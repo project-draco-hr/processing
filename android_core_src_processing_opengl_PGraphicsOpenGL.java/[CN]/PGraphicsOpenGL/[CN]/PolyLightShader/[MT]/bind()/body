@@ -1,0 +1,36 @@
+{
+  super.bind();
+  if (-1 < inVertexLoc)   pgl.glEnableVertexAttribArray(inVertexLoc);
+  if (-1 < inColorLoc)   pgl.glEnableVertexAttribArray(inColorLoc);
+  if (-1 < inNormalLoc)   pgl.glEnableVertexAttribArray(inNormalLoc);
+  if (-1 < inAmbientLoc)   pgl.glEnableVertexAttribArray(inAmbientLoc);
+  if (-1 < inSpecularLoc)   pgl.glEnableVertexAttribArray(inSpecularLoc);
+  if (-1 < inEmissiveLoc)   pgl.glEnableVertexAttribArray(inEmissiveLoc);
+  if (-1 < inShineLoc)   pgl.glEnableVertexAttribArray(inShineLoc);
+  if (pgCurrent != null) {
+    if (-1 < projmodelviewMatrixLoc) {
+      pgCurrent.updateGLProjmodelview();
+      setMat4Uniform(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
+    }
+    if (-1 < modelviewMatrixLoc) {
+      pgCurrent.updateGLModelview();
+      setMat4Uniform(modelviewMatrixLoc,pgCurrent.glModelview);
+    }
+    if (-1 < projectionMatrixLoc) {
+      pgCurrent.updateGLProjection();
+      setMat4Uniform(projectionMatrixLoc,pgCurrent.glProjection);
+    }
+    if (-1 < normalMatrixLoc) {
+      pgCurrent.updateGLNormal();
+      setMat3Uniform(normalMatrixLoc,pgCurrent.glNormal);
+    }
+    setIntUniform(lightCountLoc,pgCurrent.lightCount);
+    setFloatVecUniform(lightPositionLoc,pgCurrent.lightPosition,4);
+    setFloatVecUniform(lightNormalLoc,pgCurrent.lightNormal,3);
+    setFloatVecUniform(lightAmbientLoc,pgCurrent.lightAmbient,3);
+    setFloatVecUniform(lightDiffuseLoc,pgCurrent.lightDiffuse,3);
+    setFloatVecUniform(lightSpecularLoc,pgCurrent.lightSpecular,3);
+    setFloatVecUniform(lightFalloffCoefficientsLoc,pgCurrent.lightFalloffCoefficients,3);
+    setFloatVecUniform(lightSpotParametersLoc,pgCurrent.lightSpotParameters,2);
+  }
+}

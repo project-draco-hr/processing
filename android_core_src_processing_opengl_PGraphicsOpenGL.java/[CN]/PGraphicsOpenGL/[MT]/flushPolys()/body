@@ -4,7 +4,7 @@
   for (int i=0; i < texCache.size; i++) {
     Texture tex=texCache.getTexture(i);
     PolyShader shader=getPolyShader(lights,tex != null);
-    shader.start();
+    shader.bind();
     int first=texCache.firstCache[i];
     int last=texCache.lastCache[i];
     IndexCache cache=tessGeo.polyIndexCache;
@@ -29,7 +29,7 @@
       pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
       pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
     }
-    shader.stop();
+    shader.unbind();
   }
   texCache.endRender();
   unbindPolyBuffers();
