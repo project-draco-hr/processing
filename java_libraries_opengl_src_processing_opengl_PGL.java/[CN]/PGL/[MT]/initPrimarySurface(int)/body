@@ -18,12 +18,12 @@
     profile=GLProfile.getDefault();
   }
  else {
-    if (toolkit == AWT) {
+    if (canvasAWT != null) {
       canvasAWT.removeGLEventListener(listener);
       pg.parent.removeListeners(canvasAWT);
       pg.parent.remove(canvasAWT);
     }
- else     if (toolkit == NEWT) {
+ else     if (canvasNEWT != null) {
       animator.stop();
       animator.remove(window);
       window.removeGLEventListener(listener);
@@ -55,6 +55,7 @@
     canvasAWT.addGLEventListener(listener);
     capabilities=canvasAWT.getChosenGLCapabilities();
     canvas=canvasAWT;
+    canvasNEWT=null;
   }
  else   if (toolkit == NEWT) {
     window=GLWindow.create(caps);
@@ -65,10 +66,11 @@
     pg.parent.addListeners(canvasNEWT);
     listener=new PGLListener();
     window.addGLEventListener(listener);
-    animator=new GLAnimator(window);
+    animator=new PGLAnimator(window);
     animator.start();
     capabilities=window.getChosenGLCapabilities();
     canvas=canvasNEWT;
+    canvasAWT=null;
   }
   initialized=true;
 }

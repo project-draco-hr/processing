@@ -1,0 +1,23 @@
+{
+  if (width != img.width || height != img.height) {
+    PGraphics.showWarning("Resolution of image is different from PGraphics object");
+    return;
+  }
+  if (texture == null || texture != img.getCache(pgPrimary)) {
+    Texture.Parameters params;
+    if (primarySurface) {
+      params=new Texture.Parameters(ARGB,Texture.POINT,false);
+    }
+ else {
+      params=new Texture.Parameters(ARGB,Texture.BILINEAR,false);
+    }
+    texture=addTexture(img,params);
+    texture.setFlippedY(true);
+    this.setCache(pgPrimary,texture);
+    this.setParams(pgPrimary,params);
+    if (!primarySurface && offscreenFramebuffer != null) {
+      offscreenFramebuffer.setColorBuffer(texture);
+      offscreenFramebuffer.clear();
+    }
+  }
+}

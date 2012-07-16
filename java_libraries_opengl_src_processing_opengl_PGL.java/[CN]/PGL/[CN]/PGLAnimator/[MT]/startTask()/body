@@ -1,0 +1,26 @@
+{
+  if (null != task) {
+    return;
+  }
+  task=new TimerTask(){
+    private boolean firstRun=true;
+    public void run(){
+      if (firstRun) {
+        Thread.currentThread().setName("PGL-RenderQueue-" + count);
+        firstRun=false;
+        count++;
+      }
+      if (PGLAnimator.this.shouldRun) {
+        PGLAnimator.this.animThread=Thread.currentThread();
+        display();
+synchronized (this) {
+          shouldRun=false;
+        }
+      }
+    }
+  }
+;
+  fpsCounter.resetFPSCounter();
+  shouldRun=false;
+  timer.schedule(task,0,1);
+}
