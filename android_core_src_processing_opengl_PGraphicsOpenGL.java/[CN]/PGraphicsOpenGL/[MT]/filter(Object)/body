@@ -1,0 +1,27 @@
+{
+  if (!(shader instanceof PolyTexShader)) {
+    PGraphics.showWarning("Object is not a valid shader");
+    return;
+  }
+  PolyTexShader texShader=(PolyTexShader)shader;
+  if (primarySurface) {
+  }
+ else {
+    if (textureCopy == null) {
+      Texture.Parameters params=new Texture.Parameters(ARGB,Texture.BILINEAR,false);
+      textureCopy=new Texture(parent,width,height,params);
+      textureCopy.setFlippedY(true);
+    }
+    flush();
+    offscreenFramebuffer.setColorBuffer(textureCopy);
+    offscreenFramebuffer.clear();
+    beginPGL();
+    pgl.drawTexture(texture.glTarget,texture.glName,texture.glWidth,texture.glHeight,0,0,width,height);
+    endPGL();
+    offscreenFramebuffer.setColorBuffer(texture);
+    offscreenFramebuffer.clear();
+    beginPGL();
+    pgl.drawTextureCustom(textureCopy.glTarget,textureCopy.glName,textureCopy.glWidth,textureCopy.glHeight,0,0,width,height,texShader.glProgram);
+    endPGL();
+  }
+}

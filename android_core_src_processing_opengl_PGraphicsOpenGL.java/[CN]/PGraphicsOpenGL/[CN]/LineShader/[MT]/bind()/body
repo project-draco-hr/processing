@@ -6,28 +6,32 @@
   if (pgCurrent != null) {
     if (-1 < projmodelviewMatrixLoc) {
       pgCurrent.updateGLProjmodelview();
-      setMat4Uniform(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
+      setUniformMatrix(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
     }
     if (-1 < modelviewMatrixLoc) {
       pgCurrent.updateGLModelview();
-      setMat4Uniform(modelviewMatrixLoc,pgCurrent.glModelview);
+      setUniformMatrix(modelviewMatrixLoc,pgCurrent.glModelview);
     }
     if (-1 < projectionMatrixLoc) {
       pgCurrent.updateGLProjection();
-      setMat4Uniform(projectionMatrixLoc,pgCurrent.glProjection);
+      setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
     }
-    setFloatUniform(viewportLoc,pgCurrent.viewport[0],pgCurrent.viewport[1],pgCurrent.viewport[2],pgCurrent.viewport[3]);
+    float x=pgCurrent.viewport[0];
+    float y=pgCurrent.viewport[1];
+    float w=pgCurrent.viewport[2];
+    float h=pgCurrent.viewport[3];
+    setUniformValue(viewportLoc,x,y,w,h);
     if (pgCurrent.hintEnabled(ENABLE_PERSPECTIVE_CORRECTED_LINES)) {
-      setIntUniform(perspectiveLoc,1);
+      setUniformValue(perspectiveLoc,1);
     }
  else {
-      setIntUniform(perspectiveLoc,0);
+      setUniformValue(perspectiveLoc,0);
     }
     if (pgCurrent.hintEnabled(ENABLE_ACCURATE_2D)) {
-      setFloatUniform(zfactorLoc,1);
+      setUniformValue(zfactorLoc,1.0f);
     }
  else {
-      setFloatUniform(zfactorLoc,0.99f);
+      setUniformValue(zfactorLoc,0.99f);
     }
   }
 }

@@ -11,20 +11,10 @@
     params.sampling=textureSampling;
     if (params.sampling == Texture.TRILINEAR && !params.mipmaps) {
       params.sampling=Texture.BILINEAR;
-      PGraphics.showWarning("TRILINEAR texture sampling requires mipmaps, which are disabled. Will use BILINEAR instead.");
+      PGraphics.showWarning("TRILINEAR texture sampling requires mipmaps, which are disabled. I will use BILINEAR instead.");
     }
     params.wrapU=textureWrap;
     params.wrapV=textureWrap;
-    img.setParams(pgPrimary,params);
   }
-  if (img.parent == null) {
-    img.parent=parent;
-  }
-  Texture tex=new Texture(img.parent,img.width,img.height,params);
-  if (img.pixels == null) {
-    img.loadPixels();
-  }
-  if (img.pixels != null)   tex.set(img.pixels);
-  img.setCache(pgPrimary,tex);
-  return tex;
+  return addTexture(img,params);
 }

@@ -1,7 +1,7 @@
 {
-  if (glProgramObjectID == 0 || contextIsOutdated()) {
+  if (glProgram == 0 || contextIsOutdated()) {
     context=pgl.getCurrentContext();
-    glProgramObjectID=pgMain.createGLSLProgramObject(context.code());
+    glProgram=pgMain.createGLSLProgramObject(context.code());
     boolean hasVert=false;
     if (vertexFilename != null) {
       hasVert=loadVertexShader(vertexFilename);
@@ -32,22 +32,22 @@
     }
     if (vertRes && fragRes) {
       if (hasVert) {
-        pgl.glAttachShader(glProgramObjectID,glVertexShaderID);
+        pgl.glAttachShader(glProgram,glVertex);
       }
       if (hasFrag) {
-        pgl.glAttachShader(glProgramObjectID,glFragmentShaderID);
+        pgl.glAttachShader(glProgram,glFragment);
       }
-      pgl.glLinkProgram(glProgramObjectID);
+      pgl.glLinkProgram(glProgram);
       int[] linked=new int[1];
-      pgl.glGetProgramiv(glProgramObjectID,PGL.GL_LINK_STATUS,linked,0);
+      pgl.glGetProgramiv(glProgram,PGL.GL_LINK_STATUS,linked,0);
       if (linked[0] == PGL.GL_FALSE) {
-        PGraphics.showException("Cannot link shader program:\n" + pgl.glGetProgramInfoLog(glProgramObjectID));
+        PGraphics.showException("Cannot link shader program:\n" + pgl.glGetProgramInfoLog(glProgram));
       }
-      pgl.glValidateProgram(glProgramObjectID);
+      pgl.glValidateProgram(glProgram);
       int[] validated=new int[1];
-      pgl.glGetProgramiv(glProgramObjectID,PGL.GL_VALIDATE_STATUS,validated,0);
+      pgl.glGetProgramiv(glProgram,PGL.GL_VALIDATE_STATUS,validated,0);
       if (validated[0] == PGL.GL_FALSE) {
-        PGraphics.showException("Cannot validate shader program:\n" + pgl.glGetProgramInfoLog(glProgramObjectID));
+        PGraphics.showException("Cannot validate shader program:\n" + pgl.glGetProgramInfoLog(glProgram));
       }
     }
   }

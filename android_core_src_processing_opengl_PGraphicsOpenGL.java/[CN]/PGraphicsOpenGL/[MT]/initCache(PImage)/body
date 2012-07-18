@@ -1,11 +1,10 @@
 {
   Texture tex=(Texture)img.getCache(pgPrimary);
-  if (tex == null) {
+  if (tex == null || tex.contextIsOutdated()) {
     tex=addTexture(img);
-  }
- else {
-    if (tex.contextIsOutdated()) {
-      tex=addTexture(img);
+    if (img.pixels != null) {
+      tex.set(img.pixels);
     }
   }
+  return tex;
 }

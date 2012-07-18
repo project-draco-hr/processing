@@ -5,15 +5,15 @@
   }
   pg.pushFramebuffer();
   pg.setFramebuffer(this);
-  glDepthStencilBufferID=pg.createRenderBufferObject(context.code());
-  pgl.glBindRenderbuffer(PGL.GL_RENDERBUFFER,glDepthStencilBufferID);
+  glDepthStencil=pg.createRenderBufferObject(context.code());
+  pgl.glBindRenderbuffer(PGL.GL_RENDERBUFFER,glDepthStencil);
   if (multisample) {
     pgl.glRenderbufferStorageMultisample(PGL.GL_RENDERBUFFER,nsamples,PGL.GL_DEPTH24_STENCIL8,width,height);
   }
  else {
     pgl.glRenderbufferStorage(PGL.GL_RENDERBUFFER,PGL.GL_DEPTH24_STENCIL8,width,height);
   }
-  pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_DEPTH_ATTACHMENT,PGL.GL_RENDERBUFFER,glDepthStencilBufferID);
-  pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_STENCIL_ATTACHMENT,PGL.GL_RENDERBUFFER,glDepthStencilBufferID);
+  pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_DEPTH_ATTACHMENT,PGL.GL_RENDERBUFFER,glDepthStencil);
+  pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_STENCIL_ATTACHMENT,PGL.GL_RENDERBUFFER,glDepthStencil);
   pg.popFramebuffer();
 }

@@ -1,21 +1,13 @@
 {
-  Texture tex=(Texture)img.getCache(pgPrimary);
-  if (tex == null) {
-    tex=addTexture(img);
+  Texture tex=(Texture)initCache(img);
+  if (img.isModified()) {
+    if (img.width != tex.width || img.height != tex.height) {
+      tex.init(img.width,img.height);
+    }
+    updateTexture(img,tex);
   }
- else {
-    if (tex.contextIsOutdated()) {
-      tex=addTexture(img);
-    }
-    if (img.isModified()) {
-      if (img.width != tex.width || img.height != tex.height) {
-        tex.init(img.width,img.height);
-      }
-      updateTexture(img,tex);
-    }
-    if (tex.hasBuffers()) {
-      tex.bufferUpdate();
-    }
+  if (tex.hasBuffers()) {
+    tex.bufferUpdate();
   }
   return tex;
 }

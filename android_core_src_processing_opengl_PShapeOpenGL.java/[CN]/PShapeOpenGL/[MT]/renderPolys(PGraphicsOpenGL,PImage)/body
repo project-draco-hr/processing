@@ -4,7 +4,7 @@
     tex=g.getTexture(textureImage);
     if (tex != null) {
       pgl.enableTexturing(tex.glTarget);
-      pgl.glBindTexture(tex.glTarget,tex.glID);
+      pgl.glBindTexture(tex.glTarget,tex.glName);
     }
   }
   boolean renderingFill=false, renderingStroke=false;
@@ -37,20 +37,20 @@
     int ioffset=cache.indexOffset[n];
     int icount=cache.indexCount[n];
     int voffset=cache.vertexOffset[n];
-    shader.setVertexAttribute(root.glPolyVertexBufferID,4,PGL.GL_FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
-    shader.setColorAttribute(root.glPolyColorBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+    shader.setVertexAttribute(root.glPolyVertex,4,PGL.GL_FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
+    shader.setColorAttribute(root.glPolyColor,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
     if (g.lights) {
-      shader.setNormalAttribute(root.glPolyNormalBufferID,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
-      shader.setAmbientAttribute(root.glPolyAmbientBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-      shader.setSpecularAttribute(root.glPolySpecularBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-      shader.setEmissiveAttribute(root.glPolyEmissiveBufferID,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-      shader.setShininessAttribute(root.glPolyShininessBufferID,1,PGL.GL_FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
+      shader.setNormalAttribute(root.glPolyNormal,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setAmbientAttribute(root.glPolyAmbient,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setSpecularAttribute(root.glPolySpecular,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setEmissiveAttribute(root.glPolyEmissive,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setShininessAttribute(root.glPolyShininess,1,PGL.GL_FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
     }
     if (tex != null) {
-      shader.setTexcoordAttribute(root.glPolyTexcoordBufferID,2,PGL.GL_FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setTexcoordAttribute(root.glPolyTexcoord,2,PGL.GL_FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
       shader.setTexture(tex);
     }
-    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glPolyIndexBufferID);
+    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glPolyIndex);
     pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
     pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
   }

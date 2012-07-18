@@ -5,8 +5,8 @@
   }
   pg.pushFramebuffer();
   pg.setFramebuffer(this);
-  glDepthBufferID=pg.createRenderBufferObject(context.code());
-  pgl.glBindRenderbuffer(PGL.GL_RENDERBUFFER,glDepthBufferID);
+  glDepth=pg.createRenderBufferObject(context.code());
+  pgl.glBindRenderbuffer(PGL.GL_RENDERBUFFER,glDepth);
   int glConst=PGL.GL_DEPTH_COMPONENT16;
   if (depthBits == 16) {
     glConst=PGL.GL_DEPTH_COMPONENT16;
@@ -23,6 +23,6 @@
  else {
     pgl.glRenderbufferStorage(PGL.GL_RENDERBUFFER,glConst,width,height);
   }
-  pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_DEPTH_ATTACHMENT,PGL.GL_RENDERBUFFER,glDepthBufferID);
+  pgl.glFramebufferRenderbuffer(PGL.GL_FRAMEBUFFER,PGL.GL_DEPTH_ATTACHMENT,PGL.GL_RENDERBUFFER,glDepth);
   pg.popFramebuffer();
 }
