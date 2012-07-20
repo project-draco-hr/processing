@@ -13,21 +13,21 @@
     if (PGraphicsOpenGL.autoMipmapGenSupported) {
       int[] rgbaPixels=new int[w * h];
       convertToRGBA(pixels,rgbaPixels,format,w,h);
-      setNative(rgbaPixels,x,y,w,h);
+      pgl.glTexSubImage2D(glTarget,0,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,IntBuffer.wrap(rgbaPixels));
       pgl.glGenerateMipmap(glTarget);
       rgbaPixels=null;
     }
  else {
       int[] rgbaPixels=new int[w * h];
       convertToRGBA(pixels,rgbaPixels,format,w,h);
-      setNative(rgbaPixels,x,y,w,h);
+      pgl.glTexSubImage2D(glTarget,0,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,IntBuffer.wrap(rgbaPixels));
       rgbaPixels=null;
     }
   }
  else {
     int[] rgbaPixels=new int[w * h];
     convertToRGBA(pixels,rgbaPixels,format,w,h);
-    setNative(rgbaPixels,x,y,w,h);
+    pgl.glTexSubImage2D(glTarget,0,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,IntBuffer.wrap(rgbaPixels));
     rgbaPixels=null;
   }
   unbind();
