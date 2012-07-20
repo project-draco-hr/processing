@@ -3,25 +3,41 @@
     PGraphics.showWarning("Object is not a valid shader");
     return;
   }
-  PolyTexShader texShader=(PolyTexShader)shader;
-  if (primarySurface) {
+  loadTexture();
+  if (textureCopy == null || textureCopy.width != width || textureCopy.height != height) {
+    Texture.Parameters params=new Texture.Parameters(ARGB,Texture.POINT,false);
+    textureCopy=new Texture(parent,width,height,params);
+    textureCopy.setFlippedY(true);
+    imageCopy=wrapTexture(textureCopy);
   }
- else {
-    if (textureCopy == null) {
-      Texture.Parameters params=new Texture.Parameters(ARGB,Texture.BILINEAR,false);
-      textureCopy=new Texture(parent,width,height,params);
-      textureCopy.setFlippedY(true);
-    }
-    flush();
-    offscreenFramebuffer.setColorBuffer(textureCopy);
-    offscreenFramebuffer.clear();
-    beginPGL();
-    pgl.drawTexture(texture.glTarget,texture.glName,texture.glWidth,texture.glHeight,0,0,width,height);
-    endPGL();
-    offscreenFramebuffer.setColorBuffer(texture);
-    offscreenFramebuffer.clear();
-    beginPGL();
-    pgl.drawTextureCustom(textureCopy.glTarget,textureCopy.glName,textureCopy.glWidth,textureCopy.glHeight,0,0,width,height,texShader.glProgram);
-    endPGL();
+  textureCopy.set(texture.glTarget,texture.glName,texture.glWidth,texture.glHeight,width,height);
+  pgl.glDepthMask(false);
+  pgl.glDisable(PGL.GL_DEPTH_TEST);
+  PolyTexShader prevTexShader=polyTexShader;
+  polyTexShader=(PolyTexShader)shader;
+  boolean prevLights=lights;
+  lights=false;
+  int prevTextureMode=textureMode;
+  textureMode=NORMAL;
+  boolean prevStroke=stroke;
+  stroke=false;
+  begin2D();
+  beginShape(QUADS);
+  texture(imageCopy);
+  vertex(0,0,0,0);
+  vertex(width,0,1,0);
+  vertex(width,height,1,1);
+  vertex(0,height,0,1);
+  endShape();
+  end2D();
+  stroke=prevStroke;
+  lights=prevLights;
+  textureMode=prevTextureMode;
+  polyTexShader=prevTexShader;
+  if (!hints[DISABLE_DEPTH_TEST]) {
+    pgl.glEnable(PGL.GL_DEPTH_TEST);
+  }
+  if (!hints[DISABLE_DEPTH_MASK]) {
+    pgl.glDepthMask(true);
   }
 }

@@ -1,14 +1,16 @@
 {
+  boolean needEndDraw=false;
+  if (!drawing) {
+    beginDraw();
+    needEndDraw=true;
+  }
+  flush();
   if (primarySurface) {
-    boolean needEndDraw=false;
-    if (!drawing) {
-      beginDraw();
-      needEndDraw=true;
-    }
     loadTextureImpl(Texture.POINT,false);
-    flush();
     if (pgl.primaryIsFboBacked()) {
+      pgl.bindPrimaryColorFBO();
       texture.set(pgl.getFboTexTarget(),pgl.getFboTexName(),pgl.getFboWidth(),pgl.getFboHeight(),width,height);
+      pgl.bindPrimaryMultiFBO();
     }
  else {
       if (nativePixels == null || nativePixels.length < width * height) {
@@ -20,8 +22,24 @@
       endPixelsOp();
       texture.setNative(nativePixels,0,0,width,height);
     }
-    if (needEndDraw) {
-      endDraw();
+  }
+ else {
+    if (offscreenMultisample) {
+      offscreenFramebufferMultisample.copy(offscreenFramebuffer);
     }
+    if (offscreenMultisample) {
+      pushFramebuffer();
+      setFramebuffer(offscreenFramebuffer);
+    }
+    pgl.glColorMask(false,false,false,true);
+    pgl.glClearColor(0,0,0,1);
+    pgl.glClear(PGL.GL_COLOR_BUFFER_BIT);
+    pgl.glColorMask(true,true,true,true);
+    if (offscreenMultisample) {
+      popFramebuffer();
+    }
+  }
+  if (needEndDraw) {
+    endDraw();
   }
 }

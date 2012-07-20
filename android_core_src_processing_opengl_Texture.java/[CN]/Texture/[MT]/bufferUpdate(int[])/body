@@ -4,14 +4,14 @@
     data=bufferCache.remove(0);
   }
  catch (  NoSuchElementException ex) {
-    PGraphics.showWarning("PTexture: don't have pixel data to copy to texture");
+    PGraphics.showWarning("Don't have pixel data to copy to texture");
   }
   if (data != null) {
     if ((data.w != width) || (data.h != height)) {
       init(data.w,data.h);
     }
     bind();
-    setTexels(data.rgbBuf,0,0,width,height);
+    setNative(data.rgbBuf,0,0,width,height);
     unbind();
     data.rgbBuf.get(pixels);
     convertToARGB(pixels);

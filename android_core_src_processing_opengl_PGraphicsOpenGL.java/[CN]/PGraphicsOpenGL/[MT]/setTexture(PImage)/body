@@ -4,14 +4,18 @@
     return;
   }
   if (texture == null || texture != img.getCache(pgPrimary)) {
-    Texture.Parameters params;
-    if (primarySurface) {
-      params=new Texture.Parameters(ARGB,Texture.POINT,false);
-    }
+    Texture tex=(Texture)img.getCache(pgPrimary);
+    Texture.Parameters params=tex != null ? tex.getParameters() : null;
+    if (tex == null || tex.contextIsOutdated() || !validSurfaceTex(tex)) {
+      if (primarySurface) {
+        params=new Texture.Parameters(ARGB,Texture.POINT,false);
+      }
  else {
-      params=new Texture.Parameters(ARGB,Texture.BILINEAR,false);
+        params=new Texture.Parameters(ARGB,Texture.BILINEAR,false);
+      }
+      tex=addTexture(img,params);
     }
-    texture=addTexture(img,params);
+    texture=tex;
     texture.setFlippedY(true);
     this.setCache(pgPrimary,texture);
     this.setParams(pgPrimary,params);

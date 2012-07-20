@@ -1,15 +1,16 @@
 {
   int i0=y * width + x;
   int len=w * h;
-  if (rgbaPixels == null || rgbaPixels.length < len) {
-    rgbaPixels=new int[len];
+  if (nativePixels == null || nativePixels.length < len) {
+    nativePixels=new int[len];
+    nativePixelBuffer=IntBuffer.wrap(nativePixels);
   }
-  PApplet.arrayCopy(pixels,i0,rgbaPixels,0,len);
-  PGL.javaToNativeARGB(rgbaPixels,w,h);
+  PApplet.arrayCopy(pixels,i0,nativePixels,0,len);
+  PGL.javaToNativeARGB(nativePixels,w,h);
   if (primarySurface) {
     loadTextureImpl(POINT,false);
   }
-  pgl.copyToTexture(texture.glTarget,texture.glFormat,texture.glName,x,y,w,h,IntBuffer.wrap(rgbaPixels));
+  pgl.copyToTexture(texture.glTarget,texture.glFormat,texture.glName,x,y,w,h,IntBuffer.wrap(nativePixels));
   if (primarySurface || offscreenMultisample) {
     beginPixelsOp(OP_WRITE);
     drawTexture(x,y,w,h);
