@@ -1,0 +1,35 @@
+{
+  initComponents();
+  ((JComponent)getContentPane()).setBorder(new EmptyBorder(12,18,18,18));
+  imageFolderField.setTransferHandler(new FileTextFieldTransferHandler(JFileChooser.DIRECTORIES_ONLY));
+  soundFileField.setTransferHandler(new FileTextFieldTransferHandler());
+  JComponent[] smallComponents={compressionBox,compressionLabel,fpsField,fpsLabel,widthField,widthLabel,heightField,heightLabel,originalSizeCheckBox};
+  for (  JComponent c : smallComponents) {
+    c.putClientProperty("JComponent.sizeVariant","small");
+  }
+  prefs=Preferences.userNodeForPackage(MovieMakerFrame.class);
+  imageFolderField.setText(prefs.get("movie.imageFolder",""));
+  soundFileField.setText(prefs.get("movie.soundFile",""));
+  widthField.setText("" + prefs.getInt("movie.width",640));
+  heightField.setText("" + prefs.getInt("movie.height",480));
+  boolean original=prefs.getBoolean("movie.originalSize",false);
+  originalSizeCheckBox.setSelected(original);
+  widthField.setEnabled(!original);
+  heightField.setEnabled(!original);
+  String fps="" + prefs.getDouble("movie.fps",30);
+  if (fps.endsWith(".0")) {
+    fps=fps.substring(0,fps.length() - 2);
+  }
+  fpsField.setText(fps);
+  compressionBox.setSelectedIndex(Math.max(0,Math.min(compressionBox.getItemCount() - 1,prefs.getInt("movie.compression",0))));
+  originalSizeCheckBox.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      boolean enabled=!originalSizeCheckBox.isSelected();
+      widthField.setEnabled(enabled);
+      heightField.setEnabled(enabled);
+    }
+  }
+);
+  pack();
+  setLocationRelativeTo(null);
+}
