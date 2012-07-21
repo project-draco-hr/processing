@@ -105,7 +105,11 @@ catch (  Exception ex) {
     throw new SketchException(ex.toString());
   }
   importedLibraries=new ArrayList<Library>();
-  importedLibraries.add(mode.getCoreLibrary());
+  Library core=mode.getCoreLibrary();
+  if (core != null) {
+    importedLibraries.add(core);
+    classPath+=core.getClassPath();
+  }
   for (  String item : result.extraImports) {
     int dot=item.lastIndexOf('.');
     String entry=(dot == -1) ? item : item.substring(0,dot);
@@ -128,7 +132,7 @@ catch (  Exception ex) {
           }
         }
       }
-      if (ignorableImport(item)) {
+      if (ignorableImport(item,preprocessor)) {
         found=true;
       }
       if (!found) {
