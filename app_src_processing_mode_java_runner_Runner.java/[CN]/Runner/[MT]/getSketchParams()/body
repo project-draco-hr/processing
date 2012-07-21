@@ -10,7 +10,19 @@
       GraphicsDevice editorDevice=editor.getGraphicsConfiguration().getDevice();
       GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
       GraphicsDevice[] devices=ge.getScreenDevices();
-      GraphicsDevice runDevice=(runDisplay >= 0 && runDisplay < devices.length) ? devices[runDisplay] : editorDevice;
+      GraphicsDevice runDevice=editorDevice;
+      if (runDisplay >= 0 && runDisplay < devices.length) {
+        runDevice=devices[runDisplay];
+      }
+ else {
+        runDevice=editorDevice;
+        for (int i=0; i < devices.length; i++) {
+          if (devices[i] == runDevice) {
+            runDisplay=i;
+            break;
+          }
+        }
+      }
       Point windowLocation=editor.getSketchLocation();
       if (windowLocation == null) {
         if (editorDevice == runDevice) {
