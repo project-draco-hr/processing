@@ -1,7 +1,12 @@
 {
   menu.removeAll();
   for (  final Record rec : records) {
-    JMenuItem item=new JMenuItem(rec.getName());
+    String purtyPath=new File(rec.getPath()).getParent();
+    String sketchbookPath=base.getSketchbookFolder().getAbsolutePath();
+    if (purtyPath.startsWith(sketchbookPath)) {
+      purtyPath="sketchbook \u2192 " + purtyPath.substring(sketchbookPath.length() + 1);
+    }
+    JMenuItem item=new JMenuItem(rec.getName() + " | " + purtyPath);
     item.addActionListener(new ActionListener(){
       public void actionPerformed(      ActionEvent e){
         base.handleOpen(rec.path);

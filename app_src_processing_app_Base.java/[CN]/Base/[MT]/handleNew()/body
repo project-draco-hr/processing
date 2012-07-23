@@ -1,19 +1,48 @@
 {
   try {
-    String path=createNewUntitled();
-    if (path != null) {
-      Editor editor=handleOpen(path);
-      editor.untitled=true;
+    File newbieDir=null;
+    String newbieName=null;
+    File newbieParentDir=untitledFolder;
+    String prefix=Preferences.get("editor.untitled.prefix");
+    int index=0;
+    String format=Preferences.get("editor.untitled.suffix");
+    String suffix=null;
+    if (format == null) {
+      Calendar cal=Calendar.getInstance();
+      int day=cal.get(Calendar.DAY_OF_MONTH);
+      int month=cal.get(Calendar.MONTH);
+      suffix=months[month] + PApplet.nf(day,2);
     }
  else {
+      SimpleDateFormat formatter=new SimpleDateFormat(format);
+      suffix=formatter.format(new Date());
     }
+    do {
+      if (index == 26) {
+        if (!breakTime) {
+          Base.showWarning("Time for a Break","You've reached the limit for auto naming of new sketches\n" + "for the day. How about going for a walk instead?",null);
+          breakTime=true;
+        }
+ else {
+          Base.showWarning("Sunshine","No really, time for some fresh air for you.",null);
+        }
+        return;
+      }
+      newbieName=prefix + suffix + ((char)('a' + index));
+      newbieName=Sketch.sanitizeName(newbieName);
+      newbieDir=new File(newbieParentDir,newbieName);
+      index++;
+    }
+ while (newbieDir.exists() || new File(sketchbookFolder,newbieName).exists());
+    newbieDir.mkdirs();
+    File newbieFile=new File(newbieDir,newbieName + "." + nextMode.getDefaultExtension());
+    if (!newbieFile.createNewFile()) {
+      throw new IOException(newbieFile + " already exists.");
+    }
+    String path=newbieFile.getAbsolutePath();
+    handleOpen(path,true);
   }
  catch (  IOException e) {
-    if (activeEditor != null) {
-      activeEditor.statusError(e);
-    }
- else {
-      e.printStackTrace();
-    }
+    Base.showWarning("That's new to me","A strange and unexplainable error occurred\n" + "while trying to create a new sketch.",e);
   }
 }

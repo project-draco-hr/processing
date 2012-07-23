@@ -8,7 +8,7 @@
   for (  Editor editor : editors) {
     if (editor.getSketch().getMainFilePath().equals(path)) {
       editor.toFront();
-      recent.handle(editor);
+      handleRecent(editor);
       return editor;
     }
   }
@@ -46,8 +46,9 @@
   if (editor.getSketch() == null) {
     return null;
   }
+  editor.untitled=untitled;
   editors.add(editor);
-  recent.handle(editor);
+  handleRecent(editor);
   editor.setVisible(true);
   return editor;
 }
