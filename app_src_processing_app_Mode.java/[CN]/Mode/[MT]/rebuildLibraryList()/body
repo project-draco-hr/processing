@@ -1,11 +1,14 @@
 {
   importToLibraryTable=new HashMap<String,ArrayList<Library>>();
   coreLibraries=Library.list(librariesFolder);
-  contribLibraries=Library.list(base.getSketchbookLibrariesFolder());
   for (  Library lib : coreLibraries) {
     lib.addPackageList(importToLibraryTable);
   }
-  for (  Library lib : contribLibraries) {
-    lib.addPackageList(importToLibraryTable);
+  File contribLibrariesFolder=Base.getSketchbookLibrariesFolder();
+  if (contribLibrariesFolder != null) {
+    contribLibraries=Library.list(contribLibrariesFolder);
+    for (    Library lib : contribLibraries) {
+      lib.addPackageList(importToLibraryTable);
+    }
   }
 }

@@ -1,0 +1,144 @@
+{
+  String sketchPath=null;
+  File sketchFolder=null;
+  String pdePath=null;
+  String outputPath=null;
+  File outputFolder=null;
+  boolean force=false;
+  int platform=PApplet.platform;
+  int platformBits=0;
+  int task=HELP;
+  for (  String arg : args) {
+    if (arg.length() == 0) {
+    }
+ else     if (arg.equals(helpArg)) {
+    }
+ else     if (arg.equals(preprocArg)) {
+      task=PREPROCESS;
+    }
+ else     if (arg.equals(buildArg)) {
+      task=BUILD;
+    }
+ else     if (arg.equals(runArg)) {
+      task=RUN;
+    }
+ else     if (arg.equals(presentArg)) {
+      task=PRESENT;
+    }
+ else     if (arg.equals(exportApplicationArg)) {
+      task=EXPORT_APPLICATION;
+    }
+ else     if (arg.startsWith(platformArg)) {
+      String platformStr=arg.substring(platformArg.length());
+      platform=Base.getPlatformIndex(platformStr);
+      if (platform == -1) {
+        complainAndQuit(platformStr + " should instead be " + "'windows', 'macosx', or 'linux'.");
+      }
+    }
+ else     if (arg.startsWith(bitsArg)) {
+      String bitsStr=arg.substring(bitsArg.length());
+      if (bitsStr.equals("32")) {
+        platformBits=32;
+      }
+ else       if (bitsStr.equals("64")) {
+        platformBits=64;
+      }
+ else {
+        complainAndQuit("Bits should be either 32 or 64, not " + bitsStr);
+      }
+    }
+ else     if (arg.startsWith(sketchArg)) {
+      sketchPath=arg.substring(sketchArg.length());
+      sketchFolder=new File(sketchPath);
+      if (!sketchFolder.exists()) {
+        complainAndQuit(sketchFolder + " does not exist.");
+      }
+      File pdeFile=new File(sketchFolder,sketchFolder.getName() + ".pde");
+      if (!pdeFile.exists()) {
+        complainAndQuit("Not a valid sketch folder. " + pdeFile + " does not exist.");
+      }
+      pdePath=pdeFile.getAbsolutePath();
+    }
+ else     if (arg.startsWith(outputArg)) {
+      outputPath=arg.substring(outputArg.length());
+    }
+ else     if (arg.equals(forceArg)) {
+      force=true;
+    }
+ else {
+      complainAndQuit("I don't know anything about " + arg + ".");
+    }
+  }
+  if (task == HELP) {
+    printCommandLine(System.out);
+    System.exit(0);
+  }
+  if (outputPath == null) {
+    complainAndQuit("An output path must be specified.");
+  }
+  outputFolder=new File(outputPath);
+  if (outputFolder.exists() && !force) {
+    complainAndQuit("The output folder already exists. Use --force to overwrite it.");
+  }
+  if (!outputFolder.mkdirs()) {
+    complainAndQuit("Could not create the output folder.");
+  }
+  Preferences.init(null);
+  Base.locateSketchbookFolder();
+  if (sketchPath == null) {
+    complainAndQuit("No sketch path specified.");
+  }
+ else   if (outputPath.equals(pdePath)) {
+    complainAndQuit("The sketch path and output path cannot be identical.");
+  }
+ else   if (!pdePath.toLowerCase().endsWith(".pde")) {
+    complainAndQuit("Sketch path must point to the main .pde file.");
+  }
+ else {
+    boolean success=false;
+    JavaMode javaMode=new JavaMode(null,Base.getContentFile("modes/java"));
+    try {
+      sketch=new Sketch(pdePath,javaMode);
+      if (task == BUILD) {
+        JavaBuild build=new JavaBuild(sketch);
+        String mainClassName=build.build(new File(sketchPath),outputFolder,true);
+        success=mainClassName != null;
+      }
+ else       if (task == RUN || task == PRESENT) {
+        JavaBuild build=new JavaBuild(sketch);
+        String className=build.build(sketchFolder,outputFolder,true);
+        if (className != null) {
+          success=true;
+          Runner runner=new Runner(build,this);
+          runner.launch(task == PRESENT);
+        }
+ else {
+          success=false;
+        }
+      }
+ else       if (task == EXPORT_APPLICATION) {
+        if (outputPath == null) {
+          javaMode.handleExportApplication(sketch);
+        }
+ else {
+          JavaBuild build=new JavaBuild(sketch);
+          build.build(true);
+          if (build != null) {
+            if (platformBits == 0 && Library.hasMultipleArch(platform,build.getImportedLibraries())) {
+              complainAndQuit("This sketch can be exported for 32- or 64-bit, please specify one.");
+            }
+            success=build.exportApplication(outputFolder,platform,platformBits);
+          }
+        }
+      }
+      System.exit(success ? 0 : 1);
+    }
+ catch (    SketchException re) {
+      statusError(re);
+    }
+catch (    IOException e) {
+      e.printStackTrace();
+      System.exit(1);
+    }
+  }
+}
