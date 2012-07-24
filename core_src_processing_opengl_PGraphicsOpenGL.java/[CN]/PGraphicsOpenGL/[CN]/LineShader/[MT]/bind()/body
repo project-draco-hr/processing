@@ -28,10 +28,15 @@
       setUniformValue(perspectiveLoc,0);
     }
     if (pgCurrent.hintEnabled(ENABLE_ACCURATE_2D)) {
-      setUniformValue(zfactorLoc,1.0f);
+      setUniformValue(scaleLoc,1.0f,1.0f,1.0f);
     }
  else {
-      setUniformValue(zfactorLoc,0.99f);
+      if (usingOrthoProjection) {
+        setUniformValue(scaleLoc,1.0f,1.0f,0.99f);
+      }
+ else {
+        setUniformValue(scaleLoc,0.99f,0.99f,0.99f);
+      }
     }
   }
 }
