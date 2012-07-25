@@ -1,6 +1,10 @@
 {
   release();
-  pgl.enableTexturing(glTarget);
+  boolean enabledTex=false;
+  if (!pgl.texturingIsEnabled(glTarget)) {
+    pgl.enableTexturing(glTarget);
+    enabledTex=true;
+  }
   context=pgl.getCurrentContext();
   glName=pg.createTextureObject(context.code());
   pgl.glBindTexture(glTarget,glName);
@@ -11,6 +15,8 @@
   pgl.glTexImage2D(glTarget,0,glFormat,glWidth,glHeight,0,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,null);
   pgl.initTexture(glTarget,PGL.GL_RGBA,width,height);
   pgl.glBindTexture(glTarget,0);
-  pgl.disableTexturing(glTarget);
+  if (enabledTex) {
+    pgl.disableTexturing(glTarget);
+  }
   bound=false;
 }

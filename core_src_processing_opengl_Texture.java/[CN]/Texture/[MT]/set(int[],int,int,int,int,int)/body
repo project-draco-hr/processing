@@ -8,7 +8,12 @@
     PGraphics.showWarning("The pixels array has a length of " + pixels.length + ", but it should be "+ w * h);
     return;
   }
-  bind();
+  boolean enabledTex=false;
+  if (!pgl.texturingIsEnabled(glTarget)) {
+    pgl.enableTexturing(glTarget);
+    enabledTex=true;
+  }
+  pgl.glBindTexture(glTarget,glName);
   if (usingMipmaps) {
     if (PGraphicsOpenGL.autoMipmapGenSupported) {
       int[] rgbaPixels=new int[w * h];
@@ -30,6 +35,9 @@
     pgl.glTexSubImage2D(glTarget,0,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,IntBuffer.wrap(rgbaPixels));
     rgbaPixels=null;
   }
-  unbind();
+  pgl.glBindTexture(glTarget,0);
+  if (enabledTex) {
+    pgl.disableTexturing(glTarget);
+  }
   updateTexels(x,y,w,h);
 }

@@ -1,6 +1,14 @@
 {
-  bind();
+  boolean enabledTex=false;
+  if (!pgl.texturingIsEnabled(glTarget)) {
+    pgl.enableTexturing(glTarget);
+    enabledTex=true;
+  }
+  pgl.glBindTexture(glTarget,glName);
   pgl.glTexSubImage2D(glTarget,level,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,buffer);
-  unbind();
+  pgl.glBindTexture(glTarget,0);
+  if (enabledTex) {
+    pgl.disableTexturing(glTarget);
+  }
   updateTexels(x,y,w,h);
 }
