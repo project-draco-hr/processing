@@ -1,7 +1,13 @@
 {
-  if (bound) {
-    pgl.enableTexturing(glTarget);
-    pgl.glBindTexture(glTarget,0);
-    bound=false;
+  if (pgl.textureIsBound(glTarget,glName)) {
+    if (!pgl.texturingIsEnabled(glTarget)) {
+      pgl.enableTexturing(glTarget);
+      pgl.glBindTexture(glTarget,0);
+      pgl.disableTexturing(glTarget);
+    }
+ else {
+      pgl.glBindTexture(glTarget,0);
+    }
   }
+  bound=false;
 }

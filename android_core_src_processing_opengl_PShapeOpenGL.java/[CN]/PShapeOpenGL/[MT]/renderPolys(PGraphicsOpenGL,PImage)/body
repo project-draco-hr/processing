@@ -3,8 +3,7 @@
   if (textureImage != null) {
     tex=g.getTexture(textureImage);
     if (tex != null) {
-      pgl.enableTexturing(tex.glTarget);
-      pgl.glBindTexture(tex.glTarget,tex.glName);
+      tex.bind();
     }
   }
   boolean renderingFill=false, renderingStroke=false;
@@ -21,8 +20,7 @@
  else {
       if (!renderingStroke) {
         if (tex != null) {
-          pgl.glBindTexture(tex.glTarget,0);
-          pgl.disableTexturing(tex.glTarget);
+          tex.unbind();
           tex=null;
         }
         if (shader != null && shader.bound()) {
@@ -58,7 +56,6 @@
     shader.unbind();
   }
   if (tex != null) {
-    pgl.glBindTexture(tex.glTarget,0);
-    pgl.disableTexturing(tex.glTarget);
+    tex.unbind();
   }
 }

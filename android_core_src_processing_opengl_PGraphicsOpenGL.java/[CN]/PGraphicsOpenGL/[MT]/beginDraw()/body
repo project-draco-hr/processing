@@ -10,8 +10,9 @@
   if (!glParamsRead) {
     getGLParameters();
   }
-  if (!settingsInited) {
-    defaultSettings();
+  if (screenFramebuffer == null) {
+    screenFramebuffer=new FrameBuffer(parent,width,height,true);
+    setFramebuffer(screenFramebuffer);
   }
   if (primarySurface) {
     pgl.updatePrimary();
@@ -84,7 +85,7 @@
   viewport[3]=height;
   pgl.glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
   if (resized) {
-    background(0);
+    background(backgroundColor);
     if (texture != null) {
       this.removeCache(pgPrimary);
       this.removeParams(pgPrimary);
@@ -93,10 +94,10 @@
     }
     resized=false;
   }
-  if (sizeChanged) {
+  if (sized) {
     defaultPerspective();
     defaultCamera();
-    sizeChanged=false;
+    sized=false;
   }
  else {
     modelview.set(camera);
@@ -129,6 +130,9 @@
  else {
       pgl.glDisable(PGL.GL_SCISSOR_TEST);
     }
+  }
+  if (!settingsInited) {
+    defaultSettings();
   }
   if (restoreSurface) {
     restoreSurfaceFromPixels();

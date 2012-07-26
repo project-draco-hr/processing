@@ -1,7 +1,14 @@
 {
-  enableTexturing(target);
+  glActiveTexture(GL_TEXTURE0);
+  boolean enabledTex=false;
+  if (!texturingIsEnabled(target)) {
+    enableTexturing(target);
+    enabledTex=true;
+  }
   glBindTexture(target,id);
   glTexSubImage2D(target,0,x,y,w,h,format,GL_UNSIGNED_BYTE,buffer);
   glBindTexture(target,0);
-  disableTexturing(target);
+  if (enabledTex) {
+    disableTexturing(target);
+  }
 }
