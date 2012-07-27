@@ -1,0 +1,31 @@
+{
+  if (dupIndices == null) {
+    dupIndices=new int[16];
+  }
+  if (dupIndices.length == dupCount) {
+    int n=dupCount << 1;
+    int temp[]=new int[n];
+    PApplet.arrayCopy(dupIndices,0,temp,0,dupCount);
+    dupIndices=temp;
+  }
+  if (idx < dupIndices[0]) {
+    for (int i=dupCount; i > 0; i--)     dupIndices[i]=dupIndices[i - 1];
+    dupIndices[0]=idx;
+    dupCount++;
+  }
+ else   if (dupIndices[dupCount - 1] < idx) {
+    dupIndices[dupCount]=idx;
+    dupCount++;
+  }
+ else {
+    for (int i=0; i < dupCount - 1; i++) {
+      if (dupIndices[i] == idx)       break;
+      if (dupIndices[i] < idx && idx < dupIndices[i + 1]) {
+        for (int j=dupCount; j > i + 1; j--)         dupIndices[j]=dupIndices[j - 1];
+        dupIndices[i + 1]=idx;
+        dupCount++;
+        break;
+      }
+    }
+  }
+}
