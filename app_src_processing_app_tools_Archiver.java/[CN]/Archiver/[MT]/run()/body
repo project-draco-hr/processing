@@ -26,27 +26,5 @@
     index++;
   }
  while (newbie.exists());
-  FileDialog fd=new FileDialog(editor,"Archive sketch as:",FileDialog.SAVE);
-  fd.setDirectory(parent.getAbsolutePath());
-  fd.setFile(newbie.getName());
-  fd.setVisible(true);
-  String directory=fd.getDirectory();
-  String filename=fd.getFile();
-  if (filename != null) {
-    newbie=new File(directory,filename);
-    try {
-      FileOutputStream zipOutputFile=new FileOutputStream(newbie);
-      ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
-      buildZip(location,name,zos);
-      zos.flush();
-      zos.close();
-      editor.statusNotice("Created archive " + newbie.getName() + ".");
-    }
- catch (    IOException e) {
-      e.printStackTrace();
-    }
-  }
- else {
-    editor.statusNotice("Archive sketch canceled.");
-  }
+  PApplet.selectOutput("Archive sketch as...","fileSelected",newbie,this,editor);
 }

@@ -1,0 +1,19 @@
+{
+  if (newbie != null) {
+    try {
+      FileOutputStream zipOutputFile=new FileOutputStream(newbie);
+      ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
+      File sketchFolder=editor.getSketch().getFolder();
+      buildZip(sketchFolder,sketchFolder.getName(),zos);
+      zos.flush();
+      zos.close();
+      editor.statusNotice("Created archive " + newbie.getName() + ".");
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+  }
+ else {
+    editor.statusNotice("Archive sketch canceled.");
+  }
+}

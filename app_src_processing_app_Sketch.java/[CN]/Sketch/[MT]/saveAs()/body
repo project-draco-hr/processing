@@ -1,9 +1,24 @@
 {
   String newParentDir=null;
   String newName=null;
-  if (false) {
+  final String PROMPT="Save sketch folder as...";
+  if (Preferences.getBoolean("chooser.files.native")) {
+    FileDialog fd=new FileDialog(editor,PROMPT,FileDialog.SAVE);
+    if (isReadOnly() || isUntitled()) {
+      fd.setDirectory(Preferences.get("sketchbook.path"));
+    }
+ else {
+      fd.setDirectory(folder.getParent());
+    }
+    String oldName=folder.getName();
+    fd.setFile(oldName);
+    fd.setVisible(true);
+    newParentDir=fd.getDirectory();
+    newName=fd.getFile();
+  }
+ else {
     JFileChooser fc=new JFileChooser();
-    fc.setDialogTitle("Save sketch folder as...");
+    fc.setDialogTitle(PROMPT);
     if (isReadOnly() || isUntitled()) {
       fc.setCurrentDirectory(new File(Preferences.get("sketchbook.path")));
     }
@@ -16,20 +31,6 @@
       newParentDir=selection.getParent();
       newName=selection.getName();
     }
-  }
- else {
-    FileDialog fd=new FileDialog(editor,"Save sketch folder as...",FileDialog.SAVE);
-    if (isReadOnly() || isUntitled()) {
-      fd.setDirectory(Preferences.get("sketchbook.path"));
-    }
- else {
-      fd.setDirectory(folder.getParent());
-    }
-    String oldName=folder.getName();
-    fd.setFile(oldName);
-    fd.setVisible(true);
-    newParentDir=fd.getDirectory();
-    newName=fd.getFile();
   }
   if (newName == null)   return false;
   newName=Sketch.checkName(newName);
