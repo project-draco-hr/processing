@@ -1,20 +1,13 @@
 {
+  DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
   try {
-    DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
     factory.setAttribute("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
-    factory.setExpandEntityReferences(false);
-    DocumentBuilder builder=factory.newDocumentBuilder();
-    Document document=builder.parse(new InputSource(reader));
-    node=document.getDocumentElement();
-    name=node.getNodeName();
   }
- catch (  ParserConfigurationException pce) {
-    pce.printStackTrace();
+ catch (  IllegalArgumentException e) {
   }
-catch (  IOException e1) {
-    e1.printStackTrace();
-  }
-catch (  SAXException e2) {
-    e2.printStackTrace();
-  }
+  factory.setExpandEntityReferences(false);
+  DocumentBuilder builder=factory.newDocumentBuilder();
+  Document document=builder.parse(new InputSource(reader));
+  node=document.getDocumentElement();
+  name=node.getNodeName();
 }
