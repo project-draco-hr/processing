@@ -1,0 +1,16 @@
+{
+  try {
+    Class callbackClass=callbackObject.getClass();
+    Method selectMethod=callbackClass.getMethod(callbackMethod,new Class[]{File.class});
+    selectMethod.invoke(callbackObject,new Object[]{selectedFile});
+  }
+ catch (  IllegalAccessException iae) {
+    System.err.println(callbackMethod + "() must be public");
+  }
+catch (  InvocationTargetException ite) {
+    ite.printStackTrace();
+  }
+catch (  NoSuchMethodException nsme) {
+    System.err.println(callbackMethod + "() could not be found");
+  }
+}
