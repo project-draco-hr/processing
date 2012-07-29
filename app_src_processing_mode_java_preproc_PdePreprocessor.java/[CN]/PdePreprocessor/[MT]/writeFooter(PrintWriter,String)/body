@@ -1,7 +1,8 @@
 {
   if (mode == Mode.STATIC) {
-    out.println(indent + "noLoop();");
-    out.println("} ");
+    out.println(indent + indent + "noLoop();");
+    out.println(indent + "}");
+    out.println();
   }
   if ((mode == Mode.STATIC) || (mode == Mode.ACTIVE)) {
     if (sketchWidth != null && !hasMethod("sketchWidth")) {
@@ -20,8 +21,8 @@
       }
     }
     if (!hasMethod("main")) {
-      out.println(indent + "static public void main(String args[]) {");
-      out.print(indent + indent + "PApplet.main(new String[] { ");
+      out.println(indent + "static public void main(String[] passedArgs) {");
+      out.print(indent + indent + "String[] appletArgs = new String[] { ");
       if (Preferences.getBoolean("export.application.fullscreen")) {
         out.print("\"" + PApplet.ARGS_FULL_SCREEN + "\", ");
         String farbe=Preferences.get("run.present.bgcolor");
@@ -34,7 +35,12 @@
           out.print("\"" + PApplet.ARGS_HIDE_STOP + "\", ");
         }
       }
-      out.println("\"" + className + "\" });");
+      out.println("\"" + className + "\" };");
+      out.println(indent + indent + "if (passedArgs != null) {");
+      out.println(indent + indent + "  PApplet.main(concat(appletArgs, passedArgs));");
+      out.println(indent + indent + "} else {");
+      out.println(indent + indent + "  PApplet.main(appletArgs);");
+      out.println(indent + indent + "}");
       out.println(indent + "}");
     }
     out.println("}");
