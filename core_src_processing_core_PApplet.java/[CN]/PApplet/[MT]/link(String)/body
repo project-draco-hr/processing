@@ -1,6 +1,11 @@
 {
   try {
-    Desktop.getDesktop().browse(new URI(url));
+    if (Desktop.isDesktopSupported()) {
+      Desktop.getDesktop().browse(new URI(url));
+    }
+ else {
+      open(url);
+    }
   }
  catch (  IOException e) {
     e.printStackTrace();
