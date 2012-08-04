@@ -1,5 +1,12 @@
 {
   this.parent=parent;
+  if (PApplet.platform == PConstants.MACOSX) {
+    File lockFolder=new File("/var/lock");
+    if (!lockFolder.exists() || !lockFolder.canRead() || !lockFolder.canWrite()|| !lockFolder.canExecute()) {
+      final String MESSAGE="To use the serial library, first open\n" + "Applications -> Utilities -> Terminal.app\n" + "and enter the following:\n"+ "sudo mkdir -p /var/lock\n"+ "sudo chmod 777 /var/lock";
+      System.err.println(MESSAGE);
+    }
+  }
   this.rate=irate;
   parity=SerialPort.PARITY_NONE;
   if (iparity == 'E')   parity=SerialPort.PARITY_EVEN;
