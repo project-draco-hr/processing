@@ -28,7 +28,13 @@
   item=new JMenuItem("Delete");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      editor.getSketch().handleDeleteCode();
+      Sketch sketch=editor.getSketch();
+      if (editor.base.editors.size() != 1 && sketch.getCodeCount() == 1) {
+        Base.showWarning("Yeah, no.","You can't delete the last tab " + "of the last open sketch.",null);
+      }
+ else {
+        editor.getSketch().handleDeleteCode();
+      }
     }
   }
 );
