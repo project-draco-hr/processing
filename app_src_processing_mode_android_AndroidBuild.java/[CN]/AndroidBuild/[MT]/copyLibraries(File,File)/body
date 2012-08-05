@@ -6,7 +6,12 @@
         System.err.println(exportFile.getName() + " is mentioned in export.txt, but it's " + "a big fat lie and does not exist.");
       }
  else       if (exportFile.isDirectory()) {
-        Base.copyDir(exportFile,new File(assetsFolder,exportName));
+        if (exportName.equals("armeabi") || exportName.equals("armeabi-v7a") || exportName.equals("x86")) {
+          Base.copyDir(exportFile,new File(libsFolder,exportName));
+        }
+ else {
+          Base.copyDir(exportFile,new File(assetsFolder,exportName));
+        }
       }
  else       if (exportName.toLowerCase().endsWith(".zip")) {
         System.err.println(".zip files are not allowed in Android libraries.");
