@@ -14,7 +14,8 @@
   }
 );
   toolbarMenu.add(item);
-  item=new JMenuItem("Examples...");
+  insertToolbarRecentMenu();
+  item=Base.newJMenuItemShift("Examples...",'O');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       showExamplesFrame();
@@ -23,10 +24,5 @@
 );
   toolbarMenu.add(item);
   toolbarMenu.addSeparator();
-  try {
-    base.addSketches(toolbarMenu,base.getSketchbookFolder(),true);
-  }
- catch (  IOException e) {
-    e.printStackTrace();
-  }
+  base.populateSketchbookMenu(toolbarMenu);
 }

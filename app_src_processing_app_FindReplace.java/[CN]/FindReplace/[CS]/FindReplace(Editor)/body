@@ -23,6 +23,16 @@
 );
   ignoreCaseBox.setSelected(ignoreCase);
   pain.add(ignoreCaseBox);
+  allTabsBox=new JCheckBox("All Tabs");
+  allTabsBox.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      allTabs=allTabsBox.isSelected();
+    }
+  }
+);
+  allTabsBox.setSelected(allTabs);
+  allTabsBox.setEnabled(false);
+  pain.add(allTabsBox);
   wrapAroundBox=new JCheckBox("Wrap Around");
   wrapAroundBox.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -65,8 +75,10 @@
   replaceLabel.setBounds(EDGE + (labelDimension.width - labelWidth),ypos + yoff,labelWidth,labelDimension.height);
   replaceField.setBounds(EDGE + labelDimension.width + SMALL,ypos,fieldWidth,fieldHeight);
   ypos+=fieldHeight + SMALL;
-  ignoreCaseBox.setBounds(EDGE + labelDimension.width + SMALL,ypos,(fieldWidth - SMALL) / 2,fieldHeight);
-  wrapAroundBox.setBounds(EDGE + labelDimension.width + SMALL+ (fieldWidth - SMALL) / 2 + SMALL,ypos,(fieldWidth - SMALL) / 2,fieldHeight);
+  final int third=(fieldWidth - SMALL * 2) / 3;
+  ignoreCaseBox.setBounds(EDGE + labelDimension.width + SMALL,ypos,third,fieldHeight);
+  allTabsBox.setBounds(EDGE + labelDimension.width + SMALL+ third+ SMALL,ypos,third,fieldHeight);
+  wrapAroundBox.setBounds(EDGE + labelDimension.width + SMALL+ third * 2 + SMALL * 2,ypos,third,fieldHeight);
   ypos+=fieldHeight + SMALL;
   buttons.setBounds(EDGE - BUTTON_GAP,ypos,buttonsDimension.width,buttonsDimension.height);
   ypos+=buttonsDimension.height + EDGE;
