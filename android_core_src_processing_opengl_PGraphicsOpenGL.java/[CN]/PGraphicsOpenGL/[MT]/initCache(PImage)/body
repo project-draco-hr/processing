@@ -2,8 +2,10 @@
   Texture tex=(Texture)img.getCache(pgPrimary);
   if (tex == null || tex.contextIsOutdated()) {
     tex=addTexture(img);
-    img.loadPixels();
-    tex.set(img.pixels);
+    if (tex != null) {
+      img.loadPixels();
+      tex.set(img.pixels);
+    }
   }
   return tex;
 }
