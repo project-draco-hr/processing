@@ -1,5 +1,6 @@
 {
   if (uniformValues != null && 0 < uniformValues.size()) {
+    int texUnit=firstTexUnit;
     for (    Integer loc : uniformValues.keySet()) {
       UniformValue val=uniformValues.get(loc);
       if (val.type == UniformValue.INT1) {
@@ -77,6 +78,16 @@
  else       if (val.type == UniformValue.MAT4) {
         float[] v=((float[])val.value);
         pgl.glUniformMatrix4fv(loc,1,false,v,0);
+      }
+ else       if (val.type == UniformValue.SAMPLER2D) {
+        PImage img=(PImage)val.value;
+        Texture tex=pgMain.getTexture(img);
+        pgl.glUniform1i(loc,texUnit);
+        if (textures == null) {
+          textures=new HashMap<Integer,Texture>();
+          textures.put(texUnit,tex);
+        }
+        texUnit++;
       }
     }
     uniformValues.clear();
