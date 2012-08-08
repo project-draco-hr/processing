@@ -1,3 +1,37 @@
 {
-  setNative(buffer,0,x,y,w,h);
+  if (pixels == null) {
+    pixels=null;
+    PGraphics.showWarning("The pixel buffer is null.");
+    return;
+  }
+  if (pixels.capacity() != w * h) {
+    PGraphics.showWarning("The pixels array has a length of " + pixels.capacity() + ", but it should be "+ w * h);
+    return;
+  }
+  if (pixels.capacity() == 0) {
+    return;
+  }
+  boolean enabledTex=false;
+  if (!pgl.texturingIsEnabled(glTarget)) {
+    pgl.enableTexturing(glTarget);
+    enabledTex=true;
+  }
+  pgl.glBindTexture(glTarget,glName);
+  if (usingMipmaps) {
+    if (PGraphicsOpenGL.autoMipmapGenSupported) {
+      pgl.glTexSubImage2D(glTarget,0,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,pixels);
+      pgl.glGenerateMipmap(glTarget);
+    }
+ else {
+      pgl.glTexSubImage2D(glTarget,0,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,pixels);
+    }
+  }
+ else {
+    pgl.glTexSubImage2D(glTarget,0,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,pixels);
+  }
+  pgl.glBindTexture(glTarget,0);
+  if (enabledTex) {
+    pgl.disableTexturing(glTarget);
+  }
+  updateTexels(x,y,w,h);
 }
