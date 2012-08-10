@@ -7,12 +7,12 @@
     int ioffset=cache.indexOffset[n];
     int icount=cache.indexCount[n];
     int voffset=cache.vertexOffset[n];
-    shader.setVertexAttribute(glPointVertex,4,PGL.GL_FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
-    shader.setColorAttribute(glPointColor,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-    shader.setPointAttribute(glPointAttrib,2,PGL.GL_FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
-    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,glPointIndex);
-    pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
-    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+    shader.setVertexAttribute(glPointVertex,4,PGL.FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
+    shader.setColorAttribute(glPointColor,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+    shader.setPointAttribute(glPointAttrib,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
+    pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,glPointIndex);
+    pgl.drawElements(PGL.TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
+    pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,0);
   }
   shader.unbind();
   unbindPointBuffers();

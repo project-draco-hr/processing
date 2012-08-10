@@ -1,14 +1,14 @@
 {
-  int shader=glCreateShader(shaderType);
+  int shader=createShader(shaderType);
   if (shader != 0) {
-    glShaderSource(shader,source);
-    glCompileShader(shader);
+    shaderSource(shader,source);
+    compileShader(shader);
     int[] compiled=new int[1];
-    glGetShaderiv(shader,GL_COMPILE_STATUS,compiled,0);
-    if (compiled[0] == GL_FALSE) {
+    getShaderiv(shader,COMPILE_STATUS,compiled,0);
+    if (compiled[0] == FALSE) {
       System.err.println("Could not compile shader " + shaderType + ":");
-      System.err.println(glGetShaderInfoLog(shader));
-      glDeleteShader(shader);
+      System.err.println(getShaderInfoLog(shader));
+      deleteShader(shader);
       shader=0;
     }
   }

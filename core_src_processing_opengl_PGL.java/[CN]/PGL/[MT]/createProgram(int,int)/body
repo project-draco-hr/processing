@@ -1,15 +1,15 @@
 {
-  int program=glCreateProgram();
+  int program=createProgram();
   if (program != 0) {
-    glAttachShader(program,vertexShader);
-    glAttachShader(program,fragmentShader);
-    glLinkProgram(program);
+    attachShader(program,vertexShader);
+    attachShader(program,fragmentShader);
+    linkProgram(program);
     int[] linked=new int[1];
-    glGetProgramiv(program,GL_LINK_STATUS,linked,0);
-    if (linked[0] == GL_FALSE) {
+    getProgramiv(program,LINK_STATUS,linked,0);
+    if (linked[0] == FALSE) {
       System.err.println("Could not link program: ");
-      System.err.println(glGetProgramInfoLog(program));
-      glDeleteProgram(program);
+      System.err.println(getProgramInfoLog(program));
+      deleteProgram(program);
       program=0;
     }
   }

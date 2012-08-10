@@ -18,7 +18,7 @@
         nativePixelBuffer=IntBuffer.wrap(nativePixels);
       }
       beginPixelsOp(OP_READ);
-      pgl.glReadPixels(0,0,width,height,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,nativePixelBuffer);
+      pgl.readPixels(0,0,width,height,PGL.RGBA,PGL.UNSIGNED_BYTE,nativePixelBuffer);
       endPixelsOp();
       texture.setNative(nativePixels,0,0,width,height);
     }
@@ -31,10 +31,10 @@
       pushFramebuffer();
       setFramebuffer(offscreenFramebuffer);
     }
-    pgl.glColorMask(false,false,false,true);
-    pgl.glClearColor(0,0,0,1);
-    pgl.glClear(PGL.GL_COLOR_BUFFER_BIT);
-    pgl.glColorMask(true,true,true,true);
+    pgl.colorMask(false,false,false,true);
+    pgl.clearColor(0,0,0,1);
+    pgl.clear(PGL.COLOR_BUFFER_BIT);
+    pgl.colorMask(true,true,true,true);
     if (offscreenMultisample) {
       popFramebuffer();
     }

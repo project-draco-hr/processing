@@ -35,22 +35,22 @@
     int ioffset=cache.indexOffset[n];
     int icount=cache.indexCount[n];
     int voffset=cache.vertexOffset[n];
-    shader.setVertexAttribute(root.glPolyVertex,4,PGL.GL_FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
-    shader.setColorAttribute(root.glPolyColor,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+    shader.setVertexAttribute(root.glPolyVertex,4,PGL.FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
+    shader.setColorAttribute(root.glPolyColor,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
     if (g.lights) {
-      shader.setNormalAttribute(root.glPolyNormal,3,PGL.GL_FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
-      shader.setAmbientAttribute(root.glPolyAmbient,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-      shader.setSpecularAttribute(root.glPolySpecular,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-      shader.setEmissiveAttribute(root.glPolyEmissive,4,PGL.GL_UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-      shader.setShininessAttribute(root.glPolyShininess,1,PGL.GL_FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
+      shader.setNormalAttribute(root.glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setAmbientAttribute(root.glPolyAmbient,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setSpecularAttribute(root.glPolySpecular,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setEmissiveAttribute(root.glPolyEmissive,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setShininessAttribute(root.glPolyShininess,1,PGL.FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
     }
     if (tex != null) {
-      shader.setTexcoordAttribute(root.glPolyTexcoord,2,PGL.GL_FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setTexcoordAttribute(root.glPolyTexcoord,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
       shader.setTexture(tex);
     }
-    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,root.glPolyIndex);
-    pgl.glDrawElements(PGL.GL_TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
-    pgl.glBindBuffer(PGL.GL_ELEMENT_ARRAY_BUFFER,0);
+    pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,root.glPolyIndex);
+    pgl.drawElements(PGL.TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
+    pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,0);
   }
   if (shader != null && shader.bound()) {
     shader.unbind();

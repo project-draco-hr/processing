@@ -2,10 +2,10 @@
   if (primarySurface) {
     if (pgl.primaryIsDoubleBuffered()) {
       if (op == OP_READ) {
-        pgl.glReadBuffer(PGL.GL_BACK);
+        pgl.readBuffer(PGL.BACK);
       }
  else {
-        pgl.glDrawBuffer(PGL.GL_BACK);
+        pgl.drawBuffer(PGL.BACK);
       }
       offscreenNotCurrent=false;
     }
@@ -13,11 +13,11 @@
       if (op == OP_READ) {
         offscreenNotCurrent=true;
         pgl.bindPrimaryColorFBO();
-        pgl.glReadBuffer(PGL.GL_COLOR_ATTACHMENT0);
+        pgl.readBuffer(PGL.COLOR_ATTACHMENT0);
       }
  else {
         offscreenNotCurrent=false;
-        pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
+        pgl.drawBuffer(PGL.COLOR_ATTACHMENT0);
       }
     }
  else {
@@ -32,7 +32,7 @@
         setFramebuffer(offscreenFramebuffer);
         pgl.updateOffscreen(pgPrimary.pgl);
       }
-      pgl.glReadBuffer(PGL.GL_COLOR_ATTACHMENT0);
+      pgl.readBuffer(PGL.COLOR_ATTACHMENT0);
     }
  else {
       if (offscreenMultisample) {
@@ -51,7 +51,7 @@
         }
         pgl.updateOffscreen(pgPrimary.pgl);
       }
-      pgl.glDrawBuffer(PGL.GL_COLOR_ATTACHMENT0);
+      pgl.drawBuffer(PGL.COLOR_ATTACHMENT0);
     }
   }
   pixelsOp=op;

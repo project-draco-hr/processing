@@ -1,32 +1,32 @@
 {
-  OPENGL_VENDOR=pgl.glGetString(PGL.GL_VENDOR);
-  OPENGL_RENDERER=pgl.glGetString(PGL.GL_RENDERER);
-  OPENGL_VERSION=pgl.glGetString(PGL.GL_VERSION);
-  OPENGL_EXTENSIONS=pgl.glGetString(PGL.GL_EXTENSIONS);
-  GLSL_VERSION=pgl.glGetString(PGL.GL_SHADING_LANGUAGE_VERSION);
+  OPENGL_VENDOR=pgl.getString(PGL.VENDOR);
+  OPENGL_RENDERER=pgl.getString(PGL.RENDERER);
+  OPENGL_VERSION=pgl.getString(PGL.VERSION);
+  OPENGL_EXTENSIONS=pgl.getString(PGL.EXTENSIONS);
+  GLSL_VERSION=pgl.getString(PGL.SHADING_LANGUAGE_VERSION);
   npotTexSupported=-1 < OPENGL_EXTENSIONS.indexOf("texture_non_power_of_two");
   autoMipmapGenSupported=-1 < OPENGL_EXTENSIONS.indexOf("generate_mipmap");
   fboMultisampleSupported=-1 < OPENGL_EXTENSIONS.indexOf("framebuffer_multisample");
   packedDepthStencilSupported=-1 < OPENGL_EXTENSIONS.indexOf("packed_depth_stencil");
   try {
-    pgl.glBlendEquation(PGL.GL_FUNC_ADD);
+    pgl.blendEquation(PGL.FUNC_ADD);
     blendEqSupported=true;
   }
  catch (  Exception e) {
     blendEqSupported=false;
   }
   int temp[]=new int[2];
-  pgl.glGetIntegerv(PGL.GL_MAX_TEXTURE_SIZE,temp,0);
+  pgl.getIntegerv(PGL.MAX_TEXTURE_SIZE,temp,0);
   maxTextureSize=temp[0];
-  pgl.glGetIntegerv(PGL.GL_MAX_SAMPLES,temp,0);
+  pgl.getIntegerv(PGL.MAX_SAMPLES,temp,0);
   maxSamples=temp[0];
-  pgl.glGetIntegerv(PGL.GL_ALIASED_LINE_WIDTH_RANGE,temp,0);
+  pgl.getIntegerv(PGL.ALIASED_LINE_WIDTH_RANGE,temp,0);
   maxLineWidth=temp[1];
-  pgl.glGetIntegerv(PGL.GL_ALIASED_POINT_SIZE_RANGE,temp,0);
+  pgl.getIntegerv(PGL.ALIASED_POINT_SIZE_RANGE,temp,0);
   maxPointSize=temp[1];
-  pgl.glGetIntegerv(PGL.GL_DEPTH_BITS,temp,0);
+  pgl.getIntegerv(PGL.DEPTH_BITS,temp,0);
   depthBits=temp[0];
-  pgl.glGetIntegerv(PGL.GL_STENCIL_BITS,temp,0);
+  pgl.getIntegerv(PGL.STENCIL_BITS,temp,0);
   stencilBits=temp[0];
   glParamsRead=true;
 }
