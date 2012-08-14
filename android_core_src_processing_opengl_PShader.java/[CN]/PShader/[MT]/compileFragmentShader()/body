@@ -1,11 +1,11 @@
 {
   glFragment=pgMain.createGLSLFragShaderObject(context.code());
-  pgl.glShaderSource(glFragment,fragmentShaderSource);
-  pgl.glCompileShader(glFragment);
+  pgl.shaderSource(glFragment,fragmentShaderSource);
+  pgl.compileShader(glFragment);
   int[] compiled=new int[1];
-  pgl.glGetShaderiv(glFragment,PGL.GL_COMPILE_STATUS,compiled,0);
-  if (compiled[0] == PGL.GL_FALSE) {
-    PGraphics.showException("Cannot compile fragment shader:\n" + pgl.glGetShaderInfoLog(glFragment));
+  pgl.getShaderiv(glFragment,PGL.COMPILE_STATUS,compiled,0);
+  if (compiled[0] == PGL.FALSE) {
+    PGraphics.showException("Cannot compile fragment shader:\n" + pgl.getShaderInfoLog(glFragment));
     return false;
   }
  else {

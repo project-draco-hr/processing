@@ -1,27 +1,27 @@
 {
   if (!loadedTexShader) {
-    texVertShader=createShader(GL_VERTEX_SHADER,texVertShaderSource);
-    texFragShader=createShader(GL_FRAGMENT_SHADER,texFragShaderSource);
+    texVertShader=createShader(VERTEX_SHADER,texVertShaderSource);
+    texFragShader=createShader(FRAGMENT_SHADER,texFragShaderSource);
     if (0 < texVertShader && 0 < texFragShader) {
       texShaderProgram=createProgram(texVertShader,texFragShader);
     }
     if (0 < texShaderProgram) {
-      texVertLoc=glGetAttribLocation(texShaderProgram,"inVertex");
-      texTCoordLoc=glGetAttribLocation(texShaderProgram,"inTexcoord");
+      texVertLoc=getAttribLocation(texShaderProgram,"inVertex");
+      texTCoordLoc=getAttribLocation(texShaderProgram,"inTexcoord");
     }
     texData=allocateDirectFloatBuffer(texCoords.length);
     loadedTexShader=true;
   }
   if (0 < texShaderProgram) {
     boolean[] depthTest=new boolean[1];
-    glGetBooleanv(GL_DEPTH_TEST,depthTest,0);
-    glDisable(GL_DEPTH_TEST);
+    getBooleanv(DEPTH_TEST,depthTest,0);
+    disable(DEPTH_TEST);
     boolean[] depthMask=new boolean[1];
-    glGetBooleanv(GL_DEPTH_WRITEMASK,depthMask,0);
-    glDepthMask(false);
-    glUseProgram(texShaderProgram);
-    glEnableVertexAttribArray(texVertLoc);
-    glEnableVertexAttribArray(texTCoordLoc);
+    getBooleanv(DEPTH_WRITEMASK,depthMask,0);
+    depthMask(false);
+    useProgram(texShaderProgram);
+    enableVertexAttribArray(texVertLoc);
+    enableVertexAttribArray(texTCoordLoc);
     texCoords[0]=2 * (float)scrX0 / pg.width - 1;
     texCoords[1]=2 * (float)scrY0 / pg.height - 1;
     texCoords[2]=(float)texX0 / width;
@@ -40,31 +40,31 @@
     texCoords[15]=(float)texY1 / height;
     texData.rewind();
     texData.put(texCoords);
-    glActiveTexture(GL_TEXTURE0);
+    activeTexture(TEXTURE0);
     boolean enabledTex=false;
-    if (!texturingIsEnabled(GL_TEXTURE_2D)) {
-      enableTexturing(GL_TEXTURE_2D);
+    if (!texturingIsEnabled(TEXTURE_2D)) {
+      enableTexturing(TEXTURE_2D);
       enabledTex=true;
     }
-    glBindTexture(target,id);
+    bindTexture(target,id);
     texData.position(0);
-    glVertexAttribPointer(texVertLoc,2,GL_FLOAT,false,4 * SIZEOF_FLOAT,texData);
+    vertexAttribPointer(texVertLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,texData);
     texData.position(2);
-    glVertexAttribPointer(texTCoordLoc,2,GL_FLOAT,false,4 * SIZEOF_FLOAT,texData);
-    glDrawArrays(GL_TRIANGLE_STRIP,0,4);
-    glBindTexture(target,0);
+    vertexAttribPointer(texTCoordLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,texData);
+    drawArrays(TRIANGLE_STRIP,0,4);
+    bindTexture(target,0);
     if (enabledTex) {
-      disableTexturing(GL_TEXTURE_2D);
+      disableTexturing(TEXTURE_2D);
     }
-    glDisableVertexAttribArray(texVertLoc);
-    glDisableVertexAttribArray(texTCoordLoc);
-    glUseProgram(0);
+    disableVertexAttribArray(texVertLoc);
+    disableVertexAttribArray(texTCoordLoc);
+    useProgram(0);
     if (depthTest[0]) {
-      glEnable(GL_DEPTH_TEST);
+      enable(DEPTH_TEST);
     }
  else {
-      glDisable(GL_DEPTH_TEST);
+      disable(DEPTH_TEST);
     }
-    glDepthMask(depthMask[0]);
+    depthMask(depthMask[0]);
   }
 }

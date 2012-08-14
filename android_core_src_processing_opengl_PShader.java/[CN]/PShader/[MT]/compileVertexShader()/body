@@ -1,11 +1,11 @@
 {
   glVertex=pgMain.createGLSLVertShaderObject(context.code());
-  pgl.glShaderSource(glVertex,vertexShaderSource);
-  pgl.glCompileShader(glVertex);
+  pgl.shaderSource(glVertex,vertexShaderSource);
+  pgl.compileShader(glVertex);
   int[] compiled=new int[1];
-  pgl.glGetShaderiv(glVertex,PGL.GL_COMPILE_STATUS,compiled,0);
-  if (compiled[0] == PGL.GL_FALSE) {
-    PGraphics.showException("Cannot compile vertex shader:\n" + pgl.glGetShaderInfoLog(glVertex));
+  pgl.getShaderiv(glVertex,PGL.COMPILE_STATUS,compiled,0);
+  if (compiled[0] == PGL.FALSE) {
+    PGraphics.showException("Cannot compile vertex shader:\n" + pgl.getShaderInfoLog(glVertex));
     return false;
   }
  else {

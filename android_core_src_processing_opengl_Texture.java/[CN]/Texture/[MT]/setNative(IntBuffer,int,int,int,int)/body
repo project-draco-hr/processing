@@ -16,20 +16,20 @@
     pgl.enableTexturing(glTarget);
     enabledTex=true;
   }
-  pgl.glBindTexture(glTarget,glName);
+  pgl.bindTexture(glTarget,glName);
   if (usingMipmaps) {
     if (PGraphicsOpenGL.autoMipmapGenSupported) {
-      pgl.glTexSubImage2D(glTarget,0,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,pixels);
-      pgl.glGenerateMipmap(glTarget);
+      pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixels);
+      pgl.generateMipmap(glTarget);
     }
  else {
-      pgl.glTexSubImage2D(glTarget,0,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,pixels);
+      pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixels);
     }
   }
  else {
-    pgl.glTexSubImage2D(glTarget,0,x,y,w,h,PGL.GL_RGBA,PGL.GL_UNSIGNED_BYTE,pixels);
+    pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixels);
   }
-  pgl.glBindTexture(glTarget,0);
+  pgl.bindTexture(glTarget,0);
   if (enabledTex) {
     pgl.disableTexturing(glTarget);
   }
