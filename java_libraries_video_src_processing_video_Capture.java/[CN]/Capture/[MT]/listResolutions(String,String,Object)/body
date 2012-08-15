@@ -1,0 +1,39 @@
+{
+  Pipeline testPipeline=new Pipeline("test");
+  Element source=ElementFactory.make(sourceName,"source");
+  source.set(propertyName,propertyValue);
+  BufferDataAppSink sink=new BufferDataAppSink("sink","",new BufferDataAppSink.Listener(){
+    public void bufferFrame(    int w,    int h,    Buffer buffer){
+    }
+  }
+);
+  testPipeline.addMany(source,sink);
+  Element.linkMany(source,sink);
+  testPipeline.play();
+  testPipeline.getState();
+  ArrayList<String> resolutions=new ArrayList<String>();
+  for (  Pad pad : source.getPads()) {
+    Caps caps=pad.getCaps();
+    int n=caps.size();
+    for (int i=0; i < n; i++) {
+      Structure str=caps.getStructure(i);
+      if (!str.hasIntField("width") || !str.hasIntField("height"))       continue;
+      int w=((Integer)str.getValue("width")).intValue();
+      int h=((Integer)str.getValue("height")).intValue();
+      if (PApplet.platform == WINDOWS) {
+        addResFromString(resolutions,str.toString(),w,h);
+      }
+ else {
+        addResFromStructure(resolutions,str,w,h);
+      }
+    }
+  }
+  testPipeline.stop();
+  testPipeline.getState();
+  if (sink != null) {
+    sink.removeListener();
+    sink.dispose();
+  }
+  testPipeline.dispose();
+  return resolutions;
+}

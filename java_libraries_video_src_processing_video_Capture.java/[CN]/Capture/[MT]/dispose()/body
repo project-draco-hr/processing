@@ -1,3 +1,28 @@
 {
-  delete();
+  if (pipeline != null) {
+    try {
+      if (pipeline.isPlaying()) {
+        pipeline.stop();
+        pipeline.getState();
+      }
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    pixels=null;
+    copyPixels=null;
+    if (rgbSink != null) {
+      rgbSink.removeListener();
+      rgbSink.dispose();
+      rgbSink=null;
+    }
+    natBuffer=null;
+    if (natSink != null) {
+      natSink.removeListener();
+      natSink.dispose();
+      natSink=null;
+    }
+    pipeline.dispose();
+    pipeline=null;
+  }
 }

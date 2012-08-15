@@ -1,0 +1,23 @@
+{
+  boolean singleFrac=false;
+  try {
+    Fraction fr=str.getFraction("framerate");
+    res.add(makeResolutionString(w,h,fr.numerator,fr.denominator));
+  }
+ catch (  Exception e) {
+  }
+  if (!singleFrac) {
+    ValueList flist=null;
+    try {
+      flist=str.getValueList("framerate");
+    }
+ catch (    Exception e) {
+    }
+    if (flist != null) {
+      for (int k=0; k < flist.getSize(); k++) {
+        Fraction fr=flist.getFraction(k);
+        res.add(makeResolutionString(w,h,fr.numerator,fr.denominator));
+      }
+    }
+  }
+}

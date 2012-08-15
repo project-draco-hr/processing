@@ -11,7 +11,7 @@
     if (copyMask == null || copyMask.equals("")) {
       initCopyMask();
     }
-    String caps="width=" + reqWidth + ", height="+ reqHeight+ fpsStr+ ", "+ copyMask;
+    String caps=copyMask;
     natSink=new BufferDataAppSink("nat",caps,new BufferDataAppSink.Listener(){
       public void bufferFrame(      int w,      int h,      Buffer buffer){
         invokeEvent(w,h,buffer);
@@ -19,7 +19,7 @@
     }
 );
     natSink.setAutoDisposeBuffer(false);
-    gpipeline.addMany(gsource,natSink);
+    pipeline.addMany(gsource,natSink);
     Element.linkMany(gsource,natSink);
   }
  else {
@@ -33,7 +33,7 @@
     }
 );
     rgbSink.setPassDirectBuffer(Video.passDirectBuffer);
-    gpipeline.addMany(gsource,conv,videofilter,rgbSink);
+    pipeline.addMany(gsource,conv,videofilter,rgbSink);
     Element.linkMany(gsource,conv,videofilter,rgbSink);
   }
   pipelineReady=true;
