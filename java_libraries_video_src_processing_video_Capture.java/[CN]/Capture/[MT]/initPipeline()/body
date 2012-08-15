@@ -1,7 +1,7 @@
 {
   String fpsStr="";
-  if (!fps.equals("")) {
-    fpsStr=", framerate=" + fps;
+  if (!frameRateString.equals("")) {
+    fpsStr=", framerate=" + frameRateString;
   }
   if (bufferSink != null || (Video.useGLBufferSink && parent.g.isGL())) {
     useBufferSink=true;
@@ -11,7 +11,7 @@
     if (copyMask == null || copyMask.equals("")) {
       initCopyMask();
     }
-    String caps=copyMask;
+    String caps="width=" + reqWidth + ", height="+ reqHeight+ fpsStr+ ", "+ copyMask;
     natSink=new BufferDataAppSink("nat",caps,new BufferDataAppSink.Listener(){
       public void bufferFrame(      int w,      int h,      Buffer buffer){
         invokeEvent(w,h,buffer);
@@ -19,8 +19,8 @@
     }
 );
     natSink.setAutoDisposeBuffer(false);
-    pipeline.addMany(gsource,natSink);
-    Element.linkMany(gsource,natSink);
+    pipeline.addMany(sourceElement,natSink);
+    Element.linkMany(sourceElement,natSink);
   }
  else {
     Element conv=ElementFactory.make("ffmpegcolorspace","ColorConverter");
@@ -33,8 +33,8 @@
     }
 );
     rgbSink.setPassDirectBuffer(Video.passDirectBuffer);
-    pipeline.addMany(gsource,conv,videofilter,rgbSink);
-    Element.linkMany(gsource,conv,videofilter,rgbSink);
+    pipeline.addMany(sourceElement,conv,videofilter,rgbSink);
+    Element.linkMany(sourceElement,conv,videofilter,rgbSink);
   }
   pipelineReady=true;
   newFrame=false;

@@ -1,20 +1,40 @@
 {
   this.parent=parent;
   Video.init();
+  checkValidDevices(src);
   parent.registerDispose(this);
   setEventHandlerObject(parent);
   pipeline=new Pipeline("Video Capture");
-  this.source=sourceName;
-  fps=frameRate;
-  reqWidth=requestWidth;
-  reqHeight=requestHeight;
-  gsource=ElementFactory.make(sourceName,"Source");
-  if (properties != null) {
-    Iterator<String> it=properties.keySet().iterator();
+  frameRateString=fps;
+  if (frameRateString.equals("")) {
+    frameRate=-1;
+  }
+ else {
+    String[] parts=frameRateString.split("/");
+    if (parts.length == 2) {
+      int fpsDenominator=PApplet.parseInt(parts[0]);
+      int fpsNumerator=PApplet.parseInt(parts[1]);
+      frameRate=(float)fpsDenominator / (float)fpsNumerator;
+    }
+ else     if (parts.length == 1) {
+      frameRateString+="/1";
+      frameRate=PApplet.parseFloat(parts[0]);
+    }
+ else {
+      frameRateString="";
+      frameRate=-1;
+    }
+  }
+  reqWidth=rw;
+  reqHeight=rh;
+  sourceName=src;
+  sourceElement=ElementFactory.make(src,"Source");
+  if (props != null) {
+    Iterator<String> it=props.keySet().iterator();
     while (it.hasNext()) {
       String name=it.next();
-      Object value=properties.get(name);
-      gsource.set(name,value);
+      Object value=props.get(name);
+      sourceElement.set(name,value);
     }
   }
   bufWidth=bufHeight=0;
