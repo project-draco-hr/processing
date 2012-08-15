@@ -3,6 +3,9 @@
   if (!sinkReady) {
     initSink();
   }
+  float fps=getSourceFrameRate();
+  int frame=(int)(where * fps);
+  where=frame / fps;
   boolean res;
   long pos=Video.secToNanoLong(where);
   res=playBin.seek(1.0,Format.TIME,SeekFlags.FLUSH,SeekType.SET,pos,SeekType.NONE,-1);
