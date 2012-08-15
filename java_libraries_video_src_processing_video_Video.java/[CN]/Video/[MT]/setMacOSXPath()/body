@@ -1,19 +1,12 @@
 {
-  if (systemGStreamer && lookForGlobalGStreamer()) {
-    gstreamerBinPath=systemGStreamerPath;
-    gstreamerPluginsPath=systemGStreamerPath + "/" + systemPluginsFolder;
+  if (gstreamerPath.equals("")) {
+    LibraryPath libPath=new LibraryPath();
+    String path=libPath.get();
+    gstreamerBinPath=buildGStreamerBinPath(path,"/macosx" + bitsJVM);
+    gstreamerPluginsPath=gstreamerBinPath + "/plugins";
   }
  else {
-    systemGStreamer=false;
-    if (localGStreamerPath.equals("")) {
-      LibraryPath libPath=new LibraryPath();
-      String path=libPath.get();
-      gstreamerBinPath=buildGStreamerBinPath(path,"/macosx" + bitsJVM);
-      gstreamerPluginsPath=gstreamerBinPath + "/" + localPluginsFolder;
-    }
- else {
-      gstreamerBinPath=localGStreamerPath;
-      gstreamerPluginsPath=localGStreamerPath + "/" + localPluginsFolder;
-    }
+    gstreamerBinPath=gstreamerPath;
+    gstreamerPluginsPath=gstreamerPath + "/plugins";
   }
 }

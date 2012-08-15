@@ -1,6 +1,5 @@
 {
   if (PApplet.platform == LINUX) {
-    systemGStreamer=true;
     setLinuxPath();
   }
  else   if (PApplet.platform == WINDOWS) {
@@ -12,16 +11,11 @@
   if (!gstreamerBinPath.equals("")) {
     System.setProperty("jna.library.path",gstreamerBinPath);
   }
-  if ((PApplet.platform == LINUX) && !systemGStreamer) {
-    System.err.println("Loading local version of GStreamer not supported in Linux at this time.");
-  }
-  if ((PApplet.platform == WINDOWS) && !systemGStreamer) {
+  if (PApplet.platform == WINDOWS) {
     LibraryLoader loader=LibraryLoader.getInstance();
     if (loader == null) {
       System.err.println("Cannot load local version of GStreamer libraries.");
     }
-  }
-  if ((PApplet.platform == MACOSX) && !systemGStreamer) {
   }
   String[] args={""};
   Gst.setUseDefaultContext(defaultGLibContext);
