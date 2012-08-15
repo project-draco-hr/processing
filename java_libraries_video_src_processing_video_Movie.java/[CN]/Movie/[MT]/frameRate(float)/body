@@ -1,9 +1,11 @@
 {
-  float f=(0 < ifps && 0 < fps) ? ifps / fps : 1;
+  if (seeking)   return;
+  float f=(0 < ifps && 0 < frameRate) ? ifps / frameRate : 1;
   if (playing) {
-    gplayer.pause();
+    playBin.pause();
+    playBin.getState();
   }
-  long t=gplayer.queryPosition(TimeUnit.NANOSECONDS);
+  long t=playBin.queryPosition(TimeUnit.NANOSECONDS);
   boolean res;
   long start, stop;
   if (rate > 0) {
@@ -14,12 +16,16 @@
     start=0;
     stop=t;
   }
-  res=gplayer.seek(rate * f,Format.TIME,SeekFlags.FLUSH,SeekType.SET,start,SeekType.SET,stop);
+  res=playBin.seek(rate * f,Format.TIME,SeekFlags.FLUSH,SeekType.SET,start,SeekType.SET,stop);
+  playBin.getState();
   if (!res) {
     PGraphics.showWarning("Seek operation failed.");
   }
   if (playing) {
-    gplayer.play();
+    playBin.play();
   }
-  fps=ifps;
+  frameRate=ifps;
+  seeking=true;
+  playBin.getState();
+  seeking=false;
 }

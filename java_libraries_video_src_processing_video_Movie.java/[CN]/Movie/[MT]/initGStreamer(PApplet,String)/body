@@ -1,36 +1,36 @@
 {
   this.parent=parent;
-  gplayer=null;
+  playBin=null;
   File file;
   Video.init();
   try {
     try {
       file=new File(parent.dataPath(filename));
       if (file.exists()) {
-        gplayer=new PlayBin2("Movie Player");
-        gplayer.setInputFile(file);
+        playBin=new PlayBin2("Movie Player");
+        playBin.setInputFile(file);
       }
     }
  catch (    Exception e) {
     }
-    if (gplayer == null) {
+    if (playBin == null) {
       try {
         file=new File(filename);
         if (file.exists()) {
-          gplayer=new PlayBin2("Movie Player");
-          gplayer.setInputFile(file);
+          playBin=new PlayBin2("Movie Player");
+          playBin.setInputFile(file);
         }
       }
  catch (      Exception e) {
         e.printStackTrace();
       }
     }
-    if (gplayer == null) {
+    if (playBin == null) {
       for (int i=0; i < supportedProtocols.length; i++) {
         if (filename.startsWith(supportedProtocols[i] + "://")) {
           try {
-            gplayer=new PlayBin2("Movie Player");
-            gplayer.setURI(URI.create(filename));
+            playBin=new PlayBin2("Movie Player");
+            playBin.setURI(URI.create(filename));
             break;
           }
  catch (          Exception e) {
@@ -42,7 +42,7 @@
   }
  catch (  SecurityException se) {
   }
-  if (gplayer == null) {
+  if (playBin == null) {
     parent.die("Could not load movie file " + filename,null);
   }
   try {
@@ -50,7 +50,8 @@
     parent.registerDispose(this);
     setEventHandlerObject(parent);
     rate=1.0f;
-    fps=-1;
+    frameRate=-1;
+    volume=-1;
     sinkReady=false;
     bufWidth=bufHeight=0;
   }

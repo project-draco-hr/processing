@@ -1,3 +1,31 @@
 {
-  delete();
+  if (playBin != null) {
+    try {
+      if (playBin.isPlaying()) {
+        playBin.stop();
+        playBin.getState();
+      }
+    }
+ catch (    IllegalStateException e) {
+      PGraphics.showWarning("error when deleting player, maybe some native resource is already disposed");
+    }
+catch (    Exception e) {
+      e.printStackTrace();
+    }
+    pixels=null;
+    copyPixels=null;
+    if (rgbSink != null) {
+      rgbSink.removeListener();
+      rgbSink.dispose();
+      rgbSink=null;
+    }
+    natBuffer=null;
+    if (natSink != null) {
+      natSink.removeListener();
+      natSink.dispose();
+      natSink=null;
+    }
+    playBin.dispose();
+    playBin=null;
+  }
 }
