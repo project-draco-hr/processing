@@ -1,36 +1,36 @@
 {
   this.parent=parent;
-  playBin=null;
+  playbin=null;
   File file;
   Video.init();
   try {
     try {
       file=new File(parent.dataPath(filename));
       if (file.exists()) {
-        playBin=new PlayBin2("Movie Player");
-        playBin.setInputFile(file);
+        playbin=new PlayBin2("Movie Player");
+        playbin.setInputFile(file);
       }
     }
  catch (    Exception e) {
     }
-    if (playBin == null) {
+    if (playbin == null) {
       try {
         file=new File(filename);
         if (file.exists()) {
-          playBin=new PlayBin2("Movie Player");
-          playBin.setInputFile(file);
+          playbin=new PlayBin2("Movie Player");
+          playbin.setInputFile(file);
         }
       }
  catch (      Exception e) {
         e.printStackTrace();
       }
     }
-    if (playBin == null) {
+    if (playbin == null) {
       for (int i=0; i < supportedProtocols.length; i++) {
         if (filename.startsWith(supportedProtocols[i] + "://")) {
           try {
-            playBin=new PlayBin2("Movie Player");
-            playBin.setURI(URI.create(filename));
+            playbin=new PlayBin2("Movie Player");
+            playbin.setURI(URI.create(filename));
             break;
           }
  catch (          Exception e) {
@@ -42,7 +42,7 @@
   }
  catch (  SecurityException se) {
   }
-  if (playBin == null) {
+  if (playbin == null) {
     parent.die("Could not load movie file " + filename,null);
   }
   try {

@@ -2,10 +2,10 @@
   if (seeking)   return;
   float f=(0 < ifps && 0 < frameRate) ? ifps / frameRate : 1;
   if (playing) {
-    playBin.pause();
-    playBin.getState();
+    playbin.pause();
+    playbin.getState();
   }
-  long t=playBin.queryPosition(TimeUnit.NANOSECONDS);
+  long t=playbin.queryPosition(TimeUnit.NANOSECONDS);
   boolean res;
   long start, stop;
   if (rate > 0) {
@@ -16,16 +16,16 @@
     start=0;
     stop=t;
   }
-  res=playBin.seek(rate * f,Format.TIME,SeekFlags.FLUSH,SeekType.SET,start,SeekType.SET,stop);
-  playBin.getState();
+  res=playbin.seek(rate * f,Format.TIME,SeekFlags.FLUSH,SeekType.SET,start,SeekType.SET,stop);
+  playbin.getState();
   if (!res) {
     PGraphics.showWarning("Seek operation failed.");
   }
   if (playing) {
-    playBin.play();
+    playbin.play();
   }
   frameRate=ifps;
   seeking=true;
-  playBin.getState();
+  playbin.getState();
   seeking=false;
 }
