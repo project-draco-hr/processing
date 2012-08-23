@@ -17,17 +17,6 @@
     if (offscreenMultisample) {
       offscreenFramebufferMultisample.copy(offscreenFramebuffer);
     }
-    if (offscreenMultisample) {
-      pushFramebuffer();
-      setFramebuffer(offscreenFramebuffer);
-    }
-    pgl.colorMask(false,false,false,true);
-    pgl.clearColor(0,0,0,1);
-    pgl.clear(PGL.COLOR_BUFFER_BIT);
-    pgl.colorMask(true,true,true,true);
-    if (offscreenMultisample) {
-      popFramebuffer();
-    }
     if (!pgl.initialized || !pgPrimary.pgl.initialized || parent.frameCount == 0) {
       saveSurfaceToPixels();
       restoreSurface=true;
