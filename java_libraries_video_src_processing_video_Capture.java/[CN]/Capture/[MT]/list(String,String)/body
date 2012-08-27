@@ -4,8 +4,13 @@
   ArrayList<String> configList=new ArrayList<String>();
   for (  String device : devices) {
     ArrayList<String> resolutions=listResolutions(sourceName,propertyName,device);
-    for (    String res : resolutions) {
-      configList.add("name=" + device + ","+ res);
+    if (0 < resolutions.size()) {
+      for (      String res : resolutions) {
+        configList.add("name=" + device + ","+ res);
+      }
+    }
+ else {
+      configList.add("name=" + device);
     }
   }
   String[] configs=new String[configList.size()];

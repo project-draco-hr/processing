@@ -1,4 +1,12 @@
 {
+  String whStr="";
+  if (0 < reqWidth && 0 < reqHeight) {
+    whStr="width=" + reqWidth + ", height="+ reqHeight;
+  }
+ else {
+    PGraphics.showWarning("Resolution information not available, attempting" + " to open the capture device at 320x240");
+    whStr="width=320, height=240";
+  }
   String fpsStr="";
   if (!frameRateString.equals("")) {
     fpsStr=", framerate=" + frameRateString;
@@ -11,7 +19,7 @@
     if (copyMask == null || copyMask.equals("")) {
       initCopyMask();
     }
-    String caps="width=" + reqWidth + ", height="+ reqHeight+ fpsStr+ ", "+ copyMask;
+    String caps=whStr + fpsStr + ", "+ copyMask;
     natSink=new BufferDataAppSink("nat",caps,new BufferDataAppSink.Listener(){
       public void bufferFrame(      int w,      int h,      Buffer buffer){
         invokeEvent(w,h,buffer);
