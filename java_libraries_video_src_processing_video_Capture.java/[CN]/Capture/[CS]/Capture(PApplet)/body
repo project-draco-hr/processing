@@ -1,7 +1,11 @@
 {
-  String name=getName(requestConfig);
-  int[] size=getSize(requestConfig);
-  String fps=getFrameRate(requestConfig);
+  String[] configs=Capture.list();
+  if (configs.length == 0) {
+    throw new RuntimeException("There are no cameras available for capture");
+  }
+  String name=getName(configs[0]);
+  int[] size=getSize(configs[0]);
+  String fps=getFrameRate(configs[0]);
   String idName;
   Object idValue;
   if (devicePropertyName.equals("")) {

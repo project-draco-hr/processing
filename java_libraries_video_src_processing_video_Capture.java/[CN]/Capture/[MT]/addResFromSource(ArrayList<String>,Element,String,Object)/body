@@ -4,13 +4,17 @@
     int n=caps.size();
     for (int i=0; i < n; i++) {
       Structure str=caps.getStructure(i);
-      System.out.println(str);
-      if (str.hasField(propertyName)) {
+      if (propertyName != null && str.hasField(propertyName)) {
         Object value=str.getValue(propertyName);
         if (value instanceof String) {
           String strValue=(String)value;
           String checkValue=(String)propertyValue;
           if (!strValue.equals(checkValue))           continue;
+        }
+ else         if (value instanceof Integer) {
+          Integer intValue=(Integer)value;
+          Integer checkValue=(Integer)propertyValue;
+          if (intValue != checkValue)           continue;
         }
       }
       if (!str.hasIntField("width") || !str.hasIntField("height"))       continue;

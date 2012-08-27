@@ -1,11 +1,14 @@
 {
   super(requestWidth,requestHeight,RGB);
-  HashMap<String,Object> properties=new HashMap<String,Object>();
+  String idName;
+  Object idValue;
   if (devicePropertyName.equals("")) {
-    properties.put(indexPropertyName,PApplet.parseInt(cameraName));
+    idName=indexPropertyName;
+    idValue=new Integer(PApplet.parseInt(cameraName));
   }
  else {
-    properties.put(devicePropertyName,cameraName);
+    idName=devicePropertyName;
+    idValue=cameraName;
   }
-  initGStreamer(parent,requestWidth,requestHeight,capturePlugin,properties,"");
+  initGStreamer(parent,requestWidth,requestHeight,sourceElementName,idName,idValue,"");
 }
