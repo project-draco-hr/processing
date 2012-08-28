@@ -4,11 +4,25 @@
     int n=caps.size();
     if (0 < n) {
       Structure str=caps.getStructure(0);
-      if (!str.hasIntField("width") || !str.hasIntField("height"))       return;
+      if (!str.hasIntField("width") || !str.hasIntField("height") || !str.hasIntField("framerate"))       return;
       int w=((Integer)str.getValue("width")).intValue();
       int h=((Integer)str.getValue("height")).intValue();
       while (80 <= w) {
-        addResFromStructure(res,str,w,h);
+        int num=30;
+        int den=1;
+        try {
+          Fraction fr=str.getFraction("framerate");
+          num=fr.numerator;
+          den=fr.denominator;
+        }
+ catch (        Exception e) {
+          return;
+        }
+        res.add(makeResolutionString(w,h,num,den));
+        if (num == 30 && den == 1) {
+          res.add(makeResolutionString(w,h,15,1));
+          res.add(makeResolutionString(w,h,1,1));
+        }
         if (w % 2 == 0 && h % 2 == 0) {
           w/=2;
           h/=2;
