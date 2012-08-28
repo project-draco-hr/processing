@@ -1,0 +1,22 @@
+{
+  for (  Pad pad : src.getPads()) {
+    Caps caps=pad.getNegotiatedCaps();
+    int n=caps.size();
+    if (0 < n) {
+      Structure str=caps.getStructure(0);
+      if (!str.hasIntField("width") || !str.hasIntField("height"))       return;
+      int w=((Integer)str.getValue("width")).intValue();
+      int h=((Integer)str.getValue("height")).intValue();
+      while (80 <= w) {
+        addResFromStructure(res,str,w,h);
+        if (w % 2 == 0 && h % 2 == 0) {
+          w/=2;
+          h/=2;
+        }
+ else {
+          break;
+        }
+      }
+    }
+  }
+}
