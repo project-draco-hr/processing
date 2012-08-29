@@ -1,15 +1,25 @@
 {
-  if (PApplet.platform == LINUX) {
-    setLinuxPath();
+  String libPath=System.getProperty("gstreamer.library.path");
+  if (libPath != null) {
+    gstreamerLibPath=libPath;
+    String pluginPath=System.getProperty("gstreamer.plugin.path");
+    if (pluginPath != null) {
+      gstreamerPluginPath=pluginPath;
+    }
   }
- else   if (PApplet.platform == WINDOWS) {
-    setWindowsPath();
+ else {
+    if (PApplet.platform == LINUX) {
+      buildLinuxPaths();
+    }
+ else     if (PApplet.platform == WINDOWS) {
+      buildWindowsPaths();
+    }
+ else     if (PApplet.platform == MACOSX) {
+      buildMacOSXPaths();
+    }
   }
- else   if (PApplet.platform == MACOSX) {
-    setMacOSXPath();
-  }
-  if (!gstreamerBinPath.equals("")) {
-    System.setProperty("jna.library.path",gstreamerBinPath);
+  if (!gstreamerLibPath.equals("")) {
+    System.setProperty("jna.library.path",gstreamerLibPath);
   }
   if (PApplet.platform == WINDOWS) {
     LibraryLoader loader=LibraryLoader.getInstance();
