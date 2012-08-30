@@ -20,4 +20,15 @@
     pgCurrent.updateGLProjection();
     setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
   }
+  float x=pgCurrent.viewport[0];
+  float y=pgCurrent.viewport[1];
+  float w=pgCurrent.viewport[2];
+  float h=pgCurrent.viewport[3];
+  setUniformValue(viewportLoc,x,y,w,h);
+  if (pgCurrent.hintEnabled(ENABLE_PERSPECTIVE_CORRECTED_STROKE)) {
+    setUniformValue(perspectiveLoc,1);
+  }
+ else {
+    setUniformValue(perspectiveLoc,0);
+  }
 }
