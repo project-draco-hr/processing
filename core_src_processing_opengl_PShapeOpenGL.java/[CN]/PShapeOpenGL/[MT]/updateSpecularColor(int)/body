@@ -1,8 +1,8 @@
 {
   if (specularColor == newSpecularColor)   return;
   specularColor=newSpecularColor;
+  Arrays.fill(inGeo.specular,0,inGeo.vertexCount,PGL.javaToNativeARGB(specularColor));
   if (shapeEnded && tessellated && hasPolys) {
-    Arrays.fill(inGeo.specular,0,inGeo.vertexCount,PGL.javaToNativeARGB(specularColor));
     if (is3D()) {
       Arrays.fill(tessGeo.polySpecular,firstPolyVertex,lastPolyVertex + 1,PGL.javaToNativeARGB(specularColor));
       root.setModifiedPolySpecular(firstPolyVertex,lastPolyVertex);

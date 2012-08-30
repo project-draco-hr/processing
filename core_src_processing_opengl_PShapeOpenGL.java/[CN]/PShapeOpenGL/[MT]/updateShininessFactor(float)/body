@@ -1,8 +1,8 @@
 {
   if (PGraphicsOpenGL.same(shininess,newShininess))   return;
   shininess=newShininess;
+  Arrays.fill(inGeo.shininess,0,inGeo.vertexCount,shininess);
   if (shapeEnded && tessellated && hasPolys) {
-    Arrays.fill(inGeo.shininess,0,inGeo.vertexCount,shininess);
     if (is3D()) {
       Arrays.fill(tessGeo.polyShininess,firstPolyVertex,lastPolyVertex + 1,shininess);
       root.setModifiedPolyShininess(firstPolyVertex,lastPolyVertex);

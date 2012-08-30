@@ -22,7 +22,9 @@
         }
       }
       if (-1 < child.firstPolyVertex) {
-        if (firstPolyVertex == -1)         firstPolyVertex=Integer.MAX_VALUE;
+        if (firstPolyVertex == -1) {
+          firstPolyVertex=Integer.MAX_VALUE;
+        }
         firstPolyVertex=PApplet.min(firstPolyVertex,child.firstPolyVertex);
       }
       if (-1 < child.lastPolyVertex) {
@@ -42,15 +44,21 @@
         root.polyVertexOffset=root.polyVertexAbs;
         cache.indexOffset[n]=root.polyIndexOffset;
       }
- else       tessGeo.incPolyIndices(ioffset,ioffset + icount - 1,root.polyVertexRel);
+ else {
+        tessGeo.incPolyIndices(ioffset,ioffset + icount - 1,root.polyVertexRel);
+      }
       cache.vertexOffset[n]=root.polyVertexOffset;
-      if (is2D())       setFirstStrokeVertex(n,lastPolyVertex);
+      if (is2D()) {
+        setFirstStrokeVertex(n,lastPolyVertex);
+      }
       root.polyIndexOffset+=icount;
       root.polyVertexAbs+=vcount;
       root.polyVertexRel+=vcount;
       lastPolyVertex+=vcount;
     }
     lastPolyVertex--;
-    if (is2D())     setLastStrokeVertex(lastPolyVertex);
+    if (is2D()) {
+      setLastStrokeVertex(lastPolyVertex);
+    }
   }
 }
