@@ -1,3 +1,10 @@
 {
-  PGraphics.showMethodWarning("mask");
+  if (alpha.width != width || alpha.height != height) {
+    throw new RuntimeException("The PImage used with mask() must be " + "the same size as the applet.");
+  }
+  if (maskShader == null) {
+    maskShader=new PolyTexShader(parent,defPolyTexShaderVertURL,maskShaderFragURL);
+  }
+  maskShader.set("maskSampler",alpha);
+  filter(maskShader);
 }
