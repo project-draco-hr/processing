@@ -1,8 +1,8 @@
 {
   if (emissiveColor == newEmissiveColor)   return;
   emissiveColor=newEmissiveColor;
+  Arrays.fill(inGeo.emissive,0,inGeo.vertexCount,PGL.javaToNativeARGB(emissiveColor));
   if (shapeEnded && tessellated && 0 < tessGeo.polyVertexCount) {
-    Arrays.fill(inGeo.emissive,0,inGeo.vertexCount,PGL.javaToNativeARGB(emissiveColor));
     if (is3D()) {
       Arrays.fill(tessGeo.polyEmissive,firstPolyVertex,lastPolyVertex + 1,PGL.javaToNativeARGB(emissiveColor));
       root.setModifiedPolyEmissive(firstPolyVertex,lastPolyVertex);

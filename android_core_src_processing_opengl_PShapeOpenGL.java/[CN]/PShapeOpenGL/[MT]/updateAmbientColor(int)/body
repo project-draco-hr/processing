@@ -1,8 +1,8 @@
 {
   if (ambientColor == newAmbientColor)   return;
   ambientColor=newAmbientColor;
+  Arrays.fill(inGeo.ambient,0,inGeo.vertexCount,PGL.javaToNativeARGB(ambientColor));
   if (shapeEnded && tessellated && hasPolys) {
-    Arrays.fill(inGeo.ambient,0,inGeo.vertexCount,PGL.javaToNativeARGB(ambientColor));
     if (is3D()) {
       Arrays.fill(tessGeo.polyAmbient,firstPolyVertex,lastPolyVertex=1,PGL.javaToNativeARGB(ambientColor));
       root.setModifiedPolyAmbient(firstPolyVertex,lastPolyVertex);

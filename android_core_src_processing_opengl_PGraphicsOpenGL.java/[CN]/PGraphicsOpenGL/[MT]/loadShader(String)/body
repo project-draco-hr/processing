@@ -1,3 +1,19 @@
 {
-  return loadShader(PShader.TEXTURED,fragFilename);
+  int shaderType=getTypeFromFragmentShader(fragFilename);
+  PShader shader=null;
+  if (shaderType == PShader.TEXTURE) {
+    shader=new PolyTexShader(parent);
+    shader.setVertexShader(defPolyTexShaderVertURL);
+  }
+ else   if (shaderType == PShader.COLOR) {
+    shader=new PolyColorShader(parent);
+    shader.setVertexShader(defPolyColorShaderVertURL);
+  }
+  if (shader == null) {
+    PGraphics.showWarning("The GLSL code doesn't seem to contain a valid " + "shader to use in Processing.");
+  }
+ else {
+    shader.setFragmentShader(fragFilename);
+  }
+  return shader;
 }

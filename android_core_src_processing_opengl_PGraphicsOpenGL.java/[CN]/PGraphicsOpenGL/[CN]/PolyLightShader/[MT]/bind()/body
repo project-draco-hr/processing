@@ -1,5 +1,10 @@
 {
   super.bind();
+  if (pgCurrent == null) {
+    setRenderer(PGraphicsOpenGL.pgCurrent);
+    loadAttributes();
+    loadUniforms();
+  }
   if (-1 < inVertexLoc)   pgl.enableVertexAttribArray(inVertexLoc);
   if (-1 < inColorLoc)   pgl.enableVertexAttribArray(inColorLoc);
   if (-1 < inNormalLoc)   pgl.enableVertexAttribArray(inNormalLoc);
@@ -7,30 +12,28 @@
   if (-1 < inSpecularLoc)   pgl.enableVertexAttribArray(inSpecularLoc);
   if (-1 < inEmissiveLoc)   pgl.enableVertexAttribArray(inEmissiveLoc);
   if (-1 < inShineLoc)   pgl.enableVertexAttribArray(inShineLoc);
-  if (pgCurrent != null) {
-    if (-1 < projmodelviewMatrixLoc) {
-      pgCurrent.updateGLProjmodelview();
-      setUniformMatrix(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
-    }
-    if (-1 < modelviewMatrixLoc) {
-      pgCurrent.updateGLModelview();
-      setUniformMatrix(modelviewMatrixLoc,pgCurrent.glModelview);
-    }
-    if (-1 < projectionMatrixLoc) {
-      pgCurrent.updateGLProjection();
-      setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
-    }
-    if (-1 < normalMatrixLoc) {
-      pgCurrent.updateGLNormal();
-      setUniformMatrix(normalMatrixLoc,pgCurrent.glNormal);
-    }
-    setUniformValue(lightCountLoc,pgCurrent.lightCount);
-    setUniformVector(lightPositionLoc,pgCurrent.lightPosition,4);
-    setUniformVector(lightNormalLoc,pgCurrent.lightNormal,3);
-    setUniformVector(lightAmbientLoc,pgCurrent.lightAmbient,3);
-    setUniformVector(lightDiffuseLoc,pgCurrent.lightDiffuse,3);
-    setUniformVector(lightSpecularLoc,pgCurrent.lightSpecular,3);
-    setUniformVector(lightFalloffCoefficientsLoc,pgCurrent.lightFalloffCoefficients,3);
-    setUniformVector(lightSpotParametersLoc,pgCurrent.lightSpotParameters,2);
+  if (-1 < projmodelviewMatrixLoc) {
+    pgCurrent.updateGLProjmodelview();
+    setUniformMatrix(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
   }
+  if (-1 < modelviewMatrixLoc) {
+    pgCurrent.updateGLModelview();
+    setUniformMatrix(modelviewMatrixLoc,pgCurrent.glModelview);
+  }
+  if (-1 < projectionMatrixLoc) {
+    pgCurrent.updateGLProjection();
+    setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
+  }
+  if (-1 < normalMatrixLoc) {
+    pgCurrent.updateGLNormal();
+    setUniformMatrix(normalMatrixLoc,pgCurrent.glNormal);
+  }
+  setUniformValue(lightCountLoc,pgCurrent.lightCount);
+  setUniformVector(lightPositionLoc,pgCurrent.lightPosition,4);
+  setUniformVector(lightNormalLoc,pgCurrent.lightNormal,3);
+  setUniformVector(lightAmbientLoc,pgCurrent.lightAmbient,3);
+  setUniformVector(lightDiffuseLoc,pgCurrent.lightDiffuse,3);
+  setUniformVector(lightSpecularLoc,pgCurrent.lightSpecular,3);
+  setUniformVector(lightFalloffCoefficientsLoc,pgCurrent.lightFalloffCoefficients,3);
+  setUniformVector(lightSpotParametersLoc,pgCurrent.lightSpotParameters,2);
 }

@@ -14,30 +14,30 @@
     }
   }
  else {
-    int index=0;
+    int idx=0;
     int code=BREAK;
     if (vertices[0].length == 2) {
       for (int j=0; j < vertexCodeCount; j++) {
 switch (vertexCodes[j]) {
 case VERTEX:
-          inGeo.addVertex(vertices[index][X],vertices[index][Y],code);
+          inGeo.addVertex(vertices[idx][X],vertices[idx][Y],code);
         code=VERTEX;
-      index++;
+      idx++;
     break;
 case QUAD_BEZIER_VERTEX:
-  inGeo.addQuadraticVertex(vertices[index + 0][X],vertices[index + 0][Y],0,vertices[index + 1][X],vertices[index + 1][Y],0,fill,stroke,bezierDetail,code);
+  inGeo.addQuadraticVertex(vertices[idx + 0][X],vertices[idx + 0][Y],0,vertices[idx + 1][X],vertices[idx + 1][Y],0,fill,stroke,bezierDetail,code);
 code=VERTEX;
-index+=2;
+idx+=2;
 break;
 case BEZIER_VERTEX:
-inGeo.addBezierVertex(vertices[index + 0][X],vertices[index + 0][Y],0,vertices[index + 1][X],vertices[index + 1][Y],0,vertices[index + 2][X],vertices[index + 2][Y],0,fill,stroke,bezierDetail,code);
+inGeo.addBezierVertex(vertices[idx + 0][X],vertices[idx + 0][Y],0,vertices[idx + 1][X],vertices[idx + 1][Y],0,vertices[idx + 2][X],vertices[idx + 2][Y],0,fill,stroke,bezierDetail,code);
 code=VERTEX;
-index+=3;
+idx+=3;
 break;
 case CURVE_VERTEX:
-inGeo.addCurveVertex(vertices[index][X],vertices[index][Y],0,fill,stroke,curveDetail,code);
+inGeo.addCurveVertex(vertices[idx][X],vertices[idx][Y],0,fill,stroke,curveDetail,code);
 code=VERTEX;
-index++;
+idx++;
 case BREAK:
 code=BREAK;
 }
@@ -47,24 +47,24 @@ code=BREAK;
 for (int j=0; j < vertexCodeCount; j++) {
 switch (vertexCodes[j]) {
 case VERTEX:
-inGeo.addVertex(vertices[index][X],vertices[index][Y],vertices[index][Z],code);
+inGeo.addVertex(vertices[idx][X],vertices[idx][Y],vertices[idx][Z],code);
 code=VERTEX;
-index++;
+idx++;
 break;
 case QUAD_BEZIER_VERTEX:
-inGeo.addQuadraticVertex(vertices[index + 0][X],vertices[index + 0][Y],vertices[index + 0][Z],vertices[index + 1][X],vertices[index + 1][Y],vertices[index + 0][Z],fill,stroke,bezierDetail,code);
+inGeo.addQuadraticVertex(vertices[idx + 0][X],vertices[idx + 0][Y],vertices[idx + 0][Z],vertices[idx + 1][X],vertices[idx + 1][Y],vertices[idx + 0][Z],fill,stroke,bezierDetail,code);
 code=VERTEX;
-index+=2;
+idx+=2;
 break;
 case BEZIER_VERTEX:
-inGeo.addBezierVertex(vertices[index + 0][X],vertices[index + 0][Y],vertices[index + 0][Z],vertices[index + 1][X],vertices[index + 1][Y],vertices[index + 1][Z],vertices[index + 2][X],vertices[index + 2][Y],vertices[index + 2][Z],fill,stroke,bezierDetail,code);
+inGeo.addBezierVertex(vertices[idx + 0][X],vertices[idx + 0][Y],vertices[idx + 0][Z],vertices[idx + 1][X],vertices[idx + 1][Y],vertices[idx + 1][Z],vertices[idx + 2][X],vertices[idx + 2][Y],vertices[idx + 2][Z],fill,stroke,bezierDetail,code);
 code=VERTEX;
-index+=3;
+idx+=3;
 break;
 case CURVE_VERTEX:
-inGeo.addCurveVertex(vertices[index][X],vertices[index][Y],vertices[index][Z],fill,stroke,curveDetail,code);
+inGeo.addCurveVertex(vertices[idx][X],vertices[idx][Y],vertices[idx][Z],fill,stroke,curveDetail,code);
 code=VERTEX;
-index++;
+idx++;
 case BREAK:
 code=BREAK;
 }

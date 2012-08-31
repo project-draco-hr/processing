@@ -1,42 +1,45 @@
 {
   super.bind();
+  if (pgCurrent == null) {
+    setRenderer(PGraphicsOpenGL.pgCurrent);
+    loadAttributes();
+    loadUniforms();
+  }
   if (-1 < inVertexLoc)   pgl.enableVertexAttribArray(inVertexLoc);
   if (-1 < inColorLoc)   pgl.enableVertexAttribArray(inColorLoc);
   if (-1 < inAttribLoc)   pgl.enableVertexAttribArray(inAttribLoc);
-  if (pgCurrent != null) {
-    if (-1 < projmodelviewMatrixLoc) {
-      pgCurrent.updateGLProjmodelview();
-      setUniformMatrix(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
-    }
-    if (-1 < modelviewMatrixLoc) {
-      pgCurrent.updateGLModelview();
-      setUniformMatrix(modelviewMatrixLoc,pgCurrent.glModelview);
-    }
-    if (-1 < projectionMatrixLoc) {
-      pgCurrent.updateGLProjection();
-      setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
-    }
-    float x=pgCurrent.viewport[0];
-    float y=pgCurrent.viewport[1];
-    float w=pgCurrent.viewport[2];
-    float h=pgCurrent.viewport[3];
-    setUniformValue(viewportLoc,x,y,w,h);
-    if (pgCurrent.hintEnabled(ENABLE_PERSPECTIVE_CORRECTED_LINES)) {
-      setUniformValue(perspectiveLoc,1);
+  if (-1 < projmodelviewMatrixLoc) {
+    pgCurrent.updateGLProjmodelview();
+    setUniformMatrix(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
+  }
+  if (-1 < modelviewMatrixLoc) {
+    pgCurrent.updateGLModelview();
+    setUniformMatrix(modelviewMatrixLoc,pgCurrent.glModelview);
+  }
+  if (-1 < projectionMatrixLoc) {
+    pgCurrent.updateGLProjection();
+    setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
+  }
+  float x=pgCurrent.viewport[0];
+  float y=pgCurrent.viewport[1];
+  float w=pgCurrent.viewport[2];
+  float h=pgCurrent.viewport[3];
+  setUniformValue(viewportLoc,x,y,w,h);
+  if (pgCurrent.hintEnabled(ENABLE_STROKE_PERSPECTIVE)) {
+    setUniformValue(perspectiveLoc,1);
+  }
+ else {
+    setUniformValue(perspectiveLoc,0);
+  }
+  if (pgCurrent.hintEnabled(ENABLE_ACCURATE_2D)) {
+    setUniformValue(scaleLoc,1.0f,1.0f,1.0f);
+  }
+ else {
+    if (usingOrthoProjection) {
+      setUniformValue(scaleLoc,1.0f,1.0f,0.99f);
     }
  else {
-      setUniformValue(perspectiveLoc,0);
-    }
-    if (pgCurrent.hintEnabled(ENABLE_ACCURATE_2D)) {
-      setUniformValue(scaleLoc,1.0f,1.0f,1.0f);
-    }
- else {
-      if (usingOrthoProjection) {
-        setUniformValue(scaleLoc,1.0f,1.0f,0.99f);
-      }
- else {
-        setUniformValue(scaleLoc,0.99f,0.99f,0.99f);
-      }
+      setUniformValue(scaleLoc,0.99f,0.99f,0.99f);
     }
   }
 }
