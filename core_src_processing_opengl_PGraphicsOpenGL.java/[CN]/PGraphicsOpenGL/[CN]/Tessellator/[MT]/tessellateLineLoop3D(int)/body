@@ -1,6 +1,7 @@
 {
-  int nvert=lineCount * 4 + (lineCount - 1);
-  int nind=lineCount * 2 * 3 + (lineCount - 1) * 2 * 3;
+  int nBevelTr=noCapsJoins() ? 0 : (lineCount - 1);
+  int nvert=lineCount * 4 + nBevelTr;
+  int nind=lineCount * 2 * 3 + nBevelTr * 2 * 3;
   tess.lineVertexCheck(nvert);
   tess.lineIndexCheck(nind);
   int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
@@ -9,7 +10,12 @@
   short[] lastInd={-1,-1};
   for (int ln=0; ln < lineCount - 1; ln++) {
     int i1=in.firstVertex + ln + 1;
-    index=addLine3D(i0,i1,index,lastInd,false);
+    if (0 < nBevelTr) {
+      index=addLine3D(i0,i1,index,lastInd,false);
+    }
+ else {
+      index=addLine3D(i0,i1,index,null,false);
+    }
     i0=i1;
   }
   index=addLine3D(in.lastVertex,in.firstVertex,index,lastInd,false);

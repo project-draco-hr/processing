@@ -1,6 +1,7 @@
 {
-  int nInVert=in.getNumEdgeVertices(true);
-  int nInInd=in.getNumEdgeIndices(true);
+  boolean bevel=!noCapsJoins();
+  int nInVert=in.getNumEdgeVertices(bevel);
+  int nInInd=in.getNumEdgeIndices(bevel);
   tess.lineVertexCheck(nInVert);
   tess.lineIndexCheck(nInInd);
   int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
@@ -10,9 +11,14 @@
     int[] edge=in.edges[i];
     int i0=edge[0];
     int i1=edge[1];
-    index=addLine3D(i0,i1,index,lastInd,true);
-    if (edge[2] == EDGE_STOP || edge[2] == EDGE_SINGLE) {
-      lastInd[0]=lastInd[1]=-1;
+    if (bevel) {
+      index=addLine3D(i0,i1,index,lastInd,true);
+      if (edge[2] == EDGE_STOP || edge[2] == EDGE_SINGLE) {
+        lastInd[0]=lastInd[1]=-1;
+      }
+    }
+ else {
+      index=addLine3D(i0,i1,index,null,true);
     }
   }
   lastLineIndexCache=index;
