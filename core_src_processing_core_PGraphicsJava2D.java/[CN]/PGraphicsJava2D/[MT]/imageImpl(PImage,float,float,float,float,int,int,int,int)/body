@@ -1,11 +1,11 @@
 {
   if (who.width <= 0 || who.height <= 0)   return;
-  if (who.getCache(this) == null) {
-    who.setCache(this,new ImageCache(who));
+  if (getCache(who) == null) {
+    this.setCache(who,new ImageCache(who));
     who.updatePixels();
     who.modified=true;
   }
-  ImageCache cash=(ImageCache)who.getCache(this);
+  ImageCache cash=(ImageCache)getCache(who);
   if ((tint && !cash.tinted) || (tint && (cash.tintedColor != tintColor)) || (!tint && cash.tinted)) {
     who.updatePixels();
   }
@@ -13,5 +13,5 @@
     cash.update(tint,tintColor);
     who.modified=false;
   }
-  g2.drawImage(((ImageCache)who.getCache(this)).image,(int)x1,(int)y1,(int)x2,(int)y2,u1,v1,u2,v2,null);
+  g2.drawImage(((ImageCache)getCache(who)).image,(int)x1,(int)y1,(int)x2,(int)y2,u1,v1,u2,v2,null);
 }
