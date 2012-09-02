@@ -1,19 +1,4 @@
 {
-  Texture.Parameters params=(Texture.Parameters)pgPrimary.getParams(img);
-  if (params == null) {
-    params=new Texture.Parameters();
-    if (hints[DISABLE_TEXTURE_MIPMAPS]) {
-      params.mipmaps=false;
-    }
- else {
-      params.mipmaps=true;
-    }
-    params.sampling=textureSampling;
-    if (params.sampling == Texture.TRILINEAR && !params.mipmaps) {
-      params.sampling=Texture.BILINEAR;
-    }
-    params.wrapU=textureWrap;
-    params.wrapV=textureWrap;
-  }
+  Texture.Parameters params=new Texture.Parameters(ARGB,textureSampling,getHint(ENABLE_TEXTURE_MIPMAPS),textureWrap);
   return addTexture(img,params);
 }
