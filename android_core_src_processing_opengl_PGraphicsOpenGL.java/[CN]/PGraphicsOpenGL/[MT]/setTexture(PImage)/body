@@ -3,8 +3,8 @@
     PGraphics.showWarning("Resolution of image is different from PGraphics " + "object");
     return;
   }
-  if (texture == null || texture != img.getCache(pgPrimary)) {
-    Texture tex=(Texture)img.getCache(pgPrimary);
+  if (texture == null || texture != pgPrimary.getCache(img)) {
+    Texture tex=(Texture)pgPrimary.getCache(img);
     Texture.Parameters params=tex != null ? tex.getParameters() : null;
     if (tex == null || tex.contextIsOutdated() || !validSurfaceTex(tex)) {
       if (primarySurface) {
@@ -18,8 +18,8 @@
     if (tex != null) {
       texture=tex;
       texture.setFlippedY(true);
-      this.setCache(pgPrimary,texture);
-      this.setParams(pgPrimary,params);
+      pgPrimary.setCache(this,texture);
+      pgPrimary.setParams(this,params);
       if (!primarySurface && offscreenFramebuffer != null) {
         offscreenFramebuffer.setColorBuffer(texture);
         offscreenFramebuffer.clear();
