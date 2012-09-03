@@ -1,5 +1,19 @@
 {
-  needScreenFBO=true;
+  if (ENABLE_OSX_SCREEN_FBO) {
+    needScreenFBO=false;
+    glColorFbo[0]=0;
+    String osName=System.getProperty("os.name");
+    if (osName.equals("Mac OS X")) {
+      String version=System.getProperty("os.version");
+      String[] parts=version.split("\\.");
+      if (2 <= parts.length) {
+        int num=Integer.parseInt(parts[1]);
+        if (MIN_OSX_VER_FOR_SCREEN_FBO <= num && MIN_SAMPLES_FOR_SCREEN_FBO <= qualityToSamples(pg.quality)) {
+          needScreenFBO=true;
+        }
+      }
+    }
+  }
   if (profile == null) {
     profile=GLProfile.getDefault();
   }
