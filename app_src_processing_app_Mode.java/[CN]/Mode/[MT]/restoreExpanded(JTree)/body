@@ -1,0 +1,12 @@
+{
+  String pref="examples." + getClass().getName() + ".visible";
+  String value=Preferences.get(pref);
+  if (value != null) {
+    String[] paths=value.split(File.pathSeparator);
+    for (    String path : paths) {
+      String[] items=path.split(File.separator);
+      DefaultMutableTreeNode[] nodes=new DefaultMutableTreeNode[items.length];
+      expandTree(tree,null,items,nodes,0);
+    }
+  }
+}

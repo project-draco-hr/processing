@@ -37,6 +37,15 @@
       }
     }
 );
+    tree.addTreeExpansionListener(new TreeExpansionListener(){
+      @Override public void treeExpanded(      TreeExpansionEvent event){
+        updateExpanded(tree);
+      }
+      @Override public void treeCollapsed(      TreeExpansionEvent event){
+        updateExpanded(tree);
+      }
+    }
+);
     tree.setBorder(new EmptyBorder(5,5,5,5));
     tree.setToggleClickCount(1);
     JScrollPane treePane=new JScrollPane(tree);
@@ -44,6 +53,7 @@
     treePane.setBorder(new EmptyBorder(0,0,0,0));
     examplesFrame.getContentPane().add(treePane);
     examplesFrame.pack();
+    restoreExpanded(tree);
   }
   int roughWidth=examplesFrame.getWidth() + 20;
   Point p=null;
