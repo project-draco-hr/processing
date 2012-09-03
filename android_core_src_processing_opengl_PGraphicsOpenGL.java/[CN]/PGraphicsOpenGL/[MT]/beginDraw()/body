@@ -16,9 +16,7 @@
   }
   if (primarySurface) {
     pgl.updatePrimary();
-    if (pgl.primaryIsDoubleBuffered()) {
-      pgl.drawBuffer(PGL.BACK);
-    }
+    pgl.drawBuffer(pgl.primaryDrawBuffer());
   }
  else {
     if (!pgl.initialized) {
@@ -88,7 +86,6 @@
     background(backgroundColor);
     if (texture != null) {
       pgPrimary.removeCache(this);
-      pgPrimary.removeParams(this);
       texture=null;
       loadTexture();
     }

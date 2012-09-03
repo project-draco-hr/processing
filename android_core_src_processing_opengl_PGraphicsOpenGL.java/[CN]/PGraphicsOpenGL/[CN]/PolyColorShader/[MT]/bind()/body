@@ -19,4 +19,12 @@
     pgCurrent.updateGLProjection();
     setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
   }
+  float w=pgCurrent.width;
+  float h=pgCurrent.height;
+  setUniformValue(resolutionLoc,w,h);
+  if (-1 < backbufferSamplerLoc) {
+    setUniformValue(backbufferSamplerLoc,lastTexUnit);
+    pgl.activeTexture(PGL.TEXTURE0 + lastTexUnit);
+    pgCurrent.bindBackTexture();
+  }
 }
