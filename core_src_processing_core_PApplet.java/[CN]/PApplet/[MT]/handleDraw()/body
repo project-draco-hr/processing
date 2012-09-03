@@ -31,7 +31,7 @@
       float instantaneousRate=(float)rate / 1000.0f;
       frameRate=(frameRate * 0.9f) + (instantaneousRate * 0.1f);
       if (frameCount != 0) {
-        preMethods.handle();
+        handleMethods("pre");
       }
       pmouseX=dmouseX;
       pmouseY=dmouseY;
@@ -40,7 +40,7 @@
       dmouseY=mouseY;
       dequeueMouseEvents();
       dequeueKeyEvents();
-      drawMethods.handle();
+      handleMethods("draw");
       redraw=false;
     }
     g.endDraw();
@@ -52,7 +52,7 @@
     repaint();
     getToolkit().sync();
     if (frameCount != 0) {
-      postMethods.handle();
+      handleMethods("post");
     }
   }
 }

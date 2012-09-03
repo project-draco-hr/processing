@@ -1,4 +1,13 @@
 {
-  Class<?> methodArgs[]=new Class[]{MouseEvent.class};
-  registerWithArgs(mouseEventMethods,"mouseEvent",o,methodArgs);
+  Class<?> c=o.getClass();
+  try {
+    Method method=c.getMethod("mouseEvent",new Class[]{java.awt.event.MouseEvent.class});
+    if (mouseEventMethods == null) {
+      mouseEventMethods=new RegisteredMethods();
+    }
+    mouseEventMethods.add(o,method);
+  }
+ catch (  Exception e) {
+    die("Could not register mouseEvent() for " + o,e);
+  }
 }
