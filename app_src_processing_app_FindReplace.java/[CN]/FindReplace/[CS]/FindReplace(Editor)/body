@@ -44,24 +44,28 @@
   pain.add(wrapAroundBox);
   JPanel buttons=new JPanel();
   buttons.setLayout(new FlowLayout(FlowLayout.CENTER,BUTTON_GAP,0));
+  replaceAllButton=new JButton("Replace All");
+  replaceButton=new JButton("Replace");
+  replaceAndFindButton=new JButton("Replace & Find");
+  previousButton=new JButton("Previous");
+  findButton=new JButton("Find");
   if (Base.isMacOS()) {
-    buttons.add(replaceAllButton=new JButton("Replace All"));
-    buttons.add(replaceButton=new JButton("Replace"));
-    buttons.add(replaceFindButton=new JButton("Replace & Find"));
-    buttons.add(previousButton=new JButton("Previous"));
-    buttons.add(findButton=new JButton("Find"));
-  }
- else {
-    buttons.add(findButton=new JButton("Find"));
-    buttons.add(previousButton=new JButton("Previous"));
-    buttons.add(replaceFindButton=new JButton("Replace & Find"));
-    buttons.add(replaceButton=new JButton("Replace"));
-    buttons.add(replaceAllButton=new JButton("Replace All"));
-  }
-  pain.add(buttons);
-  if (Base.isMacOS()) {
+    buttons.add(replaceAllButton);
+    buttons.add(replaceButton);
+    buttons.add(replaceAndFindButton);
+    buttons.add(previousButton);
+    buttons.add(findButton);
     buttons.setBorder(null);
   }
+ else {
+    buttons.add(findButton);
+    buttons.add(previousButton);
+    buttons.add(replaceAndFindButton);
+    buttons.add(replaceButton);
+    buttons.add(replaceAllButton);
+  }
+  pain.add(buttons);
+  setFound(false);
   Dimension buttonsDimension=buttons.getPreferredSize();
   int visibleButtonWidth=buttonsDimension.width - 2 * BUTTON_GAP;
   int fieldWidth=visibleButtonWidth - (labelDimension.width + SMALL);
@@ -88,11 +92,36 @@
   Insets insets=getInsets();
   setSize(wide + insets.left + insets.right,high + insets.top + insets.bottom);
   setLocationRelativeTo(null);
-  replaceButton.addActionListener(this);
-  replaceAllButton.addActionListener(this);
-  replaceFindButton.addActionListener(this);
-  findButton.addActionListener(this);
-  previousButton.addActionListener(this);
+  replaceButton.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      replace();
+    }
+  }
+);
+  replaceAllButton.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      replaceAll();
+    }
+  }
+);
+  replaceAndFindButton.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      replaceAndFindNext();
+    }
+  }
+);
+  findButton.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      findNext();
+    }
+  }
+);
+  previousButton.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      findPrevious();
+    }
+  }
+);
   getRootPane().setDefaultButton(findButton);
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
   addWindowListener(new WindowAdapter(){

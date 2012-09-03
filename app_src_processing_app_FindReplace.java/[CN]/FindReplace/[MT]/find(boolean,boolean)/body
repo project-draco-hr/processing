@@ -1,35 +1,41 @@
 {
   String searchTerm=findField.getText();
-  if (searchTerm.length() == 0)   return false;
-  String text=editor.getText();
-  if (ignoreCase) {
-    searchTerm=searchTerm.toLowerCase();
-    text=text.toLowerCase();
-  }
-  int nextIndex;
-  if (!backwards) {
-    int selectionEnd=editor.getSelectionStop();
-    nextIndex=text.indexOf(searchTerm,selectionEnd);
-    if (nextIndex == -1 && wrap) {
-      nextIndex=text.indexOf(searchTerm,0);
+  if (searchTerm.length() != 0) {
+    String text=editor.getText();
+    if (ignoreCase) {
+      searchTerm=searchTerm.toLowerCase();
+      text=text.toLowerCase();
     }
-  }
- else {
-    int selectionStart=editor.getSelectionStart() - 1;
-    if (selectionStart >= 0) {
-      nextIndex=text.lastIndexOf(searchTerm,selectionStart);
+    int nextIndex;
+    if (!backwards) {
+      int selectionEnd=editor.getSelectionStop();
+      nextIndex=text.indexOf(searchTerm,selectionEnd);
+      if (nextIndex == -1 && wrap) {
+        nextIndex=text.indexOf(searchTerm,0);
+      }
     }
  else {
-      nextIndex=-1;
-    }
-    if (wrap && nextIndex == -1) {
-      nextIndex=text.lastIndexOf(searchTerm);
-    }
-  }
-  if (nextIndex != -1) {
-    editor.setSelection(nextIndex,nextIndex + searchTerm.length());
-  }
+      int selectionStart=editor.getSelectionStart() - 1;
+      if (selectionStart >= 0) {
+        nextIndex=text.lastIndexOf(searchTerm,selectionStart);
+      }
  else {
+        nextIndex=-1;
+      }
+      if (wrap && nextIndex == -1) {
+        nextIndex=text.lastIndexOf(searchTerm);
+      }
+    }
+    if (nextIndex != -1) {
+      editor.setSelection(nextIndex,nextIndex + searchTerm.length());
+    }
+ else {
+    }
+    if (nextIndex != -1) {
+      setFound(true);
+      return true;
+    }
   }
-  return nextIndex != -1;
+  setFound(false);
+  return false;
 }
