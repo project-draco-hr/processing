@@ -1,26 +1,23 @@
 {
   if (primarySurface) {
-    if (pgl.primaryIsDoubleBuffered()) {
+    if (pgl.primaryIsFboBacked()) {
+      if (op == OP_READ) {
+        offscreenNotCurrent=true;
+        pgl.bindPrimaryColorFBO();
+        pgl.readBuffer(pgl.primaryDrawBuffer());
+      }
+ else {
+        offscreenNotCurrent=false;
+        pgl.drawBuffer(pgl.primaryDrawBuffer());
+      }
+    }
+ else {
       if (op == OP_READ) {
         pgl.readBuffer(pgl.primaryDrawBuffer());
       }
  else {
         pgl.drawBuffer(pgl.primaryDrawBuffer());
       }
-      offscreenNotCurrent=false;
-    }
- else     if (pgl.primaryIsFboBacked()) {
-      if (op == OP_READ) {
-        offscreenNotCurrent=true;
-        pgl.bindPrimaryColorFBO();
-        pgl.readBuffer(PGL.COLOR_ATTACHMENT0);
-      }
- else {
-        offscreenNotCurrent=false;
-        pgl.drawBuffer(PGL.COLOR_ATTACHMENT0);
-      }
-    }
- else {
       offscreenNotCurrent=false;
     }
   }

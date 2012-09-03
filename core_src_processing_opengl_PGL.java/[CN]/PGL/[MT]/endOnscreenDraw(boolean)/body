@@ -12,9 +12,9 @@
     gl.glDisable(GL.GL_BLEND);
     drawTexture(GL.GL_TEXTURE_2D,glColorTex[frontTex],fboWidth,fboHeight,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
     gl.glBindFramebuffer(GL.GL_FRAMEBUFFER,glColorFbo[0]);
+    gl.glFramebufferTexture2D(GL.GL_FRAMEBUFFER,GL.GL_COLOR_ATTACHMENT0,GL.GL_TEXTURE_2D,glColorTex[backTex],0);
+    drawTexture(GL.GL_TEXTURE_2D,glColorTex[frontTex],fboWidth,fboHeight,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
+    gl.glFramebufferTexture2D(GL.GL_FRAMEBUFFER,GL.GL_COLOR_ATTACHMENT0,GL.GL_TEXTURE_2D,glColorTex[frontTex],0);
     PGraphicsOpenGL.screenFramebuffer.glFbo=glColorFbo[0];
-    int temp=frontTex;
-    frontTex=backTex;
-    backTex=temp;
   }
 }

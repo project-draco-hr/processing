@@ -1,6 +1,11 @@
 {
   if (-1 < inVertexLoc)   pgl.disableVertexAttribArray(inVertexLoc);
   if (-1 < inColorLoc)   pgl.disableVertexAttribArray(inColorLoc);
+  if (-1 < backbufferSamplerLoc) {
+    pgl.activeTexture(PGL.TEXTURE0 + lastTexUnit);
+    pgCurrent.unbindBackTexture();
+    pgl.activeTexture(PGL.TEXTURE0);
+  }
   pgl.bindBuffer(PGL.ARRAY_BUFFER,0);
   super.unbind();
 }
