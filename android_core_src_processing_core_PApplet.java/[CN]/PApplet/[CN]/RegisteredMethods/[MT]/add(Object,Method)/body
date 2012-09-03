@@ -1,13 +1,18 @@
 {
-  if (objects == null) {
-    objects=new Object[5];
-    methods=new Method[5];
+  if (findIndex(object) == -1) {
+    if (objects == null) {
+      objects=new Object[5];
+      methods=new Method[5];
+    }
+ else     if (count == objects.length) {
+      objects=(Object[])PApplet.expand(objects);
+      methods=(Method[])PApplet.expand(methods);
+    }
+    objects[count]=object;
+    methods[count]=method;
+    count++;
   }
-  if (count == objects.length) {
-    objects=(Object[])PApplet.expand(objects);
-    methods=(Method[])PApplet.expand(methods);
+ else {
+    die(method.getName() + "() already added for this instance of " + object.getClass().getName());
   }
-  objects[count]=object;
-  methods[count]=method;
-  count++;
 }

@@ -31,6 +31,9 @@
       double rate=1000000.0 / ((now - frameRateLastNanos) / 1000000.0);
       float instantaneousRate=(float)rate / 1000.0f;
       frameRate=(frameRate * 0.9f) + (instantaneousRate * 0.1f);
+      if (frameCount != 0) {
+        handleMethods("pre");
+      }
       pmouseX=dmouseX;
       pmouseY=dmouseY;
       pmotionX=dmotionX;
@@ -42,9 +45,13 @@
       dmotionY=motionY;
       dequeueMotionEvents();
       dequeueKeyEvents();
+      handleMethods("draw");
       redraw=false;
     }
     g.endDraw();
+    if (frameCount != 0) {
+      handleMethods("post");
+    }
     frameRateLastNanos=now;
     frameCount++;
   }

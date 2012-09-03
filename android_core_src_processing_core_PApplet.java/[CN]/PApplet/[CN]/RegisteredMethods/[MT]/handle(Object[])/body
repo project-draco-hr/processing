@@ -1,10 +1,23 @@
 {
   for (int i=0; i < count; i++) {
     try {
-      methods[i].invoke(objects[i],oargs);
+      methods[i].invoke(objects[i],args);
     }
  catch (    Exception e) {
-      e.printStackTrace();
+      Throwable t;
+      if (e instanceof InvocationTargetException) {
+        InvocationTargetException ite=(InvocationTargetException)e;
+        t=ite.getCause();
+      }
+ else {
+        t=e;
+      }
+      if (t instanceof RuntimeException) {
+        throw (RuntimeException)t;
+      }
+ else {
+        t.printStackTrace();
+      }
     }
   }
 }
