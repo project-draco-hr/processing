@@ -1,21 +1,15 @@
 {
-  key=(char)event.getUnicodeChar();
-  if (key == 0 || key == 0xFFFF) {
-    key=CODED;
-  }
-  keyCode=event.getKeyCode();
-  int action=event.getAction();
-  if (action == KeyEvent.ACTION_DOWN) {
+switch (event.getAction()) {
+case KeyEvent.PRESSED:
     keyPressed=true;
-    keyPressed();
-  }
- else   if (action == KeyEvent.ACTION_UP) {
-    keyPressed=false;
-    keyReleased();
-  }
-  if (action == KeyEvent.ACTION_DOWN) {
-    if (keyCode == KeyEvent.KEYCODE_BACK) {
-      exit();
-    }
-  }
+  keyPressed();
+break;
+case KeyEvent.RELEASED:
+keyPressed=false;
+keyReleased();
+break;
+}
+if (event.getAction() == KeyEvent.PRESSED && event.getKeyCode() == android.view.KeyEvent.KEYCODE_BACK) {
+exit();
+}
 }
