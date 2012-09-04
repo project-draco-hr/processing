@@ -1,0 +1,22 @@
+{
+  int peAction=0;
+switch (event.getID()) {
+case java.awt.event.KeyEvent.KEY_PRESSED:
+    peAction=KeyEvent.PRESSED;
+  break;
+case java.awt.event.KeyEvent.KEY_RELEASED:
+peAction=KeyEvent.RELEASED;
+break;
+case java.awt.event.KeyEvent.KEY_TYPED:
+peAction=KeyEvent.TYPED;
+break;
+}
+int peModifiers=event.getModifiersEx() & (InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK| InputEvent.ALT_DOWN_MASK);
+KeyEvent ke=new KeyEvent(event,event.getWhen(),peAction,peModifiers,event.getKeyChar(),event.getKeyCode());
+if (looping) {
+enqueueKeyEvent(ke);
+}
+ else {
+handleKeyEvent(ke);
+}
+}

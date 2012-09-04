@@ -1,29 +1,13 @@
 {
-  int id=event.getID();
-  if ((id == MouseEvent.MOUSE_DRAGGED) || (id == MouseEvent.MOUSE_MOVED)) {
+  if (event.getAction() == MouseEvent.DRAGGED || event.getAction() == MouseEvent.MOVED) {
     pmouseX=emouseX;
     pmouseY=emouseY;
     mouseX=event.getX();
     mouseY=event.getY();
   }
-  mouseEvent=event;
-  int modifiers=event.getModifiers();
-  if ((modifiers & InputEvent.BUTTON1_MASK) != 0) {
-    mouseButton=LEFT;
-  }
- else   if ((modifiers & InputEvent.BUTTON2_MASK) != 0) {
-    mouseButton=CENTER;
-  }
- else   if ((modifiers & InputEvent.BUTTON3_MASK) != 0) {
-    mouseButton=RIGHT;
-  }
-  if (platform == MACOSX) {
-    if (mouseEvent.isPopupTrigger()) {
-      mouseButton=RIGHT;
-    }
-  }
+  mouseButton=event.getButton();
   if (mouseEventMethods != null) {
-    mouseEventMethods.handle(new Object[]{event});
+    mouseEventMethods.handle(new Object[]{event.getNative()});
   }
   if (firstMouse) {
     pmouseX=mouseX;
@@ -32,26 +16,28 @@
     dmouseY=mouseY;
     firstMouse=false;
   }
-switch (id) {
-case MouseEvent.MOUSE_PRESSED:
+  mouseEvent=event;
+  handleMethods("mouseEvent",new Object[]{event});
+switch (event.getAction()) {
+case MouseEvent.PRESSED:
     mousePressed=true;
   mousePressed();
 break;
-case MouseEvent.MOUSE_RELEASED:
+case MouseEvent.RELEASED:
 mousePressed=false;
 mouseReleased();
 break;
-case MouseEvent.MOUSE_CLICKED:
+case MouseEvent.CLICKED:
 mouseClicked();
 break;
-case MouseEvent.MOUSE_DRAGGED:
+case MouseEvent.DRAGGED:
 mouseDragged();
 break;
-case MouseEvent.MOUSE_MOVED:
+case MouseEvent.MOVED:
 mouseMoved();
 break;
 }
-if ((id == MouseEvent.MOUSE_DRAGGED) || (id == MouseEvent.MOUSE_MOVED)) {
+if ((event.getAction() == MouseEvent.DRAGGED) || (event.getAction() == MouseEvent.MOVED)) {
 emouseX=mouseX;
 emouseY=mouseY;
 }

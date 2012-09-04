@@ -1,0 +1,50 @@
+{
+  int peAction=0;
+switch (nativeEvent.getID()) {
+case java.awt.event.MouseEvent.MOUSE_PRESSED:
+    peAction=MouseEvent.PRESSED;
+  break;
+case java.awt.event.MouseEvent.MOUSE_RELEASED:
+peAction=MouseEvent.RELEASED;
+break;
+case java.awt.event.MouseEvent.MOUSE_CLICKED:
+peAction=MouseEvent.CLICKED;
+break;
+case java.awt.event.MouseEvent.MOUSE_DRAGGED:
+peAction=MouseEvent.DRAGGED;
+break;
+case java.awt.event.MouseEvent.MOUSE_MOVED:
+peAction=MouseEvent.MOVED;
+break;
+case java.awt.event.MouseEvent.MOUSE_ENTERED:
+peAction=MouseEvent.ENTERED;
+break;
+case java.awt.event.MouseEvent.MOUSE_EXITED:
+peAction=MouseEvent.EXITED;
+break;
+}
+int modifiers=nativeEvent.getModifiersEx();
+int peModifiers=modifiers & (InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK| InputEvent.ALT_DOWN_MASK);
+int peButton=0;
+if ((modifiers & InputEvent.BUTTON1_DOWN_MASK) != 0) {
+peButton=LEFT;
+}
+ else if ((modifiers & InputEvent.BUTTON2_DOWN_MASK) != 0) {
+peButton=CENTER;
+}
+ else if ((modifiers & InputEvent.BUTTON3_DOWN_MASK) != 0) {
+peButton=RIGHT;
+}
+if (platform == MACOSX) {
+if (nativeEvent.isPopupTrigger()) {
+peButton=RIGHT;
+}
+}
+MouseEvent pe=new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,nativeEvent.getX(),nativeEvent.getY(),peButton,nativeEvent.getClickCount());
+if (looping) {
+enqueueMouseEvent(pe);
+}
+ else {
+handleMouseEvent(pe);
+}
+}
