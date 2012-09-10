@@ -13,13 +13,13 @@
       return true;
     }
   }
-  if ((event.getModifiers() & KeyEvent.META_MASK) != 0) {
+  if ((event.getModifiers() & InputEvent.META_MASK) != 0) {
     return false;
   }
   if ((code == KeyEvent.VK_BACK_SPACE) || (code == KeyEvent.VK_TAB) || (code == KeyEvent.VK_ENTER)|| ((c >= 32) && (c < 128))) {
     sketch.setModified(true);
   }
-  if ((code == KeyEvent.VK_UP) && ((event.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+  if ((code == KeyEvent.VK_UP) && ((event.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
     char contents[]=textarea.getText().toCharArray();
     int caretIndex=textarea.getCaretPosition();
     int index=calcLineStart(caretIndex - 1,contents);
@@ -41,7 +41,7 @@
       index--;
     }
     if (index < 0)     index=0;
-    if ((event.getModifiers() & KeyEvent.SHIFT_MASK) != 0) {
+    if ((event.getModifiers() & InputEvent.SHIFT_MASK) != 0) {
       textarea.setSelectionStart(caretIndex);
       textarea.setSelectionEnd(index);
     }
@@ -51,7 +51,7 @@
     event.consume();
     return true;
   }
- else   if ((code == KeyEvent.VK_DOWN) && ((event.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+ else   if ((code == KeyEvent.VK_DOWN) && ((event.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
     char contents[]=textarea.getText().toCharArray();
     int caretIndex=textarea.getCaretPosition();
     int index=caretIndex;
@@ -73,7 +73,7 @@
       }
       index++;
     }
-    if ((event.getModifiers() & KeyEvent.SHIFT_MASK) != 0) {
+    if ((event.getModifiers() & InputEvent.SHIFT_MASK) != 0) {
       textarea.setSelectionStart(caretIndex);
       textarea.setSelectionEnd(index);
     }
@@ -85,7 +85,7 @@
   }
 switch (c) {
 case 9:
-    if ((event.getModifiers() & KeyEvent.SHIFT_MASK) != 0) {
+    if ((event.getModifiers() & InputEvent.SHIFT_MASK) != 0) {
       editor.handleOutdent();
     }
  else     if (textarea.isSelectionActive()) {

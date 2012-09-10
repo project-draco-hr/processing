@@ -8,18 +8,19 @@
     }
   }
 );
-  if (archives == null || archives.length == 0)   return;
-  try {
-    URL[] urlList=new URL[archives.length];
-    for (int j=0; j < urlList.length; j++) {
-      urlList[j]=archives[j].toURI().toURL();
+  if (archives != null && archives.length > 0) {
+    try {
+      URL[] urlList=new URL[archives.length];
+      for (int j=0; j < urlList.length; j++) {
+        urlList[j]=archives[j].toURI().toURL();
+      }
+      loader=new URLClassLoader(urlList);
+      for (int j=0; j < archives.length; j++) {
+        className=findClassInZipFile(folder.getName(),archives[j]);
+        if (className != null)         break;
+      }
     }
-    loader=new URLClassLoader(urlList);
-    for (int j=0; j < archives.length; j++) {
-      className=ToolContribution.findClassInZipFile(folder.getName(),archives[j]);
-      if (className != null)       break;
+ catch (    MalformedURLException e) {
     }
-  }
- catch (  MalformedURLException e) {
   }
 }

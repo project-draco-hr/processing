@@ -4,13 +4,13 @@
   if (keyCode == KeyEvent.VK_CONTROL || keyCode == KeyEvent.VK_SHIFT || keyCode == KeyEvent.VK_ALT || keyCode == KeyEvent.VK_META) {
     return;
   }
-  if ((modifiers & KeyEvent.META_MASK) != 0) {
+  if ((modifiers & InputEvent.META_MASK) != 0) {
     KeyStroke keyStroke=KeyStroke.getKeyStroke(keyCode,modifiers);
     if (currentBindings.get(keyStroke) == null) {
       return;
     }
   }
-  if ((modifiers & ~KeyEvent.SHIFT_MASK) != 0 || evt.isActionKey() || keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE || keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_TAB || keyCode == KeyEvent.VK_ESCAPE) {
+  if ((modifiers & ~InputEvent.SHIFT_MASK) != 0 || evt.isActionKey() || keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE || keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_TAB || keyCode == KeyEvent.VK_ESCAPE) {
     if (grabAction != null) {
       handleGrabAction(evt);
       return;

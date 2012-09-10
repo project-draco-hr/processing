@@ -1,8 +1,7 @@
 {
   try {
-    Class c=Class.forName(classname);
-    Constructor cc;
-    cc=c.getConstructor(Base.class,File.class);
+    Class<?> c=Thread.currentThread().getContextClassLoader().loadClass(className);
+    Constructor cc=c.getConstructor(Base.class,File.class);
     return (Mode)cc.newInstance(base,folder);
   }
  catch (  Exception e) {
