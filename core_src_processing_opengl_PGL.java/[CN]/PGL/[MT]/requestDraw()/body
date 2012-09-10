@@ -10,7 +10,12 @@
     }
  catch (    GLException e) {
       Throwable tr=e.getCause();
-      throw new RuntimeException(tr);
+      if (tr instanceof RuntimeException) {
+        throw (RuntimeException)tr;
+      }
+ else {
+        throw new RuntimeException(tr);
+      }
     }
   }
 }
