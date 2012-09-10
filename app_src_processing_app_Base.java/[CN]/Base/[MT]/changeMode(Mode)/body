@@ -5,8 +5,8 @@
       Base.showWarning("Save","Please save the sketch before changing the mode.",null);
     }
  else {
-      boolean untitled=activeEditor.untitled;
       String mainPath=sketch.getMainFilePath();
+      boolean wasUntitled=sketch.isUntitled();
       File sketchProps=new File(sketch.getFolder(),"sketch.properties");
       try {
         Settings props=new Settings(sketchProps);
@@ -19,7 +19,7 @@
       }
       EditorState state=activeEditor.state;
       handleClose(activeEditor,true);
-      handleOpen(mainPath,untitled,state);
+      handleOpen(mainPath,wasUntitled,state);
     }
   }
 }
