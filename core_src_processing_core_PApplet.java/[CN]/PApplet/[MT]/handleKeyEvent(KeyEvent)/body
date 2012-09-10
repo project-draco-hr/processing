@@ -2,10 +2,6 @@
   keyEvent=event;
   key=event.getKey();
   keyCode=event.getKeyCode();
-  if (keyEventMethods != null) {
-    keyEventMethods.handle(new Object[]{event.getNative()});
-  }
-  handleMethods("keyEvent",new Object[]{event});
 switch (event.getAction()) {
 case KeyEvent.PRESSED:
     keyPressed=true;
@@ -19,6 +15,10 @@ case KeyEvent.TYPED:
 keyTyped();
 break;
 }
+if (keyEventMethods != null) {
+keyEventMethods.handle(new Object[]{event.getNative()});
+}
+handleMethods("keyEvent",new Object[]{event});
 if (event.getAction() == KeyEvent.PRESSED) {
 if (key == ESC) {
 exit();
