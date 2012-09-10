@@ -5,17 +5,23 @@
   String oldPath=get("sketchbook.path");
   String newPath=sketchbookLocationField.getText();
   if (!newPath.equals(oldPath)) {
-    editor.base.setSketchbookFolder(new File(newPath));
+    base.setSketchbookFolder(new File(newPath));
   }
   setBoolean("editor.external",externalEditorBox.isSelected());
   setBoolean("update.check",checkUpdatesBox.isSelected());
+  int oldDisplayIndex=getInteger("run.display");
   int displayIndex=0;
   for (int d=0; d < displaySelectionBox.getItemCount(); d++) {
     if (displaySelectionBox.getSelectedIndex() == d) {
       displayIndex=d;
     }
   }
-  setInteger("run.display",displayIndex);
+  if (oldDisplayIndex != displayIndex) {
+    setInteger("run.display",displayIndex);
+    for (    Editor editor : base.getEditors()) {
+      editor.setSketchLocation(null);
+    }
+  }
   setBoolean("run.options.memory",memoryOverrideBox.isSelected());
   int memoryMin=Preferences.getInteger("run.options.memory.initial");
   int memoryMax=Preferences.getInteger("run.options.memory.maximum");
@@ -32,7 +38,7 @@
     String newBits=bitsThirtyTwoButton.isSelected() ? "32" : "64";
     if (!oldBits.equals(newBits)) {
       set("run.options.bits",newBits);
-      for (      Mode m : editor.base.getModeList()) {
+      for (      Mode m : base.getModeList()) {
         m.rebuildLibraryList();
       }
     }
@@ -50,5 +56,7 @@
   if (autoAssociateBox != null) {
     setBoolean("platform.auto_file_type_associations",autoAssociateBox.isSelected());
   }
-  editor.applyPreferences();
+  for (  Editor editor : base.getEditors()) {
+    editor.applyPreferences();
+  }
 }
