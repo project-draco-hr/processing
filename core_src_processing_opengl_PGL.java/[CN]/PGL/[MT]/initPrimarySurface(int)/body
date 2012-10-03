@@ -1,19 +1,4 @@
 {
-  if (ENABLE_OSX_SCREEN_FBO) {
-    needScreenFBO=false;
-    glColorFbo[0]=0;
-    String osName=System.getProperty("os.name");
-    if (osName.equals("Mac OS X")) {
-      String version=System.getProperty("os.version");
-      String[] parts=version.split("\\.");
-      if (2 <= parts.length) {
-        int num=Integer.parseInt(parts[1]);
-        if (MIN_OSX_VER_FOR_SCREEN_FBO <= num && MIN_SAMPLES_FOR_SCREEN_FBO <= qualityToSamples(pg.quality)) {
-          needScreenFBO=true;
-        }
-      }
-    }
-  }
   if (profile == null) {
     profile=GLProfile.getDefault();
   }
@@ -40,10 +25,23 @@
  else {
     caps.setSampleBuffers(false);
   }
+  if (PApplet.platform == PConstants.MACOSX) {
+    caps.setFBO(enable_screen_FBO_macosx);
+  }
+ else   if (PApplet.platform == PConstants.WINDOWS) {
+    caps.setFBO(enable_screen_FBO_windows);
+  }
+ else   if (PApplet.platform == PConstants.LINUX) {
+    caps.setFBO(enable_screen_FBO_linux);
+  }
+ else {
+    caps.setFBO(enable_screen_FBO_other);
+  }
   caps.setDepthBits(24);
   caps.setStencilBits(8);
   caps.setAlphaBits(8);
   caps.setBackgroundOpaque(true);
+  caps.setOnscreen(true);
   if (toolkit == AWT) {
     canvasAWT=new GLCanvas(caps);
     canvasAWT.setBounds(0,0,pg.width,pg.height);
@@ -60,6 +58,11 @@
  else   if (toolkit == NEWT) {
     window=GLWindow.create(caps);
     canvasNEWT=new NewtCanvasAWT(window);
+    Dimension size0=new Dimension(pg.width,pg.height);
+    canvasNEWT.setShallUseOffscreenLayer(true);
+    canvasNEWT.setPreferredSize(size0);
+    canvasNEWT.setMinimumSize(size0);
+    canvasNEWT.setSize(size0);
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasNEWT,BorderLayout.CENTER);
     pg.parent.removeListeners(pg.parent);
