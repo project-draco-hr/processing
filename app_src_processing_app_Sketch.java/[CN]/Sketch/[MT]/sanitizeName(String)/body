@@ -1,12 +1,12 @@
 {
-  char c[]=origName.toCharArray();
+  char orig[]=origName.toCharArray();
   StringBuffer buffer=new StringBuffer();
-  if ((c[0] >= '0') && (c[0] <= '9')) {
-    buffer.append('_');
+  if (!asciiLetter(orig[0])) {
+    buffer.append("sketch_");
   }
-  for (int i=0; i < c.length; i++) {
-    if (((c[i] >= '0') && (c[i] <= '9')) || ((c[i] >= 'a') && (c[i] <= 'z')) || ((c[i] >= 'A') && (c[i] <= 'Z'))) {
-      buffer.append(c[i]);
+  for (  char c : orig) {
+    if (asciiLetter(c) || (c >= '0' && c <= '9')) {
+      buffer.append(c);
     }
  else {
       buffer.append('_');
