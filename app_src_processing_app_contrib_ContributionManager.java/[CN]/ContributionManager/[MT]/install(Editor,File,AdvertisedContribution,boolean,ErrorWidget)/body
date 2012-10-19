@@ -1,26 +1,26 @@
 {
   File tempDir=ContributionManager.unzipFileToTemp(libFile,statusBar);
-  ArrayList<File> libfolders=ContributionManager.discover(ad.getType(),tempDir);
-  if (libfolders.isEmpty()) {
-    libfolders=ContributionManager.discover(ad.getType(),tempDir.getParentFile());
+  ArrayList<File> libFolders=ContributionManager.discover(ad.getType(),tempDir);
+  if (libFolders.isEmpty()) {
+    libFolders=ContributionManager.discover(ad.getType(),tempDir.getParentFile());
   }
-  if (libfolders != null && libfolders.size() == 1) {
-    File libfolder=libfolders.get(0);
+  if (libFolders != null && libFolders.size() == 1) {
+    File libfolder=libFolders.get(0);
     File propFile=new File(libfolder,getPropertiesFileName(ad.getType()));
     if (writePropertiesFile(propFile,ad)) {
-      InstalledContribution newcontrib=ContributionManager.create(editor.getBase(),ad.getType(),libfolder);
-      return ContributionManager.installContribution(editor,newcontrib,confirmReplace,statusBar);
+      InstalledContribution newContrib=ContributionManager.create(editor.getBase(),ad.getType(),libfolder);
+      return ContributionManager.installContribution(editor,newContrib,confirmReplace,statusBar);
     }
  else {
       statusBar.setErrorMessage("Error overwriting .properties file.");
     }
   }
  else {
-    if (libfolders == null) {
+    if (libFolders == null) {
       statusBar.setErrorMessage("An internal error occured while searching " + "for contributions in the downloaded file.");
     }
- else     if (libfolders.isEmpty()) {
-      statusBar.setErrorMessage("Maybe it's just us, but it looks like there " + "are no contributions in the file for \"" + ad.getName() + ".\"");
+ else     if (libFolders.isEmpty()) {
+      statusBar.setErrorMessage("Maybe it's just me, but it looks like " + "there are no contributions in the file " + "for \"" + ad.getName() + ".\"");
     }
  else {
       statusBar.setErrorMessage("There were multiple libraries in the file, " + "so we're ignoring it.");

@@ -1,46 +1,47 @@
 {
-  if (contribution == null)   return;
-  final ProgressMonitor progressMonitor=pm != null ? pm : new NullProgressMonitor();
-  new Thread(new Runnable(){
-    public void run(){
-      progressMonitor.startTask("Removing",ProgressMonitor.UNKNOWN);
-      boolean doBackup=Preferences.getBoolean("contribution.backup.on_remove");
-      if (ContributionManager.requiresRestart(contribution)) {
-        if (!doBackup || (doBackup && backupContribution(editor,contribution,false,statusBar))) {
-          if (ContributionManager.flagForDeletion(contribution)) {
-            contribListing.replaceContribution(contribution,contribution);
-          }
-        }
-      }
- else {
-        boolean success=false;
-        if (doBackup) {
-          success=backupContribution(editor,contribution,true,statusBar);
-        }
- else {
-          Base.removeDir(contribution.getFolder());
-          success=!contribution.getFolder().exists();
-        }
-        if (success) {
-          Contribution advertisedVersion=contribListing.getAdvertisedContribution(contribution);
-          if (advertisedVersion == null) {
-            contribListing.removeContribution(contribution);
-          }
- else {
-            contribListing.replaceContribution(contribution,advertisedVersion);
+  if (contribution != null) {
+    final ProgressMonitor progressMonitor=(pm != null) ? pm : new NullProgressMonitor();
+    new Thread(new Runnable(){
+      public void run(){
+        progressMonitor.startTask("Removing",ProgressMonitor.UNKNOWN);
+        boolean doBackup=Preferences.getBoolean("contribution.backup.on_remove");
+        if (ContributionManager.requiresRestart(contribution)) {
+          if (!doBackup || (doBackup && backupContribution(editor,contribution,false,statusBar))) {
+            if (ContributionManager.flagForDeletion(contribution)) {
+              contribListing.replaceContribution(contribution,contribution);
+            }
           }
         }
  else {
+          boolean success=false;
           if (doBackup) {
+            success=backupContribution(editor,contribution,true,statusBar);
           }
  else {
-            statusBar.setErrorMessage("Could not delete the contribution's files");
+            Base.removeDir(contribution.getFolder());
+            success=!contribution.getFolder().exists();
+          }
+          if (success) {
+            Contribution advertisedVersion=contribListing.getAdvertisedContribution(contribution);
+            if (advertisedVersion == null) {
+              contribListing.removeContribution(contribution);
+            }
+ else {
+              contribListing.replaceContribution(contribution,advertisedVersion);
+            }
+          }
+ else {
+            if (doBackup) {
+            }
+ else {
+              statusBar.setErrorMessage("Could not delete the contribution's files");
+            }
           }
         }
+        refreshInstalled(editor);
+        progressMonitor.finished();
       }
-      refreshInstalled(editor);
-      progressMonitor.finished();
     }
-  }
 ).start();
+  }
 }
