@@ -10,9 +10,10 @@
   if (!glParamsRead) {
     getGLParameters();
   }
-  if (screenFramebuffer == null) {
-    screenFramebuffer=new FrameBuffer(parent,width,height,true);
-    setFramebuffer(screenFramebuffer);
+  if (drawFramebuffer == null || readFramebuffer == null) {
+    drawFramebuffer=FrameBuffer.wrap(parent,pgl.primaryDrawFramebuffer(),width,height);
+    readFramebuffer=FrameBuffer.wrap(parent,pgl.primaryReadFramebuffer(),width,height);
+    setFramebuffer(drawFramebuffer);
   }
   if (primarySurface) {
     pgl.updatePrimary();
