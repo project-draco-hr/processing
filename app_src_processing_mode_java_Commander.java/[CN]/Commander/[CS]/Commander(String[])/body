@@ -74,8 +74,13 @@
     complainAndQuit("An output path must be specified.",true);
   }
   outputFolder=new File(outputPath);
-  if (outputFolder.exists() && !force) {
-    complainAndQuit("The output folder already exists. Use --force to overwrite it.",false);
+  if (outputFolder.exists()) {
+    if (force) {
+      Base.removeDir(outputFolder);
+    }
+ else {
+      complainAndQuit("The output folder already exists. " + "Use --force to remove it.",false);
+    }
   }
   if (!outputFolder.mkdirs()) {
     complainAndQuit("Could not create the output folder.",false);
@@ -93,18 +98,16 @@
     JavaMode javaMode=new JavaMode(null,Base.getContentFile("modes/java"));
     try {
       sketch=new Sketch(pdePath,javaMode);
-      if (task == BUILD) {
+      if (task == BUILD || task == RUN || task == PRESENT) {
         JavaBuild build=new JavaBuild(sketch);
-        String mainClassName=build.build(new File(sketchPath),outputFolder,true);
-        success=mainClassName != null;
-      }
- else       if (task == RUN || task == PRESENT) {
-        JavaBuild build=new JavaBuild(sketch);
-        String className=build.build(sketchFolder,outputFolder,true);
+        File srcFolder=new File(outputFolder,"source");
+        String className=build.build(srcFolder,outputFolder,true);
         if (className != null) {
           success=true;
-          Runner runner=new Runner(build,this);
-          runner.launch(task == PRESENT);
+          if (task == RUN || task == PRESENT) {
+            Runner runner=new Runner(build,this);
+            runner.launch(task == PRESENT);
+          }
         }
  else {
           success=false;
@@ -125,7 +128,11 @@
           }
         }
       }
-      System.exit(success ? 0 : 1);
+      if (!success) {
+        System.exit(1);
+      }
+      System.out.println("Finished.");
+      System.exit(0);
     }
  catch (    SketchException re) {
       statusError(re);
