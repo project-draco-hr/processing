@@ -1,0 +1,21 @@
+{
+  try {
+    File file=File.createTempFile("processing","commander");
+    PrintWriter writer=PApplet.createWriter(file);
+    writer.println("#!/bin/sh");
+    writer.println("echo 'bag of awesome'");
+    writer.flush();
+    writer.close();
+    file.setExecutable(true);
+    System.out.println(System.getProperty("javaroot"));
+    if (true)     return;
+    String sourcePath=file.getAbsolutePath();
+    String targetPath="/usr/bin/processing-java";
+    String shellScript="/bin/mv " + sourcePath + " "+ targetPath;
+    String appleScript="do shell script \"" + shellScript + "\" with administrator privileges";
+    PApplet.exec(new String[]{"osascript","-e",appleScript});
+  }
+ catch (  IOException e) {
+    Base.showWarning("Error while installing","An error occurred and the tools were not installed.",e);
+  }
+}
