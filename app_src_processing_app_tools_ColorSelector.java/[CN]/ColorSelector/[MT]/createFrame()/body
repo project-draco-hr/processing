@@ -25,7 +25,7 @@
   frame.pack();
   frame.setResizable(false);
   Dimension size=frame.getSize();
-  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  Dimension screen=Toolkit.getScreenSize();
   frame.setLocation((screen.width - size.width) / 2,(screen.height - size.height) / 2);
   frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
   frame.addWindowListener(new WindowAdapter(){
@@ -34,13 +34,13 @@
     }
   }
 );
-  Base.registerWindowCloseKeys(frame.getRootPane(),new ActionListener(){
+  Toolkit.registerWindowCloseKeys(frame.getRootPane(),new ActionListener(){
     public void actionPerformed(    ActionEvent actionEvent){
       frame.setVisible(false);
     }
   }
 );
-  Base.setIcon(frame);
+  Toolkit.setIcon(frame);
   hueField.getDocument().addDocumentListener(this);
   saturationField.getDocument().addDocumentListener(this);
   brightnessField.getDocument().addDocumentListener(this);

@@ -195,16 +195,16 @@
     }
   }
 ;
-  Base.registerWindowCloseKeys(dialog.getRootPane(),disposer);
-  Base.setIcon(dialog);
-  Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+  Toolkit.registerWindowCloseKeys(dialog.getRootPane(),disposer);
+  Toolkit.setIcon(dialog);
+  Dimension screen=Toolkit.getScreenSize();
   dialog.setLocation((screen.width - wide) / 2,(screen.height - high) / 2);
   dialog.pack();
   Insets insets=dialog.getInsets();
   dialog.setSize(wide + insets.left + insets.right,high + insets.top + insets.bottom);
   pain.addKeyListener(new KeyAdapter(){
     public void keyPressed(    KeyEvent e){
-      KeyStroke wc=Base.WINDOW_CLOSE_KEYSTROKE;
+      KeyStroke wc=Toolkit.WINDOW_CLOSE_KEYSTROKE;
       if ((e.getKeyCode() == KeyEvent.VK_ESCAPE) || (KeyStroke.getKeyStrokeForEvent(e).equals(wc))) {
         disposeFrame();
       }
