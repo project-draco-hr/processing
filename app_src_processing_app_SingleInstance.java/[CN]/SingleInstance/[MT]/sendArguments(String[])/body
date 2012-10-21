@@ -2,20 +2,11 @@
   try {
     int port=Preferences.getInteger(SERVER_PORT);
     String key=Preferences.get(SERVER_KEY);
-    long endTime=System.currentTimeMillis() + timeout;
     Socket socket=null;
-    while (socket == null && System.currentTimeMillis() < endTime) {
-      try {
-        socket=new Socket(InetAddress.getByName(null),port);
-      }
- catch (      Exception ioe) {
-        try {
-          Thread.sleep(50);
-        }
- catch (        InterruptedException ie) {
-          Thread.yield();
-        }
-      }
+    try {
+      socket=new Socket(InetAddress.getByName(null),port);
+    }
+ catch (    Exception ignored) {
     }
     if (socket != null) {
       PrintWriter writer=PApplet.createWriter(socket.getOutputStream());
