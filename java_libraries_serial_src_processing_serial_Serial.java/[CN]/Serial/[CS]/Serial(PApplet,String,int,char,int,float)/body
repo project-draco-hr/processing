@@ -5,7 +5,8 @@
     if (!lockFolder.exists() || !lockFolder.canRead() || !lockFolder.canWrite()|| !lockFolder.canExecute()) {
       final String MESSAGE="To use the serial library, first open\n" + "Applications -> Utilities -> Terminal.app\n" + "and enter the following:\n"+ "sudo mkdir -p /var/lock\n"+ "sudo chmod 777 /var/lock";
       System.err.println(MESSAGE);
-      throw new RuntimeException("Additional installation required to " + "use serial, read the console below.");
+      final String msg="Please use Tools \u2192 Fix the Serial Library.";
+      throw new RuntimeException(msg);
     }
   }
   this.rate=irate;
@@ -38,7 +39,7 @@
     input=null;
     output=null;
   }
-  parent.registerDispose(this);
+  parent.registerMethod("dispose",this);
   try {
     serialEventMethod=parent.getClass().getMethod("serialEvent",new Class[]{Serial.class});
   }
