@@ -1,12 +1,6 @@
 {
-  ArrayList<InstalledContribution> contribs=new ArrayList<InstalledContribution>();
-  contribs.addAll(ModeContribution.list(this,getSketchbookModesFolder()));
-  contribs.addAll(ToolContribution.list(getSketchbookToolsFolder(),false));
-  for (  InstalledContribution contrib : contribs) {
-    if (ContributionManager.isFlaggedForDeletion(contrib)) {
-      removeDir(contrib.getFolder());
-    }
-  }
+  ContributionManager.checkDeletions(getSketchbookModesFolder());
+  ContributionManager.checkDeletions(getSketchbookToolsFolder());
   buildCoreModes();
   rebuildContribModes();
   recent=new Recent(this);

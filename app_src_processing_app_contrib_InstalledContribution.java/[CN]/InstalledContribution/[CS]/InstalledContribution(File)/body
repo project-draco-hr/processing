@@ -1,0 +1,24 @@
+{
+  this.folder=folder;
+  File propertiesFile=new File(folder,getTypeName() + ".properties");
+  if (propertiesFile.exists()) {
+    properties=Base.readSettings(propertiesFile);
+    name=properties.get("name");
+    id=properties.get("id");
+    category=ContributionListing.getCategory(properties.get("category"));
+    if (name == null) {
+      name=folder.getName();
+    }
+    authorList=properties.get("authorList");
+    url=properties.get("url");
+    sentence=properties.get("sentence");
+    paragraph=properties.get("paragraph");
+    try {
+      version=Integer.parseInt(properties.get("version"));
+    }
+ catch (    NumberFormatException e) {
+      e.printStackTrace();
+    }
+    prettyVersion=properties.get("prettyVersion");
+  }
+}

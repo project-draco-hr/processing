@@ -1,0 +1,25 @@
+{
+  try {
+    if (propFile.delete() && propFile.createNewFile() && propFile.setWritable(true)) {
+      PrintWriter writer=PApplet.createWriter(propFile);
+      writer.println("name=" + getName());
+      writer.println("category=" + getCategory());
+      writer.println("authorList=" + getAuthorList());
+      writer.println("url=" + getUrl());
+      writer.println("sentence=" + getSentence());
+      writer.println("paragraph=" + getParagraph());
+      writer.println("version=" + getVersion());
+      writer.println("prettyVersion=" + getPrettyVersion());
+      writer.flush();
+      writer.close();
+    }
+    return true;
+  }
+ catch (  FileNotFoundException e) {
+    e.printStackTrace();
+  }
+catch (  IOException e) {
+    e.printStackTrace();
+  }
+  return false;
+}

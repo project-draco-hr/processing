@@ -1,14 +1,14 @@
 {
   File tempDir=ContributionManager.unzipFileToTemp(libFile,statusBar);
-  ArrayList<File> libFolders=ContributionManager.discover(ad.getType(),tempDir);
+  List<File> libFolders=ContributionManager.discover(ad.getType(),tempDir);
   if (libFolders.isEmpty()) {
     libFolders=ContributionManager.discover(ad.getType(),tempDir.getParentFile());
   }
   if (libFolders != null && libFolders.size() == 1) {
-    File libfolder=libFolders.get(0);
-    File propFile=new File(libfolder,getPropertiesFileName(ad.getType()));
-    if (writePropertiesFile(propFile,ad)) {
-      InstalledContribution newContrib=ContributionManager.create(editor.getBase(),ad.getType(),libfolder);
+    File libFolder=libFolders.get(0);
+    File propFile=new File(libFolder,ad.getTypeName() + ".properties");
+    if (ad.writePropertiesFile(propFile)) {
+      InstalledContribution newContrib=ContributionManager.create(editor.getBase(),libFolder,ad.getType());
       return ContributionManager.installContribution(editor,newContrib,confirmReplace,statusBar);
     }
  else {

@@ -1,0 +1,19 @@
+{
+  File modesFolder=Base.getSketchbookModesFolder();
+  ArrayList<ModeContribution> contribModes=base.getModeContribs();
+  HashMap<File,ModeContribution> existing=new HashMap<File,ModeContribution>();
+  for (  ModeContribution contrib : contribModes) {
+    existing.put(contrib.getFolder(),contrib);
+  }
+  File[] potential=listCandidates(modesFolder,"mode");
+  for (  File folder : potential) {
+    if (!existing.containsKey(folder)) {
+      try {
+        contribModes.add(new ModeContribution(base,folder,null));
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+}
