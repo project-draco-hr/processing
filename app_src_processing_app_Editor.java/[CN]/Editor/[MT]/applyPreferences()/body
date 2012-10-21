@@ -1,21 +1,9 @@
 {
-  boolean external=Preferences.getBoolean("editor.external");
-  textarea.setEditable(!external);
-  saveMenuItem.setEnabled(!external);
-  saveAsMenuItem.setEnabled(!external);
   TextAreaPainter painter=textarea.getPainter();
-  if (external) {
-    Color color=mode.getColor("editor.external.bgcolor");
-    painter.setBackground(color);
-    painter.setLineHighlightEnabled(false);
-    textarea.setCaretVisible(false);
-  }
- else {
-    Color color=mode.getColor("editor.bgcolor");
-    painter.setBackground(color);
-    boolean highlight=Preferences.getBoolean("editor.linehighlight");
-    painter.setLineHighlightEnabled(highlight);
-    textarea.setCaretVisible(true);
-  }
+  Color color=mode.getColor("editor.bgcolor");
+  painter.setBackground(color);
+  boolean highlight=Preferences.getBoolean("editor.linehighlight");
+  painter.setLineHighlightEnabled(highlight);
+  textarea.setCaretVisible(true);
   painter.setFont(Preferences.getFont("editor.font"));
 }
