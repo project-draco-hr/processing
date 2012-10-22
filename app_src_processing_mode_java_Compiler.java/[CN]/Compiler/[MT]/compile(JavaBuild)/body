@@ -17,9 +17,19 @@
     }
 ;
     PrintWriter writer=new PrintWriter(internalWriter);
-    CompilationProgress progress=null;
     PrintWriter outWriter=new PrintWriter(System.out);
-    success=BatchCompiler.compile(command,outWriter,writer,progress);
+    ClassLoader loader=build.mode.getClassLoader();
+    try {
+      Class batchClass=Class.forName("org.eclipse.jdt.core.compiler.batch.BatchCompiler",false,loader);
+      Class progressClass=Class.forName("org.eclipse.jdt.core.compiler.CompilationProgress",false,loader);
+      Class[] compileArgs=new Class[]{String[].class,PrintWriter.class,PrintWriter.class,progressClass};
+      Method compileMethod=batchClass.getMethod("compile",compileArgs);
+      success=(Boolean)compileMethod.invoke(null,new Object[]{command,outWriter,writer,null});
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+      throw new SketchException("Unknown error inside the compiler.");
+    }
     writer.flush();
     writer.close();
     BufferedReader reader=new BufferedReader(new StringReader(errorBuffer.toString()));
