@@ -88,9 +88,6 @@
     displayDevice=environment.getDefaultScreenDevice();
   }
   Frame frame=new Frame(displayDevice.getDefaultConfiguration());
-  Image image=Toolkit.getDefaultToolkit().createImage(ICON_IMAGE);
-  frame.setIconImage(image);
-  frame.setTitle(name);
   final PApplet applet;
   if (constructedApplet != null) {
     applet=constructedApplet;
@@ -104,6 +101,8 @@
       throw new RuntimeException(e);
     }
   }
+  applet.setIconImage(frame);
+  frame.setTitle(name);
   applet.frame=frame;
   applet.sketchPath=folder;
   present|=applet.sketchFullScreen();
