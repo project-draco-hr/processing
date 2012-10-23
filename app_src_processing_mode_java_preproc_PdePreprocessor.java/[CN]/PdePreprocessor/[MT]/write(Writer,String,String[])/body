@@ -2,24 +2,35 @@
   final ArrayList<String> programImports=new ArrayList<String>();
   final ArrayList<String> codeFolderImports=new ArrayList<String>();
   foundMethods=new HashMap<String,Object>();
-  if (!program.endsWith("\n"))   program+="\n";
+  if (!program.endsWith("\n")) {
+    program+="\n";
+  }
   checkForUnterminatedMultilineComment(program);
   if (Preferences.getBoolean("preproc.substitute_unicode")) {
     program=substituteUnicode(program);
   }
   final String importRegexp="(?:^|;)\\s*(import\\s+)((?:static\\s+)?\\S+)(\\s*;)";
+  final Pattern importPattern=Pattern.compile(importRegexp);
+  String scrubbed=scrubComments(program);
+  Matcher m=importPattern.matcher(scrubbed);
+  int offset=0;
+  boolean found=false;
   do {
-    String[] pieces=PApplet.match(program,importRegexp);
-    if (pieces == null)     break;
-    String piece=pieces[1] + pieces[2] + pieces[3];
-    int len=piece.length();
-    if (!ignoreImport(pieces[2])) {
-      programImports.add(pieces[2]);
+    found=m.find(offset);
+    if (found) {
+      String piece=m.group(1) + m.group(2) + m.group(3);
+      int len=piece.length();
+      if (!ignoreImport(m.group(2))) {
+        programImports.add(m.group(2));
+      }
+      int start=m.start();
+      int stop=start + len;
+      program=program.substring(0,start) + program.substring(stop);
+      scrubbed=scrubbed.substring(0,start) + scrubbed.substring(stop);
+      offset=stop;
     }
-    int idx=program.indexOf(piece);
-    program=program.substring(0,idx) + program.substring(idx + len);
   }
- while (true);
+ while (found);
   if (codeFolderPackages != null) {
     for (    String item : codeFolderPackages) {
       codeFolderImports.add(item + ".*");
