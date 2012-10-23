@@ -8,7 +8,7 @@
     commandArgs="java -Xrunjdwp:transport=dt_shmem,address=" + addr + ",suspend=y ";
   }
  else   if (Base.isMacOS()) {
-    commandArgs="/usr/libexec/java_home --request --version 1.6 " + "-d" + Base.getNativeBits() + " -exec java "+ "-Xrunjdwp:transport=dt_socket,address="+ addr+ ",suspend=y ";
+    commandArgs="/usr/libexec/java_home " + (System.getProperty("os.version").startsWith("10.6") ? "" : "--request ") + "--version 1.6 "+ "-d"+ Base.getNativeBits()+ " --exec java "+ "-Xrunjdwp:transport=dt_socket,address="+ addr+ ",suspend=y ";
   }
   for (int i=0; i < vmParams.length; i++) {
     commandArgs=addArgument(commandArgs,vmParams[i],' ');
