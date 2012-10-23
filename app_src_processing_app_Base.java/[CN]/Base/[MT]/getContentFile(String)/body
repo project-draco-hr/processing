@@ -1,11 +1,14 @@
 {
-  String path=System.getProperty("user.dir");
-  if (Base.isMacOS()) {
-    String javaroot=System.getProperty("javaroot");
-    if (javaroot != null) {
-      path=javaroot;
-    }
+  String path=Base.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+  String decodedPath=PApplet.urlDecode(path);
+  File libFolder=new File(decodedPath).getParentFile();
+  File processingRoot=null;
+  if (libFolder.getName().equals("lib")) {
+    processingRoot=libFolder.getParentFile();
   }
-  File working=new File(path);
-  return new File(working,name);
+ else {
+    Base.log("Could not find lib in " + libFolder.getAbsolutePath() + ", switching to user.dir");
+    processingRoot=new File(System.getProperty("user.dir"));
+  }
+  return new File(processingRoot,name);
 }
