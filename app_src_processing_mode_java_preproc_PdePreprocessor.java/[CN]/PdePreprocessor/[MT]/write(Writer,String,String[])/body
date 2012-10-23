@@ -9,25 +9,26 @@
   if (Preferences.getBoolean("preproc.substitute_unicode")) {
     program=substituteUnicode(program);
   }
-  final String importRegexp="(?:^|;)\\s*(import\\s+)((?:static\\s+)?\\S+)(\\s*;)";
+  final String importRegexp="((?:^|;)\\s*)(import\\s+)((?:static\\s+)?\\S+)(\\s*;)";
   final Pattern importPattern=Pattern.compile(importRegexp);
   String scrubbed=scrubComments(program);
-  Matcher m=importPattern.matcher(scrubbed);
+  Matcher m=null;
   int offset=0;
   boolean found=false;
   do {
+    m=importPattern.matcher(scrubbed);
     found=m.find(offset);
     if (found) {
-      String piece=m.group(1) + m.group(2) + m.group(3);
-      int len=piece.length();
-      if (!ignoreImport(m.group(2))) {
-        programImports.add(m.group(2));
+      String before=m.group(1);
+      String piece=m.group(2) + m.group(3) + m.group(4);
+      if (!ignoreImport(m.group(3))) {
+        programImports.add(m.group(3));
       }
-      int start=m.start();
-      int stop=start + len;
+      int start=m.start() + before.length();
+      int stop=start + piece.length();
       program=program.substring(0,start) + program.substring(stop);
       scrubbed=scrubbed.substring(0,start) + scrubbed.substring(stop);
-      offset=stop;
+      offset=m.start();
     }
   }
  while (found);
