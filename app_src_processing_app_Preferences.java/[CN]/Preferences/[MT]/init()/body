@@ -1,0 +1,36 @@
+{
+  try {
+    load(Base.getLibStream("preferences.txt"));
+  }
+ catch (  Exception e) {
+    Base.showError(null,"Could not read default settings.\n" + "You'll need to reinstall Processing.",e);
+  }
+  String platformExt="." + PConstants.platformNames[PApplet.platform];
+  int platformExtLength=platformExt.length();
+  ArrayList<String> platformKeys=new ArrayList<String>();
+  for (  String key : table.keySet()) {
+    if (key.endsWith(platformExt)) {
+      platformKeys.add(key);
+    }
+  }
+  for (  String key : platformKeys) {
+    String actualKey=key.substring(0,key.length() - platformExtLength);
+    String value=get(key);
+    set(actualKey,value);
+  }
+  defaults=(HashMap<String,String>)table.clone();
+  setColor("run.window.bgcolor",SystemColor.control);
+  preferencesFile=Base.getSettingsFile(PREFS_FILE);
+  if (!preferencesFile.exists()) {
+    save();
+  }
+ else {
+    try {
+      load(new FileInputStream(preferencesFile));
+    }
+ catch (    Exception ex) {
+      Base.showError("Error reading preferences","Error reading the preferences file. " + "Please delete (or move)\n" + preferencesFile.getAbsolutePath() + " and restart Processing.",ex);
+    }
+  }
+  PApplet.useNativeSelect=Preferences.getBoolean("chooser.files.native");
+}
