@@ -4,36 +4,29 @@
     return;
   }
   loadTexture();
-  if (textureCopy == null || textureCopy.width != width || textureCopy.height != height) {
-    Texture.Parameters params=new Texture.Parameters(ARGB,Texture.POINT,false);
-    textureCopy=new Texture(parent,width,height,params);
-    textureCopy.invertedY(true);
-    imageCopy=wrapTexture(textureCopy);
-  }
-  textureCopy.set(texture.glTarget,texture.glName,texture.glWidth,texture.glHeight,width,height);
   pgl.depthMask(false);
   pgl.disable(PGL.DEPTH_TEST);
-  PolyTexShader prevTexShader=polyTexShader;
-  polyTexShader=(PolyTexShader)shader;
+  begin2D();
   boolean prevLights=lights;
   lights=false;
   int prevTextureMode=textureMode;
   textureMode=NORMAL;
   boolean prevStroke=stroke;
   stroke=false;
-  begin2D();
+  PolyTexShader prevTexShader=polyTexShader;
+  polyTexShader=(PolyTexShader)shader;
   beginShape(QUADS);
-  texture(imageCopy);
+  texture(this);
   vertex(0,0,0,0);
   vertex(width,0,1,0);
   vertex(width,height,1,1);
   vertex(0,height,0,1);
   endShape();
   end2D();
+  polyTexShader=prevTexShader;
   stroke=prevStroke;
   lights=prevLights;
   textureMode=prevTextureMode;
-  polyTexShader=prevTexShader;
   if (!hints[DISABLE_DEPTH_TEST]) {
     pgl.enable(PGL.DEPTH_TEST);
   }

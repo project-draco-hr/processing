@@ -4,6 +4,9 @@
     if (op == OP_READ) {
       setFramebuffer(readFramebuffer);
       pgl.readBuffer(pgl.primaryReadBuffer());
+      if (pgl.primaryIsFboBacked()) {
+        pgl.forceUpdate();
+      }
     }
  else {
       setFramebuffer(drawFramebuffer);

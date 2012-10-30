@@ -8,7 +8,8 @@
   if (primarySurface) {
     loadTextureImpl(Texture.POINT,false);
     if (pgl.primaryIsFboBacked()) {
-      PGraphics.showWarning("Cannot load contents of screen into texture");
+      pgl.forceUpdate();
+      texture.set(pgl.getFboTexTarget(),pgl.getFboTexName(),pgl.getFboWidth(),pgl.getFboHeight(),width,height);
     }
  else {
       if (nativePixels == null || nativePixels.length < width * height) {
@@ -20,7 +21,6 @@
       endPixelsOp();
       texture.setNative(nativePixels,0,0,width,height);
     }
-    texture.setNative(nativePixels,0,0,width,height);
   }
  else {
     if (offscreenMultisample) {
