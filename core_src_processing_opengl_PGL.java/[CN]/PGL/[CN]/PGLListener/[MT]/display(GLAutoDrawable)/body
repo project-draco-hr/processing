@@ -13,13 +13,18 @@
     }
     FBObject.TextureAttachment texAttach=null;
     if (fboDrawable != null) {
-      fboBack=fboDrawable.getFBObject(GL.GL_BACK);
-      texAttach=fboDrawable.getTextureBuffer(GL.GL_FRONT);
+      drawFBO=fboDrawable.getFBObject(GL.GL_BACK);
+      if (0 < capabilities.getNumSamples()) {
+        texAttach=fboDrawable.getTextureBuffer(GL.GL_FRONT);
+      }
+ else {
+        texAttach=fboDrawable.getTextureBuffer(GL.GL_BACK);
+      }
     }
     if (texAttach != null) {
-      fboFrontTex=texAttach.getName();
-      fboFrontTexWidth=texAttach.getWidth();
-      fboFrontTexHeight=texAttach.getHeight();
+      drawTexName=texAttach.getName();
+      drawTexWidth=texAttach.getWidth();
+      drawTexHeight=texAttach.getHeight();
     }
   }
   gl=context.getGL();
