@@ -3,7 +3,10 @@
     throw new RuntimeException("popFramebuffer call is unbalanced.");
   }
   fbStackDepth--;
-  currentFramebuffer.finish();
-  currentFramebuffer=fbStack[fbStackDepth];
-  currentFramebuffer.bind();
+  FrameBuffer fbo=fbStack[fbStackDepth];
+  if (currentFramebuffer != fbo) {
+    currentFramebuffer.finish();
+    currentFramebuffer=fbo;
+    currentFramebuffer.bind();
+  }
 }

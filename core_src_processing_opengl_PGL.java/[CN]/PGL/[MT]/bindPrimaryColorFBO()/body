@@ -1,0 +1,13 @@
+{
+  if (multisample) {
+    gl.glBindFramebuffer(GL2.GL_READ_FRAMEBUFFER,glMultiFbo[0]);
+    gl.glBindFramebuffer(GL2.GL_DRAW_FRAMEBUFFER,glColorFbo[0]);
+    gl2x.glBlitFramebuffer(0,0,fboWidth,fboHeight,0,0,fboWidth,fboHeight,GL.GL_COLOR_BUFFER_BIT,GL.GL_NEAREST);
+  }
+  gl.glBindFramebuffer(GL.GL_FRAMEBUFFER,glColorFbo[0]);
+  PGraphicsOpenGL.screenFramebuffer.glFbo=glColorFbo[0];
+  gl.glColorMask(false,false,false,true);
+  gl.glClearColor(0,0,0,1);
+  gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+  gl.glColorMask(true,true,true,true);
+}

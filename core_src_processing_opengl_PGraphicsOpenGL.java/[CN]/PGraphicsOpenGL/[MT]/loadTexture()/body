@@ -8,8 +8,9 @@
   if (primarySurface) {
     loadTextureImpl(Texture.POINT,false);
     if (pgl.primaryIsFboBacked()) {
-      pgl.forceUpdate();
+      pgl.bindPrimaryColorFBO();
       texture.set(pgl.getFboTexTarget(),pgl.getFboTexName(),pgl.getFboWidth(),pgl.getFboHeight(),width,height);
+      pgl.bindPrimaryMultiFBO();
     }
  else {
       if (nativePixels == null || nativePixels.length < width * height) {
