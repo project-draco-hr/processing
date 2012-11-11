@@ -1,9 +1,12 @@
 {
   StringBuffer bigCode=new StringBuffer();
+  int bigCount=0;
   for (  SketchCode sc : sketch.getCode()) {
     if (sc.isExtension("pde")) {
+      sc.setPreprocOffset(bigCount);
       bigCode.append(sc.getProgram());
-      bigCode.append("\n");
+      bigCode.append('\n');
+      bigCount+=sc.getLineCount();
     }
   }
   if (!bin.exists()) {
@@ -33,6 +36,7 @@ catch (  antlr.RecognitionException re) {
     int errorLine=re.getLine() - 1;
     int errorFile=findErrorFile(errorLine);
     errorLine-=sketch.getCode(errorFile).getPreprocOffset();
+    System.out.println(String.format("(1) %d, %d",errorFile,errorLine));
     String msg=re.getMessage();
     if (msg.equals("expecting RCURLY, found 'null'")) {
       throw new SketchException("Found one too many { characters " + "without a } to match it.",errorFile,errorLine,re.getColumn());
@@ -68,6 +72,7 @@ catch (  antlr.TokenStreamRecognitionException tsre) {
         }
       }
       errorLine-=sketch.getCode(errorFile).getPreprocOffset();
+      System.out.println(String.format("(2) %d, %d",errorFile,errorLine));
       throw new SketchException(tsre.getMessage(),errorFile,errorLine,errorColumn);
     }
  else {
