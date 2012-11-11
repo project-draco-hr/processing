@@ -1,16 +1,4 @@
 {
-  if (PApplet.platform == PConstants.MACOSX) {
-    needScreenFBO=enable_screen_FBO_macosx;
-  }
- else   if (PApplet.platform == PConstants.WINDOWS) {
-    needScreenFBO=enable_screen_FBO_windows;
-  }
- else   if (PApplet.platform == PConstants.LINUX) {
-    needScreenFBO=enable_screen_FBO_linux;
-  }
- else {
-    needScreenFBO=enable_screen_FBO_other;
-  }
   if (profile == null) {
     profile=GLProfile.getDefault();
   }
@@ -30,15 +18,26 @@
     setFramerate=false;
   }
   GLCapabilities caps=new GLCapabilities(profile);
-  if (1 < antialias && !needScreenFBO) {
+  if (1 < antialias) {
     caps.setSampleBuffers(true);
     caps.setNumSamples(antialias);
   }
  else {
     caps.setSampleBuffers(false);
   }
+  if (PApplet.platform == PConstants.MACOSX) {
+    caps.setFBO(enable_screen_FBO_macosx);
+  }
+ else   if (PApplet.platform == PConstants.WINDOWS) {
+    caps.setFBO(enable_screen_FBO_windows);
+  }
+ else   if (PApplet.platform == PConstants.LINUX) {
+    caps.setFBO(enable_screen_FBO_linux);
+  }
+ else {
+    caps.setFBO(enable_screen_FBO_other);
+  }
   caps.setDepthBits(24);
-  caps.setStencilBits(8);
   caps.setAlphaBits(8);
   caps.setBackgroundOpaque(true);
   caps.setOnscreen(true);
@@ -59,6 +58,7 @@
     window=GLWindow.create(caps);
     canvasNEWT=new NewtCanvasAWT(window);
     canvasNEWT.setBounds(0,0,pg.width,pg.height);
+    canvasNEWT.setBackground(Color.GRAY);
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasNEWT,BorderLayout.CENTER);
     pg.parent.removeListeners(pg.parent);
@@ -70,6 +70,7 @@
     capabilities=window.getChosenGLCapabilities();
     canvas=canvasNEWT;
     canvasAWT=null;
+    System.out.println(capabilities);
   }
   initialized=true;
 }

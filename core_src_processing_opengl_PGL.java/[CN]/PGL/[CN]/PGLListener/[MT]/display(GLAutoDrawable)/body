@@ -1,6 +1,32 @@
 {
   drawable=adrawable;
   context=adrawable.getContext();
+  if (capabilities.isFBO()) {
+    GLFBODrawable fboDrawable=null;
+    if (toolkit == AWT) {
+      GLCanvas drCanvas=(GLCanvas)adrawable;
+      fboDrawable=(GLFBODrawable)drCanvas.getDelegatedDrawable();
+    }
+ else {
+      GLWindow drWindow=(GLWindow)adrawable;
+      fboDrawable=(GLFBODrawable)drWindow.getDelegatedDrawable();
+    }
+    FBObject.TextureAttachment texAttach=null;
+    if (fboDrawable != null) {
+      drawFBO=fboDrawable.getFBObject(GL.GL_BACK);
+      if (0 < capabilities.getNumSamples()) {
+        texAttach=fboDrawable.getTextureBuffer(GL.GL_FRONT);
+      }
+ else {
+        texAttach=fboDrawable.getTextureBuffer(GL.GL_BACK);
+      }
+    }
+    if (texAttach != null) {
+      drawTexName=texAttach.getName();
+      drawTexWidth=texAttach.getWidth();
+      drawTexHeight=texAttach.getHeight();
+    }
+  }
   gl=context.getGL();
   gl2=gl.getGL2ES2();
   try {

@@ -1,14 +1,9 @@
 {
   if (offscreenNotCurrent) {
-    if (primarySurface) {
-      pgl.bindPrimaryMultiFBO();
+    if (!primarySurface && pixelsOp == OP_WRITE && offscreenMultisample) {
+      offscreenFramebufferMultisample.copy(offscreenFramebuffer);
     }
- else {
-      if (pixelsOp == OP_WRITE && offscreenMultisample) {
-        offscreenFramebufferMultisample.copy(offscreenFramebuffer);
-      }
-      popFramebuffer();
-    }
+    popFramebuffer();
   }
   pixelsOp=OP_NONE;
 }

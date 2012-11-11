@@ -1,25 +1,18 @@
 {
   if (primarySurface) {
-    if (pgl.primaryIsFboBacked()) {
-      if (op == OP_READ) {
-        offscreenNotCurrent=true;
-        pgl.bindPrimaryColorFBO();
-        pgl.readBuffer(pgl.primaryDrawBuffer());
-      }
- else {
-        offscreenNotCurrent=false;
-        pgl.drawBuffer(pgl.primaryDrawBuffer());
+    pushFramebuffer();
+    if (op == OP_READ) {
+      setFramebuffer(readFramebuffer);
+      pgl.readBuffer(pgl.primaryReadBuffer());
+      if (pgl.primaryIsFboBacked()) {
+        pgl.forceUpdate();
       }
     }
  else {
-      if (op == OP_READ) {
-        pgl.readBuffer(pgl.primaryDrawBuffer());
-      }
- else {
-        pgl.drawBuffer(pgl.primaryDrawBuffer());
-      }
-      offscreenNotCurrent=false;
+      setFramebuffer(drawFramebuffer);
+      pgl.drawBuffer(pgl.primaryDrawBuffer());
     }
+    offscreenNotCurrent=true;
   }
  else {
     if (op == OP_READ) {
