@@ -8,18 +8,26 @@
   application.addApplicationListener(adapter);
   application.setEnabledAboutMenu(true);
   application.setEnabledPreferencesMenu(true);
-  try {
-    Class<?> appClass=Application.class;
-    Method method=appClass.getMethod("setDefaultMenuBar",new Class[]{JMenuBar.class});
-    if (method != null) {
-      JMenuBar defaultMenuBar=new JMenuBar();
-      JMenu fileMenu=buildFileMenu(base);
-      defaultMenuBar.add(fileMenu);
-      method.invoke(application,new Object[]{defaultMenuBar});
-      Base.defaultFileMenu=fileMenu;
+  if (PApplet.javaVersion <= 1.6f) {
+    try {
+      Class<?> appClass=Application.class;
+      Method method=appClass.getMethod("setDefaultMenuBar",new Class[]{JMenuBar.class});
+      if (method != null) {
+        JMenuBar defaultMenuBar=new JMenuBar();
+        JMenu fileMenu=buildFileMenu(base);
+        defaultMenuBar.add(fileMenu);
+        method.invoke(application,new Object[]{defaultMenuBar});
+        Base.defaultFileMenu=fileMenu;
+      }
+    }
+ catch (    InvocationTargetException ite) {
+      ite.getTargetException().printStackTrace();
+    }
+catch (    Exception e) {
+      e.printStackTrace();
     }
   }
- catch (  Exception e) {
-    e.printStackTrace();
+ else {
+    System.out.println("Skipping default menu bar due to apparent Oracle Java bug.");
   }
 }

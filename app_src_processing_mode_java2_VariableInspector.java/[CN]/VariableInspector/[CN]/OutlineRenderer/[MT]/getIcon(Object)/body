@@ -1,0 +1,31 @@
+{
+  VariableNode var=toVariableNode(o);
+  if (var != null) {
+    if (tree.isEnabled()) {
+      return getIcon(var.getType(),0);
+    }
+ else {
+      return getIcon(var.getType(),1);
+    }
+  }
+ else {
+    if (o instanceof TreeNode) {
+      TreeNode node=(TreeNode)o;
+      AbstractLayoutCache layout=tree.getLayoutCache();
+      UIDefaults defaults=UIManager.getDefaults();
+      boolean isLeaf=model.isLeaf(o);
+      Icon icon;
+      if (isLeaf) {
+        icon=defaults.getIcon("Tree.leafIcon");
+      }
+ else {
+        icon=defaults.getIcon("Tree.closedIcon");
+      }
+      if (!tree.isEnabled()) {
+        return toGray(icon);
+      }
+      return icon;
+    }
+  }
+  return null;
+}

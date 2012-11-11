@@ -1,0 +1,16 @@
+{
+  super(base,path,state,mode);
+  dmode=(DebugMode)mode;
+  dbg=new Debugger(this);
+  vi=new VariableInspector(this);
+  ta=(TextArea)textarea;
+  DebugMode theme=dmode;
+  breakpointColor=theme.loadColorFromTheme("breakpoint.bgcolor",breakpointColor);
+  breakpointMarkerColor=theme.loadColorFromTheme("breakpoint.marker.color",breakpointMarkerColor);
+  currentLineColor=theme.loadColorFromTheme("currentline.bgcolor",currentLineColor);
+  currentLineMarkerColor=theme.loadColorFromTheme("currentline.marker.color",currentLineMarkerColor);
+  for (  LineID lineID : stripBreakpointComments()) {
+    dbg.setBreakpoint(lineID);
+  }
+  getSketch().setModified(false);
+}

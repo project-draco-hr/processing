@@ -1,0 +1,30 @@
+{
+  super(base,folder);
+  examplesFolder=Base.getContentFile("modes/java/examples");
+  referenceFolder=Base.getContentFile("modes/java/reference");
+  Logger globalLogger=Logger.getLogger("");
+  if (VERBOSE_LOGGING) {
+    globalLogger.setLevel(Level.INFO);
+  }
+ else {
+    globalLogger.setLevel(Level.WARNING);
+  }
+  try {
+    File logFile=getContentFile("logs/DebugMode.%g.log");
+    File logFolder=logFile.getParentFile();
+    if (!logFolder.exists()) {
+      logFolder.mkdir();
+    }
+    Handler handler=new FileHandler(logFile.getAbsolutePath(),LOG_SIZE,10,false);
+    globalLogger.addHandler(handler);
+  }
+ catch (  IOException ex) {
+    Logger.getLogger(DebugMode.class.getName()).log(Level.SEVERE,null,ex);
+  }
+catch (  SecurityException ex) {
+    Logger.getLogger(DebugMode.class.getName()).log(Level.SEVERE,null,ex);
+  }
+  Package p=DebugMode.class.getPackage();
+  String titleAndVersion=p.getImplementationTitle() + " (v" + p.getImplementationVersion()+ ")";
+  Logger.getLogger(DebugMode.class.getName()).log(Level.INFO,titleAndVersion);
+}
