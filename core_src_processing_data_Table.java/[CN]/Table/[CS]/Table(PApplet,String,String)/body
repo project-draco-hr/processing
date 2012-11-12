@@ -1,0 +1,39 @@
+{
+  init(parent);
+  String extension=null;
+  int dotIndex=filename.lastIndexOf('.');
+  if (dotIndex != -1) {
+    extension=filename.substring(dotIndex + 1).toLowerCase();
+    if (!extension.equals("csv") && !extension.equals("tsv")) {
+      extension=null;
+    }
+  }
+  String[] opts=null;
+  if (options != null) {
+    opts=options.split("\\s*,\\s*");
+    for (    String opt : opts) {
+      if (opt.equals("tsv")) {
+        extension="tsv";
+      }
+ else       if (opt.equals("csv")) {
+        extension="csv";
+      }
+ else       if (opt.equals("newlines")) {
+        awfulCSV=true;
+      }
+ else {
+        System.err.println(opt + " is not a valid option for loading a Table");
+      }
+    }
+  }
+  BufferedReader reader=parent.createReader(filename);
+  if (awfulCSV) {
+    parseAwfulCSV(reader);
+  }
+ else   if ("tsv".equals(extension)) {
+    parseBasic(reader,true);
+  }
+ else   if ("csv".equals(extension)) {
+    parseBasic(reader,false);
+  }
+}
