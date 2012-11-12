@@ -61,16 +61,17 @@
     canvasNEWT.setBackground(Color.GRAY);
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasNEWT,BorderLayout.CENTER);
-    pg.parent.removeListeners(pg.parent);
-    pg.parent.addListeners(canvasNEWT);
+    com.jogamp.newt.event.MouseListener mouseListener=new NEWTMouseAdapter();
+    window.addMouseListener(mouseListener);
+    com.jogamp.newt.event.KeyListener keyListener=new NEWTKeyAdapter();
+    window.addKeyListener(keyListener);
     listener=new PGLListener();
     window.addGLEventListener(listener);
-    animator=new PGLAnimator(window);
+    animator=new NEWTAnimator(window);
     animator.start();
     capabilities=window.getChosenGLCapabilities();
     canvas=canvasNEWT;
     canvasAWT=null;
-    System.out.println(capabilities);
   }
   initialized=true;
 }
