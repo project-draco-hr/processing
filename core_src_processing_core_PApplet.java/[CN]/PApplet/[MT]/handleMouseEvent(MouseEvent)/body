@@ -7,7 +7,9 @@
   }
   mouseButton=event.getButton();
   if (mouseEventMethods != null) {
-    mouseEventMethods.handle(new Object[]{event.getNative()});
+    if (event.getNative() != null) {
+      mouseEventMethods.handle(new Object[]{event.getNative()});
+    }
   }
   if (firstMouse) {
     pmouseX=mouseX;
@@ -17,14 +19,20 @@
     firstMouse=false;
   }
   mouseEvent=event;
-  handleMethods("mouseEvent",new Object[]{event});
 switch (event.getAction()) {
 case MouseEvent.PRESSED:
     mousePressed=true;
-  mousePressed();
-break;
+  break;
 case MouseEvent.RELEASED:
 mousePressed=false;
+break;
+}
+handleMethods("mouseEvent",new Object[]{event});
+switch (event.getAction()) {
+case MouseEvent.PRESSED:
+mousePressed();
+break;
+case MouseEvent.RELEASED:
 mouseReleased();
 break;
 case MouseEvent.CLICKED:
@@ -35,6 +43,12 @@ mouseDragged();
 break;
 case MouseEvent.MOVED:
 mouseMoved();
+break;
+case MouseEvent.ENTERED:
+mouseEntered();
+break;
+case MouseEvent.EXITED:
+mouseExited();
 break;
 }
 if ((event.getAction() == MouseEvent.DRAGGED) || (event.getAction() == MouseEvent.MOVED)) {

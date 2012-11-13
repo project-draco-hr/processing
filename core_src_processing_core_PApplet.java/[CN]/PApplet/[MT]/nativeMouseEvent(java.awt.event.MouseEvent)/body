@@ -23,20 +23,21 @@ case java.awt.event.MouseEvent.MOUSE_EXITED:
 peAction=MouseEvent.EXITED;
 break;
 }
-int modifiers=nativeEvent.getModifiersEx();
+System.out.println(nativeEvent);
+int modifiers=nativeEvent.getModifiers();
 int peModifiers=modifiers & (InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK| InputEvent.ALT_DOWN_MASK);
 int peButton=0;
-if ((modifiers & InputEvent.BUTTON1_MASK) != 0 || (modifiers & InputEvent.BUTTON1_DOWN_MASK) != 0) {
+if ((modifiers & InputEvent.BUTTON1_MASK) != 0) {
 peButton=LEFT;
 }
- else if ((modifiers & InputEvent.BUTTON2_MASK) != 0 || (modifiers & InputEvent.BUTTON2_DOWN_MASK) != 0) {
+ else if ((modifiers & InputEvent.BUTTON2_MASK) != 0) {
 peButton=CENTER;
 }
- else if ((modifiers & InputEvent.BUTTON3_MASK) != 0 || (modifiers & InputEvent.BUTTON3_DOWN_MASK) != 0) {
+ else if ((modifiers & InputEvent.BUTTON3_MASK) != 0) {
 peButton=RIGHT;
 }
 if (platform == MACOSX) {
-if (nativeEvent.isPopupTrigger()) {
+if ((modifiers & InputEvent.CTRL_DOWN_MASK) != 0) {
 peButton=RIGHT;
 }
 }
