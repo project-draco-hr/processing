@@ -1,18 +1,6 @@
 {
-  if (pe instanceof MouseEvent) {
-    if (looping) {
-      enqueueMouseEvent((MouseEvent)pe);
-    }
- else {
-      handleMouseEvent((MouseEvent)pe);
-    }
-  }
- else   if (pe instanceof KeyEvent) {
-    if (looping) {
-      enqueueKeyEvent((KeyEvent)pe);
-    }
- else {
-      handleKeyEvent((KeyEvent)pe);
-    }
+  eventQueue.add(pe);
+  if (!looping) {
+    dequeueEvents();
   }
 }

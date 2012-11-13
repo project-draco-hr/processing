@@ -24,7 +24,7 @@ peAction=MouseEvent.EXITED;
 break;
 }
 int modifiers=nativeEvent.getModifiers();
-int peModifiers=modifiers & (InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK| InputEvent.ALT_DOWN_MASK);
+int peModifiers=modifiers & (InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK| InputEvent.ALT_MASK);
 int peButton=0;
 if ((modifiers & InputEvent.BUTTON1_MASK) != 0) {
 peButton=LEFT;
@@ -40,6 +40,5 @@ if ((modifiers & InputEvent.CTRL_DOWN_MASK) != 0) {
 peButton=RIGHT;
 }
 }
-MouseEvent pe=new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,nativeEvent.getX(),nativeEvent.getY(),peButton,nativeEvent.getClickCount());
-postEvent(pe);
+postEvent(new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,nativeEvent.getX(),nativeEvent.getY(),peButton,nativeEvent.getClickCount()));
 }
