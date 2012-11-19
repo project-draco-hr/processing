@@ -1,30 +1,39 @@
 {
-  drawable=adrawable;
-  context=adrawable.getContext();
+  drawable=glDrawable;
+  context=glDrawable.getContext();
   if (capabilities.isFBO()) {
     GLFBODrawable fboDrawable=null;
     if (toolkit == AWT) {
-      GLCanvas drCanvas=(GLCanvas)adrawable;
-      fboDrawable=(GLFBODrawable)drCanvas.getDelegatedDrawable();
+      GLCanvas glCanvas=(GLCanvas)glDrawable;
+      fboDrawable=(GLFBODrawable)glCanvas.getDelegatedDrawable();
     }
  else {
-      GLWindow drWindow=(GLWindow)adrawable;
-      fboDrawable=(GLFBODrawable)drWindow.getDelegatedDrawable();
+      GLWindow glWindow=(GLWindow)glDrawable;
+      fboDrawable=(GLFBODrawable)glWindow.getDelegatedDrawable();
     }
-    FBObject.TextureAttachment texAttach=null;
     if (fboDrawable != null) {
-      drawFBO=fboDrawable.getFBObject(GL.GL_BACK);
+      backFBO=fboDrawable.getFBObject(GL.GL_BACK);
       if (0 < capabilities.getNumSamples()) {
-        texAttach=fboDrawable.getTextureBuffer(GL.GL_FRONT);
+        if (frontFBO == null) {
+          frontFBO=new FBObject();
+          frontFBO.reset(gl,pg.width,pg.height);
+          frontFBO.attachTexture2D(gl,0,true);
+          sinkFBO=backFBO.getSamplingSinkFBO();
+        }
+ else {
+          FBObject temp=sinkFBO;
+          sinkFBO=frontFBO;
+          frontFBO=temp;
+          backFBO.setSamplingSink(sinkFBO);
+        }
+        backTex=(FBObject.TextureAttachment)sinkFBO.getColorbuffer(0);
+        frontTex=(FBObject.TextureAttachment)frontFBO.getColorbuffer(0);
       }
  else {
-        texAttach=fboDrawable.getTextureBuffer(GL.GL_BACK);
+        frontFBO=fboDrawable.getFBObject(GL.GL_FRONT);
+        backTex=fboDrawable.getTextureBuffer(GL.GL_BACK);
+        frontTex=fboDrawable.getTextureBuffer(GL.GL_FRONT);
       }
-    }
-    if (texAttach != null) {
-      drawTexName=texAttach.getName();
-      drawTexWidth=texAttach.getWidth();
-      drawTexHeight=texAttach.getHeight();
     }
   }
   gl=context.getGL();
