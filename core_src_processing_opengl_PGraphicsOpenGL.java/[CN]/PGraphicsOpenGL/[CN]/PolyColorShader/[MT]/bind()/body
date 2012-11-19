@@ -7,24 +7,5 @@
   }
   if (-1 < inVertexLoc)   pgl.enableVertexAttribArray(inVertexLoc);
   if (-1 < inColorLoc)   pgl.enableVertexAttribArray(inColorLoc);
-  if (-1 < projmodelviewMatrixLoc) {
-    pgCurrent.updateGLProjmodelview();
-    setUniformMatrix(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
-  }
-  if (-1 < modelviewMatrixLoc) {
-    pgCurrent.updateGLModelview();
-    setUniformMatrix(modelviewMatrixLoc,pgCurrent.glModelview);
-  }
-  if (-1 < projectionMatrixLoc) {
-    pgCurrent.updateGLProjection();
-    setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
-  }
-  float w=pgCurrent.width;
-  float h=pgCurrent.height;
-  setUniformValue(resolutionLoc,w,h);
-  if (-1 < backbufferSamplerLoc) {
-    setUniformValue(backbufferSamplerLoc,lastTexUnit);
-    pgl.activeTexture(PGL.TEXTURE0 + lastTexUnit);
-    pgCurrent.bindBackTexture();
-  }
+  setCommonUniforms();
 }

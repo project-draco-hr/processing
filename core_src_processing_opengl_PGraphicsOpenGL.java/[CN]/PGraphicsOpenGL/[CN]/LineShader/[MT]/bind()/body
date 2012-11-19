@@ -8,23 +8,6 @@
   if (-1 < inVertexLoc)   pgl.enableVertexAttribArray(inVertexLoc);
   if (-1 < inColorLoc)   pgl.enableVertexAttribArray(inColorLoc);
   if (-1 < inAttribLoc)   pgl.enableVertexAttribArray(inAttribLoc);
-  if (-1 < projmodelviewMatrixLoc) {
-    pgCurrent.updateGLProjmodelview();
-    setUniformMatrix(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
-  }
-  if (-1 < modelviewMatrixLoc) {
-    pgCurrent.updateGLModelview();
-    setUniformMatrix(modelviewMatrixLoc,pgCurrent.glModelview);
-  }
-  if (-1 < projectionMatrixLoc) {
-    pgCurrent.updateGLProjection();
-    setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
-  }
-  float x=pgCurrent.viewport[0];
-  float y=pgCurrent.viewport[1];
-  float w=pgCurrent.viewport[2];
-  float h=pgCurrent.viewport[3];
-  setUniformValue(viewportLoc,x,y,w,h);
   if (pgCurrent.getHint(ENABLE_STROKE_PERSPECTIVE) && !pgCurrent.usingOrthoProjection) {
     setUniformValue(perspectiveLoc,1);
   }
@@ -42,4 +25,5 @@
       setUniformValue(scaleLoc,0.99f,0.99f,0.99f);
     }
   }
+  setCommonUniforms();
 }

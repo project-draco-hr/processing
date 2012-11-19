@@ -1,0 +1,45 @@
+{
+  if (-1 < projmodelviewMatrixLoc) {
+    pgCurrent.updateGLProjmodelview();
+    setUniformMatrix(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
+  }
+  if (-1 < modelviewMatrixLoc) {
+    pgCurrent.updateGLModelview();
+    setUniformMatrix(modelviewMatrixLoc,pgCurrent.glModelview);
+  }
+  if (-1 < projectionMatrixLoc) {
+    pgCurrent.updateGLProjection();
+    setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
+  }
+  if (1 < resolutionLoc) {
+    float w=pgCurrent.width;
+    float h=pgCurrent.height;
+    setUniformValue(resolutionLoc,w,h);
+  }
+  if (-1 < viewportLoc) {
+    float x=pgCurrent.viewport[0];
+    float y=pgCurrent.viewport[1];
+    float w=pgCurrent.viewport[2];
+    float h=pgCurrent.viewport[3];
+    setUniformValue(viewportLoc,x,y,w,h);
+  }
+  if (-1 < mouseLoc) {
+    float mx=pgCurrent.parent.mouseX;
+    float my=pgCurrent.parent.mouseY;
+    setUniformValue(mouseLoc,mx,my);
+  }
+  if (-1 < pmouseLoc) {
+    float pmx=pgCurrent.parent.pmouseX;
+    float pmy=pgCurrent.parent.pmouseY;
+    setUniformValue(pmouseLoc,pmx,pmy);
+  }
+  if (-1 < timeLoc) {
+    float sec=pgCurrent.parent.millis() / 1000.0f;
+    setUniformValue(timeLoc,sec);
+  }
+  if (-1 < pframeSamplerLoc) {
+    setUniformValue(pframeSamplerLoc,lastTexUnit);
+    pgl.activeTexture(PGL.TEXTURE0 + lastTexUnit);
+    pgCurrent.bindBackTexture();
+  }
+}
