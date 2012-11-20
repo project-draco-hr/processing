@@ -12,6 +12,9 @@
   pgl.texParameteri(glTarget,PGL.TEXTURE_MAG_FILTER,glMagFilter);
   pgl.texParameteri(glTarget,PGL.TEXTURE_WRAP_S,glWrapS);
   pgl.texParameteri(glTarget,PGL.TEXTURE_WRAP_T,glWrapT);
+  if (PGraphicsOpenGL.anisoSamplingSupported) {
+    pgl.texParameterf(glTarget,PGL.TEXTURE_MAX_ANISOTROPY,PGraphicsOpenGL.maxAnisoAmount);
+  }
   pgl.texImage2D(glTarget,0,glFormat,glWidth,glHeight,0,PGL.RGBA,PGL.UNSIGNED_BYTE,null);
   pgl.initTexture(glTarget,PGL.RGBA,width,height);
   pgl.bindTexture(glTarget,0);

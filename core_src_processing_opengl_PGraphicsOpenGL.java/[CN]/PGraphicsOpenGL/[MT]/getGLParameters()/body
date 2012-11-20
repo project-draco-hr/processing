@@ -14,6 +14,7 @@
   autoMipmapGenSupported=-1 < OPENGL_EXTENSIONS.indexOf("_generate_mipmap");
   fboMultisampleSupported=-1 < OPENGL_EXTENSIONS.indexOf("_framebuffer_multisample");
   packedDepthStencilSupported=-1 < OPENGL_EXTENSIONS.indexOf("_packed_depth_stencil");
+  anisoSamplingSupported=-1 < OPENGL_EXTENSIONS.indexOf("_texture_filter_anisotropic");
   try {
     pgl.blendEquation(PGL.FUNC_ADD);
     blendEqSupported=true;
@@ -34,5 +35,10 @@
   depthBits=temp[0];
   pgl.getIntegerv(PGL.STENCIL_BITS,temp,0);
   stencilBits=temp[0];
+  if (anisoSamplingSupported) {
+    float ftemp[]=new float[1];
+    pgl.getFloatv(PGL.MAX_TEXTURE_MAX_ANISOTROPY,ftemp,0);
+    maxAnisoAmount=ftemp[0];
+  }
   glParamsRead=true;
 }
