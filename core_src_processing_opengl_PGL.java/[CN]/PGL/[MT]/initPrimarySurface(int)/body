@@ -49,11 +49,11 @@
     pg.parent.add(canvasAWT,BorderLayout.CENTER);
     pg.parent.removeListeners(pg.parent);
     pg.parent.addListeners(canvasAWT);
-    listener=new PGLListener();
-    canvasAWT.addGLEventListener(listener);
     capabilities=canvasAWT.getChosenGLCapabilities();
     canvas=canvasAWT;
     canvasNEWT=null;
+    listener=new PGLListener();
+    canvasAWT.addGLEventListener(listener);
   }
  else   if (toolkit == NEWT) {
     window=GLWindow.create(caps);
@@ -66,13 +66,13 @@
     window.addMouseListener(mouseListener);
     com.jogamp.newt.event.KeyListener keyListener=new NEWTKeyAdapter();
     window.addKeyListener(keyListener);
+    capabilities=window.getChosenGLCapabilities();
+    canvas=canvasNEWT;
+    canvasAWT=null;
     listener=new PGLListener();
     window.addGLEventListener(listener);
     animator=new NEWTAnimator(window);
     animator.start();
-    capabilities=window.getChosenGLCapabilities();
-    canvas=canvasNEWT;
-    canvasAWT=null;
   }
   initialized=true;
 }
