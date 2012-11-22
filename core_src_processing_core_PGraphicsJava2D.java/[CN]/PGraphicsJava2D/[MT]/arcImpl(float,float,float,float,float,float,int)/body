@@ -1,0 +1,25 @@
+{
+  start=-start * RAD_TO_DEG;
+  stop=-stop * RAD_TO_DEG;
+  float sweep=stop - start;
+  int fillMode=Arc2D.PIE;
+  int strokeMode=Arc2D.OPEN;
+  if (mode == OPEN) {
+    fillMode=Arc2D.OPEN;
+  }
+ else   if (mode == PIE) {
+    strokeMode=Arc2D.PIE;
+  }
+ else   if (mode == CHORD) {
+    fillMode=Arc2D.CHORD;
+    strokeMode=Arc2D.CHORD;
+  }
+  if (fill) {
+    arc.setArc(x,y,w,h,start,sweep,fillMode);
+    fillShape(arc);
+  }
+  if (stroke) {
+    arc.setArc(x,y,w,h,start,sweep,strokeMode);
+    strokeShape(arc);
+  }
+}
