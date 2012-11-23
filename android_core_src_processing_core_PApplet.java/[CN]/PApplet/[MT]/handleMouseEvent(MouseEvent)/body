@@ -1,0 +1,56 @@
+{
+  if (event.getAction() == MouseEvent.DRAG || event.getAction() == MouseEvent.MOVE) {
+    pmouseX=emouseX;
+    pmouseY=emouseY;
+    mouseX=event.getX();
+    mouseY=event.getY();
+  }
+  if (event.getAction() == MouseEvent.PRESS) {
+    mouseX=event.getX();
+    mouseY=event.getY();
+    pmouseX=mouseX;
+    pmouseY=mouseY;
+    dmouseX=mouseX;
+    dmouseY=mouseY;
+  }
+switch (event.getAction()) {
+case MouseEvent.PRESS:
+    mousePressed=true;
+  break;
+case MouseEvent.RELEASE:
+mousePressed=false;
+break;
+}
+handleMethods("mouseEvent",new Object[]{event});
+switch (event.getAction()) {
+case MouseEvent.PRESS:
+mousePressed();
+break;
+case MouseEvent.RELEASE:
+mouseReleased();
+break;
+case MouseEvent.CLICK:
+mouseClicked();
+break;
+case MouseEvent.DRAG:
+mouseDragged();
+break;
+case MouseEvent.MOVE:
+mouseMoved();
+break;
+case MouseEvent.ENTER:
+mouseEntered();
+break;
+case MouseEvent.EXIT:
+mouseExited();
+break;
+}
+if ((event.getAction() == MouseEvent.DRAG) || (event.getAction() == MouseEvent.MOVE)) {
+emouseX=mouseX;
+emouseY=mouseY;
+}
+if (event.getAction() == MouseEvent.PRESS) {
+emouseX=mouseX;
+emouseY=mouseY;
+}
+}

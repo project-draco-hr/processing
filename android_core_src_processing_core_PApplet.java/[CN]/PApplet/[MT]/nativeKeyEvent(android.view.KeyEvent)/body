@@ -7,10 +7,10 @@
   int keAction=0;
   int action=event.getAction();
   if (action == android.view.KeyEvent.ACTION_DOWN) {
-    keAction=KeyEvent.PRESSED;
+    keAction=KeyEvent.PRESS;
   }
  else   if (action == android.view.KeyEvent.ACTION_UP) {
-    keAction=KeyEvent.RELEASED;
+    keAction=KeyEvent.RELEASE;
   }
   int keModifiers=0;
   KeyEvent ke=new KeyEvent(event,event.getEventTime(),keAction,keModifiers,key,keyCode);
@@ -19,10 +19,5 @@
       exit();
     }
   }
-  if (looping) {
-    enqueueKeyEvent(ke);
-  }
- else {
-    handleKeyEvent(ke);
-  }
+  postEvent(ke);
 }
