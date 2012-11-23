@@ -22,11 +22,12 @@
   if (base.activeEditor != null) {
     boolean offerToUpdateContributions=true;
     if (latest > Base.REVISION) {
+      System.out.println("You are running Processing revision " + Base.REVISION + ", the latest is "+ latest+ ".");
       offerToUpdateContributions=!promptToVisitDownloadPage();
     }
     if (offerToUpdateContributions) {
       Thread.sleep(5 * 1000);
-      if (!base.libraryManagerFrame.hasAlreadyBeenOpened() && base.libraryManagerFrame.hasUpdates() || !base.toolManagerFrame.hasAlreadyBeenOpened() && base.toolManagerFrame.hasUpdates() || !base.modeManagerFrame.hasAlreadyBeenOpened() && base.modeManagerFrame.hasUpdates()) {
+      if ((!base.libraryManagerFrame.hasAlreadyBeenOpened() && base.libraryManagerFrame.hasUpdates()) || (!base.toolManagerFrame.hasAlreadyBeenOpened() && base.toolManagerFrame.hasUpdates()) || (!base.modeManagerFrame.hasAlreadyBeenOpened() && base.modeManagerFrame.hasUpdates())) {
         promptToOpenContributionManager();
       }
     }
