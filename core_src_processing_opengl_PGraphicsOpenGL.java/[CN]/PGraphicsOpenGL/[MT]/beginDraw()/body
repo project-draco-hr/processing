@@ -27,7 +27,6 @@
     texture.glName=pgl.getBackTextureName();
     ptexture.glName=pgl.getFrontTextureName();
     pgl.update();
-    pgl.drawBuffer(pgl.getBackBuffer());
   }
  else {
     if (!pgl.initialized) {
@@ -35,7 +34,7 @@
     }
  else {
       boolean outdated=offscreenFramebuffer != null && offscreenFramebuffer.contextIsOutdated();
-      boolean outdatedMulti=offscreenFramebufferMultisample != null && offscreenFramebufferMultisample.contextIsOutdated();
+      boolean outdatedMulti=multisampleFramebuffer != null && multisampleFramebuffer.contextIsOutdated();
       if (outdated || outdatedMulti) {
         pgl.initialized=false;
         initOffscreen();
@@ -43,12 +42,11 @@
     }
     pushFramebuffer();
     if (offscreenMultisample) {
-      setFramebuffer(offscreenFramebufferMultisample);
+      setFramebuffer(multisampleFramebuffer);
     }
  else {
       setFramebuffer(offscreenFramebuffer);
     }
-    pgl.drawBuffer(PGL.COLOR_ATTACHMENT0);
   }
   report("top beginDraw()");
   drawing=true;

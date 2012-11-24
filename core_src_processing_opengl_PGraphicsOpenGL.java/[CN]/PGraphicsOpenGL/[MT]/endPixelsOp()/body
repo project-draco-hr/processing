@@ -1,9 +1,9 @@
 {
-  if (offscreenNotCurrent) {
-    if (!primarySurface && pixelsOp == OP_WRITE && offscreenMultisample) {
-      offscreenFramebufferMultisample.copy(offscreenFramebuffer);
-    }
+  if (pixOpChangedFB) {
     popFramebuffer();
+    pixOpChangedFB=false;
   }
+  pgl.readBuffer(pgl.getDefaultReadBuffer());
+  pgl.drawBuffer(pgl.getDefautDrawBuffer());
   pixelsOp=OP_NONE;
 }

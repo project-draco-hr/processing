@@ -1,46 +1,40 @@
 {
+  FrameBuffer pixfb=null;
   if (primarySurface) {
-    pushFramebuffer();
     if (op == OP_READ) {
-      setFramebuffer(readFramebuffer);
-      pgl.readBuffer(pgl.getFrontBuffer());
-      if (pgl.isFBOBacked()) {
+      if (pgl.isFBOBacked() && pgl.isMultisampled()) {
         pgl.syncBackTexture();
+        pixfb=readFramebuffer;
+      }
+ else {
+        pixfb=drawFramebuffer;
       }
     }
- else {
-      setFramebuffer(drawFramebuffer);
-      pgl.drawBuffer(pgl.getBackBuffer());
+ else     if (op == OP_WRITE) {
+      pixfb=drawFramebuffer;
     }
-    offscreenNotCurrent=true;
   }
  else {
     if (op == OP_READ) {
-      offscreenNotCurrent=offscreenFramebuffer != currentFramebuffer;
-      if (offscreenNotCurrent) {
-        pushFramebuffer();
-        setFramebuffer(offscreenFramebuffer);
-      }
-      pgl.readBuffer(PGL.COLOR_ATTACHMENT0);
-    }
- else {
       if (offscreenMultisample) {
-        offscreenNotCurrent=offscreenFramebufferMultisample != currentFramebuffer;
+        multisampleFramebuffer.copy(offscreenFramebuffer,currentFramebuffer);
       }
- else {
-        offscreenNotCurrent=offscreenFramebuffer != currentFramebuffer;
-      }
-      if (offscreenNotCurrent) {
-        pushFramebuffer();
-        if (offscreenMultisample) {
-          setFramebuffer(offscreenFramebufferMultisample);
-        }
- else {
-          setFramebuffer(offscreenFramebuffer);
-        }
-      }
-      pgl.drawBuffer(PGL.COLOR_ATTACHMENT0);
+      pixfb=offscreenFramebuffer;
     }
+ else     if (op == OP_WRITE) {
+      pixfb=offscreenMultisample ? multisampleFramebuffer : offscreenFramebuffer;
+    }
+  }
+  if (pixfb != currentFramebuffer) {
+    pushFramebuffer();
+    setFramebuffer(pixfb);
+    pixOpChangedFB=true;
+  }
+  if (op == OP_READ) {
+    pgl.readBuffer(pgl.getDefautDrawBuffer());
+  }
+ else   if (op == OP_WRITE) {
+    pgl.drawBuffer(pgl.getDefautDrawBuffer());
   }
   pixelsOp=op;
 }
