@@ -1,0 +1,27 @@
+{
+  if (offscreenMultisample) {
+    offscreenFramebufferMultisample.copy(offscreenFramebuffer);
+  }
+  if (!pgl.initialized || !pgPrimary.pgl.initialized || parent.frameCount == 0) {
+    saveSurfaceToPixels();
+    restoreSurface=true;
+  }
+  if (!clearColorBuffer0) {
+    if (offscreenMultisample) {
+      pushFramebuffer();
+      setFramebuffer(offscreenFramebuffer);
+    }
+    offscreenFramebuffer.setColorBuffer(ptexture);
+    drawTexture();
+    offscreenFramebuffer.setColorBuffer(texture);
+    if (offscreenMultisample) {
+      popFramebuffer();
+    }
+  }
+  popFramebuffer();
+  texture.updateTexels();
+  int temp=texture.glName;
+  texture.glName=ptexture.glName;
+  ptexture.glName=temp;
+  pgPrimary.restoreGL();
+}
