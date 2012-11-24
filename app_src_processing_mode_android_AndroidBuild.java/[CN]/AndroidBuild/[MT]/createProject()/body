@@ -17,7 +17,8 @@
     writeBuildXML(buildFile,sketch.getName());
     writeProjectProps(new File(tmpFolder,"project.properties"));
     writeLocalProps(new File(tmpFolder,"local.properties"));
-    writeRes(new File(tmpFolder,"res"),sketchClassName);
+    final File resFolder=new File(tmpFolder,"res");
+    writeRes(resFolder,sketchClassName);
     final File libsFolder=mkdirs(tmpFolder,"libs");
     final File assetsFolder=mkdirs(tmpFolder,"assets");
     Base.copyFile(coreZipFile,new File(libsFolder,"processing-core.jar"));
@@ -26,6 +27,10 @@
     final File sketchDataFolder=sketch.getDataFolder();
     if (sketchDataFolder.exists()) {
       Base.copyDir(sketchDataFolder,assetsFolder);
+    }
+    final File sketchResFolder=new File(sketch.getFolder(),"res");
+    if (sketchResFolder.exists()) {
+      Base.copyDir(sketchResFolder,resFolder);
     }
   }
   return tmpFolder;
