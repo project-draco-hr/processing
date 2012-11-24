@@ -18,10 +18,16 @@
     if (readFramebuffer == null) {
       readFramebuffer=new FrameBuffer(parent,width,height,true);
     }
-    drawFramebuffer.setFBO(pgl.primaryDrawFramebuffer());
-    readFramebuffer.setFBO(pgl.primaryReadFramebuffer());
-    pgl.updatePrimary();
-    pgl.drawBuffer(pgl.primaryDrawBuffer());
+    if (pgl.isFBOBacked() && texture == null) {
+      texture=pgl.wrapBackTexture();
+      ptexture=pgl.wrapFrontTexture();
+    }
+    drawFramebuffer.setFBO(pgl.getDrawFramebuffer());
+    readFramebuffer.setFBO(pgl.getReadFramebuffer());
+    texture.glName=pgl.getBackTextureName();
+    ptexture.glName=pgl.getFrontTextureName();
+    pgl.update();
+    pgl.drawBuffer(pgl.getBackBuffer());
   }
  else {
     if (!pgl.initialized) {
@@ -42,7 +48,6 @@
  else {
       setFramebuffer(offscreenFramebuffer);
     }
-    pgl.updateOffscreen(pgPrimary.pgl);
     pgl.drawBuffer(PGL.COLOR_ATTACHMENT0);
   }
   report("top beginDraw()");
@@ -120,17 +125,13 @@
   pgl.clearStencil(0);
   pgl.clear(PGL.DEPTH_BUFFER_BIT | PGL.STENCIL_BUFFER_BIT);
   if (primarySurface) {
-    pgl.beginOnscreenDraw(clearColorBuffer);
+    pgl.beginDraw(clearColorBuffer);
   }
  else {
     beginOffscreenDraw();
   }
   if (!settingsInited) {
     defaultSettings();
-  }
-  if (restoreSurface) {
-    restoreSurfaceFromPixels();
-    restoreSurface=false;
   }
   if (hints[DISABLE_DEPTH_MASK]) {
     pgl.depthMask(false);

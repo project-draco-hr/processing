@@ -3,14 +3,14 @@
     pushFramebuffer();
     if (op == OP_READ) {
       setFramebuffer(readFramebuffer);
-      pgl.readBuffer(pgl.primaryReadBuffer());
+      pgl.readBuffer(pgl.getFrontBuffer());
       if (pgl.isFBOBacked()) {
-        pgl.forceUpdate();
+        pgl.syncBackTexture();
       }
     }
  else {
       setFramebuffer(drawFramebuffer);
-      pgl.drawBuffer(pgl.primaryDrawBuffer());
+      pgl.drawBuffer(pgl.getBackBuffer());
     }
     offscreenNotCurrent=true;
   }
@@ -20,7 +20,6 @@
       if (offscreenNotCurrent) {
         pushFramebuffer();
         setFramebuffer(offscreenFramebuffer);
-        pgl.updateOffscreen(pgPrimary.pgl);
       }
       pgl.readBuffer(PGL.COLOR_ATTACHMENT0);
     }
@@ -39,7 +38,6 @@
  else {
           setFramebuffer(offscreenFramebuffer);
         }
-        pgl.updateOffscreen(pgPrimary.pgl);
       }
       pgl.drawBuffer(PGL.COLOR_ATTACHMENT0);
     }

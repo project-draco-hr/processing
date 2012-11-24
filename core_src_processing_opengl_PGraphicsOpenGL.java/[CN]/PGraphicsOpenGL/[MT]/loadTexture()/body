@@ -6,12 +6,11 @@
   }
   flush();
   if (primarySurface) {
-    loadTextureImpl(Texture.POINT,false);
     if (pgl.isFBOBacked()) {
-      pgl.forceUpdate();
-      texture.set(pgl.getBackTexTarget(),pgl.getBackTexName(),pgl.getBackTexWidth(),pgl.getBackTexHeight(),width,height);
+      pgl.syncBackTexture();
     }
  else {
+      loadTextureImpl(Texture.POINT,false);
       if (nativePixels == null || nativePixels.length < width * height) {
         nativePixels=new int[width * height];
         nativePixelBuffer=IntBuffer.wrap(nativePixels);

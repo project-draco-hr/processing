@@ -7,7 +7,7 @@
   }
   PApplet.arrayCopy(pixels,i0,nativePixels,0,len);
   PGL.javaToNativeARGB(nativePixels,w,h);
-  if (primarySurface) {
+  if (primarySurface && !pgl.isFBOBacked()) {
     loadTextureImpl(POINT,false);
   }
   pgl.copyToTexture(texture.glTarget,texture.glFormat,texture.glName,x,y,w,h,IntBuffer.wrap(nativePixels));
