@@ -10,11 +10,11 @@
     globalLogger.setLevel(Level.WARNING);
   }
   try {
-    File logFile=getContentFile("logs/DebugMode.%g.log");
-    File logFolder=logFile.getParentFile();
+    File logFolder=Base.getSettingsFile("debug");
     if (!logFolder.exists()) {
       logFolder.mkdir();
     }
+    File logFile=new File(logFolder,"DebugMode.%g.log");
     Handler handler=new FileHandler(logFile.getAbsolutePath(),LOG_SIZE,10,false);
     globalLogger.addHandler(handler);
   }
