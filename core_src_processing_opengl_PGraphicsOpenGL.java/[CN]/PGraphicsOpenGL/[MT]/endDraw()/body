@@ -21,9 +21,22 @@
       saveSurfaceToPixels();
       restoreSurface=true;
     }
+    if (offscreenMultisample) {
+      pushFramebuffer();
+      setFramebuffer(offscreenFramebuffer);
+    }
+    offscreenFramebuffer.setColorBuffer(ptexture);
+    drawTexture();
+    offscreenFramebuffer.setColorBuffer(texture);
+    if (offscreenMultisample) {
+      popFramebuffer();
+    }
     popFramebuffer();
     texture.updateTexels();
     pgl.endOffscreenDraw(pgPrimary.clearColorBuffer0);
+    int temp=texture.glName;
+    texture.glName=ptexture.glName;
+    ptexture.glName=temp;
     pgPrimary.restoreGL();
   }
   drawing=false;

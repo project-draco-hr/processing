@@ -4,7 +4,7 @@
     return;
   }
   if (pgCurrent != null && !pgCurrent.primarySurface && !this.primarySurface) {
-    showWarning("Already called beginDraw() for another " + "PGraphicsOpenGL object.");
+    showWarning(NESTED_DRAW_ERROR);
     return;
   }
   if (!glParamsRead) {
@@ -15,10 +15,10 @@
       drawFramebuffer=new FrameBuffer(parent,width,height,true);
       setFramebuffer(drawFramebuffer);
     }
-    drawFramebuffer.setFBO(pgl.primaryDrawFramebuffer());
     if (readFramebuffer == null) {
       readFramebuffer=new FrameBuffer(parent,width,height,true);
     }
+    drawFramebuffer.setFBO(pgl.primaryDrawFramebuffer());
     readFramebuffer.setFBO(pgl.primaryReadFramebuffer());
     pgl.updatePrimary();
     pgl.drawBuffer(pgl.primaryDrawBuffer());
