@@ -3,8 +3,11 @@
     DOMSource dumSource=new DOMSource(node);
     TransformerFactory tf=TransformerFactory.newInstance();
     Transformer transformer=tf.newTransformer();
-    if (parent != null) {
+    if (indent == -1 || parent != null) {
       transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,"yes");
+    }
+ else {
+      transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,"no");
     }
     transformer.setOutputProperty(OutputKeys.METHOD,"xml");
     transformer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
