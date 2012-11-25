@@ -1,0 +1,14 @@
+{
+  if (firstRun) {
+    Thread.currentThread().setName("PGL-RenderQueue-" + count);
+    firstRun=false;
+    count++;
+  }
+  if (shouldRun) {
+    PGLAnimator.this.animThread=Thread.currentThread();
+    display();
+synchronized (this) {
+      shouldRun=false;
+    }
+  }
+}

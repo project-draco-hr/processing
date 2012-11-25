@@ -44,7 +44,7 @@
       boolean outdated=offscreenFramebuffer != null && offscreenFramebuffer.contextIsOutdated();
       boolean outdatedMulti=multisampleFramebuffer != null && multisampleFramebuffer.contextIsOutdated();
       if (outdated || outdatedMulti) {
-        pgl.initialized=false;
+        restartPGL();
         initOffscreen();
       }
     }
@@ -98,18 +98,13 @@
   viewport[2]=width;
   viewport[3]=height;
   pgl.viewport(viewport[0],viewport[1],viewport[2],viewport[3]);
-  if (resized) {
-    background(backgroundColor);
-    if (texture != null) {
-      pgPrimary.removeCache(this);
-      texture=null;
-      loadTexture();
-    }
-    resized=false;
-  }
   if (sized) {
+    background(backgroundColor);
     defaultPerspective();
     defaultCamera();
+    if (pixels != null) {
+      loadPixels();
+    }
     sized=false;
   }
  else {

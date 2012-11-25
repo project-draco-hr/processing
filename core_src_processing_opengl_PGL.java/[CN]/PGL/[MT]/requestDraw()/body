@@ -1,11 +1,16 @@
 {
   if (initialized) {
     try {
-      if (toolkit == AWT) {
-        canvasAWT.display();
-      }
- else       if (toolkit == NEWT) {
+      if (useAnimator) {
         animator.requestDisplay();
+      }
+ else {
+        if (toolkit == AWT) {
+          canvasAWT.display();
+        }
+ else         if (toolkit == NEWT) {
+          window.display();
+        }
       }
     }
  catch (    GLException e) {
