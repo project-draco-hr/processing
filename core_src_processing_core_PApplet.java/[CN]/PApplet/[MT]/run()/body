@@ -19,9 +19,11 @@ synchronized (pauseObject) {
       }
     }
     debug("done with pause");
-    if (resizeRequest) {
-      resizeRenderer(resizeWidth,resizeHeight);
-      resizeRequest=false;
+    if (g != null) {
+      getSize(currentSize);
+      if (currentSize.width != g.width || currentSize.height != g.height) {
+        resizeRenderer(currentSize.width,currentSize.height);
+      }
     }
     if (g != null)     g.requestDraw();
     if (frameCount == 1) {
