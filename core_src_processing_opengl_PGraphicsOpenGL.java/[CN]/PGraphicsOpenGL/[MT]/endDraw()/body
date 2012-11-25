@@ -5,6 +5,10 @@
     showWarning("Cannot call endDraw() before beginDraw().");
     return;
   }
+  if (!pgPrimary.pgl.initialized || parent.frameCount == 0) {
+    saveSurfaceToPixels();
+    restoreSurface=true;
+  }
   if (primarySurface) {
     pgl.endDraw(clearColorBuffer0);
     pgl.flush();

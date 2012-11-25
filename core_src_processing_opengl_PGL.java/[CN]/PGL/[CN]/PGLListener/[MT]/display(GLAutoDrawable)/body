@@ -1,6 +1,21 @@
 {
   drawable=glDrawable;
   context=glDrawable.getContext();
+  gl=context.getGL();
+  gl2=gl.getGL2ES2();
+  try {
+    gl2x=gl.getGL2();
+  }
+ catch (  javax.media.opengl.GLException e) {
+    gl2x=null;
+  }
+  if (firstFrame) {
+    gl.glClearDepthf(1);
+    gl.glClearStencil(0);
+    gl.glClearColor(0,0,0,0);
+    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
+    firstFrame=false;
+  }
   if (capabilities.isFBO()) {
     GLFBODrawable fboDrawable=null;
     if (toolkit == AWT) {
@@ -35,14 +50,6 @@
         frontTex=fboDrawable.getTextureBuffer(GL.GL_FRONT);
       }
     }
-  }
-  gl=context.getGL();
-  gl2=gl.getGL2ES2();
-  try {
-    gl2x=gl.getGL2();
-  }
- catch (  javax.media.opengl.GLException e) {
-    gl2x=null;
   }
   pg.parent.handleDraw();
 }
