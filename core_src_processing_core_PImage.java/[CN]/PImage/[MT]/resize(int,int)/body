@@ -1,24 +1,19 @@
 {
-  loadPixels();
   if (w <= 0 && h <= 0) {
-    width=0;
-    height=0;
-    pixels=new int[0];
+    throw new IllegalArgumentException("width or height must be > 0 for resize");
   }
- else {
-    if (w == 0) {
-      float diff=(float)h / (float)height;
-      w=(int)(width * diff);
-    }
- else     if (h == 0) {
-      float diff=(float)w / (float)width;
-      h=(int)(height * diff);
-    }
-    PImage temp=new PImage(w,h,this.format);
-    temp.copy(this,0,0,width,height,0,0,w,h);
-    this.width=w;
-    this.height=h;
-    this.pixels=temp.pixels;
+  if (w == 0) {
+    float diff=(float)h / (float)height;
+    w=(int)(width * diff);
   }
+ else   if (h == 0) {
+    float diff=(float)w / (float)width;
+    h=(int)(height * diff);
+  }
+  BufferedImage img=resizeImage((BufferedImage)getNative(),w,h);
+  PImage temp=new PImage(img);
+  this.width=w;
+  this.height=h;
+  this.pixels=temp.pixels;
   updatePixels();
 }

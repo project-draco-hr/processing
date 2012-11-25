@@ -1,27 +1,17 @@
 {
-  loadPixels();
-  if (wide <= 0 && high <= 0) {
-    width=0;
-    height=0;
-    pixels=new int[0];
-    bitmap=null;
+  if (w <= 0 && h <= 0) {
+    throw new IllegalArgumentException("width or height must be > 0 for resize");
   }
- else {
-    if (wide == 0) {
-      float diff=(float)high / (float)height;
-      wide=(int)(width * diff);
-    }
- else     if (high == 0) {
-      float diff=(float)wide / (float)width;
-      high=(int)(height * diff);
-    }
-    PImage temp=new PImage(wide,high,this.format);
-    temp.parent=parent;
-    temp.copy(this,0,0,width,height,0,0,wide,high);
-    this.width=wide;
-    this.height=high;
-    this.pixels=temp.pixels;
-    this.bitmap=null;
+  if (w == 0) {
+    float diff=(float)h / (float)height;
+    w=(int)(width * diff);
   }
+ else   if (h == 0) {
+    float diff=(float)w / (float)width;
+    h=(int)(height * diff);
+  }
+  bitmap=Bitmap.createScaledBitmap(bitmap,w,h,true);
+  this.width=w;
+  this.height=h;
   updatePixels();
 }
