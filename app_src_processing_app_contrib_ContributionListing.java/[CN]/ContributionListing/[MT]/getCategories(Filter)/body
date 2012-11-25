@@ -1,13 +1,15 @@
 {
-  Set<String> ret=new HashSet<String>();
-  Set<String> cats=librariesByCategory.keySet();
-  for (  String cat : cats) {
-    for (    Contribution contrib : librariesByCategory.get(cat)) {
+  Set<String> outgoing=new HashSet<String>();
+  Set<String> categorySet=librariesByCategory.keySet();
+  for (  String categoryName : categorySet) {
+    for (    Contribution contrib : librariesByCategory.get(categoryName)) {
       if (filter.matches(contrib)) {
-        ret.add(cat);
+        if (categoryName != null && categoryName.trim().length() != 0) {
+          outgoing.add(categoryName);
+        }
         break;
       }
     }
   }
-  return ret;
+  return outgoing;
 }
