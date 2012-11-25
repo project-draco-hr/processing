@@ -1,26 +1,43 @@
 {
   int targetX=0;
   int targetY=0;
+  int targetWidth=w;
+  int targetHeight=h;
+  boolean cropped=false;
   if (x < 0) {
     w+=x;
     targetX=-x;
+    cropped=true;
     x=0;
   }
   if (y < 0) {
     h+=y;
     targetY=-y;
+    cropped=true;
     y=0;
   }
-  if (x + w > width)   w=width - x;
-  if (y + h > height)   h=height - y;
+  if (x + w > width) {
+    w=width - x;
+    cropped=true;
+  }
+  if (y + h > height) {
+    h=height - y;
+    cropped=true;
+  }
   if (w < 0) {
     w=0;
   }
   if (h < 0) {
     h=0;
   }
-  PImage target=new PImage(w,h,format);
+  int targetFormat=format;
+  if (cropped && format == RGB) {
+    targetFormat=ARGB;
+  }
+  PImage target=new PImage(targetWidth,targetHeight,targetFormat);
   target.parent=parent;
-  getImpl(x,y,w,h,target,targetX,targetY);
+  if (w > 0 && h > 0) {
+    getImpl(x,y,w,h,target,targetX,targetY);
+  }
   return target;
 }
