@@ -42,6 +42,8 @@
   char implicitCommand='\0';
   boolean prevCurve=false;
   float ctrlX, ctrlY;
+  float movetoX=0;
+  float movetoY=0;
   while (i < pathTokens.length) {
     char c=pathTokens[i].charAt(0);
     if (((c >= '0' && c <= '9') || (c == '-')) && implicitCommand != '\0') {
@@ -55,7 +57,9 @@ switch (c) {
 case 'M':
       cx=PApplet.parseFloat(pathTokens[i + 1]);
     cy=PApplet.parseFloat(pathTokens[i + 2]);
-  parsePathMoveto(cx,cy);
+  movetoX=cx;
+movetoY=cy;
+parsePathMoveto(cx,cy);
 implicitCommand='L';
 i+=3;
 break;
@@ -252,6 +256,8 @@ prevCurve=true;
 break;
 case 'Z':
 case 'z':
+cx=movetoX;
+cy=movetoY;
 close=true;
 i++;
 break;
@@ -261,7 +267,7 @@ String unparsed=PApplet.join(PApplet.subset(pathTokens,i),",");
 System.err.println("parsed: " + parsed);
 System.err.println("unparsed: " + unparsed);
 if (pathTokens[i].equals("a") || pathTokens[i].equals("A")) {
-String msg="Sorry, elliptical arc support for SVG files " + "is not yet implemented (See issue #130 for updates)";
+String msg="Sorry, elliptical arc support for SVG files " + "is not yet implemented (See issue 130 for updates)";
 throw new RuntimeException(msg);
 }
 throw new RuntimeException("shape command not handled: " + pathTokens[i]);
