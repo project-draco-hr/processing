@@ -1,0 +1,10 @@
+{
+  WritableRaster raster=((BufferedImage)(primarySurface ? offscreen : image)).getRaster();
+  if ((sourceX == 0) && (sourceY == 0) && (sourceWidth == sourceImage.width)&& (sourceHeight == sourceImage.height)) {
+    raster.setDataElements(targetX,targetY,sourceImage.width,sourceImage.height,sourceImage.pixels);
+  }
+ else {
+    PImage temp=sourceImage.get(sourceX,sourceY,sourceWidth,sourceHeight);
+    raster.setDataElements(targetX,targetY,temp.width,temp.height,temp.pixels);
+  }
+}

@@ -1,0 +1,17 @@
+{
+  WritableRaster raster=((BufferedImage)(primarySurface ? offscreen : image)).getRaster();
+  if (sourceWidth == target.width && sourceHeight == target.height) {
+    raster.getDataElements(sourceX,sourceY,sourceWidth,sourceHeight,target.pixels);
+  }
+ else {
+    int[] temp=new int[sourceWidth * sourceHeight];
+    raster.getDataElements(sourceX,sourceY,sourceWidth,sourceHeight,temp);
+    int sourceOffset=0;
+    int targetOffset=targetY * target.width + targetX;
+    for (int y=0; y < sourceHeight; y++) {
+      System.arraycopy(temp,sourceOffset,target.pixels,targetOffset,sourceWidth);
+      sourceOffset+=sourceWidth;
+      targetOffset+=target.width;
+    }
+  }
+}

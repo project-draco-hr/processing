@@ -1,10 +1,14 @@
 {
+  int targetX=0;
+  int targetY=0;
   if (x < 0) {
     w+=x;
+    targetX=-x;
     x=0;
   }
   if (y < 0) {
     h+=y;
+    targetY=-y;
     y=0;
   }
   if (x + w > width)   w=width - x;
@@ -15,5 +19,8 @@
   if (h < 0) {
     h=0;
   }
-  return getImpl(x,y,w,h);
+  PImage target=new PImage(w,h,format);
+  target.parent=parent;
+  getImpl(x,y,w,h,target,targetX,targetY);
+  return target;
 }
