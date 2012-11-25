@@ -1,11 +1,11 @@
 {
-  if (src.format == ALPHA) {
-    throw new RuntimeException("set() not available for ALPHA images");
+  if (img.format == ALPHA) {
+    throw new IllegalArgumentException("set() not available for ALPHA images");
   }
   int sx=0;
   int sy=0;
-  int sw=src.width;
-  int sh=src.height;
+  int sw=img.width;
+  int sh=img.height;
   if (x < 0) {
     sx-=x;
     sw+=x;
@@ -23,5 +23,5 @@
     sh=height - y;
   }
   if ((sw <= 0) || (sh <= 0))   return;
-  setImpl(x,y,sx,sy,sw,sh,src);
+  setImpl(img,sx,sy,sw,sh,x,y);
 }
