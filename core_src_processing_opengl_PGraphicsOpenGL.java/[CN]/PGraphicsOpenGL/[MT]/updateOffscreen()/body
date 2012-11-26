@@ -1,0 +1,23 @@
+{
+  if (!pgl.initialized) {
+    initOffscreen();
+  }
+ else {
+    boolean outdated=offscreenFramebuffer != null && offscreenFramebuffer.contextIsOutdated();
+    boolean outdatedMulti=multisampleFramebuffer != null && multisampleFramebuffer.contextIsOutdated();
+    if (outdated || outdatedMulti) {
+      restartPGL();
+      initOffscreen();
+    }
+ else {
+      swapTextures();
+    }
+  }
+  pushFramebuffer();
+  if (offscreenMultisample) {
+    setFramebuffer(multisampleFramebuffer);
+  }
+ else {
+    setFramebuffer(offscreenFramebuffer);
+  }
+}
