@@ -16,7 +16,11 @@
         nativePixelBuffer=IntBuffer.wrap(nativePixels);
       }
       beginPixelsOp(OP_READ);
-      pgl.readPixels(0,0,width,height,PGL.RGBA,PGL.UNSIGNED_BYTE,nativePixelBuffer);
+      try {
+        pgl.readPixels(0,0,width,height,PGL.RGBA,PGL.UNSIGNED_BYTE,nativePixelBuffer);
+      }
+ catch (      IndexOutOfBoundsException e) {
+      }
       endPixelsOp();
       texture.setNative(nativePixels,0,0,width,height);
     }

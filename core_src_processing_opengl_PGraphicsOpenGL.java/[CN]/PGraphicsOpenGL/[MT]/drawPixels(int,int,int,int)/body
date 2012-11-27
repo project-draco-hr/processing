@@ -5,8 +5,12 @@
     nativePixels=new int[len];
     nativePixelBuffer=IntBuffer.wrap(nativePixels);
   }
-  PApplet.arrayCopy(pixels,i0,nativePixels,0,len);
-  PGL.javaToNativeARGB(nativePixels,w,h);
+  try {
+    PApplet.arrayCopy(pixels,i0,nativePixels,0,len);
+    PGL.javaToNativeARGB(nativePixels,w,h);
+  }
+ catch (  ArrayIndexOutOfBoundsException e) {
+  }
   if (primarySurface && !pgl.isFBOBacked()) {
     loadTextureImpl(POINT,false);
   }
