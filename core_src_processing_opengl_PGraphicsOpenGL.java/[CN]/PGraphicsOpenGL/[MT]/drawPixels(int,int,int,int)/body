@@ -1,7 +1,4 @@
 {
-  if (sized || texture == null) {
-    return;
-  }
   int i0=y * width + x;
   int len=w * h;
   if (nativePixels == null || nativePixels.length != len) {
@@ -14,7 +11,8 @@
     loadTextureImpl(POINT,false);
   }
   pgl.copyToTexture(texture.glTarget,texture.glFormat,texture.glName,x,y,w,h,IntBuffer.wrap(nativePixels));
-  if (primarySurface || offscreenMultisample) {
+  boolean needToDrawTex=primarySurface && (!pgl.isFBOBacked() || (pgl.isFBOBacked() && pgl.isMultisampled())) || offscreenMultisample;
+  if (needToDrawTex) {
     beginPixelsOp(OP_WRITE);
     drawTexture(x,y,w,h);
     endPixelsOp();
