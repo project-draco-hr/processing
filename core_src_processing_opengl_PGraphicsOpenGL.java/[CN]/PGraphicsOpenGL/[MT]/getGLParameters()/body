@@ -23,6 +23,8 @@
     blendEqSupported=false;
   }
   int temp[]=new int[2];
+  depthBits=pgl.getDepthBits();
+  stencilBits=pgl.getStencilBits();
   pgl.getIntegerv(PGL.MAX_TEXTURE_SIZE,temp,0);
   maxTextureSize=temp[0];
   pgl.getIntegerv(PGL.MAX_SAMPLES,temp,0);
@@ -31,16 +33,6 @@
   maxLineWidth=temp[1];
   pgl.getIntegerv(PGL.ALIASED_POINT_SIZE_RANGE,temp,0);
   maxPointSize=temp[1];
-  pgl.getIntegerv(PGL.DEPTH_BITS,temp,0);
-  depthBits=temp[0];
-  pgl.getIntegerv(PGL.STENCIL_BITS,temp,0);
-  stencilBits=temp[0];
-  if (depthBits == 0) {
-    depthBits=24;
-  }
-  if (stencilBits == 0) {
-    stencilBits=8;
-  }
   if (anisoSamplingSupported) {
     float ftemp[]=new float[1];
     pgl.getFloatv(PGL.MAX_TEXTURE_MAX_ANISOTROPY,ftemp,0);
