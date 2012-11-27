@@ -3,7 +3,7 @@
   int offset=line.offset;
   lastOffset=offset;
   lastKeyword=offset;
-  int mlength=line.count + offset;
+  int mlength=offset + line.count;
   boolean backslash=false;
   loop:   for (int i=offset; i < mlength; i++) {
     int i1=(i + 1);
@@ -67,7 +67,9 @@ i++;
 break;
 default :
 backslash=false;
-if (!Character.isLetterOrDigit(c) && c != '_') doKeyword(line,i,c);
+if (!Character.isLetterOrDigit(c) && c != '_') {
+doKeyword(line,i,c);
+}
 break;
 }
 break;
@@ -103,7 +105,9 @@ default :
 throw new InternalError("Invalid state: " + token);
 }
 }
-if (token == Token.NULL) doKeyword(line,mlength,'\0');
+if (token == Token.NULL) {
+doKeyword(line,mlength,'\0');
+}
 switch (token) {
 case Token.LITERAL1:
 case Token.LITERAL2:
