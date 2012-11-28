@@ -5,12 +5,17 @@
     nativePixelBuffer=IntBuffer.wrap(nativePixels);
   }
   try {
-    int offset0=y * width + x;
-    int offset1=0;
-    for (int yc=y; yc < y + h; yc++) {
-      System.arraycopy(pixels,offset0,nativePixels,offset1,w);
-      offset0+=width;
-      offset1+=w;
+    if (0 < x || 0 < y || w < width || h < height) {
+      int offset0=y * width + x;
+      int offset1=0;
+      for (int yc=y; yc < y + h; yc++) {
+        System.arraycopy(pixels,offset0,nativePixels,offset1,w);
+        offset0+=width;
+        offset1+=w;
+      }
+    }
+ else {
+      PApplet.arrayCopy(pixels,0,nativePixels,0,len);
     }
     PGL.javaToNativeARGB(nativePixels,w,h);
   }
