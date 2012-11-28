@@ -8,6 +8,14 @@
   int platform=PApplet.platform;
   int platformBits=0;
   int task=HELP;
+  try {
+    systemOut=new PrintStream(System.out,true,"UTF-8");
+    systemErr=new PrintStream(System.err,true,"UTF-8");
+  }
+ catch (  UnsupportedEncodingException e) {
+    e.printStackTrace();
+    System.exit(1);
+  }
   for (  String arg : args) {
     if (arg.length() == 0) {
     }
@@ -67,7 +75,7 @@
     }
   }
   if (task == HELP) {
-    printCommandLine(System.out);
+    printCommandLine(systemOut);
     System.exit(0);
   }
   if (outputPath == null) {
@@ -131,7 +139,7 @@
       if (!success) {
         System.exit(1);
       }
-      System.out.println("Finished.");
+      systemOut.println("Finished.");
       System.exit(0);
     }
  catch (    SketchException re) {
