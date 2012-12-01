@@ -1,8 +1,13 @@
 {
-  g2.setComposite(new Composite(){
-    @Override public CompositeContext createContext(    ColorModel srcColorModel,    ColorModel dstColorModel,    RenderingHints hints){
-      return new BlendingContext(mode);
-    }
+  if (mode == BLEND) {
+    g2.setComposite(defaultComposite);
   }
+ else {
+    g2.setComposite(new Composite(){
+      @Override public CompositeContext createContext(      ColorModel srcColorModel,      ColorModel dstColorModel,      RenderingHints hints){
+        return new BlendingContext(mode);
+      }
+    }
 );
+  }
 }
