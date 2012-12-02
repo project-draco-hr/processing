@@ -1,3 +1,18 @@
 {
-  Base.showWarning("Processing.js doesn't support libraries","Libraries are not supported. Import statements are " + "ignored, and code relying on them will break.",null);
+  sketch.ensureExistence();
+  if (mode.isDefaultExtension(sketch.getCurrentCode())) {
+    sketch.setCurrentCode(0);
+  }
+  String[] list=Base.packageListFromClassPath(jarPath);
+  StringBuffer buffer=new StringBuffer();
+  for (int i=0; i < list.length; i++) {
+    buffer.append("import ");
+    buffer.append(list[i]);
+    buffer.append(".*;\n");
+  }
+  buffer.append('\n');
+  buffer.append(getText());
+  setText(buffer.toString());
+  setSelection(0,0);
+  sketch.setModified(true);
 }
