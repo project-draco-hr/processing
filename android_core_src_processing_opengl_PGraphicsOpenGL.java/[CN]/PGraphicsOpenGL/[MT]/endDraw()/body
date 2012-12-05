@@ -1,37 +1,27 @@
 {
   report("top endDraw()");
-  flush();
   if (!drawing) {
-    showWarning("Cannot call endDraw() before beginDraw().");
+    PGraphics.showWarning(NO_BEGIN_DRAW_ERROR);
     return;
   }
+  flush();
+  if (!pgPrimary.pgl.initialized || parent.frameCount == 0) {
+    saveSurfaceToPixels();
+    restoreSurface=true;
+  }
   if (primarySurface) {
-    pgl.endOnscreenDraw(clearColorBuffer0);
-    if (!pgl.initialized || parent.frameCount == 0) {
-      saveSurfaceToPixels();
-      restoreSurface=true;
-    }
+    pgl.endDraw(clearColorBuffer0);
     pgl.flush();
   }
  else {
-    if (offscreenMultisample) {
-      offscreenFramebufferMultisample.copy(offscreenFramebuffer);
-    }
-    if (!pgl.initialized || !pgPrimary.pgl.initialized || parent.frameCount == 0) {
-      saveSurfaceToPixels();
-      restoreSurface=true;
-    }
-    popFramebuffer();
-    texture.updateTexels();
-    pgl.endOffscreenDraw(pgPrimary.clearColorBuffer0);
-    pgPrimary.restoreGL();
+    endOffscreenDraw();
   }
-  drawing=false;
   if (pgCurrent == pgPrimary) {
     pgCurrent=null;
   }
  else {
     pgCurrent=pgPrimary;
   }
+  drawing=false;
   report("bot endDraw()");
 }

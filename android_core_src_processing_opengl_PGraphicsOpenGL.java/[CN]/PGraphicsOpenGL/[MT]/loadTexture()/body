@@ -6,26 +6,28 @@
   }
   flush();
   if (primarySurface) {
-    loadTextureImpl(Texture.POINT,false);
-    if (pgl.primaryIsFboBacked()) {
-      pgl.bindPrimaryColorFBO();
-      texture.set(pgl.getFboTexTarget(),pgl.getFboTexName(),pgl.getFboWidth(),pgl.getFboHeight(),width,height);
-      pgl.bindPrimaryMultiFBO();
+    if (pgl.isFBOBacked()) {
+      pgl.syncBackTexture();
     }
  else {
+      loadTextureImpl(Texture.POINT,false);
       if (nativePixels == null || nativePixels.length < width * height) {
         nativePixels=new int[width * height];
         nativePixelBuffer=IntBuffer.wrap(nativePixels);
       }
       beginPixelsOp(OP_READ);
-      pgl.readPixels(0,0,width,height,PGL.RGBA,PGL.UNSIGNED_BYTE,nativePixelBuffer);
+      try {
+        pgl.readPixels(0,0,width,height,PGL.RGBA,PGL.UNSIGNED_BYTE,nativePixelBuffer);
+      }
+ catch (      IndexOutOfBoundsException e) {
+      }
       endPixelsOp();
       texture.setNative(nativePixels,0,0,width,height);
     }
   }
  else {
     if (offscreenMultisample) {
-      offscreenFramebufferMultisample.copy(offscreenFramebuffer);
+      multisampleFramebuffer.copy(offscreenFramebuffer,currentFramebuffer);
     }
   }
   if (needEndDraw) {

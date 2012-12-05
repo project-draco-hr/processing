@@ -1,55 +1,40 @@
 {
+  FrameBuffer pixfb=null;
   if (primarySurface) {
-    if (pgl.primaryIsFboBacked()) {
-      if (op == OP_READ) {
-        offscreenNotCurrent=true;
-        pgl.bindPrimaryColorFBO();
-        pgl.readBuffer(pgl.primaryDrawBuffer());
+    if (op == OP_READ) {
+      if (pgl.isFBOBacked() && pgl.isMultisampled()) {
+        pgl.syncBackTexture();
+        pixfb=readFramebuffer;
       }
  else {
-        offscreenNotCurrent=false;
-        pgl.drawBuffer(pgl.primaryDrawBuffer());
+        pixfb=drawFramebuffer;
       }
     }
- else {
-      if (op == OP_READ) {
-        pgl.readBuffer(pgl.primaryDrawBuffer());
-      }
- else {
-        pgl.drawBuffer(pgl.primaryDrawBuffer());
-      }
-      offscreenNotCurrent=false;
+ else     if (op == OP_WRITE) {
+      pixfb=drawFramebuffer;
     }
   }
  else {
     if (op == OP_READ) {
-      offscreenNotCurrent=offscreenFramebuffer != currentFramebuffer;
-      if (offscreenNotCurrent) {
-        pushFramebuffer();
-        setFramebuffer(offscreenFramebuffer);
-        pgl.updateOffscreen(pgPrimary.pgl);
-      }
-      pgl.readBuffer(PGL.COLOR_ATTACHMENT0);
-    }
- else {
       if (offscreenMultisample) {
-        offscreenNotCurrent=offscreenFramebufferMultisample != currentFramebuffer;
+        multisampleFramebuffer.copy(offscreenFramebuffer,currentFramebuffer);
       }
- else {
-        offscreenNotCurrent=offscreenFramebuffer != currentFramebuffer;
-      }
-      if (offscreenNotCurrent) {
-        pushFramebuffer();
-        if (offscreenMultisample) {
-          setFramebuffer(offscreenFramebufferMultisample);
-        }
- else {
-          setFramebuffer(offscreenFramebuffer);
-        }
-        pgl.updateOffscreen(pgPrimary.pgl);
-      }
-      pgl.drawBuffer(PGL.COLOR_ATTACHMENT0);
+      pixfb=offscreenFramebuffer;
     }
+ else     if (op == OP_WRITE) {
+      pixfb=offscreenMultisample ? multisampleFramebuffer : offscreenFramebuffer;
+    }
+  }
+  if (pixfb != currentFramebuffer) {
+    pushFramebuffer();
+    setFramebuffer(pixfb);
+    pixOpChangedFB=true;
+  }
+  if (op == OP_READ) {
+    pgl.readBuffer(currentFramebuffer.getDefaultDrawBuffer());
+  }
+ else   if (op == OP_WRITE) {
+    pgl.drawBuffer(currentFramebuffer.getDefaultDrawBuffer());
   }
   pixelsOp=op;
 }
