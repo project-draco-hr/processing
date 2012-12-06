@@ -1,0 +1,24 @@
+{
+  lastTimeStamp=System.currentTimeMillis();
+  try {
+    sourceCode=preprocessCode(editor.getSketch().getMainProgram());
+    syntaxCheck();
+    if (problems.length == 0 && editor.compilationCheckEnabled) {
+      sourceCode=xqpreproc.doYourThing(sourceCode,programImports);
+      prepareCompilerClasspath();
+      mainClassOffset=xqpreproc.mainClassOffset;
+      if (staticMode)       mainClassOffset++;
+      compileCheck();
+    }
+    updateErrorTable();
+    editor.updateErrorBar(problemsList);
+    updateEditorStatus();
+    updateTextAreaPainter();
+    return true;
+  }
+ catch (  Exception e) {
+    System.out.println("Oops! [ErrorCheckerService.checkCode]: " + e);
+    e.printStackTrace();
+  }
+  return false;
+}

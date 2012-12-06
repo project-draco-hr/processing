@@ -1,0 +1,14 @@
+{
+  try {
+    while (true) {
+      EventSet eventSet=eventQueue.remove();
+      listener.vmEvent(eventSet);
+    }
+  }
+ catch (  VMDisconnectedException e) {
+    Logger.getLogger(VMEventReader.class.getName()).log(Level.INFO,"VMEventReader quit on VM disconnect");
+  }
+catch (  Exception e) {
+    Logger.getLogger(VMEventReader.class.getName()).log(Level.SEVERE,"VMEventReader quit",e);
+  }
+}

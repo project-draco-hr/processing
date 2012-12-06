@@ -1,0 +1,79 @@
+{
+  this.addMouseListener(new MouseAdapter(){
+    @SuppressWarnings("rawtypes") @Override public void mouseClicked(    final MouseEvent e){
+      SwingWorker worker=new SwingWorker(){
+        protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          for (          ErrorMarker eMarker : errorPoints) {
+            if (e.getY() >= eMarker.y - 2 && e.getY() <= eMarker.y + 2 + errorMarkerHeight) {
+              int currentTabErrorIndex=errorPoints.indexOf(eMarker);
+              int currentTab=editor.getSketch().getCodeIndex(editor.getSketch().getCurrentCode());
+              int totalErrorIndex=currentTabErrorIndex;
+              for (int i=0; i < errorCheckerService.problemsList.size(); i++) {
+                Problem p=errorCheckerService.problemsList.get(i);
+                if (p.tabIndex < currentTab)                 totalErrorIndex++;
+                if (p.tabIndex == currentTab)                 break;
+              }
+              errorCheckerService.scrollToErrorLine(totalErrorIndex);
+            }
+          }
+        }
+      }
+;
+      try {
+        worker.execute();
+      }
+ catch (      Exception exp) {
+        System.out.println("Errorbar mouseClicked is slacking." + exp.getMessage());
+      }
+    }
+  }
+);
+  this.addMouseMotionListener(new MouseMotionListener(){
+    @SuppressWarnings("rawtypes") @Override public void mouseMoved(    final MouseEvent e){
+      SwingWorker worker=new SwingWorker(){
+        protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          for (          ErrorMarker eMarker : errorPoints) {
+            if (e.getY() >= eMarker.y - 2 && e.getY() <= eMarker.y + 2 + errorMarkerHeight) {
+              int currentTab=editor.getSketch().getCodeIndex(editor.getSketch().getCurrentCode());
+              int currentTabErrorCount=0;
+              for (int i=0; i < errorPoints.size(); i++) {
+                Problem p=errorPoints.get(i).problem;
+                if (p.tabIndex == currentTab) {
+                  if (currentTabErrorCount == errorPoints.indexOf(eMarker)) {
+                    String msg=(p.isError() ? "Error: " : "Warning: ") + p.message;
+                    setToolTipText(msg);
+                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    return;
+                  }
+ else {
+                    currentTabErrorCount++;
+                  }
+                }
+              }
+            }
+ else {
+              setToolTipText("");
+              setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
+          }
+        }
+      }
+;
+      try {
+        worker.execute();
+      }
+ catch (      Exception exp) {
+        System.out.println("Errorbar mousemoved Worker is slacking." + exp.getMessage());
+      }
+    }
+    @Override public void mouseDragged(    MouseEvent arg0){
+    }
+  }
+);
+}
