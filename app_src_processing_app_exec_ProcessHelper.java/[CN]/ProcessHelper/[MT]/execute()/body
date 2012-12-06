@@ -1,26 +1,3 @@
 {
-  final StringWriter outWriter=new StringWriter();
-  final StringWriter errWriter=new StringWriter();
-  final long startTime=System.currentTimeMillis();
-  final String prettyCommand=toString();
-  final Process process=dir == null ? Runtime.getRuntime().exec(cmd) : Runtime.getRuntime().exec(cmd,new String[]{},dir);
-  ProcessRegistry.watch(process);
-  try {
-    String title=prettyCommand;
-    new StreamPump(process.getInputStream(),"out: " + title).addTarget(outWriter).start();
-    new StreamPump(process.getErrorStream(),"err: " + title).addTarget(errWriter).start();
-    try {
-      final int result=process.waitFor();
-      final long time=System.currentTimeMillis() - startTime;
-      return new ProcessResult(prettyCommand,result,outWriter.toString(),errWriter.toString(),time);
-    }
- catch (    final InterruptedException e) {
-      System.err.println("Interrupted: " + prettyCommand);
-      throw e;
-    }
-  }
-  finally {
-    process.destroy();
-    ProcessRegistry.unwatch(process);
-  }
+  return execute(null);
 }
