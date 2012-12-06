@@ -46,5 +46,48 @@
   debugMenu.add(printThreads);
   debugMenu.addSeparator();
   debugMenu.add(toggleVariableInspectorMenuItem);
+  debugMenu.addSeparator();
+  JCheckBoxMenuItem item;
+  final DebugEditor thisEditor=this;
+  item=new JCheckBoxMenuItem("Error Checker Enabled");
+  item.setSelected(true);
+  item.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      if (!((JCheckBoxMenuItem)e.getSource()).isSelected()) {
+        errorCheckerService.pauseThread();
+        System.out.println(thisEditor.getSketch().getName() + " - Error Checker paused.");
+        errorBar.errorPoints.clear();
+        errorCheckerService.problemsList.clear();
+        errorCheckerService.updateErrorTable();
+        errorCheckerService.updateEditorStatus();
+        getTextArea().repaint();
+      }
+ else {
+        errorCheckerService.resumeThread();
+        System.out.println(thisEditor.getSketch().getName() + " - Error Checker resumed.");
+      }
+    }
+  }
+);
+  debugMenu.add(item);
+  problemWindowMenuCB=new JCheckBoxMenuItem("Show Problem Window");
+  problemWindowMenuCB.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      if (errorCheckerService.errorWindow == null)       return;
+      errorCheckerService.errorWindow.setVisible(((JCheckBoxMenuItem)e.getSource()).isSelected());
+      toggleView(XQConsoleToggle.text[0]);
+    }
+  }
+);
+  debugMenu.add(problemWindowMenuCB);
+  showWarnings=new JCheckBoxMenuItem("Warnings Enabled");
+  showWarnings.setSelected(true);
+  showWarnings.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      errorCheckerService.warningsEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
+    }
+  }
+);
+  debugMenu.add(showWarnings);
   return debugMenu;
 }

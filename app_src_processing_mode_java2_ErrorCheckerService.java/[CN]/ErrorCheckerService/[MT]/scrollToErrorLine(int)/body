@@ -1,0 +1,16 @@
+{
+  if (editor == null)   return;
+  if (errorIndex < problemsList.size() && errorIndex >= 0) {
+    Problem p=problemsList.get(errorIndex);
+    try {
+      editor.toFront();
+      editor.getSketch().setCurrentCode(p.tabIndex);
+      editor.getTextArea().scrollTo(p.lineNumber - 1,0);
+      editor.setSelection(editor.getTextArea().getLineStartNonWhiteSpaceOffset(p.lineNumber - 1) + editor.getTextArea().getLineText(p.lineNumber - 1).trim().length(),editor.getTextArea().getLineStartNonWhiteSpaceOffset(p.lineNumber - 1));
+      editor.repaint();
+    }
+ catch (    Exception e) {
+      System.err.println(e + " : Error while selecting text in scrollToErrorLine()");
+    }
+  }
+}

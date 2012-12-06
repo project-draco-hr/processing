@@ -1,0 +1,30 @@
+{
+  try {
+    String[][] errorData=new String[problemsList.size()][3];
+    for (int i=0; i < problemsList.size(); i++) {
+      errorData[i][0]=problemsList.get(i).message;
+      errorData[i][1]=editor.getSketch().getCode(problemsList.get(i).tabIndex).getPrettyName();
+      errorData[i][2]=problemsList.get(i).lineNumber + "";
+    }
+    if (errorWindow != null) {
+      DefaultTableModel tm=new DefaultTableModel(errorData,XQErrorTable.columnNames);
+      if (errorWindow.isVisible()) {
+        errorWindow.updateTable(tm);
+      }
+      editor.updateTable(tm);
+      slashAnimationIndex++;
+      if (slashAnimationIndex == slashAnimation.length) {
+        slashAnimationIndex=0;
+      }
+      if (editor != null) {
+        String info=slashAnimation[slashAnimationIndex] + " T:" + (System.currentTimeMillis() - lastTimeStamp)+ "ms";
+        errorWindow.setTitle("Problems - " + editor.getSketch().getName() + " "+ info);
+      }
+    }
+  }
+ catch (  Exception e) {
+    System.out.println("Exception at updateErrorTable() " + e);
+    e.printStackTrace();
+    stopThread();
+  }
+}

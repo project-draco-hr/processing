@@ -1,0 +1,63 @@
+{
+  JMenu menu=new JMenu("XQMode");
+  JCheckBoxMenuItem item;
+  final DebugEditor thisEditor=this;
+  item=new JCheckBoxMenuItem("Error Checker Enabled");
+  item.setSelected(true);
+  item.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      if (!((JCheckBoxMenuItem)e.getSource()).isSelected()) {
+        errorCheckerService.pauseThread();
+        System.out.println(thisEditor.getSketch().getName() + " - Error Checker paused.");
+        errorBar.errorPoints.clear();
+        errorCheckerService.problemsList.clear();
+        errorCheckerService.updateErrorTable();
+        errorCheckerService.updateEditorStatus();
+        getTextArea().repaint();
+      }
+ else {
+        errorCheckerService.resumeThread();
+        System.out.println(thisEditor.getSketch().getName() + " - Error Checker resumed.");
+      }
+    }
+  }
+);
+  menu.add(item);
+  problemWindowMenuCB=new JCheckBoxMenuItem("Show Problem Window");
+  problemWindowMenuCB.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      if (errorCheckerService.errorWindow == null)       return;
+      errorCheckerService.errorWindow.setVisible(((JCheckBoxMenuItem)e.getSource()).isSelected());
+      toggleView(XQConsoleToggle.text[0]);
+    }
+  }
+);
+  menu.add(problemWindowMenuCB);
+  showWarnings=new JCheckBoxMenuItem("Warnings Enabled");
+  showWarnings.setSelected(true);
+  showWarnings.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      errorCheckerService.warningsEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
+    }
+  }
+);
+  menu.add(showWarnings);
+  menu.addSeparator();
+  JMenuItem item2=new JMenuItem("XQMode Wiki");
+  item2.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      Base.openURL("https://github.com/Manindra29/XQMode/wiki");
+    }
+  }
+);
+  menu.add(item2);
+  item2=new JMenuItem("XQMode on Github");
+  item2.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      Base.openURL("https://github.com/Manindra29/XQMode");
+    }
+  }
+);
+  menu.add(item2);
+  return menu;
+}
