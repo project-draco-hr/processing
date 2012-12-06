@@ -5,4 +5,12 @@
   librariesFolder=new File(folder,"libraries");
   referenceFolder=new File(folder,"reference");
   rebuildLibraryList();
+  try {
+    for (    File file : getKeywordFiles()) {
+      loadKeywords(file);
+    }
+  }
+ catch (  IOException e) {
+    Base.showWarning("Problem loading keywords","Could not load keywords file for " + getTitle() + " mode.",e);
+  }
 }
