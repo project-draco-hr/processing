@@ -1,7 +1,11 @@
 {
   try {
     if (loadCompClass) {
-      File f=new File("modes" + File.separator + "experimental"+ File.separator+ "mode");
+      File f=Base.getContentFile("modes" + File.separator + "experimental"+ File.separator+ "mode");
+      if (!f.exists()) {
+        System.err.println("Could not locate the files required for on-the-fly error checking. Bummer.");
+        return;
+      }
       FileFilter fileFilter=new FileFilter(){
         public boolean accept(        File file){
           return (file.getName().endsWith(".jar") && !file.getName().startsWith("experimental"));
@@ -61,7 +65,7 @@ catch (  Exception e) {
     stopThread();
   }
 catch (  NoClassDefFoundError e) {
-    System.err.println(e + " compileCheck() problem. Somebody tried to mess with XQMode files.");
+    System.err.println(e + " compileCheck() problem. Somebody tried to mess with Experimental Mode files.");
     stopThread();
   }
 }
