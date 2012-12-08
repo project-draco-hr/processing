@@ -1,10 +1,15 @@
 {
-  String classPath=getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-  System.out.println("cp is " + classPath);
-  try {
-    Runtime.getRuntime().exec(new String[]{"java","-cp",classPath,"processing.app.tools.MovieMakerFrame"});
+  if (Base.isMacOS()) {
+    String classPath=getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+    try {
+      Runtime.getRuntime().exec(new String[]{"java","-cp",classPath,"processing.app.tools.MovieMakerFrame"});
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
   }
- catch (  IOException e) {
-    e.printStackTrace();
+ else {
+    System.out.println("null frame, yeah baby");
+    MovieMakerFrame.main(null);
   }
 }
