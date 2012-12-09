@@ -1,11 +1,14 @@
 {
   int shader=createShader(shaderType);
   if (shader != 0) {
+    if (intBuffer == null) {
+      intBuffer=allocateDirectIntBuffer(1);
+    }
     shaderSource(shader,source);
     compileShader(shader);
-    int[] compiled=new int[1];
-    getShaderiv(shader,COMPILE_STATUS,compiled,0);
-    if (compiled[0] == FALSE) {
+    getShaderiv(shader,COMPILE_STATUS,intBuffer);
+    boolean compiled=intBuffer.get(0) == 0 ? false : true;
+    if (!compiled) {
       System.err.println("Could not compile shader " + shaderType + ":");
       System.err.println(getShaderInfoLog(shader));
       deleteShader(shader);

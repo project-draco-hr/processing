@@ -15,12 +15,15 @@
   if (texData == null) {
     texData=allocateDirectFloatBuffer(texCoords.length);
   }
+  if (byteBuffer == null) {
+    byteBuffer=allocateDirectByteBuffer(1);
+  }
   if (0 < tex2DShaderProgram) {
-    boolean[] depthTest=new boolean[1];
-    getBooleanv(DEPTH_TEST,depthTest,0);
+    getBooleanv(DEPTH_TEST,byteBuffer);
+    boolean depthTest=byteBuffer.get(0) == 0 ? false : true;
     disable(DEPTH_TEST);
-    boolean[] depthMask=new boolean[1];
-    getBooleanv(DEPTH_WRITEMASK,depthMask,0);
+    getBooleanv(DEPTH_WRITEMASK,byteBuffer);
+    boolean depthMask=byteBuffer.get(0) == 0 ? false : true;
     depthMask(false);
     useProgram(tex2DShaderProgram);
     enableVertexAttribArray(tex2DVertLoc);
@@ -63,12 +66,12 @@
     disableVertexAttribArray(tex2DVertLoc);
     disableVertexAttribArray(tex2DTCoordLoc);
     useProgram(0);
-    if (depthTest[0]) {
+    if (depthTest) {
       enable(DEPTH_TEST);
     }
  else {
       disable(DEPTH_TEST);
     }
-    depthMask(depthMask[0]);
+    depthMask(depthMask);
   }
 }

@@ -17,10 +17,10 @@
       float ny=in.normals[index++];
       float nz=in.normals[index];
       index=4 * tessIdx;
-      polyVertices[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
-      polyVertices[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
-      polyVertices[index++]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
-      polyVertices[index]=x * mm.m30 + y * mm.m31 + z * mm.m32 + mm.m33;
+      polyVertices.put(index++,x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03);
+      polyVertices.put(index++,x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13);
+      polyVertices.put(index++,x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23);
+      polyVertices.put(index,x * mm.m30 + y * mm.m31 + z * mm.m32 + mm.m33);
       index=3 * tessIdx;
       polyNormals[index++]=nx * nm.m00 + ny * nm.m10 + nz * nm.m20;
       polyNormals[index++]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
@@ -41,10 +41,10 @@
         float ny=in.normals[index++];
         float nz=in.normals[index];
         index=4 * tessIdx;
-        polyVertices[index++]=x;
-        polyVertices[index++]=y;
-        polyVertices[index++]=z;
-        polyVertices[index]=1;
+        polyVertices.put(index++,x);
+        polyVertices.put(index++,y);
+        polyVertices.put(index++,z);
+        polyVertices.put(index,1);
         index=3 * tessIdx;
         polyNormals[index++]=nx;
         polyNormals[index++]=ny;
@@ -55,8 +55,9 @@
       for (int i=0; i < nvert; i++) {
         int inIdx=i0 + i;
         int tessIdx=firstPolyVertex + i;
-        PApplet.arrayCopy(in.vertices,3 * inIdx,polyVertices,4 * tessIdx,3);
-        polyVertices[4 * tessIdx + 3]=1;
+        polyVertices.position(4 * tessIdx);
+        polyVertices.put(in.vertices,3 * inIdx,3);
+        polyVertices.put(4 * tessIdx + 3,1);
       }
       PApplet.arrayCopy(in.normals,3 * i0,polyNormals,3 * firstPolyVertex,3 * nvert);
     }

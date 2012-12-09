@@ -2,9 +2,9 @@
   glFragment=pgMain.createGLSLFragShaderObject(context.id());
   pgl.shaderSource(glFragment,fragmentShaderSource);
   pgl.compileShader(glFragment);
-  int[] compiled=new int[1];
-  pgl.getShaderiv(glFragment,PGL.COMPILE_STATUS,compiled,0);
-  if (compiled[0] == PGL.FALSE) {
+  pgl.getShaderiv(glFragment,PGL.COMPILE_STATUS,intBuffer);
+  boolean compiled=intBuffer.get(0) == 0 ? false : true;
+  if (!compiled) {
     PGraphics.showException("Cannot compile fragment shader:\n" + pgl.getShaderInfoLog(glFragment));
     return false;
   }

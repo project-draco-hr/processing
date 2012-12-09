@@ -38,15 +38,15 @@
         pgl.attachShader(glProgram,glFragment);
       }
       pgl.linkProgram(glProgram);
-      int[] linked=new int[1];
-      pgl.getProgramiv(glProgram,PGL.LINK_STATUS,linked,0);
-      if (linked[0] == PGL.FALSE) {
+      pgl.getProgramiv(glProgram,PGL.LINK_STATUS,intBuffer);
+      boolean linked=intBuffer.get(0) == 0 ? false : true;
+      if (!linked) {
         PGraphics.showException("Cannot link shader program:\n" + pgl.getProgramInfoLog(glProgram));
       }
       pgl.validateProgram(glProgram);
-      int[] validated=new int[1];
-      pgl.getProgramiv(glProgram,PGL.VALIDATE_STATUS,validated,0);
-      if (validated[0] == PGL.FALSE) {
+      pgl.getProgramiv(glProgram,PGL.VALIDATE_STATUS,intBuffer);
+      boolean validated=intBuffer.get(0) == 0 ? false : true;
+      if (!validated) {
         PGraphics.showException("Cannot validate shader program:\n" + pgl.getProgramInfoLog(glProgram));
       }
     }

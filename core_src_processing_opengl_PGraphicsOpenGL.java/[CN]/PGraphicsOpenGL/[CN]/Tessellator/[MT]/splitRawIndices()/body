@@ -35,9 +35,9 @@
       ri2=ii2;
     }
  else     ri2=count + ii2;
-    tess.polyIndices[offset + 3 * tr + 0]=(short)ri0;
-    tess.polyIndices[offset + 3 * tr + 1]=(short)ri1;
-    tess.polyIndices[offset + 3 * tr + 2]=(short)ri2;
+    tess.polyIndices.put(offset + 3 * tr + 0,(short)ri0);
+    tess.polyIndices.put(offset + 3 * tr + 1,(short)ri1);
+    tess.polyIndices.put(offset + 3 * tr + 2,(short)ri2);
     inInd1=3 * tr + 2;
     inMaxVert1=PApplet.max(inMaxVert1,PApplet.max(i0,i1,i2));
     inMaxVert0=PApplet.min(inMaxVert0,PApplet.min(i0,i1,i2));
@@ -46,9 +46,9 @@
       int nondupCount=0;
       if (0 < dupCount) {
         for (int i=inInd0; i <= inInd1; i++) {
-          int ri=tess.polyIndices[offset + i];
+          int ri=tess.polyIndices.get(offset + i);
           if (ri < 0) {
-            tess.polyIndices[offset + i]=(short)(inMaxVertRel + 1 + dupIndexPos(ri));
+            tess.polyIndices.put(offset + i,(short)(inMaxVertRel + 1 + dupIndexPos(ri)));
           }
         }
         if (inMaxVertRef <= inMaxVert1) {

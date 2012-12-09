@@ -1,12 +1,15 @@
 {
   int program=createProgram();
   if (program != 0) {
+    if (intBuffer == null) {
+      intBuffer=allocateDirectIntBuffer(1);
+    }
     attachShader(program,vertexShader);
     attachShader(program,fragmentShader);
     linkProgram(program);
-    int[] linked=new int[1];
-    getProgramiv(program,LINK_STATUS,linked,0);
-    if (linked[0] == FALSE) {
+    getProgramiv(program,LINK_STATUS,intBuffer);
+    boolean linked=intBuffer.get(0) == 0 ? false : true;
+    if (!linked) {
       System.err.println("Could not link program: ");
       System.err.println(getProgramInfoLog(program));
       deleteProgram(program);

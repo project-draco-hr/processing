@@ -3,8 +3,9 @@
   int size=tessGeo.polyVertexCount;
   int sizef=size * PGL.SIZEOF_FLOAT;
   int sizei=size * PGL.SIZEOF_INT;
+  tessGeo.readyPolyVertices();
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyVertex);
-  pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,FloatBuffer.wrap(tessGeo.polyVertices,0,4 * size),PGL.STATIC_DRAW);
+  pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,tessGeo.polyVertices,PGL.STATIC_DRAW);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyColor);
   pgl.bufferData(PGL.ARRAY_BUFFER,sizei,IntBuffer.wrap(tessGeo.polyColors,0,size),PGL.STATIC_DRAW);
   if (lit) {
@@ -23,6 +24,7 @@
     pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyTexcoord);
     pgl.bufferData(PGL.ARRAY_BUFFER,2 * sizef,FloatBuffer.wrap(tessGeo.polyTexcoords,0,2 * size),PGL.STATIC_DRAW);
   }
+  tessGeo.readyPolyIndices();
   pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,glPolyIndex);
-  pgl.bufferData(PGL.ELEMENT_ARRAY_BUFFER,tessGeo.polyIndexCount * PGL.SIZEOF_INDEX,ShortBuffer.wrap(tessGeo.polyIndices,0,tessGeo.polyIndexCount),PGL.STATIC_DRAW);
+  pgl.bufferData(PGL.ELEMENT_ARRAY_BUFFER,tessGeo.polyIndexCount * PGL.SIZEOF_INDEX,tessGeo.polyIndices,PGL.STATIC_DRAW);
 }

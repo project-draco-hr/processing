@@ -22,21 +22,19 @@
  catch (  Exception e) {
     blendEqSupported=false;
   }
-  int temp[]=new int[2];
   depthBits=pgl.getDepthBits();
   stencilBits=pgl.getStencilBits();
-  pgl.getIntegerv(PGL.MAX_TEXTURE_SIZE,temp,0);
-  maxTextureSize=temp[0];
-  pgl.getIntegerv(PGL.MAX_SAMPLES,temp,0);
-  maxSamples=temp[0];
-  pgl.getIntegerv(PGL.ALIASED_LINE_WIDTH_RANGE,temp,0);
-  maxLineWidth=temp[1];
-  pgl.getIntegerv(PGL.ALIASED_POINT_SIZE_RANGE,temp,0);
-  maxPointSize=temp[1];
+  pgl.getIntegerv(PGL.MAX_TEXTURE_SIZE,intBuffer);
+  maxTextureSize=intBuffer.get(0);
+  pgl.getIntegerv(PGL.MAX_SAMPLES,intBuffer);
+  maxSamples=intBuffer.get(0);
+  pgl.getIntegerv(PGL.ALIASED_LINE_WIDTH_RANGE,intBuffer);
+  maxLineWidth=intBuffer.get(0);
+  pgl.getIntegerv(PGL.ALIASED_POINT_SIZE_RANGE,intBuffer);
+  maxPointSize=intBuffer.get(0);
   if (anisoSamplingSupported) {
-    float ftemp[]=new float[1];
-    pgl.getFloatv(PGL.MAX_TEXTURE_MAX_ANISOTROPY,ftemp,0);
-    maxAnisoAmount=ftemp[0];
+    pgl.getFloatv(PGL.MAX_TEXTURE_MAX_ANISOTROPY,floatBuffer);
+    maxAnisoAmount=floatBuffer.get(0);
   }
   glParamsRead=true;
 }
