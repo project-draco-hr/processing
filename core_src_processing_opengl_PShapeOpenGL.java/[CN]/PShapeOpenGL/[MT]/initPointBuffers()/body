@@ -6,12 +6,14 @@
   glPointVertex=pg.createVertexBufferObject(context.id());
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glPointVertex);
   pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,tessGeo.pointVertices,PGL.STATIC_DRAW);
+  tessGeo.readyPointColors();
   glPointColor=pg.createVertexBufferObject(context.id());
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glPointColor);
-  pgl.bufferData(PGL.ARRAY_BUFFER,sizei,IntBuffer.wrap(tessGeo.pointColors,0,size),PGL.STATIC_DRAW);
+  pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.pointColors,PGL.STATIC_DRAW);
+  tessGeo.readyPointAttribs();
   glPointAttrib=pg.createVertexBufferObject(context.id());
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glPointAttrib);
-  pgl.bufferData(PGL.ARRAY_BUFFER,2 * sizef,FloatBuffer.wrap(tessGeo.pointAttribs,0,2 * size),PGL.STATIC_DRAW);
+  pgl.bufferData(PGL.ARRAY_BUFFER,2 * sizef,tessGeo.pointAttribs,PGL.STATIC_DRAW);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,0);
   tessGeo.readyPointIndices();
   glPointIndex=pg.createVertexBufferObject(context.id());

@@ -5,8 +5,8 @@
   raw.strokeJoin(strokeJoin);
   raw.beginShape(LINES);
   FloatBuffer vertices=tessGeo.lineVertices;
-  int[] color=tessGeo.lineColors;
-  float[] attribs=tessGeo.lineAttribs;
+  IntBuffer color=tessGeo.lineColors;
+  FloatBuffer attribs=tessGeo.lineAttribs;
   ShortBuffer indices=tessGeo.lineIndices;
   IndexCache cache=tessGeo.lineIndexCache;
   for (int n=0; n < cache.size; n++) {
@@ -16,13 +16,13 @@
     for (int ln=ioffset / 6; ln < (ioffset + icount) / 6; ln++) {
       int i0=voffset + indices.get(6 * ln + 0);
       int i1=voffset + indices.get(6 * ln + 5);
-      float sw0=2 * attribs[4 * i0 + 3];
-      float sw1=2 * attribs[4 * i1 + 3];
+      float sw0=2 * attribs.get(4 * i0 + 3);
+      float sw1=2 * attribs.get(4 * i1 + 3);
       if (zero(sw0))       continue;
       float[] pt0={0,0,0,0};
       float[] pt1={0,0,0,0};
-      int argb0=PGL.nativeToJavaARGB(color[i0]);
-      int argb1=PGL.nativeToJavaARGB(color[i1]);
+      int argb0=PGL.nativeToJavaARGB(color.get(i0));
+      int argb1=PGL.nativeToJavaARGB(color.get(i1));
       if (flushMode == FLUSH_CONTINUOUSLY) {
         float[] src0={0,0,0,0};
         float[] src1={0,0,0,0};

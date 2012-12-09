@@ -6,12 +6,14 @@
   glLineVertex=pg.createVertexBufferObject(context.id());
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glLineVertex);
   pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,tessGeo.lineVertices,PGL.STATIC_DRAW);
+  tessGeo.readyLineColors();
   glLineColor=pg.createVertexBufferObject(context.id());
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glLineColor);
-  pgl.bufferData(PGL.ARRAY_BUFFER,sizei,IntBuffer.wrap(tessGeo.lineColors,0,size),PGL.STATIC_DRAW);
+  pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.lineColors,PGL.STATIC_DRAW);
+  tessGeo.readyLineAttribs();
   glLineAttrib=pg.createVertexBufferObject(context.id());
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glLineAttrib);
-  pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,FloatBuffer.wrap(tessGeo.lineAttribs,0,4 * size),PGL.STATIC_DRAW);
+  pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,tessGeo.lineAttribs,PGL.STATIC_DRAW);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,0);
   tessGeo.readyLineIndices();
   glLineIndex=pg.createVertexBufferObject(context.id());

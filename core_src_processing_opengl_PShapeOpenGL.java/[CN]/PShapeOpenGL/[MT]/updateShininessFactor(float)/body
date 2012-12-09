@@ -4,14 +4,14 @@
   Arrays.fill(inGeo.shininess,0,inGeo.vertexCount,shininess);
   if (shapeEnded && tessellated && hasPolys) {
     if (is3D()) {
-      Arrays.fill(tessGeo.polyShininess,firstPolyVertex,lastPolyVertex + 1,shininess);
+      PGL.fillBuffer(tessGeo.polyShininess,firstPolyVertex,lastPolyVertex,shininess);
       root.setModifiedPolyShininess(firstPolyVertex,lastPolyVertex);
     }
  else     if (is2D()) {
       int last1=lastPolyVertex + 1;
       if (-1 < firstLineVertex)       last1=firstLineVertex;
       if (-1 < firstPointVertex)       last1=firstPointVertex;
-      Arrays.fill(tessGeo.polyShininess,firstPolyVertex,last1,shininess);
+      PGL.fillBuffer(tessGeo.polyShininess,firstPolyVertex,last1 - 1,shininess);
       root.setModifiedPolyColors(firstPolyVertex,last1 - 1);
     }
   }

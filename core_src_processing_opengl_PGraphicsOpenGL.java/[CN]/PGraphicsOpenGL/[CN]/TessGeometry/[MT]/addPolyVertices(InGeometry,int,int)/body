@@ -22,9 +22,9 @@
       polyVertices.put(index++,x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23);
       polyVertices.put(index,x * mm.m30 + y * mm.m31 + z * mm.m32 + mm.m33);
       index=3 * tessIdx;
-      polyNormals[index++]=nx * nm.m00 + ny * nm.m10 + nz * nm.m20;
-      polyNormals[index++]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
-      polyNormals[index]=nx * nm.m02 + ny * nm.m12 + nz * nm.m22;
+      polyNormals.put(index++,nx * nm.m00 + ny * nm.m10 + nz * nm.m20);
+      polyNormals.put(index++,nx * nm.m01 + ny * nm.m11 + nz * nm.m21);
+      polyNormals.put(index,nx * nm.m02 + ny * nm.m12 + nz * nm.m22);
     }
   }
  else {
@@ -46,9 +46,9 @@
         polyVertices.put(index++,z);
         polyVertices.put(index,1);
         index=3 * tessIdx;
-        polyNormals[index++]=nx;
-        polyNormals[index++]=ny;
-        polyNormals[index]=nz;
+        polyNormals.put(index++,nx);
+        polyNormals.put(index++,ny);
+        polyNormals.put(index,nz);
       }
     }
  else {
@@ -59,7 +59,8 @@
         polyVertices.put(in.vertices,3 * inIdx,3);
         polyVertices.put(4 * tessIdx + 3,1);
       }
-      PApplet.arrayCopy(in.normals,3 * i0,polyNormals,3 * firstPolyVertex,3 * nvert);
+      polyNormals.position(3 * firstPolyVertex);
+      polyNormals.put(in.normals,3 * i0,3 * nvert);
     }
   }
   if (nvert <= PGL.MIN_ARRAYCOPY_SIZE) {
@@ -69,22 +70,28 @@
       index=2 * inIdx;
       float u=in.texcoords[index++];
       float v=in.texcoords[index];
-      polyColors[tessIdx]=in.colors[inIdx];
+      polyColors.put(tessIdx,in.colors[inIdx]);
       index=2 * tessIdx;
-      polyTexcoords[index++]=u;
-      polyTexcoords[index]=v;
-      polyAmbient[tessIdx]=in.ambient[inIdx];
-      polySpecular[tessIdx]=in.specular[inIdx];
-      polyEmissive[tessIdx]=in.emissive[inIdx];
-      polyShininess[tessIdx]=in.shininess[inIdx];
+      polyTexcoords.put(index++,u);
+      polyTexcoords.put(index,v);
+      polyAmbient.put(tessIdx,in.ambient[inIdx]);
+      polySpecular.put(tessIdx,in.specular[inIdx]);
+      polyEmissive.put(tessIdx,in.emissive[inIdx]);
+      polyShininess.put(tessIdx,in.shininess[inIdx]);
     }
   }
  else {
-    PApplet.arrayCopy(in.colors,i0,polyColors,firstPolyVertex,nvert);
-    PApplet.arrayCopy(in.texcoords,2 * i0,polyTexcoords,2 * firstPolyVertex,2 * nvert);
-    PApplet.arrayCopy(in.ambient,i0,polyAmbient,firstPolyVertex,nvert);
-    PApplet.arrayCopy(in.specular,i0,polySpecular,firstPolyVertex,nvert);
-    PApplet.arrayCopy(in.emissive,i0,polyEmissive,firstPolyVertex,nvert);
-    PApplet.arrayCopy(in.shininess,i0,polyShininess,firstPolyVertex,nvert);
+    polyColors.position(firstPolyVertex);
+    polyColors.put(in.colors,i0,nvert);
+    polyTexcoords.position(2 * firstPolyVertex);
+    polyTexcoords.put(in.texcoords,2 * i0,2 * nvert);
+    polyAmbient.position(firstPolyVertex);
+    polyAmbient.put(in.ambient,i0,nvert);
+    polySpecular.position(firstPolyVertex);
+    polySpecular.put(in.specular,i0,nvert);
+    polyEmissive.position(firstPolyVertex);
+    polyEmissive.put(in.emissive,i0,nvert);
+    polyShininess.position(firstPolyVertex);
+    polyShininess.put(in.shininess,i0,nvert);
   }
 }
