@@ -4,18 +4,18 @@
   raw.strokeCap(strokeCap);
   raw.strokeJoin(strokeJoin);
   raw.beginShape(LINES);
-  float[] vertices=tessGeo.lineVertices;
+  FloatBuffer vertices=tessGeo.lineVertices;
   int[] color=tessGeo.lineColors;
   float[] attribs=tessGeo.lineAttribs;
-  short[] indices=tessGeo.lineIndices;
+  ShortBuffer indices=tessGeo.lineIndices;
   IndexCache cache=tessGeo.lineIndexCache;
   for (int n=0; n < cache.size; n++) {
     int ioffset=cache.indexOffset[n];
     int icount=cache.indexCount[n];
     int voffset=cache.vertexOffset[n];
     for (int ln=ioffset / 6; ln < (ioffset + icount) / 6; ln++) {
-      int i0=voffset + indices[6 * ln + 0];
-      int i1=voffset + indices[6 * ln + 5];
+      int i0=voffset + indices.get(6 * ln + 0);
+      int i1=voffset + indices.get(6 * ln + 5);
       float sw0=2 * attribs[4 * i0 + 3];
       float sw1=2 * attribs[4 * i1 + 3];
       if (zero(sw0))       continue;
@@ -26,14 +26,18 @@
       if (flushMode == FLUSH_CONTINUOUSLY) {
         float[] src0={0,0,0,0};
         float[] src1={0,0,0,0};
-        PApplet.arrayCopy(vertices,4 * i0,src0,0,4);
-        PApplet.arrayCopy(vertices,4 * i1,src1,0,4);
+        vertices.position(4 * i0);
+        vertices.get(src0,0,4);
+        vertices.position(4 * i1);
+        vertices.get(src1,0,4);
         modelview.mult(src0,pt0);
         modelview.mult(src1,pt1);
       }
  else {
-        PApplet.arrayCopy(vertices,4 * i0,pt0,0,4);
-        PApplet.arrayCopy(vertices,4 * i1,pt1,0,4);
+        vertices.position(4 * i0);
+        vertices.get(pt0,0,4);
+        vertices.position(4 * i1);
+        vertices.get(pt1,0,4);
       }
       if (raw.is3D()) {
         raw.strokeWeight(sw0);
