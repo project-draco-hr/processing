@@ -1,0 +1,14 @@
+{
+  testValidity(value);
+  Object object=this.opt(key);
+  if (object == null) {
+    this.put(key,value instanceof JSONArray ? new JSONArray().put(value) : value);
+  }
+ else   if (object instanceof JSONArray) {
+    ((JSONArray)object).put(value);
+  }
+ else {
+    this.put(key,new JSONArray().put(object).put(value));
+  }
+  return this;
+}

@@ -1,0 +1,21 @@
+{
+  Sort s=new Sort(){
+    @Override public int size(){
+      return count;
+    }
+    @Override public float compare(    int a,    int b){
+      float diff=values[a].compareToIgnoreCase(values[b]);
+      if (tiebreaker) {
+        if (diff == 0) {
+          diff=keys[a].compareToIgnoreCase(keys[b]);
+        }
+      }
+      return descending ? diff : -diff;
+    }
+    @Override public void swap(    int a,    int b){
+      StringHash.this.swap(a,b);
+    }
+  }
+;
+  s.run();
+}
