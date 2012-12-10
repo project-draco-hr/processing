@@ -18,10 +18,10 @@
     flushMode=FLUSH_WHEN_FULL;
   }
   if (primarySurface) {
-    int[] temp=new int[1];
-    pgl.getIntegerv(PGL.SAMPLES,temp,0);
-    if (quality != temp[0] && 1 < temp[0] && 1 < quality) {
-      quality=temp[0];
+    pgl.getIntegerv(PGL.SAMPLES,intBuffer);
+    int temp=intBuffer.get(0);
+    if (quality != temp && 1 < temp && 1 < quality) {
+      quality=temp;
     }
   }
   if (quality < 2) {
@@ -33,11 +33,11 @@
   pgl.disable(PGL.POINT_SMOOTH);
   pgl.disable(PGL.LINE_SMOOTH);
   pgl.disable(PGL.POLYGON_SMOOTH);
-  viewport[0]=0;
-  viewport[1]=0;
-  viewport[2]=width;
-  viewport[3]=height;
-  pgl.viewport(viewport[0],viewport[1],viewport[2],viewport[3]);
+  viewport.put(0,0);
+  viewport.put(1,0);
+  viewport.put(2,width);
+  viewport.put(3,height);
+  pgl.viewport(viewport.get(0),viewport.get(1),viewport.get(2),viewport.get(3));
   if (sized) {
     background(backgroundColor);
     defaultPerspective();

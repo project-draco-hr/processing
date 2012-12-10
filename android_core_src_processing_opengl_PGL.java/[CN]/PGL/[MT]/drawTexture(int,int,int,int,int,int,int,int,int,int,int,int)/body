@@ -9,15 +9,20 @@
       texVertLoc=getAttribLocation(texShaderProgram,"inVertex");
       texTCoordLoc=getAttribLocation(texShaderProgram,"inTexcoord");
     }
-    texData=allocateDirectFloatBuffer(texCoords.length);
     loadedTexShader=true;
   }
+  if (texData == null) {
+    texData=allocateDirectFloatBuffer(texCoords.length);
+  }
+  if (intBuffer == null) {
+    intBuffer=allocateDirectIntBuffer(1);
+  }
   if (0 < texShaderProgram) {
-    boolean[] depthTest=new boolean[1];
-    getBooleanv(DEPTH_TEST,depthTest,0);
+    getBooleanv(DEPTH_TEST,intBuffer);
+    boolean depthTest=intBuffer.get(0) == 0 ? false : true;
     disable(DEPTH_TEST);
-    boolean[] depthMask=new boolean[1];
-    getBooleanv(DEPTH_WRITEMASK,depthMask,0);
+    getBooleanv(DEPTH_WRITEMASK,intBuffer);
+    boolean depthMask=intBuffer.get(0) == 0 ? false : true;
     depthMask(false);
     useProgram(texShaderProgram);
     enableVertexAttribArray(texVertLoc);
@@ -59,12 +64,12 @@
     disableVertexAttribArray(texVertLoc);
     disableVertexAttribArray(texTCoordLoc);
     useProgram(0);
-    if (depthTest[0]) {
+    if (depthTest) {
       enable(DEPTH_TEST);
     }
  else {
       disable(DEPTH_TEST);
     }
-    depthMask(depthMask[0]);
+    depthMask(depthMask);
   }
 }
