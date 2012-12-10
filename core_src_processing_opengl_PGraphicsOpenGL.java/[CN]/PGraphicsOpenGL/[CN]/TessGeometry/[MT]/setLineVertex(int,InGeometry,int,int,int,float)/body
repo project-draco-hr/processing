@@ -11,26 +11,26 @@
   if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL) {
     PMatrix3D mm=modelview;
     index=4 * tessIdx;
-    lineVertices.put(index++,x0 * mm.m00 + y0 * mm.m01 + z0 * mm.m02 + mm.m03);
-    lineVertices.put(index++,x0 * mm.m10 + y0 * mm.m11 + z0 * mm.m12 + mm.m13);
-    lineVertices.put(index++,x0 * mm.m20 + y0 * mm.m21 + z0 * mm.m22 + mm.m23);
-    lineVertices.put(index,x0 * mm.m30 + y0 * mm.m31 + z0 * mm.m32 + mm.m33);
+    lineVertices[index++]=x0 * mm.m00 + y0 * mm.m01 + z0 * mm.m02 + mm.m03;
+    lineVertices[index++]=x0 * mm.m10 + y0 * mm.m11 + z0 * mm.m12 + mm.m13;
+    lineVertices[index++]=x0 * mm.m20 + y0 * mm.m21 + z0 * mm.m22 + mm.m23;
+    lineVertices[index]=x0 * mm.m30 + y0 * mm.m31 + z0 * mm.m32 + mm.m33;
     index=4 * tessIdx;
-    lineAttribs.put(index++,x1 * mm.m00 + y1 * mm.m01 + z1 * mm.m02 + mm.m03);
-    lineAttribs.put(index++,x1 * mm.m10 + y1 * mm.m11 + z1 * mm.m12 + mm.m13);
-    lineAttribs.put(index,x1 * mm.m20 + y1 * mm.m21 + z1 * mm.m22 + mm.m23);
+    lineAttribs[index++]=x1 * mm.m00 + y1 * mm.m01 + z1 * mm.m02 + mm.m03;
+    lineAttribs[index++]=x1 * mm.m10 + y1 * mm.m11 + z1 * mm.m12 + mm.m13;
+    lineAttribs[index]=x1 * mm.m20 + y1 * mm.m21 + z1 * mm.m22 + mm.m23;
   }
  else {
     index=4 * tessIdx;
-    lineVertices.put(index++,x0);
-    lineVertices.put(index++,y0);
-    lineVertices.put(index++,z0);
-    lineVertices.put(index,1);
+    lineVertices[index++]=x0;
+    lineVertices[index++]=y0;
+    lineVertices[index++]=z0;
+    lineVertices[index]=1;
     index=4 * tessIdx;
-    lineAttribs.put(index++,x1);
-    lineAttribs.put(index++,y1);
-    lineAttribs.put(index,z1);
+    lineAttribs[index++]=x1;
+    lineAttribs[index++]=y1;
+    lineAttribs[index]=z1;
   }
-  lineColors.put(tessIdx,rgba);
-  lineAttribs.put(4 * tessIdx + 3,weight);
+  lineColors[tessIdx]=rgba;
+  lineAttribs[4 * tessIdx + 3]=weight;
 }

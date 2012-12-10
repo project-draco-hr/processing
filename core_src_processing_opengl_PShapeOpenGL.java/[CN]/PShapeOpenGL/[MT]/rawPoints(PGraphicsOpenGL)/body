@@ -4,10 +4,10 @@
   raw.noFill();
   raw.strokeCap(strokeCap);
   raw.beginShape(POINTS);
-  FloatBuffer vertices=tessGeo.pointVertices;
-  IntBuffer color=tessGeo.pointColors;
-  FloatBuffer attribs=tessGeo.pointAttribs;
-  ShortBuffer indices=tessGeo.pointIndices;
+  float[] vertices=tessGeo.pointVertices;
+  int[] color=tessGeo.pointColors;
+  float[] attribs=tessGeo.pointAttribs;
+  short[] indices=tessGeo.pointIndices;
   IndexCache cache=tessGeo.pointIndexCache;
   for (int n=0; n < cache.size; n++) {
     int ioffset=cache.indexOffset[n];
@@ -15,7 +15,7 @@
     int voffset=cache.vertexOffset[n];
     int pt=ioffset;
     while (pt < (ioffset + icount) / 3) {
-      float size=attribs.get(2 * pt + 2);
+      float size=attribs[2 * pt + 2];
       float weight;
       int perim;
       if (0 < size) {
@@ -26,12 +26,11 @@
         weight=-size / 0.5f;
         perim=5;
       }
-      int i0=voffset + indices.get(3 * pt);
-      int argb0=PGL.nativeToJavaARGB(color.get(i0));
+      int i0=voffset + indices[3 * pt];
+      int argb0=PGL.nativeToJavaARGB(color[i0]);
       float[] pt0={0,0,0,0};
       float[] src0={0,0,0,0};
-      vertices.position(4 * i0);
-      vertices.get(src0,0,4);
+      PApplet.arrayCopy(vertices,4 * i0,src0,0,4);
       g.modelview.mult(src0,pt0);
       if (raw.is3D()) {
         raw.strokeWeight(weight);

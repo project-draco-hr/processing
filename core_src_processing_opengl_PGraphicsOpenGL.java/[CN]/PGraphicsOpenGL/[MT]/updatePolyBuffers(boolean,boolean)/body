@@ -3,35 +3,35 @@
   int size=tessGeo.polyVertexCount;
   int sizef=size * PGL.SIZEOF_FLOAT;
   int sizei=size * PGL.SIZEOF_INT;
-  tessGeo.readyPolyVertices();
+  tessGeo.updatePolyVerticesBuffer();
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyVertex);
-  pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,tessGeo.polyVertices,PGL.STATIC_DRAW);
-  tessGeo.readyPolyColors();
+  pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,tessGeo.polyVerticesBuffer,PGL.STATIC_DRAW);
+  tessGeo.updatePolyColorsBuffer();
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyColor);
-  pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyColors,PGL.STATIC_DRAW);
+  pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyColorsBuffer,PGL.STATIC_DRAW);
   if (lit) {
-    tessGeo.readyPolyNormals();
+    tessGeo.updatePolyNormalsBuffer();
     pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyNormal);
-    pgl.bufferData(PGL.ARRAY_BUFFER,3 * sizef,tessGeo.polyNormals,PGL.STATIC_DRAW);
-    tessGeo.readyPolyAmbient();
+    pgl.bufferData(PGL.ARRAY_BUFFER,3 * sizef,tessGeo.polyNormalsBuffer,PGL.STATIC_DRAW);
+    tessGeo.updatePolyAmbientBuffer();
     pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyAmbient);
-    pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyAmbient,PGL.STATIC_DRAW);
-    tessGeo.readyPolySpecular();
+    pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyAmbientBuffer,PGL.STATIC_DRAW);
+    tessGeo.updatePolySpecularBuffer();
     pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolySpecular);
-    pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polySpecular,PGL.STATIC_DRAW);
-    tessGeo.readyPolyEmissive();
+    pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polySpecularBuffer,PGL.STATIC_DRAW);
+    tessGeo.updatePolyEmissiveBuffer();
     pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyEmissive);
-    pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyEmissive,PGL.STATIC_DRAW);
-    tessGeo.readyPolyShininess();
+    pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyEmissiveBuffer,PGL.STATIC_DRAW);
+    tessGeo.updatePolyShininessBuffer();
     pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyShininess);
-    pgl.bufferData(PGL.ARRAY_BUFFER,sizef,tessGeo.polyShininess,PGL.STATIC_DRAW);
+    pgl.bufferData(PGL.ARRAY_BUFFER,sizef,tessGeo.polyShininessBuffer,PGL.STATIC_DRAW);
   }
   if (tex) {
-    tessGeo.readyPolyTexcoords();
+    tessGeo.updatePolyTexcoordsBuffer();
     pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyTexcoord);
-    pgl.bufferData(PGL.ARRAY_BUFFER,2 * sizef,tessGeo.polyTexcoords,PGL.STATIC_DRAW);
+    pgl.bufferData(PGL.ARRAY_BUFFER,2 * sizef,tessGeo.polyTexcoordsBuffer,PGL.STATIC_DRAW);
   }
-  tessGeo.readyPolyIndices();
+  tessGeo.updatePolyIndicesBuffer();
   pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,glPolyIndex);
-  pgl.bufferData(PGL.ELEMENT_ARRAY_BUFFER,tessGeo.polyIndexCount * PGL.SIZEOF_INDEX,tessGeo.polyIndices,PGL.STATIC_DRAW);
+  pgl.bufferData(PGL.ELEMENT_ARRAY_BUFFER,tessGeo.polyIndexCount * PGL.SIZEOF_INDEX,tessGeo.polyIndicesBuffer,PGL.STATIC_DRAW);
 }

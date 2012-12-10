@@ -3,52 +3,43 @@
   raw.colorMode(RGB);
   raw.noStroke();
   raw.beginShape(TRIANGLES);
-  FloatBuffer vertices=tessGeo.polyVertices;
-  IntBuffer color=tessGeo.polyColors;
-  FloatBuffer uv=tessGeo.polyTexcoords;
-  ShortBuffer indices=tessGeo.polyIndices;
+  float[] vertices=tessGeo.polyVertices;
+  int[] color=tessGeo.polyColors;
+  float[] uv=tessGeo.polyTexcoords;
+  short[] indices=tessGeo.polyIndices;
   IndexCache cache=tessGeo.polyIndexCache;
   for (int n=firstPolyIndexCache; n <= lastPolyIndexCache; n++) {
     int ioffset=cache.indexOffset[n];
     int icount=cache.indexCount[n];
     int voffset=cache.vertexOffset[n];
     for (int tr=ioffset / 3; tr < (ioffset + icount) / 3; tr++) {
-      int i0=voffset + indices.get(3 * tr + 0);
-      int i1=voffset + indices.get(3 * tr + 1);
-      int i2=voffset + indices.get(3 * tr + 2);
+      int i0=voffset + indices[3 * tr + 0];
+      int i1=voffset + indices[3 * tr + 1];
+      int i2=voffset + indices[3 * tr + 2];
       float[] src0={0,0,0,0};
       float[] src1={0,0,0,0};
       float[] src2={0,0,0,0};
       float[] pt0={0,0,0,0};
       float[] pt1={0,0,0,0};
       float[] pt2={0,0,0,0};
-      int argb0=PGL.nativeToJavaARGB(color.get(i0));
-      int argb1=PGL.nativeToJavaARGB(color.get(i1));
-      int argb2=PGL.nativeToJavaARGB(color.get(i2));
-      vertices.position(4 * i0);
-      vertices.get(src0,0,4);
-      vertices.position(4 * i1);
-      vertices.get(src1,0,4);
-      vertices.position(4 * i2);
-      vertices.get(src2,0,4);
+      int argb0=PGL.nativeToJavaARGB(color[i0]);
+      int argb1=PGL.nativeToJavaARGB(color[i1]);
+      int argb2=PGL.nativeToJavaARGB(color[i2]);
+      PApplet.arrayCopy(vertices,4 * i0,src0,0,4);
+      PApplet.arrayCopy(vertices,4 * i1,src1,0,4);
+      PApplet.arrayCopy(vertices,4 * i2,src2,0,4);
       g.modelview.mult(src0,pt0);
       g.modelview.mult(src1,pt1);
       g.modelview.mult(src2,pt2);
       if (textureImage != null) {
         raw.texture(textureImage);
-        float u0=uv.get(2 * i0 + 0);
-        float v0=uv.get(2 * i0 + 1);
-        float u1=uv.get(2 * i1 + 0);
-        float v1=uv.get(2 * i1 + 1);
-        float u2=uv.get(2 * i2 + 0);
-        float v2=uv.get(2 * i2 + 1);
         if (raw.is3D()) {
           raw.fill(argb0);
-          raw.vertex(pt0[X],pt0[Y],pt0[Z],u0,v0);
+          raw.vertex(pt0[X],pt0[Y],pt0[Z],uv[2 * i0 + 0],uv[2 * i0 + 1]);
           raw.fill(argb1);
-          raw.vertex(pt1[X],pt1[Y],pt1[Z],u1,v1);
+          raw.vertex(pt1[X],pt1[Y],pt1[Z],uv[2 * i1 + 0],uv[2 * i1 + 1]);
           raw.fill(argb2);
-          raw.vertex(pt2[X],pt2[Y],pt2[Z],u2,v2);
+          raw.vertex(pt2[X],pt2[Y],pt2[Z],uv[2 * i2 + 0],uv[2 * i2 + 1]);
         }
  else         if (raw.is2D()) {
           float sx0=g.screenXImpl(pt0[0],pt0[1],pt0[2],pt0[3]);
@@ -58,11 +49,11 @@
           float sx2=g.screenXImpl(pt2[0],pt2[1],pt2[2],pt2[3]);
           float sy2=g.screenYImpl(pt2[0],pt2[1],pt2[2],pt2[3]);
           raw.fill(argb0);
-          raw.vertex(sx0,sy0,u0,v0);
+          raw.vertex(sx0,sy0,uv[2 * i0 + 0],uv[2 * i0 + 1]);
           raw.fill(argb1);
-          raw.vertex(sx1,sy1,u1,v1);
+          raw.vertex(sx1,sy1,uv[2 * i1 + 0],uv[2 * i1 + 1]);
           raw.fill(argb1);
-          raw.vertex(sx2,sy2,u2,v2);
+          raw.vertex(sx2,sy2,uv[2 * i2 + 0],uv[2 * i2 + 1]);
         }
       }
  else {

@@ -15,15 +15,12 @@
   if (texData == null) {
     texData=allocateDirectFloatBuffer(texCoords.length);
   }
-  if (byteBuffer == null) {
-    byteBuffer=allocateDirectByteBuffer(1);
-  }
   if (0 < texRectShaderProgram) {
-    getBooleanv(DEPTH_TEST,byteBuffer);
-    boolean depthTest=byteBuffer.get(0) == 0 ? false : true;
+    getBooleanv(DEPTH_TEST,intBuffer);
+    boolean depthTest=intBuffer.get(0) == 0 ? false : true;
     disable(DEPTH_TEST);
-    getBooleanv(DEPTH_WRITEMASK,byteBuffer);
-    boolean depthMask=byteBuffer.get(0) == 0 ? false : true;
+    getBooleanv(DEPTH_WRITEMASK,intBuffer);
+    boolean depthMask=intBuffer.get(0) == 0 ? false : true;
     depthMask(false);
     useProgram(texRectShaderProgram);
     enableVertexAttribArray(texRectVertLoc);

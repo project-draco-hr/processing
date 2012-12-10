@@ -7,17 +7,17 @@
   if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL) {
     PMatrix3D mm=modelview;
     index=4 * tessIdx;
-    pointVertices.put(index++,x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03);
-    pointVertices.put(index++,x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13);
-    pointVertices.put(index++,x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23);
-    pointVertices.put(index,x * mm.m30 + y * mm.m31 + z * mm.m32 + mm.m33);
+    pointVertices[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
+    pointVertices[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
+    pointVertices[index++]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
+    pointVertices[index]=x * mm.m30 + y * mm.m31 + z * mm.m32 + mm.m33;
   }
  else {
     index=4 * tessIdx;
-    pointVertices.put(index++,x);
-    pointVertices.put(index++,y);
-    pointVertices.put(index++,z);
-    pointVertices.put(index,1);
+    pointVertices[index++]=x;
+    pointVertices[index++]=y;
+    pointVertices[index++]=z;
+    pointVertices[index]=1;
   }
-  pointColors.put(tessIdx,in.strokeColors[inIdx]);
+  pointColors[tessIdx]=in.strokeColors[inIdx];
 }
