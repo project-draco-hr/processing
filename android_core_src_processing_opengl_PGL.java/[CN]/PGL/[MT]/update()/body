@@ -1,60 +1,84 @@
 {
   if (!initialized) {
-    String ext=GLES20.glGetString(GLES20.GL_EXTENSIONS);
+    String ext=getString(EXTENSIONS);
     if (-1 < ext.indexOf("texture_non_power_of_two")) {
       fboWidth=pg.width;
       fboHeight=pg.height;
     }
  else {
-      fboWidth=PGL.nextPowerOfTwo(pg.width);
-      fboHeight=PGL.nextPowerOfTwo(pg.height);
+      fboWidth=nextPowerOfTwo(pg.width);
+      fboHeight=nextPowerOfTwo(pg.height);
     }
     boolean packed=ext.indexOf("packed_depth_stencil") != -1;
     int depthBits=getDepthBits();
     int stencilBits=getStencilBits();
-    GLES20.glGenTextures(2,glColorTex,0);
+    glColorTex=allocateDirectIntBuffer(2);
+    glColorFbo=allocateDirectIntBuffer(1);
+    glDepthStencil=allocateDirectIntBuffer(1);
+    glDepth=allocateDirectIntBuffer(1);
+    glStencil=allocateDirectIntBuffer(1);
+    genTextures(2,glColorTex);
     for (int i=0; i < 2; i++) {
-      GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,glColorTex[i]);
-      GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D,GLES20.GL_TEXTURE_MIN_FILTER,GLES20.GL_NEAREST);
-      GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D,GLES20.GL_TEXTURE_MAG_FILTER,GLES20.GL_NEAREST);
-      GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D,GLES20.GL_TEXTURE_WRAP_S,GLES20.GL_CLAMP_TO_EDGE);
-      GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D,GLES20.GL_TEXTURE_WRAP_T,GLES20.GL_CLAMP_TO_EDGE);
-      GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D,0,GLES20.GL_RGBA,fboWidth,fboHeight,0,PGL.RGBA,PGL.UNSIGNED_BYTE,null);
-      initTexture(GLES20.GL_TEXTURE_2D,PGL.RGBA,fboWidth,fboHeight);
+      bindTexture(TEXTURE_2D,glColorTex.get(i));
+      texParameteri(TEXTURE_2D,TEXTURE_MIN_FILTER,NEAREST);
+      texParameteri(TEXTURE_2D,TEXTURE_MAG_FILTER,NEAREST);
+      texParameteri(TEXTURE_2D,TEXTURE_WRAP_S,CLAMP_TO_EDGE);
+      texParameteri(TEXTURE_2D,TEXTURE_WRAP_T,CLAMP_TO_EDGE);
+      texImage2D(TEXTURE_2D,0,RGBA,fboWidth,fboHeight,0,RGBA,UNSIGNED_BYTE,null);
+      initTexture(TEXTURE_2D,RGBA,fboWidth,fboHeight);
     }
-    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
+    bindTexture(TEXTURE_2D,0);
     backTex=0;
     frontTex=1;
-    GLES20.glGenFramebuffers(1,glColorFbo,0);
-    GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,glColorFbo[0]);
-    GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER,GLES20.GL_COLOR_ATTACHMENT0,GLES20.GL_TEXTURE_2D,glColorTex[backTex],0);
+    genFramebuffers(1,glColorFbo);
+    bindFramebuffer(FRAMEBUFFER,glColorFbo.get(0));
+    framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
     if (packed && depthBits == 24 && stencilBits == 8) {
-      int[] depthStencil={0};
-      GLES20.glGenRenderbuffers(1,depthStencil,0);
-      GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER,depthStencil[0]);
-      GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER,DEPTH24_STENCIL8,fboWidth,fboHeight);
-      GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER,GLES20.GL_DEPTH_ATTACHMENT,GLES20.GL_RENDERBUFFER,depthStencil[0]);
-      GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER,GLES20.GL_STENCIL_ATTACHMENT,GLES20.GL_RENDERBUFFER,depthStencil[0]);
+      genRenderbuffers(1,glDepthStencil);
+      bindRenderbuffer(RENDERBUFFER,glDepthStencil.get(0));
+      renderbufferStorage(RENDERBUFFER,DEPTH24_STENCIL8,fboWidth,fboHeight);
+      framebufferRenderbuffer(FRAMEBUFFER,DEPTH_ATTACHMENT,RENDERBUFFER,glDepthStencil.get(0));
+      framebufferRenderbuffer(FRAMEBUFFER,STENCIL_ATTACHMENT,RENDERBUFFER,glDepthStencil.get(0));
     }
  else {
-      int[] depth={0};
-      int[] stencil={0};
-      GLES20.glGenRenderbuffers(1,depth,0);
-      GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER,depth[0]);
-      GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER,GLES20.GL_DEPTH_COMPONENT16,fboWidth,fboHeight);
-      GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER,GLES20.GL_DEPTH_ATTACHMENT,GLES20.GL_RENDERBUFFER,depth[0]);
-      if (stencilBits == 8) {
-        GLES20.glGenRenderbuffers(1,stencil,0);
-        GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER,stencil[0]);
-        GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER,GLES20.GL_STENCIL_INDEX8,fboWidth,fboHeight);
-        GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER,GLES20.GL_STENCIL_ATTACHMENT,GLES20.GL_RENDERBUFFER,stencil[0]);
+      if (0 < depthBits) {
+        int depthComponent=DEPTH_COMPONENT16;
+        if (depthBits == 32) {
+          depthComponent=DEPTH_COMPONENT32;
+        }
+ else         if (depthBits == 24) {
+          depthComponent=DEPTH_COMPONENT24;
+        }
+ else         if (depthBits == 16) {
+          depthComponent=DEPTH_COMPONENT16;
+        }
+        genRenderbuffers(1,glDepth);
+        bindRenderbuffer(RENDERBUFFER,glDepth.get(0));
+        renderbufferStorage(RENDERBUFFER,depthComponent,fboWidth,fboHeight);
+        framebufferRenderbuffer(FRAMEBUFFER,DEPTH_ATTACHMENT,RENDERBUFFER,glDepth.get(0));
+      }
+      if (0 < stencilBits) {
+        int stencilIndex=STENCIL_INDEX1;
+        if (stencilBits == 8) {
+          stencilIndex=STENCIL_INDEX8;
+        }
+ else         if (stencilBits == 4) {
+          stencilIndex=STENCIL_INDEX4;
+        }
+ else         if (stencilBits == 1) {
+          stencilIndex=STENCIL_INDEX1;
+        }
+        genRenderbuffers(1,glStencil);
+        bindRenderbuffer(RENDERBUFFER,glStencil.get(0));
+        renderbufferStorage(RENDERBUFFER,stencilIndex,fboWidth,fboHeight);
+        framebufferRenderbuffer(FRAMEBUFFER,STENCIL_ATTACHMENT,RENDERBUFFER,glStencil.get(0));
       }
     }
     validateFramebuffer();
-    GLES20.glClearDepthf(1);
-    GLES20.glClearStencil(0);
-    GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
-    GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,0);
+    clearDepth(1);
+    clearStencil(0);
+    clear(DEPTH_BUFFER_BIT | STENCIL_BUFFER_BIT);
+    bindFramebuffer(FRAMEBUFFER,0);
     initialized=true;
   }
 }

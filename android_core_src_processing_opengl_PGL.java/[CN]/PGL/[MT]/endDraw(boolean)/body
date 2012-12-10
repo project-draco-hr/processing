@@ -1,11 +1,11 @@
 {
   if (usingFBOlayer) {
-    GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,0);
-    GLES20.glClearDepthf(1);
-    GLES20.glClearColor(0,0,0,0);
-    GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-    GLES20.glDisable(GLES20.GL_BLEND);
-    drawTexture(GLES20.GL_TEXTURE_2D,glColorTex[backTex],fboWidth,fboHeight,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
+    bindFramebuffer(FRAMEBUFFER,0);
+    clearDepth(1);
+    clearColor(0,0,0,0);
+    clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
+    disable(BLEND);
+    drawTexture(TEXTURE_2D,glColorTex.get(backTex),fboWidth,fboHeight,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
     int temp=frontTex;
     frontTex=backTex;
     backTex=temp;

@@ -14,15 +14,10 @@
   if (texData == null) {
     texData=allocateDirectFloatBuffer(texCoords.length);
   }
-  if (intBuffer == null) {
-    intBuffer=allocateDirectIntBuffer(1);
-  }
   if (0 < texShaderProgram) {
-    getBooleanv(DEPTH_TEST,intBuffer);
-    boolean depthTest=intBuffer.get(0) == 0 ? false : true;
+    boolean depthTest=getDepthTest();
     disable(DEPTH_TEST);
-    getBooleanv(DEPTH_WRITEMASK,intBuffer);
-    boolean depthMask=intBuffer.get(0) == 0 ? false : true;
+    boolean depthMask=getDepthWriteMask();
     depthMask(false);
     useProgram(texShaderProgram);
     enableVertexAttribArray(texVertLoc);
