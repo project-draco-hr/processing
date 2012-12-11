@@ -7,14 +7,13 @@ switch (c) {
 case 0:
 case '\n':
 case '\r':
-      syntaxError("Unterminated string");
-    break;
+      throw new RuntimeException("Unterminated string");
 case '\\':
-  c=this.next();
+    c=this.next();
 switch (c) {
 case 'b':
-  sb.append('\b');
-break;
+    sb.append('\b');
+  break;
 case 't':
 sb.append('\t');
 break;
@@ -37,7 +36,7 @@ case '/':
 sb.append(c);
 break;
 default :
-syntaxError("Illegal escape.");
+throw new RuntimeException("Illegal escape.");
 }
 break;
 default :
