@@ -1,24 +1,26 @@
 {
   init();
-  String[] opts=PApplet.fixOptions(options);
   boolean awfulCSV=false;
   boolean header=false;
   String extension=null;
-  for (  String opt : opts) {
-    if (opt.equals("tsv")) {
-      extension="tsv";
-    }
- else     if (opt.equals("csv")) {
-      extension="csv";
-    }
- else     if (opt.equals("newlines")) {
-      awfulCSV=true;
-    }
- else     if (opt.equals("header")) {
-      header=true;
-    }
+  if (options != null) {
+    String[] opts=PApplet.splitTokens(options," ,");
+    for (    String opt : opts) {
+      if (opt.equals("tsv")) {
+        extension="tsv";
+      }
+ else       if (opt.equals("csv")) {
+        extension="csv";
+      }
+ else       if (opt.equals("newlines")) {
+        awfulCSV=true;
+      }
+ else       if (opt.equals("header")) {
+        header=true;
+      }
  else {
-      throw new IllegalArgumentException("'" + opt + "' is not a valid option for loading a Table");
+        throw new IllegalArgumentException("'" + opt + "' is not a valid option for loading a Table");
+      }
     }
   }
   BufferedReader reader=PApplet.createReader(input);
