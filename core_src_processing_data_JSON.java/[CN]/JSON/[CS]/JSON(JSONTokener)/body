@@ -3,13 +3,13 @@
   char c;
   String key;
   if (x.nextClean() != '{') {
-    throw x.syntaxError("A JSONObject text must begin with '{'");
+    throw new RuntimeException("A JSONObject text must begin with '{'");
   }
   for (; ; ) {
     c=x.nextClean();
 switch (c) {
 case 0:
-      throw x.syntaxError("A JSONObject text must end with '}'");
+      throw new RuntimeException("A JSONObject text must end with '}'");
 case '}':
     return;
 default :
@@ -23,7 +23,7 @@ x.back();
 }
 }
  else if (c != ':') {
-throw x.syntaxError("Expected a ':' after a key");
+throw new RuntimeException("Expected a ':' after a key");
 }
 this.putOnce(key,x.nextValue());
 switch (x.nextClean()) {
@@ -37,7 +37,7 @@ break;
 case '}':
 return;
 default :
-throw x.syntaxError("Expected a ',' or '}'");
+throw new RuntimeException("Expected a ',' or '}'");
 }
 }
 }
