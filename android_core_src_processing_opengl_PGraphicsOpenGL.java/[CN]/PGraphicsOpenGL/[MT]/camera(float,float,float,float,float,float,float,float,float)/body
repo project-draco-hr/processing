@@ -1,0 +1,45 @@
+{
+  float z0=eyeX - centerX;
+  float z1=eyeY - centerY;
+  float z2=eyeZ - centerZ;
+  float mag=PApplet.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
+  if (nonZero(mag)) {
+    z0/=mag;
+    z1/=mag;
+    z2/=mag;
+  }
+  cameraEyeX=eyeX;
+  cameraEyeY=eyeY;
+  cameraEyeZ=eyeZ;
+  float y0=upX;
+  float y1=upY;
+  float y2=upZ;
+  float x0=y1 * z2 - y2 * z1;
+  float x1=-y0 * z2 + y2 * z0;
+  float x2=y0 * z1 - y1 * z0;
+  y0=z1 * x2 - z2 * x1;
+  y1=-z0 * x2 + z2 * x0;
+  y2=z0 * x1 - z1 * x0;
+  mag=PApplet.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
+  if (nonZero(mag)) {
+    x0/=mag;
+    x1/=mag;
+    x2/=mag;
+  }
+  mag=PApplet.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
+  if (nonZero(mag)) {
+    y0/=mag;
+    y1/=mag;
+    y2/=mag;
+  }
+  modelview.set(x0,x1,x2,0,y0,y1,y2,0,z0,z1,z2,0,0,0,0,1);
+  float tx=-eyeX;
+  float ty=-eyeY;
+  float tz=-eyeZ;
+  modelview.translate(tx,ty,tz);
+  modelviewInv.set(modelview);
+  modelviewInv.invert();
+  camera.set(modelview);
+  cameraInv.set(modelviewInv);
+  updateProjmodelview();
+}

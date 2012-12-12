@@ -1,0 +1,19 @@
+{
+  int shaderType=getTypeFromFragmentShader(fragFilename);
+  PShader shader=null;
+  if (shaderType == PShader.TEXTURE) {
+    shader=new PolyTexShader(parent);
+    shader.setVertexShader(defPolyTexShaderVertURL);
+  }
+ else   if (shaderType == PShader.COLOR) {
+    shader=new PolyColorShader(parent);
+    shader.setVertexShader(defPolyColorShaderVertURL);
+  }
+  if (shader == null) {
+    PGraphics.showWarning(INVALID_PROCESSING_SHADER_ERROR);
+  }
+ else {
+    shader.setFragmentShader(fragFilename);
+  }
+  return shader;
+}

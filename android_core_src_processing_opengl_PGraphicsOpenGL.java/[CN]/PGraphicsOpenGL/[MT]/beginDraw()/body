@@ -1,0 +1,29 @@
+{
+  report("top beginDraw()");
+  if (!checkGLThread()) {
+    return;
+  }
+  if (drawing) {
+    PGraphics.showWarning(ALREADY_DRAWING_ERROR);
+    return;
+  }
+  if (pgCurrent != null && !pgCurrent.primarySurface && !this.primarySurface) {
+    PGraphics.showWarning(NESTED_DRAW_ERROR);
+    return;
+  }
+  if (!glParamsRead) {
+    getGLParameters();
+  }
+  if (primarySurface) {
+    updatePrimary();
+    pgl.beginDraw(clearColorBuffer);
+  }
+ else {
+    updateOffscreen();
+    beginOffscreenDraw();
+  }
+  setDefaults();
+  pgCurrent=this;
+  drawing=true;
+  report("bot beginDraw()");
+}

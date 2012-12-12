@@ -1,0 +1,12 @@
+{
+  Set<GLResource> finalized=new HashSet<GLResource>();
+  for (  GLResource res : glslFragmentShaders.keySet()) {
+    if (glslFragmentShaders.get(res)) {
+      finalized.add(res);
+      pgl.deleteShader(res.id);
+    }
+  }
+  for (  GLResource res : finalized) {
+    glslFragmentShaders.remove(res);
+  }
+}

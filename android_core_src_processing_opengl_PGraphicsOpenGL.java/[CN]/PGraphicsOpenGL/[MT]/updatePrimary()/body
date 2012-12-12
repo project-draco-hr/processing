@@ -1,0 +1,26 @@
+{
+  if (drawFramebuffer == null) {
+    drawFramebuffer=new FrameBuffer(parent,width,height,true);
+    setFramebuffer(drawFramebuffer);
+  }
+  if (readFramebuffer == null) {
+    readFramebuffer=new FrameBuffer(parent,width,height,true);
+  }
+  drawFramebuffer.setFBO(pgl.getDrawFramebuffer());
+  readFramebuffer.setFBO(pgl.getReadFramebuffer());
+  if (pgl.isFBOBacked()) {
+    if (texture == null) {
+      texture=pgl.wrapBackTexture();
+    }
+ else {
+      texture.glName=pgl.getBackTextureName();
+    }
+    if (ptexture == null) {
+      ptexture=pgl.wrapFrontTexture();
+    }
+ else {
+      ptexture.glName=pgl.getFrontTextureName();
+    }
+  }
+  pgl.update();
+}

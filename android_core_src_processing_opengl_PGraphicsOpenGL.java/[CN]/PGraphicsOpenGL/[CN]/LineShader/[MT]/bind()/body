@@ -1,0 +1,29 @@
+{
+  super.bind();
+  if (pgCurrent == null) {
+    setRenderer(PGraphicsOpenGL.pgCurrent);
+    loadAttributes();
+    loadUniforms();
+  }
+  if (-1 < inVertexLoc)   pgl.enableVertexAttribArray(inVertexLoc);
+  if (-1 < inColorLoc)   pgl.enableVertexAttribArray(inColorLoc);
+  if (-1 < inAttribLoc)   pgl.enableVertexAttribArray(inAttribLoc);
+  if (pgCurrent.getHint(ENABLE_STROKE_PERSPECTIVE) && pgCurrent.nonOrthoProjection()) {
+    setUniformValue(perspectiveLoc,1);
+  }
+ else {
+    setUniformValue(perspectiveLoc,0);
+  }
+  if (pgCurrent.getHint(DISABLE_OPTIMIZED_STROKE)) {
+    setUniformValue(scaleLoc,1.0f,1.0f,1.0f);
+  }
+ else {
+    if (orthoProjection()) {
+      setUniformValue(scaleLoc,1.0f,1.0f,0.99f);
+    }
+ else {
+      setUniformValue(scaleLoc,0.99f,0.99f,0.99f);
+    }
+  }
+  setCommonUniforms();
+}

@@ -1,0 +1,37 @@
+{
+  createPolyBuffers();
+  int size=tessGeo.polyVertexCount;
+  int sizef=size * PGL.SIZEOF_FLOAT;
+  int sizei=size * PGL.SIZEOF_INT;
+  tessGeo.updatePolyVerticesBuffer();
+  pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyVertex);
+  pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,tessGeo.polyVerticesBuffer,PGL.STATIC_DRAW);
+  tessGeo.updatePolyColorsBuffer();
+  pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyColor);
+  pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyColorsBuffer,PGL.STATIC_DRAW);
+  if (lit) {
+    tessGeo.updatePolyNormalsBuffer();
+    pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyNormal);
+    pgl.bufferData(PGL.ARRAY_BUFFER,3 * sizef,tessGeo.polyNormalsBuffer,PGL.STATIC_DRAW);
+    tessGeo.updatePolyAmbientBuffer();
+    pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyAmbient);
+    pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyAmbientBuffer,PGL.STATIC_DRAW);
+    tessGeo.updatePolySpecularBuffer();
+    pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolySpecular);
+    pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polySpecularBuffer,PGL.STATIC_DRAW);
+    tessGeo.updatePolyEmissiveBuffer();
+    pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyEmissive);
+    pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyEmissiveBuffer,PGL.STATIC_DRAW);
+    tessGeo.updatePolyShininessBuffer();
+    pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyShininess);
+    pgl.bufferData(PGL.ARRAY_BUFFER,sizef,tessGeo.polyShininessBuffer,PGL.STATIC_DRAW);
+  }
+  if (tex) {
+    tessGeo.updatePolyTexcoordsBuffer();
+    pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyTexcoord);
+    pgl.bufferData(PGL.ARRAY_BUFFER,2 * sizef,tessGeo.polyTexcoordsBuffer,PGL.STATIC_DRAW);
+  }
+  tessGeo.updatePolyIndicesBuffer();
+  pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,glPolyIndex);
+  pgl.bufferData(PGL.ELEMENT_ARRAY_BUFFER,tessGeo.polyIndexCount * PGL.SIZEOF_INDEX,tessGeo.polyIndicesBuffer,PGL.STATIC_DRAW);
+}

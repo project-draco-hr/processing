@@ -1,0 +1,42 @@
+{
+  boolean oldValue=hints[PApplet.abs(which)];
+  super.hint(which);
+  boolean newValue=hints[PApplet.abs(which)];
+  if (oldValue == newValue) {
+    return;
+  }
+  if (which == DISABLE_DEPTH_TEST) {
+    flush();
+    pgl.disable(PGL.DEPTH_TEST);
+  }
+ else   if (which == ENABLE_DEPTH_TEST) {
+    flush();
+    pgl.enable(PGL.DEPTH_TEST);
+  }
+ else   if (which == DISABLE_DEPTH_MASK) {
+    flush();
+    pgl.depthMask(false);
+  }
+ else   if (which == ENABLE_DEPTH_MASK) {
+    flush();
+    pgl.depthMask(true);
+  }
+ else   if (which == ENABLE_OPTIMIZED_STROKE) {
+    flush();
+    setFlushMode(FLUSH_WHEN_FULL);
+  }
+ else   if (which == DISABLE_OPTIMIZED_STROKE) {
+    flush();
+    setFlushMode(FLUSH_CONTINUOUSLY);
+  }
+ else   if (which == DISABLE_STROKE_PERSPECTIVE) {
+    if (0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount) {
+      flush();
+    }
+  }
+ else   if (which == ENABLE_STROKE_PERSPECTIVE) {
+    if (0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount) {
+      flush();
+    }
+  }
+}

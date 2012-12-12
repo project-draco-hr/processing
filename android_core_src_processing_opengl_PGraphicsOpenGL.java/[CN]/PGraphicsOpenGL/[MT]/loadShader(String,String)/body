@@ -1,0 +1,57 @@
+{
+  int shaderType=getTypeFromVertexShader(vertFilename);
+  PShader shader=null;
+  if (fragFilename == null || fragFilename.equals("")) {
+    if (shaderType == PShader.POINT) {
+      shader=new PointShader(parent);
+      shader.setFragmentShader(defPointShaderFragURL);
+    }
+ else     if (shaderType == PShader.LINE) {
+      shader=new LineShader(parent);
+      shader.setFragmentShader(defLineShaderFragURL);
+    }
+ else     if (shaderType == PShader.TEXLIGHT) {
+      shader=new PolyTexlightShader(parent);
+      shader.setFragmentShader(defPolyTexShaderFragURL);
+    }
+ else     if (shaderType == PShader.LIGHT) {
+      shader=new PolyLightShader(parent);
+      shader.setFragmentShader(defPolyNoTexShaderFragURL);
+    }
+ else     if (shaderType == PShader.TEXTURE) {
+      shader=new PolyTexShader(parent);
+      shader.setFragmentShader(defPolyTexShaderFragURL);
+    }
+ else     if (shaderType == PShader.COLOR) {
+      shader=new PolyColorShader(parent);
+      shader.setFragmentShader(defPolyNoTexShaderFragURL);
+    }
+    if (shader != null) {
+      shader.setVertexShader(vertFilename);
+    }
+  }
+ else {
+    if (shaderType == PShader.POINT) {
+      shader=new PointShader(parent,vertFilename,fragFilename);
+    }
+ else     if (shaderType == PShader.LINE) {
+      shader=new LineShader(parent,vertFilename,fragFilename);
+    }
+ else     if (shaderType == PShader.TEXLIGHT) {
+      shader=new PolyTexlightShader(parent,vertFilename,fragFilename);
+    }
+ else     if (shaderType == PShader.LIGHT) {
+      shader=new PolyLightShader(parent,vertFilename,fragFilename);
+    }
+ else     if (shaderType == PShader.TEXTURE) {
+      shader=new PolyTexShader(parent,vertFilename,fragFilename);
+    }
+ else     if (shaderType == PShader.COLOR) {
+      shader=new PolyColorShader(parent,vertFilename,fragFilename);
+    }
+  }
+  if (shader == null) {
+    PGraphics.showWarning(INVALID_PROCESSING_SHADER_ERROR);
+  }
+  return shader;
+}

@@ -1,0 +1,40 @@
+{
+  OPENGL_VENDOR=pgl.getString(PGL.VENDOR);
+  OPENGL_RENDERER=pgl.getString(PGL.RENDERER);
+  OPENGL_VERSION=pgl.getString(PGL.VERSION);
+  OPENGL_EXTENSIONS=pgl.getString(PGL.EXTENSIONS);
+  GLSL_VERSION=pgl.getString(PGL.SHADING_LANGUAGE_VERSION);
+  int major=pgl.getGLVersion()[0];
+  if (major < 2) {
+    if (OPENGL_EXTENSIONS.indexOf("_fragment_shader") == -1 || OPENGL_EXTENSIONS.indexOf("_vertex_shader") == -1 || OPENGL_EXTENSIONS.indexOf("_shader_objects") == -1 || OPENGL_EXTENSIONS.indexOf("_shading_language") == -1) {
+      throw new RuntimeException("Processing cannot run because GLSL shaders" + " are not available.");
+    }
+  }
+  npotTexSupported=-1 < OPENGL_EXTENSIONS.indexOf("_texture_non_power_of_two");
+  autoMipmapGenSupported=-1 < OPENGL_EXTENSIONS.indexOf("_generate_mipmap");
+  fboMultisampleSupported=-1 < OPENGL_EXTENSIONS.indexOf("_framebuffer_multisample");
+  packedDepthStencilSupported=-1 < OPENGL_EXTENSIONS.indexOf("_packed_depth_stencil");
+  anisoSamplingSupported=-1 < OPENGL_EXTENSIONS.indexOf("_texture_filter_anisotropic");
+  try {
+    pgl.blendEquation(PGL.FUNC_ADD);
+    blendEqSupported=true;
+  }
+ catch (  Exception e) {
+    blendEqSupported=false;
+  }
+  depthBits=pgl.getDepthBits();
+  stencilBits=pgl.getStencilBits();
+  pgl.getIntegerv(PGL.MAX_TEXTURE_SIZE,intBuffer);
+  maxTextureSize=intBuffer.get(0);
+  pgl.getIntegerv(PGL.MAX_SAMPLES,intBuffer);
+  maxSamples=intBuffer.get(0);
+  pgl.getIntegerv(PGL.ALIASED_LINE_WIDTH_RANGE,intBuffer);
+  maxLineWidth=intBuffer.get(0);
+  pgl.getIntegerv(PGL.ALIASED_POINT_SIZE_RANGE,intBuffer);
+  maxPointSize=intBuffer.get(0);
+  if (anisoSamplingSupported) {
+    pgl.getFloatv(PGL.MAX_TEXTURE_MAX_ANISOTROPY,floatBuffer);
+    maxAnisoAmount=floatBuffer.get(0);
+  }
+  glParamsRead=true;
+}

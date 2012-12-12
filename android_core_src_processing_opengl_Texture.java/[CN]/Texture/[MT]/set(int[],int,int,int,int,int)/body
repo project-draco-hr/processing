@@ -1,0 +1,49 @@
+{
+  if (pixels == null) {
+    pixels=null;
+    PGraphics.showWarning("The pixels array is null.");
+    return;
+  }
+  if (pixels.length < w * h) {
+    PGraphics.showWarning("The pixel array has a length of " + pixels.length + ", but it should be at least "+ w * h);
+    return;
+  }
+  if (pixels.length == 0) {
+    return;
+  }
+  boolean enabledTex=false;
+  if (!pgl.texturingIsEnabled(glTarget)) {
+    pgl.enableTexturing(glTarget);
+    enabledTex=true;
+  }
+  pgl.bindTexture(glTarget,glName);
+  if (usingMipmaps) {
+    if (PGraphicsOpenGL.autoMipmapGenSupported) {
+      int[] rgbaPixels=new int[w * h];
+      convertToRGBA(pixels,rgbaPixels,format,w,h);
+      updatePixelBuffer(rgbaPixels);
+      pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
+      pgl.generateMipmap(glTarget);
+      rgbaPixels=null;
+    }
+ else {
+      int[] rgbaPixels=new int[w * h];
+      convertToRGBA(pixels,rgbaPixels,format,w,h);
+      updatePixelBuffer(rgbaPixels);
+      pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
+      rgbaPixels=null;
+    }
+  }
+ else {
+    int[] rgbaPixels=new int[w * h];
+    convertToRGBA(pixels,rgbaPixels,format,w,h);
+    updatePixelBuffer(rgbaPixels);
+    pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
+    rgbaPixels=null;
+  }
+  pgl.bindTexture(glTarget,0);
+  if (enabledTex) {
+    pgl.disableTexturing(glTarget);
+  }
+  updateTexels(x,y,w,h);
+}

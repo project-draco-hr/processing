@@ -1,0 +1,20 @@
+{
+  if (tex == null) {
+    throw new RuntimeException("Source texture is null");
+  }
+  if (tempFbo == null) {
+    tempFbo=new FrameBuffer(parent,glWidth,glHeight);
+  }
+  tempFbo.setColorBuffer(this);
+  tempFbo.disableDepthTest();
+  pg.pushFramebuffer();
+  pg.setFramebuffer(tempFbo);
+  if (scale) {
+    pgl.drawTexture(tex.glTarget,tex.glName,tex.glWidth,tex.glHeight,x,y,w,h,0,0,width,height);
+  }
+ else {
+    pgl.drawTexture(tex.glTarget,tex.glName,tex.glWidth,tex.glHeight,x,y,w,h,x,y,w,h);
+  }
+  pg.popFramebuffer();
+  updateTexels(x,y,w,h);
+}

@@ -1,0 +1,23 @@
+{
+  if (shape.isVisible()) {
+    flush();
+    pushMatrix();
+    if (shapeMode == CENTER) {
+      translate(x - c / 2f,y - d / 2f,z - e / 2f);
+      scale(c / shape.getWidth(),d / shape.getHeight(),e / shape.getDepth());
+    }
+ else     if (shapeMode == CORNER) {
+      translate(x,y,z);
+      scale(c / shape.getWidth(),d / shape.getHeight(),e / shape.getDepth());
+    }
+ else     if (shapeMode == CORNERS) {
+      c-=x;
+      d-=y;
+      e-=z;
+      translate(x,y,z);
+      scale(c / shape.getWidth(),d / shape.getHeight(),e / shape.getDepth());
+    }
+    shape.draw(this);
+    popMatrix();
+  }
+}

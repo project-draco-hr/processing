@@ -1,0 +1,61 @@
+{
+  if (params.target == TEX2D) {
+    glTarget=PGL.TEXTURE_2D;
+  }
+ else {
+    throw new RuntimeException("Unknown texture target");
+  }
+  if (params.format == RGB) {
+    glFormat=PGL.RGB;
+  }
+ else   if (params.format == ARGB) {
+    glFormat=PGL.RGBA;
+  }
+ else   if (params.format == ALPHA) {
+    glFormat=PGL.ALPHA;
+  }
+ else {
+    throw new RuntimeException("Unknown texture format");
+  }
+  if (params.sampling == POINT) {
+    glMagFilter=PGL.NEAREST;
+    glMinFilter=PGL.NEAREST;
+  }
+ else   if (params.sampling == LINEAR) {
+    glMagFilter=PGL.NEAREST;
+    glMinFilter=params.mipmaps && PGL.MIPMAPS_ENABLED ? PGL.LINEAR_MIPMAP_NEAREST : PGL.LINEAR;
+  }
+ else   if (params.sampling == BILINEAR) {
+    glMagFilter=PGL.LINEAR;
+    glMinFilter=params.mipmaps && PGL.MIPMAPS_ENABLED ? PGL.LINEAR_MIPMAP_NEAREST : PGL.LINEAR;
+  }
+ else   if (params.sampling == TRILINEAR) {
+    glMagFilter=PGL.LINEAR;
+    glMinFilter=params.mipmaps && PGL.MIPMAPS_ENABLED ? PGL.LINEAR_MIPMAP_LINEAR : PGL.LINEAR;
+  }
+ else {
+    throw new RuntimeException("Unknown texture filtering mode");
+  }
+  if (params.wrapU == CLAMP) {
+    glWrapS=PGL.CLAMP_TO_EDGE;
+  }
+ else   if (params.wrapU == REPEAT) {
+    glWrapS=PGL.REPEAT;
+  }
+ else {
+    throw new RuntimeException("Unknown wrapping mode");
+  }
+  if (params.wrapV == CLAMP) {
+    glWrapT=PGL.CLAMP_TO_EDGE;
+  }
+ else   if (params.wrapV == REPEAT) {
+    glWrapT=PGL.REPEAT;
+  }
+ else {
+    throw new RuntimeException("Unknown wrapping mode");
+  }
+  usingMipmaps=glMinFilter == PGL.LINEAR_MIPMAP_NEAREST || glMinFilter == PGL.LINEAR_MIPMAP_LINEAR;
+  usingRepeat=glWrapS == PGL.REPEAT || glWrapT == PGL.REPEAT;
+  invertedX=false;
+  invertedY=false;
+}

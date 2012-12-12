@@ -1,0 +1,36 @@
+{
+  if (!(shader instanceof PolyTexShader)) {
+    PGraphics.showWarning(INVALID_FILTER_SHADER_ERROR);
+    return;
+  }
+  loadTexture();
+  pgl.depthMask(false);
+  pgl.disable(PGL.DEPTH_TEST);
+  begin2D();
+  boolean prevLights=lights;
+  lights=false;
+  int prevTextureMode=textureMode;
+  textureMode=NORMAL;
+  boolean prevStroke=stroke;
+  stroke=false;
+  PolyTexShader prevTexShader=polyTexShader;
+  polyTexShader=(PolyTexShader)shader;
+  beginShape(QUADS);
+  texture(this);
+  vertex(0,0,0,0);
+  vertex(width,0,1,0);
+  vertex(width,height,1,1);
+  vertex(0,height,0,1);
+  endShape();
+  end2D();
+  polyTexShader=prevTexShader;
+  stroke=prevStroke;
+  lights=prevLights;
+  textureMode=prevTextureMode;
+  if (!hints[DISABLE_DEPTH_TEST]) {
+    pgl.enable(PGL.DEPTH_TEST);
+  }
+  if (!hints[DISABLE_DEPTH_MASK]) {
+    pgl.depthMask(true);
+  }
+}

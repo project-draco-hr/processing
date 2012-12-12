@@ -1,0 +1,70 @@
+{
+  float hradius, vradius;
+switch (rectMode) {
+case CORNERS:
+    break;
+case CORNER:
+  c+=a;
+d+=b;
+break;
+case RADIUS:
+hradius=c;
+vradius=d;
+c=a + hradius;
+d=b + vradius;
+a-=hradius;
+b-=vradius;
+break;
+case CENTER:
+hradius=c / 2.0f;
+vradius=d / 2.0f;
+c=a + hradius;
+d=b + vradius;
+a-=hradius;
+b-=vradius;
+}
+if (a > c) {
+float temp=a;
+a=c;
+c=temp;
+}
+if (b > d) {
+float temp=b;
+b=d;
+d=temp;
+}
+float maxRounding=PApplet.min((c - a) / 2,(d - b) / 2);
+if (tl > maxRounding) tl=maxRounding;
+if (tr > maxRounding) tr=maxRounding;
+if (br > maxRounding) br=maxRounding;
+if (bl > maxRounding) bl=maxRounding;
+if (nonZero(tr)) {
+addVertex(c - tr,b,VERTEX);
+addQuadraticVertex(c,b,0,c,b + tr,0,fill,stroke,detail,VERTEX);
+}
+ else {
+addVertex(c,b,VERTEX);
+}
+if (nonZero(br)) {
+addVertex(c,d - br,VERTEX);
+addQuadraticVertex(c,d,0,c - br,d,0,fill,stroke,detail,VERTEX);
+}
+ else {
+addVertex(c,d,VERTEX);
+}
+if (nonZero(bl)) {
+addVertex(a + bl,d,VERTEX);
+addQuadraticVertex(a,d,0,a,d - bl,0,fill,stroke,detail,VERTEX);
+}
+ else {
+addVertex(a,d,VERTEX);
+}
+if (nonZero(tl)) {
+addVertex(a,b + tl,VERTEX);
+addQuadraticVertex(a,b,0,a + tl,b,0,fill,stroke,detail,VERTEX);
+}
+ else {
+addVertex(a,b,VERTEX);
+}
+if (stroke) addPolygonEdges(true);
+}

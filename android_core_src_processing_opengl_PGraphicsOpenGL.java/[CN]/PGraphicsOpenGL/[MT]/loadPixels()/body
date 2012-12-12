@@ -1,0 +1,20 @@
+{
+  if (sized) {
+    return;
+  }
+  boolean needEndDraw=false;
+  if (!drawing) {
+    beginDraw();
+    needEndDraw=true;
+  }
+  if (!setgetPixels) {
+    flush();
+  }
+  allocatePixels();
+  if (!setgetPixels) {
+    readPixels();
+  }
+  if (needEndDraw) {
+    endDraw();
+  }
+}
