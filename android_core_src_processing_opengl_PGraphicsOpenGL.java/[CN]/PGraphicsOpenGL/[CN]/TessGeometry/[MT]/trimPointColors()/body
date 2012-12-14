@@ -1,6 +1,11 @@
 {
-  pointColorsBuffer=PGL.allocateDirectIntBuffer(pointVertexCount);
   int temp[]=new int[pointVertexCount];
   PApplet.arrayCopy(pointColors,0,temp,0,pointVertexCount);
   pointColors=temp;
+  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
+    pointColorsBuffer=PGL.allocateDirectIntBuffer(pointVertexCount);
+  }
+ else {
+    pointColorsBuffer=IntBuffer.wrap(pointColors);
+  }
 }

@@ -1,6 +1,11 @@
 {
-  pointVerticesBuffer=PGL.allocateDirectFloatBuffer(4 * n);
   float temp[]=new float[4 * n];
   PApplet.arrayCopy(pointVertices,0,temp,0,4 * pointVertexCount);
   pointVertices=temp;
+  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
+    pointVerticesBuffer=PGL.allocateDirectFloatBuffer(4 * n);
+  }
+ else {
+    pointVerticesBuffer=FloatBuffer.wrap(pointVertices);
+  }
 }

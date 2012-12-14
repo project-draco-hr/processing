@@ -1,5 +1,11 @@
 {
-  IntBuffer texels=PGL.allocateDirectIntBuffer(16 * 16);
+  IntBuffer texels;
+  if (USE_DIRECT_PIXEL_BUFFERS) {
+    texels=PGL.allocateDirectIntBuffer(16 * 16);
+  }
+ else {
+    texels=IntBuffer.allocate(16 * 16);
+  }
   for (int y=0; y < height; y+=16) {
     int h=PApplet.min(16,height - y);
     for (int x=0; x < width; x+=16) {

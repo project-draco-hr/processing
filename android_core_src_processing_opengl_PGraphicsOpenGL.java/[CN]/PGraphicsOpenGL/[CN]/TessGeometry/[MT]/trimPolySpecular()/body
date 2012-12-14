@@ -1,6 +1,11 @@
 {
-  polySpecularBuffer=PGL.allocateDirectIntBuffer(polyVertexCount);
   int temp[]=new int[polyVertexCount];
   PApplet.arrayCopy(polySpecular,0,temp,0,polyVertexCount);
   polySpecular=temp;
+  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
+    polySpecularBuffer=PGL.allocateDirectIntBuffer(polyVertexCount);
+  }
+ else {
+    polySpecularBuffer=IntBuffer.wrap(polySpecular);
+  }
 }

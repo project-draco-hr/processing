@@ -1,6 +1,11 @@
 {
-  polyShininessBuffer=PGL.allocateDirectFloatBuffer(polyVertexCount);
   float temp[]=new float[polyVertexCount];
   PApplet.arrayCopy(polyShininess,0,temp,0,polyVertexCount);
   polyShininess=temp;
+  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
+    polyShininessBuffer=PGL.allocateDirectFloatBuffer(polyVertexCount);
+  }
+ else {
+    polyShininessBuffer=FloatBuffer.wrap(polyShininess);
+  }
 }

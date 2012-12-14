@@ -1,6 +1,11 @@
 {
-  polyAmbientBuffer=PGL.allocateDirectIntBuffer(polyVertexCount);
   int temp[]=new int[polyVertexCount];
   PApplet.arrayCopy(polyAmbient,0,temp,0,polyVertexCount);
   polyAmbient=temp;
+  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
+    polyAmbientBuffer=PGL.allocateDirectIntBuffer(polyVertexCount);
+  }
+ else {
+    polyAmbientBuffer=IntBuffer.wrap(polyAmbient);
+  }
 }

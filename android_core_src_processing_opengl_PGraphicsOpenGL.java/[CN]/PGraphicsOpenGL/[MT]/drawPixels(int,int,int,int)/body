@@ -2,7 +2,12 @@
   int len=w * h;
   if (nativePixels == null || nativePixels.length < len) {
     nativePixels=new int[len];
-    nativePixelBuffer=PGL.allocateDirectIntBuffer(len);
+    if (PGL.USE_DIRECT_PIXEL_BUFFERS) {
+      nativePixelBuffer=PGL.allocateDirectIntBuffer(len);
+    }
+ else {
+      nativePixelBuffer=IntBuffer.wrap(nativePixels);
+    }
   }
   try {
     if (0 < x || 0 < y || w < width || h < height) {
@@ -24,9 +29,11 @@
   if (primarySurface && !pgl.isFBOBacked()) {
     loadTextureImpl(POINT,false);
   }
-  nativePixelBuffer.position(0);
-  nativePixelBuffer.put(nativePixels);
-  nativePixelBuffer.rewind();
+  if (PGL.USE_DIRECT_PIXEL_BUFFERS) {
+    nativePixelBuffer.position(0);
+    nativePixelBuffer.put(nativePixels);
+    nativePixelBuffer.rewind();
+  }
   boolean needToDrawTex=primarySurface && (!pgl.isFBOBacked() || (pgl.isFBOBacked() && pgl.isMultisampled())) || offscreenMultisample;
   if (needToDrawTex) {
     pgl.copyToTexture(texture.glTarget,texture.glFormat,texture.glName,x,y,w,h,nativePixelBuffer);

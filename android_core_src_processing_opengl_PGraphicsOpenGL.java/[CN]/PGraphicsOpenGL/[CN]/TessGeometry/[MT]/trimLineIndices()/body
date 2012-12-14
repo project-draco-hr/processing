@@ -1,6 +1,11 @@
 {
-  lineIndicesBuffer=PGL.allocateDirectShortBuffer(lineIndexCount);
   short temp[]=new short[lineIndexCount];
   PApplet.arrayCopy(lineIndices,0,temp,0,lineIndexCount);
   lineIndices=temp;
+  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
+    lineIndicesBuffer=PGL.allocateDirectShortBuffer(lineIndexCount);
+  }
+ else {
+    lineIndicesBuffer=ShortBuffer.wrap(lineIndices);
+  }
 }

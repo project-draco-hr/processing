@@ -1,6 +1,11 @@
 {
-  polyEmissiveBuffer=PGL.allocateDirectIntBuffer(polyVertexCount);
   int temp[]=new int[polyVertexCount];
   PApplet.arrayCopy(polyEmissive,0,temp,0,polyVertexCount);
   polyEmissive=temp;
+  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
+    polyEmissiveBuffer=PGL.allocateDirectIntBuffer(polyVertexCount);
+  }
+ else {
+    polyEmissiveBuffer=IntBuffer.wrap(polyEmissive);
+  }
 }

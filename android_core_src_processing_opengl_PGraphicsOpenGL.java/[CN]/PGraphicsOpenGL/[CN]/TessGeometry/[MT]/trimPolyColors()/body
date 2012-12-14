@@ -1,6 +1,11 @@
 {
-  polyColorsBuffer=PGL.allocateDirectIntBuffer(polyVertexCount);
   int temp[]=new int[polyVertexCount];
   PApplet.arrayCopy(polyColors,0,temp,0,polyVertexCount);
   polyColors=temp;
+  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
+    polyColorsBuffer=PGL.allocateDirectIntBuffer(polyVertexCount);
+  }
+ else {
+    polyColorsBuffer=IntBuffer.wrap(polyColors);
+  }
 }

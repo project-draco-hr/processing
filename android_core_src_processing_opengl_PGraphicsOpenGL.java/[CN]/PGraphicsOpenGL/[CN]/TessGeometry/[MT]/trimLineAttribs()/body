@@ -1,6 +1,11 @@
 {
-  lineAttribsBuffer=PGL.allocateDirectFloatBuffer(4 * lineVertexCount);
   float temp[]=new float[4 * lineVertexCount];
   PApplet.arrayCopy(lineAttribs,0,temp,0,4 * lineVertexCount);
   lineAttribs=temp;
+  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
+    lineAttribsBuffer=PGL.allocateDirectFloatBuffer(4 * lineVertexCount);
+  }
+ else {
+    lineAttribsBuffer=FloatBuffer.wrap(lineAttribs);
+  }
 }
