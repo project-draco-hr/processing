@@ -17,14 +17,24 @@
     sizeH=size.height;
     imageW=sizeW;
     imageH=sizeH;
-    offscreen=createImage(imageW,imageH);
+    if (Toolkit.isRetina()) {
+      offscreen=createImage(imageW * 2,imageH * 2);
+    }
+ else {
+      offscreen=createImage(imageW,imageH);
+    }
   }
   Graphics g=offscreen.getGraphics();
   g.setFont(font);
   metrics=g.getFontMetrics();
   fontAscent=metrics.getAscent();
   Graphics2D g2=(Graphics2D)g;
-  g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+  if (Toolkit.isRetina()) {
+    g2.scale(2,2);
+  }
+ else {
+    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+  }
   g.setColor(backgroundColor);
   g.fillRect(0,0,imageW,imageH);
   if (tabs.length != sketch.getCodeCount()) {
@@ -62,5 +72,5 @@
   }
   placeTabs(tabLeft,tabMax,g);
   g.drawImage(pieces[popup.isVisible() ? SELECTED : UNSELECTED][MENU],menuLeft,0,null);
-  screen.drawImage(offscreen,0,0,null);
+  screen.drawImage(offscreen,0,0,imageW,imageH,null);
 }

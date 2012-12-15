@@ -4,7 +4,12 @@
   }
   Dimension size=getSize();
   if ((offscreen == null) || (size.width != width) || (size.height != height)) {
-    offscreen=createImage(size.width,size.height);
+    if (Toolkit.isRetina()) {
+      offscreen=createImage(size.width * 2,size.height * 2);
+    }
+ else {
+      offscreen=createImage(size.width,size.height);
+    }
     width=size.width;
     height=size.height;
     int offsetX=3;
@@ -18,12 +23,17 @@
     }
   }
   Graphics g=offscreen.getGraphics();
+  Graphics2D g2=(Graphics2D)g;
+  if (Toolkit.isRetina()) {
+    g2.scale(2,2);
+  }
+ else {
+    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+  }
   g.setColor(bgcolor);
   g.fillRect(0,0,width,height);
-  Graphics2D g2=(Graphics2D)g;
-  g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
   for (  Button b : buttons) {
-    g.drawImage(b.stateImage,b.left,TOP,null);
+    g.drawImage(b.stateImage,b.left,TOP,BUTTON_WIDTH,BUTTON_HEIGHT,null);
   }
   g.setColor(statusColor);
   g.setFont(statusFont);
@@ -45,7 +55,7 @@
   g.setColor(modeButtonColor);
   g.drawRect(modeX1,modeY1,modeX2 - modeX1,modeY2 - modeY1);
   g.drawString(modeTitle,modeX1 + modeGapH,modeY2 - modeGapV);
-  screen.drawImage(offscreen,0,0,null);
+  screen.drawImage(offscreen,0,0,size.width,size.height,null);
   if (!isEnabled()) {
     screen.setColor(new Color(0,0,0,100));
     screen.fillRect(0,0,getWidth(),getHeight());
