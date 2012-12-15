@@ -3,23 +3,24 @@
     boolean commanate=false;
     int length=this.size();
     writer.write('[');
+    int thisFactor=(indentFactor == -1) ? 0 : indentFactor;
     if (length == 1) {
-      JSONObject.writeValue(writer,this.myArrayList.get(0),indentFactor,indent);
+      JSONObject.writeValue(writer,this.myArrayList.get(0),thisFactor,indent);
     }
  else     if (length != 0) {
-      final int newindent=indent + indentFactor;
+      final int newindent=indent + thisFactor;
       for (int i=0; i < length; i+=1) {
         if (commanate) {
           writer.write(',');
         }
-        if (indentFactor > 0) {
+        if (indentFactor != -1) {
           writer.write('\n');
         }
         JSONObject.indent(writer,newindent);
-        JSONObject.writeValue(writer,this.myArrayList.get(i),indentFactor,newindent);
+        JSONObject.writeValue(writer,this.myArrayList.get(i),thisFactor,newindent);
         commanate=true;
       }
-      if (indentFactor > 0) {
+      if (indentFactor != -1) {
         writer.write('\n');
       }
       JSONObject.indent(writer,indent);
