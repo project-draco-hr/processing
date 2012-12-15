@@ -1,8 +1,13 @@
 {
   if (popup != null && popup.isVisible())   return;
   if (!selectWord && !selectLine) {
-    setSelectionRectangular((evt.getModifiers() & InputEvent.CTRL_MASK) != 0);
-    select(getMarkPosition(),xyToOffset(evt.getX(),evt.getY()));
+    setSelectionRectangular(evt.isControlDown());
+    try {
+      select(getMarkPosition(),xyToOffset(evt.getX(),evt.getY()));
+    }
+ catch (    ArrayIndexOutOfBoundsException e) {
+      Base.log("xToOffset problem",e);
+    }
   }
  else {
     int line=yToLine(evt.getY());
