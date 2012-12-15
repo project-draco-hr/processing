@@ -13,12 +13,7 @@
       loadTextureImpl(Texture.POINT,false);
       if (nativePixels == null || nativePixels.length < width * height) {
         nativePixels=new int[width * height];
-        if (PGL.USE_DIRECT_PIXEL_BUFFERS) {
-          nativePixelBuffer=PGL.allocateDirectIntBuffer(width * height);
-        }
- else {
-          nativePixelBuffer=IntBuffer.wrap(nativePixels);
-        }
+        nativePixelBuffer=PGL.allocateIntBuffer(nativePixels);
       }
       beginPixelsOp(OP_READ);
       try {

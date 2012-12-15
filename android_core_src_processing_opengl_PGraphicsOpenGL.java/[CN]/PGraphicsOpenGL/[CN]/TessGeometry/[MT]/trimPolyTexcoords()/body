@@ -2,10 +2,5 @@
   float temp[]=new float[2 * polyVertexCount];
   PApplet.arrayCopy(polyTexcoords,0,temp,0,2 * polyVertexCount);
   polyTexcoords=temp;
-  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
-    polyTexcoordsBuffer=PGL.allocateDirectFloatBuffer(2 * polyVertexCount);
-  }
- else {
-    polyTexcoordsBuffer=FloatBuffer.wrap(polyTexcoords);
-  }
+  polyTexcoordsBuffer=PGL.allocateFloatBuffer(polyTexcoords);
 }

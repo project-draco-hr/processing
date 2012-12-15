@@ -2,10 +2,5 @@
   float temp[]=new float[3 * polyVertexCount];
   PApplet.arrayCopy(polyNormals,0,temp,0,3 * polyVertexCount);
   polyNormals=temp;
-  if (PGL.USE_DIRECT_VERTEX_BUFFERS) {
-    polyNormalsBuffer=PGL.allocateDirectFloatBuffer(3 * polyVertexCount);
-  }
- else {
-    polyNormalsBuffer=FloatBuffer.wrap(polyNormals);
-  }
+  polyNormalsBuffer=PGL.allocateFloatBuffer(polyNormals);
 }

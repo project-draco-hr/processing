@@ -2,12 +2,7 @@
   int len=w * h;
   if (nativePixels == null || nativePixels.length < len) {
     nativePixels=new int[len];
-    if (PGL.USE_DIRECT_PIXEL_BUFFERS) {
-      nativePixelBuffer=PGL.allocateDirectIntBuffer(len);
-    }
- else {
-      nativePixelBuffer=IntBuffer.wrap(nativePixels);
-    }
+    nativePixelBuffer=PGL.allocateIntBuffer(nativePixels);
   }
   try {
     if (0 < x || 0 < y || w < width || h < height) {
@@ -26,13 +21,9 @@
   }
  catch (  ArrayIndexOutOfBoundsException e) {
   }
+  PGL.putPixels(nativePixelBuffer,nativePixels);
   if (primarySurface && !pgl.isFBOBacked()) {
     loadTextureImpl(POINT,false);
-  }
-  if (PGL.USE_DIRECT_PIXEL_BUFFERS) {
-    nativePixelBuffer.position(0);
-    nativePixelBuffer.put(nativePixels);
-    nativePixelBuffer.rewind();
   }
   boolean needToDrawTex=primarySurface && (!pgl.isFBOBacked() || (pgl.isFBOBacked() && pgl.isMultisampled())) || offscreenMultisample;
   if (needToDrawTex) {
