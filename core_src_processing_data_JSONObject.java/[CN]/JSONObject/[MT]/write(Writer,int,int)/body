@@ -4,35 +4,36 @@
     final int length=this.size();
     Iterator keys=this.keys();
     writer.write('{');
+    int actualFactor=(indentFactor == -1) ? 0 : indentFactor;
     if (length == 1) {
       Object key=keys.next();
       writer.write(quote(key.toString()));
       writer.write(':');
-      if (indentFactor > 0) {
+      if (actualFactor > 0) {
         writer.write(' ');
       }
-      writeValue(writer,this.map.get(key),indentFactor,indent);
+      writeValue(writer,this.map.get(key),actualFactor,indent);
     }
  else     if (length != 0) {
-      final int newindent=indent + indentFactor;
+      final int newindent=indent + actualFactor;
       while (keys.hasNext()) {
         Object key=keys.next();
         if (commanate) {
           writer.write(',');
         }
-        if (indentFactor > 0) {
+        if (indentFactor != -1) {
           writer.write('\n');
         }
         indent(writer,newindent);
         writer.write(quote(key.toString()));
         writer.write(':');
-        if (indentFactor > 0) {
+        if (actualFactor > 0) {
           writer.write(' ');
         }
-        writeValue(writer,this.map.get(key),indentFactor,newindent);
+        writeValue(writer,this.map.get(key),actualFactor,newindent);
         commanate=true;
       }
-      if (indentFactor > 0) {
+      if (indentFactor != -1) {
         writer.write('\n');
       }
       indent(writer,indent);
