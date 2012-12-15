@@ -2,33 +2,34 @@
   if (okButton == null)   setup();
   Dimension size=getSize();
   if ((size.width != sizeW) || (size.height != sizeH)) {
-    if ((size.width > imageW) || (size.height > imageH)) {
-      offscreen=null;
-    }
- else {
-      sizeW=size.width;
-      sizeH=size.height;
-      setButtonBounds();
-    }
+    offscreen=null;
   }
   if (offscreen == null) {
     sizeW=size.width;
     sizeH=size.height;
     setButtonBounds();
-    imageW=sizeW;
-    imageH=sizeH;
-    offscreen=createImage(imageW,imageH);
+    if (Toolkit.isRetina()) {
+      offscreen=createImage(sizeW * 2,sizeH * 2);
+    }
+ else {
+      offscreen=createImage(sizeW,sizeH);
+    }
   }
   Graphics g=offscreen.getGraphics();
   Graphics2D g2=(Graphics2D)g;
-  g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+  if (Toolkit.isRetina()) {
+    g2.scale(2,2);
+  }
+ else {
+    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+  }
   g.setFont(font);
   if (metrics == null) {
     metrics=g.getFontMetrics();
     ascent=metrics.getAscent();
   }
   g.setColor(bgcolor[mode]);
-  g.fillRect(0,0,imageW,imageH);
+  g.fillRect(0,0,sizeW,sizeH);
   g.setColor(fgcolor[mode]);
   g.setFont(font);
   g.drawString(message,Preferences.GUI_SMALL,(sizeH + ascent) / 2);
@@ -44,5 +45,5 @@
       g.drawLine(r,y,r,y + h);
     }
   }
-  screen.drawImage(offscreen,0,0,null);
+  screen.drawImage(offscreen,0,0,sizeW,sizeH,null);
 }
