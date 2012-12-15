@@ -9,17 +9,23 @@
   int w=img.getWidth();
   int h=img.getHeight();
   do {
-    if (w > wide) {
+    if (w > targetWidth) {
       w/=2;
-      if (w < wide) {
-        w=wide;
+      if (w < targetWidth) {
+        w=targetWidth;
       }
     }
-    if (h > high) {
+ else     if (targetWidth >= w) {
+      w=targetWidth;
+    }
+    if (h > targetHeight) {
       h/=2;
-      if (h < high) {
-        h=high;
+      if (h < targetHeight) {
+        h=targetHeight;
       }
+    }
+ else     if (targetHeight >= h) {
+      h=targetHeight;
     }
     if (scratchImage == null || isTranslucent) {
       scratchImage=new BufferedImage(w,h,type);
@@ -31,12 +37,12 @@
     prevH=h;
     outgoing=scratchImage;
   }
- while (w != wide || h != high);
+ while (w != targetWidth || h != targetHeight);
   if (g2 != null) {
     g2.dispose();
   }
-  if (wide != outgoing.getWidth() || high != outgoing.getHeight()) {
-    scratchImage=new BufferedImage(wide,high,type);
+  if (targetWidth != outgoing.getWidth() || targetHeight != outgoing.getHeight()) {
+    scratchImage=new BufferedImage(targetWidth,targetHeight,type);
     g2=scratchImage.createGraphics();
     g2.drawImage(outgoing,0,0,null);
     g2.dispose();
