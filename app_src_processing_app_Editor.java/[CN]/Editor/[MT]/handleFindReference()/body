@@ -1,15 +1,15 @@
 {
-  String text=textarea.getSelectedText().trim();
-  if (text.length() == 0) {
-    statusNotice("First select a word to find in the reference.");
+  String ref=referenceCheck(true);
+  if (ref != null) {
+    showReference(ref + ".html");
   }
  else {
-    String referenceFile=mode.lookupReference(text);
-    if (referenceFile == null) {
-      statusNotice("No reference available for \"" + text + "\"");
+    String text=textarea.getSelectedText().trim();
+    if (text.length() == 0) {
+      statusNotice("First select a word to find in the reference.");
     }
  else {
-      showReference(referenceFile + ".html");
+      statusNotice("No reference available for \"" + text + "\"");
     }
   }
 }

@@ -1,17 +1,8 @@
 {
-  if (textarea.isSelectionActive()) {
-    cutItem.setEnabled(true);
-    copyItem.setEnabled(true);
-    discourseItem.setEnabled(true);
-    String sel=textarea.getSelectedText().trim();
-    String referenceFile=mode.lookupReference(sel);
-    referenceItem.setEnabled(referenceFile != null);
-  }
- else {
-    cutItem.setEnabled(false);
-    copyItem.setEnabled(false);
-    discourseItem.setEnabled(false);
-    referenceItem.setEnabled(false);
-  }
+  boolean active=textarea.isSelectionActive();
+  cutItem.setEnabled(active);
+  copyItem.setEnabled(active);
+  discourseItem.setEnabled(active);
+  referenceItem.setEnabled(referenceCheck(false) != null);
   super.show(component,x,y);
 }
