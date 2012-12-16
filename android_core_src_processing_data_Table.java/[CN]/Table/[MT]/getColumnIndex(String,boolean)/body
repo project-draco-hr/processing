@@ -1,7 +1,7 @@
 {
   if (columnTitles == null) {
     if (report) {
-      System.err.println("Can't get column indices because no column titles are set.");
+      throw new IllegalArgumentException("This table has no header, so no column titles are set.");
     }
     return -1;
   }
@@ -14,7 +14,7 @@
   Integer index=columnIndices.get(name);
   if (index == null) {
     if (report) {
-      System.err.println("No column named '" + name + "' was found.");
+      throw new IllegalArgumentException("This table has no column named '" + name + "'");
     }
     return -1;
   }

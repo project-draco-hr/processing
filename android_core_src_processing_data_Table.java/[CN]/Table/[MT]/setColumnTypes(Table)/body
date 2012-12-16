@@ -1,8 +1,14 @@
 {
-  setColumnTitles(dictionary.getStringColumn(0));
+  int titleCol=0;
+  int typeCol=1;
+  if (dictionary.hasColumnTitles()) {
+    titleCol=dictionary.getColumnIndex("title",true);
+    typeCol=dictionary.getColumnIndex("type",true);
+  }
+  setColumnTitles(dictionary.getStringColumn(titleCol));
   if (dictionary.getColumnCount() > 1) {
     for (int i=0; i < dictionary.getRowCount(); i++) {
-      setColumnType(i,dictionary.getString(i,1));
+      setColumnType(i,dictionary.getString(i,typeCol));
     }
   }
 }

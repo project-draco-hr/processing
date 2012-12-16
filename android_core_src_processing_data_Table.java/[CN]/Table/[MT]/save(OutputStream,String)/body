@@ -1,0 +1,21 @@
+{
+  PrintWriter writer=PApplet.createWriter(output);
+  if (options != null) {
+    String[] opts=PApplet.splitTokens(options,", ");
+    for (    String opt : opts) {
+      if (opt.equals("csv")) {
+        writeCSV(writer);
+      }
+ else       if (opt.equals("tsv")) {
+        writeTSV(writer);
+      }
+ else       if (opt.equals("html")) {
+        writeHTML(writer);
+      }
+ else {
+        throw new IllegalArgumentException("'" + opt + "' not understood. "+ "Only csv, tsv, and html are "+ "accepted as save parameters");
+      }
+    }
+  }
+  writer.close();
+}

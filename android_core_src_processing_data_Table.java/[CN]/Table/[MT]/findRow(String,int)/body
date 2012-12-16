@@ -1,32 +1,4 @@
 {
-  checkBounds(-1,column);
-  if (columnTypes[column] == STRING) {
-    String[] stringData=(String[])columns[column];
-    if (what == null) {
-      for (int row=0; row < rowCount; row++) {
-        if (stringData[row] == null)         return row;
-      }
-    }
- else {
-      for (int row=0; row < rowCount; row++) {
-        if (stringData[row] != null && stringData[row].equals(what)) {
-          return row;
-        }
-      }
-    }
-  }
- else {
-    for (int row=0; row < rowCount; row++) {
-      String str=getString(row,column);
-      if (str == null) {
-        if (what == null) {
-          return row;
-        }
-      }
- else       if (str.equals(what)) {
-        return row;
-      }
-    }
-  }
-  return -1;
+  int row=findRowIndex(value,column);
+  return (row == -1) ? null : new RowPointer(this,row);
 }

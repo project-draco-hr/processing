@@ -1,20 +1,4 @@
 {
-  checkBounds(-1,column);
-  if (columnTypes[column] == STRING) {
-    String[] stringData=(String[])columns[column];
-    for (int row=0; row < rowCount; row++) {
-      if (stringData[row] != null && PApplet.match(stringData[row],regexp) != null) {
-        return row;
-      }
-    }
-  }
- else {
-    for (int row=0; row < rowCount; row++) {
-      String str=getString(row,column);
-      if (str != null && PApplet.match(str,regexp) != null) {
-        return row;
-      }
-    }
-  }
-  return -1;
+  int row=matchRowIndex(regexp,column);
+  return (row == -1) ? null : new RowPointer(this,row);
 }

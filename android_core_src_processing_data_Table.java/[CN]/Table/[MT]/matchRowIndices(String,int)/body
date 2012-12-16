@@ -1,0 +1,22 @@
+{
+  int[] outgoing=new int[rowCount];
+  int count=0;
+  checkBounds(-1,column);
+  if (columnTypes[column] == STRING) {
+    String[] stringData=(String[])columns[column];
+    for (int row=0; row < rowCount; row++) {
+      if (stringData[row] != null && PApplet.match(stringData[row],regexp) != null) {
+        outgoing[count++]=row;
+      }
+    }
+  }
+ else {
+    for (int row=0; row < rowCount; row++) {
+      String str=getString(row,column);
+      if (str != null && PApplet.match(str,regexp) != null) {
+        outgoing[count++]=row;
+      }
+    }
+  }
+  return PApplet.subset(outgoing,0,count);
+}
