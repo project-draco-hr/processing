@@ -1,6 +1,5 @@
 {
   beginPixelsOp(OP_READ);
-  pixelBuffer.rewind();
   try {
     pgl.readPixels(0,0,width,height,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
   }
@@ -8,9 +7,7 @@
   }
   endPixelsOp();
   try {
-    pixelBuffer.position(0);
-    pixelBuffer.get(pixels);
-    pixelBuffer.rewind();
+    PGL.getIntArray(pixelBuffer,pixels);
     PGL.nativeToJavaARGB(pixels,width,height);
   }
  catch (  ArrayIndexOutOfBoundsException e) {

@@ -16,11 +16,9 @@
     texData=allocateDirectFloatBuffer(texCoords.length);
   }
   if (0 < tex2DShaderProgram) {
-    getBooleanv(DEPTH_TEST,intBuffer);
-    boolean depthTest=intBuffer.get(0) == 0 ? false : true;
+    boolean depthTest=getDepthTest();
     disable(DEPTH_TEST);
-    getBooleanv(DEPTH_WRITEMASK,intBuffer);
-    boolean depthMask=intBuffer.get(0) == 0 ? false : true;
+    boolean depthMask=getDepthWriteMask();
     depthMask(false);
     useProgram(tex2DShaderProgram);
     enableVertexAttribArray(tex2DVertLoc);

@@ -13,11 +13,10 @@
       loadTextureImpl(Texture.POINT,false);
       if (nativePixels == null || nativePixels.length < width * height) {
         nativePixels=new int[width * height];
-        nativePixelBuffer=PGL.allocateDirectIntBuffer(width * height);
+        nativePixelBuffer=PGL.allocateIntBuffer(nativePixels);
       }
       beginPixelsOp(OP_READ);
       try {
-        nativePixelBuffer.rewind();
         pgl.readPixels(0,0,width,height,PGL.RGBA,PGL.UNSIGNED_BYTE,nativePixelBuffer);
       }
  catch (      IndexOutOfBoundsException e) {

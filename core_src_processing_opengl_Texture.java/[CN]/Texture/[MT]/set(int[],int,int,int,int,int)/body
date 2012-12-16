@@ -19,27 +19,24 @@
   pgl.bindTexture(glTarget,glName);
   if (usingMipmaps) {
     if (PGraphicsOpenGL.autoMipmapGenSupported) {
-      int[] rgbaPixels=new int[w * h];
+      loadPixels(w * h);
       convertToRGBA(pixels,rgbaPixels,format,w,h);
       updatePixelBuffer(rgbaPixels);
       pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
       pgl.generateMipmap(glTarget);
-      rgbaPixels=null;
     }
  else {
-      int[] rgbaPixels=new int[w * h];
+      loadPixels(w * h);
       convertToRGBA(pixels,rgbaPixels,format,w,h);
       updatePixelBuffer(rgbaPixels);
       pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
-      rgbaPixels=null;
     }
   }
  else {
-    int[] rgbaPixels=new int[w * h];
+    loadPixels(w * h);
     convertToRGBA(pixels,rgbaPixels,format,w,h);
     updatePixelBuffer(rgbaPixels);
     pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
-    rgbaPixels=null;
   }
   pgl.bindTexture(glTarget,0);
   if (enabledTex) {

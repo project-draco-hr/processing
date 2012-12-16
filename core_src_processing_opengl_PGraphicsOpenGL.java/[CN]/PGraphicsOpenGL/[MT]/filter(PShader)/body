@@ -4,6 +4,12 @@
     return;
   }
   loadTexture();
+  if (filterTexture == null || filterTexture.contextIsOutdated()) {
+    filterTexture=new Texture(parent,texture.width,texture.height,texture.getParameters());
+    filterTexture.invertedY(true);
+    filterImage=wrapTexture(filterTexture);
+  }
+  filterTexture.set(texture);
   pgl.depthMask(false);
   pgl.disable(PGL.DEPTH_TEST);
   begin2D();
@@ -16,7 +22,7 @@
   PolyTexShader prevTexShader=polyTexShader;
   polyTexShader=(PolyTexShader)shader;
   beginShape(QUADS);
-  texture(this);
+  texture(filterImage);
   vertex(0,0,0,0);
   vertex(width,0,1,0);
   vertex(width,height,1,1);
