@@ -10,48 +10,13 @@
  catch (  javax.media.opengl.GLException e) {
     gl2x=null;
   }
-  if (firstFrame) {
+  if (needToClearBuffers) {
     gl.glClearDepthf(1);
     gl.glClearStencil(0);
     gl.glClearColor(0,0,0,0);
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
-    firstFrame=false;
+    needToClearBuffers=false;
     drawable.swapBuffers();
-  }
-  if (capabilities.isFBO()) {
-    GLFBODrawable fboDrawable=null;
-    if (toolkit == AWT) {
-      GLCanvas glCanvas=(GLCanvas)glDrawable;
-      fboDrawable=(GLFBODrawable)glCanvas.getDelegatedDrawable();
-    }
- else {
-      GLWindow glWindow=(GLWindow)glDrawable;
-      fboDrawable=(GLFBODrawable)glWindow.getDelegatedDrawable();
-    }
-    if (fboDrawable != null) {
-      backFBO=fboDrawable.getFBObject(GL.GL_BACK);
-      if (0 < capabilities.getNumSamples()) {
-        if (frontFBO == null) {
-          frontFBO=new FBObject();
-          frontFBO.reset(gl,pg.width,pg.height);
-          frontFBO.attachTexture2D(gl,0,true);
-          sinkFBO=backFBO.getSamplingSinkFBO();
-        }
- else {
-          FBObject temp=sinkFBO;
-          sinkFBO=frontFBO;
-          frontFBO=temp;
-          backFBO.setSamplingSink(sinkFBO);
-        }
-        backTex=(FBObject.TextureAttachment)sinkFBO.getColorbuffer(0);
-        frontTex=(FBObject.TextureAttachment)frontFBO.getColorbuffer(0);
-      }
- else {
-        frontFBO=fboDrawable.getFBObject(GL.GL_FRONT);
-        backTex=fboDrawable.getTextureBuffer(GL.GL_BACK);
-        frontTex=fboDrawable.getTextureBuffer(GL.GL_FRONT);
-      }
-    }
   }
   pg.parent.handleDraw();
 }
