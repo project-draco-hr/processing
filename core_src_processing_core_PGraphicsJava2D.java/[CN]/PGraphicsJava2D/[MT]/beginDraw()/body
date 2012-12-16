@@ -1,4 +1,23 @@
 {
+  if (useCanvas && primarySurface) {
+    if (parent.frameCount == 0) {
+      canvas.createBufferStrategy(2);
+      strategy=canvas.getBufferStrategy();
+      PApplet.debug("PGraphicsJava2D.beginDraw() strategy is " + strategy);
+      BufferCapabilities caps=strategy.getCapabilities();
+      caps=strategy.getCapabilities();
+      PApplet.debug("PGraphicsJava2D.beginDraw() caps are " + " flipping: " + caps.isPageFlipping() + " front/back accel: "+ caps.getFrontBufferCapabilities().isAccelerated()+ " "+ "/"+ caps.getBackBufferCapabilities().isAccelerated());
+    }
+    GraphicsConfiguration gc=canvas.getGraphicsConfiguration();
+    if (bimage == null || bimage.getWidth() != width || bimage.getHeight() != height) {
+      PApplet.debug("PGraphicsJava2D creating new image");
+      bimage=gc.createCompatibleImage(width,height);
+      g2=bimage.createGraphics();
+    }
+  }
+  if (parent.frameCount == 0) {
+    defaultComposite=g2.getComposite();
+  }
   checkSettings();
   resetMatrix();
   vertexCount=0;

@@ -1,13 +1,31 @@
 {
   if (primarySurface) {
-    parent.updateListeners(parent);
-    image=new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
-    offscreen=new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-    g2=(Graphics2D)offscreen.getGraphics();
+    if (useCanvas) {
+      if (canvas != null) {
+        parent.removeListeners(canvas);
+        parent.remove(canvas);
+      }
+      canvas=new Canvas();
+      canvas.setIgnoreRepaint(true);
+      parent.add(canvas);
+      if (canvas.getWidth() != width || canvas.getHeight() != height) {
+        PApplet.debug("PGraphicsJava2D comp size being set to " + width + "x"+ height);
+        canvas.setSize(width,height);
+      }
+ else {
+        PApplet.debug("PGraphicsJava2D comp size already " + width + "x"+ height);
+      }
+      parent.addListeners(canvas);
+    }
+ else {
+      parent.updateListeners(parent);
+      image=new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+      offscreen=new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+      g2=(Graphics2D)offscreen.getGraphics();
+    }
   }
  else {
     image=new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
     g2=(Graphics2D)image.getGraphics();
   }
-  defaultComposite=g2.getComposite();
 }
