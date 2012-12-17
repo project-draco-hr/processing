@@ -9,6 +9,13 @@
       fboWidth=nextPowerOfTwo(pg.width);
       fboHeight=nextPowerOfTwo(pg.height);
     }
+    if (-1 < ext.indexOf("_framebuffer_multisample")) {
+      numSamples=reqNumSamples;
+    }
+ else {
+      numSamples=1;
+    }
+    boolean multisample=1 < numSamples;
     boolean packed=ext.indexOf("packed_depth_stencil") != -1;
     int depthBits=getDepthBits();
     int stencilBits=getStencilBits();
@@ -28,10 +35,23 @@
     genFramebuffers(1,glColorFbo);
     bindFramebuffer(FRAMEBUFFER,glColorFbo.get(0));
     framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
+    if (multisample) {
+      genFramebuffers(1,glMultiFbo);
+      bindFramebuffer(FRAMEBUFFER,glMultiFbo.get(0));
+      genRenderbuffers(1,glColorBuf);
+      bindRenderbuffer(RENDERBUFFER,glColorBuf.get(0));
+      renderbufferStorageMultisample(RENDERBUFFER,numSamples,RGBA8,fboWidth,fboHeight);
+      framebufferRenderbuffer(FRAMEBUFFER,COLOR_ATTACHMENT0,RENDERBUFFER,glColorBuf.get(0));
+    }
     if (packed && depthBits == 24 && stencilBits == 8) {
       genRenderbuffers(1,glDepthStencil);
       bindRenderbuffer(RENDERBUFFER,glDepthStencil.get(0));
-      renderbufferStorage(RENDERBUFFER,DEPTH24_STENCIL8,fboWidth,fboHeight);
+      if (multisample) {
+        renderbufferStorageMultisample(RENDERBUFFER,numSamples,DEPTH24_STENCIL8,fboWidth,fboHeight);
+      }
+ else {
+        renderbufferStorage(RENDERBUFFER,DEPTH24_STENCIL8,fboWidth,fboHeight);
+      }
       framebufferRenderbuffer(FRAMEBUFFER,DEPTH_ATTACHMENT,RENDERBUFFER,glDepthStencil.get(0));
       framebufferRenderbuffer(FRAMEBUFFER,STENCIL_ATTACHMENT,RENDERBUFFER,glDepthStencil.get(0));
     }
@@ -49,7 +69,12 @@
         }
         genRenderbuffers(1,glDepth);
         bindRenderbuffer(RENDERBUFFER,glDepth.get(0));
-        renderbufferStorage(RENDERBUFFER,depthComponent,fboWidth,fboHeight);
+        if (multisample) {
+          renderbufferStorageMultisample(RENDERBUFFER,numSamples,depthComponent,fboWidth,fboHeight);
+        }
+ else {
+          renderbufferStorage(RENDERBUFFER,depthComponent,fboWidth,fboHeight);
+        }
         framebufferRenderbuffer(FRAMEBUFFER,DEPTH_ATTACHMENT,RENDERBUFFER,glDepth.get(0));
       }
       if (0 < stencilBits) {
@@ -65,14 +90,20 @@
         }
         genRenderbuffers(1,glStencil);
         bindRenderbuffer(RENDERBUFFER,glStencil.get(0));
-        renderbufferStorage(RENDERBUFFER,stencilIndex,fboWidth,fboHeight);
+        if (multisample) {
+          renderbufferStorageMultisample(RENDERBUFFER,numSamples,stencilIndex,fboWidth,fboHeight);
+        }
+ else {
+          renderbufferStorage(RENDERBUFFER,stencilIndex,fboWidth,fboHeight);
+        }
         framebufferRenderbuffer(FRAMEBUFFER,STENCIL_ATTACHMENT,RENDERBUFFER,glStencil.get(0));
       }
     }
     validateFramebuffer();
     clearDepth(1);
     clearStencil(0);
-    clear(DEPTH_BUFFER_BIT | STENCIL_BUFFER_BIT);
+    clearColor(0,0,0,0);
+    clear(DEPTH_BUFFER_BIT | STENCIL_BUFFER_BIT | COLOR_BUFFER_BIT);
     bindFramebuffer(FRAMEBUFFER,0);
     fboLayerCreated=true;
   }
