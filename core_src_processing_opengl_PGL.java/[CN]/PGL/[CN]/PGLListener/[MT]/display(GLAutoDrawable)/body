@@ -18,5 +18,40 @@
     needToClearBuffers=false;
     drawable.swapBuffers();
   }
+  if (USE_JOGL_FBOLAYER && capabilities.isFBO()) {
+    GLFBODrawable fboDrawable=null;
+    if (toolkit == AWT) {
+      GLCanvas glCanvas=(GLCanvas)glDrawable;
+      fboDrawable=(GLFBODrawable)glCanvas.getDelegatedDrawable();
+    }
+ else {
+      GLWindow glWindow=(GLWindow)glDrawable;
+      fboDrawable=(GLFBODrawable)glWindow.getDelegatedDrawable();
+    }
+    if (fboDrawable != null) {
+      backFBO=fboDrawable.getFBObject(GL.GL_BACK);
+      if (0 < capabilities.getNumSamples()) {
+        if (frontFBO == null) {
+          frontFBO=new FBObject();
+          frontFBO.reset(gl,pg.width,pg.height);
+          frontFBO.attachTexture2D(gl,0,true);
+          sinkFBO=backFBO.getSamplingSinkFBO();
+        }
+ else {
+          FBObject temp=sinkFBO;
+          sinkFBO=frontFBO;
+          frontFBO=temp;
+          backFBO.setSamplingSink(sinkFBO);
+        }
+        backTexAttach=(FBObject.TextureAttachment)sinkFBO.getColorbuffer(0);
+        frontTexAttach=(FBObject.TextureAttachment)frontFBO.getColorbuffer(0);
+      }
+ else {
+        frontFBO=fboDrawable.getFBObject(GL.GL_FRONT);
+        backTexAttach=fboDrawable.getTextureBuffer(GL.GL_BACK);
+        frontTexAttach=fboDrawable.getTextureBuffer(GL.GL_FRONT);
+      }
+    }
+  }
   pg.parent.handleDraw();
 }

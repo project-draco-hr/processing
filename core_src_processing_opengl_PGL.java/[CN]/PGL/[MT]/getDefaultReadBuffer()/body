@@ -1,8 +1,21 @@
 {
-  if (fboLayerInUse) {
-    return COLOR_ATTACHMENT0;
+  if (USE_JOGL_FBOLAYER) {
+    if (capabilities.isFBO()) {
+      return GL.GL_COLOR_ATTACHMENT0;
+    }
+ else     if (capabilities.getDoubleBuffered()) {
+      return GL.GL_BACK;
+    }
+ else {
+      return GL.GL_FRONT;
+    }
   }
  else {
-    return FRONT;
+    if (fboLayerInUse) {
+      return COLOR_ATTACHMENT0;
+    }
+ else {
+      return FRONT;
+    }
   }
 }

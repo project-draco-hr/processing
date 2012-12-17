@@ -1,15 +1,25 @@
 {
-  if (fboLayerInUse) {
-    syncBackTexture();
-    bindFramebuffer(FRAMEBUFFER,0);
-    clearDepth(1);
-    clearColor(0,0,0,0);
-    clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
-    disable(BLEND);
-    drawTexture(TEXTURE_2D,glColorTex.get(backTex),fboWidth,fboHeight,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
-    int temp=frontTex;
-    frontTex=backTex;
-    backTex=temp;
+  if (USE_JOGL_FBOLAYER) {
+    if (!clear0 && isFBOBacked() && !isMultisampled()) {
+      frontFBO.bind(gl);
+      gl.glDisable(GL.GL_BLEND);
+      drawTexture(GL.GL_TEXTURE_2D,backTexAttach.getName(),backTexAttach.getWidth(),backTexAttach.getHeight(),0,0,pg.width,pg.height,0,0,pg.width,pg.height);
+      backFBO.bind(gl);
+    }
+  }
+ else {
+    if (fboLayerInUse) {
+      syncBackTexture();
+      bindFramebuffer(FRAMEBUFFER,0);
+      clearDepth(1);
+      clearColor(0,0,0,0);
+      clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
+      disable(BLEND);
+      drawTexture(TEXTURE_2D,glColorTex.get(backTex),fboWidth,fboHeight,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
+      int temp=frontTex;
+      frontTex=backTex;
+      backTex=temp;
+    }
   }
   flush();
 }

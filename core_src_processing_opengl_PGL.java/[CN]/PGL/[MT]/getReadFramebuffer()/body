@@ -1,8 +1,18 @@
 {
-  if (fboLayerInUse) {
-    return glColorFbo.get(0);
+  if (USE_JOGL_FBOLAYER) {
+    if (capabilities.isFBO()) {
+      return context.getDefaultReadFramebuffer();
+    }
+ else {
+      return 0;
+    }
   }
  else {
-    return 0;
+    if (fboLayerInUse) {
+      return glColorFbo.get(0);
+    }
+ else {
+      return 0;
+    }
   }
 }
