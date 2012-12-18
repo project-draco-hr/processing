@@ -1,0 +1,88 @@
+{
+  while (true) {
+    if (stopRequested)     break;
+    Mouse.poll();
+    while (Mouse.next()) {
+      if (stopRequested)       break;
+      long millis=Mouse.getEventNanoseconds() / 1000000L;
+      int modifiers=0;
+      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+        modifiers|=Event.SHIFT;
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
+        modifiers|=Event.CTRL;
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LMETA) || Keyboard.isKeyDown(Keyboard.KEY_RMETA)) {
+        modifiers|=Event.META;
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
+        modifiers|=Event.ALT;
+      }
+      int x=Mouse.getX();
+      int y=parent.height - Mouse.getY();
+      int button=0;
+      if (Mouse.isButtonDown(0)) {
+        button=PConstants.LEFT;
+      }
+ else       if (Mouse.isButtonDown(1)) {
+        button=PConstants.RIGHT;
+      }
+ else       if (Mouse.isButtonDown(2)) {
+        button=PConstants.CENTER;
+      }
+      int action=0;
+      if (button != 0) {
+        if (pressed) {
+          action=MouseEvent.DRAG;
+        }
+ else {
+          action=MouseEvent.PRESS;
+          pressed=true;
+        }
+      }
+ else       if (pressed) {
+        action=MouseEvent.RELEASE;
+        pressed=false;
+      }
+ else {
+        action=MouseEvent.MOVE;
+      }
+      if (inside) {
+        if (!Mouse.isInsideWindow()) {
+          inside=false;
+          action=MouseEvent.EXIT;
+        }
+      }
+ else {
+        if (Mouse.isInsideWindow()) {
+          inside=true;
+          action=MouseEvent.ENTER;
+        }
+      }
+      int count=0;
+      if (Mouse.getEventButtonState()) {
+        startedClickTime=millis;
+        startedClickButton=button;
+      }
+ else {
+        if (action == MouseEvent.RELEASE) {
+          boolean clickDetected=millis - startedClickTime < 500;
+          if (clickDetected) {
+            MouseEvent me=new MouseEvent(null,millis,action,modifiers,x,y,button,count);
+            parent.postEvent(me);
+            action=MouseEvent.CLICK;
+            count=1;
+          }
+        }
+      }
+      MouseEvent me=new MouseEvent(null,millis,action,modifiers,x,y,button,count);
+      parent.postEvent(me);
+    }
+    try {
+      Thread.sleep(10);
+    }
+ catch (    InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+}

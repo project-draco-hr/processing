@@ -1,0 +1,15 @@
+{
+  int program=createProgram();
+  if (program != 0) {
+    attachShader(program,vertexShader);
+    attachShader(program,fragmentShader);
+    linkProgram(program);
+    if (!linked(program)) {
+      System.err.println("Could not link program: ");
+      System.err.println(getProgramInfoLog(program));
+      deleteProgram(program);
+      program=0;
+    }
+  }
+  return program;
+}

@@ -1,0 +1,41 @@
+{
+  if (canvas != null) {
+    keyPoller.requestStop();
+    mousePoller.requestStop();
+    try {
+      Display.setParent(null);
+    }
+ catch (    LWJGLException e) {
+      e.printStackTrace();
+    }
+    Display.destroy();
+    pg.parent.remove(canvas);
+  }
+  canvas=new Canvas();
+  canvas.setBounds(0,0,pg.parent.width,pg.parent.height);
+  canvas.setFocusable(true);
+  canvas.requestFocus();
+  canvas.setIgnoreRepaint(true);
+  canvas.setBackground(Color.BLACK);
+  pg.parent.setLayout(new BorderLayout());
+  pg.parent.add(canvas,BorderLayout.CENTER);
+  try {
+    Display.setParent(canvas);
+    PixelFormat format=new PixelFormat(32,request_alpha_bits,request_depth_bits,request_stencil_bits,0);
+    Display.create(format);
+    Display.setVSyncEnabled(true);
+  }
+ catch (  LWJGLException e) {
+    e.printStackTrace();
+  }
+  context=new DummyContext(Display.getDrawable().hashCode());
+  keyPoller=new KeyPoller(pg.parent);
+  keyPoller.start();
+  mousePoller=new MousePoller(pg.parent);
+  mousePoller.start();
+  reqNumSamples=qualityToSamples(antialias);
+  fboLayerCreated=false;
+  fboLayerInUse=false;
+  firstFrame=true;
+  needToClearBuffers=true;
+}
