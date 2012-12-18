@@ -34,30 +34,14 @@
  else {
       caps.setSampleBuffers(false);
     }
-    if (PApplet.platform == PConstants.MACOSX) {
-      caps.setFBO(enable_screen_FBO_macosx);
-    }
- else     if (PApplet.platform == PConstants.WINDOWS) {
-      caps.setFBO(enable_screen_FBO_windows);
-    }
- else     if (PApplet.platform == PConstants.LINUX) {
-      caps.setFBO(enable_screen_FBO_linux);
-    }
- else {
-      caps.setFBO(enable_screen_FBO_other);
-    }
-    caps.setDepthBits(request_depth_bits);
-    caps.setStencilBits(request_stencil_bits);
-    caps.setAlphaBits(request_alpha_bits);
-    caps.setBackgroundOpaque(true);
-    caps.setOnscreen(true);
   }
  else {
     caps.setSampleBuffers(false);
-    caps.setPBuffer(true);
-    caps.setFBO(false);
     reqNumSamples=qualityToSamples(antialias);
   }
+  caps.setDepthBits(request_depth_bits);
+  caps.setStencilBits(request_stencil_bits);
+  caps.setAlphaBits(request_alpha_bits);
   if (toolkit == AWT) {
     canvasAWT=new GLCanvas(caps);
     canvasAWT.setBounds(0,0,pg.width,pg.height);

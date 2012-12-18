@@ -1,23 +1,16 @@
 {
-  if (USE_JOGL_FBOLAYER) {
-    if (capabilities.isFBO()) {
-      return context.getDefaultDrawFramebuffer();
+  if (fboLayerInUse) {
+    if (1 < numSamples) {
+      return glMultiFbo.get(0);
     }
  else {
-      return 0;
+      return glColorFbo.get(0);
     }
   }
+ else   if (capabilities.isFBO()) {
+    return context.getDefaultDrawFramebuffer();
+  }
  else {
-    if (fboLayerInUse) {
-      if (1 < numSamples) {
-        return glMultiFbo.get(0);
-      }
- else {
-        return glColorFbo.get(0);
-      }
-    }
- else {
-      return 0;
-    }
+    return 0;
   }
 }
