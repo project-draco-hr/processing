@@ -1,6 +1,5 @@
 {
   int codeIndex=0;
-  int bigCount=0;
   int x=problem.getSourceLineNumber() - mainClassOffset;
   if (x < 0) {
     x=problem.getSourceLineNumber() - 2;
@@ -15,7 +14,6 @@
   try {
     for (    SketchCode sc : editor.getSketch().getCode()) {
       if (sc.isExtension("pde")) {
-        sc.setPreprocOffset(bigCount);
         int len=0;
         if (editor.getSketch().getCurrentCode().equals(sc)) {
           len=Base.countLines(sc.getDocument().getText(0,sc.getDocument().getLength())) + 1;
@@ -40,7 +38,6 @@
           break;
         }
       }
-      bigCount+=sc.getLineCount();
     }
   }
  catch (  Exception e) {

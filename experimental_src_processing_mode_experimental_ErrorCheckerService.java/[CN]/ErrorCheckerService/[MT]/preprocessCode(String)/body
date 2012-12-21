@@ -4,7 +4,6 @@
   try {
     for (    SketchCode sc : editor.getSketch().getCode()) {
       if (sc.isExtension("pde")) {
-        sc.setPreprocOffset(scPreProcOffset);
         try {
           if (editor.getSketch().getCurrentCode().equals(sc)) {
             rawCode.append(scrapImportStatements(sc.getDocument().getText(0,sc.getDocument().getLength()),editor.getSketch().getCodeIndex(sc)));
@@ -18,7 +17,6 @@
           System.err.println("Exception in preprocessCode() - bigCode " + e.toString());
         }
         rawCode.append('\n');
-        scPreProcOffset+=sc.getLineCount();
       }
     }
   }
