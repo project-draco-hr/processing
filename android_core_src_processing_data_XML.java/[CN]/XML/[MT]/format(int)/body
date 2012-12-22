@@ -24,19 +24,17 @@
     transformer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
     transformer.setOutputProperty(OutputKeys.INDENT,"yes");
     final String decl="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+    final String sep=System.getProperty("line.separator");
     StringWriter tempWriter=new StringWriter();
     StreamResult tempResult=new StreamResult(tempWriter);
     transformer.transform(new DOMSource(node),tempResult);
-    String[] tempLines=PApplet.split(tempWriter.toString(),'\n');
-    PApplet.println(tempLines);
-    if (tempLines[0].startsWith(decl)) {
+    String[] tempLines=PApplet.split(tempWriter.toString(),sep);
+    if (tempLines[0].startsWith("<?xml")) {
       int declEnd=tempLines[0].indexOf("?>") + 2;
       if (tempLines[0].length() == declEnd) {
-        PApplet.println("removing first line");
         tempLines=PApplet.subset(tempLines,1);
       }
  else {
-        PApplet.println("removing part of first line");
         tempLines[0]=tempLines[0].substring(declEnd);
       }
     }
@@ -48,7 +46,7 @@
     StreamResult xmlOutput=new StreamResult(stringWriter);
     Source source=new StreamSource(new StringReader(singleLine));
     transformer.transform(source,xmlOutput);
-    return decl + "\n" + stringWriter.toString();
+    return decl + sep + stringWriter.toString();
   }
  catch (  Exception e) {
     e.printStackTrace();
