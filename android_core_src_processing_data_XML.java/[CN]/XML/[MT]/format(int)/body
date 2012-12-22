@@ -1,30 +1,44 @@
 {
   try {
+    boolean useIndentAmount=false;
     TransformerFactory factory=TransformerFactory.newInstance();
     if (indent != -1) {
-      factory.setAttribute("indent-number",indent);
+      try {
+        factory.setAttribute("indent-number",indent);
+      }
+ catch (      IllegalArgumentException e) {
+        useIndentAmount=true;
+      }
     }
     Transformer transformer=factory.newTransformer();
-    if (indent == -1 || parent != null) {
+    if (indent == -1 || parent == null) {
       transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,"yes");
     }
  else {
       transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,"no");
     }
     transformer.setOutputProperty(OutputKeys.METHOD,"xml");
+    if (useIndentAmount) {
+      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount",String.valueOf(indent));
+    }
     transformer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
-    if (indent != 0) {
-      transformer.setOutputProperty(OutputKeys.INDENT,"yes");
-    }
- else {
-      transformer.setOutputProperty(OutputKeys.INDENT,"no");
-    }
+    transformer.setOutputProperty(OutputKeys.INDENT,"yes");
+    final String decl="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     StringWriter tempWriter=new StringWriter();
     StreamResult tempResult=new StreamResult(tempWriter);
     transformer.transform(new DOMSource(node),tempResult);
     String[] tempLines=PApplet.split(tempWriter.toString(),'\n');
-    if (tempLines[0].startsWith("<?xml")) {
-      tempLines=PApplet.subset(tempLines,1);
+    PApplet.println(tempLines);
+    if (tempLines[0].startsWith(decl)) {
+      int declEnd=tempLines[0].indexOf("?>") + 2;
+      if (tempLines[0].length() == declEnd) {
+        PApplet.println("removing first line");
+        tempLines=PApplet.subset(tempLines,1);
+      }
+ else {
+        PApplet.println("removing part of first line");
+        tempLines[0]=tempLines[0].substring(declEnd);
+      }
     }
     String singleLine=PApplet.join(PApplet.trim(tempLines),"");
     if (indent == -1) {
@@ -34,7 +48,7 @@
     StreamResult xmlOutput=new StreamResult(stringWriter);
     Source source=new StreamSource(new StringReader(singleLine));
     transformer.transform(source,xmlOutput);
-    return stringWriter.toString();
+    return decl + "\n" + stringWriter.toString();
   }
  catch (  Exception e) {
     e.printStackTrace();
