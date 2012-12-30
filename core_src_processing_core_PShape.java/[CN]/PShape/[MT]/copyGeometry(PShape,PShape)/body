@@ -1,11 +1,12 @@
 {
+  dest.beginShape(src.getKind());
   copyMatrix(src,dest);
   copyStyles(src,dest);
   copyImage(src,dest);
   if (src.style) {
     for (int i=0; i < src.vertexCount; i++) {
       float[] vert=src.vertices[i];
-      dest.fill(vert[PGraphics.R] * 255,vert[PGraphics.G] * 255,vert[PGraphics.B] * 255,vert[PGraphics.A] * 255);
+      dest.fill((int)(vert[PGraphics.R] * 255) << 24 | (int)(vert[PGraphics.G] * 255) << 16 | (int)(vert[PGraphics.B] * 255) << 8 | (int)(vert[PGraphics.A] * 255));
       if (0 < PApplet.dist(vert[PGraphics.NX],vert[PGraphics.NY],vert[PGraphics.NZ],0,0,0)) {
         dest.normal(vert[PGraphics.NX],vert[PGraphics.NY],vert[PGraphics.NZ]);
       }
@@ -23,5 +24,5 @@
       }
     }
   }
-  dest.end();
+  dest.endShape();
 }
