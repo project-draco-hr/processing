@@ -2,7 +2,12 @@
   if (frameCount == 0) {
     return;
   }
-  if ((g != null) && (g.image != null)) {
-    screen.drawImage(g.image,0,0,null);
+  if (!insideDraw && (g != null) && (g.image != null)) {
+    if (useStrategy) {
+      render();
+    }
+ else {
+      screen.drawImage(g.image,0,0,width,height,null);
+    }
   }
 }
