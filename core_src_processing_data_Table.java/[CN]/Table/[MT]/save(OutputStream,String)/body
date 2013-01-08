@@ -12,10 +12,20 @@
  else       if (opt.equals("html")) {
         writeHTML(writer);
       }
+ else       if (opt.equals("bin")) {
+        try {
+          saveBinary(output);
+        }
+ catch (        IOException e) {
+          e.printStackTrace();
+          return false;
+        }
+      }
  else {
         throw new IllegalArgumentException("'" + opt + "' not understood. "+ "Only csv, tsv, and html are "+ "accepted as save parameters");
       }
     }
   }
   writer.close();
+  return true;
 }

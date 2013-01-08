@@ -1,0 +1,61 @@
+{
+  DataOutputStream output=new DataOutputStream(new BufferedOutputStream(os));
+  output.writeInt(0x9007AB1E);
+  output.writeInt(getRowCount());
+  output.writeInt(getColumnCount());
+  if (columnTitles != null) {
+    output.writeBoolean(true);
+    for (    String title : columnTitles) {
+      output.writeUTF(title);
+    }
+  }
+ else {
+    output.writeBoolean(false);
+  }
+  for (int i=0; i < getColumnCount(); i++) {
+    output.writeInt(columnTypes[i]);
+  }
+  for (int i=0; i < getColumnCount(); i++) {
+    if (columnTypes[i] == CATEGORICAL) {
+      columnCategories[i].write(output);
+    }
+  }
+  if (missingString == null) {
+    output.writeBoolean(false);
+  }
+ else {
+    output.writeBoolean(true);
+    output.writeUTF(missingString);
+  }
+  output.writeInt(missingInt);
+  output.writeLong(missingLong);
+  output.writeFloat(missingFloat);
+  output.writeDouble(missingDouble);
+  output.writeInt(missingCategory);
+  for (  TableRow row : rows()) {
+    for (int col=0; col < getColumnCount(); col++) {
+switch (columnTypes[col]) {
+case STRING:
+        output.writeUTF(row.getString(col));
+      break;
+case INT:
+    output.writeInt(row.getInt(col));
+  break;
+case LONG:
+output.writeLong(row.getLong(col));
+break;
+case FLOAT:
+output.writeFloat(row.getFloat(col));
+break;
+case DOUBLE:
+output.writeDouble(row.getDouble(col));
+break;
+case CATEGORICAL:
+output.writeInt(columnCategories[col].index(row.getString(col)));
+break;
+}
+}
+}
+output.flush();
+output.close();
+}

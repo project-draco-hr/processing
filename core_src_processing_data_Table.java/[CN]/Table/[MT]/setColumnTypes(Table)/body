@@ -6,9 +6,29 @@
     typeCol=dictionary.getColumnIndex("type",true);
   }
   setColumnTitles(dictionary.getStringColumn(titleCol));
+  final String[] typeNames=dictionary.getStringColumn(typeCol);
   if (dictionary.getColumnCount() > 1) {
-    for (int i=0; i < dictionary.getRowCount(); i++) {
-      setColumnType(i,dictionary.getString(i,typeCol));
+    if (getRowCount() > 1000) {
+      int proc=Runtime.getRuntime().availableProcessors();
+      ExecutorService pool=Executors.newFixedThreadPool(proc / 2);
+      for (int i=0; i < dictionary.getRowCount(); i++) {
+        final int col=i;
+        pool.execute(new Runnable(){
+          public void run(){
+            setColumnType(col,typeNames[col]);
+          }
+        }
+);
+      }
+      pool.shutdown();
+      while (!pool.isTerminated()) {
+        Thread.yield();
+      }
+    }
+ else {
+      for (int col=0; col < dictionary.getRowCount(); col++) {
+        setColumnType(col,typeNames[col]);
+      }
     }
   }
 }

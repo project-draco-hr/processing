@@ -3,6 +3,7 @@
   boolean awfulCSV=false;
   boolean header=false;
   String extension=null;
+  boolean binary=false;
   if (options != null) {
     String[] opts=PApplet.splitTokens(options," ,");
     for (    String opt : opts) {
@@ -15,6 +16,9 @@
  else       if (opt.equals("newlines")) {
         awfulCSV=true;
       }
+ else       if (opt.equals("bin")) {
+        binary=true;
+      }
  else       if (opt.equals("header")) {
         header=true;
       }
@@ -23,14 +27,19 @@
       }
     }
   }
-  BufferedReader reader=PApplet.createReader(input);
-  if (awfulCSV) {
-    parseAwfulCSV(reader,header);
+  if (binary) {
+    loadBinary(input);
   }
- else   if ("tsv".equals(extension)) {
-    parseBasic(reader,header,true);
-  }
- else   if ("csv".equals(extension)) {
-    parseBasic(reader,header,false);
+ else {
+    BufferedReader reader=PApplet.createReader(input);
+    if (awfulCSV) {
+      parseAwfulCSV(reader,header);
+    }
+ else     if ("tsv".equals(extension)) {
+      parseBasic(reader,header,true);
+    }
+ else     if ("csv".equals(extension)) {
+      parseBasic(reader,header,false);
+    }
   }
 }

@@ -5,8 +5,11 @@
     return stringData[row];
   }
  else   if (columnTypes[col] == CATEGORICAL) {
-    int index=getInt(row,col);
-    return columnCategories[col].key(index);
+    int cat=getInt(row,col);
+    if (cat == missingCategory) {
+      return missingString;
+    }
+    return columnCategories[col].key(cat);
   }
  else {
     return String.valueOf(Array.get(columns[col],row));
