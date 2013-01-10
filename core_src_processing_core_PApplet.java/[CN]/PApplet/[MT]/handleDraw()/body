@@ -48,8 +48,18 @@
       recorder.endDraw();
     }
     insideDraw=false;
-    repaint();
-    getToolkit().sync();
+    if (useActive) {
+      if (useStrategy) {
+        render();
+      }
+ else {
+        Graphics screen=getGraphics();
+        screen.drawImage(g.image,0,0,width,height,null);
+      }
+    }
+ else {
+      repaint();
+    }
     if (frameCount != 0) {
       handleMethods("post");
     }

@@ -1,14 +1,14 @@
 {
   if (canvas == null) {
+    removeListeners(this);
     canvas=new Canvas();
     add(canvas);
     setIgnoreRepaint(true);
     canvas.setIgnoreRepaint(true);
+    addListeners(canvas);
   }
   canvas.setBounds(0,0,width,height);
-  System.out.println("render(), canvas bounds are " + canvas.getBounds());
   if (canvas.getBufferStrategy() == null) {
-    System.out.println("creating a strategy");
     canvas.createBufferStrategy(2);
   }
   BufferStrategy strategy=canvas.getBufferStrategy();
@@ -20,13 +20,9 @@
       Graphics draw=strategy.getDrawGraphics();
       draw.drawImage(g.image,0,0,width,height,null);
       draw.dispose();
-      System.out.println("restored " + strategy.contentsRestored());
     }
  while (strategy.contentsRestored());
-    System.out.println("showing");
     strategy.show();
-    System.out.println("lost " + strategy.contentsLost());
-    System.out.println();
   }
  while (strategy.contentsLost());
 }
