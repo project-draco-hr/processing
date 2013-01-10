@@ -1,10 +1,12 @@
 {
-  WritableRaster raster=((BufferedImage)image).getRaster();
-  if ((clearPixels == null) || (clearPixels.length < width)) {
-    clearPixels=new int[width];
+  int imageWidth=image.getWidth(null);
+  int imageHeight=image.getHeight(null);
+  WritableRaster raster=getRaster();
+  if ((clearPixels == null) || (clearPixels.length < imageWidth)) {
+    clearPixels=new int[imageWidth];
   }
-  Arrays.fill(clearPixels,backgroundColor);
-  for (int i=0; i < height; i++) {
-    raster.setDataElements(0,i,width,1,clearPixels);
+  Arrays.fill(clearPixels,0,imageWidth,backgroundColor);
+  for (int i=0; i < imageHeight; i++) {
+    raster.setDataElements(0,i,imageWidth,1,clearPixels);
   }
 }

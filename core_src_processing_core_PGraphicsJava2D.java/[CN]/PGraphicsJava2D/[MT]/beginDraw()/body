@@ -1,4 +1,18 @@
 {
+  if (primarySurface && !useOffscreen) {
+    GraphicsConfiguration gc=parent.getGraphicsConfiguration();
+    if (false) {
+      if (image == null || ((VolatileImage)image).validate(gc) == VolatileImage.IMAGE_INCOMPATIBLE) {
+        image=gc.createCompatibleVolatileImage(width,height);
+      }
+    }
+ else {
+      if (image == null) {
+        image=gc.createCompatibleImage(width,height);
+      }
+    }
+    g2=(Graphics2D)image.getGraphics();
+  }
   if (useCanvas && primarySurface) {
     if (parent.frameCount == 0) {
       canvas.createBufferStrategy(2);

@@ -19,16 +19,24 @@
     }
  else {
       parent.updateListeners(parent);
-      image=new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
-      offscreen=new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-      g2=(Graphics2D)offscreen.getGraphics();
+      if (useOffscreen) {
+        image=new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+        offscreen=new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+        g2=(Graphics2D)offscreen.getGraphics();
+      }
+ else {
+        GraphicsConfiguration gc=parent.getGraphicsConfiguration();
+        if (gc == null) {
+          GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+          gc=ge.getDefaultScreenDevice().getDefaultConfiguration();
+        }
+        image=gc.createCompatibleImage(width,height);
+        g2=(Graphics2D)image.getGraphics();
+      }
     }
   }
  else {
     image=new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
     g2=(Graphics2D)image.getGraphics();
-  }
-  if (!useCanvas) {
-    defaultComposite=g2.getComposite();
   }
 }
