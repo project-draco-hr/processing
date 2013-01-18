@@ -12,23 +12,25 @@
     pg.parent.remove(canvas);
   }
   canvas=new Canvas();
-  canvas.setBounds(0,0,pg.parent.width,pg.parent.height);
   canvas.setFocusable(true);
   canvas.requestFocus();
   canvas.setIgnoreRepaint(true);
   canvas.setBackground(Color.BLACK);
+  canvas.setForeground(Color.BLACK);
   pg.parent.setLayout(new BorderLayout());
   pg.parent.add(canvas,BorderLayout.CENTER);
+  canvas.setBounds(0,0,pg.parent.width,pg.parent.height);
   try {
-    Display.setParent(canvas);
     PixelFormat format=new PixelFormat(32,request_alpha_bits,request_depth_bits,request_stencil_bits,0);
+    Display.setDisplayMode(new DisplayMode(pg.parent.width,pg.parent.height));
+    Display.setParent(canvas);
     Display.create(format);
     Display.setVSyncEnabled(true);
   }
  catch (  LWJGLException e) {
     e.printStackTrace();
   }
-  context=new DummyContext(Display.getDrawable().hashCode());
+  context=Display.getDrawable().hashCode();
   keyPoller=new KeyPoller(pg.parent);
   keyPoller.start();
   mousePoller=new MousePoller(pg.parent);
