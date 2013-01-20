@@ -1,0 +1,34 @@
+{
+  int sx=0;
+  int sy=0;
+  int sw=img.width;
+  int sh=img.height;
+  if (x < 0) {
+    sx-=x;
+    sw+=x;
+    x=0;
+  }
+  if (y < 0) {
+    sy-=y;
+    sh+=y;
+    y=0;
+  }
+  if (hints[ENABLE_RETINA_PIXELS]) {
+    if (x + sw > retina.width) {
+      sw=retina.width - x;
+    }
+    if (y + sh > retina.height) {
+      sh=retina.height - y;
+    }
+  }
+ else {
+    if (x + sw > width) {
+      sw=width - x;
+    }
+    if (y + sh > height) {
+      sh=height - y;
+    }
+  }
+  if ((sw <= 0) || (sh <= 0))   return;
+  setImpl(img,sx,sy,sw,sh,x,y);
+}

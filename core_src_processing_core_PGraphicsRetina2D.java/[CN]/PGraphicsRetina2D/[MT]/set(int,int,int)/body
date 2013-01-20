@@ -1,0 +1,16 @@
+{
+  if (hints[ENABLE_RETINA_PIXELS]) {
+    if (x >= 0 && y >= 0 && x < retina.width && y < retina.height) {
+      getset[0]=argb;
+      getRaster().setDataElements(x,y,getset);
+    }
+  }
+ else {
+    if (x >= 0 && y >= 0 && x < width && y < height) {
+      for (int i=0; i < 4; i++) {
+        rgetset[i]=argb;
+      }
+      getRaster().setDataElements(x,y,2,2,rgetset);
+    }
+  }
+}

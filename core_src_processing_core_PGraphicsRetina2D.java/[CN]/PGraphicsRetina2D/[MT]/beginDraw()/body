@@ -1,14 +1,9 @@
 {
   GraphicsConfiguration gc=parent.getGraphicsConfiguration();
-  if (false) {
-    if (image == null || ((VolatileImage)image).validate(gc) == VolatileImage.IMAGE_INCOMPATIBLE) {
-      image=gc.createCompatibleVolatileImage(width * 2,height * 2);
-    }
-  }
- else {
-    if (image == null) {
-      image=gc.createCompatibleImage(width * 2,height * 2);
-    }
+  if (image == null) {
+    retina.width=width * 2;
+    retina.height=height * 2;
+    image=gc.createCompatibleImage(retina.width,retina.height);
   }
   g2=(Graphics2D)image.getGraphics();
   checkSettings();

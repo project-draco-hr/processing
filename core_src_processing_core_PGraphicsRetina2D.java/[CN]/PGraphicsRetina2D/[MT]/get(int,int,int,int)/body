@@ -1,0 +1,55 @@
+{
+  int targetX=0;
+  int targetY=0;
+  int targetWidth=w;
+  int targetHeight=h;
+  boolean cropped=false;
+  if (x < 0) {
+    w+=x;
+    targetX=-x;
+    cropped=true;
+    x=0;
+  }
+  if (y < 0) {
+    h+=y;
+    targetY=-y;
+    cropped=true;
+    y=0;
+  }
+  if (hints[ENABLE_RETINA_PIXELS]) {
+    if (x + w > retina.width) {
+      w=retina.width - x;
+      cropped=true;
+    }
+    if (y + h > retina.height) {
+      h=retina.height - y;
+      cropped=true;
+    }
+  }
+ else {
+    if (x + w > width) {
+      w=width - x;
+      cropped=true;
+    }
+    if (y + h > height) {
+      h=height - y;
+      cropped=true;
+    }
+  }
+  if (w < 0) {
+    w=0;
+  }
+  if (h < 0) {
+    h=0;
+  }
+  int targetFormat=format;
+  if (cropped && format == RGB) {
+    targetFormat=ARGB;
+  }
+  PImage target=new PImage(targetWidth,targetHeight,targetFormat);
+  target.parent=parent;
+  if (w > 0 && h > 0) {
+    getImpl(x,y,w,h,target,targetX,targetY);
+  }
+  return target;
+}
