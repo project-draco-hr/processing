@@ -1,6 +1,7 @@
 {
   File tempDir=ContributionManager.unzipFileToTemp(libFile,statusBar);
   List<File> libFolders=ContributionManager.discover(ad.getType(),tempDir);
+  InstalledContribution outgoing=null;
   if (libFolders.isEmpty()) {
     libFolders=ContributionManager.discover(ad.getType(),tempDir.getParentFile());
   }
@@ -9,7 +10,7 @@
     File propFile=new File(libFolder,ad.getTypeName() + ".properties");
     if (ad.writePropertiesFile(propFile)) {
       InstalledContribution newContrib=ContributionManager.create(editor.getBase(),libFolder,ad.getType());
-      return ContributionManager.installContribution(editor,newContrib,confirmReplace,statusBar);
+      outgoing=ContributionManager.installContribution(editor,newContrib,confirmReplace,statusBar);
     }
  else {
       statusBar.setErrorMessage("Error overwriting .properties file.");
@@ -26,5 +27,6 @@
       statusBar.setErrorMessage("There were multiple libraries in the file, " + "so we're ignoring it.");
     }
   }
-  return null;
+  Base.removeDir(tempDir);
+  return outgoing;
 }
