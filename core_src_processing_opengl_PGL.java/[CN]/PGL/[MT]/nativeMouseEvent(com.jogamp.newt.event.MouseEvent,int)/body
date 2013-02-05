@@ -11,6 +11,11 @@
  else   if ((modifiers & InputEvent.BUTTON3_MASK) != 0) {
     peButton=PConstants.RIGHT;
   }
+  if (PApplet.platform == PConstants.MACOSX) {
+    if ((modifiers & InputEvent.CTRL_MASK) != 0) {
+      peButton=PConstants.RIGHT;
+    }
+  }
   float peAmount=peAction == MouseEvent.WHEEL ? nativeEvent.getWheelRotation() : nativeEvent.getClickCount();
   MouseEvent me=new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,nativeEvent.getX(),nativeEvent.getY(),peButton,peAmount);
   pg.parent.postEvent(me);
