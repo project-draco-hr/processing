@@ -1,7 +1,7 @@
 {
-  if (-1 < projmodelviewMatrixLoc) {
+  if (-1 < transformMatrixLoc) {
     pgCurrent.updateGLProjmodelview();
-    setUniformMatrix(projmodelviewMatrixLoc,pgCurrent.glProjmodelview);
+    setUniformMatrix(transformMatrixLoc,pgCurrent.glProjmodelview);
   }
   if (-1 < modelviewMatrixLoc) {
     pgCurrent.updateGLModelview();
@@ -11,11 +11,6 @@
     pgCurrent.updateGLProjection();
     setUniformMatrix(projectionMatrixLoc,pgCurrent.glProjection);
   }
-  if (1 < resolutionLoc) {
-    float w=pgCurrent.width;
-    float h=pgCurrent.height;
-    setUniformValue(resolutionLoc,w,h);
-  }
   if (-1 < viewportLoc) {
     float x=pgCurrent.viewport.get(0);
     float y=pgCurrent.viewport.get(1);
@@ -23,22 +18,8 @@
     float h=pgCurrent.viewport.get(3);
     setUniformValue(viewportLoc,x,y,w,h);
   }
-  if (-1 < mouseLoc) {
-    float mx=pgCurrent.parent.mouseX;
-    float my=pgCurrent.parent.height - pgCurrent.parent.mouseY;
-    setUniformValue(mouseLoc,mx,my);
-  }
-  if (-1 < pmouseLoc) {
-    float pmx=pgCurrent.parent.pmouseX;
-    float pmy=pgCurrent.parent.height - pgCurrent.parent.pmouseY;
-    setUniformValue(pmouseLoc,pmx,pmy);
-  }
-  if (-1 < timeLoc) {
-    float sec=pgCurrent.parent.millis() / 1000.0f;
-    setUniformValue(timeLoc,sec);
-  }
-  if (-1 < pframeSamplerLoc) {
-    setUniformValue(pframeSamplerLoc,lastTexUnit);
+  if (-1 < bufferSamplerLoc) {
+    setUniformValue(bufferSamplerLoc,lastTexUnit);
     pgl.activeTexture(PGL.TEXTURE0 + lastTexUnit);
     pgCurrent.bindBackTexture();
   }
