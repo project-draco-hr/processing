@@ -1,7 +1,27 @@
 {
-  int shaderType=getTypeFromFragmentShader(fragFilename);
+  int shaderType=getShaderType(fragFilename);
+  if (shaderType == -1) {
+    PGraphics.showWarning(INVALID_PROCESSING_SHADER_ERROR);
+    return null;
+  }
   PShader shader=null;
-  if (shaderType == PShader.TEXTURE) {
+  if (shaderType == PShader.POINT) {
+    shader=new PointShader(parent);
+    shader.setVertexShader(defPointShaderVertURL);
+  }
+ else   if (shaderType == PShader.LINE) {
+    shader=new LineShader(parent);
+    shader.setVertexShader(defLineShaderVertURL);
+  }
+ else   if (shaderType == PShader.TEXLIGHT) {
+    shader=new PolyTexlightShader(parent);
+    shader.setVertexShader(defPolyTexlightShaderVertURL);
+  }
+ else   if (shaderType == PShader.LIGHT) {
+    shader=new PolyLightShader(parent);
+    shader.setVertexShader(defPolyLightShaderVertURL);
+  }
+ else   if (shaderType == PShader.TEXTURE) {
     shader=new PolyTexShader(parent);
     shader.setVertexShader(defPolyTexShaderVertURL);
   }
@@ -9,11 +29,6 @@
     shader=new PolyColorShader(parent);
     shader.setVertexShader(defPolyColorShaderVertURL);
   }
-  if (shader == null) {
-    PGraphics.showWarning(INVALID_PROCESSING_SHADER_ERROR);
-  }
- else {
-    shader.setFragmentShader(fragFilename);
-  }
+  shader.setFragmentShader(fragFilename);
   return shader;
 }
