@@ -1,5 +1,12 @@
 {
-  int shaderType=getTypeFromVertexShader(vertFilename);
+  int shaderType=getShaderType(vertFilename);
+  if (shaderType == -1) {
+    shaderType=getShaderType(fragFilename);
+  }
+  if (shaderType == -1) {
+    PGraphics.showWarning(INVALID_PROCESSING_SHADER_ERROR);
+    return null;
+  }
   PShader shader=null;
   if (fragFilename == null || fragFilename.equals("")) {
     if (shaderType == PShader.POINT) {
@@ -49,9 +56,6 @@
  else     if (shaderType == PShader.COLOR) {
       shader=new PolyColorShader(parent,vertFilename,fragFilename);
     }
-  }
-  if (shader == null) {
-    PGraphics.showWarning(INVALID_PROCESSING_SHADER_ERROR);
   }
   return shader;
 }

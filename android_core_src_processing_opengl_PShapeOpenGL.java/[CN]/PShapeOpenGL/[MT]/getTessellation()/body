@@ -7,15 +7,16 @@
   short[] indices=tessGeo.polyIndices;
   PShape tess;
   if (is3D()) {
-    tess=PGraphics3D.createShapeImpl(pg.parent,TRIANGLES);
+    tess=PGraphics3D.createShapeImpl(pg.parent,PShape.GEOMETRY);
   }
  else   if (is2D()) {
-    tess=PGraphics2D.createShapeImpl(pg.parent,TRIANGLES);
+    tess=PGraphics2D.createShapeImpl(pg.parent,PShape.GEOMETRY);
   }
  else {
     PGraphics.showWarning("This shape is not either 2D or 3D!");
     return null;
   }
+  tess.beginShape(TRIANGLES);
   tess.noStroke();
   IndexCache cache=tessGeo.polyIndexCache;
   for (int n=firstPolyIndexCache; n <= lastPolyIndexCache; n++) {
@@ -74,6 +75,6 @@
       }
     }
   }
-  tess.end();
+  tess.endShape();
   return tess;
 }
