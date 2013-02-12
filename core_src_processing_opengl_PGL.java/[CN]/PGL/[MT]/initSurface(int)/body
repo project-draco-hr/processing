@@ -42,11 +42,11 @@
   caps.setDepthBits(request_depth_bits);
   caps.setStencilBits(request_stencil_bits);
   caps.setAlphaBits(request_alpha_bits);
+  caps.setDefaultColor(pg.backgroundColor);
   if (toolkit == AWT) {
     canvasAWT=new GLCanvas(caps);
     canvasAWT.setBounds(0,0,pg.width,pg.height);
-    canvasAWT.setBackground(Color.BLACK);
-    canvasAWT.setForeground(Color.BLACK);
+    canvasAWT.setBackground(new Color(pg.backgroundColor,true));
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasAWT,BorderLayout.CENTER);
     pg.parent.removeListeners(pg.parent);
@@ -65,8 +65,7 @@
     window=GLWindow.create(caps);
     canvasNEWT=new NewtCanvasAWT(window);
     canvasNEWT.setBounds(0,0,pg.width,pg.height);
-    canvasNEWT.setBackground(Color.BLACK);
-    canvasNEWT.setForeground(Color.BLACK);
+    canvasNEWT.setBackground(new Color(pg.backgroundColor,true));
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasNEWT,BorderLayout.CENTER);
     NEWTMouseListener mouseListener=new NEWTMouseListener();
@@ -89,5 +88,4 @@
   fboLayerCreated=false;
   fboLayerInUse=false;
   firstFrame=true;
-  needToClearBuffers=true;
 }
