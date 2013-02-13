@@ -6,7 +6,12 @@
       bindFramebuffer(FRAMEBUFFER,glMultiFbo.get(0));
     }
     if (firstFrame) {
-      clearColor(0,0,0,0);
+      int argb=pg.backgroundColor;
+      float a=((argb >> 24) & 0xff) / 255.0f;
+      float r=((argb >> 16) & 0xff) / 255.0f;
+      float g=((argb >> 8) & 0xff) / 255.0f;
+      float b=((argb) & 0xff) / 255.0f;
+      clearColor(r,g,b,a);
       clear(COLOR_BUFFER_BIT);
     }
  else     if (!clear0) {
