@@ -27,7 +27,7 @@
       texParameteri(TEXTURE_2D,TEXTURE_WRAP_S,CLAMP_TO_EDGE);
       texParameteri(TEXTURE_2D,TEXTURE_WRAP_T,CLAMP_TO_EDGE);
       texImage2D(TEXTURE_2D,0,RGBA,fboWidth,fboHeight,0,RGBA,UNSIGNED_BYTE,null);
-      initTexture(TEXTURE_2D,RGBA,fboWidth,fboHeight);
+      initTexture(TEXTURE_2D,RGBA,fboWidth,fboHeight,pg.backgroundColor);
     }
     bindTexture(TEXTURE_2D,0);
     backTex=0;
@@ -102,7 +102,12 @@
     validateFramebuffer();
     clearDepth(1);
     clearStencil(0);
-    clearColor(0,0,0,0);
+    int argb=pg.backgroundColor;
+    float a=((argb >> 24) & 0xff) / 255.0f;
+    float r=((argb >> 16) & 0xff) / 255.0f;
+    float g=((argb >> 8) & 0xff) / 255.0f;
+    float b=((argb) & 0xff) / 255.0f;
+    clearColor(r,g,b,a);
     clear(DEPTH_BUFFER_BIT | STENCIL_BUFFER_BIT | COLOR_BUFFER_BIT);
     bindFramebuffer(FRAMEBUFFER,0);
     fboLayerCreated=true;
