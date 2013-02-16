@@ -2,12 +2,9 @@
   LaunchingConnector connector=(LaunchingConnector)findConnector("com.sun.jdi.RawCommandLineLaunch");
   Map arguments=connector.defaultArguments();
   Connector.Argument commandArg=(Connector.Argument)arguments.get("command");
-  String addr="127.0.0.1:" + (8000 + (int)(Math.random() * 1000));
+  String addr="" + (8000 + (int)(Math.random() * 1000));
   String commandArgs="java -Xrunjdwp:transport=dt_socket,address=" + addr + ",suspend=y ";
-  if (Base.isWindows()) {
-    commandArgs="java -Xrunjdwp:transport=dt_shmem,address=" + addr + ",suspend=y ";
-  }
- else   if (Base.isMacOS()) {
+  if (Base.isMacOS()) {
     addr="" + (8000 + (int)(Math.random() * 1000));
     commandArgs="/usr/libexec/java_home " + (System.getProperty("os.version").startsWith("10.6") ? "" : "--request ") + "--version 1.6 "+ "--exec java "+ "-d"+ Base.getNativeBits()+ " "+ "-Xrunjdwp:transport=dt_socket,address="+ addr+ ",suspend=y ";
   }
