@@ -1,0 +1,21 @@
+{
+  if (type == null) {
+    return new Filter(){
+      public boolean matches(      Contribution contrib){
+        return contrib.getType() == type;
+      }
+    }
+;
+  }
+ else {
+    return new Filter(){
+      public boolean matches(      Contribution contrib){
+        if (contrib instanceof InstalledContribution) {
+          return ContributionListing.getInstance().hasUpdates(contrib);
+        }
+        return false;
+      }
+    }
+;
+  }
+}

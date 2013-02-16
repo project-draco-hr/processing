@@ -1,12 +1,12 @@
 {
-  ArrayList<InstalledContribution> oldContribs=ContributionManager.listContributions(getType(),editor);
+  ArrayList<InstalledContribution> oldContribs=getType().listContributions(editor);
   String contribFolderName=getFolder().getName();
   File contribTypeFolder=getType().getSketchbookFolder();
   File contribFolder=new File(contribTypeFolder,contribFolderName);
   for (  InstalledContribution oldContrib : oldContribs) {
     if ((oldContrib.getFolder().exists() && oldContrib.getFolder().equals(contribFolder)) || (oldContrib.getId() != null && oldContrib.getId().equals(getId()))) {
-      if (ContributionManager.requiresRestart(oldContrib)) {
-        if (!oldContrib.backupContribution(editor,false,statusBar)) {
+      if (oldContrib.requiresRestart()) {
+        if (!oldContrib.backup(editor,false,statusBar)) {
           return null;
         }
       }
@@ -16,7 +16,7 @@
         if (confirmReplace) {
           if (doBackup) {
             result=Base.showYesNoQuestion(editor,"Replace","Replace pre-existing \"" + oldContrib.getName() + "\" library?","A pre-existing copy of the \"" + oldContrib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ " in <i>libraries/old</i> before replacing it.");
-            if (result != JOptionPane.YES_OPTION || !oldContrib.backupContribution(editor,true,statusBar)) {
+            if (result != JOptionPane.YES_OPTION || !oldContrib.backup(editor,true,statusBar)) {
               return null;
             }
           }
@@ -28,7 +28,7 @@
           }
         }
  else {
-          if ((doBackup && !oldContrib.backupContribution(editor,true,statusBar)) || (!doBackup && !oldContrib.getFolder().delete())) {
+          if ((doBackup && !oldContrib.backup(editor,true,statusBar)) || (!doBackup && !oldContrib.getFolder().delete())) {
             return null;
           }
         }
@@ -42,5 +42,5 @@
     statusBar.setErrorMessage("Could not move " + getTypeName() + " \""+ getName()+ "\" to the sketchbook.");
     return null;
   }
-  return ContributionManager.load(editor.getBase(),contribFolder,getType());
+  return getType().load(editor.getBase(),contribFolder);
 }

@@ -26,7 +26,7 @@
     public void actionPerformed(    ActionEvent e){
       if (contrib instanceof InstalledContribution) {
         InstalledContribution installed=(InstalledContribution)contrib;
-        ContributionManager.unsetDeletionFlag(installed);
+        installed.unsetDeletionFlag();
         contribListing.replaceContribution(contrib,contrib);
       }
     }
@@ -38,7 +38,7 @@
         updateButton.setEnabled(false);
         installRemoveButton.setEnabled(false);
         installProgressBar.setVisible(true);
-        ContributionManager.removeContribution(contribManager.editor,(InstalledContribution)contrib,new JProgressMonitor(installProgressBar){
+        ((InstalledContribution)contrib).removeContribution(contribManager.editor,new JProgressMonitor(installProgressBar){
           public void finishedAction(){
             resetInstallProgressBarState();
             installRemoveButton.setEnabled(true);

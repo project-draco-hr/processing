@@ -18,7 +18,7 @@
   headerText.setText(nameText.toString());
   StringBuilder description=new StringBuilder();
   description.append("<html><body>");
-  boolean isFlagged=ContributionManager.isDeletionFlagSet(contrib);
+  boolean isFlagged=contrib.isDeletionFlagged();
   if (isFlagged) {
     description.append(ContributionListPanel.DELETION_MESSAGE);
   }
@@ -43,7 +43,7 @@
     }
  else {
       versionText.append("New version available!");
-      if (ContributionManager.requiresRestart(contrib)) {
+      if (contrib.requiresRestart()) {
         versionText.append(" To update, first remove the current version.");
       }
     }
@@ -56,7 +56,7 @@
     updateNotificationLabel.setVisible(false);
   }
   updateButton.setEnabled(true);
-  if (contrib != null && !ContributionManager.requiresRestart(contrib)) {
+  if (contrib != null && !contrib.requiresRestart()) {
     updateButton.setVisible(isSelected() && contribListing.hasUpdates(contrib));
   }
   installRemoveButton.removeActionListener(installActionListener);
