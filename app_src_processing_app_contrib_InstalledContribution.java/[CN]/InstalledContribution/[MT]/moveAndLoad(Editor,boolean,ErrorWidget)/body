@@ -1,7 +1,7 @@
 {
-  ArrayList<InstalledContribution> oldContribs=ContributionManager.getContributions(getType(),editor);
+  ArrayList<InstalledContribution> oldContribs=ContributionManager.listContributions(getType(),editor);
   String contribFolderName=getFolder().getName();
-  File contribTypeFolder=ContributionManager.getSketchbookContribFolder(editor.getBase(),getType());
+  File contribTypeFolder=getType().getSketchbookContribFolder();
   File contribFolder=new File(contribTypeFolder,contribFolderName);
   for (  InstalledContribution oldContrib : oldContribs) {
     if ((oldContrib.getFolder().exists() && oldContrib.getFolder().equals(contribFolder)) || (oldContrib.getId() != null && oldContrib.getId().equals(getId()))) {

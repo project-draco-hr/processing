@@ -1,5 +1,5 @@
 {
-  File sketchbookContribFolder=ContributionManager.getSketchbookContribFolder(editor.getBase(),type);
+  File sketchbookContribFolder=type.getSketchbookContribFolder();
   File tempFolder=null;
   try {
     tempFolder=Base.createTempFolder(type.toString(),"tmp",sketchbookContribFolder);
@@ -16,15 +16,15 @@
   if (contribFolder == null) {
     contribFolder=InstalledContribution.findCandidate(tempFolder,type);
   }
-  InstalledContribution outgoing=null;
+  InstalledContribution installedContrib=null;
   if (contribFolder == null) {
     statusBar.setErrorMessage("Could not find a " + type + " in the downloaded file.");
   }
  else {
     File propFile=new File(contribFolder,type + ".properties");
-    if (writePropertiesFile(propFile)) {
+    if (!writePropertiesFile(propFile)) {
       InstalledContribution newContrib=ContributionManager.load(editor.getBase(),contribFolder,type);
-      outgoing=newContrib.install(editor,confirmReplace,statusBar);
+      installedContrib=newContrib.moveAndLoad(editor,confirmReplace,statusBar);
     }
  else {
       statusBar.setErrorMessage("Error overwriting .properties file.");
@@ -33,5 +33,5 @@
   if (tempFolder.exists()) {
     Base.removeDir(tempFolder);
   }
-  return outgoing;
+  return installedContrib;
 }
