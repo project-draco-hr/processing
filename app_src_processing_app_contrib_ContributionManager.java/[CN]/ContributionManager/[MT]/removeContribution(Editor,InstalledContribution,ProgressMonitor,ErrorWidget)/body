@@ -6,7 +6,7 @@
         progressMonitor.startTask("Removing",ProgressMonitor.UNKNOWN);
         boolean doBackup=Preferences.getBoolean("contribution.backup.on_remove");
         if (ContributionManager.requiresRestart(contribution)) {
-          if (!doBackup || (doBackup && backupContribution(editor,contribution,false,statusBar))) {
+          if (!doBackup || (doBackup && contribution.backupContribution(editor,false,statusBar))) {
             if (ContributionManager.setDeletionFlag(contribution)) {
               contribListing.replaceContribution(contribution,contribution);
             }
@@ -15,7 +15,7 @@
  else {
           boolean success=false;
           if (doBackup) {
-            success=backupContribution(editor,contribution,true,statusBar);
+            success=contribution.backupContribution(editor,true,statusBar);
           }
  else {
             Base.removeDir(contribution.getFolder());

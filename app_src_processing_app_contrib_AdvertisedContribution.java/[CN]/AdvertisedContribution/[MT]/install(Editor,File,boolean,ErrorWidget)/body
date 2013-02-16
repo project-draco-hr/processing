@@ -1,5 +1,5 @@
 {
-  File sketchbookContribFolder=type.getSketchbookContribFolder();
+  File sketchbookContribFolder=type.getSketchbookFolder();
   File tempFolder=null;
   try {
     tempFolder=Base.createTempFolder(type.toString(),"tmp",sketchbookContribFolder);
@@ -8,13 +8,13 @@
     statusBar.setErrorMessage("Could not create a temporary folder to install.");
     return null;
   }
-  ContributionManager.unzip(contribArchive,tempFolder);
+  unzip(contribArchive,tempFolder);
   File contribFolder=null;
-  if (InstalledContribution.isCandidate(tempFolder,type)) {
+  if (type.isCandidate(tempFolder)) {
     contribFolder=tempFolder;
   }
   if (contribFolder == null) {
-    contribFolder=InstalledContribution.findCandidate(tempFolder,type);
+    contribFolder=type.findCandidate(tempFolder);
   }
   InstalledContribution installedContrib=null;
   if (contribFolder == null) {

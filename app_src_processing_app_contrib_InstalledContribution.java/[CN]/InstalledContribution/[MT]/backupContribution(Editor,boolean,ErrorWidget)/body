@@ -1,0 +1,25 @@
+{
+  boolean success=false;
+  File backupFolder=createBackupFolder(statusBar,getType());
+  if (backupFolder != null) {
+    String libFolderName=getFolder().getName();
+    String prefix=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    final String backupName=prefix + "_" + libFolderName;
+    File backupSubFolder=ContributionManager.getUniqueName(backupFolder,backupName);
+    if (doDeleteOriginal) {
+      success=getFolder().renameTo(backupSubFolder);
+    }
+ else {
+      try {
+        Base.copyDir(getFolder(),backupSubFolder);
+        success=true;
+      }
+ catch (      IOException e) {
+      }
+    }
+    if (!success) {
+      statusBar.setErrorMessage("Could not move contribution to backup folder.");
+    }
+  }
+  return success;
+}
