@@ -4,24 +4,23 @@
     String lines[]=PApplet.loadStrings(f);
     int start=0;
     while (start < lines.length) {
-      if (!lines[start].contains("=")) {
-        String type=lines[start];
-        int end=++start;
-        while (end < lines.length && !lines[end].equals("")) {
-          end++;
-        }
-        int length=end - start;
-        String strings[]=new String[length];
-        System.arraycopy(lines,start,strings,0,length);
-        HashMap<String,String> exports=new HashMap<String,String>();
-        Base.readSettings(null,strings,exports);
-        Contribution.Type kind=Contribution.Type.toType(type);
-        outgoing.add(new AdvertisedContribution(kind,exports));
-        start=end + 1;
+      String type=lines[start];
+      ContributionType contribType=ContributionType.fromName(type);
+      if (contribType == null) {
+        System.err.println("Error in contribution listing file on line " + (start + 1));
+        return outgoing;
       }
- else {
-        start++;
+      int end=++start;
+      while (end < lines.length && !lines[end].equals("")) {
+        end++;
       }
+      int length=end - start;
+      String[] contribLines=new String[length];
+      System.arraycopy(lines,start,contribLines,0,length);
+      HashMap<String,String> contribParams=new HashMap<String,String>();
+      Base.readSettings(f.getName(),contribLines,contribParams);
+      outgoing.add(new AdvertisedContribution(contribType,contribParams));
+      start=end + 1;
     }
   }
   return outgoing;
