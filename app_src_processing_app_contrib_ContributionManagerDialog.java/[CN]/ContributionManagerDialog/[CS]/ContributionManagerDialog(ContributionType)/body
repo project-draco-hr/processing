@@ -1,7 +1,12 @@
 {
-  this.title=type.getTitle() + " Manager";
-  this.permaFilter=ContributionListing.createFilter(type);
+  if (type == null) {
+    title="Update Manager";
+  }
+ else {
+    title=type.getTitle() + " Manager";
+  }
+  filter=ContributionListing.createFilter(type);
   contribListing=ContributionListing.getInstance();
-  contributionListPanel=new ContributionListPanel(this,permaFilter);
+  contributionListPanel=new ContributionListPanel(this,filter);
   contribListing.addContributionListener(contributionListPanel);
 }
