@@ -9,15 +9,12 @@
     return null;
   }
   Base.unzip(contribArchive,tempFolder);
-  Base.openFolder(tempFolder);
   File contribFolder=null;
   if (type.isCandidate(tempFolder)) {
     status.setErrorMessage("This " + type + " needs to be repackaged according to the guidelines.");
     return null;
   }
-  if (contribFolder == null) {
-    contribFolder=type.findCandidate(tempFolder);
-  }
+  contribFolder=type.findCandidate(tempFolder);
   LocalContribution installedContrib=null;
   if (contribFolder == null) {
     status.setErrorMessage("Could not find a " + type + " in the downloaded file.");
