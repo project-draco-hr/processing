@@ -1,87 +1,42 @@
 {
   dialog.setResizable(true);
   Container pane=dialog.getContentPane();
-  pane.setLayout(new GridBagLayout());
-{
-    GridBagConstraints c=new GridBagConstraints();
-    c.gridx=0;
-    c.gridy=0;
-    JPanel filterPanel=new JPanel();
-    filterPanel.setLayout(new BoxLayout(filterPanel,BoxLayout.X_AXIS));
-    pane.add(filterPanel,c);
-    filterPanel.add(Box.createHorizontalStrut(6));
-    JLabel categoryLabel=new JLabel("Category:");
-    filterPanel.add(categoryLabel);
-    filterPanel.add(Box.createHorizontalStrut(5));
-    categoryChooser=new JComboBox();
-    categoryChooser.setMaximumRowCount(20);
-    updateCategoryChooser();
-    filterPanel.add(categoryChooser,c);
-    categoryChooser.addItemListener(new ItemListener(){
-      public void itemStateChanged(      ItemEvent e){
-        category=(String)categoryChooser.getSelectedItem();
-        if (ContributionManagerDialog.ANY_CATEGORY.equals(category)) {
-          category=null;
-        }
-        filterLibraries(category,filterField.filters);
+  pane.setLayout(new BorderLayout());
+  JPanel filterPanel=new JPanel();
+  filterPanel.setLayout(new BoxLayout(filterPanel,BoxLayout.X_AXIS));
+  pane.add(filterPanel,BorderLayout.NORTH);
+  filterPanel.add(Box.createHorizontalStrut(6));
+  JLabel categoryLabel=new JLabel("Category:");
+  filterPanel.add(categoryLabel);
+  filterPanel.add(Box.createHorizontalStrut(5));
+  categoryChooser=new JComboBox();
+  categoryChooser.setMaximumRowCount(20);
+  updateCategoryChooser();
+  filterPanel.add(categoryChooser);
+  categoryChooser.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      category=(String)categoryChooser.getSelectedItem();
+      if (ContributionManagerDialog.ANY_CATEGORY.equals(category)) {
+        category=null;
       }
+      filterLibraries(category,filterField.filters);
     }
-);
-    filterPanel.add(Box.createHorizontalStrut(5));
-    filterField=new FilterField();
-    filterPanel.add(filterField);
   }
-{
-    GridBagConstraints c=new GridBagConstraints();
-    c.fill=GridBagConstraints.BOTH;
-    c.gridx=0;
-    c.gridy=1;
-    c.gridwidth=2;
-    c.weighty=1;
-    c.weightx=1;
-    scrollPane=new JScrollPane();
-    scrollPane.setPreferredSize(new Dimension(300,300));
-    scrollPane.setViewportView(contributionListPanel);
-    scrollPane.getViewport().setOpaque(true);
-    scrollPane.getViewport().setBackground(contributionListPanel.getBackground());
-    scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-    scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    status=new StatusPanel();
-    status.setBorder(BorderFactory.createEtchedBorder());
-    final JLayeredPane layeredPane=new JLayeredPane();
-    layeredPane.add(scrollPane,JLayeredPane.DEFAULT_LAYER);
-    layeredPane.add(status,JLayeredPane.PALETTE_LAYER);
-    layeredPane.addComponentListener(new ComponentAdapter(){
-      void resizeLayers(){
-        scrollPane.setSize(layeredPane.getSize());
-        scrollPane.updateUI();
-      }
-      public void componentShown(      ComponentEvent e){
-        resizeLayers();
-      }
-      public void componentResized(      ComponentEvent arg0){
-        resizeLayers();
-      }
-    }
 );
-    final JViewport viewport=scrollPane.getViewport();
-    viewport.addComponentListener(new ComponentAdapter(){
-      void resizeLayers(){
-        status.setLocation(0,viewport.getHeight() - 18);
-        Dimension d=viewport.getSize();
-        d.height=20;
-        d.width+=3;
-        status.setSize(d);
-      }
-      public void componentShown(      ComponentEvent e){
-        resizeLayers();
-      }
-      public void componentResized(      ComponentEvent e){
-        resizeLayers();
-      }
-    }
-);
-    pane.add(layeredPane,c);
-  }
+  filterPanel.add(Box.createHorizontalStrut(5));
+  filterField=new FilterField();
+  filterPanel.add(filterField);
+  filterPanel.setBorder(new EmptyBorder(7,7,7,7));
+  scrollPane=new JScrollPane();
+  scrollPane.setPreferredSize(new Dimension(300,300));
+  scrollPane.setViewportView(contributionListPanel);
+  scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+  scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+  pane.add(scrollPane,BorderLayout.CENTER);
+  pane.add(Box.createHorizontalStrut(10),BorderLayout.WEST);
+  pane.add(Box.createHorizontalStrut(10),BorderLayout.EAST);
+  status=new StatusPanel();
+  status.setBorder(new EmptyBorder(4,7,3,7));
+  pane.add(status,BorderLayout.SOUTH);
   dialog.setMinimumSize(new Dimension(450,400));
 }
