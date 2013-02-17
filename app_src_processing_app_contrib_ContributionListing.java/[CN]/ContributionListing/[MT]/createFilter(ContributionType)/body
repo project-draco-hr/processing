@@ -2,7 +2,10 @@
   if (type == null) {
     return new Filter(){
       public boolean matches(      Contribution contrib){
-        return contrib.getType() == type;
+        if (contrib instanceof LocalContribution) {
+          return ContributionListing.getInstance().hasUpdates(contrib);
+        }
+        return false;
       }
     }
 ;
@@ -10,10 +13,7 @@
  else {
     return new Filter(){
       public boolean matches(      Contribution contrib){
-        if (contrib instanceof InstalledContribution) {
-          return ContributionListing.getInstance().hasUpdates(contrib);
-        }
-        return false;
+        return contrib.getType() == type;
       }
     }
 ;

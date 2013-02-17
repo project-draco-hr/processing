@@ -5,10 +5,10 @@
     tempFolder=Base.createTempFolder(type.toString(),"tmp",sketchbookContribFolder);
   }
  catch (  IOException e) {
-    statusBar.setErrorMessage("Could not create a temporary folder to install.");
+    status.setErrorMessage("Could not create a temporary folder to install.");
     return null;
   }
-  unzip(contribArchive,tempFolder);
+  Base.unzip(contribArchive,tempFolder);
   File contribFolder=null;
   if (type.isCandidate(tempFolder)) {
     contribFolder=tempFolder;
@@ -16,18 +16,18 @@
   if (contribFolder == null) {
     contribFolder=type.findCandidate(tempFolder);
   }
-  InstalledContribution installedContrib=null;
+  LocalContribution installedContrib=null;
   if (contribFolder == null) {
-    statusBar.setErrorMessage("Could not find a " + type + " in the downloaded file.");
+    status.setErrorMessage("Could not find a " + type + " in the downloaded file.");
   }
  else {
     File propFile=new File(contribFolder,type + ".properties");
     if (!writePropertiesFile(propFile)) {
-      InstalledContribution newContrib=type.load(editor.getBase(),contribFolder);
-      installedContrib=newContrib.moveAndLoad(editor,confirmReplace,statusBar);
+      LocalContribution newContrib=type.load(editor.getBase(),contribFolder);
+      installedContrib=newContrib.moveAndLoad(editor,confirmReplace,status);
     }
  else {
-      statusBar.setErrorMessage("Error overwriting .properties file.");
+      status.setErrorMessage("Error overwriting .properties file.");
     }
   }
   if (tempFolder.exists()) {
