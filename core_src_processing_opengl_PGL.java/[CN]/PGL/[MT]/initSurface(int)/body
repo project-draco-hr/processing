@@ -47,6 +47,7 @@
     canvasAWT=new GLCanvas(caps);
     canvasAWT.setBounds(0,0,pg.width,pg.height);
     canvasAWT.setBackground(new Color(pg.backgroundColor,true));
+    canvasAWT.setFocusable(true);
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasAWT,BorderLayout.CENTER);
     pg.parent.removeListeners(pg.parent);
@@ -66,8 +67,7 @@
     canvasNEWT=new NewtCanvasAWT(window);
     canvasNEWT.setBounds(0,0,pg.width,pg.height);
     canvasNEWT.setBackground(new Color(pg.backgroundColor,true));
-    pg.parent.setLayout(new BorderLayout());
-    pg.parent.add(canvasNEWT,BorderLayout.CENTER);
+    canvasNEWT.setFocusable(true);
     NEWTMouseListener mouseListener=new NEWTMouseListener();
     window.addMouseListener(mouseListener);
     NEWTKeyListener keyListener=new NEWTKeyListener();
@@ -75,6 +75,8 @@
     NEWTWindowListener winListener=new NEWTWindowListener();
     window.addWindowListener(winListener);
     canvasNEWT.addFocusListener(pg.parent);
+    pg.parent.setLayout(new BorderLayout());
+    pg.parent.add(canvasNEWT,BorderLayout.CENTER);
     capabilities=window.getChosenGLCapabilities();
     canvas=canvasNEWT;
     canvasAWT=null;
