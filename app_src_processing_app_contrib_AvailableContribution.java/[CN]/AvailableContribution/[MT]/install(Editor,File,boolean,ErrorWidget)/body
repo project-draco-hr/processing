@@ -1,0 +1,37 @@
+{
+  File sketchbookContribFolder=type.getSketchbookFolder();
+  File tempFolder=null;
+  try {
+    tempFolder=Base.createTempFolder(type.toString(),"tmp",sketchbookContribFolder);
+  }
+ catch (  IOException e) {
+    status.setErrorMessage("Could not create a temporary folder to install.");
+    return null;
+  }
+  Base.unzip(contribArchive,tempFolder);
+  File contribFolder=null;
+  if (type.isCandidate(tempFolder)) {
+    contribFolder=tempFolder;
+  }
+  if (contribFolder == null) {
+    contribFolder=type.findCandidate(tempFolder);
+  }
+  LocalContribution installedContrib=null;
+  if (contribFolder == null) {
+    status.setErrorMessage("Could not find a " + type + " in the downloaded file.");
+  }
+ else {
+    File propFile=new File(contribFolder,type + ".properties");
+    if (!writePropertiesFile(propFile)) {
+      LocalContribution newContrib=type.load(editor.getBase(),contribFolder);
+      installedContrib=newContrib.moveAndLoad(editor,confirmReplace,status);
+    }
+ else {
+      status.setErrorMessage("Error overwriting .properties file.");
+    }
+  }
+  if (tempFolder.exists()) {
+    Base.removeDir(tempFolder);
+  }
+  return installedContrib;
+}

@@ -1,0 +1,27 @@
+{
+  ArrayList<AvailableContribution> outgoing=new ArrayList<AvailableContribution>();
+  if (file != null && file.exists()) {
+    String lines[]=PApplet.loadStrings(file);
+    int start=0;
+    while (start < lines.length) {
+      String type=lines[start];
+      ContributionType contribType=ContributionType.fromName(type);
+      if (contribType == null) {
+        System.err.println("Error in contribution listing file on line " + (start + 1));
+        return outgoing;
+      }
+      int end=++start;
+      while (end < lines.length && !lines[end].equals("")) {
+        end++;
+      }
+      int length=end - start;
+      String[] contribLines=new String[length];
+      System.arraycopy(lines,start,contribLines,0,length);
+      HashMap<String,String> contribParams=new HashMap<String,String>();
+      Base.readSettings(file.getName(),contribLines,contribParams);
+      outgoing.add(new AvailableContribution(contribType,contribParams));
+      start=end + 1;
+    }
+  }
+  return outgoing;
+}

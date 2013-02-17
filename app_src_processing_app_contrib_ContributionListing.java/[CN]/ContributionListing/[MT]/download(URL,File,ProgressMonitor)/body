@@ -1,0 +1,29 @@
+{
+  boolean success=false;
+  try {
+    URLConnection conn=source.openConnection();
+    conn.setConnectTimeout(1000);
+    conn.setReadTimeout(5000);
+    int fileSize=conn.getContentLength();
+    progress.startTask("Downloading",fileSize);
+    InputStream in=conn.getInputStream();
+    FileOutputStream out=new FileOutputStream(dest);
+    byte[] b=new byte[8192];
+    int amount;
+    int total=0;
+    while (!progress.isCanceled() && (amount=in.read(b)) != -1) {
+      out.write(b,0,amount);
+      total+=amount;
+      progress.setProgress(total);
+    }
+    out.flush();
+    out.close();
+    success=true;
+  }
+ catch (  IOException ioe) {
+    progress.error(ioe);
+    ioe.printStackTrace();
+  }
+  progress.finished();
+  return success;
+}
