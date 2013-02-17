@@ -1,0 +1,89 @@
+{
+  setLayout(new GridBagLayout());
+{
+    GridBagConstraints c=new GridBagConstraints();
+    c.gridx=0;
+    c.gridy=0;
+    c.weightx=1;
+    c.fill=GridBagConstraints.BOTH;
+    c.anchor=GridBagConstraints.WEST;
+    headerText=new JTextPane();
+    headerText.setInheritsPopupMenu(true);
+    Insets margin=headerText.getMargin();
+    margin.bottom=0;
+    headerText.setMargin(margin);
+    setHtmlTextStyle(headerText);
+    stripTextSelectionListeners(headerText);
+    add(headerText,c);
+  }
+{
+    GridBagConstraints c=new GridBagConstraints();
+    c.gridx=0;
+    c.gridy=1;
+    c.weighty=1;
+    c.weightx=1;
+    c.gridwidth=2;
+    c.fill=GridBagConstraints.BOTH;
+    c.anchor=GridBagConstraints.NORTHEAST;
+    JPanel descriptionPanel=new JPanel(new GridBagLayout());
+    descriptionPanel.setInheritsPopupMenu(true);
+    descriptionPanel.setOpaque(false);
+    add(descriptionPanel,c);
+{
+      GridBagConstraints dc=new GridBagConstraints();
+      dc.fill=GridBagConstraints.HORIZONTAL;
+      dc.weightx=1;
+      descriptionText=new JTextPane();
+      descriptionText.setInheritsPopupMenu(true);
+      setHtmlTextStyle(descriptionText);
+      descriptionPanel.add(descriptionText,dc);
+    }
+    int margin=Base.isMacOS() ? 15 : 5;
+{
+      GridBagConstraints dc=new GridBagConstraints();
+      dc.gridx=1;
+      descriptionPanel.add(Box.createHorizontalStrut(margin),dc);
+    }
+  }
+{
+    GridBagConstraints c=new GridBagConstraints();
+    c.gridx=0;
+    c.gridy=2;
+    c.weightx=1;
+    c.insets=new Insets(-5,0,0,0);
+    c.fill=GridBagConstraints.HORIZONTAL;
+    c.anchor=GridBagConstraints.EAST;
+    updateNotificationLabel=new JTextPane();
+    updateNotificationLabel.setInheritsPopupMenu(true);
+    updateNotificationLabel.setVisible(false);
+    setHtmlTextStyle(updateNotificationLabel);
+    stripTextSelectionListeners(updateNotificationLabel);
+    add(updateNotificationLabel,c);
+  }
+{
+    GridBagConstraints c=new GridBagConstraints();
+    c.gridx=1;
+    c.gridy=2;
+    c.weightx=1;
+    c.insets=new Insets(-5,0,0,0);
+    c.anchor=GridBagConstraints.EAST;
+    updateButton=new JButton("Update now");
+    updateButton.setInheritsPopupMenu(true);
+    Dimension installButtonDimensions=updateButton.getPreferredSize();
+    installButtonDimensions.width=ContributionPanel.BUTTON_WIDTH;
+    updateButton.setMinimumSize(installButtonDimensions);
+    updateButton.setPreferredSize(installButtonDimensions);
+    updateButton.setOpaque(false);
+    updateButton.setVisible(false);
+    updateButton.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        updateButton.setEnabled(false);
+        AvailableContribution ad=contribListing.getAvailableContribution(contrib);
+        String url=ad.link;
+        installContribution(ad,url);
+      }
+    }
+);
+    add(updateButton,c);
+  }
+}

@@ -1,0 +1,14 @@
+{
+  super.setForeground(fg);
+  if (htmlPanes != null) {
+    for (    JTextPane pane : htmlPanes) {
+      Document doc=pane.getDocument();
+      if (doc instanceof HTMLDocument) {
+        HTMLDocument html=(HTMLDocument)doc;
+        StyleSheet stylesheet=html.getStyleSheet();
+        stylesheet.addRule("body {color:" + PApplet.hex(fg.getRGB()).substring(2) + ";}");
+        stylesheet.addRule("a {color:" + PApplet.hex(fg.getRGB()).substring(2) + "}");
+      }
+    }
+  }
+}
