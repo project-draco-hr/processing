@@ -43,11 +43,11 @@
     scrollPane.getViewport().setBackground(contributionListPanel.getBackground());
     scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
     scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    statusBar=new StatusPanel();
-    statusBar.setBorder(BorderFactory.createEtchedBorder());
+    status=new StatusPanel();
+    status.setBorder(BorderFactory.createEtchedBorder());
     final JLayeredPane layeredPane=new JLayeredPane();
     layeredPane.add(scrollPane,JLayeredPane.DEFAULT_LAYER);
-    layeredPane.add(statusBar,JLayeredPane.PALETTE_LAYER);
+    layeredPane.add(status,JLayeredPane.PALETTE_LAYER);
     layeredPane.addComponentListener(new ComponentAdapter(){
       void resizeLayers(){
         scrollPane.setSize(layeredPane.getSize());
@@ -64,11 +64,11 @@
     final JViewport viewport=scrollPane.getViewport();
     viewport.addComponentListener(new ComponentAdapter(){
       void resizeLayers(){
-        statusBar.setLocation(0,viewport.getHeight() - 18);
+        status.setLocation(0,viewport.getHeight() - 18);
         Dimension d=viewport.getSize();
         d.height=20;
         d.width+=3;
-        statusBar.setSize(d);
+        status.setSize(d);
       }
       public void componentShown(      ComponentEvent e){
         resizeLayers();

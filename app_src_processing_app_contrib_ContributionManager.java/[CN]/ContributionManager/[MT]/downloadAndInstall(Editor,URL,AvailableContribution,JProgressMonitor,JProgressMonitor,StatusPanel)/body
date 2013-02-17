@@ -1,0 +1,33 @@
+{
+  new Thread(new Runnable(){
+    public void run(){
+      String filename=url.getFile();
+      filename=filename.substring(filename.lastIndexOf('/') + 1);
+      try {
+        File contribZip=File.createTempFile("download",filename);
+        contribZip.setWritable(true);
+        try {
+          ContributionListing.download(url,contribZip,downloadProgress);
+          if (!downloadProgress.isCanceled() && !downloadProgress.isError()) {
+            installProgress.startTask("Installing...",ProgressMonitor.UNKNOWN);
+            LocalContribution contribution=ad.install(editor,contribZip,false,status);
+            if (contribution != null) {
+              contribListing.replaceContribution(ad,contribution);
+              refreshInstalled(editor);
+            }
+            installProgress.finished();
+          }
+          contribZip.delete();
+        }
+ catch (        Exception e) {
+          e.printStackTrace();
+          status.setErrorMessage("Error during download and install.");
+        }
+      }
+ catch (      IOException e) {
+        status.setErrorMessage("Could not write to temporary directory.");
+      }
+    }
+  }
+).start();
+}

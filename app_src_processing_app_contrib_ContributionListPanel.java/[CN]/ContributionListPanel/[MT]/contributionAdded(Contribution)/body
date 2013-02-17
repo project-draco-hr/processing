@@ -1,19 +1,18 @@
 {
-  if (permaFilter.matches(contribution)) {
-    SwingUtilities.invokeLater(new Runnable(){
+  if (filter.matches(contribution)) {
+    EventQueue.invokeLater(new Runnable(){
       public void run(){
-        if (panelByContribution.containsKey(contribution)) {
-          return;
-        }
-        ContributionPanel newPanel=new ContributionPanel();
+        if (!panelByContribution.containsKey(contribution)) {
+          ContributionPanel newPanel=new ContributionPanel(ContributionListPanel.this);
 synchronized (panelByContribution) {
-          panelByContribution.put(contribution,newPanel);
-        }
-        if (newPanel != null) {
-          newPanel.setContribution(contribution);
-          add(newPanel);
-          updatePanelOrdering();
-          updateColors();
+            panelByContribution.put(contribution,newPanel);
+          }
+          if (newPanel != null) {
+            newPanel.setContribution(contribution);
+            add(newPanel);
+            updatePanelOrdering();
+            updateColors();
+          }
         }
       }
     }

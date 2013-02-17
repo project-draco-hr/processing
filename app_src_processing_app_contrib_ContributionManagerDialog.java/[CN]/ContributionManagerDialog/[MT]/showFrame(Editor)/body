@@ -12,7 +12,7 @@
   }
   dialog.setVisible(true);
   if (!contribListing.hasDownloadedLatestList()) {
-    contribListing.getAdvertisedContributions(new AbstractProgressMonitor(){
+    contribListing.downloadAvailableList(new AbstractProgressMonitor(){
       public void startTask(      String name,      int maxValue){
       }
       public void finished(){
@@ -20,10 +20,10 @@
         updateContributionListing();
         updateCategoryChooser();
         if (isError()) {
-          statusBar.setErrorMessage("An error occured when downloading " + "the list of available contributions.");
+          status.setErrorMessage("An error occured when downloading " + "the list of available contributions.");
         }
  else {
-          statusBar.updateUI();
+          status.updateUI();
         }
       }
     }
