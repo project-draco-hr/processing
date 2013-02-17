@@ -1,6 +1,5 @@
 {
-  ContributionManager.checkDeletions(getSketchbookModesFolder());
-  ContributionManager.checkDeletions(getSketchbookToolsFolder());
+  ContributionManager.deleteFlagged();
   buildCoreModes();
   rebuildContribModes();
   recent=new Recent(this);
@@ -21,33 +20,10 @@
       log("Could not find mode " + lastModeIdentifier + ", using default.");
     }
   }
-  libraryManagerFrame=new ContributionManagerDialog("Library Manager",new ContributionListing.Filter(){
-    public boolean matches(    Contribution contrib){
-      return contrib.getType() == ContributionType.LIBRARY;
-    }
-  }
-);
-  toolManagerFrame=new ContributionManagerDialog("Tool Manager",new ContributionListing.Filter(){
-    public boolean matches(    Contribution contrib){
-      return contrib.getType() == ContributionType.TOOL;
-    }
-  }
-);
-  modeManagerFrame=new ContributionManagerDialog("Mode Manager",new ContributionListing.Filter(){
-    public boolean matches(    Contribution contrib){
-      return contrib.getType() == ContributionType.MODE;
-    }
-  }
-);
-  updateManagerFrame=new ContributionManagerDialog("Update Manager",new ContributionListing.Filter(){
-    public boolean matches(    Contribution contrib){
-      if (contrib instanceof InstalledContribution) {
-        return ContributionListing.getInstance().hasUpdates(contrib);
-      }
-      return false;
-    }
-  }
-);
+  libraryManagerFrame=new ContributionManagerDialog(ContributionType.LIBRARY);
+  toolManagerFrame=new ContributionManagerDialog(ContributionType.TOOL);
+  modeManagerFrame=new ContributionManagerDialog(ContributionType.MODE);
+  updateManagerFrame=new ContributionManagerDialog(null);
   nextMode.rebuildLibraryList();
   platform.init(this);
   boolean opened=false;

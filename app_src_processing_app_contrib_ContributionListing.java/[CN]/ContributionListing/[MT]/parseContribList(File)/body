@@ -1,7 +1,7 @@
 {
-  ArrayList<AdvertisedContribution> outgoing=new ArrayList<AdvertisedContribution>();
-  if (f != null && f.exists()) {
-    String lines[]=PApplet.loadStrings(f);
+  ArrayList<AvailableContribution> outgoing=new ArrayList<AvailableContribution>();
+  if (file != null && file.exists()) {
+    String lines[]=PApplet.loadStrings(file);
     int start=0;
     while (start < lines.length) {
       String type=lines[start];
@@ -18,8 +18,8 @@
       String[] contribLines=new String[length];
       System.arraycopy(lines,start,contribLines,0,length);
       HashMap<String,String> contribParams=new HashMap<String,String>();
-      Base.readSettings(f.getName(),contribLines,contribParams);
-      outgoing.add(new AdvertisedContribution(contribType,contribParams));
+      Base.readSettings(file.getName(),contribLines,contribParams);
+      outgoing.add(new AvailableContribution(contribType,contribParams));
       start=end + 1;
     }
   }

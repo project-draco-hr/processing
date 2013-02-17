@@ -16,17 +16,17 @@
 ;
   installActionListener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      if (contrib instanceof AdvertisedContribution) {
-        installContribution((AdvertisedContribution)contrib);
+      if (contrib instanceof AvailableContribution) {
+        installContribution((AvailableContribution)contrib);
       }
     }
   }
 ;
   undoActionListener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      if (contrib instanceof InstalledContribution) {
-        InstalledContribution installed=(InstalledContribution)contrib;
-        ContributionManager.unsetDeletionFlag(installed);
+      if (contrib instanceof LocalContribution) {
+        LocalContribution installed=(LocalContribution)contrib;
+        installed.unsetDeletionFlag();
         contribListing.replaceContribution(contrib,contrib);
       }
     }
@@ -34,11 +34,11 @@
 ;
   removeActionListener=new ActionListener(){
     public void actionPerformed(    ActionEvent arg){
-      if (contrib.isInstalled() && contrib instanceof InstalledContribution) {
+      if (contrib.isInstalled() && contrib instanceof LocalContribution) {
         updateButton.setEnabled(false);
         installRemoveButton.setEnabled(false);
         installProgressBar.setVisible(true);
-        ContributionManager.removeContribution(contribManager.editor,(InstalledContribution)contrib,new JProgressMonitor(installProgressBar){
+        ((LocalContribution)contrib).removeContribution(contribManager.editor,new JProgressMonitor(installProgressBar){
           public void finishedAction(){
             resetInstallProgressBarState();
             installRemoveButton.setEnabled(true);
@@ -53,8 +53,8 @@
   openFolder=new JMenuItem("Open Folder");
   openFolder.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      if (contrib instanceof InstalledContribution) {
-        File folder=((InstalledContribution)contrib).getFolder();
+      if (contrib instanceof LocalContribution) {
+        File folder=((LocalContribution)contrib).getFolder();
         Base.openFolder(folder);
       }
     }
