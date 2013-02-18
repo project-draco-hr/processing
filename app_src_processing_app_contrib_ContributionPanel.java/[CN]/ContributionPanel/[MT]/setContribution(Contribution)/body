@@ -1,0 +1,85 @@
+{
+  this.contrib=contrib;
+  StringBuilder nameText=new StringBuilder();
+  nameText.append("<html><body><b>");
+  if (contrib.getUrl() == null) {
+    nameText.append(contrib.getName());
+  }
+ else {
+    nameText.append("<a href=\"" + contrib.getUrl() + "\">"+ contrib.getName()+ "</a>");
+  }
+  nameText.append("</b>");
+  String authorList=contrib.getAuthorList();
+  if (authorList != null && !authorList.isEmpty()) {
+    nameText.append(" by ");
+    nameText.append(toHtmlLinks(contrib.getAuthorList()));
+  }
+  nameText.append("</body></html>");
+  headerText.setText(nameText.toString());
+  StringBuilder description=new StringBuilder();
+  description.append("<html><body>");
+  boolean isFlagged=contrib.isDeletionFlagged();
+  if (isFlagged) {
+    description.append(ContributionListPanel.DELETION_MESSAGE);
+  }
+ else {
+    String sentence=contrib.getSentence();
+    if (sentence == null || sentence.isEmpty()) {
+      sentence="<i>Description unavailable.</i>";
+    }
+ else {
+      sentence=sanitizeHtmlTags(sentence);
+      sentence=toHtmlLinks(sentence);
+    }
+    description.append(sentence);
+  }
+  description.append("</body></html>");
+  descriptionText.setText(description.toString());
+  if (contribListing.hasUpdates(contrib)) {
+    StringBuilder versionText=new StringBuilder();
+    versionText.append("<html><body><i>");
+    if (isFlagged) {
+      versionText.append("To finish an update, reinstall this contribution after the restart.");
+    }
+ else {
+      versionText.append("New version available!");
+      if (contrib.requiresRestart()) {
+        versionText.append(" To update, first remove the current version.");
+      }
+    }
+    versionText.append("</i></body></html>");
+    updateNotificationLabel.setText(versionText.toString());
+    updateNotificationLabel.setVisible(true);
+  }
+ else {
+    updateNotificationLabel.setText("");
+    updateNotificationLabel.setVisible(false);
+  }
+  updateButton.setEnabled(true);
+  if (contrib != null && !contrib.requiresRestart()) {
+    updateButton.setVisible(isSelected() && contribListing.hasUpdates(contrib));
+  }
+  installRemoveButton.removeActionListener(installActionListener);
+  installRemoveButton.removeActionListener(removeActionListener);
+  installRemoveButton.removeActionListener(undoActionListener);
+  if (isFlagged) {
+    installRemoveButton.addActionListener(undoActionListener);
+    installRemoveButton.setText("Undo");
+  }
+ else   if (contrib.isInstalled()) {
+    installRemoveButton.addActionListener(removeActionListener);
+    installRemoveButton.setText("Remove");
+  }
+ else {
+    installRemoveButton.addActionListener(installActionListener);
+    installRemoveButton.setText("Install");
+  }
+  contextMenu.removeAll();
+  if (contrib.isInstalled()) {
+    contextMenu.add(openFolder);
+    setComponentPopupMenu(contextMenu);
+  }
+ else {
+    setComponentPopupMenu(null);
+  }
+}

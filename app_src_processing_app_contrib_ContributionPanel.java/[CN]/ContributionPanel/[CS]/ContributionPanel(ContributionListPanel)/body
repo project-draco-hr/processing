@@ -1,0 +1,75 @@
+{
+  listPanel=contributionListPanel;
+  enableHyperlinks=false;
+  alreadySelected=false;
+  conditionalHyperlinkOpener=new HyperlinkListener(){
+    public void hyperlinkUpdate(    HyperlinkEvent e){
+      if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        if (enableHyperlinks) {
+          if (e.getURL() != null) {
+            Base.openURL(e.getURL().toString());
+          }
+        }
+      }
+    }
+  }
+;
+  installActionListener=new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (contrib instanceof AvailableContribution) {
+        installContribution((AvailableContribution)contrib);
+      }
+    }
+  }
+;
+  undoActionListener=new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (contrib instanceof LocalContribution) {
+        LocalContribution installed=(LocalContribution)contrib;
+        installed.unsetDeletionFlag();
+        contribListing.replaceContribution(contrib,contrib);
+      }
+    }
+  }
+;
+  removeActionListener=new ActionListener(){
+    public void actionPerformed(    ActionEvent arg){
+      if (contrib.isInstalled() && contrib instanceof LocalContribution) {
+        updateButton.setEnabled(false);
+        installRemoveButton.setEnabled(false);
+        installProgressBar.setVisible(true);
+        ((LocalContribution)contrib).removeContribution(listPanel.contribManager.editor,new JProgressMonitor(installProgressBar){
+          public void finishedAction(){
+            resetInstallProgressBarState();
+            installRemoveButton.setEnabled(true);
+          }
+        }
+,listPanel.contribManager.status);
+      }
+    }
+  }
+;
+  contextMenu=new JPopupMenu();
+  openFolder=new JMenuItem("Open Folder");
+  openFolder.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (contrib instanceof LocalContribution) {
+        File folder=((LocalContribution)contrib).getFolder();
+        Base.openFolder(folder);
+      }
+    }
+  }
+);
+  setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+  addPaneComponents();
+  addProgressBarAndButton();
+  setBackground(listPanel.getBackground());
+  setOpaque(true);
+  setSelected(false);
+  setExpandListener(this,new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
+      listPanel.setSelectedPanel(ContributionPanel.this);
+    }
+  }
+);
+}
