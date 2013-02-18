@@ -1,0 +1,37 @@
+{
+  pm.startTask("Removing",ProgressMonitor.UNKNOWN);
+  boolean doBackup=Preferences.getBoolean("contribution.backup.on_remove");
+  if (requiresRestart()) {
+    if (!doBackup || (doBackup && backup(editor,false,status))) {
+      if (setDeletionFlag()) {
+        contribListing.replaceContribution(this,this);
+      }
+    }
+  }
+ else {
+    boolean success=false;
+    if (doBackup) {
+      success=backup(editor,true,status);
+    }
+ else {
+      Base.removeDir(getFolder());
+      success=!getFolder().exists();
+    }
+    if (success) {
+      Contribution advertisedVersion=contribListing.getAvailableContribution(this);
+      if (advertisedVersion == null) {
+        contribListing.removeContribution(this);
+      }
+ else {
+        contribListing.replaceContribution(this,advertisedVersion);
+      }
+    }
+ else {
+      if (!doBackup) {
+        status.setErrorMessage("Could not delete the contribution's files");
+      }
+    }
+  }
+  ContributionManager.refreshInstalled(editor);
+  pm.finished();
+}

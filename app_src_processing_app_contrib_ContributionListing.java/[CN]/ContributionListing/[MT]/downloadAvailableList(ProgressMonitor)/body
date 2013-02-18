@@ -1,0 +1,25 @@
+{
+  final ProgressMonitor progressMonitor=(pm != null) ? pm : new NullProgressMonitor();
+  new Thread(new Runnable(){
+    public void run(){
+      downloadingListingLock.lock();
+      URL url=null;
+      try {
+        url=new URL(LISTING_URL);
+      }
+ catch (      MalformedURLException e) {
+        progressMonitor.error(e);
+        progressMonitor.finished();
+      }
+      if (!progressMonitor.isFinished()) {
+        ContributionManager.download(url,listingFile,progressMonitor);
+        if (!progressMonitor.isCanceled() && !progressMonitor.isError()) {
+          hasDownloadedLatestList=true;
+          setAdvertisedList(listingFile);
+        }
+      }
+      downloadingListingLock.unlock();
+    }
+  }
+).start();
+}
