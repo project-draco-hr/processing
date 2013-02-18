@@ -4,7 +4,8 @@
     updateButton.setVisible(isSelected() && contribListing.hasUpdates(contrib));
   }
   installRemoveButton.setVisible(isSelected());
-  for (  JTextPane textPane : htmlPanes) {
+{
+    JTextPane textPane=headerText;
     JEditorPane editorPane=textPane;
     editorPane.removeHyperlinkListener(ContributionListPanel.nullHyperlinkListener);
     editorPane.removeHyperlinkListener(conditionalHyperlinkOpener);
@@ -16,17 +17,7 @@
       editorPane.addHyperlinkListener(ContributionListPanel.nullHyperlinkListener);
       editorPane.setEditable(true);
     }
-    Document doc=textPane.getDocument();
-    if (doc instanceof HTMLDocument) {
-      HTMLDocument html=(HTMLDocument)doc;
-      StyleSheet stylesheet=html.getStyleSheet();
-      if (isSelected()) {
-        stylesheet.addRule("a {text-decoration:underline}");
-      }
- else {
-        stylesheet.addRule("a {text-decoration:none}");
-      }
-    }
+    setSelectionStyle(textPane,isSelected());
   }
   alreadySelected=isSelected();
 }

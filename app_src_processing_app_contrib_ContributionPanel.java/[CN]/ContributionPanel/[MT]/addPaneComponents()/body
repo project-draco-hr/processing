@@ -12,7 +12,9 @@
     Insets margin=headerText.getMargin();
     margin.bottom=0;
     headerText.setMargin(margin);
-    setHtmlTextStyle(headerText);
+    headerText.setContentType("text/html");
+    setTextStyle(headerText);
+    headerText.setOpaque(false);
     stripTextSelectionListeners(headerText);
     add(headerText,c);
   }
@@ -35,7 +37,9 @@
       dc.weightx=1;
       descriptionText=new JTextPane();
       descriptionText.setInheritsPopupMenu(true);
-      setHtmlTextStyle(descriptionText);
+      descriptionText.setContentType("text/html");
+      setTextStyle(descriptionText);
+      descriptionText.setOpaque(false);
       descriptionPanel.add(descriptionText,dc);
     }
     int margin=Base.isMacOS() ? 15 : 5;
@@ -56,7 +60,7 @@
     updateNotificationLabel=new JTextPane();
     updateNotificationLabel.setInheritsPopupMenu(true);
     updateNotificationLabel.setVisible(false);
-    setHtmlTextStyle(updateNotificationLabel);
+    setTextStyle(updateNotificationLabel);
     stripTextSelectionListeners(updateNotificationLabel);
     add(updateNotificationLabel,c);
   }
@@ -67,7 +71,7 @@
     c.weightx=1;
     c.insets=new Insets(-5,0,0,0);
     c.anchor=GridBagConstraints.EAST;
-    updateButton=new JButton("Update now");
+    updateButton=new JButton("Update");
     updateButton.setInheritsPopupMenu(true);
     Dimension installButtonDimensions=updateButton.getPreferredSize();
     installButtonDimensions.width=ContributionPanel.BUTTON_WIDTH;
