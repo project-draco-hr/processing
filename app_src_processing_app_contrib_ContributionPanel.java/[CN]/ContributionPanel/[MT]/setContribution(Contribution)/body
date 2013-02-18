@@ -1,23 +1,20 @@
 {
   this.contrib=contrib;
-  StringBuilder nameText=new StringBuilder();
-  nameText.append("<html><body><b>");
+  StringBuilder description=new StringBuilder();
+  description.append("<html><body><b>");
   if (contrib.getUrl() == null) {
-    nameText.append(contrib.getName());
+    description.append(contrib.getName());
   }
  else {
-    nameText.append("<a href=\"" + contrib.getUrl() + "\">"+ contrib.getName()+ "</a>");
+    description.append("<a href=\"" + contrib.getUrl() + "\">"+ contrib.getName()+ "</a>");
   }
-  nameText.append("</b>");
+  description.append("</b>");
   String authorList=contrib.getAuthorList();
   if (authorList != null && !authorList.isEmpty()) {
-    nameText.append(" by ");
-    nameText.append(toHtmlLinks(contrib.getAuthorList()));
+    description.append(" by ");
+    description.append(toHtmlLinks(contrib.getAuthorList()));
   }
-  nameText.append("</body></html>");
-  headerText.setText(nameText.toString());
-  StringBuilder description=new StringBuilder();
-  description.append("<html><body>");
+  description.append("<br/>");
   boolean isFlagged=contrib.isDeletionFlagged();
   if (isFlagged) {
     description.append(ContributionListPanel.DELETION_MESSAGE);
@@ -34,7 +31,7 @@
     description.append(sentence);
   }
   description.append("</body></html>");
-  descriptionText.setText(description.toString());
+  textBlock.setText(description.toString());
   if (contribListing.hasUpdates(contrib)) {
     StringBuilder versionText=new StringBuilder();
     versionText.append("<html><body><i>");
