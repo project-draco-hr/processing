@@ -6,12 +6,14 @@
     createComponents();
     registerDisposeListeners();
     dialog.pack();
-    Dimension screen=Toolkit.getScreenSize();
-    dialog.setLocation((screen.width - dialog.getWidth()) / 2,(screen.height - dialog.getHeight()) / 2);
+    dialog.setLocationRelativeTo(null);
     contributionListPanel.grabFocus();
   }
   dialog.setVisible(true);
-  if (!contribListing.hasDownloadedLatestList()) {
+  if (contribListing.hasDownloadedLatestList()) {
+    updateContributionListing();
+  }
+ else {
     contribListing.downloadAvailableList(new AbstractProgressMonitor(){
       public void startTask(      String name,      int maxValue){
       }
@@ -29,5 +31,4 @@
     }
 );
   }
-  updateContributionListing();
 }
