@@ -1,5 +1,4 @@
 {
-  final ProgressMonitor progressMonitor=(pm != null) ? pm : new NullProgressMonitor();
   new Thread(new Runnable(){
     public void run(){
       downloadingListingLock.lock();
@@ -8,12 +7,12 @@
         url=new URL(LISTING_URL);
       }
  catch (      MalformedURLException e) {
-        progressMonitor.error(e);
-        progressMonitor.finished();
+        progress.error(e);
+        progress.finished();
       }
-      if (!progressMonitor.isFinished()) {
-        ContributionManager.download(url,listingFile,progressMonitor);
-        if (!progressMonitor.isCanceled() && !progressMonitor.isError()) {
+      if (!progress.isFinished()) {
+        ContributionManager.download(url,listingFile,progress);
+        if (!progress.isCanceled() && !progress.isError()) {
           hasDownloadedLatestList=true;
           setAdvertisedList(listingFile);
         }
