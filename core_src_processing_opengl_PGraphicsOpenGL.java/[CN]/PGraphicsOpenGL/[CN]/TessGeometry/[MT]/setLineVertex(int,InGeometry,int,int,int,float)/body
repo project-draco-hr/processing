@@ -8,6 +8,9 @@
   float x1=in.vertices[index++];
   float y1=in.vertices[index++];
   float z1=in.vertices[index];
+  float dx=x1 - x0;
+  float dy=y1 - y0;
+  float dz=z1 - z0;
   if (renderMode == IMMEDIATE && flushMode == FLUSH_WHEN_FULL) {
     PMatrix3D mm=modelview;
     index=4 * tessIdx;
@@ -16,9 +19,9 @@
     lineVertices[index++]=x0 * mm.m20 + y0 * mm.m21 + z0 * mm.m22 + mm.m23;
     lineVertices[index]=x0 * mm.m30 + y0 * mm.m31 + z0 * mm.m32 + mm.m33;
     index=4 * tessIdx;
-    lineAttribs[index++]=x1 * mm.m00 + y1 * mm.m01 + z1 * mm.m02 + mm.m03;
-    lineAttribs[index++]=x1 * mm.m10 + y1 * mm.m11 + z1 * mm.m12 + mm.m13;
-    lineAttribs[index]=x1 * mm.m20 + y1 * mm.m21 + z1 * mm.m22 + mm.m23;
+    lineDirections[index++]=dx * mm.m00 + dy * mm.m01 + dz * mm.m02;
+    lineDirections[index++]=dx * mm.m10 + dy * mm.m11 + dz * mm.m12;
+    lineDirections[index]=dx * mm.m20 + dy * mm.m21 + dz * mm.m22;
   }
  else {
     index=4 * tessIdx;
@@ -27,10 +30,10 @@
     lineVertices[index++]=z0;
     lineVertices[index]=1;
     index=4 * tessIdx;
-    lineAttribs[index++]=x1;
-    lineAttribs[index++]=y1;
-    lineAttribs[index]=z1;
+    lineDirections[index++]=dx;
+    lineDirections[index++]=dy;
+    lineDirections[index]=dz;
   }
   lineColors[tessIdx]=rgba;
-  lineAttribs[4 * tessIdx + 3]=weight;
+  lineDirections[4 * tessIdx + 3]=weight;
 }
