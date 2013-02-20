@@ -2,7 +2,7 @@
   boolean success=false;
   try {
     URLConnection conn=source.openConnection();
-    conn.setConnectTimeout(1000);
+    conn.setConnectTimeout(2000);
     conn.setReadTimeout(5000);
     int fileSize=conn.getContentLength();
     progress.startTask("Downloading",fileSize);
@@ -20,7 +20,10 @@
     out.close();
     success=true;
   }
- catch (  IOException ioe) {
+ catch (  SocketTimeoutException ste) {
+    progress.error(ste);
+  }
+catch (  IOException ioe) {
     progress.error(ioe);
     ioe.printStackTrace();
   }
