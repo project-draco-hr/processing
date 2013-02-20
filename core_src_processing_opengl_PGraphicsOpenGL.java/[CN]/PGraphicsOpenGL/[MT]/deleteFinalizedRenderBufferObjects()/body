@@ -4,7 +4,7 @@
     if (glRenderBuffers.get(res)) {
       finalized.add(res);
       intBuffer.put(0,res.id);
-      pgl.deleteRenderbuffers(1,intBuffer);
+      if (pgl.threadIsCurrent())       pgl.deleteRenderbuffers(1,intBuffer);
     }
   }
   for (  GLResource res : finalized) {

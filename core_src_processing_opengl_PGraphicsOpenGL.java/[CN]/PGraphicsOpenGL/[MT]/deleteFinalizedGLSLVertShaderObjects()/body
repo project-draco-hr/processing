@@ -3,7 +3,7 @@
   for (  GLResource res : glslVertexShaders.keySet()) {
     if (glslVertexShaders.get(res)) {
       finalized.add(res);
-      pgl.deleteShader(res.id);
+      if (pgl.threadIsCurrent())       pgl.deleteShader(res.id);
     }
   }
   for (  GLResource res : finalized) {
