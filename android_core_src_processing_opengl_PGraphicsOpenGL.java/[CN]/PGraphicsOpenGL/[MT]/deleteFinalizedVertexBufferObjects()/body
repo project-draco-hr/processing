@@ -4,7 +4,7 @@
     if (glVertexBuffers.get(res)) {
       finalized.add(res);
       intBuffer.put(0,res.id);
-      pgl.deleteBuffers(1,intBuffer);
+      if (pgl.threadIsCurrent())       pgl.deleteBuffers(1,intBuffer);
     }
   }
   for (  GLResource res : finalized) {
