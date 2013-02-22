@@ -17,19 +17,11 @@ gluTess.setWindingRule(PGL.TESS_WINDING_NONZERO);
 break;
 }
 while (!iter.isDone()) {
-float sr=0;
-float sg=0;
-float sb=0;
-float sa=0;
 switch (iter.currentSegment(coords)) {
 case LinePath.SEG_MOVETO:
 gluTess.beginContour();
 case LinePath.SEG_LINETO:
-sa=(strokeColor >> 24) & 0xFF;
-sr=(strokeColor >> 16) & 0xFF;
-sg=(strokeColor >> 8) & 0xFF;
-sb=(strokeColor >> 0) & 0xFF;
-vertex=new double[]{coords[0],coords[1],0,sa,sr,sg,sb,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+vertex=new double[]{coords[0],coords[1],0,coords[2],coords[3],coords[4],coords[5],0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 gluTess.addVertex(vertex);
 break;
 case LinePath.SEG_CLOSE:

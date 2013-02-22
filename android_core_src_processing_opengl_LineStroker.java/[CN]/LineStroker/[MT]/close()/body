@@ -12,40 +12,40 @@
   boolean ccw=isCCW(px0,py0,x0,y0,sx0,sy0);
   if (joinSegment) {
     if (joinStyle == LinePath.JOIN_MITER) {
-      drawMiter(px0,py0,x0,y0,sx0,sy0,omx,omy,mx,my,ccw);
+      drawMiter(px0,py0,x0,y0,sx0,sy0,omx,omy,mx,my,pcolor0,ccw);
     }
  else     if (joinStyle == LinePath.JOIN_ROUND) {
-      drawRoundJoin(x0,y0,omx,omy,mx,my,0,false,ccw,ROUND_JOIN_THRESHOLD);
+      drawRoundJoin(x0,y0,omx,omy,mx,my,0,color0,false,ccw,ROUND_JOIN_THRESHOLD);
     }
   }
  else {
-    drawRoundJoin(x0,y0,omx,omy,mx,my,0,false,ccw,ROUND_JOIN_INTERNAL_THRESHOLD);
+    drawRoundJoin(x0,y0,omx,omy,mx,my,0,color0,false,ccw,ROUND_JOIN_INTERNAL_THRESHOLD);
   }
-  emitLineTo(x0 + mx,y0 + my);
-  emitLineTo(sx0 + mx,sy0 + my);
+  emitLineTo(x0 + mx,y0 + my,color0);
+  emitLineTo(sx0 + mx,sy0 + my,scolor0);
   ccw=isCCW(x0,y0,sx0,sy0,sx1,sy1);
   if (!ccw) {
     if (joinStyle == LinePath.JOIN_MITER) {
-      drawMiter(x0,y0,sx0,sy0,sx1,sy1,mx,my,mx0,my0,false);
+      drawMiter(x0,y0,sx0,sy0,sx1,sy1,mx,my,mx0,my0,color0,false);
     }
  else     if (joinStyle == LinePath.JOIN_ROUND) {
-      drawRoundJoin(sx0,sy0,mx,my,mx0,my0,0,false,false,ROUND_JOIN_THRESHOLD);
+      drawRoundJoin(sx0,sy0,mx,my,mx0,my0,0,scolor0,false,false,ROUND_JOIN_THRESHOLD);
     }
   }
-  emitLineTo(sx0 + mx0,sy0 + my0);
-  emitLineTo(sx0 - mx0,sy0 - my0);
+  emitLineTo(sx0 + mx0,sy0 + my0,scolor0);
+  emitLineTo(sx0 - mx0,sy0 - my0,scolor0);
   if (ccw) {
     if (joinStyle == LinePath.JOIN_MITER) {
-      drawMiter(x0,y0,sx0,sy0,sx1,sy1,-mx,-my,-mx0,-my0,false);
+      drawMiter(x0,y0,sx0,sy0,sx1,sy1,-mx,-my,-mx0,-my0,color0,false);
     }
  else     if (joinStyle == LinePath.JOIN_ROUND) {
-      drawRoundJoin(sx0,sy0,-mx,-my,-mx0,-my0,0,true,false,ROUND_JOIN_THRESHOLD);
+      drawRoundJoin(sx0,sy0,-mx,-my,-mx0,-my0,0,scolor0,true,false,ROUND_JOIN_THRESHOLD);
     }
   }
-  emitLineTo(sx0 - mx,sy0 - my);
-  emitLineTo(x0 - mx,y0 - my);
-  for (int i=rindex - 2; i >= 0; i-=2) {
-    emitLineTo(reverse[i],reverse[i + 1]);
+  emitLineTo(sx0 - mx,sy0 - my,scolor0);
+  emitLineTo(x0 - mx,y0 - my,color0);
+  for (int i=rindex - 3; i >= 0; i-=3) {
+    emitLineTo(reverse[i],reverse[i + 1],reverse[i + 2]);
   }
   this.x0=this.sx0;
   this.y0=this.sy0;

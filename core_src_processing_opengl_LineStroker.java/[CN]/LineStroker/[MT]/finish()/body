@@ -1,6 +1,6 @@
 {
   if (capStyle == LinePath.CAP_ROUND) {
-    drawRoundJoin(x0,y0,omx,omy,-omx,-omy,1,false,false,ROUND_JOIN_THRESHOLD);
+    drawRoundJoin(x0,y0,omx,omy,-omx,-omy,1,color0,false,false,ROUND_JOIN_THRESHOLD);
   }
  else   if (capStyle == LinePath.CAP_SQUARE) {
     long ldx=px0 - x0;
@@ -10,16 +10,16 @@
       long s=(long)lineWidth2 * 65536 / llen;
       int capx=x0 - (int)(ldx * s >> 16);
       int capy=y0 - (int)(ldy * s >> 16);
-      emitLineTo(capx + omx,capy + omy);
-      emitLineTo(capx - omx,capy - omy);
+      emitLineTo(capx + omx,capy + omy,color0);
+      emitLineTo(capx - omx,capy - omy,color0);
     }
   }
-  for (int i=rindex - 2; i >= 0; i-=2) {
-    emitLineTo(reverse[i],reverse[i + 1]);
+  for (int i=rindex - 3; i >= 0; i-=3) {
+    emitLineTo(reverse[i],reverse[i + 1],reverse[i + 2]);
   }
   this.rindex=0;
   if (capStyle == LinePath.CAP_ROUND) {
-    drawRoundJoin(sx0,sy0,-mx0,-my0,mx0,my0,1,false,false,ROUND_JOIN_THRESHOLD);
+    drawRoundJoin(sx0,sy0,-mx0,-my0,mx0,my0,1,scolor0,false,false,ROUND_JOIN_THRESHOLD);
   }
  else   if (capStyle == LinePath.CAP_SQUARE) {
     long ldx=sx1 - sx0;
@@ -29,8 +29,8 @@
       long s=(long)lineWidth2 * 65536 / llen;
       int capx=sx0 - (int)(ldx * s >> 16);
       int capy=sy0 - (int)(ldy * s >> 16);
-      emitLineTo(capx - mx0,capy - my0);
-      emitLineTo(capx + mx0,capy + my0);
+      emitLineTo(capx - mx0,capy - my0,scolor0);
+      emitLineTo(capx + mx0,capy + my0,scolor0);
     }
   }
   emitClose();

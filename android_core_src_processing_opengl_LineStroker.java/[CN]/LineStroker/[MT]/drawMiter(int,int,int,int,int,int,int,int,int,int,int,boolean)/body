@@ -1,0 +1,26 @@
+{
+  if (mx == omx && my == omy) {
+    return;
+  }
+  if (px0 == x0 && py0 == y0) {
+    return;
+  }
+  if (x0 == x1 && y0 == y1) {
+    return;
+  }
+  if (rev) {
+    omx=-omx;
+    omy=-omy;
+    mx=-mx;
+    my=-my;
+  }
+  computeMiter(px0 + omx,py0 + omy,x0 + omx,y0 + omy,x0 + mx,y0 + my,x1 + mx,y1 + my,miter);
+  long dx=(long)miter[0] - x0;
+  long dy=(long)miter[1] - y0;
+  long a=(dy * m00 - dx * m10) >> 16;
+  long b=(dy * m01 - dx * m11) >> 16;
+  long lenSq=a * a + b * b;
+  if (lenSq < miterLimitSq) {
+    emitLineTo(miter[0],miter[1],color,rev);
+  }
+}

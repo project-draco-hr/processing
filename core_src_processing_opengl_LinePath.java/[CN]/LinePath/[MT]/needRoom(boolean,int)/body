@@ -11,14 +11,25 @@
     pointTypes=copyOf(pointTypes,size + grow);
   }
   size=floatCoords.length;
-  if (numCoords + newCoords > size) {
+  if (numCoords + newPoints * 2 > size) {
     int grow=size;
     if (grow > EXPAND_MAX * 2) {
       grow=EXPAND_MAX * 2;
     }
-    if (grow < newCoords) {
-      grow=newCoords;
+    if (grow < newPoints * 2) {
+      grow=newPoints * 2;
     }
     floatCoords=copyOf(floatCoords,size + grow);
+  }
+  size=pointColors.length;
+  if (numCoords + newPoints > size) {
+    int grow=size;
+    if (grow > EXPAND_MAX) {
+      grow=EXPAND_MAX;
+    }
+    if (grow < newPoints) {
+      grow=newPoints;
+    }
+    pointColors=copyOf(pointColors,size + grow);
   }
 }
