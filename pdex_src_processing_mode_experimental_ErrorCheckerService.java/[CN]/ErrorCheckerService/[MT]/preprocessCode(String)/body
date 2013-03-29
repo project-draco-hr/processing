@@ -47,15 +47,21 @@
   className=(editor == null) ? "DefaultClass" : editor.getSketch().getName();
   Matcher matcher=FUNCTION_DECL.matcher(sourceAlt);
   if (!matcher.find()) {
-    sourceAlt="public class " + className + " extends PApplet {\n"+ "public void setup() {\n"+ sourceAlt+ "\nnoLoop();\n}\n"+ "\n}\n";
+    sourceAlt=xqpreproc.prepareImports(programImports) + "public class " + className+ " extends PApplet {\n"+ "public void setup() {\n"+ sourceAlt+ "\nnoLoop();\n}\n"+ "\n}\n";
     staticMode=true;
-    mainClassOffset=2;
   }
  else {
-    sourceAlt="public class " + className + " extends PApplet {\n"+ sourceAlt+ "\n}";
+    sourceAlt=xqpreproc.prepareImports(programImports) + "public class " + className+ " extends PApplet {\n"+ sourceAlt+ "\n}";
     staticMode=false;
-    mainClassOffset=1;
   }
+  int position=sourceAlt.indexOf("{") + 1;
+  mainClassOffset=1;
+  for (int i=0; i <= position; i++) {
+    if (sourceAlt.charAt(i) == '\n') {
+      mainClassOffset++;
+    }
+  }
+  if (staticMode)   mainClassOffset++;
   sourceAlt=substituteUnicode(sourceAlt);
   sourceCode=sourceAlt;
   return sourceAlt;

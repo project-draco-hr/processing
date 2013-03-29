@@ -1,0 +1,34 @@
+{
+  CompilationUnit root=(CompilationUnit)node.getRoot();
+  if (root.getLineNumber(node.getStartPosition()) == lineNumber) {
+    System.err.println(3 + getNodeAsString(node) + " len "+ node.getLength());
+    if (offset < node.getLength())     return node;
+ else {
+      System.err.println(-11);
+      return null;
+    }
+  }
+  for (  Object oprop : node.structuralPropertiesForType()) {
+    StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)oprop;
+    if (prop.isChildProperty() || prop.isSimpleProperty()) {
+      if (node.getStructuralProperty(prop) != null) {
+        if (node.getStructuralProperty(prop) instanceof ASTNode) {
+          ASTNode retNode=findLineOfNode((ASTNode)node.getStructuralProperty(prop),lineNumber,offset,name);
+          if (retNode != null) {
+            return retNode;
+          }
+        }
+      }
+    }
+ else     if (prop.isChildListProperty()) {
+      List<ASTNode> nodelist=(List<ASTNode>)node.getStructuralProperty(prop);
+      for (      ASTNode retNode : nodelist) {
+        ASTNode rr=findLineOfNode(retNode,lineNumber,offset,name);
+        if (rr != null) {
+          return rr;
+        }
+      }
+    }
+  }
+  return null;
+}

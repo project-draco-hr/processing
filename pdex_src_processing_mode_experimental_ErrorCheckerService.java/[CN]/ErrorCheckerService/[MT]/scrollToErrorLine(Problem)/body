@@ -1,0 +1,17 @@
+{
+  if (editor == null) {
+    return;
+  }
+  if (p == null)   return;
+  try {
+    editor.toFront();
+    editor.getSketch().setCurrentCode(p.tabIndex);
+    editor.setSelection(editor.getTextArea().getLineStartNonWhiteSpaceOffset(p.lineNumber - 1) + editor.getTextArea().getLineText(p.lineNumber - 1).trim().length(),editor.getTextArea().getLineStartNonWhiteSpaceOffset(p.lineNumber - 1));
+    editor.getTextArea().scrollTo(p.lineNumber - 1,0);
+    editor.repaint();
+  }
+ catch (  Exception e) {
+    System.err.println(e + " : Error while selecting text in scrollToErrorLine()");
+    e.printStackTrace();
+  }
+}

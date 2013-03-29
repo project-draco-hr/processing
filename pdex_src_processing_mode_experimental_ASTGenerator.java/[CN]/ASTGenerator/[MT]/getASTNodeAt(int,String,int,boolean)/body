@@ -1,0 +1,41 @@
+{
+  System.out.println("--------");
+  if (errorCheckerService != null) {
+    editor=errorCheckerService.getEditor();
+    int codeIndex=editor.getSketch().getCodeIndex(editor.getCurrentTab());
+    if (codeIndex > 0) {
+      for (int i=0; i < codeIndex; i++) {
+        SketchCode sc=editor.getSketch().getCode(i);
+        int len=Base.countLines(sc.getProgram()) + 1;
+        lineNumber+=len;
+      }
+    }
+  }
+  System.out.println("FLON: " + lineNumber);
+  ASTNode lineNode=findLineOfNode(compilationUnit,lineNumber,offset,name);
+  System.out.println("+> " + lineNode);
+  ASTNode decl=null;
+  if (lineNode != null) {
+    System.out.println("FLON2: " + lineNumber + " LN O "+ lineNode.getStartPosition());
+    ASTNode simpName=pinpointOnLine(lineNode,offset,lineNode.getStartPosition(),name);
+    System.out.println("+++> " + simpName);
+    if (simpName instanceof SimpleName) {
+      System.out.println(getNodeAsString(simpName));
+      decl=findDeclaration((SimpleName)simpName);
+      if (decl != null) {
+        System.err.println("DECLA: " + decl.getClass().getName());
+        retLabelString=getNodeAsString(decl);
+      }
+ else       System.err.println("null");
+      System.out.println(getNodeAsString(decl));
+    }
+  }
+  if (decl != null && scrollOnly) {
+    System.err.println("FINAL String label: " + getNodeAsString(decl));
+    DefaultProblem dpr=new DefaultProblem(null,null,-1,null,-1,decl.getStartPosition(),decl.getStartPosition(),getLineNumber(decl) + 1,0);
+    int[] position=errorCheckerService.calculateTabIndexAndLineNumber(dpr);
+    System.out.println("Tab " + position[0] + ", Line: "+ (position[1]));
+    Problem p=new Problem(dpr,position[0],position[1]);
+  }
+  return null;
+}

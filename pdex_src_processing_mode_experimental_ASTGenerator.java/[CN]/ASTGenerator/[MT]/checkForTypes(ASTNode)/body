@@ -1,0 +1,32 @@
+{
+  List<VariableDeclarationFragment> vdfs=null;
+switch (node.getNodeType()) {
+case ASTNode.TYPE_DECLARATION:
+    return new String[]{getNodeAsString(node)};
+case ASTNode.METHOD_DECLARATION:
+  String[] ret1=new String[]{getNodeAsString(node)};
+return ret1;
+case ASTNode.SINGLE_VARIABLE_DECLARATION:
+return new String[]{getNodeAsString(node)};
+case ASTNode.FIELD_DECLARATION:
+vdfs=((FieldDeclaration)node).fragments();
+break;
+case ASTNode.VARIABLE_DECLARATION_STATEMENT:
+vdfs=((VariableDeclarationStatement)node).fragments();
+break;
+case ASTNode.VARIABLE_DECLARATION_EXPRESSION:
+vdfs=((VariableDeclarationExpression)node).fragments();
+break;
+default :
+break;
+}
+if (vdfs != null) {
+String ret[]=new String[vdfs.size()];
+int i=0;
+for (VariableDeclarationFragment vdf : vdfs) {
+ret[i++]=getNodeAsString(vdf);
+}
+return ret;
+}
+return null;
+}
