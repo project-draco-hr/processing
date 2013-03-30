@@ -6,7 +6,6 @@
       if (node.getStructuralProperty(prop) != null) {
         if (node.getStructuralProperty(prop) instanceof ASTNode) {
           ASTNode cnode=(ASTNode)node.getStructuralProperty(prop);
-          System.out.println("Looking at " + getNodeAsString(cnode));
           int cLineNum=((CompilationUnit)cnode.getRoot()).getLineNumber(cnode.getStartPosition() + cnode.getLength());
           if (getLineNumber(cnode) <= lineNumber && lineNumber <= cLineNum) {
             return findClosestParentNode(lineNumber,cnode);
@@ -18,7 +17,6 @@
       List<ASTNode> nodelist=(List<ASTNode>)node.getStructuralProperty(prop);
       for (      ASTNode cnode : nodelist) {
         int cLineNum=((CompilationUnit)cnode.getRoot()).getLineNumber(cnode.getStartPosition() + cnode.getLength());
-        System.out.println("Looking at " + getNodeAsString(cnode));
         if (getLineNumber(cnode) <= lineNumber && lineNumber <= cLineNum) {
           return findClosestParentNode(lineNumber,cnode);
         }

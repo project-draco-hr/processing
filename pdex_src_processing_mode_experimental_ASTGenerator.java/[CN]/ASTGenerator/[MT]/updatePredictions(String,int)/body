@@ -19,9 +19,9 @@
       parser.setKind(ASTParser.K_EXPRESSION);
       parser.setSource(word.toCharArray());
       ASTNode testnode=parser.createAST(null);
-      System.out.print("Typed: " + word + "|");
+      System.err.print("Typed: " + word + "|");
       anode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
-      System.out.println(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(anode));
+      System.err.println(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(anode));
       ArrayList<String> candidates=new ArrayList<String>();
       if (testnode instanceof SimpleName) {
         anode=anode.getParent();
@@ -56,8 +56,9 @@
         }
       }
  else {
-        System.out.println("Not a SN " + getNodeAsString(testnode));
+        System.err.println("Complex expression " + getNodeAsString(testnode));
         ASTNode det=resolveExpression(anode,testnode);
+        System.err.println("DET " + getNodeAsString(det));
         if (det != null) {
           TypeDeclaration td=null;
           if (det instanceof MethodDeclaration) {
@@ -72,13 +73,22 @@
               td=(TypeDeclaration)findDeclaration(stp.getName());
             }
           }
-          System.out.println(getNodeAsString(det) + " defined in " + getNodeAsString(td));
+ else           if (det instanceof VariableDeclarationStatement) {
+            SimpleType stp=(SimpleType)(((VariableDeclarationStatement)det).getType());
+            td=(TypeDeclaration)findDeclaration(stp.getName());
+          }
+          System.err.println(getNodeAsString(det) + " defined in " + getNodeAsString(td));
           if (td != null) {
+            ASTNode child=resolveChildExpression(testnode);
+            System.out.println("Completion candidate: " + getNodeAsString(child));
             for (int i=0; i < td.getFields().length; i++) {
-              candidates.add(getNodeAsString(td.getFields()[i]));
+              List<VariableDeclarationFragment> vdfs=td.getFields()[i].fragments();
+              for (              VariableDeclarationFragment vdf : vdfs) {
+                if (vdf.getName().toString().startsWith(child.toString()))                 candidates.add(getNodeAsString(vdf));
+              }
             }
             for (int i=0; i < td.getMethods().length; i++) {
-              candidates.add(getNodeAsString(td.getMethods()[i]));
+              if (td.getMethods()[i].getName().toString().startsWith(child.toString()))               candidates.add(getNodeAsString(td.getMethods()[i]));
             }
           }
         }

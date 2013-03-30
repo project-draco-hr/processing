@@ -96,13 +96,11 @@
       StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)oprop;
       if (prop.isChildProperty() || prop.isSimpleProperty()) {
         if (parent.getStructuralProperty(prop) instanceof ASTNode) {
-          System.out.println(prop + " C/S Prop of -> " + getNodeAsString(parent));
           ret=definedIn((ASTNode)parent.getStructuralProperty(prop),findMe.toString(),constrains,declaringClass);
           if (ret != null)           return ret;
         }
       }
  else       if (prop.isChildListProperty()) {
-        System.out.println((prop) + " ChildList props of " + getNodeAsString(parent));
         List<ASTNode> nodelist=(List<ASTNode>)parent.getStructuralProperty(prop);
         for (        ASTNode retNode : nodelist) {
           ret=definedIn(retNode,findMe.toString(),constrains,declaringClass);

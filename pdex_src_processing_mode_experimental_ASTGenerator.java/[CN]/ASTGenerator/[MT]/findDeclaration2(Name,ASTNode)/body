@@ -94,18 +94,15 @@
   }
   System.out.println("Alternate parent: " + getNodeAsString(alternateParent));
   while (alternateParent != null) {
-    System.out.println("findDeclaration2 -> " + getNodeAsString(alternateParent));
     for (    Object oprop : alternateParent.structuralPropertiesForType()) {
       StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)oprop;
       if (prop.isChildProperty() || prop.isSimpleProperty()) {
         if (alternateParent.getStructuralProperty(prop) instanceof ASTNode) {
-          System.out.println(prop + " C/S Prop of -> " + getNodeAsString(alternateParent));
           ret=definedIn((ASTNode)alternateParent.getStructuralProperty(prop),findMe.toString(),constrains,declaringClass);
           if (ret != null)           return ret;
         }
       }
  else       if (prop.isChildListProperty()) {
-        System.out.println((prop) + " ChildList props of " + getNodeAsString(alternateParent));
         List<ASTNode> nodelist=(List<ASTNode>)alternateParent.getStructuralProperty(prop);
         for (        ASTNode retNode : nodelist) {
           ret=definedIn(retNode,findMe.toString(),constrains,declaringClass);
