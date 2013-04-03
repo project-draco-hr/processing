@@ -4,6 +4,12 @@
       return null;
     }
     protected void done(){
+      String word2=word;
+      boolean noCompare=false;
+      if (word2.endsWith(".")) {
+        word2=word2.substring(0,word.length() - 1);
+        noCompare=true;
+      }
       int lineNumber=line;
       if (errorCheckerService != null) {
         editor=errorCheckerService.getEditor();
@@ -17,13 +23,14 @@
       ASTNode anode=null;
       ASTParser parser=ASTParser.newParser(AST.JLS4);
       parser.setKind(ASTParser.K_EXPRESSION);
-      parser.setSource(word.toCharArray());
+      parser.setSource(word2.toCharArray());
       ASTNode testnode=parser.createAST(null);
-      System.err.print("Typed: " + word + "|");
+      System.err.print("Typed: " + word2 + "|");
       anode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
       System.err.println(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(anode));
       ArrayList<String> candidates=new ArrayList<String>();
-      if (testnode instanceof SimpleName) {
+      if (testnode instanceof SimpleName && !noCompare) {
+        System.err.println("One word expression " + getNodeAsString(testnode));
         anode=anode.getParent();
         while (anode != null) {
           List<StructuralPropertyDescriptor> sprops=anode.structuralPropertiesForType();
@@ -35,7 +42,7 @@
                 String[] types=checkForTypes(cnode);
                 if (types != null) {
                   for (int i=0; i < types.length; i++) {
-                    if (types[i].startsWith(word))                     candidates.add(types[i]);
+                    if (types[i].startsWith(word2))                     candidates.add(types[i]);
                   }
                 }
               }
@@ -46,7 +53,7 @@
                 String[] types=checkForTypes(clnode);
                 if (types != null) {
                   for (int i=0; i < types.length; i++) {
-                    if (types[i].startsWith(word))                     candidates.add(types[i]);
+                    if (types[i].startsWith(word2))                     candidates.add(types[i]);
                   }
                 }
               }
@@ -84,11 +91,17 @@
             for (int i=0; i < td.getFields().length; i++) {
               List<VariableDeclarationFragment> vdfs=td.getFields()[i].fragments();
               for (              VariableDeclarationFragment vdf : vdfs) {
-                if (vdf.getName().toString().startsWith(child.toString()))                 candidates.add(getNodeAsString(vdf));
+                if (noCompare) {
+                  candidates.add(getNodeAsString(vdf));
+                }
+ else                 if (vdf.getName().toString().startsWith(child.toString()))                 candidates.add(getNodeAsString(vdf));
               }
             }
             for (int i=0; i < td.getMethods().length; i++) {
-              if (td.getMethods()[i].getName().toString().startsWith(child.toString()))               candidates.add(getNodeAsString(td.getMethods()[i]));
+              if (noCompare) {
+                candidates.add(getNodeAsString(td.getMethods()[i]));
+              }
+ else               if (td.getMethods()[i].getName().toString().startsWith(child.toString()))               candidates.add(getNodeAsString(td.getMethods()[i]));
             }
           }
         }

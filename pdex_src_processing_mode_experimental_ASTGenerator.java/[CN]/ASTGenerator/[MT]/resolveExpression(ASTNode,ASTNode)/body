@@ -1,4 +1,5 @@
 {
+  System.out.println("Resolving " + getNodeAsString(expression));
   if (expression instanceof SimpleName) {
     return findDeclaration2(((SimpleName)expression),nearestNode);
   }
@@ -6,7 +7,8 @@
     return findDeclaration2(((MethodInvocation)expression).getName(),nearestNode);
   }
  else   if (expression instanceof FieldAccess) {
-    return findDeclaration2(((FieldAccess)expression).getName(),nearestNode);
+    System.out.println("2. Field access " + getNodeAsString(((FieldAccess)expression).getExpression()));
+    return resolveExpression(nearestNode,((FieldAccess)expression).getExpression());
   }
  else   if (expression instanceof QualifiedName) {
     System.out.println("1. Resolving " + ((QualifiedName)expression).getQualifier() + " ||| "+ ((QualifiedName)expression).getName());
