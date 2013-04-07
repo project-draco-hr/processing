@@ -42,9 +42,9 @@
     canvasAWT.setFocusable(true);
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasAWT,BorderLayout.CENTER);
+    pg.parent.validate();
     pg.parent.removeListeners(pg.parent);
     pg.parent.addListeners(canvasAWT);
-    capabilities=canvasAWT.getChosenGLCapabilities();
     canvas=canvasAWT;
     canvasNEWT=null;
     listener=new PGLListener();
@@ -58,6 +58,7 @@
     canvasNEWT.setFocusable(true);
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasNEWT,BorderLayout.CENTER);
+    pg.parent.validate();
     if (events == NEWT) {
       NEWTMouseListener mouseListener=new NEWTMouseListener();
       window.addMouseListener(mouseListener);
@@ -71,7 +72,6 @@
       pg.parent.removeListeners(canvasNEWT);
       pg.parent.addListeners(canvasNEWT);
     }
-    capabilities=window.getChosenGLCapabilities();
     canvas=canvasNEWT;
     canvasAWT=null;
     listener=new PGLListener();
