@@ -9,6 +9,7 @@
   int vidx=cache.vertexOffset[index] + cache.vertexCount[index];
   int color=constStroke ? strokeColor : in.strokeColors[i0];
   float weight=constStroke ? strokeWeight : in.strokeWeights[i0];
+  if (subPixelStroke(weight))   clampingEnabled=false;
   float x0=in.vertices[3 * i0 + 0];
   float y0=in.vertices[3 * i0 + 1];
   float x1=in.vertices[3 * i1 + 0];
@@ -17,24 +18,33 @@
   float diry=y1 - y0;
   float llen=PApplet.sqrt(dirx * dirx + diry * diry);
   float normx=0, normy=0;
+  float dirdx=0, dirdy=0;
   if (nonZero(llen)) {
     normx=-diry / llen;
     normy=+dirx / llen;
+    dirdx=(dirx / llen) * PApplet.min(0.75f,weight / 2);
+    dirdy=(diry / llen) * PApplet.min(0.75f,weight / 2);
   }
-  tess.setPolyVertex(vidx++,x0 + normx * weight / 2,y0 + normy * weight / 2,0,color);
+  float normdx=normx * weight / 2;
+  float normdy=normy * weight / 2;
+  tess.setPolyVertex(vidx++,x0 + normdx - dirdx,y0 + normdy - dirdy,0,color);
   tess.polyIndices[iidx++]=(short)(count + 0);
-  tess.setPolyVertex(vidx++,x0 - normx * weight / 2,y0 - normy * weight / 2,0,color);
+  tess.setPolyVertex(vidx++,x0 - normdx - dirdx,y0 - normdy - dirdy,0,color);
   tess.polyIndices[iidx++]=(short)(count + 1);
   if (!constStroke) {
     color=in.strokeColors[i1];
     weight=in.strokeWeights[i1];
+    normdx=normx * weight / 2;
+    normdy=normy * weight / 2;
+    if (subPixelStroke(weight))     clampingEnabled=false;
   }
-  tess.setPolyVertex(vidx++,x1 - normx * weight / 2,y1 - normy * weight / 2,0,color);
+  tess.setPolyVertex(vidx++,x1 - normdx + dirdx,y1 - normdy + dirdy,0,color);
   tess.polyIndices[iidx++]=(short)(count + 2);
   tess.polyIndices[iidx++]=(short)(count + 2);
   tess.polyIndices[iidx++]=(short)(count + 0);
-  tess.setPolyVertex(vidx++,x1 + normx * weight / 2,y1 + normy * weight / 2,0,color);
+  tess.setPolyVertex(vidx++,x1 + normdx + dirdx,y1 + normdy + dirdy,0,color);
   tess.polyIndices[iidx++]=(short)(count + 3);
   cache.incCounts(index,6,4);
+  clampingEnabled=true;
   return index;
 }

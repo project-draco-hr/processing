@@ -2,6 +2,7 @@
   callback.init(in.renderMode == RETAINED,true,false);
   int cap=strokeCap == ROUND ? LinePath.CAP_ROUND : strokeCap == PROJECT ? LinePath.CAP_SQUARE : LinePath.CAP_BUTT;
   int join=strokeJoin == ROUND ? LinePath.JOIN_ROUND : strokeJoin == BEVEL ? LinePath.JOIN_BEVEL : LinePath.JOIN_MITER;
+  if (subPixelStroke(strokeWeight))   clampingEnabled=false;
   LinePath strokedPath=LinePath.createStrokedPath(path,strokeWeight,cap,join);
   gluTess.beginPolygon();
   double[] vertex;
@@ -31,4 +32,5 @@ break;
 iter.next();
 }
 gluTess.endPolygon();
+clampingEnabled=true;
 }
