@@ -68,22 +68,24 @@
         System.err.println("DET " + getNodeAsString(det));
         if (det != null) {
           TypeDeclaration td=null;
+          SimpleType stp=null;
           if (det instanceof MethodDeclaration) {
             if (((MethodDeclaration)det).getReturnType2() instanceof SimpleType) {
-              SimpleType stp=(SimpleType)(((MethodDeclaration)det).getReturnType2());
+              stp=(SimpleType)(((MethodDeclaration)det).getReturnType2());
               td=(TypeDeclaration)findDeclaration(stp.getName());
             }
           }
  else           if (det instanceof FieldDeclaration) {
             if (((FieldDeclaration)det).getType() instanceof SimpleType) {
-              SimpleType stp=(SimpleType)(((FieldDeclaration)det).getType());
+              stp=(SimpleType)(((FieldDeclaration)det).getType());
               td=(TypeDeclaration)findDeclaration(stp.getName());
             }
           }
  else           if (det instanceof VariableDeclarationStatement) {
-            SimpleType stp=(SimpleType)(((VariableDeclarationStatement)det).getType());
+            stp=(SimpleType)(((VariableDeclarationStatement)det).getType());
             td=(TypeDeclaration)findDeclaration(stp.getName());
           }
+          System.out.println("ST is " + stp.getName());
           System.err.println(getNodeAsString(det) + " defined in " + getNodeAsString(td));
           if (td != null) {
             ASTNode child=resolveChildExpression(testnode);
@@ -102,6 +104,41 @@
                 candidates.add(getNodeAsString(td.getMethods()[i]));
               }
  else               if (td.getMethods()[i].getName().toString().startsWith(child.toString()))               candidates.add(getNodeAsString(td.getMethods()[i]));
+            }
+          }
+ else {
+            if (stp != null) {
+              System.out.println("Couldn't determine type! " + stp.getName().toString());
+              RegExpResourceFilter regExpResourceFilter;
+              regExpResourceFilter=new RegExpResourceFilter(".*",stp.getName().toString() + ".class");
+              String[] resources=classPath.findResources("",regExpResourceFilter);
+              for (              String className : resources) {
+                System.out.println("-> " + className);
+              }
+              if (resources.length > 0) {
+                String matchedClass=resources[0];
+                matchedClass=matchedClass.substring(0,matchedClass.length() - 6);
+                matchedClass=matchedClass.replace('/','.');
+                System.out.println("Matched class: " + matchedClass);
+                try {
+                  Class<?> probableClass=Class.forName(matchedClass,false,errorCheckerService.classLoader);
+                  for (                  Method method : probableClass.getMethods()) {
+                    StringBuffer label=new StringBuffer(method.getName() + "(");
+                    for (                    Class<?> type : method.getParameterTypes()) {
+                      label.append(type.getSimpleName() + ",");
+                    }
+                    label.append(")");
+                    candidates.add(label.toString());
+                  }
+                  for (                  Field field : probableClass.getFields()) {
+                    candidates.add(field.getName());
+                  }
+                }
+ catch (                ClassNotFoundException e) {
+                  e.printStackTrace();
+                  System.out.println("Couldn't load " + matchedClass);
+                }
+              }
             }
           }
         }

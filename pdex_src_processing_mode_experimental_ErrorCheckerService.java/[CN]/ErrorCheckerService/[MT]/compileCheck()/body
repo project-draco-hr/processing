@@ -13,14 +13,15 @@
       }
 ;
       File[] jarFiles=f.listFiles(fileFilter);
-      for (      File jarFile : jarFiles) {
-        classpathJars.add(jarFile.toURI().toURL());
+      classpath=new URL[classpathJars.size() + jarFiles.length];
+      int ii=0;
+      for (; ii < classpathJars.size(); ii++) {
+        classpath[ii]=classpathJars.get(ii);
       }
-      classpath=new URL[classpathJars.size()];
-      for (int i=0; i < classpathJars.size(); i++) {
-        classpath[i]=classpathJars.get(i);
+      for (int i=0; i < jarFiles.length; i++) {
+        classpath[ii++]=jarFiles[i].toURI().toURL();
       }
-      URLClassLoader classLoader=new URLClassLoader(classpath);
+      classLoader=new URLClassLoader(classpath);
       checkerClass=Class.forName("CompilationChecker",true,classLoader);
       compilationChecker=checkerClass.newInstance();
       loadCompClass=false;

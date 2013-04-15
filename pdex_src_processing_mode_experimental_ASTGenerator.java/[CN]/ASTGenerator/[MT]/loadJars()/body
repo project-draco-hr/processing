@@ -1,0 +1,28 @@
+{
+  try {
+    factory=new ClassPathFactory();
+    String tehPaths=System.getProperty("java.class.path") + File.pathSeparatorChar + System.getProperty("java.home")+ "/lib/rt.jar";
+    StringBuffer tehPath=new StringBuffer(System.getProperty("java.class.path") + File.pathSeparatorChar + System.getProperty("java.home")+ "/lib/rt.jar");
+    if (errorCheckerService.classpathJars != null) {
+      for (      URL jarPath : errorCheckerService.classpathJars) {
+        tehPath.append(jarPath.getPath() + File.pathSeparatorChar);
+      }
+    }
+    StringTokenizer st=new StringTokenizer(tehPath.toString(),File.pathSeparatorChar + "");
+    while (st.hasMoreElements()) {
+      System.out.println("- " + st.nextToken());
+    }
+    classPath=factory.createFromPath(tehPath.toString());
+    for (    String packageName : classPath.listPackages("")) {
+      System.out.println(packageName);
+    }
+    RegExpResourceFilter regExpResourceFilter=new RegExpResourceFilter(".*","Vec3D.class");
+    String[] resources=classPath.findResources("",regExpResourceFilter);
+    for (    String className : resources) {
+      System.out.println("-> " + className);
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}
