@@ -9,7 +9,7 @@
   int vidx=cache.vertexOffset[index] + cache.vertexCount[index];
   int color=constStroke ? strokeColor : in.strokeColors[i0];
   float weight=constStroke ? strokeWeight : in.strokeWeights[i0];
-  if (subPixelStroke(weight))   clampXY=false;
+  if (subPixelStroke(weight))   clamp=false;
   float x0=in.vertices[3 * i0 + 0];
   float y0=in.vertices[3 * i0 + 1];
   float x1=in.vertices[3 * i1 + 0];
@@ -27,11 +27,11 @@
   }
   float normdx=normx * weight / 2;
   float normdy=normy * weight / 2;
-  tess.setPolyVertex(vidx++,x0 + normdx - dirdx,y0 + normdy - dirdy,0,color,clampXY);
+  tess.setPolyVertex(vidx++,x0 + normdx - dirdx,y0 + normdy - dirdy,0,color,clamp);
   tess.polyIndices[iidx++]=(short)(count + 0);
-  tess.setPolyVertex(vidx++,x0 - normdx - dirdx,y0 - normdy - dirdy,0,color,clampXY);
+  tess.setPolyVertex(vidx++,x0 - normdx - dirdx,y0 - normdy - dirdy,0,color,clamp);
   tess.polyIndices[iidx++]=(short)(count + 1);
-  if (clampXY) {
+  if (clamp) {
     float xac=tess.polyVertices[4 * (vidx - 2) + 0];
     float yac=tess.polyVertices[4 * (vidx - 2) + 1];
     float xbc=tess.polyVertices[4 * (vidx - 1) + 0];
@@ -46,15 +46,15 @@
     weight=in.strokeWeights[i1];
     normdx=normx * weight / 2;
     normdy=normy * weight / 2;
-    if (subPixelStroke(weight))     clampXY=false;
+    if (subPixelStroke(weight))     clamp=false;
   }
-  tess.setPolyVertex(vidx++,x1 - normdx + dirdx,y1 - normdy + dirdy,0,color,clampXY);
+  tess.setPolyVertex(vidx++,x1 - normdx + dirdx,y1 - normdy + dirdy,0,color,clamp);
   tess.polyIndices[iidx++]=(short)(count + 2);
   tess.polyIndices[iidx++]=(short)(count + 2);
   tess.polyIndices[iidx++]=(short)(count + 0);
-  tess.setPolyVertex(vidx++,x1 + normdx + dirdx,y1 + normdy + dirdy,0,color,clampXY);
+  tess.setPolyVertex(vidx++,x1 + normdx + dirdx,y1 + normdy + dirdy,0,color,clamp);
   tess.polyIndices[iidx++]=(short)(count + 3);
-  if (clampXY) {
+  if (clamp) {
     float xac=tess.polyVertices[4 * (vidx - 2) + 0];
     float yac=tess.polyVertices[4 * (vidx - 2) + 1];
     float xbc=tess.polyVertices[4 * (vidx - 1) + 0];
