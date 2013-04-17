@@ -7,12 +7,13 @@
     int index=in.renderMode == RETAINED ? tess.polyIndexCache.addNew() : tess.polyIndexCache.getLast();
     firstLineIndexCache=index;
     if (firstPolyIndexCache == -1)     firstPolyIndexCache=index;
+    boolean clamp=clampEdges2D();
     for (int i=in.firstEdge; i <= in.lastEdge; i++) {
       int[] edge=in.edges[i];
       if (edge[2] == EDGE_CLOSE)       continue;
       int i0=edge[0];
       int i1=edge[1];
-      index=addLine2D(i0,i1,index,false);
+      index=addLineSegment2D(i0,i1,index,false,clamp);
     }
     lastLineIndexCache=lastPolyIndexCache=index;
   }

@@ -5,12 +5,13 @@
     int nInInd=3 * (nInVert - 2);
     setRawSize(nInInd);
     int idx=0;
+    boolean clamp=clampTriangleFan();
     for (int i=in.firstVertex + 1; i < in.lastVertex; i++) {
       rawIndices[idx++]=in.firstVertex;
       rawIndices[idx++]=i;
       rawIndices[idx++]=i + 1;
     }
-    splitRawIndices();
+    splitRawIndices(clamp);
   }
   endTex();
   tessellateEdges();
