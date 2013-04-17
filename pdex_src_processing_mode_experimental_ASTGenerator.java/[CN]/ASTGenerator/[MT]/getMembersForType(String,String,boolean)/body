@@ -1,0 +1,60 @@
+{
+  ArrayList<String> candidates=new ArrayList<String>();
+  RegExpResourceFilter regExpResourceFilter;
+  regExpResourceFilter=new RegExpResourceFilter(".*",typeName + ".class");
+  String[] resources=classPath.findResources("",regExpResourceFilter);
+  for (  String className : resources) {
+    System.out.println("-> " + className);
+  }
+  if (resources.length > 0) {
+    String matchedClass=resources[0];
+    matchedClass=matchedClass.substring(0,matchedClass.length() - 6);
+    matchedClass=matchedClass.replace('/','.');
+    System.out.println("Matched class: " + matchedClass);
+    System.out.println("Looking for match " + child.toString());
+    try {
+      Class<?> probableClass=Class.forName(matchedClass,false,errorCheckerService.classLoader);
+      for (      Method method : probableClass.getMethods()) {
+        StringBuffer label=new StringBuffer(method.getName() + "(");
+        for (        Class<?> type : method.getParameterTypes()) {
+          label.append(type.getSimpleName() + ",");
+        }
+        label.append(")");
+        if (noCompare)         candidates.add(label.toString());
+ else         if (label.toString().startsWith(child.toString()))         candidates.add(label.toString());
+      }
+      for (      Field field : probableClass.getFields()) {
+        if (noCompare)         candidates.add(field.getName());
+ else         if (field.getName().startsWith(child.toString()))         candidates.add(field.getName());
+      }
+    }
+ catch (    ClassNotFoundException e) {
+      e.printStackTrace();
+      System.out.println("Couldn't load " + matchedClass);
+    }
+  }
+  if (candidates.size() > 0) {
+    String methodmatch=candidates.get(0);
+    System.out.println("jdoc match " + methodmatch);
+    for (    final String key : jdocMap.keySet()) {
+      if (methodmatch.startsWith(key) && key.length() > 4) {
+        System.out.println("Matched jdoc" + key);
+        jdocLabel.setText(jdocMap.get(key));
+        visitRecur((ASTNode)compilationUnit.types().get(0),codeTree);
+        SwingWorker worker=new SwingWorker(){
+          @Override protected Object doInBackground() throws Exception {
+            return null;
+          }
+          protected void done(){
+            System.out.println(jdocMap.get(key));
+            jdocLabel.repaint();
+          }
+        }
+;
+        worker.execute();
+        break;
+      }
+    }
+  }
+  return candidates;
+}

@@ -33,6 +33,16 @@
         System.err.println("One word expression " + getNodeAsString(testnode));
         anode=anode.getParent();
         while (anode != null) {
+          if (anode instanceof TypeDeclaration) {
+            TypeDeclaration td=(TypeDeclaration)anode;
+            if (td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY) != null) {
+              SimpleType st=(SimpleType)td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY);
+              System.out.println("Superclass " + st.getName());
+              for (              String can : getMembersForType(st.getName().toString(),word2,noCompare)) {
+                candidates.add(can);
+              }
+            }
+          }
           List<StructuralPropertyDescriptor> sprops=anode.structuralPropertiesForType();
           for (          StructuralPropertyDescriptor sprop : sprops) {
             ASTNode cnode=null;
@@ -87,8 +97,8 @@
           }
           System.out.println("ST is " + stp.getName());
           System.err.println(getNodeAsString(det) + " defined in " + getNodeAsString(td));
+          ASTNode child=resolveChildExpression(testnode);
           if (td != null) {
-            ASTNode child=resolveChildExpression(testnode);
             System.out.println("Completion candidate: " + getNodeAsString(child));
             for (int i=0; i < td.getFields().length; i++) {
               List<VariableDeclarationFragment> vdfs=td.getFields()[i].fragments();
@@ -108,37 +118,7 @@
           }
  else {
             if (stp != null) {
-              System.out.println("Couldn't determine type! " + stp.getName().toString());
-              RegExpResourceFilter regExpResourceFilter;
-              regExpResourceFilter=new RegExpResourceFilter(".*",stp.getName().toString() + ".class");
-              String[] resources=classPath.findResources("",regExpResourceFilter);
-              for (              String className : resources) {
-                System.out.println("-> " + className);
-              }
-              if (resources.length > 0) {
-                String matchedClass=resources[0];
-                matchedClass=matchedClass.substring(0,matchedClass.length() - 6);
-                matchedClass=matchedClass.replace('/','.');
-                System.out.println("Matched class: " + matchedClass);
-                try {
-                  Class<?> probableClass=Class.forName(matchedClass,false,errorCheckerService.classLoader);
-                  for (                  Method method : probableClass.getMethods()) {
-                    StringBuffer label=new StringBuffer(method.getName() + "(");
-                    for (                    Class<?> type : method.getParameterTypes()) {
-                      label.append(type.getSimpleName() + ",");
-                    }
-                    label.append(")");
-                    candidates.add(label.toString());
-                  }
-                  for (                  Field field : probableClass.getFields()) {
-                    candidates.add(field.getName());
-                  }
-                }
- catch (                ClassNotFoundException e) {
-                  e.printStackTrace();
-                  System.out.println("Couldn't load " + matchedClass);
-                }
-              }
+              candidates=getMembersForType(stp.getName().toString(),child.toString(),noCompare);
             }
           }
         }
