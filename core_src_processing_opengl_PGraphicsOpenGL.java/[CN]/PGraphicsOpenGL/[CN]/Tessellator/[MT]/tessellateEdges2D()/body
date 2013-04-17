@@ -9,6 +9,7 @@
     if (firstPolyIndexCache == -1)     firstPolyIndexCache=index;
     for (int i=in.firstEdge; i <= in.lastEdge; i++) {
       int[] edge=in.edges[i];
+      if (edge[2] == EDGE_CLOSE)       continue;
       int i0=edge[0];
       int i1=edge[1];
       index=addLine2D(i0,i1,index,false);
@@ -37,6 +38,9 @@ case EDGE_SINGLE:
 path.moveTo(in.vertices[3 * i0 + 0],in.vertices[3 * i0 + 1],in.strokeColors[i0]);
 path.lineTo(in.vertices[3 * i1 + 0],in.vertices[3 * i1 + 1],in.strokeColors[i1]);
 path.moveTo(in.vertices[3 * i1 + 0],in.vertices[3 * i1 + 1],in.strokeColors[i1]);
+break;
+case EDGE_CLOSE:
+path.closePath();
 break;
 }
 }
