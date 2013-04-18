@@ -1,0 +1,77 @@
+{
+  tess.polyIndexCheck(rawSize);
+  int offset=tess.firstPolyIndex;
+  int inInd0=0, inInd1=0;
+  int inMaxVert0=in.firstVertex, inMaxVert1=in.firstVertex;
+  int inMaxVertRef=inMaxVert0;
+  int inMaxVertRel=-1;
+  dupCount=0;
+  IndexCache cache=tess.polyIndexCache;
+  int index=in.renderMode == RETAINED ? cache.addNew() : cache.getLast();
+  firstPolyIndexCache=index;
+  int trCount=rawSize / 3;
+  for (int tr=0; tr < trCount; tr++) {
+    if (index == -1)     index=cache.addNew();
+    int i0=rawIndices[3 * tr + 0];
+    int i1=rawIndices[3 * tr + 1];
+    int i2=rawIndices[3 * tr + 2];
+    int ii0=i0 - inMaxVertRef;
+    int ii1=i1 - inMaxVertRef;
+    int ii2=i2 - inMaxVertRef;
+    int count=cache.vertexCount[index];
+    int ri0, ri1, ri2;
+    if (ii0 < 0) {
+      addDupIndex(ii0);
+      ri0=ii0;
+    }
+ else     ri0=count + ii0;
+    if (ii1 < 0) {
+      addDupIndex(ii1);
+      ri1=ii1;
+    }
+ else     ri1=count + ii1;
+    if (ii2 < 0) {
+      addDupIndex(ii2);
+      ri2=ii2;
+    }
+ else     ri2=count + ii2;
+    tess.polyIndices[offset + 3 * tr + 0]=(short)ri0;
+    tess.polyIndices[offset + 3 * tr + 1]=(short)ri1;
+    tess.polyIndices[offset + 3 * tr + 2]=(short)ri2;
+    inInd1=3 * tr + 2;
+    inMaxVert1=PApplet.max(inMaxVert1,PApplet.max(i0,i1,i2));
+    inMaxVert0=PApplet.min(inMaxVert0,PApplet.min(i0,i1,i2));
+    inMaxVertRel=PApplet.max(inMaxVertRel,PApplet.max(ri0,ri1,ri2));
+    if ((PGL.MAX_VERTEX_INDEX1 - 3 <= inMaxVertRel + dupCount && inMaxVertRel + dupCount < PGL.MAX_VERTEX_INDEX1) || (tr == trCount - 1)) {
+      int nondupCount=0;
+      if (0 < dupCount) {
+        for (int i=inInd0; i <= inInd1; i++) {
+          int ri=tess.polyIndices[offset + i];
+          if (ri < 0) {
+            tess.polyIndices[offset + i]=(short)(inMaxVertRel + 1 + dupIndexPos(ri));
+          }
+        }
+        if (inMaxVertRef <= inMaxVert1) {
+          tess.addPolyVertices(in,inMaxVertRef,inMaxVert1,clamp);
+          nondupCount=inMaxVert1 - inMaxVertRef + 1;
+        }
+        for (int i=0; i < dupCount; i++) {
+          tess.addPolyVertex(in,dupIndices[i] + inMaxVertRef,clamp);
+        }
+      }
+ else {
+        tess.addPolyVertices(in,inMaxVert0,inMaxVert1,clamp);
+        nondupCount=inMaxVert1 - inMaxVert0 + 1;
+      }
+      cache.incCounts(index,inInd1 - inInd0 + 1,nondupCount + dupCount);
+      lastPolyIndexCache=index;
+      index=-1;
+      inMaxVertRel=-1;
+      inMaxVertRef=inMaxVert1 + 1;
+      inMaxVert0=inMaxVertRef;
+      inInd0=inInd1 + 1;
+      if (dupIndices != null)       Arrays.fill(dupIndices,0,dupCount,0);
+      dupCount=0;
+    }
+  }
+}

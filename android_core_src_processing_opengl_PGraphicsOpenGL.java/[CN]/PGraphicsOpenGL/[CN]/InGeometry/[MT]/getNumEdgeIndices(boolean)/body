@@ -1,13 +1,15 @@
 {
-  int segInd=6 * (lastEdge - firstEdge + 1);
+  int segInd=lastEdge - firstEdge + 1;
   int bevInd=0;
   if (bevel) {
     for (int i=firstEdge; i <= lastEdge; i++) {
       int[] edge=edges[i];
-      if (edge[2] == EDGE_MIDDLE || edge[2] == EDGE_START) {
-        bevInd+=6;
-      }
+      if (edge[2] == EDGE_MIDDLE || edge[2] == EDGE_START)       bevInd++;
+      if (edge[2] == EDGE_CLOSE)       segInd--;
     }
   }
-  return segInd + bevInd;
+ else {
+    segInd-=getNumEdgeClosures();
+  }
+  return 6 * (segInd + bevInd);
 }

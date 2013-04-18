@@ -8,9 +8,10 @@
     firstLineIndexCache=index;
     if (firstPolyIndexCache == -1)     firstPolyIndexCache=index;
     int i0=in.firstVertex;
+    boolean clamp=clampLineStrip2D(lineCount);
     for (int ln=0; ln < lineCount; ln++) {
       int i1=in.firstVertex + ln + 1;
-      index=addLine2D(i0,i1,index,false);
+      index=addLineSegment2D(i0,i1,index,false,clamp);
       i0=i1;
     }
     lastLineIndexCache=lastPolyIndexCache=index;

@@ -8,10 +8,11 @@
     int index=in.renderMode == RETAINED ? tess.polyIndexCache.addNew() : tess.polyIndexCache.getLast();
     firstLineIndexCache=index;
     if (firstPolyIndexCache == -1)     firstPolyIndexCache=index;
+    boolean clamp=clampLines2D(lineCount);
     for (int ln=0; ln < lineCount; ln++) {
       int i0=first + 2 * ln + 0;
       int i1=first + 2 * ln + 1;
-      index=addLine2D(i0,i1,index,false);
+      index=addLineSegment2D(i0,i1,index,false,clamp);
     }
     lastLineIndexCache=lastPolyIndexCache=index;
   }

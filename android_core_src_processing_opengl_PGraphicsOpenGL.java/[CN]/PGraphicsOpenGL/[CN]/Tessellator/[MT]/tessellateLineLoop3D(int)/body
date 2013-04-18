@@ -1,5 +1,5 @@
 {
-  int nBevelTr=noCapsJoins() ? 0 : (lineCount - 1);
+  int nBevelTr=noCapsJoins() ? 0 : lineCount;
   int nvert=lineCount * 4 + nBevelTr;
   int nind=lineCount * 2 * 3 + nBevelTr * 2 * 3;
   tess.lineVertexCheck(nvert);
@@ -8,16 +8,21 @@
   firstLineIndexCache=index;
   int i0=in.firstVertex;
   short[] lastInd={-1,-1};
+  short firstInd=-1;
   for (int ln=0; ln < lineCount - 1; ln++) {
     int i1=in.firstVertex + ln + 1;
     if (0 < nBevelTr) {
-      index=addLine3D(i0,i1,index,lastInd,false);
+      index=addLineSegment3D(i0,i1,index,lastInd,false);
+      if (ln == 0)       firstInd=(short)(lastInd[0] - 2);
     }
  else {
-      index=addLine3D(i0,i1,index,null,false);
+      index=addLineSegment3D(i0,i1,index,null,false);
     }
     i0=i1;
   }
-  index=addLine3D(in.lastVertex,in.firstVertex,index,lastInd,false);
+  index=addLineSegment3D(in.lastVertex,in.firstVertex,index,lastInd,false);
+  if (0 < nBevelTr) {
+    index=addBevel3D(in.firstVertex,index,lastInd,firstInd,false);
+  }
   lastLineIndexCache=index;
 }
