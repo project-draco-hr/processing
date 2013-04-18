@@ -1,0 +1,38 @@
+{
+  hideSuggestion();
+  final int position=textarea.getCaretPosition();
+  Point location=new Point();
+  try {
+    location.x=textarea.offsetToX(textarea.getCaretLine(),position - textarea.getLineStartOffset(textarea.getCaretLine()));
+    location.y=textarea.lineToY(textarea.getCaretLine()) + textarea.getPainter().getFontMetrics().getHeight();
+  }
+ catch (  Exception e2) {
+    e2.printStackTrace();
+    return;
+  }
+  String text=textarea.getText();
+  int start=Math.max(0,position - 1);
+  while (start > 0) {
+    if (!Character.isWhitespace(text.charAt(start))) {
+      start--;
+    }
+ else {
+      start++;
+      break;
+    }
+  }
+  if (start > position) {
+    return;
+  }
+  final String subWord=text.substring(start,position);
+  if (subWord.length() < 2) {
+    return;
+  }
+  suggestion=new SuggestionPanel(textarea,position,subWord,location);
+  SwingUtilities.invokeLater(new Runnable(){
+    @Override public void run(){
+      textarea.requestFocusInWindow();
+    }
+  }
+);
+}

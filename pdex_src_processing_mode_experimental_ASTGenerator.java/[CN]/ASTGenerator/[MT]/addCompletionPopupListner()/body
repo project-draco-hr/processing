@@ -1,0 +1,51 @@
+{
+  textarea=errorCheckerService.getEditor().textArea();
+  textarea.addKeyListener(new KeyListener(){
+    @Override public void keyTyped(    KeyEvent e){
+      if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+        if (suggestion != null) {
+          if (suggestion.insertSelection()) {
+            e.consume();
+            final int position=textarea.getCaretPosition();
+            SwingUtilities.invokeLater(new Runnable(){
+              @Override public void run(){
+                try {
+                  textarea.getDocument().remove(position - 1,1);
+                }
+ catch (                BadLocationException e) {
+                  e.printStackTrace();
+                }
+              }
+            }
+);
+          }
+        }
+      }
+ else       if (e.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
+        System.out.println("BK Key");
+      }
+    }
+    @Override public void keyReleased(    KeyEvent e){
+      if (e.getKeyCode() == KeyEvent.VK_DOWN && suggestion != null) {
+        suggestion.moveDown();
+      }
+ else       if (e.getKeyCode() == KeyEvent.VK_UP && suggestion != null) {
+        suggestion.moveUp();
+      }
+ else       if (Character.isLetterOrDigit(e.getKeyChar()) || e.getKeyChar() == KeyEvent.VK_BACK_SPACE || e.getKeyChar() == KeyEvent.VK_DELETE) {
+        SwingUtilities.invokeLater(new Runnable(){
+          @Override public void run(){
+            showSuggestion();
+          }
+        }
+);
+      }
+ else       if (Character.isWhitespace(e.getKeyChar())) {
+        hideSuggestion();
+      }
+    }
+    @Override public void keyPressed(    KeyEvent e){
+    }
+  }
+);
+}
