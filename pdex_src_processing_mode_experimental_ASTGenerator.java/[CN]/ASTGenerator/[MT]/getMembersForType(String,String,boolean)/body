@@ -16,8 +16,8 @@
       Class<?> probableClass=Class.forName(matchedClass,false,errorCheckerService.classLoader);
       for (      Method method : probableClass.getMethods()) {
         StringBuffer label=new StringBuffer(method.getName() + "(");
-        for (        Class<?> type : method.getParameterTypes()) {
-          label.append(type.getSimpleName() + ",");
+        for (int i=0; i < method.getParameterTypes().length; i++) {
+          if (i < method.getParameterTypes().length - 1)           label.append(method.getParameterTypes()[i].getSimpleName() + ",");
         }
         label.append(")");
         if (noCompare)         candidates.add(label.toString());
@@ -35,23 +35,19 @@
   }
   if (candidates.size() > 0) {
     String methodmatch=candidates.get(0);
+    if (methodmatch.indexOf('(') != -1) {
+      methodmatch=methodmatch.substring(0,methodmatch.indexOf('(') - 1);
+    }
     System.out.println("jdoc match " + methodmatch);
     for (    final String key : jdocMap.keySet()) {
-      if (methodmatch.startsWith(key) && key.length() > 4) {
+      if (key.startsWith(methodmatch) && key.length() > 3) {
         System.out.println("Matched jdoc" + key);
-        jdocLabel.setText(jdocMap.get(key));
-        visitRecur((ASTNode)compilationUnit.types().get(0),codeTree);
-        SwingWorker worker=new SwingWorker(){
-          @Override protected Object doInBackground() throws Exception {
-            return null;
-          }
-          protected void done(){
-            System.out.println(jdocMap.get(key));
-            jdocLabel.repaint();
+        SwingUtilities.invokeLater(new Runnable(){
+          @Override public void run(){
+            jdocLabel.setText(jdocMap.get(key));
           }
         }
-;
-        worker.execute();
+);
         break;
       }
     }

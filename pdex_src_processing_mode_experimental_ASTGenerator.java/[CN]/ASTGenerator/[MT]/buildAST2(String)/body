@@ -17,13 +17,13 @@
       if (codeTree != null) {
         jtree.setModel(new DefaultTreeModel(codeTree));
         ((DefaultTreeModel)jtree.getModel()).reload();
-        if (!frame2.isVisible()) {
-          frame2.setVisible(true);
+        if (!frameAutoComp.isVisible()) {
+          frameAutoComp.setVisible(true);
+          long t=System.currentTimeMillis();
           loadJars();
           loadJavaDoc();
-          addCompletionPopupListner();
+          System.out.println("Time taken: " + (System.currentTimeMillis() - t));
         }
-        if (!frameAutoComp.isVisible())         frameAutoComp.setVisible(true);
         if (!jdocWindow.isVisible())         jdocWindow.setVisible(true);
         jtree.validate();
       }
@@ -31,6 +31,5 @@
   }
 ;
   worker.execute();
-  System.err.println("++>" + System.getProperty("java.class.path"));
   return codeTree;
 }

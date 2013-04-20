@@ -104,16 +104,16 @@
               List<VariableDeclarationFragment> vdfs=td.getFields()[i].fragments();
               for (              VariableDeclarationFragment vdf : vdfs) {
                 if (noCompare) {
-                  candidates.add(getNodeAsString(vdf));
+                  candidates.add(getNodeAsString2(vdf));
                 }
- else                 if (vdf.getName().toString().startsWith(child.toString()))                 candidates.add(getNodeAsString(vdf));
+ else                 if (vdf.getName().toString().startsWith(child.toString()))                 candidates.add(getNodeAsString2(vdf));
               }
             }
             for (int i=0; i < td.getMethods().length; i++) {
               if (noCompare) {
-                candidates.add(getNodeAsString(td.getMethods()[i]));
+                candidates.add(getNodeAsString2(td.getMethods()[i]));
               }
- else               if (td.getMethods()[i].getName().toString().startsWith(child.toString()))               candidates.add(getNodeAsString(td.getMethods()[i]));
+ else               if (td.getMethods()[i].getName().toString().startsWith(child.toString()))               candidates.add(getNodeAsString2(td.getMethods()[i]));
             }
           }
  else {
@@ -132,6 +132,8 @@
       tableAuto.setModel(tm);
       tableAuto.validate();
       tableAuto.repaint();
+      String[] candi2=candidates.toArray(new String[candidates.size()]);
+      errorCheckerService.getEditor().textArea().showSuggestion(candi2);
     }
   }
 ;

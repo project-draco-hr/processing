@@ -1,4 +1,41 @@
 {
+  if (evt.getID() == KeyEvent.KEY_PRESSED) {
+    if (evt.getKeyCode() == KeyEvent.VK_DOWN && suggestion != null) {
+      if (suggestion.isVisible()) {
+        suggestion.moveDown();
+        return;
+      }
+    }
+ else     if (evt.getKeyCode() == KeyEvent.VK_UP && suggestion != null) {
+      if (suggestion.isVisible()) {
+        suggestion.moveUp();
+        return;
+      }
+    }
+    if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
+      if (suggestion != null) {
+        if (suggestion.isVisible()) {
+          if (suggestion.insertSelection()) {
+            final int position=getCaretPosition();
+            SwingUtilities.invokeLater(new Runnable(){
+              @Override public void run(){
+                try {
+                }
+ catch (                Exception e) {
+                  e.printStackTrace();
+                }
+              }
+            }
+);
+            return;
+          }
+        }
+      }
+    }
+ else     if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
+      System.out.println("BK Key");
+    }
+  }
   super.processKeyEvent(evt);
   if (evt.getID() == KeyEvent.KEY_TYPED) {
     errorCheckerService.textModified.incrementAndGet();
