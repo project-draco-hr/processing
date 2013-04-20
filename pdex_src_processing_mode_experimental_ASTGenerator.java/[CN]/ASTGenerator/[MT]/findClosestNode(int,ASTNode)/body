@@ -13,10 +13,13 @@
     System.err.println("THIS CONDITION SHOULD NOT OCCUR - findClosestNode " + getNodeAsString(parent));
     return null;
   }
-  ASTNode retNode=nodes.get(0);
-  for (  ASTNode cNode : nodes) {
-    if (getLineNumber(cNode) <= lineNumber)     retNode=cNode;
- else     break;
+  if (nodes.size() > 0) {
+    ASTNode retNode=nodes.get(0);
+    for (    ASTNode cNode : nodes) {
+      if (getLineNumber(cNode) <= lineNumber)       retNode=cNode;
+ else       break;
+    }
+    return retNode;
   }
-  return retNode;
+  return null;
 }

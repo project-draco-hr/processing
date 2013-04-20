@@ -27,6 +27,7 @@
       ASTNode testnode=parser.createAST(null);
       System.err.print("Typed: " + word2 + "|");
       anode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
+      if (anode == null)       anode=(ASTNode)compilationUnit.types().get(0);
       System.err.println(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(anode));
       ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
       if (testnode instanceof SimpleName && !noCompare) {
@@ -38,7 +39,7 @@
             if (td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY) != null) {
               SimpleType st=(SimpleType)td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY);
               System.out.println("Superclass " + st.getName());
-              for (              CompletionCandidate can : getMembersForType(st.getName().toString(),word2,noCompare)) {
+              for (              CompletionCandidate can : getMembersForType(st.getName().toString(),word2,noCompare,false)) {
                 candidates.add(can);
               }
             }
@@ -118,9 +119,13 @@
           }
  else {
             if (stp != null) {
-              candidates=getMembersForType(stp.getName().toString(),child.toString(),noCompare);
+              candidates=getMembersForType(stp.getName().toString(),child.toString(),noCompare,false);
             }
           }
+        }
+ else         if (word.length() - word2.length() == 1) {
+          System.out.println("All members of " + word2);
+          candidates=getMembersForType(word2,"",true,true);
         }
       }
       CompletionCandidate[][] candi=new CompletionCandidate[candidates.size()][1];

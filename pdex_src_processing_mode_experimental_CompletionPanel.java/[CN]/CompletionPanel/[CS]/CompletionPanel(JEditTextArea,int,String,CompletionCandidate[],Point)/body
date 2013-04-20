@@ -7,7 +7,9 @@
   popupMenu.removeAll();
   popupMenu.setOpaque(false);
   popupMenu.setBorder(null);
-  popupMenu.add(list=createSuggestionList(position,items),BorderLayout.CENTER);
-  popupMenu.show(textarea,location.x,textarea.getBaseline(0,0) + location.y);
+  scrollPane=new JScrollPane();
+  scrollPane.setViewportView(list=createSuggestionList(position,items));
+  popupMenu.add(scrollPane,BorderLayout.CENTER);
   this.textarea.errorCheckerService.astGenerator.updateJavaDoc((CompletionCandidate)list.getSelectedValue());
+  popupMenu.show(textarea,location.x,textarea.getBaseline(0,0) + location.y);
 }

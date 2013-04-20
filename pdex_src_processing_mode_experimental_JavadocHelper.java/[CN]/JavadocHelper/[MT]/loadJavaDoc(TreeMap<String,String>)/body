@@ -1,0 +1,33 @@
+{
+  Document doc;
+  try {
+    File p5Ref=new File("/home/quarkninja/Workspaces/processing-workspace/processing/build/linux/work/modes/java/reference");
+    FileFilter fileFilter=new FileFilter(){
+      public boolean accept(      File file){
+        if (!file.getName().endsWith("_.html"))         return false;
+        int k=0;
+        for (int i=0; i < file.getName().length(); i++) {
+          if (file.getName().charAt(i) == '_')           k++;
+          if (k > 1)           return false;
+        }
+        return true;
+      }
+    }
+;
+    for (    File docFile : p5Ref.listFiles(fileFilter)) {
+      doc=Jsoup.parse(docFile,null);
+      Elements elm=doc.getElementsByClass("ref-item");
+      String msg="";
+      String methodName=docFile.getName().substring(0,docFile.getName().indexOf('_'));
+      for (Iterator it=elm.iterator(); it.hasNext(); ) {
+        Element ele=(Element)it.next();
+        msg="<html><body> <strong><div style=\"width: 300px; text-justification: justify;\"></strong><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"ref-item\">" + ele.html() + "</table></div></html></body></html>";
+        msg=msg.replaceAll("img src=\"","img src=\"" + p5Ref.toURI().toURL().toString() + "/");
+      }
+      jdocMap.put(methodName,msg);
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}

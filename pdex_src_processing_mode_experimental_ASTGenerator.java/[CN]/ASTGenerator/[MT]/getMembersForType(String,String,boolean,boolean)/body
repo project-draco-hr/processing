@@ -15,6 +15,7 @@
     try {
       Class<?> probableClass=Class.forName(matchedClass,false,errorCheckerService.classLoader);
       for (      Method method : probableClass.getMethods()) {
+        if (!Modifier.isStatic(method.getModifiers()) && staticOnly)         continue;
         StringBuffer label=new StringBuffer(method.getName() + "(");
         for (int i=0; i < method.getParameterTypes().length; i++) {
           label.append(method.getParameterTypes()[i].getSimpleName());
@@ -25,6 +26,7 @@
  else         if (label.toString().startsWith(child.toString()))         candidates.add(new CompletionCandidate(method.getName(),matchedClass,label.toString()));
       }
       for (      Field field : probableClass.getFields()) {
+        if (!Modifier.isStatic(field.getModifiers()) && staticOnly)         continue;
         if (noCompare)         candidates.add(new CompletionCandidate(field.getName(),matchedClass));
  else         if (field.getName().startsWith(child.toString()))         candidates.add(new CompletionCandidate(field.getName(),matchedClass));
       }

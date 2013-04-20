@@ -1,10 +1,14 @@
 {
   if (list.getSelectedIndex() == 0) {
+    scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
     selectIndex(list.getModel().getSize() - 1);
+    return;
   }
  else {
     int index=Math.max(list.getSelectedIndex() - 1,0);
     selectIndex(index);
   }
+  int step=scrollPane.getVerticalScrollBar().getMaximum() / list.getModel().getSize();
+  scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getValue() - step);
   textarea.errorCheckerService.astGenerator.updateJavaDoc((CompletionCandidate)list.getSelectedValue());
 }
