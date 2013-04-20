@@ -1,5 +1,5 @@
 {
-  ArrayList<String> candidates=new ArrayList<String>();
+  ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
   RegExpResourceFilter regExpResourceFilter;
   regExpResourceFilter=new RegExpResourceFilter(".*",typeName + ".class");
   String[] resources=classPath.findResources("",regExpResourceFilter);
@@ -17,39 +17,21 @@
       for (      Method method : probableClass.getMethods()) {
         StringBuffer label=new StringBuffer(method.getName() + "(");
         for (int i=0; i < method.getParameterTypes().length; i++) {
-          if (i < method.getParameterTypes().length - 1)           label.append(method.getParameterTypes()[i].getSimpleName() + ",");
+          label.append(method.getParameterTypes()[i].getSimpleName());
+          if (i < method.getParameterTypes().length - 1)           label.append(",");
         }
         label.append(")");
-        if (noCompare)         candidates.add(label.toString());
- else         if (label.toString().startsWith(child.toString()))         candidates.add(label.toString());
+        if (noCompare)         candidates.add(new CompletionCandidate(method.getName(),matchedClass,label.toString()));
+ else         if (label.toString().startsWith(child.toString()))         candidates.add(new CompletionCandidate(method.getName(),matchedClass,label.toString()));
       }
       for (      Field field : probableClass.getFields()) {
-        if (noCompare)         candidates.add(field.getName());
- else         if (field.getName().startsWith(child.toString()))         candidates.add(field.getName());
+        if (noCompare)         candidates.add(new CompletionCandidate(field.getName(),matchedClass));
+ else         if (field.getName().startsWith(child.toString()))         candidates.add(new CompletionCandidate(field.getName(),matchedClass));
       }
     }
  catch (    ClassNotFoundException e) {
       e.printStackTrace();
       System.out.println("Couldn't load " + matchedClass);
-    }
-  }
-  if (candidates.size() > 0) {
-    String methodmatch=candidates.get(0);
-    if (methodmatch.indexOf('(') != -1) {
-      methodmatch=methodmatch.substring(0,methodmatch.indexOf('(') - 1);
-    }
-    System.out.println("jdoc match " + methodmatch);
-    for (    final String key : jdocMap.keySet()) {
-      if (key.startsWith(methodmatch) && key.length() > 3) {
-        System.out.println("Matched jdoc" + key);
-        SwingUtilities.invokeLater(new Runnable(){
-          @Override public void run(){
-            jdocLabel.setText(jdocMap.get(key));
-          }
-        }
-);
-        break;
-      }
     }
   }
   return candidates;

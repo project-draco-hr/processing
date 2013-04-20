@@ -1,5 +1,5 @@
 {
-  this.textarea=textarea;
+  this.textarea=(TextArea)textarea;
   this.insertionPosition=position;
   if (subWord.indexOf('.') != -1)   this.subWord=subWord.substring(subWord.lastIndexOf('.') + 1);
  else   this.subWord=subWord;
@@ -9,4 +9,5 @@
   popupMenu.setBorder(null);
   popupMenu.add(list=createSuggestionList(position,items),BorderLayout.CENTER);
   popupMenu.show(textarea,location.x,textarea.getBaseline(0,0) + location.y);
+  this.textarea.errorCheckerService.astGenerator.updateJavaDoc((CompletionCandidate)list.getSelectedValue());
 }

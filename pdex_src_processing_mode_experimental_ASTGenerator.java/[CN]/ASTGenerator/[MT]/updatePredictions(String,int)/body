@@ -28,7 +28,7 @@
       System.err.print("Typed: " + word2 + "|");
       anode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
       System.err.println(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(anode));
-      ArrayList<String> candidates=new ArrayList<String>();
+      ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
       if (testnode instanceof SimpleName && !noCompare) {
         System.err.println("One word expression " + getNodeAsString(testnode));
         anode=anode.getParent();
@@ -38,7 +38,7 @@
             if (td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY) != null) {
               SimpleType st=(SimpleType)td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY);
               System.out.println("Superclass " + st.getName());
-              for (              String can : getMembersForType(st.getName().toString(),word2,noCompare)) {
+              for (              CompletionCandidate can : getMembersForType(st.getName().toString(),word2,noCompare)) {
                 candidates.add(can);
               }
             }
@@ -49,10 +49,10 @@
             if (!sprop.isChildListProperty()) {
               if (anode.getStructuralProperty(sprop) instanceof ASTNode) {
                 cnode=(ASTNode)anode.getStructuralProperty(sprop);
-                String[] types=checkForTypes(cnode);
+                CompletionCandidate[] types=checkForTypes(cnode);
                 if (types != null) {
                   for (int i=0; i < types.length; i++) {
-                    if (types[i].startsWith(word2))                     candidates.add(types[i]);
+                    if (types[i].getElementName().startsWith(word2))                     candidates.add(types[i]);
                   }
                 }
               }
@@ -60,10 +60,10 @@
  else {
               List<ASTNode> nodelist=(List<ASTNode>)anode.getStructuralProperty(sprop);
               for (              ASTNode clnode : nodelist) {
-                String[] types=checkForTypes(clnode);
+                CompletionCandidate[] types=checkForTypes(clnode);
                 if (types != null) {
                   for (int i=0; i < types.length; i++) {
-                    if (types[i].startsWith(word2))                     candidates.add(types[i]);
+                    if (types[i].getElementName().startsWith(word2))                     candidates.add(types[i]);
                   }
                 }
               }
@@ -104,16 +104,16 @@
               List<VariableDeclarationFragment> vdfs=td.getFields()[i].fragments();
               for (              VariableDeclarationFragment vdf : vdfs) {
                 if (noCompare) {
-                  candidates.add(getNodeAsString2(vdf));
+                  candidates.add(new CompletionCandidate(getNodeAsString2(vdf)));
                 }
- else                 if (vdf.getName().toString().startsWith(child.toString()))                 candidates.add(getNodeAsString2(vdf));
+ else                 if (vdf.getName().toString().startsWith(child.toString()))                 candidates.add(new CompletionCandidate(getNodeAsString2(vdf)));
               }
             }
             for (int i=0; i < td.getMethods().length; i++) {
               if (noCompare) {
-                candidates.add(getNodeAsString2(td.getMethods()[i]));
+                candidates.add(new CompletionCandidate(getNodeAsString2(td.getMethods()[i]),td.getName().toString()));
               }
- else               if (td.getMethods()[i].getName().toString().startsWith(child.toString()))               candidates.add(getNodeAsString2(td.getMethods()[i]));
+ else               if (td.getMethods()[i].getName().toString().startsWith(child.toString()))               candidates.add(new CompletionCandidate(getNodeAsString2(td.getMethods()[i]),td.getName().toString()));
             }
           }
  else {
@@ -123,7 +123,7 @@
           }
         }
       }
-      String[][] candi=new String[candidates.size()][1];
+      CompletionCandidate[][] candi=new CompletionCandidate[candidates.size()][1];
       for (int i=0; i < candi.length; i++) {
         candi[i][0]=candidates.get(i);
       }
@@ -132,8 +132,8 @@
       tableAuto.setModel(tm);
       tableAuto.validate();
       tableAuto.repaint();
-      String[] candi2=candidates.toArray(new String[candidates.size()]);
-      errorCheckerService.getEditor().textArea().showSuggestion(candi2);
+      CompletionCandidate[] candi2=candidates.toArray(new CompletionCandidate[candidates.size()]);
+      if (candidates.size() > 0)       errorCheckerService.getEditor().textArea().showSuggestion(candi2);
     }
   }
 ;

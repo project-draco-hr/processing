@@ -2,12 +2,18 @@
   List<VariableDeclarationFragment> vdfs=null;
 switch (node.getNodeType()) {
 case ASTNode.TYPE_DECLARATION:
-    return new String[]{getNodeAsString2(node)};
+    return new CompletionCandidate[]{new CompletionCandidate(getNodeAsString2(node),((TypeDeclaration)node).getName().toString())};
 case ASTNode.METHOD_DECLARATION:
-  String[] ret1=new String[]{getNodeAsString2(node)};
-return ret1;
+  MethodDeclaration md=(MethodDeclaration)node;
+List<ASTNode> params=(List<ASTNode>)md.getStructuralProperty(MethodDeclaration.PARAMETERS_PROPERTY);
+CompletionCandidate[] cand=new CompletionCandidate[params.size() + 1];
+cand[0]=new CompletionCandidate(md.getName().toString());
+for (int i=0; i < params.size(); i++) {
+cand[i + 1]=new CompletionCandidate(params.get(i).toString());
+}
+return cand;
 case ASTNode.SINGLE_VARIABLE_DECLARATION:
-return new String[]{getNodeAsString2(node)};
+return new CompletionCandidate[]{new CompletionCandidate(getNodeAsString2(node))};
 case ASTNode.FIELD_DECLARATION:
 vdfs=((FieldDeclaration)node).fragments();
 break;
@@ -21,10 +27,10 @@ default :
 break;
 }
 if (vdfs != null) {
-String ret[]=new String[vdfs.size()];
+CompletionCandidate ret[]=new CompletionCandidate[vdfs.size()];
 int i=0;
 for (VariableDeclarationFragment vdf : vdfs) {
-ret[i++]=getNodeAsString2(vdf);
+ret[i++]=new CompletionCandidate(getNodeAsString2(vdf));
 }
 return ret;
 }
