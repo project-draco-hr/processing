@@ -1,0 +1,49 @@
+{
+  int w, h;
+  boolean resize;
+  w=maxTexWidth;
+  if (-1 < currentTex && textures[currentTex].glHeight < maxTexHeight) {
+    h=PApplet.min(2 * textures[currentTex].glHeight,maxTexHeight);
+    resize=true;
+  }
+ else {
+    h=PApplet.min(PGraphicsOpenGL.maxTextureSize,PGL.MAX_FONT_TEX_SIZE / 2,maxTexHeight / 4);
+    resize=false;
+  }
+  Texture tex;
+  if (is3D) {
+    tex=new Texture(w,h,new Texture.Parameters(ARGB,Texture.BILINEAR,false));
+  }
+ else {
+    tex=new Texture(w,h,new Texture.Parameters(ARGB,Texture.LINEAR,false));
+  }
+  if (textures == null) {
+    textures=new Texture[1];
+    textures[0]=tex;
+    images=new PImage[1];
+    images[0]=pg.wrapTexture(tex);
+    currentTex=0;
+  }
+ else   if (resize) {
+    Texture tex0=textures[currentTex];
+    tex.put(tex0);
+    textures[currentTex]=tex;
+    pg.setCache(images[currentTex],tex);
+    images[currentTex].width=tex.width;
+    images[currentTex].height=tex.height;
+  }
+ else {
+    Texture[] tempTex=textures;
+    textures=new Texture[textures.length + 1];
+    PApplet.arrayCopy(tempTex,textures,tempTex.length);
+    textures[tempTex.length]=tex;
+    currentTex=textures.length - 1;
+    PImage[] tempImg=images;
+    images=new PImage[textures.length];
+    PApplet.arrayCopy(tempImg,images,tempImg.length);
+    images[tempImg.length]=pg.wrapTexture(tex);
+  }
+  lastTex=currentTex;
+  tex.bind();
+  return resize;
+}
