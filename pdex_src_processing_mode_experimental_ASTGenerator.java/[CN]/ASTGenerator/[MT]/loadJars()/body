@@ -2,7 +2,7 @@
   try {
     factory=new ClassPathFactory();
     StringBuffer tehPath=new StringBuffer(System.getProperty("java.class.path"));
-    tehPath.append(+File.pathSeparatorChar + System.getProperty("java.home") + "/lib/rt.jar"+ File.pathSeparatorChar);
+    tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + "/lib/rt.jar"+ File.pathSeparatorChar);
     if (errorCheckerService.classpathJars != null) {
       for (      URL jarPath : errorCheckerService.classpathJars) {
         tehPath.append(jarPath.getPath() + File.pathSeparatorChar);
@@ -14,14 +14,7 @@
       System.out.println(sstr);
     }
     classPath=factory.createFromPath(tehPath.toString());
-    for (    String packageName : classPath.listPackages("")) {
-      System.out.println(packageName);
-    }
-    RegExpResourceFilter regExpResourceFilter=new RegExpResourceFilter(".*","ArrayList.class");
-    String[] resources=classPath.findResources("",regExpResourceFilter);
-    for (    String className : resources) {
-      System.out.println("-> " + className);
-    }
+    System.out.println("jars loaded.");
   }
  catch (  Exception e) {
     e.printStackTrace();

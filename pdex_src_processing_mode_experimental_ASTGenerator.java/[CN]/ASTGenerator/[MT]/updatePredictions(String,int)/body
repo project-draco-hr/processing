@@ -124,8 +124,16 @@
           }
         }
  else         if (word.length() - word2.length() == 1) {
+          System.out.println(word + " w2 " + word2);
           System.out.println("All members of " + word2);
           candidates=getMembersForType(word2,"",true,true);
+        }
+ else {
+          System.out.println("Some members of " + word2);
+          int x=word2.indexOf('.');
+          if (x != -1) {
+            candidates=getMembersForType(word2.substring(0,x),word2.substring(x + 1),false,true);
+          }
         }
       }
       CompletionCandidate[][] candi=new CompletionCandidate[candidates.size()][1];
