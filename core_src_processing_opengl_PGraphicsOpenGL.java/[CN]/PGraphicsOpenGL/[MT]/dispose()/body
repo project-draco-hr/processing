@@ -1,9 +1,20 @@
 {
   super.dispose();
-  deleteFinalizedGLResources();
   deletePolyBuffers();
   deleteLineBuffers();
   deletePointBuffers();
-  deleteDefaultShaders();
-  pgl.deleteSurface();
+  deleteSurfaceTextures();
+  if (primarySurface) {
+    deleteDefaultShaders();
+  }
+ else {
+    if (offscreenFramebuffer != null) {
+      offscreenFramebuffer.release();
+    }
+    if (multisampleFramebuffer != null) {
+      multisampleFramebuffer.release();
+    }
+  }
+  deleteFinalizedGLResources();
+  if (primarySurface)   pgl.deleteSurface();
 }

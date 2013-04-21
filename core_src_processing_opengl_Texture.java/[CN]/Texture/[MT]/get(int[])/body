@@ -6,13 +6,13 @@
     throw new RuntimeException("Trying to copy texture to pixels array of " + "wrong size");
   }
   if (tempFbo == null) {
-    tempFbo=new FrameBuffer(parent,glWidth,glHeight);
+    tempFbo=new FrameBuffer(glWidth,glHeight);
   }
   tempFbo.setColorBuffer(this);
-  pg.pushFramebuffer();
-  pg.setFramebuffer(tempFbo);
+  PGraphicsOpenGL.pushFramebuffer();
+  PGraphicsOpenGL.setFramebuffer(tempFbo);
   tempFbo.readPixels();
-  pg.popFramebuffer();
+  PGraphicsOpenGL.popFramebuffer();
   tempFbo.getPixels(pixels);
   convertToARGB(pixels);
   if (invertedX)   flipArrayOnX(pixels,1);
