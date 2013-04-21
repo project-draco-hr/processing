@@ -1,0 +1,11 @@
+{
+  if (index < 0 || index >= count) {
+    throw new IllegalArgumentException("Index " + index + " is outside this list's size");
+  }
+  int[] temp=new int[count + values.length];
+  System.arraycopy(data,0,temp,0,Math.min(count,index));
+  System.arraycopy(values,0,temp,index,values.length);
+  System.arraycopy(data,index,temp,index + values.length,count - index);
+  count=count + values.length;
+  data=temp;
+}
