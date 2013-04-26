@@ -1,17 +1,17 @@
 {
   try {
+    PApplet.println("finalize surface");
     deletePolyBuffers();
     deleteLineBuffers();
     deletePointBuffers();
     deleteSurfaceTextures();
     if (!primarySurface) {
-      PApplet.println("finalize offscreen surface");
       if (offscreenFramebuffer != null) {
-        offscreenFramebuffer.release();
+        offscreenFramebuffer.dispose();
         offscreenFramebuffer=null;
       }
       if (multisampleFramebuffer != null) {
-        multisampleFramebuffer.release();
+        multisampleFramebuffer.dispose();
         multisampleFramebuffer=null;
       }
     }
