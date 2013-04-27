@@ -1,0 +1,50 @@
+{
+  PrintWriter writer=null;
+  Thread eventThread=new Thread(){
+    public void run(){
+      try {
+        boolean connected=true;
+        while (connected) {
+          EventQueue eventQueue=vm.eventQueue();
+          EventSet eventSet=eventQueue.remove();
+          for (          Event event : eventSet) {
+            if (event instanceof VMStartEvent) {
+            }
+ else             if (event instanceof ExceptionEvent) {
+              for (              ThreadReference thread : vm.allThreads()) {
+                thread.suspend();
+              }
+              exceptionEvent((ExceptionEvent)event);
+            }
+ else             if (event instanceof VMDisconnectEvent) {
+              connected=false;
+            }
+          }
+        }
+      }
+ catch (      Exception e) {
+        System.err.println("crashed in event thread due to " + e.getMessage());
+        e.printStackTrace();
+      }
+    }
+  }
+;
+  eventThread.start();
+  MessageSiphon ms=new MessageSiphon(process.getErrorStream(),this);
+  errThread=ms.getThread();
+  outThread=new StreamRedirectThread("output reader",process.getInputStream(),System.out);
+  errThread.start();
+  outThread.start();
+  vm.resume();
+  try {
+    if (eventThread != null)     eventThread.join();
+    errThread.join();
+    outThread.join();
+    if (editor != null) {
+      editor.deactivateRun();
+    }
+  }
+ catch (  InterruptedException exc) {
+  }
+  if (writer != null)   writer.close();
+}

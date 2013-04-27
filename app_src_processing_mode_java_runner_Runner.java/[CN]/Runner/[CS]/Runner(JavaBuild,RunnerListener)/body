@@ -7,7 +7,14 @@
   int bits=Base.getNativeBits();
   for (  Library library : build.getImportedLibraries()) {
     if (!library.supportsArch(PApplet.platform,bits)) {
-      throw new SketchException(library.getName() + " does not run in " + bits+ "-bit mode.");
+      System.err.println(library.getName() + " does not run in " + bits+ "-bit mode.");
+      int opposite=(bits == 32) ? 64 : 32;
+      if (Base.isMacOS()) {
+        throw new SketchException("To use " + library.getName() + ", "+ "switch to "+ opposite+ "-bit mode in Preferences.");
+      }
+ else {
+        throw new SketchException(library.getName() + " is only compatible " + "with the  "+ opposite+ "-bit download of Processing.");
+      }
     }
   }
 }
