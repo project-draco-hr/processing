@@ -1,7 +1,7 @@
 {
-  MessageSiphon ms=new MessageSiphon(vm.process().getErrorStream(),this);
+  MessageSiphon ms=new MessageSiphon(process.getErrorStream(),this);
   errThread=ms.getThread();
-  outThread=new StreamRedirectThread("VM output reader",vm.process().getInputStream(),System.out);
+  outThread=new StreamRedirectThread("VM output reader",process.getInputStream(),System.out);
   errThread.start();
   outThread.start();
 }
