@@ -1,0 +1,28 @@
+{
+  Sort s=new Sort(){
+    @Override public int size(){
+      return count;
+    }
+    @Override public float compare(    int a,    int b){
+      int diff=0;
+      if (useKeys) {
+        diff=keys[a].compareToIgnoreCase(keys[b]);
+        if (diff == 0) {
+          diff=values[a].compareToIgnoreCase(values[b]);
+        }
+      }
+ else {
+        diff=values[a].compareToIgnoreCase(values[b]);
+        if (diff == 0) {
+          diff=keys[a].compareToIgnoreCase(keys[b]);
+        }
+      }
+      return reverse ? diff : -diff;
+    }
+    @Override public void swap(    int a,    int b){
+      StringDict.this.swap(a,b);
+    }
+  }
+;
+  s.run();
+}
