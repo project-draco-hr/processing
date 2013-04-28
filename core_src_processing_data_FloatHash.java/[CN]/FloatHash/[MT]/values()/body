@@ -1,4 +1,20 @@
 {
-  crop();
-  return values;
+  return new Iterable<Float>(){
+    @Override public Iterator<Float> iterator(){
+      return new Iterator<Float>(){
+        int index=-1;
+        public void remove(){
+          removeIndex(index);
+        }
+        public Float next(){
+          return value(++index);
+        }
+        public boolean hasNext(){
+          return index + 1 < size();
+        }
+      }
+;
+    }
+  }
+;
 }

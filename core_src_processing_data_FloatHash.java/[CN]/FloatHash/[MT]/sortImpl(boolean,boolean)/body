@@ -4,13 +4,20 @@
       return count;
     }
     @Override public float compare(    int a,    int b){
-      float diff=values[b] - values[a];
-      if (tiebreaker) {
+      float diff=0;
+      if (useKeys) {
+        diff=values[a] - values[b];
         if (diff == 0) {
           diff=keys[a].compareToIgnoreCase(keys[b]);
         }
       }
-      return descending ? diff : -diff;
+ else {
+        diff=keys[a].compareToIgnoreCase(keys[b]);
+        if (diff == 0) {
+          return values[a] - values[b];
+        }
+      }
+      return reverse ? diff : -diff;
     }
     @Override public void swap(    int a,    int b){
       FloatHash.this.swap(a,b);
