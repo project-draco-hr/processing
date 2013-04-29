@@ -1,26 +1,31 @@
 {
   PrintWriter writer=PApplet.createWriter(output);
-  String opt=null;
-  if (options != null) {
-    String[] opts=PApplet.splitTokens(options,", ");
-    opt=opts[opts.length - 1];
-    if (!opt.equals("csv") && !opt.equals("tsv") && !opt.equals("html")&& !opt.equals("bin")) {
-      throw new IllegalArgumentException("'" + opt + "' not understood. "+ "Only csv, tsv, bin, and html are "+ "accepted as save parameters");
+  String extension=null;
+  if (options == null) {
+    throw new IllegalArgumentException("No extension specified for saving this Table");
+  }
+  String[] opts=PApplet.splitTokens(options,", ");
+  extension=opts[opts.length - 1];
+  boolean found=false;
+  for (  String ext : saveExtensions) {
+    if (extension.equals(ext)) {
+      found=true;
+      break;
     }
   }
- else {
-    opt="tsv";
+  if (!found) {
+    throw new IllegalArgumentException("'" + extension + "' not available for Table");
   }
-  if (opt.equals("csv")) {
+  if (extension.equals("csv")) {
     writeCSV(writer);
   }
- else   if (opt.equals("tsv")) {
+ else   if (extension.equals("tsv")) {
     writeTSV(writer);
   }
- else   if (opt.equals("html")) {
+ else   if (extension.equals("html")) {
     writeHTML(writer);
   }
- else   if (opt.equals("bin")) {
+ else   if (extension.equals("bin")) {
     try {
       saveBinary(output);
     }

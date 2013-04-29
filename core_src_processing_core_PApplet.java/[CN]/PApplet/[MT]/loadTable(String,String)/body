@@ -1,17 +1,6 @@
 {
   try {
-    String ext=checkExtension(filename);
-    if (ext != null) {
-      if (ext.equals("csv") || ext.equals("tsv") || ext.equals("bin")) {
-        if (options == null) {
-          options=ext;
-        }
- else {
-          options=ext + "," + options;
-        }
-      }
-    }
-    return new Table(createInput(filename),options);
+    return new Table(createInput(filename),Table.extensionOptions(true,filename,options));
   }
  catch (  IOException e) {
     e.printStackTrace();

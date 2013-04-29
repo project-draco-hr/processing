@@ -1,15 +1,10 @@
 {
-  String ext=checkExtension(filename);
-  if (ext != null) {
-    if (ext.equals("csv") || ext.equals("tsv") || ext.equals("bin")|| ext.equals("html")) {
-      if (options == null) {
-        options=ext;
-      }
- else {
-        options=ext + "," + options;
-      }
-    }
+  try {
+    File outputFile=saveFile(filename);
+    return table.save(outputFile,options);
   }
-  File outputFile=saveFile(filename);
-  return table.save(createOutput(outputFile),options);
+ catch (  IOException e) {
+    e.printStackTrace();
+    return false;
+  }
 }

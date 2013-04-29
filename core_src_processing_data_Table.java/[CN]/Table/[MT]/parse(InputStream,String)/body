@@ -4,14 +4,20 @@
   boolean header=false;
   String extension=null;
   boolean binary=false;
+  String worksheet=null;
+  final String sheetParam="worksheet=";
+  String[] opts=null;
   if (options != null) {
-    String[] opts=PApplet.splitTokens(options," ,");
+    opts=PApplet.splitTokens(options," ,");
     for (    String opt : opts) {
       if (opt.equals("tsv")) {
         extension="tsv";
       }
  else       if (opt.equals("csv")) {
         extension="csv";
+      }
+ else       if (opt.equals("ods")) {
+        extension="ods";
       }
  else       if (opt.equals("newlines")) {
         awfulCSV=true;
@@ -22,13 +28,22 @@
  else       if (opt.equals("header")) {
         header=true;
       }
+ else       if (opt.startsWith(sheetParam)) {
+        worksheet=opt.substring(sheetParam.length());
+      }
  else {
         throw new IllegalArgumentException("'" + opt + "' is not a valid option for loading a Table");
       }
     }
   }
+  if (extension == null) {
+    throw new IllegalArgumentException("No extension specified for this Table");
+  }
   if (binary) {
     loadBinary(input);
+  }
+ else   if (extension.equals("ods")) {
+    odsParse(input,worksheet);
   }
  else {
     BufferedReader reader=PApplet.createReader(input);
