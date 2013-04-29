@@ -33,9 +33,8 @@
   }
 ;
   eventThread.start();
-  MessageSiphon ms=new MessageSiphon(process.getErrorStream(),this);
-  errThread=ms.getThread();
-  outThread=new StreamRedirectThread("output reader",process.getInputStream(),System.out);
+  errThread=new MessageSiphon(process.getErrorStream(),this).getThread();
+  outThread=new StreamRedirectThread("JVM stdout Reader",process.getInputStream(),System.out);
   errThread.start();
   outThread.start();
   vm.resume();
