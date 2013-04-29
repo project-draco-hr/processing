@@ -1,12 +1,26 @@
 {
-  Image allButtons=mode.loadImage("theme/buttons.gif");
-  int count=allButtons.getWidth(this) / BUTTON_WIDTH;
+  int res=Toolkit.isRetina() ? 2 : 1;
+  Image allButtons=null;
+  if (res == 2) {
+    allButtons=mode.loadImage("theme/buttons-2x.png");
+    if (allButtons == null) {
+      res=1;
+    }
+  }
+  if (res == 1) {
+    allButtons=mode.loadImage("theme/buttons.png");
+    if (allButtons == null) {
+      allButtons=mode.loadImage("theme/buttons.gif");
+    }
+  }
+  int count=allButtons.getWidth(this) / BUTTON_WIDTH * res;
   Image[][] buttonImages=new Image[count][3];
   for (int i=0; i < count; i++) {
     for (int state=0; state < 3; state++) {
-      Image image=createImage(BUTTON_WIDTH,BUTTON_HEIGHT);
+      Image image=new BufferedImage(BUTTON_WIDTH * res,BUTTON_HEIGHT * res,BufferedImage.TYPE_INT_ARGB);
       Graphics g=image.getGraphics();
-      g.drawImage(allButtons,-(i * BUTTON_IMAGE_SIZE) - 3,(-2 + state) * BUTTON_IMAGE_SIZE,null);
+      g.drawImage(allButtons,-(i * BUTTON_IMAGE_SIZE * res) - 3,(state - 2) * BUTTON_IMAGE_SIZE * res,null);
+      g.dispose();
       buttonImages[i][state]=image;
     }
   }
