@@ -1,25 +1,9 @@
 {
   Mode mode=editor.getMode();
-  int res=Toolkit.isRetina() ? 2 : 1;
-  String suffix="-2x.png";
-  if (res == 2) {
-    if (!mode.getContentFile(tabFile(0,0) + suffix).exists()) {
-      res=1;
-    }
+  if (tabArrow == null) {
+    String suffix=Toolkit.highResDisplay() ? "-2x.png" : ".png";
+    tabArrow=Toolkit.getLibImage("tab-arrow" + suffix);
   }
-  if (res == 1) {
-    suffix=".png";
-    if (!mode.getContentFile(tabFile(0,0) + suffix).exists()) {
-      suffix=".gif";
-    }
-  }
-  pieces=new Image[STATUS.length][WHERE.length];
-  for (int status=0; status < STATUS.length; status++) {
-    for (int where=0; where < WHERE.length; where++) {
-      pieces[status][where]=mode.loadImage(tabFile(status,where) + suffix);
-    }
-  }
-  tabArrow=mode.loadImage("theme/tab-arrow" + suffix);
   backgroundColor=mode.getColor("header.bgcolor");
   textColor[SELECTED]=mode.getColor("header.text.selected.color");
   textColor[UNSELECTED]=mode.getColor("header.text.unselected.color");

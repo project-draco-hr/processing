@@ -4,7 +4,7 @@
   }
   Dimension size=getSize();
   if ((offscreen == null) || (size.width != width) || (size.height != height)) {
-    if (Toolkit.isRetina()) {
+    if (Toolkit.highResDisplay()) {
       offscreen=createImage(size.width * 2,size.height * 2);
     }
  else {
@@ -24,7 +24,7 @@
   }
   Graphics g=offscreen.getGraphics();
   Graphics2D g2=(Graphics2D)g;
-  if (Toolkit.isRetina()) {
+  if (Toolkit.highResDisplay()) {
     g2.scale(2,2);
   }
  else {
@@ -34,7 +34,7 @@
   g.fillRect(0,0,width,height);
   mode.drawBackground(g,0);
   for (  Button b : buttons) {
-    g.drawImage(b.stateImage,b.left,TOP,BUTTON_WIDTH,BUTTON_HEIGHT,null);
+    g.drawImage(b.stateImage,b.left,0,BUTTON_WIDTH,BUTTON_HEIGHT,null);
   }
   g.setColor(statusColor);
   g.setFont(statusFont);
