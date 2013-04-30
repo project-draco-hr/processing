@@ -1,6 +1,10 @@
 {
   try {
     theme=new Settings(Base.getContentFile("lib/theme.txt"));
+    File modeTheme=new File(folder,"theme/theme.txt");
+    if (modeTheme.exists()) {
+      theme.load(modeTheme);
+    }
     theme.setColor("run.window.bgcolor",SystemColor.control);
     String suffix=Toolkit.highResDisplay() ? "-2x.png" : ".png";
     backgroundImage=loadImage("theme/mode" + suffix);
