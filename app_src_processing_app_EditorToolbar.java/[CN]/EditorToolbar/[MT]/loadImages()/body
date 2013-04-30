@@ -1,16 +1,20 @@
 {
   int res=Toolkit.isRetina() ? 2 : 1;
+  String suffix=null;
   Image allButtons=null;
   if (res == 2) {
-    allButtons=mode.loadImage("theme/buttons-2x.png");
+    suffix="-2x.png";
+    allButtons=mode.loadImage("theme/buttons" + suffix);
     if (allButtons == null) {
       res=1;
     }
   }
   if (res == 1) {
-    allButtons=mode.loadImage("theme/buttons.png");
+    suffix=".png";
+    allButtons=mode.loadImage("theme/buttons" + suffix);
     if (allButtons == null) {
-      allButtons=mode.loadImage("theme/buttons.gif");
+      suffix=".gif";
+      allButtons=mode.loadImage("theme/buttons" + suffix);
     }
   }
   int count=allButtons.getWidth(this) / BUTTON_WIDTH * res;
@@ -24,5 +28,6 @@
       buttonImages[i][state]=image;
     }
   }
+  modeArrow=mode.loadImage("theme/mode-arrow" + suffix);
   return buttonImages;
 }

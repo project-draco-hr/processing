@@ -44,20 +44,17 @@
   }
   g.setFont(modeTextFont);
   FontMetrics metrics=g.getFontMetrics();
-  int modeH=metrics.getAscent();
-  int modeW=metrics.stringWidth(modeTitle);
-  final int modeGapH=6;
-  final int modeGapV=3;
+  int modeTextHeight=metrics.getAscent();
+  int modeTextWidth=metrics.stringWidth(modeTitle);
+  final int modeGapWidth=6;
+  final int modeBoxHeight=20;
   modeX2=getWidth() - 16;
-  modeX1=modeX2 - (modeGapH + modeW + modeGapH);
-  modeY1=(getHeight() - modeH) / 2 - modeGapV;
-  modeY2=modeY1 + modeH + modeGapV * 2;
+  modeX1=modeX2 - (modeGapWidth + modeTextWidth + modeGapWidth+ ARROW_WIDTH+ modeGapWidth);
+  modeY1=(getHeight() - modeBoxHeight) / 2;
+  modeY2=modeY1 + modeBoxHeight;
   g.setColor(modeButtonColor);
   g.drawRect(modeX1,modeY1,modeX2 - modeX1,modeY2 - modeY1);
-  g.drawString(modeTitle,modeX1 + modeGapH,modeY2 - modeGapV);
+  g.drawString(modeTitle,modeX1 + modeGapWidth,modeY1 + modeTextHeight + (modeBoxHeight - modeTextHeight) / 2);
+  g.drawImage(modeArrow,modeX2 - ARROW_WIDTH - modeGapWidth,modeY1 + (modeBoxHeight - ARROW_HEIGHT) / 2,ARROW_WIDTH,ARROW_HEIGHT,this);
   screen.drawImage(offscreen,0,0,size.width,size.height,null);
-  if (!isEnabled()) {
-    screen.setColor(new Color(0,0,0,100));
-    screen.fillRect(0,0,getWidth(),getHeight());
-  }
 }
