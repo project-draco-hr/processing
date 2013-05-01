@@ -1,5 +1,5 @@
 {
-  float peAmount=nativeEvent.getClickCount();
+  int peCount=nativeEvent.getClickCount();
   int peAction=0;
 switch (nativeEvent.getID()) {
 case java.awt.event.MouseEvent.MOUSE_PRESSED:
@@ -23,19 +23,9 @@ break;
 case java.awt.event.MouseEvent.MOUSE_EXITED:
 peAction=MouseEvent.EXIT;
 break;
-case java.awt.event.MouseWheelEvent.WHEEL_UNIT_SCROLL:
+case java.awt.event.MouseEvent.MOUSE_WHEEL:
 peAction=MouseEvent.WHEEL;
-if (preciseWheelMethod != null) {
-try {
-peAmount=((Double)preciseWheelMethod.invoke(nativeEvent,(Object[])null)).floatValue();
-}
- catch (Exception e) {
-preciseWheelMethod=null;
-}
-}
-if (preciseWheelMethod == null) {
-peAmount=((MouseWheelEvent)nativeEvent).getWheelRotation();
-}
+peCount=((MouseWheelEvent)nativeEvent).getWheelRotation();
 break;
 }
 int modifiers=nativeEvent.getModifiers();
@@ -55,5 +45,5 @@ if ((modifiers & InputEvent.CTRL_MASK) != 0) {
 peButton=RIGHT;
 }
 }
-postEvent(new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,nativeEvent.getX(),nativeEvent.getY(),peButton,peAmount));
+postEvent(new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,nativeEvent.getX(),nativeEvent.getY(),peButton,peCount));
 }
