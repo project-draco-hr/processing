@@ -8,22 +8,28 @@
     BufferedImage bimage=new BufferedImage(width,height,outputFormat);
     bimage.setRGB(0,0,width,height,pixels,0,width);
     File file=new File(path);
+    ImageWriter writer=null;
+    ImageWriteParam param=null;
+    IIOMetadata metadata=null;
     if (extension.equals("jpg") || extension.equals("jpeg")) {
-      ImageWriter writer=null;
-      Iterator<ImageWriter> iter=ImageIO.getImageWritersByFormatName("jpeg");
-      if (iter.hasNext()) {
-        writer=iter.next();
-        ImageWriteParam param=writer.getDefaultWriteParam();
+      if ((writer=imageioWriter("jpeg")) != null) {
+        param=writer.getDefaultWriteParam();
         param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         param.setCompressionQuality(0.9f);
-        BufferedOutputStream output=new BufferedOutputStream(new FileOutputStream(file));
-        writer.setOutput(ImageIO.createImageOutputStream(output));
-        writer.write(null,new IIOImage(bimage,null,null),param);
-        writer.dispose();
-        output.flush();
-        output.close();
-        return true;
       }
+    }
+    if ((writer=imageioWriter("png")) != null) {
+      param=writer.getDefaultWriteParam();
+      metadata=imageioDPI(writer,param,100);
+    }
+    if (writer != null) {
+      BufferedOutputStream output=new BufferedOutputStream(PApplet.createOutput(file));
+      writer.setOutput(ImageIO.createImageOutputStream(output));
+      writer.write(metadata,new IIOImage(bimage,null,metadata),param);
+      writer.dispose();
+      output.flush();
+      output.close();
+      return true;
     }
     return javax.imageio.ImageIO.write(bimage,extension,file);
   }
