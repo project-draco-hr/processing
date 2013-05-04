@@ -2,10 +2,11 @@
   drawable=adrawable;
   context=adrawable.getContext();
   capabilities=adrawable.getChosenGLCapabilities();
-  if (!context.hasBasicFBOSupport()) {
-    throw new RuntimeException("No basic FBO support is available");
+  gl=context.getGL();
+  if (!hasFBOs()) {
+    throw new RuntimeException("Framebuffer objects are not supported by this hardware (or driver)");
   }
-  if (!context.hasGLSL()) {
-    throw new RuntimeException("No GLSL support is available");
+  if (!hasShaders()) {
+    throw new RuntimeException("GLSL shaders are not supported by this hardware (or driver)");
   }
 }
