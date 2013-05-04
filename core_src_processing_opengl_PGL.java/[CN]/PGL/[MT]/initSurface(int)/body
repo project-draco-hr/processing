@@ -34,7 +34,6 @@
   caps.setDepthBits(request_depth_bits);
   caps.setStencilBits(request_stencil_bits);
   caps.setAlphaBits(request_alpha_bits);
-  caps.setDefaultColor(javaToNativeARGB(pg.backgroundColor));
   if (toolkit == AWT) {
     canvasAWT=new GLCanvas(caps);
     canvasAWT.setBounds(0,0,pg.width,pg.height);
@@ -42,7 +41,6 @@
     canvasAWT.setFocusable(true);
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasAWT,BorderLayout.CENTER);
-    pg.parent.validate();
     pg.parent.removeListeners(pg.parent);
     pg.parent.addListeners(canvasAWT);
     canvas=canvasAWT;
@@ -58,7 +56,6 @@
     canvasNEWT.setFocusable(true);
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasNEWT,BorderLayout.CENTER);
-    pg.parent.validate();
     if (events == NEWT) {
       NEWTMouseListener mouseListener=new NEWTMouseListener();
       window.addMouseListener(mouseListener);
