@@ -22,7 +22,6 @@
     DisplayMode[] modes=Display.getAvailableDisplayModes();
     int bpp=0;
     for (int i=0; i < modes.length; i++) {
-      System.out.println(modes[i].getBitsPerPixel());
       bpp=PApplet.max(modes[i].getBitsPerPixel(),bpp);
     }
     PixelFormat format=new PixelFormat(bpp,request_alpha_bits,request_depth_bits,request_stencil_bits,1);
@@ -33,8 +32,8 @@
     float b=((argb) & 0xff) / 255.0f;
     Display.setInitialBackground(r,g,b);
     Display.setParent(canvas);
-    Display.create(format);
     Display.setVSyncEnabled(true);
+    Display.create(format);
   }
  catch (  LWJGLException e) {
     e.printStackTrace();
