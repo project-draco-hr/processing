@@ -11,5 +11,14 @@
     frontTex=backTex;
     backTex=temp;
   }
-  finish();
+  fcount+=1;
+  int m=pg.parent.millis();
+  if (m - lastm > 1000 * fint) {
+    currentFps=(float)(fcount) / fint;
+    fcount=0;
+    lastm=m;
+  }
+  if (currentFps < 0.5f * targetFps) {
+    finish();
+  }
 }
