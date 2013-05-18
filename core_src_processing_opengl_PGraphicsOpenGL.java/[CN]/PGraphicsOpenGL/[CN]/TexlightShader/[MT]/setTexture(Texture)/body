@@ -38,5 +38,11 @@
     setUniformMatrix(texMatrixLoc,tcmat);
   }
   setUniformValue(texOffsetLoc,1.0f / tex.width,1.0f / tex.height);
-  setUniformValue(textureLoc,0);
+  if (-1 < textureLoc) {
+    texUnit=bufferUnit + 1;
+    setUniformValue(textureLoc,texUnit);
+    pgl.activeTexture(PGL.TEXTURE0 + texUnit);
+    tex.bind();
+    texture=tex;
+  }
 }

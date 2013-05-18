@@ -19,8 +19,12 @@
     setUniformValue(viewportLoc,x,y,w,h);
   }
   if (-1 < bufferLoc) {
-    setUniformValue(bufferLoc,lastTexUnit);
-    pgl.activeTexture(PGL.TEXTURE0 + lastTexUnit);
+    bufferUnit=getLastTexUnit() + 1;
+    setUniformValue(bufferLoc,bufferUnit);
+    pgl.activeTexture(PGL.TEXTURE0 + bufferUnit);
     pgCurrent.bindBackTexture();
+  }
+ else {
+    bufferUnit=-1;
   }
 }
