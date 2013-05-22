@@ -1,6 +1,7 @@
 {
   if (g instanceof PGraphicsOpenGL) {
-    if (stroke) {
+    if (g.stroke) {
+      setStroke(true);
       setStroke(g.strokeColor);
       setStrokeWeight(g.strokeWeight);
       setStrokeCap(g.strokeCap);
@@ -9,16 +10,24 @@
  else {
       setStroke(false);
     }
-    if (fill) {
+    if (g.fill) {
+      setFill(true);
       setFill(g.fillColor);
     }
  else {
       setFill(false);
     }
+    if (g.tint) {
+      setTint(true);
+      setTint(g.tintColor);
+    }
     setAmbient(g.ambientColor);
     setSpecular(g.specularColor);
     setEmissive(g.emissiveColor);
     setShininess(g.shininess);
+    if (image != null) {
+      setTextureMode(g.textureMode);
+    }
   }
  else {
     super.styles(g);
