@@ -1,0 +1,26 @@
+{
+  PImage image0=image;
+  image=tex;
+  if (textureMode == IMAGE && image0 != image) {
+    float uFactor=1;
+    float vFactor=1;
+    if (image != null) {
+      uFactor/=image.width;
+      vFactor/=image.height;
+    }
+    if (image0 != null) {
+      uFactor*=image0.width;
+      vFactor*=image0.height;
+    }
+    scaleTextureUV(uFactor,vFactor);
+  }
+  if (image0 != tex && parent != null) {
+    ((PShapeOpenGL)parent).removeTexture(tex);
+  }
+  if (parent != null) {
+    ((PShapeOpenGL)parent).addTexture(image);
+    if (is2D() && stroke) {
+      ((PShapeOpenGL)parent).strokedTexture(true);
+    }
+  }
+}
