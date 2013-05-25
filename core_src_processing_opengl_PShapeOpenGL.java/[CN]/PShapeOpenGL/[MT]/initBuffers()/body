@@ -1,15 +1,14 @@
 {
-  if (needBufferInit) {
-    context=pgl.getCurrentContext();
-    if (0 < tessGeo.polyVertexCount && 0 < tessGeo.polyIndexCount) {
-      initPolyBuffers();
-    }
-    if (0 < tessGeo.lineVertexCount && 0 < tessGeo.lineIndexCount) {
-      initLineBuffers();
-    }
-    if (0 < tessGeo.pointVertexCount && 0 < tessGeo.pointIndexCount) {
-      initPointBuffers();
-    }
-    needBufferInit=false;
+  boolean outdated=contextIsOutdated();
+  context=pgl.getCurrentContext();
+  if (hasPolys && (needBufferInit || outdated)) {
+    initPolyBuffers();
   }
+  if (hasLines && (needBufferInit || outdated)) {
+    initLineBuffers();
+  }
+  if (hasPoints && (needBufferInit || outdated)) {
+    initPointBuffers();
+  }
+  needBufferInit=false;
 }
