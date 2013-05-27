@@ -11,19 +11,20 @@
     PGraphics.showWarning(NESTED_DRAW_ERROR);
     return;
   }
+  if (!primarySurface && pgPrimary.texCache.containsTexture(this)) {
+    pgPrimary.flush();
+  }
   if (!glParamsRead) {
     getGLParameters();
   }
+  setViewport();
   if (primarySurface) {
     beginOnscreenDraw();
   }
  else {
-    if (pgPrimary.texCache.containsTexture(this)) {
-      pgPrimary.flush();
-    }
     beginOffscreenDraw();
   }
-  setDefaults();
+  setDrawDefaults();
   pgCurrent=this;
   drawing=true;
   clearCalled=false;
