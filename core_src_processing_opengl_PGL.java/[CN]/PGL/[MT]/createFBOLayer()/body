@@ -1,0 +1,114 @@
+{
+  String ext=getString(EXTENSIONS);
+  if (-1 < ext.indexOf("texture_non_power_of_two")) {
+    fboWidth=pg.width;
+    fboHeight=pg.height;
+  }
+ else {
+    fboWidth=nextPowerOfTwo(pg.width);
+    fboHeight=nextPowerOfTwo(pg.height);
+  }
+  getIntegerv(MAX_SAMPLES,intBuffer);
+  if (-1 < ext.indexOf("_framebuffer_multisample") && 1 < intBuffer.get(0)) {
+    numSamples=reqNumSamples;
+  }
+ else {
+    numSamples=1;
+  }
+  boolean multisample=1 < numSamples;
+  boolean packed=ext.indexOf("packed_depth_stencil") != -1;
+  int depthBits=getDepthBits();
+  int stencilBits=getStencilBits();
+  genTextures(2,glColorTex);
+  for (int i=0; i < 2; i++) {
+    bindTexture(TEXTURE_2D,glColorTex.get(i));
+    texParameteri(TEXTURE_2D,TEXTURE_MIN_FILTER,NEAREST);
+    texParameteri(TEXTURE_2D,TEXTURE_MAG_FILTER,NEAREST);
+    texParameteri(TEXTURE_2D,TEXTURE_WRAP_S,CLAMP_TO_EDGE);
+    texParameteri(TEXTURE_2D,TEXTURE_WRAP_T,CLAMP_TO_EDGE);
+    texImage2D(TEXTURE_2D,0,RGBA,fboWidth,fboHeight,0,RGBA,UNSIGNED_BYTE,null);
+    initTexture(TEXTURE_2D,RGBA,fboWidth,fboHeight,pg.backgroundColor);
+  }
+  bindTexture(TEXTURE_2D,0);
+  backTex=0;
+  frontTex=1;
+  genFramebuffers(1,glColorFbo);
+  bindFramebuffer(FRAMEBUFFER,glColorFbo.get(0));
+  framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
+  if (multisample) {
+    genFramebuffers(1,glMultiFbo);
+    bindFramebuffer(FRAMEBUFFER,glMultiFbo.get(0));
+    genRenderbuffers(1,glColorBuf);
+    bindRenderbuffer(RENDERBUFFER,glColorBuf.get(0));
+    renderbufferStorageMultisample(RENDERBUFFER,numSamples,RGBA8,fboWidth,fboHeight);
+    framebufferRenderbuffer(FRAMEBUFFER,COLOR_ATTACHMENT0,RENDERBUFFER,glColorBuf.get(0));
+  }
+  if (packed && depthBits == 24 && stencilBits == 8) {
+    genRenderbuffers(1,glDepthStencil);
+    bindRenderbuffer(RENDERBUFFER,glDepthStencil.get(0));
+    if (multisample) {
+      renderbufferStorageMultisample(RENDERBUFFER,numSamples,DEPTH24_STENCIL8,fboWidth,fboHeight);
+    }
+ else {
+      renderbufferStorage(RENDERBUFFER,DEPTH24_STENCIL8,fboWidth,fboHeight);
+    }
+    framebufferRenderbuffer(FRAMEBUFFER,DEPTH_ATTACHMENT,RENDERBUFFER,glDepthStencil.get(0));
+    framebufferRenderbuffer(FRAMEBUFFER,STENCIL_ATTACHMENT,RENDERBUFFER,glDepthStencil.get(0));
+  }
+ else {
+    if (0 < depthBits) {
+      int depthComponent=DEPTH_COMPONENT16;
+      if (depthBits == 32) {
+        depthComponent=DEPTH_COMPONENT32;
+      }
+ else       if (depthBits == 24) {
+        depthComponent=DEPTH_COMPONENT24;
+      }
+ else       if (depthBits == 16) {
+        depthComponent=DEPTH_COMPONENT16;
+      }
+      genRenderbuffers(1,glDepth);
+      bindRenderbuffer(RENDERBUFFER,glDepth.get(0));
+      if (multisample) {
+        renderbufferStorageMultisample(RENDERBUFFER,numSamples,depthComponent,fboWidth,fboHeight);
+      }
+ else {
+        renderbufferStorage(RENDERBUFFER,depthComponent,fboWidth,fboHeight);
+      }
+      framebufferRenderbuffer(FRAMEBUFFER,DEPTH_ATTACHMENT,RENDERBUFFER,glDepth.get(0));
+    }
+    if (0 < stencilBits) {
+      int stencilIndex=STENCIL_INDEX1;
+      if (stencilBits == 8) {
+        stencilIndex=STENCIL_INDEX8;
+      }
+ else       if (stencilBits == 4) {
+        stencilIndex=STENCIL_INDEX4;
+      }
+ else       if (stencilBits == 1) {
+        stencilIndex=STENCIL_INDEX1;
+      }
+      genRenderbuffers(1,glStencil);
+      bindRenderbuffer(RENDERBUFFER,glStencil.get(0));
+      if (multisample) {
+        renderbufferStorageMultisample(RENDERBUFFER,numSamples,stencilIndex,fboWidth,fboHeight);
+      }
+ else {
+        renderbufferStorage(RENDERBUFFER,stencilIndex,fboWidth,fboHeight);
+      }
+      framebufferRenderbuffer(FRAMEBUFFER,STENCIL_ATTACHMENT,RENDERBUFFER,glStencil.get(0));
+    }
+  }
+  validateFramebuffer();
+  clearDepth(1);
+  clearStencil(0);
+  int argb=pg.backgroundColor;
+  float a=((argb >> 24) & 0xff) / 255.0f;
+  float r=((argb >> 16) & 0xff) / 255.0f;
+  float g=((argb >> 8) & 0xff) / 255.0f;
+  float b=((argb) & 0xff) / 255.0f;
+  clearColor(r,g,b,a);
+  clear(DEPTH_BUFFER_BIT | STENCIL_BUFFER_BIT | COLOR_BUFFER_BIT);
+  bindFramebuffer(FRAMEBUFFER,0);
+  fboLayerCreated=true;
+}

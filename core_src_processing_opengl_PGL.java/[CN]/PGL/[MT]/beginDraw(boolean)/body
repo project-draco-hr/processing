@@ -1,6 +1,6 @@
 {
   if (USE_JOGL_FBOLAYER)   return;
-  if (fboLayerInUse(clear0)) {
+  if (needFBOLayer(clear0)) {
     bindFramebuffer(FRAMEBUFFER,glColorFbo.get(0));
     framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
     if (1 < numSamples) {
@@ -26,7 +26,7 @@
   if (firstFrame) {
     firstFrame=false;
   }
-  if (!fboLayerByDefault) {
-    FORCE_SCREEN_FBO=false;
+  if (!USE_FBOLAYER_BY_DEFAULT) {
+    fboLayerRequested=false;
   }
 }
