@@ -1,6 +1,8 @@
 {
+  if (!setFps)   setFps(targetFps);
   if (USE_JOGL_FBOLAYER)   return;
   if (needFBOLayer(clear0)) {
+    if (!fboLayerCreated)     createFBOLayer();
     bindFramebuffer(FRAMEBUFFER,glColorFbo.get(0));
     framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
     if (1 < numSamples) {
