@@ -3,7 +3,12 @@
     PGraphics.showWarning(INVALID_FILTER_SHADER_ERROR);
     return;
   }
-  pgl.needFBOLayer();
+  boolean needEndDraw=false;
+  if (primarySurface)   pgl.requestFBOLayer();
+ else   if (!drawing) {
+    beginDraw();
+    needEndDraw=true;
+  }
   loadTexture();
   if (filterTexture == null || filterTexture.contextIsOutdated()) {
     filterTexture=new Texture(texture.width,texture.height,texture.getParameters());
@@ -20,6 +25,8 @@
   textureMode=NORMAL;
   boolean prevStroke=stroke;
   stroke=false;
+  int prevBlendMode=blendMode;
+  blendMode(REPLACE);
   TextureShader prevTexShader=textureShader;
   textureShader=(TextureShader)shader;
   beginShape(QUADS);
@@ -34,10 +41,14 @@
   stroke=prevStroke;
   lights=prevLights;
   textureMode=prevTextureMode;
+  blendMode(prevBlendMode);
   if (!hints[DISABLE_DEPTH_TEST]) {
     pgl.enable(PGL.DEPTH_TEST);
   }
   if (!hints[DISABLE_DEPTH_MASK]) {
     pgl.depthMask(true);
+  }
+  if (needEndDraw) {
+    endDraw();
   }
 }

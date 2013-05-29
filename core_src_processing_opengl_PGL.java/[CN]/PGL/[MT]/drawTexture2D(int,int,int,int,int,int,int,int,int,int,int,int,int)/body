@@ -1,0 +1,72 @@
+{
+  if (!loadedTex2DShader || tex2DShaderContext.hashCode() != context.hashCode()) {
+    tex2DVertShader=createShader(VERTEX_SHADER,texVertShaderSource);
+    tex2DFragShader=createShader(FRAGMENT_SHADER,tex2DFragShaderSource);
+    if (0 < tex2DVertShader && 0 < tex2DFragShader) {
+      tex2DShaderProgram=createProgram(tex2DVertShader,tex2DFragShader);
+    }
+    if (0 < tex2DShaderProgram) {
+      tex2DVertLoc=getAttribLocation(tex2DShaderProgram,"inVertex");
+      tex2DTCoordLoc=getAttribLocation(tex2DShaderProgram,"inTexcoord");
+    }
+    loadedTex2DShader=true;
+    tex2DShaderContext=context;
+  }
+  if (texData == null) {
+    texData=allocateDirectFloatBuffer(texCoords.length);
+  }
+  if (0 < tex2DShaderProgram) {
+    boolean depthTest=getDepthTest();
+    disable(DEPTH_TEST);
+    boolean depthMask=getDepthWriteMask();
+    depthMask(false);
+    useProgram(tex2DShaderProgram);
+    enableVertexAttribArray(tex2DVertLoc);
+    enableVertexAttribArray(tex2DTCoordLoc);
+    texCoords[0]=2 * (float)scrX0 / scrW - 1;
+    texCoords[1]=2 * (float)scrY0 / scrH - 1;
+    texCoords[2]=(float)texX0 / texW;
+    texCoords[3]=(float)texY0 / texH;
+    texCoords[4]=2 * (float)scrX1 / scrW - 1;
+    texCoords[5]=2 * (float)scrY0 / scrH - 1;
+    texCoords[6]=(float)texX1 / texW;
+    texCoords[7]=(float)texY0 / texH;
+    texCoords[8]=2 * (float)scrX0 / scrW - 1;
+    texCoords[9]=2 * (float)scrY1 / scrH - 1;
+    texCoords[10]=(float)texX0 / texW;
+    texCoords[11]=(float)texY1 / texH;
+    texCoords[12]=2 * (float)scrX1 / scrW - 1;
+    texCoords[13]=2 * (float)scrY1 / scrH - 1;
+    texCoords[14]=(float)texX1 / texW;
+    texCoords[15]=(float)texY1 / texH;
+    texData.rewind();
+    texData.put(texCoords);
+    activeTexture(TEXTURE0);
+    boolean enabledTex=false;
+    if (!texturingIsEnabled(TEXTURE_2D)) {
+      enableTexturing(TEXTURE_2D);
+      enabledTex=true;
+    }
+    bindTexture(TEXTURE_2D,id);
+    bindBuffer(ARRAY_BUFFER,0);
+    texData.position(0);
+    vertexAttribPointer(tex2DVertLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,texData);
+    texData.position(2);
+    vertexAttribPointer(tex2DTCoordLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,texData);
+    drawArrays(TRIANGLE_STRIP,0,4);
+    bindTexture(TEXTURE_2D,0);
+    if (enabledTex) {
+      disableTexturing(TEXTURE_2D);
+    }
+    disableVertexAttribArray(tex2DVertLoc);
+    disableVertexAttribArray(tex2DTCoordLoc);
+    useProgram(0);
+    if (depthTest) {
+      enable(DEPTH_TEST);
+    }
+ else {
+      disable(DEPTH_TEST);
+    }
+    depthMask(depthMask);
+  }
+}

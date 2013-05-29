@@ -1,6 +1,26 @@
 {
-  updateOffscreen();
-  offscreenFramebuffer.setColorBuffer(texture);
+  if (!initialized) {
+    initOffscreen();
+  }
+ else {
+    boolean outdated=offscreenFramebuffer != null && offscreenFramebuffer.contextIsOutdated();
+    boolean outdatedMulti=multisampleFramebuffer != null && multisampleFramebuffer.contextIsOutdated();
+    if (outdated || outdatedMulti) {
+      restartPGL();
+      initOffscreen();
+    }
+ else {
+      swapOffscreenTextures();
+    }
+  }
+  pushFramebuffer();
+  if (offscreenMultisample) {
+    setFramebuffer(multisampleFramebuffer);
+  }
+ else {
+    setFramebuffer(offscreenFramebuffer);
+  }
+  drawPTexture();
   if (clip) {
     pgl.enable(PGL.SCISSOR_TEST);
     pgl.scissor(clipRect[0],clipRect[1],clipRect[2],clipRect[3]);

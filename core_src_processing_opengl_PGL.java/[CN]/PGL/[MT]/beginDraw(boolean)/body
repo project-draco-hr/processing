@@ -1,6 +1,8 @@
 {
+  if (!setFps)   setFps(targetFps);
   if (USE_JOGL_FBOLAYER)   return;
-  if (fboLayerInUse(clear0)) {
+  if (needFBOLayer(clear0)) {
+    if (!fboLayerCreated)     createFBOLayer();
     bindFramebuffer(FRAMEBUFFER,glColorFbo.get(0));
     framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
     if (1 < numSamples) {
@@ -16,7 +18,7 @@
       clear(COLOR_BUFFER_BIT);
     }
  else     if (!clear0) {
-      drawTexture(TEXTURE_2D,glColorTex.get(frontTex),fboWidth,fboHeight,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
+      drawTexture(TEXTURE_2D,glColorTex.get(frontTex),fboWidth,fboHeight,pg.width,pg.height,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
     }
     fboLayerInUse=true;
   }
@@ -26,7 +28,7 @@
   if (firstFrame) {
     firstFrame=false;
   }
-  if (!fboLayerByDefault) {
-    FORCE_SCREEN_FBO=false;
+  if (!USE_FBOLAYER_BY_DEFAULT) {
+    fboLayerRequested=false;
   }
 }

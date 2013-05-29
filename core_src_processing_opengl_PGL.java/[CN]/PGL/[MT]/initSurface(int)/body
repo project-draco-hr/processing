@@ -17,7 +17,27 @@
   GLCapabilities caps=new GLCapabilities(profile);
   caps.setBackgroundOpaque(true);
   caps.setOnscreen(true);
-  if (USE_JOGL_FBOLAYER) {
+  if (USE_FBOLAYER_BY_DEFAULT) {
+    if (USE_JOGL_FBOLAYER) {
+      caps.setPBuffer(false);
+      caps.setFBO(true);
+      if (1 < antialias) {
+        caps.setSampleBuffers(true);
+        caps.setNumSamples(antialias);
+      }
+ else {
+        caps.setSampleBuffers(false);
+      }
+      fboLayerRequested=false;
+    }
+ else {
+      caps.setPBuffer(false);
+      caps.setFBO(false);
+      caps.setSampleBuffers(false);
+      fboLayerRequested=1 < antialias;
+    }
+  }
+ else {
     if (1 < antialias) {
       caps.setSampleBuffers(true);
       caps.setNumSamples(antialias);
@@ -25,15 +45,13 @@
  else {
       caps.setSampleBuffers(false);
     }
+    fboLayerRequested=false;
   }
- else {
-    caps.setSampleBuffers(false);
-    reqNumSamples=qualityToSamples(antialias);
-  }
-  caps.setDepthBits(request_depth_bits);
-  caps.setStencilBits(request_stencil_bits);
-  caps.setAlphaBits(request_alpha_bits);
-  if (toolkit == AWT) {
+  caps.setDepthBits(REQUESTED_DEPTH_BITS);
+  caps.setStencilBits(REQUESTED_STENCIL_BITS);
+  caps.setAlphaBits(REQUESTED_ALPHA_BITS);
+  reqNumSamples=qualityToSamples(antialias);
+  if (WINDOW_TOOLKIT == AWT) {
     canvasAWT=new GLCanvas(caps);
     canvasAWT.setBounds(0,0,pg.width,pg.height);
     canvasAWT.setBackground(new Color(pg.backgroundColor,true));
@@ -47,7 +65,7 @@
     listener=new PGLListener();
     canvasAWT.addGLEventListener(listener);
   }
- else   if (toolkit == NEWT) {
+ else   if (WINDOW_TOOLKIT == NEWT) {
     window=GLWindow.create(caps);
     canvasNEWT=new NewtCanvasAWT(window);
     canvasNEWT.setBounds(0,0,pg.width,pg.height);
@@ -55,7 +73,7 @@
     canvasNEWT.setFocusable(true);
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasNEWT,BorderLayout.CENTER);
-    if (events == NEWT) {
+    if (EVENTS_TOOLKIT == NEWT) {
       NEWTMouseListener mouseListener=new NEWTMouseListener();
       window.addMouseListener(mouseListener);
       NEWTKeyListener keyListener=new NEWTKeyListener();
@@ -64,7 +82,7 @@
       window.addWindowListener(winListener);
       canvasNEWT.addFocusListener(pg.parent);
     }
- else     if (events == AWT) {
+ else     if (EVENTS_TOOLKIT == AWT) {
       pg.parent.removeListeners(canvasNEWT);
       pg.parent.addListeners(canvasNEWT);
     }

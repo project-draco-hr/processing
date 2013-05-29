@@ -2,18 +2,6 @@
   if (offscreenMultisample) {
     multisampleFramebuffer.copy(offscreenFramebuffer,currentFramebuffer);
   }
-  if (!clearColorBuffer0) {
-    if (offscreenMultisample) {
-      pushFramebuffer();
-      setFramebuffer(offscreenFramebuffer);
-    }
-    offscreenFramebuffer.setColorBuffer(ptexture);
-    drawTexture();
-    offscreenFramebuffer.setColorBuffer(texture);
-    if (offscreenMultisample) {
-      popFramebuffer();
-    }
-  }
   popFramebuffer();
   texture.updateTexels();
   pgPrimary.restoreGL();
