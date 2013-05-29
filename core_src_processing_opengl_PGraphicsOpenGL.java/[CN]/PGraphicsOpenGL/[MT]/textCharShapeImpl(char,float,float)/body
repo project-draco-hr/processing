@@ -1,33 +1,24 @@
 {
   boolean strokeSaved=stroke;
   stroke=false;
-  char textArray[]=new char[]{ch};
-  Graphics2D graphics=(Graphics2D)parent.getGraphics();
-  FontRenderContext frc=graphics.getFontRenderContext();
-  Font font=(Font)textFont.getNative();
-  GlyphVector gv=font.createGlyphVector(frc,textArray);
-  Shape shp=gv.getOutline();
-  PathIterator iter=shp.getPathIterator(null);
-  PApplet.println("Drawing model of character " + ch);
+  PGL.FontOutline outline=pgl.createFontOutline(ch,textFont.getNative());
   float textPoints[]=new float[6];
   float lastX=0;
   float lastY=0;
   beginShape();
-  while (!iter.isDone()) {
-    int type=iter.currentSegment(textPoints);
+  while (!outline.isDone()) {
+    int type=outline.currentSegment(textPoints);
 switch (type) {
-case PathIterator.SEG_MOVETO:
-case PathIterator.SEG_LINETO:
-      if (type == PathIterator.SEG_MOVETO) {
-        PApplet.println("moveto");
+case PGL.SEG_MOVETO:
+case PGL.SEG_LINETO:
+      if (type == PGL.SEG_MOVETO) {
         beginContour();
       }
     vertex(x + textPoints[0],y + textPoints[1]);
   lastX=textPoints[0];
 lastY=textPoints[1];
 break;
-case PathIterator.SEG_QUADTO:
-PApplet.println("quadto");
+case PGL.SEG_QUADTO:
 for (int i=1; i < bezierDetail; i++) {
 float t=(float)i / (float)bezierDetail;
 vertex(x + bezierPoint(lastX,lastX + (float)((textPoints[0] - lastX) * 2 / 3.0),textPoints[2] + (float)((textPoints[0] - textPoints[2]) * 2 / 3.0),textPoints[2],t),y + bezierPoint(lastY,lastY + (float)((textPoints[1] - lastY) * 2 / 3.0),textPoints[3] + (float)((textPoints[1] - textPoints[3]) * 2 / 3.0),textPoints[3],t));
@@ -35,8 +26,7 @@ vertex(x + bezierPoint(lastX,lastX + (float)((textPoints[0] - lastX) * 2 / 3.0),
 lastX=textPoints[2];
 lastY=textPoints[3];
 break;
-case PathIterator.SEG_CUBICTO:
-PApplet.println("cubicto");
+case PGL.SEG_CUBICTO:
 for (int i=1; i < bezierDetail; i++) {
 float t=(float)i / (float)bezierDetail;
 vertex(x + bezierPoint(lastX,textPoints[0],textPoints[2],textPoints[4],t),y + bezierPoint(lastY,textPoints[1],textPoints[3],textPoints[5],t));
@@ -44,15 +34,12 @@ vertex(x + bezierPoint(lastX,textPoints[0],textPoints[2],textPoints[4],t),y + be
 lastX=textPoints[4];
 lastY=textPoints[5];
 break;
-case PathIterator.SEG_CLOSE:
-PApplet.println("close");
+case PGL.SEG_CLOSE:
 endContour();
 break;
 }
-iter.next();
-PApplet.println(lastX + " " + lastY);
+outline.next();
 }
 endShape();
-PApplet.println("*********************");
 stroke=strokeSaved;
 }
