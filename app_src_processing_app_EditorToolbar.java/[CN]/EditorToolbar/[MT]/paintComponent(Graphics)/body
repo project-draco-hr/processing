@@ -38,24 +38,29 @@
   }
   g.setColor(statusColor);
   g.setFont(statusFont);
+  if (statusAscent == 0) {
+    statusAscent=(int)Toolkit.getAscent(g);
+  }
   if (rollover != null) {
-    int statusY=(BUTTON_HEIGHT + g.getFontMetrics().getAscent()) / 2;
+    int statusY=(BUTTON_HEIGHT + statusAscent) / 2;
     String status=shiftPressed ? rollover.titleShift : rollover.title;
     g.drawString(status,buttons.size() * BUTTON_WIDTH + 3 * BUTTON_GAP,statusY);
   }
   g.setFont(modeTextFont);
   FontMetrics metrics=g.getFontMetrics();
-  int modeTextHeight=metrics.getAscent();
+  if (modeTextAscent == 0) {
+    modeTextAscent=(int)Toolkit.getAscent(g);
+  }
   int modeTextWidth=metrics.stringWidth(modeTitle);
   final int modeGapWidth=8;
   final int modeBoxHeight=20;
   modeX2=getWidth() - 16;
   modeX1=modeX2 - (modeGapWidth + modeTextWidth + modeGapWidth+ ARROW_WIDTH+ modeGapWidth);
-  modeY1=8;
+  modeY1=(getHeight() - modeBoxHeight) / 2;
   modeY2=modeY1 + modeBoxHeight;
   g.setColor(modeButtonColor);
   g.drawRect(modeX1,modeY1,modeX2 - modeX1,modeY2 - modeY1);
-  g.drawString(modeTitle,modeX1 + modeGapWidth,modeY1 + modeTextHeight + (modeBoxHeight - modeTextHeight) / 2);
+  g.drawString(modeTitle,modeX1 + modeGapWidth,modeY1 + (modeBoxHeight + modeTextAscent) / 2);
   g.drawImage(modeArrow,modeX2 - ARROW_WIDTH - modeGapWidth,modeY1 + (modeBoxHeight - ARROW_HEIGHT) / 2,ARROW_WIDTH,ARROW_HEIGHT,null);
   screen.drawImage(offscreen,0,0,size.width,size.height,null);
 }
