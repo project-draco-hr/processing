@@ -32,7 +32,11 @@
     }
     writer.flush();
     writer.close();
-    BufferedReader reader=new BufferedReader(new StringReader(errorBuffer.toString()));
+    String errorString=errorBuffer.toString();
+    if (errorString.trim().length() != 0) {
+      success=false;
+    }
+    BufferedReader reader=new BufferedReader(new StringReader(errorString));
     String line=null;
     while ((line=reader.readLine()) != null) {
       String errorFormat="([\\w\\d_]+.java):(\\d+):\\s*(.*):\\s*(.*)\\s*";
