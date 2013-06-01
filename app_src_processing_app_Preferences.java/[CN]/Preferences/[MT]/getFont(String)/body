@@ -1,28 +1,48 @@
 {
-  boolean replace=false;
-  String value=get(attr);
-  if (value == null) {
-    value=getDefault(attr);
-    replace=true;
+  try {
+    boolean replace=false;
+    String value=get(attr);
+    if (value == null) {
+      value=getDefault(attr);
+      replace=true;
+    }
+    String[] pieces=PApplet.split(value,',');
+    if (pieces.length != 3) {
+      value=getDefault(attr);
+      pieces=PApplet.split(value,',');
+      replace=true;
+    }
+    String name=pieces[0];
+    int style=Font.PLAIN;
+    if (pieces[1].indexOf("bold") != -1) {
+      style|=Font.BOLD;
+    }
+    if (pieces[1].indexOf("italic") != -1) {
+      style|=Font.ITALIC;
+    }
+    int size=PApplet.parseInt(pieces[2],12);
+    if (replace) {
+      set(attr,value);
+    }
+    if (!name.startsWith("processing.")) {
+      return new Font(name,style,size);
+    }
+ else {
+      if (pieces[0].equals("processing.sans")) {
+        if (style == Font.BOLD) {
+          return Toolkit.getBoldFont(size);
+        }
+ else {
+          return Toolkit.getPlainFont(size);
+        }
+      }
+ else       if (pieces[0].equals("processing.mono")) {
+        return Toolkit.getMonoFont(size);
+      }
+    }
   }
-  String[] pieces=PApplet.split(value,',');
-  if (pieces.length != 3) {
-    value=getDefault(attr);
-    pieces=PApplet.split(value,',');
-    replace=true;
+ catch (  Exception e) {
+    Base.log("Error with font " + get(attr) + " for attribute "+ attr);
   }
-  String name=pieces[0];
-  int style=Font.PLAIN;
-  if (pieces[1].indexOf("bold") != -1) {
-    style|=Font.BOLD;
-  }
-  if (pieces[1].indexOf("italic") != -1) {
-    style|=Font.ITALIC;
-  }
-  int size=PApplet.parseInt(pieces[2],12);
-  Font font=new Font(name,style,size);
-  if (replace) {
-    set(attr,value);
-  }
-  return font;
+  return new Font("Dialog",Font.PLAIN,12);
 }
