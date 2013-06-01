@@ -8,7 +8,7 @@
  else {
     Preferences.set("update.id",String.valueOf(id));
   }
-  String info=PApplet.urlEncode(id + "\t" + PApplet.nf(Base.REVISION,4)+ "\t"+ System.getProperty("java.version")+ "\t"+ System.getProperty("java.vendor")+ "\t"+ System.getProperty("os.name")+ "\t"+ System.getProperty("os.version")+ "\t"+ System.getProperty("os.arch"));
+  String info=PApplet.urlEncode(id + "\t" + PApplet.nf(Base.getRevision(),4)+ "\t"+ System.getProperty("java.version")+ "\t"+ System.getProperty("java.vendor")+ "\t"+ System.getProperty("os.name")+ "\t"+ System.getProperty("os.version")+ "\t"+ System.getProperty("os.arch"));
   int latest=readInt(downloadURL + "?" + info);
   String lastString=Preferences.get("update.last");
   long now=System.currentTimeMillis();
@@ -21,8 +21,8 @@
   Preferences.set("update.last",String.valueOf(now));
   if (base.activeEditor != null) {
     boolean offerToUpdateContributions=true;
-    if (latest > Base.REVISION) {
-      System.out.println("You are running Processing revision " + Base.REVISION + ", the latest is "+ latest+ ".");
+    if (latest > Base.getRevision()) {
+      System.out.println("You are running Processing revision " + Base.getRevision() + ", the latest is "+ latest+ ".");
       offerToUpdateContributions=!promptToVisitDownloadPage();
     }
     if (offerToUpdateContributions) {
