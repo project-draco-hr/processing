@@ -1,9 +1,13 @@
 {
   Sketch sketch=editor.getSketch();
   int x=left;
-  final int bottom=getHeight();
+  final int bottom=getHeight() - TAB_STRETCH;
   final int top=bottom - TAB_HEIGHT;
   GeneralPath path=null;
+  if (g != null) {
+    g.setColor(tabColor[SELECTED]);
+    g.fillRect(0,bottom,getWidth(),TAB_STRETCH);
+  }
   for (int i=0; i < sketch.getCodeCount(); i++) {
     SketchCode code=sketch.getCode(i);
     Tab tab=tabs[i];
@@ -26,14 +30,16 @@
       path.closePath();
       g.setColor(tabColor[state]);
       g.fill(path);
-    }
-    if (tab.textVisible) {
-      if (g != null) {
+      if (tab.textVisible) {
         int textLeft=tab.left + ((tab.right - tab.left) - tab.textWidth) / 2;
         g.setColor(textColor[state]);
         int tabHeight=TAB_HEIGHT;
         int baseline=top + (tabHeight + fontAscent) / 2;
         g.drawString(tab.text,textLeft,baseline);
+      }
+      if (code.isModified()) {
+        g.setColor(modifiedColor);
+        g.drawLine(tab.left + NOTCH,top,tab.right - NOTCH,top);
       }
     }
     x+=1;

@@ -38,7 +38,7 @@
   }
   g.setColor(backgroundColor);
   g.fillRect(0,0,imageW,imageH);
-  editor.getMode().drawBackground(g,EditorToolbar.BUTTON_HEIGHT);
+  editor.getMode().drawBackground(g,Preferences.GRID_SIZE);
   if (tabs.length != sketch.getCodeCount()) {
     tabs=new Tab[sketch.getCodeCount()];
     for (int i=0; i < tabs.length; i++) {
@@ -53,8 +53,7 @@
     tab.textVisible=true;
     tab.lastVisited=code.lastVisited();
     boolean hide=editor.getMode().hideExtension(code.getExtension());
-    String codeName=hide ? code.getPrettyName() : code.getFileName();
-    tab.text="  " + codeName + (code.isModified() ? " \u00A7" : "  ");
+    tab.text=hide ? code.getPrettyName() : code.getFileName();
     tab.textWidth=(int)font.getStringBounds(tab.text,g2.getFontRenderContext()).getWidth();
   }
   if (!placeTabs(MARGIN_WIDTH,tabMax,null)) {
