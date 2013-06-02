@@ -8,9 +8,9 @@
     fboWidth=nextPowerOfTwo(pg.width);
     fboHeight=nextPowerOfTwo(pg.height);
   }
-  getIntegerv(MAX_SAMPLES,intBuffer);
-  if (-1 < ext.indexOf("_framebuffer_multisample") && 1 < intBuffer.get(0)) {
-    numSamples=reqNumSamples;
+  int maxs=maxSamples();
+  if (-1 < ext.indexOf("_framebuffer_multisample") && 1 < maxs) {
+    numSamples=PApplet.min(reqNumSamples,maxs);
   }
  else {
     numSamples=1;
