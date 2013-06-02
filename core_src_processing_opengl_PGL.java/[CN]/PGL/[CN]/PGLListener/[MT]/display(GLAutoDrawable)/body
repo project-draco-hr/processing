@@ -32,6 +32,7 @@
             frontFBO.reset(gl,pg.width,pg.height);
             frontFBO.attachTexture2D(gl,0,true);
             sinkFBO=backFBO.getSamplingSinkFBO();
+            changedFrontTex=changedBackTex=true;
           }
  else {
             System.out.println("swap");
@@ -39,13 +40,15 @@
             sinkFBO=frontFBO;
             frontFBO=temp;
             backFBO.setSamplingSink(sinkFBO);
+            changedFrontTex=changedBackTex=false;
           }
+          backTexAttach=(FBObject.TextureAttachment)sinkFBO.getColorbuffer(0);
+          frontTexAttach=(FBObject.TextureAttachment)frontFBO.getColorbuffer(0);
         }
  else {
-          frontFBO=sinkFBO=backFBO.getSamplingSinkFBO();
+          sinkFBO=backFBO.getSamplingSinkFBO();
+          frontTexAttach=backTexAttach=(FBObject.TextureAttachment)sinkFBO.getColorbuffer(0);
         }
-        backTexAttach=(FBObject.TextureAttachment)sinkFBO.getColorbuffer(0);
-        frontTexAttach=(FBObject.TextureAttachment)frontFBO.getColorbuffer(0);
       }
  else {
         frontFBO=fboDrawable.getFBObject(GL.GL_FRONT);
