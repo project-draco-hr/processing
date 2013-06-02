@@ -1,5 +1,7 @@
 {
-  if (pg.initialized && pg.parent.canDraw()) {
+  boolean canDraw=pg.parent.canDraw();
+  System.out.println(canDraw + " " + pg.parent.frameCount);
+  if (pg.initialized && (canDraw || prevCanDraw)) {
     try {
       drawLatch=new CountDownLatch(1);
       if (WINDOW_TOOLKIT == AWT) {
@@ -14,6 +16,8 @@
  catch (      InterruptedException e) {
         e.printStackTrace();
       }
+      if (canDraw)       prevCanDraw=true;
+ else       prevCanDraw=false;
     }
  catch (    GLException e) {
       Throwable tr=e.getCause();
