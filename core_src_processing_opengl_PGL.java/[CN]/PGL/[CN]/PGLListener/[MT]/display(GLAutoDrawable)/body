@@ -25,17 +25,24 @@
     if (fboDrawable != null) {
       backFBO=fboDrawable.getFBObject(GL.GL_BACK);
       if (0 < capabilities.getNumSamples()) {
-        if (frontFBO == null) {
-          frontFBO=new FBObject();
-          frontFBO.reset(gl,pg.width,pg.height);
-          frontFBO.attachTexture2D(gl,0,true);
-          sinkFBO=backFBO.getSamplingSinkFBO();
+        if (1 < pg.parent.frameCount) {
+          if (frontFBO == null) {
+            System.out.println("init");
+            frontFBO=new FBObject();
+            frontFBO.reset(gl,pg.width,pg.height);
+            frontFBO.attachTexture2D(gl,0,true);
+            sinkFBO=backFBO.getSamplingSinkFBO();
+          }
+ else {
+            System.out.println("swap");
+            FBObject temp=sinkFBO;
+            sinkFBO=frontFBO;
+            frontFBO=temp;
+            backFBO.setSamplingSink(sinkFBO);
+          }
         }
  else {
-          FBObject temp=sinkFBO;
-          sinkFBO=frontFBO;
-          frontFBO=temp;
-          backFBO.setSamplingSink(sinkFBO);
+          frontFBO=sinkFBO=backFBO.getSamplingSinkFBO();
         }
         backTexAttach=(FBObject.TextureAttachment)sinkFBO.getColorbuffer(0);
         frontTexAttach=(FBObject.TextureAttachment)frontFBO.getColorbuffer(0);
