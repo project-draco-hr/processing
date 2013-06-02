@@ -1,6 +1,5 @@
 {
   if (latch == null || latch.getCount() == 0)   return;
-  System.out.println("display " + pg.parent.frameCount);
   drawable=glDrawable;
   context=glDrawable.getContext();
   glThread=Thread.currentThread();
@@ -25,7 +24,7 @@
     if (fboDrawable != null) {
       backFBO=fboDrawable.getFBObject(GL.GL_BACK);
       if (0 < capabilities.getNumSamples()) {
-        if (1 < pg.parent.frameCount) {
+        if (needSepFrontBackTex) {
           if (frontFBO == null) {
             System.out.println("init");
             frontFBO=new FBObject();
@@ -47,7 +46,8 @@
         }
  else {
           sinkFBO=backFBO.getSamplingSinkFBO();
-          frontTexAttach=backTexAttach=(FBObject.TextureAttachment)sinkFBO.getColorbuffer(0);
+          backTexAttach=(FBObject.TextureAttachment)sinkFBO.getColorbuffer(0);
+          frontTexAttach=backTexAttach;
         }
       }
  else {
