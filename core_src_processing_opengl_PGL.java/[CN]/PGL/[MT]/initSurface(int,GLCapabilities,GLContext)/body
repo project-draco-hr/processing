@@ -1,10 +1,4 @@
 {
-  if (reqCaps != null && !(reqCaps instanceof GLCapabilities)) {
-    throw new RuntimeException("Argument is not an instance of GLCapabilities");
-  }
-  if (sharedCtx != null && !(sharedCtx instanceof GLContext)) {
-    throw new RuntimeException("Argument is not an instance of GLContext");
-  }
   if (profile == null) {
     profile=GLProfile.getDefault();
   }
@@ -20,7 +14,7 @@
     }
     sinkFBO=backFBO=frontFBO=null;
   }
-  GLCapabilities caps=reqCaps != null ? (GLCapabilities)reqCaps : new GLCapabilities(profile);
+  GLCapabilities caps=reqCaps == null ? new GLCapabilities(profile) : reqCaps;
   caps.setBackgroundOpaque(true);
   caps.setOnscreen(true);
   if (USE_FBOLAYER_BY_DEFAULT) {
@@ -62,7 +56,7 @@
       canvasAWT=new GLCanvas(caps);
     }
  else {
-      canvasAWT=new GLCanvas(caps,(GLContext)sharedCtx);
+      canvasAWT=new GLCanvas(caps,sharedCtx);
     }
     canvasAWT.setBounds(0,0,pg.width,pg.height);
     canvasAWT.setBackground(new Color(pg.backgroundColor,true));
@@ -80,7 +74,7 @@
  else   if (WINDOW_TOOLKIT == NEWT) {
     window=GLWindow.create(caps);
     if (sharedCtx != null) {
-      window.setSharedContext((GLContext)sharedCtx);
+      window.setSharedContext(sharedCtx);
     }
     canvasNEWT=new NewtCanvasAWT(window);
     canvasNEWT.setBounds(0,0,pg.width,pg.height);

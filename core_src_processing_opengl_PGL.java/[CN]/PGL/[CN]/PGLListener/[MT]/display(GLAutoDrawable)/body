@@ -1,5 +1,5 @@
 {
-  if (latch == null || latch.getCount() == 0)   return;
+  if (drawLatch == null || drawLatch.getCount() == 0)   return;
   drawable=glDrawable;
   context=glDrawable.getContext();
   glThread=Thread.currentThread();
@@ -26,7 +26,6 @@
       if (0 < capabilities.getNumSamples()) {
         if (needSepFrontTex) {
           if (frontFBO == null) {
-            System.out.println("init");
             frontFBO=new FBObject();
             frontFBO.reset(gl,pg.width,pg.height);
             frontFBO.attachTexture2D(gl,0,true);
@@ -34,7 +33,6 @@
             changedFrontTex=changedBackTex=true;
           }
  else {
-            System.out.println("swap");
             FBObject temp=sinkFBO;
             sinkFBO=frontFBO;
             frontFBO=temp;
@@ -58,7 +56,7 @@
     }
   }
   pg.parent.handleDraw();
-  if (latch != null) {
-    latch.countDown();
+  if (drawLatch != null) {
+    drawLatch.countDown();
   }
 }
