@@ -1,11 +1,19 @@
 {
   if (pg.initialized && pg.parent.canDraw()) {
+    System.out.println("requestDraw " + pg.parent.frameCount);
     try {
+      latch=new CountDownLatch(1);
       if (WINDOW_TOOLKIT == AWT) {
         canvasAWT.display();
       }
  else       if (WINDOW_TOOLKIT == NEWT) {
         window.display();
+      }
+      try {
+        latch.await(1,TimeUnit.SECONDS);
+      }
+ catch (      InterruptedException e) {
+        e.printStackTrace();
       }
     }
  catch (    GLException e) {
