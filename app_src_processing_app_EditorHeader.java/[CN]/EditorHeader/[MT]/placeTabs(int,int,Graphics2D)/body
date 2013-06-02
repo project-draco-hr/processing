@@ -4,10 +4,6 @@
   final int bottom=getHeight() - TAB_STRETCH;
   final int top=bottom - TAB_HEIGHT;
   GeneralPath path=null;
-  if (g != null) {
-    g.setColor(tabColor[SELECTED]);
-    g.fillRect(0,bottom,getWidth(),TAB_STRETCH);
-  }
   for (int i=0; i < sketch.getCodeCount(); i++) {
     SketchCode code=sketch.getCode(i);
     Tab tab=tabs[i];
@@ -43,7 +39,11 @@
         g.drawLine(tab.left + NOTCH,top,tab.right - NOTCH,top);
       }
     }
-    x+=1;
+    x+=TAB_BETWEEN;
+  }
+  if (g != null) {
+    g.setColor(tabColor[SELECTED]);
+    g.fillRect(0,bottom,getWidth(),TAB_STRETCH);
   }
   return x <= right;
 }
