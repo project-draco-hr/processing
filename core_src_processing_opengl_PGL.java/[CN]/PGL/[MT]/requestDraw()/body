@@ -1,7 +1,7 @@
 {
   if (pg.initialized && pg.parent.canDraw()) {
     try {
-      latch=new CountDownLatch(1);
+      drawLatch=new CountDownLatch(1);
       if (WINDOW_TOOLKIT == AWT) {
         canvasAWT.display();
       }
@@ -9,7 +9,7 @@
         window.display();
       }
       try {
-        latch.await(1,TimeUnit.SECONDS);
+        drawLatch.await(DRAW_TIMEOUT_MILLIS,TimeUnit.MILLISECONDS);
       }
  catch (      InterruptedException e) {
         e.printStackTrace();
