@@ -36,11 +36,18 @@
     for (int col=0; col < getColumnCount(); col++) {
 switch (columnTypes[col]) {
 case STRING:
-        output.writeUTF(row.getString(col));
-      break;
+        String str=row.getString(col);
+      if (str == null) {
+        output.writeBoolean(false);
+      }
+ else {
+        output.writeBoolean(true);
+        output.writeUTF(str);
+      }
+    break;
 case INT:
-    output.writeInt(row.getInt(col));
-  break;
+  output.writeInt(row.getInt(col));
+break;
 case LONG:
 output.writeLong(row.getLong(col));
 break;
