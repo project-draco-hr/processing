@@ -42,11 +42,20 @@
     if (indent == -1) {
       return singleLine;
     }
+    if (singleLine.trim().length() == 0) {
+      return "";
+    }
     StringWriter stringWriter=new StringWriter();
     StreamResult xmlOutput=new StreamResult(stringWriter);
     Source source=new StreamSource(new StringReader(singleLine));
     transformer.transform(source,xmlOutput);
-    return decl + sep + stringWriter.toString();
+    String outgoing=stringWriter.toString();
+    if (!outgoing.startsWith(decl)) {
+      return decl + sep + outgoing;
+    }
+ else {
+      return outgoing;
+    }
   }
  catch (  Exception e) {
     e.printStackTrace();
