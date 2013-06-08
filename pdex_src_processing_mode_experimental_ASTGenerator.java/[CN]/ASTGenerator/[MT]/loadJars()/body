@@ -1,22 +1,29 @@
 {
-  try {
-    factory=new ClassPathFactory();
-    StringBuffer tehPath=new StringBuffer(System.getProperty("java.class.path"));
-    tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + "/lib/rt.jar"+ File.pathSeparatorChar);
-    if (errorCheckerService.classpathJars != null) {
-      for (      URL jarPath : errorCheckerService.classpathJars) {
-        tehPath.append(jarPath.getPath() + File.pathSeparatorChar);
+  Thread t=new Thread(new Runnable(){
+    public void run(){
+      try {
+        factory=new ClassPathFactory();
+        StringBuffer tehPath=new StringBuffer(System.getProperty("java.class.path"));
+        tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + "/lib/rt.jar"+ File.pathSeparatorChar);
+        if (errorCheckerService.classpathJars != null) {
+          for (          URL jarPath : errorCheckerService.classpathJars) {
+            System.out.println(jarPath.getPath());
+            tehPath.append(jarPath.getPath() + File.pathSeparatorChar);
+          }
+        }
+        StringTokenizer st=new StringTokenizer(tehPath.toString(),File.pathSeparatorChar + "");
+        while (st.hasMoreElements()) {
+          String sstr=(String)st.nextElement();
+          System.out.println(sstr);
+        }
+        classPath=factory.createFromPath(tehPath.toString());
+        System.out.println("jars loaded.");
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
       }
     }
-    StringTokenizer st=new StringTokenizer(tehPath.toString(),File.pathSeparatorChar + "");
-    while (st.hasMoreElements()) {
-      String sstr=(String)st.nextElement();
-      System.out.println(sstr);
-    }
-    classPath=factory.createFromPath(tehPath.toString());
-    System.out.println("jars loaded.");
   }
- catch (  Exception e) {
-    e.printStackTrace();
-  }
+);
+  t.start();
 }
