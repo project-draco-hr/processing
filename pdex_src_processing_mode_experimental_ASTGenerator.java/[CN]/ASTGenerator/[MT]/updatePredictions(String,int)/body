@@ -20,22 +20,22 @@
           lineNumber+=len;
         }
       }
-      ASTNode anode=null;
+      ASTNode nearestNode=null;
       ASTParser parser=ASTParser.newParser(AST.JLS4);
       parser.setKind(ASTParser.K_EXPRESSION);
       parser.setSource(word2.toCharArray());
       ASTNode testnode=parser.createAST(null);
       System.err.print("Typed: " + word2 + "|");
-      anode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
-      if (anode == null)       anode=(ASTNode)compilationUnit.types().get(0);
-      System.err.println(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(anode));
+      nearestNode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
+      if (nearestNode == null)       nearestNode=(ASTNode)compilationUnit.types().get(0);
+      System.err.println(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(nearestNode));
       ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
       if (testnode instanceof SimpleName && !noCompare) {
         System.err.println("One word expression " + getNodeAsString(testnode));
-        anode=anode.getParent();
-        while (anode != null) {
-          if (anode instanceof TypeDeclaration) {
-            TypeDeclaration td=(TypeDeclaration)anode;
+        nearestNode=nearestNode.getParent();
+        while (nearestNode != null) {
+          if (nearestNode instanceof TypeDeclaration) {
+            TypeDeclaration td=(TypeDeclaration)nearestNode;
             if (td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY) != null) {
               SimpleType st=(SimpleType)td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY);
               System.out.println("Superclass " + st.getName());
@@ -44,12 +44,12 @@
               }
             }
           }
-          List<StructuralPropertyDescriptor> sprops=anode.structuralPropertiesForType();
+          List<StructuralPropertyDescriptor> sprops=nearestNode.structuralPropertiesForType();
           for (          StructuralPropertyDescriptor sprop : sprops) {
             ASTNode cnode=null;
             if (!sprop.isChildListProperty()) {
-              if (anode.getStructuralProperty(sprop) instanceof ASTNode) {
-                cnode=(ASTNode)anode.getStructuralProperty(sprop);
+              if (nearestNode.getStructuralProperty(sprop) instanceof ASTNode) {
+                cnode=(ASTNode)nearestNode.getStructuralProperty(sprop);
                 CompletionCandidate[] types=checkForTypes(cnode);
                 if (types != null) {
                   for (int i=0; i < types.length; i++) {
@@ -59,7 +59,7 @@
               }
             }
  else {
-              List<ASTNode> nodelist=(List<ASTNode>)anode.getStructuralProperty(sprop);
+              List<ASTNode> nodelist=(List<ASTNode>)nearestNode.getStructuralProperty(sprop);
               for (              ASTNode clnode : nodelist) {
                 CompletionCandidate[] types=checkForTypes(clnode);
                 if (types != null) {
@@ -70,12 +70,25 @@
               }
             }
           }
-          anode=anode.getParent();
+          nearestNode=nearestNode.getParent();
+        }
+        if (candidates.isEmpty()) {
+          System.out.println("Empty can. " + word2);
+          RegExpResourceFilter regExpResourceFilter;
+          regExpResourceFilter=new RegExpResourceFilter(".*",word2 + "[a-zA-Z_0-9]*.class");
+          String[] resources=classPath.findResources("",regExpResourceFilter);
+          for (          String matchedClass : resources) {
+            matchedClass=matchedClass.substring(0,matchedClass.length() - 6);
+            matchedClass=matchedClass.replace('/','.');
+            int d=matchedClass.lastIndexOf('.');
+            matchedClass=matchedClass.substring(d + 1);
+            candidates.add(new CompletionCandidate(matchedClass));
+          }
         }
       }
  else {
         System.err.println("Complex expression " + getNodeAsString(testnode));
-        ASTNode det=resolveExpression(anode,testnode);
+        ASTNode det=resolveExpression(nearestNode,testnode);
         System.err.println("DET " + getNodeAsString(det));
         if (det != null) {
           TypeDeclaration td=null;

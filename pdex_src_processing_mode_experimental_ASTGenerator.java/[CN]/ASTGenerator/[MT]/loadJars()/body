@@ -7,16 +7,15 @@
         tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + "/lib/rt.jar"+ File.pathSeparatorChar);
         if (errorCheckerService.classpathJars != null) {
           for (          URL jarPath : errorCheckerService.classpathJars) {
-            System.out.println(jarPath.getPath());
             tehPath.append(jarPath.getPath() + File.pathSeparatorChar);
           }
         }
-        StringTokenizer st=new StringTokenizer(tehPath.toString(),File.pathSeparatorChar + "");
-        while (st.hasMoreElements()) {
-          String sstr=(String)st.nextElement();
-          System.out.println(sstr);
-        }
         classPath=factory.createFromPath(tehPath.toString());
+        RegExpResourceFilter regExpResourceFilter=new RegExpResourceFilter(".*","ArrayList.class");
+        String[] resources=classPath.findResources("",regExpResourceFilter);
+        for (        String className : resources) {
+          System.out.println("-> " + className);
+        }
         System.out.println("jars loaded.");
       }
  catch (      Exception e) {
