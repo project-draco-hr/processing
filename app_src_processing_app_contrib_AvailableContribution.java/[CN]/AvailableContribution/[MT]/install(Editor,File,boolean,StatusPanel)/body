@@ -23,7 +23,17 @@
     File propFile=new File(contribFolder,type + ".properties");
     if (writePropertiesFile(propFile)) {
       LocalContribution newContrib=type.load(editor.getBase(),contribFolder);
-      installedContrib=newContrib.moveAndLoad(editor,confirmReplace,status);
+      File newContribFolder=newContrib.getFolder();
+      installedContrib=newContrib.copyAndLoad(editor,confirmReplace,status);
+      newContrib=null;
+      System.gc();
+      try {
+        Thread.sleep(1000);
+      }
+ catch (      InterruptedException e) {
+        e.printStackTrace();
+      }
+      Base.removeDir(newContribFolder);
     }
  else {
       status.setErrorMessage("Error overwriting .properties file.");

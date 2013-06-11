@@ -38,8 +38,13 @@
   if (contribFolder.exists()) {
     Base.removeDir(contribFolder);
   }
-  if (!getFolder().renameTo(contribFolder)) {
-    status.setErrorMessage("Could not move " + getTypeName() + " \""+ getName()+ "\" to the sketchbook.");
+  File oldFolder=getFolder();
+  try {
+    Base.copyDir(oldFolder,contribFolder);
+  }
+ catch (  IOException e) {
+    status.setErrorMessage("Could not copy " + getTypeName() + " \""+ getName()+ "\" to the sketchbook.");
+    e.printStackTrace();
     return null;
   }
   return getType().load(editor.getBase(),contribFolder);
