@@ -4,18 +4,23 @@
   if (rowCount == 0) {
     setRowCount(10);
   }
-  while ((line=reader.readLine()) != null) {
-    if (row == getRowCount()) {
-      setRowCount(row << 1);
-    }
-    if (row == 0 && header) {
-      setColumnTitles(tsv ? PApplet.split(line,'\t') : splitLineCSV(line));
-      header=false;
-    }
+  try {
+    while ((line=reader.readLine()) != null) {
+      if (row == getRowCount()) {
+        setRowCount(row << 1);
+      }
+      if (row == 0 && header) {
+        setColumnTitles(tsv ? PApplet.split(line,'\t') : splitLineCSV(line));
+        header=false;
+      }
  else {
-      setRow(row,tsv ? PApplet.split(line,'\t') : splitLineCSV(line));
-      row++;
+        setRow(row,tsv ? PApplet.split(line,'\t') : splitLineCSV(line));
+        row++;
+      }
     }
+  }
+ catch (  Exception e) {
+    throw new RuntimeException("Error reading table on line " + row,e);
   }
   if (row != getRowCount()) {
     setRowCount(row);
