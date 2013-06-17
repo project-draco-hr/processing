@@ -8,7 +8,7 @@
         if (node.getStructuralProperty(prop) instanceof ASTNode) {
           ASTNode cnode=(ASTNode)node.getStructuralProperty(prop);
           if (isAddableASTNode(cnode)) {
-            ctnode=new DefaultMutableTreeNode(getNodeAsString((ASTNode)node.getStructuralProperty(prop)));
+            ctnode=new DefaultMutableTreeNode(new ASTNodeWrapper((ASTNode)node.getStructuralProperty(prop)));
             tnode.add(ctnode);
             visitRecur(cnode,ctnode);
           }
@@ -22,7 +22,7 @@
       List<ASTNode> nodelist=(List<ASTNode>)node.getStructuralProperty(prop);
       for (      ASTNode cnode : nodelist) {
         if (isAddableASTNode(cnode)) {
-          ctnode=new DefaultMutableTreeNode(getNodeAsString(cnode));
+          ctnode=new DefaultMutableTreeNode(new ASTNodeWrapper(cnode));
           tnode.add(ctnode);
           visitRecur(cnode,ctnode);
         }
