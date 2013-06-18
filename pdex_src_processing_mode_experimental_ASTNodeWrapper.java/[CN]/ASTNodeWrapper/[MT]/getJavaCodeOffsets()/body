@@ -9,5 +9,20 @@
       break;
     }
   }
-  return new int[]{lineNumber,thisNode.getStartPosition(),nodeOffset,nodeLength};
+  int altStartPos=thisNode.getStartPosition();
+  thisNode=thisNode.getParent();
+  Iterator<StructuralPropertyDescriptor> it=thisNode.structuralPropertiesForType().iterator();
+  while (it.hasNext()) {
+    StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
+    if (prop.isChildListProperty()) {
+      List<ASTNode> nodelist=(List<ASTNode>)thisNode.getStructuralProperty(prop);
+      for (      ASTNode cnode : nodelist) {
+        if (getLineNumber(cnode) == lineNumber) {
+          altStartPos=cnode.getStartPosition();
+          break;
+        }
+      }
+    }
+  }
+  return new int[]{lineNumber,altStartPos,nodeOffset,nodeLength};
 }
