@@ -1,0 +1,32 @@
+{
+  String source=anode.toString().trim();
+  System.out.println("Src: " + source);
+  int offset=0;
+  String dataTypeFunc[]={"Int","Char","Float","Boolean","Byte"};
+  for (  String dataType : dataTypeFunc) {
+    String dataTypeRegexp="\\bPApplet.parse" + dataType + "\\s*\\(";
+    Pattern pattern=Pattern.compile(dataTypeRegexp);
+    Matcher matcher=pattern.matcher(source);
+    while (matcher.find()) {
+      System.out.print("Start index: " + matcher.start());
+      System.out.println(" End index: " + matcher.end() + " ");
+      System.out.println("-->" + matcher.group() + "<--");
+      offset=offset - ("PApplet.parse(").length();
+    }
+  }
+  final String webColorRegexp="#{1}[A-F|a-f|0-9]{6}\\W";
+  Pattern webPattern=Pattern.compile(webColorRegexp);
+  Matcher webMatcher=webPattern.matcher(source);
+  while (webMatcher.find()) {
+    String found=source.substring(webMatcher.start(),webMatcher.end());
+    source=webMatcher.replaceFirst("0xff" + found.substring(1));
+    webMatcher=webPattern.matcher(source);
+    offset+=3;
+  }
+  final String colorTypeRegex="color(?![a-zA-Z0-9_])(?=\\[*)(?!(\\s*\\())";
+  Pattern colorPattern=Pattern.compile(colorTypeRegex);
+  Matcher colorMatcher=colorPattern.matcher(source);
+  source=colorMatcher.replaceAll("int");
+  System.out.println(source + "-Norm offset " + offset);
+  return offset;
+}

@@ -1,6 +1,6 @@
 {
-  int nodeOffset=node.getStartPosition(), nodeLength=node.getLength();
-  ASTNode thisNode=node;
+  int nodeOffset=Node.getStartPosition(), nodeLength=Node.getLength();
+  ASTNode thisNode=Node;
   while (thisNode.getParent() != null) {
     if (getLineNumber(thisNode.getParent()) == lineNumber) {
       thisNode=thisNode.getParent();
@@ -12,17 +12,25 @@
   int altStartPos=thisNode.getStartPosition();
   thisNode=thisNode.getParent();
   Iterator<StructuralPropertyDescriptor> it=thisNode.structuralPropertiesForType().iterator();
+  boolean flag=true;
   while (it.hasNext()) {
     StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
     if (prop.isChildListProperty()) {
       List<ASTNode> nodelist=(List<ASTNode>)thisNode.getStructuralProperty(prop);
       for (      ASTNode cnode : nodelist) {
         if (getLineNumber(cnode) == lineNumber) {
-          altStartPos=cnode.getStartPosition();
-          break;
+          if (flag) {
+            altStartPos=cnode.getStartPosition();
+            flag=false;
+          }
+ else {
+            if (cnode == Node) {
+              break;
+            }
+          }
         }
       }
     }
   }
-  return new int[]{lineNumber,altStartPos,nodeOffset,nodeLength};
+  return new int[]{lineNumber,altStartPos,nodeOffset,nodeLength + normalizeOffsets(Node)};
 }
