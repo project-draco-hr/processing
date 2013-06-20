@@ -33,8 +33,20 @@
     }
   }
   int pdeoffsets[]=getPDECodeOffsets(ecs);
-  int x=normalizeOffsets(ecs.getPDECode(pdeoffsets[1] - 1),nodeOffset - altStartPos);
-  int xlen=normalizeOffsets(Node.toString(),nodeLength);
+  TreeMap<Integer,Integer> offsetmap=createOffsetMapping(ecs.getPDECode(pdeoffsets[1] - 1),nodeOffset - altStartPos);
+  int x=0, xlen=0;
+  for (  Integer key : offsetmap.keySet()) {
+    System.out.println(key + ":" + offsetmap.get(key));
+  }
+  for (  Integer key : offsetmap.keySet()) {
+    if (key < nodeOffset - altStartPos) {
+      x-=offsetmap.get(key);
+    }
+    if (key >= nodeOffset - altStartPos && key <= nodeOffset - altStartPos + nodeLength) {
+      xlen-=offsetmap.get(key);
+    }
+    System.out.println(key + ":" + offsetmap.get(key));
+  }
   System.out.println("X=" + x + " xlen="+ xlen);
   return new int[]{lineNumber,altStartPos,nodeOffset + x,nodeLength + xlen};
 }

@@ -1,5 +1,5 @@
 {
-  System.out.println("Src: " + source);
+  System.out.println("Src: " + source + " inpoff"+ inpOffset);
   String sourceAlt=new String(source);
   int offset=0;
   TreeMap<Integer,Integer> offsetmap=new TreeMap<Integer,Integer>();
@@ -22,14 +22,11 @@
   Matcher webMatcher=webPattern.matcher(sourceAlt);
   while (webMatcher.find()) {
     String found=sourceAlt.substring(webMatcher.start(),webMatcher.end());
-    sourceAlt=webMatcher.replaceFirst("0xff" + found.substring(1));
-    webMatcher=webPattern.matcher(sourceAlt);
     offsetmap.put(webMatcher.end(),3);
   }
   final String colorTypeRegex="color(?![a-zA-Z0-9_])(?=\\[*)(?!(\\s*\\())";
   Pattern colorPattern=Pattern.compile(colorTypeRegex);
   Matcher colorMatcher=colorPattern.matcher(sourceAlt);
-  sourceAlt=colorMatcher.replaceAll("int");
   while (colorMatcher.find()) {
     System.out.print("Start index: " + colorMatcher.start());
     System.out.println(" End index: " + colorMatcher.end() + " ");
@@ -38,16 +35,6 @@
   }
   colorMatcher.reset();
   sourceAlt=colorMatcher.replaceAll("int");
-  for (  Integer key : offsetmap.keySet()) {
-    if (key < inpOffset) {
-      offset-=offsetmap.get(key);
-    }
- else {
-      break;
-    }
-    System.out.println(key + ":" + offsetmap.get(key));
-  }
-  System.out.println(source);
   System.out.println(sourceAlt);
-  return offset;
+  return offsetmap;
 }
