@@ -32,5 +32,9 @@
       }
     }
   }
-  return new int[]{lineNumber,altStartPos,nodeOffset,nodeLength + normalizeOffsets(Node)};
+  int pdeoffsets[]=getPDECodeOffsets(ecs);
+  int x=normalizeOffsets(ecs.getPDECode(pdeoffsets[1] - 1),nodeOffset - altStartPos);
+  int xlen=normalizeOffsets(Node.toString(),nodeLength);
+  System.out.println("X=" + x + " xlen="+ xlen);
+  return new int[]{lineNumber,altStartPos,nodeOffset + x,nodeLength + xlen};
 }
