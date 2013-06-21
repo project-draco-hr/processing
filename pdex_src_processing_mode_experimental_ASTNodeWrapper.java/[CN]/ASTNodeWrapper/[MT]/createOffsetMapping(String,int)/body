@@ -12,7 +12,7 @@
       System.out.print("Start index: " + matcher.start());
       System.out.println(" End index: " + matcher.end() + " ");
       System.out.println("-->" + matcher.group() + "<--");
-      offsetmap.put(matcher.end(),("PApplet.parse").length());
+      offsetmap.put(matcher.end() - 1,("PApplet.parse").length());
     }
     matcher.reset();
     sourceAlt=matcher.replaceAll("PApplet.parse" + Character.toUpperCase(dataType.charAt(0)) + dataType.substring(1)+ "(");
@@ -22,7 +22,9 @@
   Matcher webMatcher=webPattern.matcher(sourceAlt);
   while (webMatcher.find()) {
     String found=sourceAlt.substring(webMatcher.start(),webMatcher.end());
-    offsetmap.put(webMatcher.end(),3);
+    offsetmap.put(webMatcher.end() - 1,3);
+    sourceAlt=webMatcher.replaceFirst("0xff" + found.substring(1));
+    webMatcher=webPattern.matcher(sourceAlt);
   }
   final String colorTypeRegex="color(?![a-zA-Z0-9_])(?=\\[*)(?!(\\s*\\())";
   Pattern colorPattern=Pattern.compile(colorTypeRegex);
@@ -31,10 +33,56 @@
     System.out.print("Start index: " + colorMatcher.start());
     System.out.println(" End index: " + colorMatcher.end() + " ");
     System.out.println("-->" + colorMatcher.group() + "<--");
-    offsetmap.put(colorMatcher.end(),-2);
+    offsetmap.put(colorMatcher.end() - 1,-2);
   }
   colorMatcher.reset();
   sourceAlt=colorMatcher.replaceAll("int");
   System.out.println(sourceAlt);
+  int pdeCodeMap[]=new int[source.length() * 2];
+  int javaCodeMap[]=new int[source.length() * 2];
+  int pi=1, pj=1;
+  for (  Integer key : offsetmap.keySet()) {
+    for (; pi < key; pi++) {
+      pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
+    }
+    for (; pj < key; pj++) {
+      javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
+    }
+    System.out.println(key + ":" + offsetmap.get(key));
+    int kval=offsetmap.get(key);
+    if (kval > 0) {
+      pi--;
+      pj-=2;
+      for (int i=0; i < kval; i++, pi++, pj++) {
+        pdeCodeMap[pi]=pdeCodeMap[pi - 1];
+        javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
+      }
+    }
+ else {
+      pi--;
+      pj--;
+      for (int i=0; i < -kval; i++, pi++, pj++) {
+        pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
+        javaCodeMap[pj]=javaCodeMap[pj - 1];
+      }
+    }
+  }
+  pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
+  javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
+  while (pi < sourceAlt.length()) {
+    pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
+    pi++;
+  }
+  while (pj < source.length()) {
+    javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
+    pj++;
+  }
+  for (int i=0; i < javaCodeMap.length; i++) {
+    if (javaCodeMap[i] > 0 || pdeCodeMap[i] > 0 || i == 0)     if (i < source.length())     System.out.print(source.charAt(i));
+    System.out.print(javaCodeMap[i] + " - " + pdeCodeMap[i]);
+    if (i < sourceAlt.length())     System.out.print(sourceAlt.charAt(i));
+    System.out.println();
+  }
+  System.out.println();
   return offsetmap;
 }
