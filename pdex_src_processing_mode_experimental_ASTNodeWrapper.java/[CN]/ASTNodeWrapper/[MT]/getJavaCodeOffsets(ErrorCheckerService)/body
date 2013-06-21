@@ -33,55 +33,7 @@
     }
   }
   int pdeoffsets[]=getPDECodeOffsets(ecs);
-  String pdeCode=ecs.getPDECode(pdeoffsets[1] - 1);
-  int ws=0;
-  TreeMap<Integer,Integer> offsetmap=createOffsetMapping(pdeCode,nodeOffset - altStartPos);
-  int x=0, xlen=0;
-  System.out.println("Map:");
-  for (  Integer key : offsetmap.keySet()) {
-    System.out.println(key + ":" + offsetmap.get(key));
-  }
-  System.out.println((nodeOffset - altStartPos) + ",range, " + (nodeOffset - altStartPos + nodeLength));
-  int pdeCodeMap[]=new int[pdeCode.length() * 2];
-  int javaCodeMap[]=new int[pdeCode.length() * 2];
-  int pi=1, pj=1;
-  for (  Integer key : offsetmap.keySet()) {
-    for (; pi < key; pi++) {
-      pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
-    }
-    for (; pj < key; pj++) {
-      javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
-    }
-    System.out.println(key + ":" + offsetmap.get(key));
-    int kval=offsetmap.get(key);
-    if (kval > 0) {
-      pi--;
-      pj--;
-      for (int i=0; i < kval; i++, pi++, pj++) {
-        pdeCodeMap[pi]=pdeCodeMap[pi - 1];
-        javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
-      }
-    }
- else {
-      pi--;
-      pj--;
-      for (int i=0; i < -kval; i++, pi++, pj++) {
-        pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
-        javaCodeMap[pj]=javaCodeMap[pj - 1];
-      }
-    }
-  }
-  pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
-  javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
-  for (  Integer key : offsetmap.keySet()) {
-    if (key < nodeOffset - altStartPos) {
-      x-=offsetmap.get(key);
-    }
-    if (key >= nodeOffset - altStartPos + ws && key <= nodeOffset - altStartPos + nodeLength + ws) {
-      xlen-=offsetmap.get(key);
-    }
-    System.out.println(key + ":" + offsetmap.get(key));
-  }
-  System.out.println("X=" + x + " xlen="+ xlen);
-  return new int[]{lineNumber,altStartPos,nodeOffset + x,nodeLength + xlen};
+  String pdeCode=ecs.getPDECode(pdeoffsets[1] - 1).trim();
+  int vals[]=createOffsetMapping(pdeCode,nodeOffset - altStartPos,nodeLength);
+  return new int[]{lineNumber,altStartPos,nodeOffset + vals[0],vals[1]};
 }

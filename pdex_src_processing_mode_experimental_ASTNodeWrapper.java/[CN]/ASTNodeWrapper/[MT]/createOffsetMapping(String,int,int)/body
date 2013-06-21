@@ -1,5 +1,5 @@
 {
-  System.out.println("Src: " + source + " inpoff"+ inpOffset);
+  System.out.println("Src:" + source + "\ninpoff"+ inpOffset+ " nodelen "+ nodeLen);
   String sourceAlt=new String(source);
   int offset=0;
   TreeMap<Integer,Integer> offsetmap=new TreeMap<Integer,Integer>();
@@ -12,7 +12,7 @@
       System.out.print("Start index: " + matcher.start());
       System.out.println(" End index: " + matcher.end() + " ");
       System.out.println("-->" + matcher.group() + "<--");
-      offsetmap.put(matcher.end() - 1,("PApplet.parse").length());
+      offsetmap.put(matcher.end() + 1,("PApplet.parse").length());
     }
     matcher.reset();
     sourceAlt=matcher.replaceAll("PApplet.parse" + Character.toUpperCase(dataType.charAt(0)) + dataType.substring(1)+ "(");
@@ -38,15 +38,15 @@
   colorMatcher.reset();
   sourceAlt=colorMatcher.replaceAll("int");
   System.out.println(sourceAlt);
-  int pdeCodeMap[]=new int[source.length() * 2];
   int javaCodeMap[]=new int[source.length() * 2];
+  int pdeeCodeMap[]=new int[source.length() * 2];
   int pi=1, pj=1;
   for (  Integer key : offsetmap.keySet()) {
     for (; pi < key; pi++) {
-      pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
+      javaCodeMap[pi]=javaCodeMap[pi - 1] + 1;
     }
     for (; pj < key; pj++) {
-      javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
+      pdeeCodeMap[pj]=pdeeCodeMap[pj - 1] + 1;
     }
     System.out.println(key + ":" + offsetmap.get(key));
     int kval=offsetmap.get(key);
@@ -54,35 +54,51 @@
       pi--;
       pj-=2;
       for (int i=0; i < kval; i++, pi++, pj++) {
-        pdeCodeMap[pi]=pdeCodeMap[pi - 1];
-        javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
+        javaCodeMap[pi]=javaCodeMap[pi - 1];
+        pdeeCodeMap[pj]=pdeeCodeMap[pj - 1] + 1;
       }
     }
  else {
       pi--;
       pj--;
       for (int i=0; i < -kval; i++, pi++, pj++) {
-        pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
-        javaCodeMap[pj]=javaCodeMap[pj - 1];
+        javaCodeMap[pi]=javaCodeMap[pi - 1] + 1;
+        pdeeCodeMap[pj]=pdeeCodeMap[pj - 1];
       }
     }
   }
-  pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
-  javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
+  javaCodeMap[pi]=javaCodeMap[pi - 1] + 1;
+  pdeeCodeMap[pj]=pdeeCodeMap[pj - 1] + 1;
   while (pi < sourceAlt.length()) {
-    pdeCodeMap[pi]=pdeCodeMap[pi - 1] + 1;
+    javaCodeMap[pi]=javaCodeMap[pi - 1] + 1;
     pi++;
   }
   while (pj < source.length()) {
-    javaCodeMap[pj]=javaCodeMap[pj - 1] + 1;
+    pdeeCodeMap[pj]=pdeeCodeMap[pj - 1] + 1;
     pj++;
   }
-  for (int i=0; i < javaCodeMap.length; i++) {
-    if (javaCodeMap[i] > 0 || pdeCodeMap[i] > 0 || i == 0)     if (i < source.length())     System.out.print(source.charAt(i));
-    System.out.print(javaCodeMap[i] + " - " + pdeCodeMap[i]);
-    if (i < sourceAlt.length())     System.out.print(sourceAlt.charAt(i));
-    System.out.println();
+  for (int i=0; i < pdeeCodeMap.length; i++) {
+    if (pdeeCodeMap[i] > 0 || javaCodeMap[i] > 0 || i == 0) {
+      if (i < source.length())       System.out.print(source.charAt(i));
+      System.out.print(pdeeCodeMap[i] + " - " + javaCodeMap[i]+ " <-["+ i+ "]");
+      if (i < sourceAlt.length())       System.out.print(sourceAlt.charAt(i));
+      System.out.println();
+    }
   }
   System.out.println();
-  return offsetmap;
+  pj=0;
+  pi=0;
+  int count=0;
+  pj=inpOffset;
+  int startIndex=javaCodeMap[pj];
+  while (pdeeCodeMap[pi] != startIndex && pi < pdeeCodeMap.length)   pi++;
+  int startoffDif=pi - pj;
+  int stopindex=javaCodeMap[pj + nodeLen];
+  System.out.println(startIndex + "SI,St" + stopindex+ "sod "+ startoffDif);
+  while (pdeeCodeMap[pi] < stopindex && pi < pdeeCodeMap.length) {
+    pi++;
+    count++;
+  }
+  System.out.println("pde len " + count);
+  return new int[]{startoffDif,count};
 }
