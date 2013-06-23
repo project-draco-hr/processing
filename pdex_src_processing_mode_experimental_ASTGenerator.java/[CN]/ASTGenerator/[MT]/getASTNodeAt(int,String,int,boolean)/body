@@ -15,21 +15,25 @@
   ASTNode lineNode=findLineOfNode(compilationUnit,lineNumber,offset,name);
   System.out.println("+> " + lineNode);
   ASTNode decl=null;
+  String nameOfNode=null;
   if (lineNode != null) {
     ASTNodeWrapper lineNodeWrap=new ASTNodeWrapper(lineNode);
+    int altOff=offset;
     int ret[][]=lineNodeWrap.getOffsetMapping(errorCheckerService);
-    int javaCodeMap[]=ret[0], pdeCodeMap[]=ret[1];
-    int altOff=0;
-    for (; altOff < javaCodeMap.length; altOff++) {
-      if (javaCodeMap[altOff] == pdeCodeMap[offset]) {
-        break;
+    if (ret != null) {
+      altOff=0;
+      int javaCodeMap[]=ret[0], pdeCodeMap[]=ret[1];
+      for (; altOff < javaCodeMap.length; altOff++) {
+        if (javaCodeMap[altOff] == pdeCodeMap[offset]) {
+          break;
+        }
       }
     }
     System.out.println("FLON2: " + lineNumber + " LN spos "+ lineNode.getStartPosition()+ " off "+ offset+ " alt off"+ altOff);
     ASTNode parLineNode=lineNode.getParent();
     Iterator<StructuralPropertyDescriptor> it=parLineNode.structuralPropertiesForType().iterator();
     boolean flag=true;
-    int lineStartPos=lineNode.getStartPosition(), offAdjust=0;
+    int offAdjust=0;
     while (it.hasNext() && flag) {
       StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
       if (prop.isChildListProperty()) {
@@ -52,6 +56,7 @@
     ASTNode simpName=pinpointOnLine(lineNode,altOff,lineNode.getStartPosition(),name);
     System.out.println("+++> " + simpName);
     if (simpName instanceof SimpleName) {
+      nameOfNode=simpName.toString();
       System.out.println(getNodeAsString(simpName));
       decl=findDeclaration((SimpleName)simpName);
       if (decl != null) {
@@ -63,12 +68,13 @@
     }
   }
   if (decl != null && scrollOnly) {
-    System.err.println("FINAL String label: " + getNodeAsString(decl));
-    DefaultProblem dpr=new DefaultProblem(null,null,-1,null,-1,decl.getStartPosition(),decl.getStartPosition(),getLineNumber(decl) + 1,0);
-    int[] position=errorCheckerService.calculateTabIndexAndLineNumber(dpr);
-    System.out.println("Tab " + position[0] + ", Line: "+ (position[1]));
-    Problem p=new Problem(dpr,position[0],position[1]);
-    errorCheckerService.scrollToErrorLine(p);
+    ASTNode simpName2=getNodeName(decl,nameOfNode);
+    System.err.println("FINAL String decl: " + getNodeAsString(decl));
+    System.err.println("FINAL String label: " + getNodeAsString(simpName2));
+    ASTNodeWrapper awrap=new ASTNodeWrapper(simpName2);
+    int pdeoffsets[]=awrap.getPDECodeOffsets(errorCheckerService);
+    int javaoffsets[]=awrap.getJavaCodeOffsets(errorCheckerService);
+    ErrorCheckerService.scrollToErrorLine(editor,pdeoffsets[0],pdeoffsets[1],javaoffsets[1],javaoffsets[2]);
   }
   return null;
 }

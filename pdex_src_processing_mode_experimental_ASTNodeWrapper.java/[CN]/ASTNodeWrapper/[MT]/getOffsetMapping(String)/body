@@ -25,6 +25,10 @@
     matcher.reset();
     sourceAlt=matcher.replaceAll("PApplet.parse" + Character.toUpperCase(dataType.charAt(0)) + dataType.substring(1)+ "(");
   }
+  if (offsetmap.isEmpty()) {
+    System.out.println("No offset matching needed.");
+    return null;
+  }
   webMatcher=webPattern.matcher(sourceAlt);
   while (webMatcher.find()) {
     String found=sourceAlt.substring(webMatcher.start(),webMatcher.end());
