@@ -37,11 +37,12 @@
   int javaCodeMap[]=new int[source.length() * 2];
   int pdeCodeMap[]=new int[source.length() * 2];
   int pi=1, pj=1;
+  int keySum=0;
   for (  Integer key : offsetmap.keySet()) {
-    for (; pi < key; pi++) {
+    for (; pi < key + keySum; pi++) {
       javaCodeMap[pi]=javaCodeMap[pi - 1] + 1;
     }
-    for (; pj < key; pj++) {
+    for (; pj < key + keySum; pj++) {
       pdeCodeMap[pj]=pdeCodeMap[pj - 1] + 1;
     }
     System.out.println(key + ":" + offsetmap.get(key));
@@ -62,6 +63,7 @@
         pdeCodeMap[pj]=pdeCodeMap[pj - 1];
       }
     }
+    keySum+=kval;
   }
   javaCodeMap[pi]=javaCodeMap[pi - 1] + 1;
   pdeCodeMap[pj]=pdeCodeMap[pj - 1] + 1;
