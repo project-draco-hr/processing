@@ -1,5 +1,10 @@
 {
-  PGraphicsOpenGL.pgCurrent.beginPixelsOp(PGraphicsOpenGL.OP_READ);
+  boolean needBeginOp=format != STENCIL_INDEX && format != DEPTH_COMPONENT && format != DEPTH_STENCIL;
+  if (needBeginOp) {
+    PGraphicsOpenGL.pgCurrent.beginPixelsOp(PGraphicsOpenGL.OP_READ);
+  }
   readPixelsImpl(x,y,width,height,format,type,buffer);
-  PGraphicsOpenGL.pgCurrent.endPixelsOp();
+  if (needBeginOp) {
+    PGraphicsOpenGL.pgCurrent.endPixelsOp();
+  }
 }
