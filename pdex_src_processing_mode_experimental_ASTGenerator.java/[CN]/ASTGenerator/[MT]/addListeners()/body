@@ -38,12 +38,24 @@
           DefaultMutableTreeNode defCU=findAllOccurrences();
           renameTree.setModel(new DefaultTreeModel(defCU));
           ((DefaultTreeModel)renameTree.getModel()).reload();
+          int lineOffsetDisplacementConst=newName.length() - editor.ta.getSelectedText().length();
+          HashMap<Integer,Integer> lineOffsetDisplacement=new HashMap<Integer,Integer>();
           for (int i=0; i < defCU.getChildCount(); i++) {
             ASTNodeWrapper awrap=(ASTNodeWrapper)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
             int pdeoffsets[]=awrap.getPDECodeOffsets(errorCheckerService);
             int javaoffsets[]=awrap.getJavaCodeOffsets(errorCheckerService);
             ErrorCheckerService.scrollToErrorLine(editor,pdeoffsets[0],pdeoffsets[1],javaoffsets[1],javaoffsets[2]);
             editor.ta.setSelectedText(newName);
+            if (lineOffsetDisplacement.get(javaoffsets[0]) != null) {
+              int off=lineOffsetDisplacement.get(javaoffsets[0]);
+              lineOffsetDisplacement.put(javaoffsets[0],lineOffsetDisplacementConst + off);
+            }
+ else {
+              lineOffsetDisplacement.put(javaoffsets[0],lineOffsetDisplacementConst);
+            }
+          }
+          for (          Integer lineNum : lineOffsetDisplacement.keySet()) {
+            System.out.println(lineNum + "line, disp" + lineOffsetDisplacement.get(lineNum));
           }
           editor.getSketch().setModified(true);
         }
