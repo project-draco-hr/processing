@@ -1,9 +1,28 @@
 {
   if (node instanceof SimpleName) {
     SimpleName sn=(SimpleName)node;
-    System.out.println("Visiting: " + getNodeAsString(node));
     if (sn.toString().equals(name)) {
-      if (findDeclaration(sn).equals(decl))       return true;
+      ArrayList<ASTNode> nodesToBeMatched=new ArrayList<ASTNode>();
+      nodesToBeMatched.add(decl);
+      if (decl instanceof TypeDeclaration) {
+        System.out.println("decl is a TD");
+        TypeDeclaration td=(TypeDeclaration)decl;
+        MethodDeclaration[] mlist=td.getMethods();
+        for (        MethodDeclaration md : mlist) {
+          if (md.getName().toString().equals(name)) {
+            nodesToBeMatched.add(md);
+          }
+        }
+      }
+      System.out.println("Visiting: " + getNodeAsString(node));
+      ASTNode decl2=findDeclaration(sn);
+      System.err.println("It's decl: " + getNodeAsString(decl2));
+      System.out.println("But we need: " + getNodeAsString(decl));
+      for (      ASTNode astNode : nodesToBeMatched) {
+        if (astNode.equals(decl2)) {
+          return true;
+        }
+      }
     }
   }
   return false;

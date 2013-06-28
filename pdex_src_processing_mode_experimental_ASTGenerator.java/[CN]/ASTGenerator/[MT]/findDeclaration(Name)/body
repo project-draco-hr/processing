@@ -88,6 +88,12 @@
     constrains.add(ASTNode.TYPE_DECLARATION);
     if (parent.getParent().getNodeType() == ASTNode.CLASS_INSTANCE_CREATION)     constrains.add(ASTNode.CLASS_INSTANCE_CREATION);
   }
+ else   if (parent.getNodeType() == ASTNode.TYPE_DECLARATION) {
+    TypeDeclaration td=(TypeDeclaration)parent;
+    if (findMe.equals(td.getName())) {
+      return parent;
+    }
+  }
  else   if (parent instanceof Expression) {
   }
   while (parent != null) {

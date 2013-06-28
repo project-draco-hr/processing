@@ -1,0 +1,12 @@
+{
+  String selText=editor.ta.getSelectedText();
+  int line=editor.ta.getSelectionStartLine();
+  System.out.println(editor.ta.getSelectedText() + "<- offsets " + (line)+ ", "+ (editor.ta.getSelectionStart() - editor.ta.getLineStartOffset(line))+ ", "+ (editor.ta.getSelectionStop() - editor.ta.getLineStartOffset(line)));
+  int offwhitespace=editor.ta.getLineStartNonWhiteSpaceOffset(line);
+  ASTNodeWrapper wnode=getASTNodeAt(line + errorCheckerService.mainClassOffset,selText,editor.ta.getSelectionStart() - offwhitespace,false);
+  System.err.println("Gonna find all occurrences of " + getNodeAsString(wnode.getNode()));
+  DefaultMutableTreeNode defCU=new DefaultMutableTreeNode(wnode);
+  dfsNameOnly(defCU,wnode.getNode(),selText);
+  System.out.println(wnode);
+  return defCU;
+}

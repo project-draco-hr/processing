@@ -35,13 +35,7 @@
           if (editor.ta.getSelectedText() == null)           return;
           if (renameTextField.getText().length() == 0)           return;
           String newName=renameTextField.getText();
-          String selText=editor.ta.getSelectedText();
-          int line=editor.ta.getSelectionStartLine();
-          System.out.println(editor.ta.getSelectedText() + "<- offsets " + (line)+ ", "+ (editor.ta.getSelectionStart() - editor.ta.getLineStartOffset(line))+ ", "+ (editor.ta.getSelectionStop() - editor.ta.getLineStartOffset(line)));
-          ASTNodeWrapper wnode=getASTNodeAt(line + errorCheckerService.mainClassOffset,selText,editor.ta.getSelectionStart() - editor.ta.getLineStartOffset(line),false);
-          DefaultMutableTreeNode defCU=new DefaultMutableTreeNode(wnode);
-          visitRecurNameOnly(defCU,wnode.getNode(),selText);
-          System.out.println(wnode);
+          DefaultMutableTreeNode defCU=findAllOccurrences();
           renameTree.setModel(new DefaultTreeModel(defCU));
           ((DefaultTreeModel)renameTree.getModel()).reload();
           for (int i=0; i < defCU.getChildCount(); i++) {
@@ -51,6 +45,25 @@
             ErrorCheckerService.scrollToErrorLine(editor,pdeoffsets[0],pdeoffsets[1],javaoffsets[1],javaoffsets[2]);
             editor.ta.setSelectedText(newName);
           }
+          editor.getSketch().setModified(true);
+        }
+      }
+;
+      worker.execute();
+    }
+  }
+);
+  listOccurrence.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      SwingWorker worker=new SwingWorker(){
+        @Override protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          if (editor.ta.getSelectedText() == null)           return;
+          DefaultMutableTreeNode defCU=findAllOccurrences();
+          renameTree.setModel(new DefaultTreeModel(defCU));
+          ((DefaultTreeModel)renameTree.getModel()).reload();
         }
       }
 ;
