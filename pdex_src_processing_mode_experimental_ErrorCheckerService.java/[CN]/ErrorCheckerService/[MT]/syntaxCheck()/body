@@ -1,0 +1,16 @@
+{
+  parser.setSource(sourceCode.toCharArray());
+  parser.setKind(ASTParser.K_COMPILATION_UNIT);
+  @SuppressWarnings("unchecked") Map<String,String> options=JavaCore.getOptions();
+  JavaCore.setComplianceOptions(JavaCore.VERSION_1_6,options);
+  options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_6);
+  parser.setCompilerOptions(options);
+  cu=(CompilationUnit)parser.createAST(null);
+  problems=cu.getProblems();
+  problemsList=new ArrayList<Problem>();
+  for (int i=0; i < problems.length; i++) {
+    int a[]=calculateTabIndexAndLineNumber(problems[i]);
+    Problem p=new Problem(problems[i],a[0],a[1]);
+    problemsList.add(p);
+  }
+}

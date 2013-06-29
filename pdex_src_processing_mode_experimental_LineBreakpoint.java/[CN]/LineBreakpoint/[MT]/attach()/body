@@ -1,0 +1,28 @@
+{
+  if (!dbg.isPaused()) {
+    Logger.getLogger(LineBreakpoint.class.getName()).log(Level.WARNING,"can't attach breakpoint, debugger not paused");
+    return;
+  }
+  if (theClass == null) {
+    Logger.getLogger(LineBreakpoint.class.getName()).log(Level.WARNING,"can't attach breakpoint, class not loaded: {0}",className());
+    return;
+  }
+  LineID javaLine=dbg.sketchToJavaLine(line);
+  if (javaLine == null) {
+    Logger.getLogger(LineBreakpoint.class.getName()).log(Level.WARNING,"couldn't find line {0} in the java code",line);
+    return;
+  }
+  try {
+    List<Location> locations=theClass.locationsOfLine(javaLine.lineIdx() + 1);
+    if (locations.isEmpty()) {
+      Logger.getLogger(LineBreakpoint.class.getName()).log(Level.WARNING,"no location found for line {0} -> {1}",new Object[]{line,javaLine});
+      return;
+    }
+    bpr=dbg.vm().eventRequestManager().createBreakpointRequest(locations.get(0));
+    bpr.enable();
+    Logger.getLogger(LineBreakpoint.class.getName()).log(Level.INFO,"attached breakpoint to {0} -> {1}",new Object[]{line,javaLine});
+  }
+ catch (  AbsentInformationException ex) {
+    Logger.getLogger(Debugger.class.getName()).log(Level.SEVERE,null,ex);
+  }
+}

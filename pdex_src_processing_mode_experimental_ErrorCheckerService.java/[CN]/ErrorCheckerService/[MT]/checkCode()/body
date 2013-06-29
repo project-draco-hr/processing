@@ -1,0 +1,32 @@
+{
+  lastTimeStamp=System.currentTimeMillis();
+  try {
+    sourceCode=preprocessCode(editor.getSketch().getMainProgram());
+    syntaxCheck();
+    if (problems.length == 0 && editor.compilationCheckEnabled) {
+      sourceCode=xqpreproc.doYourThing(sourceCode,programImports);
+      prepareCompilerClasspath();
+      mainClassOffset=xqpreproc.mainClassOffset;
+      if (staticMode) {
+        mainClassOffset++;
+      }
+      compileCheck();
+    }
+    updateErrorTable();
+    editor.updateErrorBar(problemsList);
+    updateEditorStatus();
+    int x=textModified.get();
+    if (x >= 3) {
+      textModified.set(3);
+      x=3;
+    }
+    if (x > 0)     textModified.set(x - 1);
+ else     textModified.set(0);
+    return true;
+  }
+ catch (  Exception e) {
+    System.out.println("Oops! [ErrorCheckerService.checkCode]: " + e);
+    e.printStackTrace();
+  }
+  return false;
+}

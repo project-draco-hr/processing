@@ -1,0 +1,15 @@
+{
+  try {
+    List<StackFrame> frames=currentThread.frames();
+    if (frames.size() > 1) {
+      if (locationIsVisible(frames.get(1).location())) {
+        stepOut();
+        return;
+      }
+    }
+    continueDebug();
+  }
+ catch (  IncompatibleThreadStateException ex) {
+    Logger.getLogger(Debugger.class.getName()).log(Level.SEVERE,null,ex);
+  }
+}

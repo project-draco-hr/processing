@@ -1,0 +1,36 @@
+{
+  this.extraImports=programImports;
+  source=prepareImports() + source;
+  Document doc=new Document(source);
+  ASTParser parser=ASTParser.newParser(AST.JLS4);
+  parser.setSource(doc.get().toCharArray());
+  parser.setKind(ASTParser.K_COMPILATION_UNIT);
+  @SuppressWarnings("unchecked") Map<String,String> options=JavaCore.getOptions();
+  JavaCore.setComplianceOptions(JavaCore.VERSION_1_6,options);
+  options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_6);
+  parser.setCompilerOptions(options);
+  CompilationUnit cu=(CompilationUnit)parser.createAST(null);
+  cu.recordModifications();
+  rewrite=ASTRewrite.create(cu.getAST());
+  cu.accept(new XQASTVisitor());
+  TextEdit edits=cu.rewrite(doc,null);
+  try {
+    edits.apply(doc);
+  }
+ catch (  MalformedTreeException e) {
+    e.printStackTrace();
+  }
+catch (  BadLocationException e) {
+    e.printStackTrace();
+  }
+  int position=doc.get().indexOf("{") + 1;
+  int lines=0;
+  for (int i=0; i < position; i++) {
+    if (doc.get().charAt(i) == '\n') {
+      lines++;
+    }
+  }
+  lines+=2;
+  mainClassOffset=lines;
+  return doc.get();
+}

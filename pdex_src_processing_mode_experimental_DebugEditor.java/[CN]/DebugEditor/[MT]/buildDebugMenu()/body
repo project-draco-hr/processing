@@ -1,0 +1,96 @@
+{
+  debugMenu=new JMenu("Debug");
+  debugMenuItem=Toolkit.newJMenuItem("Debug",KeyEvent.VK_R);
+  debugMenuItem.addActionListener(this);
+  continueMenuItem=Toolkit.newJMenuItem("Continue",KeyEvent.VK_U);
+  continueMenuItem.addActionListener(this);
+  stopMenuItem=new JMenuItem("Stop");
+  stopMenuItem.addActionListener(this);
+  toggleBreakpointMenuItem=Toolkit.newJMenuItem("Toggle Breakpoint",KeyEvent.VK_B);
+  toggleBreakpointMenuItem.addActionListener(this);
+  listBreakpointsMenuItem=new JMenuItem("List Breakpoints");
+  listBreakpointsMenuItem.addActionListener(this);
+  stepOverMenuItem=Toolkit.newJMenuItem("Step",KeyEvent.VK_J);
+  stepOverMenuItem.addActionListener(this);
+  stepIntoMenuItem=Toolkit.newJMenuItemShift("Step Into",KeyEvent.VK_J);
+  stepIntoMenuItem.addActionListener(this);
+  stepOutMenuItem=Toolkit.newJMenuItemAlt("Step Out",KeyEvent.VK_J);
+  stepOutMenuItem.addActionListener(this);
+  printStackTraceMenuItem=new JMenuItem("Print Stack Trace");
+  printStackTraceMenuItem.addActionListener(this);
+  printLocalsMenuItem=new JMenuItem("Print Locals");
+  printLocalsMenuItem.addActionListener(this);
+  printThisMenuItem=new JMenuItem("Print Fields");
+  printThisMenuItem.addActionListener(this);
+  printSourceMenuItem=new JMenuItem("Print Source Location");
+  printSourceMenuItem.addActionListener(this);
+  printThreads=new JMenuItem("Print Threads");
+  printThreads.addActionListener(this);
+  toggleVariableInspectorMenuItem=Toolkit.newJMenuItem("Toggle Variable Inspector",KeyEvent.VK_I);
+  toggleVariableInspectorMenuItem.addActionListener(this);
+  debugMenu.add(debugMenuItem);
+  debugMenu.add(continueMenuItem);
+  debugMenu.add(stopMenuItem);
+  debugMenu.addSeparator();
+  debugMenu.add(toggleBreakpointMenuItem);
+  debugMenu.add(listBreakpointsMenuItem);
+  debugMenu.addSeparator();
+  debugMenu.add(stepOverMenuItem);
+  debugMenu.add(stepIntoMenuItem);
+  debugMenu.add(stepOutMenuItem);
+  debugMenu.addSeparator();
+  debugMenu.add(printStackTraceMenuItem);
+  debugMenu.add(printLocalsMenuItem);
+  debugMenu.add(printThisMenuItem);
+  debugMenu.add(printSourceMenuItem);
+  debugMenu.add(printThreads);
+  debugMenu.addSeparator();
+  debugMenu.add(toggleVariableInspectorMenuItem);
+  debugMenu.addSeparator();
+  JCheckBoxMenuItem item;
+  final DebugEditor thisEditor=this;
+  item=new JCheckBoxMenuItem("Error Checker Enabled");
+  item.setSelected(true);
+  item.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      if (!((JCheckBoxMenuItem)e.getSource()).isSelected()) {
+        errorCheckerService.pauseThread();
+        System.out.println(thisEditor.getSketch().getName() + " - Error Checker paused.");
+        errorBar.errorPoints.clear();
+        errorCheckerService.problemsList.clear();
+        errorCheckerService.updateErrorTable();
+        errorCheckerService.updateEditorStatus();
+        getTextArea().repaint();
+        errorBar.repaint();
+      }
+ else {
+        errorCheckerService.resumeThread();
+        System.out.println(thisEditor.getSketch().getName() + " - Error Checker resumed.");
+      }
+    }
+  }
+);
+  debugMenu.add(item);
+  problemWindowMenuCB=new JCheckBoxMenuItem("Show Problem Window");
+  problemWindowMenuCB.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      if (errorCheckerService.errorWindow == null) {
+        return;
+      }
+      errorCheckerService.errorWindow.setVisible(((JCheckBoxMenuItem)e.getSource()).isSelected());
+      toggleView(XQConsoleToggle.text[0]);
+    }
+  }
+);
+  debugMenu.add(problemWindowMenuCB);
+  showWarnings=new JCheckBoxMenuItem("Warnings Enabled");
+  showWarnings.setSelected(true);
+  showWarnings.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      errorCheckerService.warningsEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
+    }
+  }
+);
+  debugMenu.add(showWarnings);
+  return debugMenu;
+}
