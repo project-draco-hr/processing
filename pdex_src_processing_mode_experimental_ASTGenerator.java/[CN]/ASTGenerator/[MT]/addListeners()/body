@@ -25,7 +25,7 @@
     }
   }
 );
-  renameButton.addActionListener(new ActionListener(){
+  btnRename.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       SwingWorker worker=new SwingWorker(){
         @Override protected Object doInBackground() throws Exception {
@@ -36,9 +36,9 @@
           if (renameTextField.getText().length() == 0)           return;
           String newName=renameTextField.getText();
           DefaultMutableTreeNode defCU=findAllOccurrences();
-          renameTree.setModel(new DefaultTreeModel(defCU));
-          ((DefaultTreeModel)renameTree.getModel()).reload();
-          occurenceListFrame.setVisible(true);
+          treeRename.setModel(new DefaultTreeModel(defCU));
+          ((DefaultTreeModel)treeRename.getModel()).reload();
+          frmOccurenceList.setVisible(true);
           int lineOffsetDisplacementConst=newName.length() - editor.ta.getSelectedText().length();
           HashMap<Integer,Integer> lineOffsetDisplacement=new HashMap<Integer,Integer>();
           int offsetsMap[][][]=new int[defCU.getChildCount()][2][];
@@ -66,7 +66,7 @@
           }
           editor.getSketch().setModified(true);
           errorCheckerService.runManualErrorCheck();
-          occurenceListFrame.setVisible(false);
+          frmOccurenceList.setVisible(false);
           renameWindow.setVisible(false);
         }
       }
@@ -84,9 +84,9 @@
         protected void done(){
           if (editor.ta.getSelectedText() == null)           return;
           DefaultMutableTreeNode defCU=findAllOccurrences();
-          renameTree.setModel(new DefaultTreeModel(defCU));
-          ((DefaultTreeModel)renameTree.getModel()).reload();
-          occurenceListFrame.setVisible(true);
+          treeRename.setModel(new DefaultTreeModel(defCU));
+          ((DefaultTreeModel)treeRename.getModel()).reload();
+          frmOccurenceList.setVisible(true);
         }
       }
 ;
@@ -94,7 +94,7 @@
     }
   }
 );
-  renameTree.addTreeSelectionListener(new TreeSelectionListener(){
+  treeRename.addTreeSelectionListener(new TreeSelectionListener(){
     @Override public void valueChanged(    TreeSelectionEvent e){
       System.out.println(e);
       SwingWorker worker=new SwingWorker(){
@@ -102,10 +102,10 @@
           return null;
         }
         protected void done(){
-          if (renameTree.getLastSelectedPathComponent() == null) {
+          if (treeRename.getLastSelectedPathComponent() == null) {
             return;
           }
-          DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)renameTree.getLastSelectedPathComponent();
+          DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)treeRename.getLastSelectedPathComponent();
           if (tnode.getUserObject() == null) {
             return;
           }
