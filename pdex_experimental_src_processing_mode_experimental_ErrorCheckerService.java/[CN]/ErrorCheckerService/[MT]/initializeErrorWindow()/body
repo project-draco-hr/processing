@@ -1,0 +1,24 @@
+{
+  if (editor == null) {
+    return;
+  }
+  if (errorWindow != null) {
+    return;
+  }
+  final ErrorCheckerService thisService=this;
+  final DebugEditor thisEditor=editor;
+  EventQueue.invokeLater(new Runnable(){
+    public void run(){
+      try {
+        errorWindow=new ErrorWindow(thisEditor,thisService);
+        editor.toFront();
+        errorWindow.errorTable.setFocusable(false);
+        editor.setSelection(0,0);
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+);
+}

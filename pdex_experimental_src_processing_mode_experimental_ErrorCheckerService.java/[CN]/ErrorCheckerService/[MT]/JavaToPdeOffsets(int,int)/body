@@ -1,0 +1,47 @@
+{
+  int codeIndex=0;
+  int x=line - mainClassOffset;
+  if (x < 0) {
+    x=line - 2;
+    if (x < programImports.size() && x >= 0) {
+      ImportStatement is=programImports.get(x);
+      return new int[]{is.tab,is.lineNumber};
+    }
+ else {
+      return new int[]{0,1};
+    }
+  }
+  try {
+    for (    SketchCode sc : editor.getSketch().getCode()) {
+      if (sc.isExtension("pde")) {
+        int len=0;
+        if (editor.getSketch().getCurrentCode().equals(sc)) {
+          len=Base.countLines(sc.getDocument().getText(0,sc.getDocument().getLength())) + 1;
+        }
+ else {
+          len=Base.countLines(sc.getProgram()) + 1;
+        }
+        if (x >= len) {
+          if (codeIndex >= editor.getSketch().getCodeCount() - 1) {
+            x=editor.getSketch().getCode(codeIndex).getLineCount();
+            break;
+          }
+ else {
+            x-=len;
+            codeIndex++;
+          }
+        }
+ else {
+          if (codeIndex >= editor.getSketch().getCodeCount()) {
+            codeIndex=editor.getSketch().getCodeCount() - 1;
+          }
+          break;
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    System.err.println("Things got messed up in ErrorCheckerService.JavaToPdeOffset()");
+  }
+  return new int[]{codeIndex,x};
+}

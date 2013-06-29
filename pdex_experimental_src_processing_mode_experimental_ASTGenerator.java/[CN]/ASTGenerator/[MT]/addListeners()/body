@@ -1,0 +1,113 @@
+{
+  jtree.addTreeSelectionListener(new TreeSelectionListener(){
+    @Override public void valueChanged(    TreeSelectionEvent e){
+      System.out.println(e);
+      SwingWorker worker=new SwingWorker(){
+        @Override protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          if (jtree.getLastSelectedPathComponent() == null) {
+            return;
+          }
+          DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)jtree.getLastSelectedPathComponent();
+          if (tnode.getUserObject() == null) {
+            return;
+          }
+          if (tnode.getUserObject() instanceof ASTNodeWrapper) {
+            ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
+            errorCheckerService.highlightNode(awrap);
+          }
+        }
+      }
+;
+      worker.execute();
+    }
+  }
+);
+  renameButton.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      SwingWorker worker=new SwingWorker(){
+        @Override protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          if (editor.ta.getSelectedText() == null)           return;
+          if (renameTextField.getText().length() == 0)           return;
+          String newName=renameTextField.getText();
+          DefaultMutableTreeNode defCU=findAllOccurrences();
+          renameTree.setModel(new DefaultTreeModel(defCU));
+          ((DefaultTreeModel)renameTree.getModel()).reload();
+          int lineOffsetDisplacementConst=newName.length() - editor.ta.getSelectedText().length();
+          HashMap<Integer,Integer> lineOffsetDisplacement=new HashMap<Integer,Integer>();
+          for (int i=defCU.getChildCount() - 1; i >= 0; i--) {
+            ASTNodeWrapper awrap=(ASTNodeWrapper)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
+            int pdeoffsets[]=awrap.getPDECodeOffsets(errorCheckerService);
+            int javaoffsets[]=awrap.getJavaCodeOffsets(errorCheckerService);
+            int off=0;
+            if (lineOffsetDisplacement.get(javaoffsets[0]) != null) {
+              off=lineOffsetDisplacement.get(javaoffsets[0]);
+              lineOffsetDisplacement.put(javaoffsets[0],lineOffsetDisplacementConst + off);
+            }
+ else {
+              lineOffsetDisplacement.put(javaoffsets[0],lineOffsetDisplacementConst);
+            }
+            ErrorCheckerService.scrollToErrorLine(editor,pdeoffsets[0],pdeoffsets[1],javaoffsets[1] + off,javaoffsets[2]);
+            editor.ta.setSelectedText(newName);
+          }
+          for (          Integer lineNum : lineOffsetDisplacement.keySet()) {
+            System.out.println(lineNum + "line, disp" + lineOffsetDisplacement.get(lineNum));
+          }
+          editor.getSketch().setModified(true);
+        }
+      }
+;
+      worker.execute();
+    }
+  }
+);
+  listOccurrence.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      SwingWorker worker=new SwingWorker(){
+        @Override protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          if (editor.ta.getSelectedText() == null)           return;
+          DefaultMutableTreeNode defCU=findAllOccurrences();
+          renameTree.setModel(new DefaultTreeModel(defCU));
+          ((DefaultTreeModel)renameTree.getModel()).reload();
+        }
+      }
+;
+      worker.execute();
+    }
+  }
+);
+  renameTree.addTreeSelectionListener(new TreeSelectionListener(){
+    @Override public void valueChanged(    TreeSelectionEvent e){
+      System.out.println(e);
+      SwingWorker worker=new SwingWorker(){
+        @Override protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          if (renameTree.getLastSelectedPathComponent() == null) {
+            return;
+          }
+          DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)renameTree.getLastSelectedPathComponent();
+          if (tnode.getUserObject() == null) {
+            return;
+          }
+          if (tnode.getUserObject() instanceof ASTNodeWrapper) {
+            ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
+            errorCheckerService.highlightNode(awrap);
+          }
+        }
+      }
+;
+      worker.execute();
+    }
+  }
+);
+}

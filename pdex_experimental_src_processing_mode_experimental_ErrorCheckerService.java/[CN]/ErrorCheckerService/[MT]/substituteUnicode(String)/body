@@ -1,0 +1,32 @@
+{
+  char p[]=program.toCharArray();
+  int unicodeCount=0;
+  for (int i=0; i < p.length; i++) {
+    if (p[i] > 127) {
+      unicodeCount++;
+    }
+  }
+  if (unicodeCount == 0) {
+    return program;
+  }
+  int index=0;
+  char p2[]=new char[p.length + unicodeCount * 5];
+  for (int i=0; i < p.length; i++) {
+    if (p[i] < 128) {
+      p2[index++]=p[i];
+    }
+ else     if (p[i] == 160) {
+      p2[index++]=' ';
+    }
+ else {
+      int c=p[i];
+      p2[index++]='\\';
+      p2[index++]='u';
+      char str[]=Integer.toHexString(c).toCharArray();
+      for (int m=0; m < 4 - str.length; m++)       p2[index++]='0';
+      System.arraycopy(str,0,p2,index,str.length);
+      index+=str.length;
+    }
+  }
+  return new String(p2,0,index);
+}

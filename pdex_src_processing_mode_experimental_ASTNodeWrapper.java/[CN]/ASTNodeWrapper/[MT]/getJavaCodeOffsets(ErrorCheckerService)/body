@@ -1,0 +1,41 @@
+{
+  int nodeOffset=Node.getStartPosition(), nodeLength=Node.getLength();
+  ASTNode thisNode=Node;
+  while (thisNode.getParent() != null) {
+    if (getLineNumber(thisNode.getParent()) == lineNumber) {
+      thisNode=thisNode.getParent();
+    }
+ else {
+      break;
+    }
+  }
+  int altStartPos=thisNode.getStartPosition();
+  thisNode=thisNode.getParent();
+  Iterator<StructuralPropertyDescriptor> it=thisNode.structuralPropertiesForType().iterator();
+  boolean flag=true;
+  while (it.hasNext()) {
+    StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
+    if (prop.isChildListProperty()) {
+      List<ASTNode> nodelist=(List<ASTNode>)thisNode.getStructuralProperty(prop);
+      for (      ASTNode cnode : nodelist) {
+        if (getLineNumber(cnode) == lineNumber) {
+          if (flag) {
+            altStartPos=cnode.getStartPosition();
+            flag=false;
+          }
+ else {
+            if (cnode == Node) {
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  System.out.println("Altspos " + altStartPos);
+  int pdeoffsets[]=getPDECodeOffsets(ecs);
+  String pdeCode=ecs.getPDECodeAtLine(pdeoffsets[0],pdeoffsets[1] - 1).trim();
+  int vals[]=createOffsetMapping(pdeCode,nodeOffset - altStartPos,nodeLength);
+  if (vals != null)   return new int[]{lineNumber,nodeOffset + vals[0] - altStartPos,vals[1]};
+ else   return new int[]{lineNumber,nodeOffset - altStartPos,nodeLength};
+}

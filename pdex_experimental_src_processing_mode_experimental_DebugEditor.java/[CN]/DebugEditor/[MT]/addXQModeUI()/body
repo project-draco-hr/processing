@@ -1,0 +1,35 @@
+{
+  JPanel textAndError=new JPanel();
+  Box box=(Box)textarea.getParent();
+  box.remove(2);
+  textAndError.setLayout(new BorderLayout());
+  errorBar=new ErrorBar(this,textarea.getMinimumSize().height,dmode);
+  textAndError.add(errorBar,BorderLayout.EAST);
+  textarea.setBounds(0,0,errorBar.getX() - 1,textarea.getHeight());
+  textAndError.add(textarea);
+  box.add(textAndError);
+  errorTableScrollPane=new JScrollPane();
+  errorTable=new XQErrorTable(errorCheckerService);
+  errorTableScrollPane.setBorder(new EtchedBorder());
+  errorTableScrollPane.setViewportView(errorTable);
+  consolePanel.remove(2);
+  JPanel lineStatusPanel=new JPanel();
+  lineStatusPanel.setLayout(new BorderLayout());
+  btnShowConsole=new XQConsoleToggle(this,XQConsoleToggle.text[0],lineStatus.getHeight());
+  btnShowErrors=new XQConsoleToggle(this,XQConsoleToggle.text[1],lineStatus.getHeight());
+  btnShowConsole.addMouseListener(btnShowConsole);
+  btnShowErrors.addMouseListener(btnShowErrors);
+  JPanel toggleButtonPanel=new JPanel(new BorderLayout());
+  toggleButtonPanel.add(btnShowConsole,BorderLayout.EAST);
+  toggleButtonPanel.add(btnShowErrors,BorderLayout.WEST);
+  lineStatusPanel.add(toggleButtonPanel,BorderLayout.EAST);
+  lineStatus.setBounds(0,0,toggleButtonPanel.getX() - 1,toggleButtonPanel.getHeight());
+  lineStatusPanel.add(lineStatus);
+  consolePanel.add(lineStatusPanel,BorderLayout.SOUTH);
+  lineStatusPanel.repaint();
+  consolePanel.remove(1);
+  consoleProblemsPane=new JPanel(new CardLayout());
+  consoleProblemsPane.add(errorTableScrollPane,XQConsoleToggle.text[1]);
+  consoleProblemsPane.add(console,XQConsoleToggle.text[0]);
+  consolePanel.add(consoleProblemsPane,BorderLayout.CENTER);
+}

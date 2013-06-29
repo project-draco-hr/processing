@@ -1,0 +1,23 @@
+{
+  rootNode.removeAllChildren();
+  if (p5mode) {
+    addAllNodes(rootNode,locals);
+    addAllNodes(rootNode,filterNodes(declaredThisFields,new LocalHidesThisFilter(locals,LocalHidesThisFilter.MODE_PREFIX)));
+    builtins.removeAllChildren();
+    addAllNodes(builtins,filterNodes(thisFields,new P5BuiltinsFilter()));
+    if (builtins.getChildCount() > 0) {
+      rootNode.add(builtins);
+    }
+    treeModel.nodeStructureChanged(rootNode);
+    for (    TreePath path : expandedNodes) {
+      path=synthesizePath(path);
+      if (path != null) {
+        tree.expandPath(path);
+      }
+ else {
+      }
+    }
+  }
+ else {
+  }
+}
