@@ -27,14 +27,13 @@
 );
   btnRename.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
+      if (txtRenameField.getText().length() == 0)       return;
       SwingWorker worker=new SwingWorker(){
         @Override protected Object doInBackground() throws Exception {
           return null;
         }
         protected void done(){
-          if (editor.ta.getSelectedText() == null)           return;
-          if (renameTextField.getText().length() == 0)           return;
-          String newName=renameTextField.getText();
+          String newName=txtRenameField.getText();
           DefaultMutableTreeNode defCU=findAllOccurrences();
           treeRename.setModel(new DefaultTreeModel(defCU));
           ((DefaultTreeModel)treeRename.getModel()).reload();
@@ -67,7 +66,7 @@
           editor.getSketch().setModified(true);
           errorCheckerService.runManualErrorCheck();
           frmOccurenceList.setVisible(false);
-          renameWindow.setVisible(false);
+          frmRename.setVisible(false);
         }
       }
 ;
@@ -82,7 +81,6 @@
           return null;
         }
         protected void done(){
-          if (editor.ta.getSelectedText() == null)           return;
           DefaultMutableTreeNode defCU=findAllOccurrences();
           treeRename.setModel(new DefaultTreeModel(defCU));
           ((DefaultTreeModel)treeRename.getModel()).reload();

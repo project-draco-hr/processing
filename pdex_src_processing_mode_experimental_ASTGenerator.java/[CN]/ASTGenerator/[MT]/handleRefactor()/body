@@ -1,4 +1,16 @@
 {
-  if (!renameWindow.isVisible())   renameWindow.setVisible(true);
-  renameWindow.toFront();
+  if (editor.ta.getSelectedText() == null) {
+    return;
+  }
+  if (!frmRename.isVisible()) {
+    frmRename.setVisible(true);
+    SwingUtilities.invokeLater(new Runnable(){
+      @Override public void run(){
+        lblRefactorOldName.setText("Current name: " + editor.ta.getSelectedText());
+        txtRenameField.requestFocus();
+      }
+    }
+);
+  }
+  frmRename.toFront();
 }
