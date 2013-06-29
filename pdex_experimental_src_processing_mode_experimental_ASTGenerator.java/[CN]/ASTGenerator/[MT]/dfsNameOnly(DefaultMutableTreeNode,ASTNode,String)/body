@@ -1,0 +1,15 @@
+{
+  Stack temp=new Stack<DefaultMutableTreeNode>();
+  temp.push(codeTree);
+  while (!temp.isEmpty()) {
+    DefaultMutableTreeNode cnode=(DefaultMutableTreeNode)temp.pop();
+    for (int i=0; i < cnode.getChildCount(); i++) {
+      temp.push(cnode.getChildAt(i));
+    }
+    if (!(cnode.getUserObject() instanceof ASTNodeWrapper))     continue;
+    ASTNodeWrapper awnode=(ASTNodeWrapper)cnode.getUserObject();
+    if (isInstanceOfType(awnode.getNode(),decl,name)) {
+      tnode.add(new DefaultMutableTreeNode(awnode));
+    }
+  }
+}

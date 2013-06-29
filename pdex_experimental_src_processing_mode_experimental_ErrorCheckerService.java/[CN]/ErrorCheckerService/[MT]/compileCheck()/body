@@ -1,0 +1,73 @@
+{
+  try {
+    if (loadCompClass) {
+      File f=Base.getContentFile("modes" + File.separator + "experimental"+ File.separator+ "mode");
+      if (!f.exists()) {
+        System.err.println("Could not locate the files required for on-the-fly error checking. Bummer.");
+        return;
+      }
+      FileFilter fileFilter=new FileFilter(){
+        public boolean accept(        File file){
+          return (file.getName().endsWith(".jar") && !file.getName().startsWith("experimental"));
+        }
+      }
+;
+      File[] jarFiles=f.listFiles(fileFilter);
+      classpath=new URL[classpathJars.size() + jarFiles.length];
+      int ii=0;
+      for (; ii < classpathJars.size(); ii++) {
+        classpath[ii]=classpathJars.get(ii);
+      }
+      for (int i=0; i < jarFiles.length; i++) {
+        classpath[ii++]=jarFiles[i].toURI().toURL();
+      }
+      classLoader=new URLClassLoader(classpath);
+      checkerClass=Class.forName("CompilationChecker",true,classLoader);
+      compilationChecker=checkerClass.newInstance();
+      astGenerator.loadJars();
+      loadCompClass=false;
+    }
+    if (compilerSettings == null) {
+      prepareCompilerSetting();
+    }
+    Method getErrors=checkerClass.getMethod("getErrorsAsObjArr",new Class[]{String.class,String.class,Map.class});
+    Object[][] errorList=(Object[][])getErrors.invoke(compilationChecker,className,sourceCode,compilerSettings);
+    if (errorList == null) {
+      return;
+    }
+    problems=new DefaultProblem[errorList.length];
+    for (int i=0; i < errorList.length; i++) {
+      problems[i]=new DefaultProblem((char[])errorList[i][0],(String)errorList[i][1],((Integer)errorList[i][2]).intValue(),(String[])errorList[i][3],((Integer)errorList[i][4]).intValue(),((Integer)errorList[i][5]).intValue(),((Integer)errorList[i][6]).intValue(),((Integer)errorList[i][7]).intValue(),0);
+      IProblem problem=problems[i];
+      int a[]=calculateTabIndexAndLineNumber(problem);
+      Problem p=new Problem(problem,a[0],a[1]);
+      if ((Boolean)errorList[i][8]) {
+        p.setType(Problem.ERROR);
+      }
+      if ((Boolean)errorList[i][9]) {
+        p.setType(Problem.WARNING);
+      }
+      if (p.isWarning() && !warningsEnabled) {
+        continue;
+      }
+      problemsList.add(p);
+    }
+  }
+ catch (  ClassNotFoundException e) {
+    System.err.println("Compiltation Checker files couldn't be found! " + e + " compileCheck() problem.");
+    stopThread();
+  }
+catch (  MalformedURLException e) {
+    System.err.println("Compiltation Checker files couldn't be found! " + e + " compileCheck() problem.");
+    stopThread();
+  }
+catch (  Exception e) {
+    System.err.println("compileCheck() problem." + e);
+    e.printStackTrace();
+    stopThread();
+  }
+catch (  NoClassDefFoundError e) {
+    System.err.println(e + " compileCheck() problem. Somebody tried to mess with Experimental Mode files.");
+    stopThread();
+  }
+}

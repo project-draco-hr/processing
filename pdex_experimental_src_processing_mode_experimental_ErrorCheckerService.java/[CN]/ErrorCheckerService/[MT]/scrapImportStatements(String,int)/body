@@ -1,0 +1,20 @@
+{
+  String tabSource=new String(tabProgram);
+  do {
+    String[] pieces=PApplet.match(tabSource,importRegexp);
+    if (pieces == null) {
+      break;
+    }
+    String piece=pieces[1] + pieces[2] + pieces[3];
+    int len=piece.length();
+    int idx=tabSource.indexOf(piece);
+    programImports.add(new ImportStatement(piece,tabNumber,Base.countLines(tabSource.substring(0,idx))));
+    String whiteSpace="";
+    for (int j=0; j < piece.length(); j++) {
+      whiteSpace+=" ";
+    }
+    tabSource=tabSource.substring(0,idx) + whiteSpace + tabSource.substring(idx + len);
+  }
+ while (true);
+  return tabSource;
+}

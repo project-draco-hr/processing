@@ -1,0 +1,37 @@
+{
+  if (cu == null) {
+    ASTParser parser=ASTParser.newParser(AST.JLS4);
+    parser.setSource(source.toCharArray());
+    parser.setKind(ASTParser.K_COMPILATION_UNIT);
+    Map<String,String> options=JavaCore.getOptions();
+    JavaCore.setComplianceOptions(JavaCore.VERSION_1_6,options);
+    options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_6);
+    parser.setCompilerOptions(options);
+    compilationUnit=(CompilationUnit)parser.createAST(null);
+  }
+ else {
+    compilationUnit=cu;
+    System.out.println("Other cu");
+  }
+  codeTree=new DefaultMutableTreeNode(getNodeAsString((ASTNode)compilationUnit.types().get(0)));
+  visitRecur((ASTNode)compilationUnit.types().get(0),codeTree);
+  SwingWorker worker=new SwingWorker(){
+    @Override protected Object doInBackground() throws Exception {
+      return null;
+    }
+    protected void done(){
+      if (codeTree != null) {
+        if (jtree.hasFocus() || frame2.hasFocus())         return;
+        jtree.setModel(new DefaultTreeModel(codeTree));
+        ((DefaultTreeModel)jtree.getModel()).reload();
+        if (!frame2.isVisible()) {
+          frame2.setVisible(true);
+        }
+        jtree.validate();
+      }
+    }
+  }
+;
+  worker.execute();
+  return codeTree;
+}

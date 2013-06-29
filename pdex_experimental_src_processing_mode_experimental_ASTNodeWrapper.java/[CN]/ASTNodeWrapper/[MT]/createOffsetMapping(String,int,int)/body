@@ -1,0 +1,24 @@
+{
+  int ret[][]=getOffsetMapping(source);
+  if (ret == null) {
+    return null;
+  }
+  int javaCodeMap[]=ret[0];
+  int pdeCodeMap[]=ret[1];
+  int pi=1, pj=1;
+  pj=0;
+  pi=0;
+  int count=1;
+  pj=inpOffset;
+  int startIndex=javaCodeMap[pj];
+  while (pdeCodeMap[pi] != startIndex && pi < pdeCodeMap.length)   pi++;
+  int startoffDif=pi - pj;
+  int stopindex=javaCodeMap[pj + nodeLen - 1];
+  System.out.println(startIndex + "SI,St" + stopindex+ "sod "+ startoffDif);
+  while (pdeCodeMap[pi] < stopindex && pi < pdeCodeMap.length) {
+    pi++;
+    count++;
+  }
+  System.out.println("pde len " + count);
+  return new int[]{startoffDif,count};
+}

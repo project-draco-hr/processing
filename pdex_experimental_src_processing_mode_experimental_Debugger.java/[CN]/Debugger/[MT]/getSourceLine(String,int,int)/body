@@ -1,0 +1,34 @@
+{
+  if (lineNo == -1) {
+    Logger.getLogger(Debugger.class.getName()).log(Level.SEVERE,"invalid line number: {0}",lineNo);
+    return "";
+  }
+  File f=new File(srcPath + File.separator + filePath);
+  String output="";
+  try {
+    BufferedReader r=new BufferedReader(new FileReader(f));
+    int i=1;
+    while (i <= lineNo + radius) {
+      String line=r.readLine();
+      if (line == null) {
+        break;
+      }
+      if (i >= lineNo - radius) {
+        if (i > lineNo - radius) {
+          output+="\n";
+        }
+        output+=f.getName() + ":" + i+ (i == lineNo ? " =>  " : "     ")+ line;
+      }
+      i++;
+    }
+    r.close();
+    return output;
+  }
+ catch (  FileNotFoundException ex) {
+    return f.getName() + ":" + lineNo;
+  }
+catch (  IOException ex) {
+    Logger.getLogger(Debugger.class.getName()).log(Level.SEVERE,null,ex);
+    return "";
+  }
+}
