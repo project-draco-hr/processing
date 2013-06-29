@@ -38,6 +38,7 @@
           DefaultMutableTreeNode defCU=findAllOccurrences();
           renameTree.setModel(new DefaultTreeModel(defCU));
           ((DefaultTreeModel)renameTree.getModel()).reload();
+          occurenceListFrame.setVisible(true);
           int lineOffsetDisplacementConst=newName.length() - editor.ta.getSelectedText().length();
           HashMap<Integer,Integer> lineOffsetDisplacement=new HashMap<Integer,Integer>();
           int offsetsMap[][][]=new int[defCU.getChildCount()][2][];
@@ -64,6 +65,9 @@
             System.out.println(lineNum + "line, disp" + lineOffsetDisplacement.get(lineNum));
           }
           editor.getSketch().setModified(true);
+          errorCheckerService.runManualErrorCheck();
+          occurenceListFrame.setVisible(false);
+          renameWindow.setVisible(false);
         }
       }
 ;
@@ -71,7 +75,7 @@
     }
   }
 );
-  listOccurrence.addActionListener(new ActionListener(){
+  btnListOccurrence.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       SwingWorker worker=new SwingWorker(){
         @Override protected Object doInBackground() throws Exception {
@@ -82,6 +86,7 @@
           DefaultMutableTreeNode defCU=findAllOccurrences();
           renameTree.setModel(new DefaultTreeModel(defCU));
           ((DefaultTreeModel)renameTree.getModel()).reload();
+          occurenceListFrame.setVisible(true);
         }
       }
 ;
