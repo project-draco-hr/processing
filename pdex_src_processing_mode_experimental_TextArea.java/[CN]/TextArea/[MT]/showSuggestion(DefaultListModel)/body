@@ -2,8 +2,8 @@
   if (defListModel.size() == 0) {
     return;
   }
-  hideSuggestion();
-  final int position=getCaretPosition();
+  String subWord=null;
+  int position=getCaretPosition();
   Point location=new Point();
   try {
     location.x=offsetToX(getCaretLine(),position - getLineStartOffset(getCaretLine()));
@@ -27,11 +27,12 @@
   if (start > position) {
     return;
   }
-  final String subWord=text.substring(start,position);
+  subWord=text.substring(start,position);
   if (subWord.length() < 2) {
     return;
   }
-  suggestion=new CompletionPanel(this,position,subWord,defListModel,location);
+  if (suggestion == null)   suggestion=new CompletionPanel(this,position,subWord,defListModel,location);
+ else   suggestion.updateList(defListModel,subWord,position);
   SwingUtilities.invokeLater(new Runnable(){
     @Override public void run(){
       requestFocusInWindow();
