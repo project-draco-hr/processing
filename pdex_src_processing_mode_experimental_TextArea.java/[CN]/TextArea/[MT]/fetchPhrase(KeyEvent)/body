@@ -1,4 +1,12 @@
 {
+  char keyChar=evt.getKeyChar();
+  if (keyChar == KeyEvent.VK_ENTER) {
+    System.out.println("Enter consumed.");
+    return null;
+  }
+ else   if (keyChar == KeyEvent.CHAR_UNDEFINED) {
+    return null;
+  }
   int off=getCaretPosition();
   System.out.print("off " + off);
   if (off < 0)   return null;
@@ -9,13 +17,6 @@
   int x=getCaretPosition() - getLineStartOffset(line) - 1, x2=x + 1, x1=x - 1;
   if (x >= s.length() || x < 0)   return null;
   System.out.print(" x char: " + s.charAt(x));
-  char keyChar=evt.getKeyChar();
-  if (keyChar == KeyEvent.VK_ENTER) {
-    System.out.println("Enter consumed.");
-    return null;
-  }
-  if (keyChar == KeyEvent.VK_BACK_SPACE || keyChar == KeyEvent.VK_DELETE)   ;
- else   if (keyChar == KeyEvent.CHAR_UNDEFINED)   return null;
   String word=(x < s.length() ? s.charAt(x) : "") + "";
   if (s.trim().length() == 1) {
     word=word.trim();
