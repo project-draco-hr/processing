@@ -151,16 +151,17 @@
       }
       Collections.sort(candidates);
       CompletionCandidate[][] candi=new CompletionCandidate[candidates.size()][1];
+      DefaultListModel defListModel=new DefaultListModel();
       for (int i=0; i < candi.length; i++) {
         candi[i][0]=candidates.get(i);
+        defListModel.addElement(candidates.get(i));
       }
       System.out.println("K = " + candidates.size());
       DefaultTableModel tm=new DefaultTableModel(candi,new String[]{"Suggestions"});
       tableAuto.setModel(tm);
       tableAuto.validate();
       tableAuto.repaint();
-      CompletionCandidate[] candi2=candidates.toArray(new CompletionCandidate[candidates.size()]);
-      if (candidates.size() > 0)       errorCheckerService.getEditor().textArea().showSuggestion(candi2);
+      errorCheckerService.getEditor().textArea().showSuggestion(defListModel);
     }
   }
 ;
