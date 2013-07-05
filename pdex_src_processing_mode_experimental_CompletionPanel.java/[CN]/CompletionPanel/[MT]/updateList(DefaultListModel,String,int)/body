@@ -1,10 +1,15 @@
 {
+  scrollPane.getViewport().removeAll();
+  Dimension dimen=popupMenu.getSize();
   completionList.setModel(items);
   completionList.validate();
-  completionList.repaint();
   completionList.setSelectedIndex(0);
+  scrollPane.setViewportView(completionList);
+  scrollPane.validate();
+  popupMenu.setSize(dimen);
   this.subWord=new String(newSubword);
   if (subWord.indexOf('.') != -1)   this.subWord=subWord.substring(subWord.lastIndexOf('.') + 1);
   insertionPosition=position;
+  System.out.println("Suggestion updated" + System.nanoTime());
   return true;
 }

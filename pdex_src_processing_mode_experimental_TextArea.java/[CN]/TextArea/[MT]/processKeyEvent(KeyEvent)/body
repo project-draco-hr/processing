@@ -4,7 +4,19 @@
       if (suggestion.isVisible()) {
         System.out.println("esc key");
         hideSuggestion();
+        evt.consume();
         return;
+      }
+    }
+  }
+  if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+    if (suggestion != null) {
+      if (suggestion.isVisible()) {
+        if (suggestion.insertSelection()) {
+          hideSuggestion();
+          evt.consume();
+          return;
+        }
       }
     }
   }
@@ -22,25 +34,6 @@ case KeyEvent.VK_UP:
     return;
   }
 break;
-case KeyEvent.VK_ENTER:
-if (suggestion != null) {
-if (suggestion.isVisible()) {
-  if (suggestion.insertSelection()) {
-    SwingUtilities.invokeLater(new Runnable(){
-      @Override public void run(){
-        try {
-        }
- catch (        Exception e) {
-          e.printStackTrace();
-        }
-      }
-    }
-);
-    return;
-  }
-}
-}
-break;
 case KeyEvent.VK_BACK_SPACE:
 System.out.println("BK Key");
 break;
@@ -51,6 +44,6 @@ break;
 super.processKeyEvent(evt);
 if (evt.getID() == KeyEvent.KEY_TYPED) {
 errorCheckerService.runManualErrorCheck();
-System.out.println(" Typing: " + fetchPhrase(evt) + " "+ (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE));
+System.out.println(" Typing: " + fetchPhrase(evt) + " "+ (evt.getKeyChar() == KeyEvent.VK_ENTER));
 }
 }
