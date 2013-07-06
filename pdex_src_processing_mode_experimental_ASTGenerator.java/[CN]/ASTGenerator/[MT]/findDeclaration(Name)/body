@@ -1,4 +1,5 @@
 {
+  System.out.println("entering --findDeclaration1 -- " + findMe.toString());
   ASTNode declaringClass=null;
   ASTNode parent=findMe.getParent();
   ASTNode ret=null;
@@ -75,13 +76,28 @@
     QualifiedName qn=(QualifiedName)parent;
     if (!findMe.toString().equals(qn.getQualifier().toString())) {
       SimpleType stp=extracTypeInfo(findDeclaration((qn.getQualifier())));
-      declaringClass=findDeclaration(stp.getName());
       System.out.println(qn.getQualifier() + "->" + qn.getName());
+      declaringClass=findDeclaration(stp.getName());
       System.out.println("QN decl class: " + getNodeAsString(declaringClass));
       constrains.clear();
       constrains.add(ASTNode.TYPE_DECLARATION);
       constrains.add(ASTNode.FIELD_DECLARATION);
       return definedIn(declaringClass,qn.getName().toString(),constrains,null);
+    }
+ else {
+      System.out.println("hereeee.");
+      if (findMe instanceof QualifiedName) {
+        QualifiedName qnn=(QualifiedName)findMe;
+        System.out.println("findMe is a QN, " + (qnn.getQualifier().toString() + " other " + qnn.getName().toString()));
+        SimpleType stp=extracTypeInfo(findDeclaration((qnn.getQualifier())));
+        System.out.println(qnn.getQualifier() + "->" + qnn.getName());
+        declaringClass=findDeclaration(stp.getName());
+        System.out.println("QN decl class: " + getNodeAsString(declaringClass));
+        constrains.clear();
+        constrains.add(ASTNode.TYPE_DECLARATION);
+        constrains.add(ASTNode.FIELD_DECLARATION);
+        return definedIn(declaringClass,qnn.getName().toString(),constrains,null);
+      }
     }
   }
  else   if (parent.getNodeType() == ASTNode.SIMPLE_TYPE) {
