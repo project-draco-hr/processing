@@ -6,32 +6,20 @@
     System.out.println("-> " + cn);
   }
   if (resources.length == 0) {
-    System.out.println("In GMFT(), couldn't find class: " + className);
+    System.out.println("In defIn3rdPar(), couldn't find class: " + className);
     return null;
   }
   String matchedClass=resources[0];
   matchedClass=matchedClass.substring(0,matchedClass.length() - 6);
   matchedClass=matchedClass.replace('/','.');
-  System.out.println("In GMFT(), Matched class: " + matchedClass);
+  System.out.println("In defIn3rdPar(), Matched class: " + matchedClass);
   System.out.println("Looking for match " + memberName.toString());
   try {
     Class<?> probableClass=Class.forName(matchedClass,false,errorCheckerService.classLoader);
-    for (    Method method : probableClass.getMethods()) {
-      StringBuffer label=new StringBuffer(method.getName() + "(");
-      for (int i=0; i < method.getParameterTypes().length; i++) {
-        label.append(method.getParameterTypes()[i].getSimpleName());
-        if (i < method.getParameterTypes().length - 1)         label.append(",");
-      }
-      label.append(")");
-      if (label.toString().startsWith(memberName)) {
-        return new ClassMember(method);
-      }
+    if (memberName.equals("THIS")) {
+      return new ClassMember(probableClass);
     }
-    for (    Field field : probableClass.getFields()) {
-      if (field.getName().startsWith(memberName)) {
-        return new ClassMember(field);
-      }
-    }
+    return definedIn3rdPartyClass(new ClassMember(probableClass),memberName);
   }
  catch (  ClassNotFoundException e) {
     e.printStackTrace();

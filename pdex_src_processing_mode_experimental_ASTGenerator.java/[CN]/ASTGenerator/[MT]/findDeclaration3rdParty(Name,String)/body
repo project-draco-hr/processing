@@ -1,5 +1,5 @@
 {
-  CompletionCandidate declaringClass=null;
+  ClassMember declaringClass=null;
   ASTNode parent=findMe.getParent();
   ArrayList<Integer> constrains=new ArrayList<Integer>();
   if (parent.getNodeType() == ASTNode.METHOD_INVOCATION) {
@@ -10,8 +10,8 @@
         constrains.add(ASTNode.TYPE_DECLARATION);
         System.out.println("MI EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
         if (exp instanceof MethodInvocation) {
-          SimpleType stp=extracTypeInfo(findDeclaration(((MethodInvocation)exp).getName()));
-          if (stp == null)           return null;
+          declaringClass=findDeclaration3rdParty(((MethodInvocation)exp).getName(),parentClass);
+          return definedIn3rdPartyClass(declaringClass,((MethodInvocation)parent).getName().toString());
         }
  else         if (exp instanceof FieldAccess) {
           SimpleType stp=extracTypeInfo(findDeclaration(((FieldAccess)exp).getName()));
@@ -67,8 +67,7 @@
     }
   }
  else   if (parent.getNodeType() == ASTNode.SIMPLE_TYPE) {
-    ArrayList<CompletionCandidate> retList=getMembersForType(findMe.toString(),"",true,false);
-    if (retList.size() > 0)     return retList.get(0);
+    return definedIn3rdPartyClass(findMe.toString(),"THIS");
   }
  else   if (parent.getNodeType() == ASTNode.TYPE_DECLARATION) {
   }
