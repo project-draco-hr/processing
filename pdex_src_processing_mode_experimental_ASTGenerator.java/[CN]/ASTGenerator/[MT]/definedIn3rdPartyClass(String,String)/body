@@ -1,48 +1,35 @@
 {
-  ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
   RegExpResourceFilter regExpResourceFilter;
-  regExpResourceFilter=new RegExpResourceFilter(".*",typeName + ".class");
+  regExpResourceFilter=new RegExpResourceFilter(".*",className + ".class");
   String[] resources=classPath.findResources("",regExpResourceFilter);
-  for (  String className : resources) {
-    System.out.println("-> " + className);
+  for (  String cn : resources) {
+    System.out.println("-> " + cn);
   }
   if (resources.length == 0) {
-    System.out.println("In GMFT(), couldn't find class: " + typeName);
-    return candidates;
+    System.out.println("In GMFT(), couldn't find class: " + className);
+    return null;
   }
   String matchedClass=resources[0];
   matchedClass=matchedClass.substring(0,matchedClass.length() - 6);
   matchedClass=matchedClass.replace('/','.');
   System.out.println("In GMFT(), Matched class: " + matchedClass);
-  System.out.println("Looking for match " + child.toString());
+  System.out.println("Looking for match " + memberName.toString());
   try {
     Class<?> probableClass=Class.forName(matchedClass,false,errorCheckerService.classLoader);
     for (    Method method : probableClass.getMethods()) {
-      if (!Modifier.isStatic(method.getModifiers()) && staticOnly) {
-        continue;
-      }
       StringBuffer label=new StringBuffer(method.getName() + "(");
       for (int i=0; i < method.getParameterTypes().length; i++) {
         label.append(method.getParameterTypes()[i].getSimpleName());
         if (i < method.getParameterTypes().length - 1)         label.append(",");
       }
       label.append(")");
-      if (noCompare) {
-        candidates.add(new CompletionCandidate(method));
-      }
- else       if (label.toString().startsWith(child.toString())) {
-        candidates.add(new CompletionCandidate(method));
+      if (label.toString().startsWith(memberName)) {
+        return new ClassMember(method);
       }
     }
     for (    Field field : probableClass.getFields()) {
-      if (!Modifier.isStatic(field.getModifiers()) && staticOnly) {
-        continue;
-      }
-      if (noCompare) {
-        candidates.add(new CompletionCandidate(field));
-      }
- else       if (field.getName().startsWith(child.toString())) {
-        candidates.add(new CompletionCandidate(field));
+      if (field.getName().startsWith(memberName)) {
+        return new ClassMember(field);
       }
     }
   }
@@ -50,5 +37,5 @@
     e.printStackTrace();
     System.out.println("Couldn't load " + matchedClass);
   }
-  return candidates;
+  return null;
 }

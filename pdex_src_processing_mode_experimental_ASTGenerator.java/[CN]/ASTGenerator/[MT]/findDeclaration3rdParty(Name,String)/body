@@ -1,0 +1,76 @@
+{
+  CompletionCandidate declaringClass=null;
+  ASTNode parent=findMe.getParent();
+  ArrayList<Integer> constrains=new ArrayList<Integer>();
+  if (parent.getNodeType() == ASTNode.METHOD_INVOCATION) {
+    Expression exp=(Expression)((MethodInvocation)parent).getStructuralProperty(MethodInvocation.EXPRESSION_PROPERTY);
+    if (((MethodInvocation)parent).getName().toString().equals(findMe.toString())) {
+      constrains.add(ASTNode.METHOD_DECLARATION);
+      if (exp != null) {
+        constrains.add(ASTNode.TYPE_DECLARATION);
+        System.out.println("MI EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
+        if (exp instanceof MethodInvocation) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((MethodInvocation)exp).getName()));
+          if (stp == null)           return null;
+        }
+ else         if (exp instanceof FieldAccess) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((FieldAccess)exp).getName()));
+          if (stp == null)           return null;
+        }
+        if (exp instanceof SimpleName) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((SimpleName)exp)));
+          if (stp == null)           return null;
+          constrains.add(ASTNode.METHOD_DECLARATION);
+        }
+      }
+    }
+ else {
+      parent=parent.getParent();
+    }
+  }
+ else   if (parent.getNodeType() == ASTNode.FIELD_ACCESS) {
+    FieldAccess fa=(FieldAccess)parent;
+    Expression exp=fa.getExpression();
+    if (fa.getName().toString().equals(findMe.toString())) {
+      constrains.add(ASTNode.FIELD_DECLARATION);
+      if (exp != null) {
+        constrains.add(ASTNode.TYPE_DECLARATION);
+        System.out.println("FA EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
+        if (exp instanceof MethodInvocation) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((MethodInvocation)exp).getName()));
+          if (stp == null)           return null;
+        }
+ else         if (exp instanceof FieldAccess) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((FieldAccess)exp).getName()));
+          if (stp == null)           return null;
+          constrains.add(ASTNode.TYPE_DECLARATION);
+        }
+        if (exp instanceof SimpleName) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((SimpleName)exp)));
+          if (stp == null)           return null;
+          constrains.add(ASTNode.METHOD_DECLARATION);
+        }
+      }
+    }
+ else {
+      parent=parent.getParent();
+    }
+  }
+ else   if (parent.getNodeType() == ASTNode.QUALIFIED_NAME) {
+    QualifiedName qn=(QualifiedName)parent;
+    if (!findMe.toString().equals(qn.getQualifier().toString())) {
+      SimpleType stp=extracTypeInfo(findDeclaration((qn.getQualifier())));
+      System.out.println(qn.getQualifier() + "->" + qn.getName());
+      constrains.clear();
+      constrains.add(ASTNode.TYPE_DECLARATION);
+      constrains.add(ASTNode.FIELD_DECLARATION);
+    }
+  }
+ else   if (parent.getNodeType() == ASTNode.SIMPLE_TYPE) {
+    ArrayList<CompletionCandidate> retList=getMembersForType(findMe.toString(),"",true,false);
+    if (retList.size() > 0)     return retList.get(0);
+  }
+ else   if (parent.getNodeType() == ASTNode.TYPE_DECLARATION) {
+  }
+  return null;
+}
