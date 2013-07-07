@@ -74,6 +74,19 @@
       declaringClass=definedIn3rdPartyClass(stp.getName().toString(),"THIS");
       return definedIn3rdPartyClass(declaringClass,qn.getName().toString());
     }
+ else {
+      if (findMe instanceof QualifiedName) {
+        QualifiedName qnn=(QualifiedName)findMe;
+        System.out.println("findMe is a QN, " + (qnn.getQualifier().toString() + " other " + qnn.getName().toString()));
+        SimpleType stp=extracTypeInfo(findDeclaration((qnn.getQualifier())));
+        System.out.println(qnn.getQualifier() + "->" + qnn.getName());
+        declaringClass=definedIn3rdPartyClass(stp.getName().toString(),"THIS");
+        constrains.clear();
+        constrains.add(ASTNode.TYPE_DECLARATION);
+        constrains.add(ASTNode.FIELD_DECLARATION);
+        return definedIn3rdPartyClass(declaringClass,qnn.getName().toString());
+      }
+    }
   }
  else   if (parent.getNodeType() == ASTNode.SIMPLE_TYPE) {
     return definedIn3rdPartyClass(findMe.toString(),"THIS");
