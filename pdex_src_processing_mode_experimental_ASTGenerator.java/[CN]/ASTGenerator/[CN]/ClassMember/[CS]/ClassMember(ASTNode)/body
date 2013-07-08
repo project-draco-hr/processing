@@ -1,4 +1,32 @@
 {
   astNode=node;
   stringVal=getNodeAsString(node);
+  SimpleType stp=extracTypeInfo(node);
+  if (stp != null) {
+    if (findDeclaration(stp.getName()) == null) {
+      String typeName=stp.getName().toString();
+      RegExpResourceFilter regExpResourceFilter;
+      regExpResourceFilter=new RegExpResourceFilter(".*",typeName + ".class");
+      String[] resources=classPath.findResources("",regExpResourceFilter);
+      for (      String className : resources) {
+        System.out.println("-> " + className);
+      }
+      if (resources.length == 0) {
+        System.out.println("In ClassMember(ASTNode), couldn't find class: " + typeName);
+      }
+ else {
+        String matchedClass=resources[0];
+        matchedClass=matchedClass.substring(0,matchedClass.length() - 6);
+        matchedClass=matchedClass.replace('/','.');
+        System.out.println("In ClassMember(ASTNode), Matched class: " + matchedClass);
+        try {
+          Class<?> probableClass=Class.forName(matchedClass,false,errorCheckerService.classLoader);
+          thisclass=probableClass;
+        }
+ catch (        ClassNotFoundException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
 }
