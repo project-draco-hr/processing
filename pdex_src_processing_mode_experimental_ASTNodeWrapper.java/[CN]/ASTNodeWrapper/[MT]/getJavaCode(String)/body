@@ -1,0 +1,34 @@
+{
+  System.out.println("Src:" + source);
+  String sourceAlt=new String(source);
+  final String webColorRegexp="#{1}[A-F|a-f|0-9]{6}\\W";
+  Pattern webPattern=Pattern.compile(webColorRegexp);
+  Matcher webMatcher=webPattern.matcher(sourceAlt);
+  while (webMatcher.find()) {
+  }
+  final String colorTypeRegex="color(?![a-zA-Z0-9_])(?=\\[*)(?!(\\s*\\())";
+  Pattern colorPattern=Pattern.compile(colorTypeRegex);
+  Matcher colorMatcher=colorPattern.matcher(sourceAlt);
+  while (colorMatcher.find()) {
+  }
+  String dataTypeFunc[]={"int","char","float","boolean","byte"};
+  for (  String dataType : dataTypeFunc) {
+    String dataTypeRegexp="\\b" + dataType + "\\s*\\(";
+    Pattern pattern=Pattern.compile(dataTypeRegexp);
+    Matcher matcher=pattern.matcher(sourceAlt);
+    while (matcher.find()) {
+    }
+    matcher.reset();
+    sourceAlt=matcher.replaceAll("PApplet.parse" + Character.toUpperCase(dataType.charAt(0)) + dataType.substring(1)+ "(");
+  }
+  webMatcher=webPattern.matcher(sourceAlt);
+  while (webMatcher.find()) {
+    String found=sourceAlt.substring(webMatcher.start(),webMatcher.end());
+    sourceAlt=webMatcher.replaceFirst("0xff" + found.substring(1));
+    webMatcher=webPattern.matcher(sourceAlt);
+  }
+  colorMatcher=colorPattern.matcher(sourceAlt);
+  sourceAlt=colorMatcher.replaceAll("int");
+  System.out.println("Converted:" + sourceAlt);
+  return sourceAlt;
+}

@@ -21,7 +21,7 @@
   if (s.trim().length() == 1) {
     word=word.trim();
     if (word.endsWith("."))     word=word.substring(0,word.length() - 1);
-    errorCheckerService.astGenerator.updatePredictions(word,line + errorCheckerService.mainClassOffset);
+    errorCheckerService.astGenerator.updatePredictions(word,line + errorCheckerService.mainClassOffset,0);
     return word;
   }
   int i=0;
@@ -58,6 +58,7 @@
   }
   if (Character.isDigit(word.charAt(0)))   return null;
   word=word.trim();
-  errorCheckerService.astGenerator.updatePredictions(word,line + errorCheckerService.mainClassOffset);
+  int lineStartNonWSOffset=0;
+  errorCheckerService.astGenerator.updatePredictions(word,line + errorCheckerService.mainClassOffset,lineStartNonWSOffset);
   return word;
 }

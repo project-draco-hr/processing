@@ -4,10 +4,10 @@
       return null;
     }
     protected void done(){
-      String word2=word;
+      String word2=ASTNodeWrapper.getJavaCode(word);
       boolean noCompare=false;
       if (word2.endsWith(".")) {
-        word2=word2.substring(0,word.length() - 1);
+        word2=word2.substring(0,word2.length() - 1);
         noCompare=true;
       }
       int lineNumber=line;
@@ -150,8 +150,15 @@
         }
         if (candidates.size() == 0) {
           System.out.println("candidates empty");
-          ClassMember expr=resolveExpression3rdParty(nearestNode,testnode,true);
-          candidates=getMembersForType(expr,resolveChildExpression(testnode).toString(),true,false);
+          String childExpr=resolveChildExpression(testnode).toString();
+          System.out.println("Child expression : " + childExpr);
+          if (!noCompare) {
+            System.out.println("Original testnode " + getNodeAsString(testnode));
+            testnode=resolveParentExpression(testnode);
+            System.out.println("Corrected testnode " + getNodeAsString(testnode));
+          }
+          ClassMember expr=resolveExpression3rdParty(nearestNode,testnode,noCompare);
+          candidates=getMembersForType(expr,childExpr,noCompare,false);
         }
       }
       Collections.sort(candidates);
