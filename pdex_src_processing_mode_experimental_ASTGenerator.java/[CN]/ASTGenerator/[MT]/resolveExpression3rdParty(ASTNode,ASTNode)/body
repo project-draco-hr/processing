@@ -1,18 +1,67 @@
 {
-  System.out.println("Resolving " + getNodeAsString(expression));
-  if (expression instanceof SimpleName) {
-    return findDeclaration2(((SimpleName)expression),nearestNode);
+  System.out.println("Resolve 3rdParty expr-- " + getNodeAsString(astNode) + " nearest node "+ getNodeAsString(nearestNode));
+  ClassMember scopeParent=null;
+  SimpleType stp=null;
+  if (astNode instanceof SimpleName)   astNode=astNode.getParent();
+switch (astNode.getNodeType()) {
+case ASTNode.FIELD_ACCESS:
+    FieldAccess fa=(FieldAccess)astNode;
+  if (fa.getExpression() == null) {
+    System.out.println("FA,Not implemented.");
+    return null;
   }
- else   if (expression instanceof MethodInvocation) {
-    return findDeclaration2(((MethodInvocation)expression).getName(),nearestNode);
+ else {
+    if (fa.getExpression() instanceof SimpleName) {
+      stp=extracTypeInfo(findDeclaration2((SimpleName)fa.getExpression(),nearestNode));
+      System.out.println("FA, SN Type " + getNodeAsString(stp));
+      scopeParent=definedIn3rdPartyClass(stp.getName().toString(),"THIS");
+    }
+ else {
+      scopeParent=resolveExpression3rdParty(nearestNode,fa.getExpression());
+    }
+    System.out.println("FA, ScopeParent " + scopeParent);
+    return definedIn3rdPartyClass(scopeParent,fa.getName().toString());
   }
- else   if (expression instanceof FieldAccess) {
-    System.out.println("2. Field access " + getNodeAsString(((FieldAccess)expression).getExpression()));
-    return resolveExpression(nearestNode,((FieldAccess)expression).getExpression(),false);
-  }
- else   if (expression instanceof QualifiedName) {
-    System.out.println("1. Resolving " + ((QualifiedName)expression).getQualifier() + " ||| "+ ((QualifiedName)expression).getName());
-    return findDeclaration2(((QualifiedName)expression).getQualifier(),nearestNode);
-  }
-  return null;
+case ASTNode.METHOD_INVOCATION:
+MethodInvocation mi=(MethodInvocation)astNode;
+if (mi.getExpression() == null) {
+System.out.println("MI,Not implemented.");
+return null;
+}
+ else {
+if (mi.getExpression() instanceof SimpleName) {
+  stp=extracTypeInfo(findDeclaration2((SimpleName)mi.getExpression(),nearestNode));
+  System.out.println("MI, SN Type " + getNodeAsString(stp));
+  scopeParent=definedIn3rdPartyClass(stp.getName().toString(),"THIS");
+}
+ else {
+  System.out.println("MI EXP.." + getNodeAsString(mi.getExpression()));
+  scopeParent=resolveExpression3rdParty(nearestNode,mi.getExpression());
+}
+System.out.println("MI, ScopeParent " + scopeParent);
+return definedIn3rdPartyClass(scopeParent,mi.getName().toString());
+}
+case ASTNode.QUALIFIED_NAME:
+QualifiedName qn=(QualifiedName)astNode;
+if (qn.getQualifier() == null) {
+System.out.println("MI,Not implemented.");
+return null;
+}
+ else {
+if (qn.getQualifier() instanceof SimpleName) {
+stp=extracTypeInfo(findDeclaration2(qn.getQualifier(),nearestNode));
+System.out.println("QN, SN Type " + getNodeAsString(stp));
+scopeParent=definedIn3rdPartyClass(stp.getName().toString(),"THIS");
+}
+ else {
+scopeParent=resolveExpression3rdParty(nearestNode,qn.getQualifier());
+}
+System.out.println("QN, ScopeParent " + scopeParent);
+return definedIn3rdPartyClass(scopeParent,qn.getName().toString());
+}
+default :
+System.out.println("Unaccounted type " + getNodeAsString(astNode));
+break;
+}
+return null;
 }

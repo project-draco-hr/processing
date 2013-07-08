@@ -1,6 +1,13 @@
 {
   if (tehClass == null)   return null;
-  Class probableClass=tehClass.getClass_();
+  Class probableClass=null;
+  if (tehClass.getClass_() != null) {
+    probableClass=tehClass.getClass_();
+  }
+ else {
+    probableClass=loadClass(tehClass.getTypeAsString()).getClass_();
+    System.out.println("Loaded " + probableClass.toString());
+  }
   for (  Method method : probableClass.getMethods()) {
     if (method.getName().equals(memberName)) {
       return new ClassMember(method);

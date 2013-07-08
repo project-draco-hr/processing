@@ -9,13 +9,22 @@
       constrains.add(ASTNode.METHOD_DECLARATION);
       if (exp != null) {
         constrains.add(ASTNode.TYPE_DECLARATION);
-        System.out.println("MI EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
+        System.out.println("3rd Par MI EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
         if (exp instanceof MethodInvocation) {
           declaringClass=findDeclaration3rdParty(((MethodInvocation)exp).getName(),parentClass);
           return definedIn3rdPartyClass(declaringClass,((MethodInvocation)parent).getName().toString());
         }
  else         if (exp instanceof FieldAccess) {
           declaringClass=findDeclaration3rdParty(((FieldAccess)exp).getName(),parentClass);
+          return definedIn3rdPartyClass(declaringClass,((MethodInvocation)parent).getName().toString());
+        }
+ else         if (exp instanceof QualifiedName) {
+          QualifiedName qnn=(QualifiedName)exp;
+          System.out.println("exp is a QN, " + (qnn.getQualifier().toString() + " other " + qnn.getName().toString()));
+          SimpleType stp=extracTypeInfo(findDeclaration((qnn.getQualifier())));
+          System.out.println(qnn.getQualifier() + "->" + qnn.getName());
+          declaringClass=findDeclaration3rdParty(stp.getName(),parentClass);
+          System.out.println("Decl class " + declaringClass);
           return definedIn3rdPartyClass(declaringClass,((MethodInvocation)parent).getName().toString());
         }
         if (exp instanceof SimpleName) {
@@ -91,7 +100,5 @@
  else   if (parent.getNodeType() == ASTNode.SIMPLE_TYPE) {
     return definedIn3rdPartyClass(findMe.toString(),"THIS");
   }
- else   if (parent.getNodeType() == ASTNode.TYPE_DECLARATION) {
-  }
-  return null;
+  return definedIn3rdPartyClass(parentClass,findMe.toString());
 }
