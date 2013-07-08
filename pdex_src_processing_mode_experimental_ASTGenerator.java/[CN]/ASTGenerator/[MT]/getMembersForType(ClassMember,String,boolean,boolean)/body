@@ -1,6 +1,25 @@
 {
   ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
-  System.out.println("Looking for match " + child.toString());
+  System.out.println("getMemFoType-> Looking for match " + child.toString() + " inside "+ tehClass);
+  if (tehClass.getASTNode() instanceof TypeDeclaration) {
+    TypeDeclaration td=(TypeDeclaration)tehClass.getASTNode();
+    for (int i=0; i < td.getFields().length; i++) {
+      List<VariableDeclarationFragment> vdfs=td.getFields()[i].fragments();
+      for (      VariableDeclarationFragment vdf : vdfs) {
+        if (noCompare) {
+          candidates.add(new CompletionCandidate(getNodeAsString2(vdf)));
+        }
+ else         if (vdf.getName().toString().startsWith(child.toString()))         candidates.add(new CompletionCandidate(getNodeAsString2(vdf)));
+      }
+    }
+    for (int i=0; i < td.getMethods().length; i++) {
+      if (noCompare) {
+        candidates.add(new CompletionCandidate(getNodeAsString2(td.getMethods()[i]),td.getName().toString(),"",CompletionCandidate.METHOD));
+      }
+ else       if (td.getMethods()[i].getName().toString().startsWith(child.toString()))       candidates.add(new CompletionCandidate(getNodeAsString2(td.getMethods()[i]),td.getName().toString(),"",CompletionCandidate.METHOD));
+    }
+    return candidates;
+  }
   try {
     Class<?> probableClass;
     if (tehClass.getClass_() != null) {

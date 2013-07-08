@@ -62,14 +62,14 @@ if (stp == null) {
 System.out.println("resolve 3rd par, Can't resolve " + qn.getQualifier());
 return null;
 }
-System.out.println("QN, SN Type " + getNodeAsString(stp));
-scopeParent=definedIn3rdPartyClass(stp.getName().toString(),"THIS");
+System.out.println("QN, SN Local Type " + getNodeAsString(stp));
+return new ClassMember(qn.getName());
 }
  else {
 scopeParent=resolveExpression3rdParty(nearestNode,qn.getQualifier(),noCompare);
-}
 System.out.println("QN, ScopeParent " + scopeParent);
 return definedIn3rdPartyClass(scopeParent,qn.getName().toString());
+}
 }
 default :
 System.out.println("Unaccounted type " + getNodeAsString(astNode));
