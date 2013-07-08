@@ -10,8 +10,12 @@
     if ((data.w != width) || (data.h != height)) {
       init(data.w,data.h);
     }
+    data.rgbBuf.rewind();
     setNative(data.rgbBuf,0,0,width,height);
-    data.dispose();
+    if (usedBuffers == null) {
+      usedBuffers=new LinkedList<BufferData>();
+    }
+    usedBuffers.add(data);
     return true;
   }
  else {
