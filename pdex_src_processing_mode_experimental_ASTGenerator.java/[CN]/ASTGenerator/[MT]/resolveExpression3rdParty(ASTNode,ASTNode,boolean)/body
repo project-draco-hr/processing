@@ -13,11 +13,15 @@ case ASTNode.FIELD_ACCESS:
  else {
     if (fa.getExpression() instanceof SimpleName) {
       stp=extracTypeInfo(findDeclaration2((SimpleName)fa.getExpression(),nearestNode));
+      if (stp == null) {
+        System.out.println("resolve 3rd par, Can't resolve " + fa.getExpression());
+        return null;
+      }
       System.out.println("FA, SN Type " + getNodeAsString(stp));
       scopeParent=definedIn3rdPartyClass(stp.getName().toString(),"THIS");
     }
  else {
-      scopeParent=resolveExpression3rdParty(nearestNode,fa.getExpression());
+      scopeParent=resolveExpression3rdParty(nearestNode,fa.getExpression(),noCompare);
     }
     System.out.println("FA, ScopeParent " + scopeParent);
     return definedIn3rdPartyClass(scopeParent,fa.getName().toString());
@@ -31,12 +35,16 @@ return null;
  else {
 if (mi.getExpression() instanceof SimpleName) {
   stp=extracTypeInfo(findDeclaration2((SimpleName)mi.getExpression(),nearestNode));
+  if (stp == null) {
+    System.out.println("resolve 3rd par, Can't resolve " + mi.getExpression());
+    return null;
+  }
   System.out.println("MI, SN Type " + getNodeAsString(stp));
   scopeParent=definedIn3rdPartyClass(stp.getName().toString(),"THIS");
 }
  else {
   System.out.println("MI EXP.." + getNodeAsString(mi.getExpression()));
-  scopeParent=resolveExpression3rdParty(nearestNode,mi.getExpression());
+  scopeParent=resolveExpression3rdParty(nearestNode,mi.getExpression(),noCompare);
 }
 System.out.println("MI, ScopeParent " + scopeParent);
 return definedIn3rdPartyClass(scopeParent,mi.getName().toString());
@@ -50,11 +58,15 @@ return null;
  else {
 if (qn.getQualifier() instanceof SimpleName) {
 stp=extracTypeInfo(findDeclaration2(qn.getQualifier(),nearestNode));
+if (stp == null) {
+System.out.println("resolve 3rd par, Can't resolve " + qn.getQualifier());
+return null;
+}
 System.out.println("QN, SN Type " + getNodeAsString(stp));
 scopeParent=definedIn3rdPartyClass(stp.getName().toString(),"THIS");
 }
  else {
-scopeParent=resolveExpression3rdParty(nearestNode,qn.getQualifier());
+scopeParent=resolveExpression3rdParty(nearestNode,qn.getQualifier(),noCompare);
 }
 System.out.println("QN, ScopeParent " + scopeParent);
 return definedIn3rdPartyClass(scopeParent,qn.getName().toString());

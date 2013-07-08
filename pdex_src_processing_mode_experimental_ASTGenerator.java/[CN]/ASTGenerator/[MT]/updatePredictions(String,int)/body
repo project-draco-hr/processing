@@ -148,6 +148,11 @@
             candidates=getMembersForType(word2.substring(0,x),word2.substring(x + 1),false,true);
           }
         }
+        if (candidates.size() == 0) {
+          System.out.println("candidates empty");
+          ClassMember expr=resolveExpression3rdParty(nearestNode,testnode,true);
+          candidates=getMembersForType(expr,resolveChildExpression(testnode).toString(),true,false);
+        }
       }
       Collections.sort(candidates);
       CompletionCandidate[][] candi=new CompletionCandidate[candidates.size()][1];
