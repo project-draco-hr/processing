@@ -1,0 +1,55 @@
+{
+  Class tehClass=null;
+  try {
+    tehClass=Class.forName(className,false,errorCheckerService.getSketchClassLoader());
+    System.out.println(tehClass.getName() + " located straightaway");
+    return tehClass;
+  }
+ catch (  ClassNotFoundException e) {
+  }
+  System.out.println("Looking in the classloader for " + className);
+  ArrayList<ImportStatement> imports=errorCheckerService.getProgramImports();
+  for (  ImportStatement impS : imports) {
+    String temp=impS.getPackageName();
+    try {
+      if (temp.endsWith("*")) {
+        temp=temp.substring(0,temp.length() - 1) + className;
+      }
+ else {
+        int x=temp.lastIndexOf('.');
+        if (temp.substring(x).equals(className)) {
+        }
+      }
+      tehClass=Class.forName(temp,false,errorCheckerService.getSketchClassLoader());
+      System.out.println(tehClass.getName() + " located.");
+      return tehClass;
+    }
+ catch (    ClassNotFoundException e) {
+      System.out.println("Doesn't exist in package: " + impS.getImportName());
+    }
+  }
+  PdePreprocessor p=new PdePreprocessor(null);
+  for (  String impS : p.getCoreImports()) {
+    try {
+      tehClass=Class.forName(impS.substring(0,impS.length() - 1) + className,false,errorCheckerService.getSketchClassLoader());
+      System.out.println(tehClass.getName() + " located.");
+      return tehClass;
+    }
+ catch (    ClassNotFoundException e) {
+      System.out.println("Doesn't exist in package: " + impS);
+    }
+  }
+  for (  String impS : p.getDefaultImports()) {
+    try {
+      if (className.equals(impS) || impS.endsWith(className)) {
+        tehClass=Class.forName(className,false,errorCheckerService.getSketchClassLoader());
+        System.out.println(tehClass.getName() + " located.");
+        return tehClass;
+      }
+    }
+ catch (    ClassNotFoundException e) {
+      System.out.println("Doesn't exist in package: " + impS);
+    }
+  }
+  return tehClass;
+}

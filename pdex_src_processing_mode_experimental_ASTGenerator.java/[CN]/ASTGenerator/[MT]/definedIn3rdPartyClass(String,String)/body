@@ -1,29 +1,13 @@
 {
-  RegExpResourceFilter regExpResourceFilter;
-  regExpResourceFilter=new RegExpResourceFilter(".*",className + ".class");
-  String[] resources=classPath.findResources("",regExpResourceFilter);
-  for (  String cn : resources) {
-    System.out.println("-> " + cn);
-  }
-  if (resources.length == 0) {
-    System.out.println("In defIn3rdPar(), couldn't find class: " + className);
+  Class<?> probableClass=findClassIfExists(className);
+  if (probableClass == null) {
+    System.out.println("Couldn't load " + className);
     return null;
   }
-  String matchedClass=resources[0];
-  matchedClass=matchedClass.substring(0,matchedClass.length() - 6);
-  matchedClass=matchedClass.replace('/','.');
-  System.out.println("In defIn3rdPar(), Matched class: " + matchedClass);
-  System.out.println("Looking for match " + memberName.toString());
-  try {
-    Class<?> probableClass=Class.forName(matchedClass,false,errorCheckerService.classLoader);
-    if (memberName.equals("THIS")) {
-      return new ClassMember(probableClass);
-    }
+  if (memberName.equals("THIS")) {
+    return new ClassMember(probableClass);
+  }
+ else {
     return definedIn3rdPartyClass(new ClassMember(probableClass),memberName);
   }
- catch (  ClassNotFoundException e) {
-    e.printStackTrace();
-    System.out.println("Couldn't load " + matchedClass);
-  }
-  return null;
 }
