@@ -8,6 +8,12 @@
       System.out.println(getNodeAsString(astNode) + " found decl -> " + getNodeAsString(decl));
       return new ClassMember(extracTypeInfo(decl));
     }
+ else {
+      Class tehClass=findClassIfExists(((SimpleName)astNode).toString());
+      if (tehClass != null) {
+        return new ClassMember(tehClass);
+      }
+    }
     astNode=astNode.getParent();
   }
 switch (astNode.getNodeType()) {
@@ -81,6 +87,10 @@ return null;
 if (qn.getQualifier() instanceof SimpleName) {
 stp=extracTypeInfo(findDeclaration2(qn.getQualifier(),nearestNode));
 if (stp == null) {
+Class tehClass=findClassIfExists(qn.getQualifier().toString());
+if (tehClass != null) {
+return definedIn3rdPartyClass(new ClassMember(tehClass),qn.getName().toString());
+}
 System.out.println("resolve 3rd par, Can't resolve " + qn.getQualifier());
 return null;
 }
