@@ -28,30 +28,35 @@ case ASTNode.FIELD_ACCESS:
   }
 case ASTNode.METHOD_INVOCATION:
 MethodInvocation mi=(MethodInvocation)astNode;
+ASTNode temp=findDeclaration2(mi.getName(),nearestNode);
+if (temp instanceof MethodDeclaration) {
+System.out.println(mi.getName() + " was found locally," + getNodeAsString(extracTypeInfo(temp)));
+return new ClassMember(extracTypeInfo(temp));
+}
 if (mi.getExpression() == null) {
 System.out.println("MI,Not implemented.");
 return null;
 }
  else {
 if (mi.getExpression() instanceof SimpleName) {
-  stp=extracTypeInfo(findDeclaration2((SimpleName)mi.getExpression(),nearestNode));
-  if (stp == null) {
-    System.out.println("resolve 3rd par, Can't resolve " + mi.getExpression());
-    return null;
-  }
-  System.out.println("MI, SN Type " + getNodeAsString(stp));
-  ASTNode typeDec=findDeclaration2(stp.getName(),nearestNode);
-  if (typeDec == null) {
-    System.out.println(stp.getName() + " couldn't be found locally..");
-    return new ClassMember(findClassIfExists(stp.getName().toString()));
-  }
-  return new ClassMember(typeDec);
+stp=extracTypeInfo(findDeclaration2((SimpleName)mi.getExpression(),nearestNode));
+if (stp == null) {
+System.out.println("resolve 3rd par, Can't resolve " + mi.getExpression());
+return null;
+}
+System.out.println("MI, SN Type " + getNodeAsString(stp));
+ASTNode typeDec=findDeclaration2(stp.getName(),nearestNode);
+if (typeDec == null) {
+System.out.println(stp.getName() + " couldn't be found locally..");
+return new ClassMember(findClassIfExists(stp.getName().toString()));
+}
+return new ClassMember(typeDec);
 }
  else {
-  System.out.println("MI EXP.." + getNodeAsString(mi.getExpression()));
-  scopeParent=resolveExpression3rdParty(nearestNode,mi.getExpression(),noCompare);
-  System.out.println("MI, ScopeParent " + scopeParent);
-  return definedIn3rdPartyClass(scopeParent,mi.getName().toString());
+System.out.println("MI EXP.." + getNodeAsString(mi.getExpression()));
+scopeParent=resolveExpression3rdParty(nearestNode,mi.getExpression(),noCompare);
+System.out.println("MI, ScopeParent " + scopeParent);
+return definedIn3rdPartyClass(scopeParent,mi.getName().toString());
 }
 }
 case ASTNode.QUALIFIED_NAME:

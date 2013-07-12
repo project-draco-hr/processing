@@ -1,11 +1,14 @@
 {
   astNode=node;
   stringVal=getNodeAsString(node);
+  if (node instanceof SimpleType) {
+    classType=((SimpleType)node).getName().toString();
+  }
   SimpleType stp=extracTypeInfo(node);
   if (stp != null) {
     if (findDeclaration(stp.getName()) == null) {
-      String typeName=stp.getName().toString();
-      Class<?> probableClass=findClassIfExists(typeName);
+      classType=stp.getName().toString();
+      Class<?> probableClass=findClassIfExists(classType);
       thisclass=probableClass;
     }
   }
