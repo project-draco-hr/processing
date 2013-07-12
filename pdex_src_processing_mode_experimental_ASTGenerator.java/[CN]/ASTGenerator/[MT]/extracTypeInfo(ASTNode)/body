@@ -2,15 +2,17 @@
   if (node == null)   return null;
 switch (node.getNodeType()) {
 case ASTNode.METHOD_DECLARATION:
-    return (SimpleType)((MethodDeclaration)node).getStructuralProperty(MethodDeclaration.RETURN_TYPE2_PROPERTY);
+    return (SimpleType)((MethodDeclaration)node).getReturnType2();
 case ASTNode.FIELD_DECLARATION:
-  return (SimpleType)((FieldDeclaration)node).getStructuralProperty(FieldDeclaration.TYPE_PROPERTY);
+  return (SimpleType)((FieldDeclaration)node).getType();
 case ASTNode.VARIABLE_DECLARATION_EXPRESSION:
-return (SimpleType)((VariableDeclarationExpression)node).getStructuralProperty(VariableDeclarationExpression.TYPE_PROPERTY);
+return (SimpleType)((VariableDeclarationExpression)node).getType();
 case ASTNode.VARIABLE_DECLARATION_STATEMENT:
-return (SimpleType)((VariableDeclarationStatement)node).getStructuralProperty(VariableDeclarationStatement.TYPE_PROPERTY);
+return (SimpleType)((VariableDeclarationStatement)node).getType();
 case ASTNode.SINGLE_VARIABLE_DECLARATION:
-return (SimpleType)((SingleVariableDeclaration)node).getStructuralProperty(SingleVariableDeclaration.TYPE_PROPERTY);
+return (SimpleType)((SingleVariableDeclaration)node).getType();
+case ASTNode.VARIABLE_DECLARATION_FRAGMENT:
+return extracTypeInfo(node.getParent());
 }
 return null;
 }

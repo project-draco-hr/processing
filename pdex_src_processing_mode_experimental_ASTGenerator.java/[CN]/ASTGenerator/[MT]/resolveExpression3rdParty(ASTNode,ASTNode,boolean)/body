@@ -2,7 +2,14 @@
   System.out.println("Resolve 3rdParty expr-- " + getNodeAsString(astNode) + " nearest node "+ getNodeAsString(nearestNode));
   ClassMember scopeParent=null;
   SimpleType stp=null;
-  if (astNode instanceof SimpleName)   astNode=astNode.getParent();
+  if (astNode instanceof SimpleName) {
+    ASTNode decl=findDeclaration2(((SimpleName)astNode),nearestNode);
+    if (decl != null) {
+      System.out.println(getNodeAsString(astNode) + " found decl -> " + getNodeAsString(decl));
+      return new ClassMember(extracTypeInfo(decl));
+    }
+    astNode=astNode.getParent();
+  }
 switch (astNode.getNodeType()) {
 case ASTNode.FIELD_ACCESS:
     FieldAccess fa=(FieldAccess)astNode;
