@@ -69,7 +69,10 @@ System.out.println("MI, SN Type " + getNodeAsString(stp));
 ASTNode typeDec=findDeclaration2(stp.getName(),nearestNode);
 if (typeDec == null) {
 System.out.println(stp.getName() + " couldn't be found locally..");
-return new ClassMember(findClassIfExists(stp.getName().toString()));
+Class tehClass=findClassIfExists(stp.getName().toString());
+if (tehClass != null) {
+  return definedIn3rdPartyClass(new ClassMember(tehClass),mi.getName().toString());
+}
 }
 return new ClassMember(typeDec);
 }

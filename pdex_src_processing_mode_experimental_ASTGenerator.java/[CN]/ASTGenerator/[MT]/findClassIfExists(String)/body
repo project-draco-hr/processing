@@ -1,64 +1,54 @@
 {
   Class tehClass=null;
-  try {
-    tehClass=Class.forName(className,false,errorCheckerService.getSketchClassLoader());
+  tehClass=loadClass(className);
+  if (tehClass instanceof Class) {
     System.out.println(tehClass.getName() + " located straightaway");
     return tehClass;
-  }
- catch (  ClassNotFoundException e) {
   }
   System.out.println("Looking in the classloader for " + className);
   ArrayList<ImportStatement> imports=errorCheckerService.getProgramImports();
   for (  ImportStatement impS : imports) {
     String temp=impS.getPackageName();
-    try {
-      if (temp.endsWith("*")) {
-        temp=temp.substring(0,temp.length() - 1) + className;
-      }
+    if (temp.endsWith("*")) {
+      temp=temp.substring(0,temp.length() - 1) + className;
+    }
  else {
-        int x=temp.lastIndexOf('.');
-        if (temp.substring(x).equals(className)) {
-        }
+      int x=temp.lastIndexOf('.');
+      if (temp.substring(x).equals(className)) {
       }
-      tehClass=Class.forName(temp,false,errorCheckerService.getSketchClassLoader());
+    }
+    tehClass=loadClass(temp);
+    if (tehClass instanceof Class) {
       System.out.println(tehClass.getName() + " located.");
       return tehClass;
     }
- catch (    ClassNotFoundException e) {
-      System.out.println("Doesn't exist in package: " + impS.getImportName());
-    }
+    System.out.println("Doesn't exist in package: " + impS.getImportName());
   }
   PdePreprocessor p=new PdePreprocessor(null);
   for (  String impS : p.getCoreImports()) {
-    try {
-      tehClass=Class.forName(impS.substring(0,impS.length() - 1) + className,false,errorCheckerService.getSketchClassLoader());
+    tehClass=loadClass(impS.substring(0,impS.length() - 1) + className);
+    if (tehClass instanceof Class) {
       System.out.println(tehClass.getName() + " located.");
       return tehClass;
     }
- catch (    ClassNotFoundException e) {
-      System.out.println("Doesn't exist in package: " + impS);
-    }
+    System.out.println("Doesn't exist in package: " + impS);
   }
   for (  String impS : p.getDefaultImports()) {
-    try {
-      if (className.equals(impS) || impS.endsWith(className)) {
-        tehClass=Class.forName(impS,false,errorCheckerService.getSketchClassLoader());
+    if (className.equals(impS) || impS.endsWith(className)) {
+      tehClass=loadClass(impS);
+      if (tehClass instanceof Class) {
         System.out.println(tehClass.getName() + " located.");
         return tehClass;
       }
-    }
- catch (    ClassNotFoundException e) {
       System.out.println("Doesn't exist in package: " + impS);
     }
   }
   String daddy="java.lang." + className;
-  try {
-    tehClass=Class.forName(daddy,false,errorCheckerService.getSketchClassLoader());
+  tehClass=loadClass(daddy);
+  if (tehClass instanceof Class) {
     System.out.println(tehClass.getName() + " located.");
     return tehClass;
   }
- catch (  ClassNotFoundException e) {
-    System.out.println("Doesn't exist in package: " + daddy);
-  }
+  System.out.println("Doesn't exist in java.lang");
   return tehClass;
 }
