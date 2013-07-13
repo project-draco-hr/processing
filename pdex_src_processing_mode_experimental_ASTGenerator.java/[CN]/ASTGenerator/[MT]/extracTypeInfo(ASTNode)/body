@@ -1,19 +1,6 @@
 {
   if (node == null)   return null;
-switch (node.getNodeType()) {
-case ASTNode.METHOD_DECLARATION:
-    return (SimpleType)((MethodDeclaration)node).getReturnType2();
-case ASTNode.FIELD_DECLARATION:
-  return (SimpleType)((FieldDeclaration)node).getType();
-case ASTNode.VARIABLE_DECLARATION_EXPRESSION:
-return (SimpleType)((VariableDeclarationExpression)node).getType();
-case ASTNode.VARIABLE_DECLARATION_STATEMENT:
-return (SimpleType)((VariableDeclarationStatement)node).getType();
-case ASTNode.SINGLE_VARIABLE_DECLARATION:
-return (SimpleType)((SingleVariableDeclaration)node).getType();
-case ASTNode.VARIABLE_DECLARATION_FRAGMENT:
-return extracTypeInfo(node.getParent());
-}
-System.out.println("Unknown type info request " + getNodeAsString(node));
-return null;
+  Type t=extracTypeInfo2(node);
+  if (t instanceof PrimitiveType)   return null;
+  return (SimpleType)t;
 }

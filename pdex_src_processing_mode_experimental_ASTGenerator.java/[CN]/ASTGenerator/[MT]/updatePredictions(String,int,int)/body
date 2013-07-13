@@ -89,21 +89,26 @@
  else {
         System.err.println("Complex expression " + getNodeAsString(testnode));
         System.out.println("candidates empty");
-        String childExpr=getChildExpression(testnode).toString();
+        ASTNode childExpr=getChildExpression(testnode);
         System.out.println("Parent expression : " + getParentExpression(testnode));
         System.out.println("Child expression : " + childExpr);
-        if (!noCompare) {
-          System.out.println("Original testnode " + getNodeAsString(testnode));
-          testnode=getParentExpression(testnode);
-          System.out.println("Corrected testnode " + getNodeAsString(testnode));
-        }
-        ClassMember expr=resolveExpression3rdParty(nearestNode,testnode,noCompare);
-        if (expr == null) {
-          System.out.println("Expr is null");
+        if (childExpr instanceof ASTNode) {
+          if (!noCompare) {
+            System.out.println("Original testnode " + getNodeAsString(testnode));
+            testnode=getParentExpression(testnode);
+            System.out.println("Corrected testnode " + getNodeAsString(testnode));
+          }
+          ClassMember expr=resolveExpression3rdParty(nearestNode,testnode,noCompare);
+          if (expr == null) {
+            System.out.println("Expr is null");
+          }
+ else {
+            System.out.println("Expr is " + expr.toString());
+            candidates=getMembersForType(expr,childExpr.toString(),noCompare,false);
+          }
         }
  else {
-          System.out.println("Expr is " + expr.toString());
-          candidates=getMembersForType(expr,childExpr,noCompare,false);
+          System.out.println("ChildExpr is null");
         }
       }
       Collections.sort(candidates);
