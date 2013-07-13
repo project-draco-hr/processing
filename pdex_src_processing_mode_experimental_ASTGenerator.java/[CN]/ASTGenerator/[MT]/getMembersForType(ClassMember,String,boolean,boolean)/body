@@ -18,6 +18,17 @@
       }
  else       if (td.getMethods()[i].getName().toString().startsWith(child.toString()))       candidates.add(new CompletionCandidate(getNodeAsString2(td.getMethods()[i]),td.getName().toString(),"",CompletionCandidate.METHOD));
     }
+    ArrayList<CompletionCandidate> superClassCandidates=new ArrayList<CompletionCandidate>();
+    if (td.getSuperclassType() instanceof Type) {
+      System.out.println(getNodeAsString(td.getSuperclassType()) + " <-Looking into superclass of " + tehClass);
+      superClassCandidates=getMembersForType(new ClassMember(td.getSuperclassType()),child,noCompare,staticOnly);
+    }
+ else {
+      superClassCandidates=getMembersForType(new ClassMember(Object.class),child,noCompare,staticOnly);
+    }
+    for (    CompletionCandidate cc : superClassCandidates) {
+      candidates.add(cc);
+    }
     return candidates;
   }
   try {
