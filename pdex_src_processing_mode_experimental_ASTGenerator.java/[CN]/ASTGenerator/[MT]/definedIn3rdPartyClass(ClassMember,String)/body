@@ -12,7 +12,13 @@
     for (int i=0; i < td.getMethods().length; i++) {
       if (td.getMethods()[i].getName().toString().startsWith(memberName))       return new ClassMember(td.getMethods()[i]);
     }
-    return null;
+    if (td.getSuperclassType() instanceof Type) {
+      System.out.println(getNodeAsString(td.getSuperclassType()) + " <-Looking into superclass of " + tehClass);
+      return definedIn3rdPartyClass(new ClassMember(td.getSuperclassType()),memberName);
+    }
+ else {
+      return definedIn3rdPartyClass(new ClassMember(Object.class),memberName);
+    }
   }
   Class probableClass=null;
   if (tehClass.getClass_() != null) {

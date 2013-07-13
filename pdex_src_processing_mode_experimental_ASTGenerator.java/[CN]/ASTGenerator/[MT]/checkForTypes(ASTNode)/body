@@ -10,11 +10,11 @@ List<ASTNode> params=(List<ASTNode>)md.getStructuralProperty(MethodDeclaration.P
 CompletionCandidate[] cand=new CompletionCandidate[params.size() + 1];
 cand[0]=new CompletionCandidate(md);
 for (int i=0; i < params.size(); i++) {
-cand[i + 1]=new CompletionCandidate(params.get(i).toString(),"","",CompletionCandidate.LOCAL_VAR);
+cand[i + 1]=new CompletionCandidate((SingleVariableDeclaration)params.get(i));
 }
 return cand;
 case ASTNode.SINGLE_VARIABLE_DECLARATION:
-return new CompletionCandidate[]{new CompletionCandidate(getNodeAsString2(node),"","",CompletionCandidate.LOCAL_VAR)};
+return new CompletionCandidate[]{new CompletionCandidate((SingleVariableDeclaration)node)};
 case ASTNode.FIELD_DECLARATION:
 vdfs=((FieldDeclaration)node).fragments();
 break;
@@ -31,7 +31,7 @@ if (vdfs != null) {
 CompletionCandidate ret[]=new CompletionCandidate[vdfs.size()];
 int i=0;
 for (VariableDeclarationFragment vdf : vdfs) {
-ret[i++]=new CompletionCandidate(getNodeAsString2(vdf),"","",CompletionCandidate.LOCAL_VAR);
+ret[i++]=new CompletionCandidate(vdf);
 }
 return ret;
 }
