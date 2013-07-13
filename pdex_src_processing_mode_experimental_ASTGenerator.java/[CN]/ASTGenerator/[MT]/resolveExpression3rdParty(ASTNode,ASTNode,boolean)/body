@@ -27,7 +27,11 @@ case ASTNode.FIELD_ACCESS:
     if (fa.getExpression() instanceof SimpleName) {
       stp=extracTypeInfo(findDeclaration2((SimpleName)fa.getExpression(),nearestNode));
       if (stp == null) {
-        System.out.println("resolve 3rd par, Can't resolve " + fa.getExpression());
+        Class tehClass=findClassIfExists(((SimpleName)fa.getExpression()).toString());
+        if (tehClass != null) {
+          return definedIn3rdPartyClass(new ClassMember(tehClass),fa.getName().toString());
+        }
+        System.out.println("FA resolve 3rd par, Can't resolve " + fa.getExpression());
         return null;
       }
       System.out.println("FA, SN Type " + getNodeAsString(stp));
@@ -54,7 +58,11 @@ return null;
 if (mi.getExpression() instanceof SimpleName) {
 stp=extracTypeInfo(findDeclaration2((SimpleName)mi.getExpression(),nearestNode));
 if (stp == null) {
-System.out.println("resolve 3rd par, Can't resolve " + mi.getExpression());
+Class tehClass=findClassIfExists(((SimpleName)mi.getExpression()).toString());
+if (tehClass != null) {
+  return definedIn3rdPartyClass(new ClassMember(tehClass),mi.getName().toString());
+}
+System.out.println("MI resolve 3rd par, Can't resolve " + mi.getExpression());
 return null;
 }
 System.out.println("MI, SN Type " + getNodeAsString(stp));
@@ -91,7 +99,7 @@ Class tehClass=findClassIfExists(qn.getQualifier().toString());
 if (tehClass != null) {
 return definedIn3rdPartyClass(new ClassMember(tehClass),qn.getName().toString());
 }
-System.out.println("resolve 3rd par, Can't resolve " + qn.getQualifier());
+System.out.println("QN resolve 3rd par, Can't resolve " + qn.getQualifier());
 return null;
 }
 System.out.println("QN, SN Local Type " + getNodeAsString(stp));
