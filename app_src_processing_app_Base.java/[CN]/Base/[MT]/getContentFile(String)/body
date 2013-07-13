@@ -2,12 +2,15 @@
   if (processingRoot == null) {
     String path=Base.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     String decodedPath=PApplet.urlDecode(path);
-    File libFolder=new File(decodedPath).getParentFile();
-    if (libFolder.getName().equals("lib")) {
-      processingRoot=libFolder.getParentFile();
+    File jarFolder=new File(decodedPath).getParentFile();
+    if (jarFolder.getName().equals("lib")) {
+      processingRoot=jarFolder.getParentFile();
     }
- else {
-      Base.log("Could not find lib in " + libFolder.getAbsolutePath() + ", switching to user.dir");
+ else     if (Base.isMacOS()) {
+      processingRoot=jarFolder;
+    }
+    if (processingRoot == null || !processingRoot.exists()) {
+      Base.log("Could not find lib folder via " + jarFolder.getAbsolutePath() + ", switching to user.dir");
       processingRoot=new File(System.getProperty("user.dir"));
     }
   }
