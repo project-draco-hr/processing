@@ -32,7 +32,6 @@
       ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
       if (testnode instanceof SimpleName && !noCompare) {
         System.err.println("One word expression " + getNodeAsString(testnode));
-        nearestNode=nearestNode.getParent();
         while (nearestNode != null) {
           if (nearestNode instanceof TypeDeclaration) {
             TypeDeclaration td=(TypeDeclaration)nearestNode;
@@ -120,9 +119,11 @@
       }
       System.out.println("K = " + candidates.size());
       DefaultTableModel tm=new DefaultTableModel(candi,new String[]{"Suggestions"});
-      tableAuto.setModel(tm);
-      tableAuto.validate();
-      tableAuto.repaint();
+      if (tableAuto.isVisible()) {
+        tableAuto.setModel(tm);
+        tableAuto.validate();
+        tableAuto.repaint();
+      }
       errorCheckerService.getEditor().textArea().showSuggestion(defListModel,word);
     }
   }
