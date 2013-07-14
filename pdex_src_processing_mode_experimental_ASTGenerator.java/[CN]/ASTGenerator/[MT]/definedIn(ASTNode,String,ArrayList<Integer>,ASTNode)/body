@@ -14,7 +14,7 @@ if (td.getName().toString().equals(name)) {
   if (constrains.contains(ASTNode.CLASS_INSTANCE_CREATION)) {
     MethodDeclaration[] methods=td.getMethods();
     for (    MethodDeclaration md : methods) {
-      if (md.getName().toString().equals(name)) {
+      if (md.getName().toString().equalsIgnoreCase(name)) {
         System.out.println("Found a constructor.");
         return md;
       }
@@ -30,14 +30,14 @@ if (td.getName().toString().equals(name)) {
     for (    FieldDeclaration fd : fields) {
       List<VariableDeclarationFragment> fragments=fd.fragments();
       for (      VariableDeclarationFragment vdf : fragments) {
-        if (vdf.getName().toString().equals(name))         return fd;
+        if (vdf.getName().toString().equalsIgnoreCase(name))         return fd;
       }
     }
   }
  else   if (constrains.contains(ASTNode.METHOD_DECLARATION)) {
     MethodDeclaration[] methods=td.getMethods();
     for (    MethodDeclaration md : methods) {
-      if (md.getName().toString().equals(name)) {
+      if (md.getName().toString().equalsIgnoreCase(name)) {
         return md;
       }
     }
@@ -46,11 +46,11 @@ if (td.getName().toString().equals(name)) {
 break;
 case ASTNode.METHOD_DECLARATION:
 System.err.println(getNodeAsString(node));
-if (((MethodDeclaration)node).getName().toString().equals(name)) return node;
+if (((MethodDeclaration)node).getName().toString().equalsIgnoreCase(name)) return node;
 break;
 case ASTNode.SINGLE_VARIABLE_DECLARATION:
 System.err.println(getNodeAsString(node));
-if (((SingleVariableDeclaration)node).getName().toString().equals(name)) return node;
+if (((SingleVariableDeclaration)node).getName().toString().equalsIgnoreCase(name)) return node;
 break;
 case ASTNode.FIELD_DECLARATION:
 System.err.println("FD" + node);
@@ -68,7 +68,7 @@ default :
 }
 if (vdfList != null) {
 for (VariableDeclarationFragment vdf : vdfList) {
-if (vdf.getName().toString().equals(name)) return node;
+if (vdf.getName().toString().equalsIgnoreCase(name)) return node;
 }
 }
 return null;

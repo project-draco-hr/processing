@@ -1,16 +1,17 @@
 {
   if (tehClass == null)   return null;
   System.out.println("definedIn3rdPartyClass-> Looking for " + memberName + " in "+ tehClass);
+  String memberNameL=memberName.toLowerCase();
   if (tehClass.getDeclaringNode() instanceof TypeDeclaration) {
     TypeDeclaration td=(TypeDeclaration)tehClass.getDeclaringNode();
     for (int i=0; i < td.getFields().length; i++) {
       List<VariableDeclarationFragment> vdfs=td.getFields()[i].fragments();
       for (      VariableDeclarationFragment vdf : vdfs) {
-        if (vdf.getName().toString().startsWith(memberName))         return new ClassMember(vdf);
+        if (vdf.getName().toString().toLowerCase().startsWith(memberNameL))         return new ClassMember(vdf);
       }
     }
     for (int i=0; i < td.getMethods().length; i++) {
-      if (td.getMethods()[i].getName().toString().startsWith(memberName))       return new ClassMember(td.getMethods()[i]);
+      if (td.getMethods()[i].getName().toString().toLowerCase().startsWith(memberNameL))       return new ClassMember(td.getMethods()[i]);
     }
     if (td.getSuperclassType() instanceof Type) {
       System.out.println(getNodeAsString(td.getSuperclassType()) + " <-Looking into superclass of " + tehClass);
@@ -29,12 +30,12 @@
     System.out.println("Loaded " + probableClass.toString());
   }
   for (  Method method : probableClass.getMethods()) {
-    if (method.getName().equals(memberName)) {
+    if (method.getName().equalsIgnoreCase(memberName)) {
       return new ClassMember(method);
     }
   }
   for (  Field field : probableClass.getFields()) {
-    if (field.getName().equals(memberName)) {
+    if (field.getName().equalsIgnoreCase(memberName)) {
       return new ClassMember(field);
     }
   }

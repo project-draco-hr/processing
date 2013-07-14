@@ -1,4 +1,5 @@
 {
+  String child=childToLookFor.toLowerCase();
   ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
   System.out.println("getMemFoType-> Looking for match " + child.toString() + " inside "+ tehClass+ " noCompare "+ noCompare+ " staticOnly "+ staticOnly);
   if (tehClass == null) {
@@ -10,24 +11,24 @@
       List<VariableDeclarationFragment> vdfs=td.getFields()[i].fragments();
       for (      VariableDeclarationFragment vdf : vdfs) {
         if (noCompare) {
-          candidates.add(new CompletionCandidate(getNodeAsString2(vdf)));
+          candidates.add(new CompletionCandidate(vdf));
         }
- else         if (vdf.getName().toString().startsWith(child.toString()))         candidates.add(new CompletionCandidate(getNodeAsString2(vdf)));
+ else         if (vdf.getName().toString().toLowerCase().startsWith(child))         candidates.add(new CompletionCandidate(vdf));
       }
     }
     for (int i=0; i < td.getMethods().length; i++) {
       if (noCompare) {
-        candidates.add(new CompletionCandidate(getNodeAsString2(td.getMethods()[i]),td.getName().toString(),"",CompletionCandidate.METHOD));
+        candidates.add(new CompletionCandidate(td.getMethods()[i]));
       }
- else       if (td.getMethods()[i].getName().toString().startsWith(child.toString()))       candidates.add(new CompletionCandidate(getNodeAsString2(td.getMethods()[i]),td.getName().toString(),"",CompletionCandidate.METHOD));
+ else       if (td.getMethods()[i].getName().toString().toLowerCase().startsWith(child))       candidates.add(new CompletionCandidate(td.getMethods()[i]));
     }
     ArrayList<CompletionCandidate> superClassCandidates=new ArrayList<CompletionCandidate>();
     if (td.getSuperclassType() instanceof Type) {
       System.out.println(getNodeAsString(td.getSuperclassType()) + " <-Looking into superclass of " + tehClass);
-      superClassCandidates=getMembersForType(new ClassMember(td.getSuperclassType()),child,noCompare,staticOnly);
+      superClassCandidates=getMembersForType(new ClassMember(td.getSuperclassType()),childToLookFor,noCompare,staticOnly);
     }
  else {
-      superClassCandidates=getMembersForType(new ClassMember(Object.class),child,noCompare,staticOnly);
+      superClassCandidates=getMembersForType(new ClassMember(Object.class),childToLookFor,noCompare,staticOnly);
     }
     for (    CompletionCandidate cc : superClassCandidates) {
       candidates.add(cc);
@@ -59,7 +60,7 @@
     if (noCompare) {
       candidates.add(new CompletionCandidate(method));
     }
- else     if (label.toString().startsWith(child.toString())) {
+ else     if (label.toString().toLowerCase().startsWith(child)) {
       candidates.add(new CompletionCandidate(method));
     }
   }
@@ -70,7 +71,7 @@
     if (noCompare) {
       candidates.add(new CompletionCandidate(field));
     }
- else     if (field.getName().startsWith(child.toString())) {
+ else     if (field.getName().toLowerCase().startsWith(child)) {
       candidates.add(new CompletionCandidate(field));
     }
   }
