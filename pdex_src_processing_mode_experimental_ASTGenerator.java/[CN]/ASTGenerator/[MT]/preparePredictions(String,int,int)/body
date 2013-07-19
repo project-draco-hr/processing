@@ -10,6 +10,22 @@
         word2=word2.substring(0,word2.length() - 1);
         noCompare=true;
       }
+      if (word2.length() > 2 && !noCompare && word2.length() > lastPredictedWord.length()) {
+        if (word2.startsWith(lastPredictedWord)) {
+          System.out.println(word + " starts with " + lastPredictedWord);
+          System.out.println("Don't recalc");
+          if (word2.contains(".")) {
+            int x=word2.lastIndexOf('.');
+            trimCandidates(word2.substring(x + 1));
+          }
+ else {
+            trimCandidates(word2);
+          }
+          updatePredictions(word);
+          lastPredictedWord=word2;
+          return;
+        }
+      }
       int lineNumber=line;
       if (errorCheckerService != null) {
         editor=errorCheckerService.getEditor();
@@ -29,7 +45,8 @@
       nearestNode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
       if (nearestNode == null)       nearestNode=(ASTNode)compilationUnit.types().get(0);
       System.err.println(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(nearestNode));
-      ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
+      candidates=new ArrayList<CompletionCandidate>();
+      lastPredictedWord=word2;
       if (testnode instanceof SimpleName && !noCompare) {
         System.err.println("One word expression " + getNodeAsString(testnode));
         while (nearestNode != null) {
@@ -109,21 +126,7 @@
           System.out.println("ChildExpr is null");
         }
       }
-      Collections.sort(candidates);
-      CompletionCandidate[][] candi=new CompletionCandidate[candidates.size()][1];
-      DefaultListModel defListModel=new DefaultListModel();
-      for (int i=0; i < candi.length; i++) {
-        candi[i][0]=candidates.get(i);
-        defListModel.addElement(candidates.get(i));
-      }
-      System.out.println("K = " + candidates.size());
-      DefaultTableModel tm=new DefaultTableModel(candi,new String[]{"Suggestions"});
-      if (tableAuto.isVisible()) {
-        tableAuto.setModel(tm);
-        tableAuto.validate();
-        tableAuto.repaint();
-      }
-      errorCheckerService.getEditor().textArea().showSuggestion(defListModel,word);
+      updatePredictions(word);
     }
   }
 ;
