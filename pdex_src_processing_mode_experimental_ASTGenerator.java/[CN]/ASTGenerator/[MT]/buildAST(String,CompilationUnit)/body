@@ -13,6 +13,7 @@
     compilationUnit=cu;
     System.out.println("Other cu");
   }
+  calculateComments();
   codeTree=new DefaultMutableTreeNode(getNodeAsString((ASTNode)compilationUnit.types().get(0)));
   visitRecur((ASTNode)compilationUnit.types().get(0),codeTree);
   SwingWorker worker=new SwingWorker(){
@@ -24,6 +25,9 @@
         if (jtree.hasFocus() || frame2.hasFocus())         return;
         jtree.setModel(new DefaultTreeModel(codeTree));
         ((DefaultTreeModel)jtree.getModel()).reload();
+        if (!frame2.isVisible()) {
+          frame2.setVisible(true);
+        }
         jtree.validate();
       }
     }
