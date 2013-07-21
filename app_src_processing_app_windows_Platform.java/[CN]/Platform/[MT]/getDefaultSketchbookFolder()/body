@@ -1,11 +1,7 @@
 {
-  char[] pszPath=new char[Shell32.MAX_PATH];
-  int hResult=Shell32.INSTANCE.SHGetFolderPath(null,Shell32.CSIDL_PERSONAL,null,Shell32.SHGFP_TYPE_CURRENT,pszPath);
-  if (Shell32.S_OK != hResult) {
-    throw new Exception("Problem city, population your computer");
+  String documentsPath=getDocumentsPath();
+  if (documentsPath != null) {
+    return new File(documentsPath,APP_NAME);
   }
-  String personalPath=new String(pszPath);
-  int len=personalPath.indexOf("\0");
-  personalPath=personalPath.substring(0,len);
-  return new File(personalPath,"Processing");
+  return null;
 }

@@ -1,11 +1,9 @@
 {
-  Advapi32 advapi32;
-  int handle=0;
   boolean ret=false;
-  advapi32=Advapi32.INSTANCE;
-  handle=openKey(rootKey,parent,WINNT.KEY_READ);
-  if (handle != 0) {
-    if (advapi32.RegDeleteKey(handle,name) == WINERROR.ERROR_SUCCESS) {
+  Advapi32 advapi32=Advapi32.INSTANCE;
+  HKEY handle=openKey(rootKey,parent,WinNT.KEY_READ);
+  if (handle != null) {
+    if (advapi32.RegDeleteKey(handle,name) == WinError.ERROR_SUCCESS) {
       ret=true;
     }
  else {
@@ -13,5 +11,5 @@
     }
     advapi32.RegCloseKey(handle);
   }
-  return (ret);
+  return ret;
 }

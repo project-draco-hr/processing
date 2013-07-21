@@ -1,11 +1,11 @@
 {
   Advapi32 advapi32;
-  IntByReference pHandle;
-  int handle=0;
+  HKEYByReference pHandle;
+  HKEY handle=null;
   advapi32=Advapi32.INSTANCE;
-  pHandle=new IntByReference();
-  if (advapi32.RegOpenKeyEx(rootKeyMap.get(key),null,0,0,pHandle) == WINERROR.ERROR_SUCCESS) {
+  pHandle=new WinReg.HKEYByReference();
+  if (advapi32.RegOpenKeyEx(rootKeyMap.get(key),null,0,0,pHandle) == WinError.ERROR_SUCCESS) {
     handle=pHandle.getValue();
   }
-  return (handle);
+  return handle;
 }

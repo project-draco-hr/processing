@@ -1,21 +1,22 @@
 {
   Advapi32 advapi32;
-  IntByReference pType, lpcbData;
+  IntByReference pType;
+  IntByReference lpcbData;
   byte[] lpData=new byte[1];
-  int handle=0;
+  HKEY handle=null;
   int ret=0;
   advapi32=Advapi32.INSTANCE;
   pType=new IntByReference();
   lpcbData=new IntByReference();
-  handle=openKey(rootKey,subKeyName,WINNT.KEY_READ);
-  if (handle != 0) {
-    if (advapi32.RegQueryValueEx(handle,name,null,pType,lpData,lpcbData) == WINERROR.ERROR_MORE_DATA) {
+  handle=openKey(rootKey,subKeyName,WinNT.KEY_READ);
+  if (handle != null) {
+    if (advapi32.RegQueryValueEx(handle,name,0,pType,lpData,lpcbData) == WinError.ERROR_MORE_DATA) {
       lpData=new byte[lpcbData.getValue()];
-      if (advapi32.RegQueryValueEx(handle,name,null,pType,lpData,lpcbData) == WINERROR.ERROR_SUCCESS) {
+      if (advapi32.RegQueryValueEx(handle,name,0,pType,lpData,lpcbData) == WinError.ERROR_SUCCESS) {
         ret=convertBufferToInt(lpData);
       }
     }
     advapi32.RegCloseKey(handle);
   }
-  return (ret);
+  return ret;
 }

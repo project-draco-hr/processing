@@ -1,6 +1,5 @@
 {
   Advapi32 advapi32;
-  int handle;
   byte[] data;
   boolean ret=false;
   data=new byte[4];
@@ -9,12 +8,12 @@
   data[2]=(byte)((value >> 16) & 0xff);
   data[3]=(byte)((value >> 24) & 0xff);
   advapi32=Advapi32.INSTANCE;
-  handle=openKey(rootKey,subKeyName,WINNT.KEY_READ | WINNT.KEY_WRITE);
-  if (handle != 0) {
-    if (advapi32.RegSetValueEx(handle,name,0,WINNT.REG_DWORD,data,data.length) == WINERROR.ERROR_SUCCESS) {
+  HKEY handle=openKey(rootKey,subKeyName,WinNT.KEY_READ | WinNT.KEY_WRITE);
+  if (handle != null) {
+    if (advapi32.RegSetValueEx(handle,name,0,WinNT.REG_DWORD,data,data.length) == WinError.ERROR_SUCCESS) {
       ret=true;
     }
     advapi32.RegCloseKey(handle);
   }
-  return (ret);
+  return ret;
 }
