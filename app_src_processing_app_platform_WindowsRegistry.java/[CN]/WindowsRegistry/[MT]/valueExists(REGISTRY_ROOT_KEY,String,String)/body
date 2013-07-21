@@ -1,11 +1,10 @@
 {
-  IntByReference pType, lpcbData;
+  Advapi32 advapi32=Advapi32.INSTANCE;
+  IntByReference pType=new IntByReference();
+  IntByReference lpcbData=new IntByReference();
+  HKEY handle=openKey(rootKey,subKeyName,WinNT.KEY_READ);
   byte[] lpData=new byte[1];
   boolean ret=false;
-  Advapi32 advapi32=Advapi32.INSTANCE;
-  pType=new IntByReference();
-  lpcbData=new IntByReference();
-  HKEY handle=openKey(rootKey,subKeyName,WinNT.KEY_READ);
   if (handle != null) {
     if (advapi32.RegQueryValueEx(handle,name,0,pType,lpData,lpcbData) != WinError.ERROR_FILE_NOT_FOUND) {
       ret=true;

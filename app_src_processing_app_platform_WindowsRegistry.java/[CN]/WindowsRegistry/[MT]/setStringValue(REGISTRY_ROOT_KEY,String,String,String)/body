@@ -1,11 +1,10 @@
 {
-  byte[] data;
-  boolean ret=false;
-  data=new byte[value.length() * 2 + 2];
+  byte[] data=new byte[value.length() * 2 + 2];
   byte[] src=value.getBytes("UTF-16LE");
   System.arraycopy(src,0,data,0,src.length);
   Advapi32 advapi32=Advapi32.INSTANCE;
   HKEY handle=openKey(rootKey,subKeyName,WinNT.KEY_READ | WinNT.KEY_WRITE);
+  boolean ret=false;
   if (handle != null) {
     if (advapi32.RegSetValueEx(handle,name,0,WinNT.REG_SZ,data,data.length) == WinError.ERROR_SUCCESS) {
       ret=true;
