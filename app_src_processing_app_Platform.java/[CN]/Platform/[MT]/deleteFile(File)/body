@@ -1,9 +1,14 @@
 {
-  if (file.isDirectory()) {
+  FileUtils fu=FileUtils.getInstance();
+  if (fu.hasTrash()) {
+    fu.moveToTrash(new File[]{file});
+    return true;
+  }
+ else   if (file.isDirectory()) {
     Base.removeDir(file);
+    return true;
   }
  else {
     return file.delete();
   }
-  return true;
 }
