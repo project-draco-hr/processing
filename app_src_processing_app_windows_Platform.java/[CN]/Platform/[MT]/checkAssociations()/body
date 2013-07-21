@@ -1,13 +1,8 @@
 {
   try {
-    String knownCommand=Registry.getStringValue(REGISTRY_ROOT_KEY.CLASSES_ROOT,DOC + "\\shell\\open\\command","");
-    if (knownCommand == null) {
-      if (Preferences.getBoolean("platform.auto_file_type_associations")) {
-        setAssociations();
-      }
-    }
- else     if (!knownCommand.equals(openCommand)) {
-      if (Preferences.getBoolean("platform.auto_file_type_associations")) {
+    if (Preferences.getBoolean("platform.auto_file_type_associations")) {
+      String knownCommand=Registry.getStringValue(REGISTRY_ROOT_KEY.CURRENT_USER,"Software\\Classes\\" + REG_DOC + "\\shell\\open\\command","");
+      if (knownCommand == null || !knownCommand.equals(REG_OPEN_COMMAND)) {
         setAssociations();
       }
     }
