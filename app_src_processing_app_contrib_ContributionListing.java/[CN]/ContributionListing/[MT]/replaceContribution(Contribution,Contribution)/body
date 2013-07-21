@@ -1,19 +1,20 @@
 {
-  if (oldLib == null || newLib == null) {
-    return;
-  }
-  if (librariesByCategory.containsKey(oldLib.getCategory())) {
-    List<Contribution> list=librariesByCategory.get(oldLib.getCategory());
-    for (int i=0; i < list.size(); i++) {
-      if (list.get(i) == oldLib) {
-        list.set(i,newLib);
+  if (oldLib != null && newLib != null) {
+    for (    String category : oldLib.getCategories()) {
+      if (librariesByCategory.containsKey(category)) {
+        List<Contribution> list=librariesByCategory.get(category);
+        for (int i=0; i < list.size(); i++) {
+          if (list.get(i) == oldLib) {
+            list.set(i,newLib);
+          }
+        }
       }
     }
-  }
-  for (int i=0; i < allContributions.size(); i++) {
-    if (allContributions.get(i) == oldLib) {
-      allContributions.set(i,newLib);
+    for (int i=0; i < allContributions.size(); i++) {
+      if (allContributions.get(i) == oldLib) {
+        allContributions.set(i,newLib);
+      }
     }
+    notifyChange(oldLib,newLib);
   }
-  notifyChange(oldLib,newLib);
 }
