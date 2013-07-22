@@ -15,6 +15,7 @@
   ASTNode lineNode=findLineOfNode(compilationUnit,lineNumber,offset,name);
   System.out.println("+> " + lineNode);
   ASTNode decl=null;
+  String nodeLabel=null;
   String nameOfNode=null;
   if (lineNode != null) {
     ASTNodeWrapper lineNodeWrap=new ASTNodeWrapper(lineNode);
@@ -61,7 +62,7 @@
       decl=findDeclaration((SimpleName)simpName);
       if (decl != null) {
         System.err.println("DECLA: " + decl.getClass().getName());
-        retLabelString=getNodeAsString(decl);
+        nodeLabel=getLabelIfType(new ASTNodeWrapper(decl),(SimpleName)simpName);
       }
  else       System.err.println("null");
       System.out.println(getNodeAsString(decl));
@@ -79,5 +80,5 @@
     System.err.println("FINAL String label: " + getNodeAsString(simpName2));
     errorCheckerService.highlightNode(simpName2);
   }
-  return new ASTNodeWrapper(decl);
+  return new ASTNodeWrapper(decl,nodeLabel);
 }
