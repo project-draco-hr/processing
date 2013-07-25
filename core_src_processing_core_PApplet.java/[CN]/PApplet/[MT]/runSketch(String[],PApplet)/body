@@ -169,8 +169,11 @@
     }
   }
  else {
-    int windowW=Math.max(applet.width,MIN_WINDOW_WIDTH);
-    int windowH=Math.max(applet.height,MIN_WINDOW_HEIGHT);
+    Insets insets=frame.getInsets();
+    int windowW=Math.max(applet.width,MIN_WINDOW_WIDTH) + insets.left + insets.right;
+    int windowH=Math.max(applet.height,MIN_WINDOW_HEIGHT) + insets.top + insets.bottom;
+    int contentW=Math.max(applet.width,MIN_WINDOW_WIDTH);
+    int contentH=Math.max(applet.height,MIN_WINDOW_HEIGHT);
     frame.setSize(windowW,windowH);
     if (location != null) {
       frame.setLocation(location[0],location[1]);
@@ -201,7 +204,7 @@
     if (backgroundColor != null) {
       frame.setBackground(backgroundColor);
     }
-    applet.setBounds((windowW - applet.width) / 2,(windowH - applet.height) / 2,applet.width,applet.height);
+    applet.setBounds((contentW - applet.width) / 2,(contentH - applet.height) / 2,applet.width,applet.height);
     if (external) {
       applet.setupExternalMessages();
     }
