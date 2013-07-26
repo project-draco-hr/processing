@@ -4,6 +4,9 @@
   System.out.println(editor.ta.getSelectedText() + "<- offsets " + (line)+ ", "+ (editor.ta.getSelectionStart() - editor.ta.getLineStartOffset(line))+ ", "+ (editor.ta.getSelectionStop() - editor.ta.getLineStartOffset(line)));
   int offwhitespace=editor.ta.getLineStartNonWhiteSpaceOffset(line);
   ASTNodeWrapper wnode=getASTNodeAt(line + errorCheckerService.mainClassOffset,selText,editor.ta.getSelectionStart() - offwhitespace,false);
+  if (wnode.getNode() == null) {
+    return null;
+  }
   System.err.println("Gonna find all occurrences of " + getNodeAsString(wnode.getNode()));
   if (wnode.getNodeType() == ASTNode.METHOD_DECLARATION) {
     MethodDeclaration md=(MethodDeclaration)wnode.getNode();
@@ -22,7 +25,7 @@
       }
     }
   }
-  DefaultMutableTreeNode defCU=new DefaultMutableTreeNode(wnode);
+  DefaultMutableTreeNode defCU=new DefaultMutableTreeNode(new ASTNodeWrapper(wnode.getNode(),selText));
   dfsNameOnly(defCU,wnode.getNode(),selText);
   System.out.println(wnode);
   return defCU;

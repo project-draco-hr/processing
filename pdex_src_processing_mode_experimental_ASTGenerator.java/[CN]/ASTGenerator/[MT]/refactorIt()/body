@@ -1,6 +1,10 @@
 {
   String newName=txtRenameField.getText();
   DefaultMutableTreeNode defCU=findAllOccurrences();
+  if (defCU == null) {
+    editor.statusError("Can't locate definition of " + editor.ta.getSelectedText());
+    return;
+  }
   treeRename.setModel(new DefaultTreeModel(defCU));
   ((DefaultTreeModel)treeRename.getModel()).reload();
   frmOccurenceList.setTitle("Usage of " + editor.ta.getSelectedText());
