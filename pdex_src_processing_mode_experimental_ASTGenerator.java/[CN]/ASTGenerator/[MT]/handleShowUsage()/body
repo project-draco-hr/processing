@@ -1,5 +1,6 @@
 {
-  if (editor.ta.getSelectedText() == null) {
+  System.out.println("Last clicked word:" + lastClickedWord);
+  if (lastClickedWord == null && editor.ta.getSelectedText() == null) {
     editor.statusError("Highlight the class/function/variable name first");
     return;
   }
@@ -8,12 +9,15 @@
     return;
   }
   DefaultMutableTreeNode defCU=findAllOccurrences();
+  String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
   if (defCU == null) {
-    editor.statusError("Can't locate definition of " + editor.ta.getSelectedText());
+    editor.statusError("Can't locate definition of " + selText);
     return;
   }
   treeRename.setModel(new DefaultTreeModel(defCU));
   ((DefaultTreeModel)treeRename.getModel()).reload();
-  frmOccurenceList.setTitle("Usage of " + editor.ta.getSelectedText());
+  frmOccurenceList.setTitle("Usage of " + selText);
   frmOccurenceList.setVisible(true);
+  lastClickedWord=null;
+  lastClickedWordNode=null;
 }

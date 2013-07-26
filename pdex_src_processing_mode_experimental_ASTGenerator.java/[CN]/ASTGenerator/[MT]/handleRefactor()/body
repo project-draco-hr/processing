@@ -1,5 +1,6 @@
 {
-  if (editor.ta.getSelectedText() == null) {
+  System.out.println("Last clicked word:" + lastClickedWord);
+  if (lastClickedWord == null && editor.ta.getSelectedText() == null) {
     editor.statusError("Highlight the class/function/variable name first");
     return;
   }
@@ -11,8 +12,9 @@
     frmRename.setVisible(true);
     SwingUtilities.invokeLater(new Runnable(){
       @Override public void run(){
-        frmOccurenceList.setTitle("All occurrences of " + editor.ta.getSelectedText());
-        lblRefactorOldName.setText("Current name: " + editor.ta.getSelectedText());
+        String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
+        frmOccurenceList.setTitle("All occurrences of " + selText);
+        lblRefactorOldName.setText("Current name: " + selText);
         txtRenameField.requestFocus();
       }
     }

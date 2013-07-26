@@ -1,9 +1,16 @@
 {
-  String selText=editor.ta.getSelectedText();
+  System.out.println("Last clicked word:" + lastClickedWord);
+  String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
   int line=editor.ta.getSelectionStartLine();
-  System.out.println(editor.ta.getSelectedText() + "<- offsets " + (line)+ ", "+ (editor.ta.getSelectionStart() - editor.ta.getLineStartOffset(line))+ ", "+ (editor.ta.getSelectionStop() - editor.ta.getLineStartOffset(line)));
+  System.out.println(selText + "<- offsets " + (line)+ ", "+ (editor.ta.getSelectionStart() - editor.ta.getLineStartOffset(line))+ ", "+ (editor.ta.getSelectionStop() - editor.ta.getLineStartOffset(line)));
   int offwhitespace=editor.ta.getLineStartNonWhiteSpaceOffset(line);
-  ASTNodeWrapper wnode=getASTNodeAt(line + errorCheckerService.mainClassOffset,selText,editor.ta.getSelectionStart() - offwhitespace,false);
+  ASTNodeWrapper wnode;
+  if (lastClickedWord == null) {
+    wnode=getASTNodeAt(line + errorCheckerService.mainClassOffset,selText,editor.ta.getSelectionStart() - offwhitespace,false);
+  }
+ else {
+    wnode=lastClickedWordNode;
+  }
   if (wnode.getNode() == null) {
     return null;
   }
