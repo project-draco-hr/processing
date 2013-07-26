@@ -1,4 +1,5 @@
 {
+  syntaxErrors.set(true);
   parser.setSource(sourceCode.toCharArray());
   parser.setKind(ASTParser.K_COMPILATION_UNIT);
   @SuppressWarnings("unchecked") Map<String,String> options=JavaCore.getOptions();
@@ -18,5 +19,6 @@
       System.out.println("arg " + j);
     }
   }
-  syntaxErrors=problems.length == 0 ? false : true;
+  if (problems.length == 0)   syntaxErrors.set(false);
+ else   syntaxErrors.set(true);
 }
