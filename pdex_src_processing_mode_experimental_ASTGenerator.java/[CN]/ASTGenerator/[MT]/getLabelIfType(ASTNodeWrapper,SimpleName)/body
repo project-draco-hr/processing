@@ -1,9 +1,9 @@
 {
-  String label="";
   ASTNode current=node.getNode().getParent();
   String type="";
   StringBuffer fullName=new StringBuffer();
   Stack<String> parents=new Stack<String>();
+  String simpleName=(sn == null) ? node.getNode().toString() : sn.toString();
 switch (node.getNodeType()) {
 case ASTNode.TYPE_DECLARATION:
 case ASTNode.METHOD_DECLARATION:
@@ -17,7 +17,7 @@ case ASTNode.FIELD_DECLARATION:
   while (parents.size() > 0) {
     fullName.append(parents.pop() + ".");
   }
-fullName.append(sn.toString());
+fullName.append(simpleName);
 if (node.getNode() instanceof MethodDeclaration) {
 MethodDeclaration md=(MethodDeclaration)node.getNode();
 type=md.getReturnType2().toString();
@@ -44,9 +44,9 @@ case ASTNode.SINGLE_VARIABLE_DECLARATION:
 SingleVariableDeclaration svd=(SingleVariableDeclaration)node.getNode();
 return svd.getType() + " " + svd.getName();
 case ASTNode.VARIABLE_DECLARATION_STATEMENT:
-return ((VariableDeclarationStatement)node.getNode()).getType() + " " + sn;
+return ((VariableDeclarationStatement)node.getNode()).getType() + " " + simpleName;
 case ASTNode.VARIABLE_DECLARATION_EXPRESSION:
-return ((VariableDeclarationExpression)node.getNode()).getType() + " " + sn;
+return ((VariableDeclarationExpression)node.getNode()).getType() + " " + simpleName;
 default :
 break;
 }
