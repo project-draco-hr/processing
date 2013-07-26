@@ -5,7 +5,7 @@
   System.out.println(selText + "<- offsets " + (line)+ ", "+ (editor.ta.getSelectionStart() - editor.ta.getLineStartOffset(line))+ ", "+ (editor.ta.getSelectionStop() - editor.ta.getLineStartOffset(line)));
   int offwhitespace=editor.ta.getLineStartNonWhiteSpaceOffset(line);
   ASTNodeWrapper wnode;
-  if (lastClickedWord == null) {
+  if (lastClickedWord == null || lastClickedWordNode.getNode() == null) {
     wnode=getASTNodeAt(line + errorCheckerService.mainClassOffset,selText,editor.ta.getSelectionStart() - offwhitespace,false);
   }
  else {
@@ -34,6 +34,14 @@
   }
   DefaultMutableTreeNode defCU=new DefaultMutableTreeNode(new ASTNodeWrapper(wnode.getNode(),selText));
   dfsNameOnly(defCU,wnode.getNode(),selText);
+  Stack<Object> tempS=new Stack<Object>();
+  for (int i=0; i < defCU.getChildCount(); i++) {
+    tempS.push(defCU.getChildAt(i));
+  }
+  defCU.removeAllChildren();
+  while (!tempS.isEmpty()) {
+    defCU.add((MutableTreeNode)tempS.pop());
+  }
   System.out.println(wnode);
   return defCU;
 }

@@ -14,9 +14,11 @@
     editor.statusError("Can't locate definition of " + selText);
     return;
   }
+  if (defCU.getChildCount() == 0)   return;
   treeRename.setModel(new DefaultTreeModel(defCU));
   ((DefaultTreeModel)treeRename.getModel()).reload();
-  frmOccurenceList.setTitle("Usage of " + selText);
+  treeRename.setRootVisible(false);
+  frmOccurenceList.setTitle("Usage of \"" + selText + "\"");
   frmOccurenceList.setVisible(true);
   lastClickedWord=null;
   lastClickedWordNode=null;
