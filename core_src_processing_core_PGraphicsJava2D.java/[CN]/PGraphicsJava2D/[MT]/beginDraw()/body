@@ -5,14 +5,16 @@
       if (image == null || ((VolatileImage)image).validate(gc) == VolatileImage.IMAGE_INCOMPATIBLE) {
         image=gc.createCompatibleVolatileImage(width,height);
         g2=(Graphics2D)image.getGraphics();
+        reapplySettings=true;
       }
     }
  else {
       if (image == null) {
         GraphicsConfiguration gc=parent.getGraphicsConfiguration();
         image=gc.createCompatibleImage(width,height);
-        System.out.println("created new image, type is " + image);
+        PApplet.debug("created new image, type is " + image);
         g2=(Graphics2D)image.getGraphics();
+        reapplySettings=true;
       }
     }
   }
@@ -31,6 +33,7 @@
       bimage=gc.createCompatibleImage(width,height);
       g2=bimage.createGraphics();
       defaultComposite=g2.getComposite();
+      reapplySettings=true;
     }
   }
   checkSettings();
