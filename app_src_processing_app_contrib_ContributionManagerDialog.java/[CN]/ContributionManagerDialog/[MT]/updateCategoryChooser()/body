@@ -4,10 +4,14 @@
     categoryChooser.removeAllItems();
     categories=new ArrayList<String>(contribListing.getCategories(filter));
     Collections.sort(categories);
+    boolean categoriesFound=false;
     categoryChooser.addItem(ContributionManagerDialog.ANY_CATEGORY);
     for (    String s : categories) {
       categoryChooser.addItem(s);
+      if (!s.equals("Unknown")) {
+        categoriesFound=true;
+      }
     }
-    categoryChooser.setEnabled(categories.size() != 0);
+    categoryChooser.setEnabled(categoriesFound);
   }
 }

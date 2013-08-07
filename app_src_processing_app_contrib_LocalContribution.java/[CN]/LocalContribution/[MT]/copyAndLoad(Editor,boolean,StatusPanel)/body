@@ -5,7 +5,7 @@
   File contribFolder=new File(contribTypeFolder,contribFolderName);
   for (  LocalContribution oldContrib : oldContribs) {
     if ((oldContrib.getFolder().exists() && oldContrib.getFolder().equals(contribFolder)) || (oldContrib.getId() != null && oldContrib.getId().equals(getId()))) {
-      if (oldContrib.requiresRestart()) {
+      if (oldContrib.getType().requiresRestart()) {
         if (!oldContrib.backup(editor,false,status)) {
           return null;
         }
@@ -15,7 +15,7 @@
         boolean doBackup=Preferences.getBoolean("contribution.backup.on_install");
         if (confirmReplace) {
           if (doBackup) {
-            result=Base.showYesNoQuestion(editor,"Replace","Replace pre-existing \"" + oldContrib.getName() + "\" library?","A pre-existing copy of the \"" + oldContrib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ " in <i>libraries/old</i> before replacing it.");
+            result=Base.showYesNoQuestion(editor,"Replace","Replace pre-existing \"" + oldContrib.getName() + "\" library?","A pre-existing copy of the \"" + oldContrib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ "in <i>libraries/old</i> before replacing it.");
             if (result != JOptionPane.YES_OPTION || !oldContrib.backup(editor,true,status)) {
               return null;
             }

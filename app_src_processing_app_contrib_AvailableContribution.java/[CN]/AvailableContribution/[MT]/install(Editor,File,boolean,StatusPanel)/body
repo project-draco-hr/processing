@@ -24,13 +24,18 @@
       LocalContribution newContrib=type.load(editor.getBase(),contribFolder);
       File newContribFolder=newContrib.getFolder();
       installedContrib=newContrib.copyAndLoad(editor,confirmReplace,status);
+      if (newContrib != null && type.requiresRestart()) {
+        installedContrib.setRestartFlag();
+      }
       newContrib=null;
       System.gc();
-      try {
-        Thread.sleep(1000);
-      }
- catch (      InterruptedException e) {
-        e.printStackTrace();
+      if (Base.isWindows()) {
+        try {
+          Thread.sleep(1000);
+        }
+ catch (        InterruptedException e) {
+          e.printStackTrace();
+        }
       }
       Base.removeDir(newContribFolder);
     }
