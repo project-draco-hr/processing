@@ -1,6 +1,15 @@
 {
   try {
-    return new Table(createInput(filename),Table.extensionOptions(true,filename,options));
+    String optionStr=Table.extensionOptions(true,filename,options);
+    String[] optionList=split(optionStr,',');
+    Table dictionary=null;
+    for (    String opt : optionList) {
+      if (opt.startsWith("dictionary=")) {
+        dictionary=loadTable(opt.substring(opt.indexOf('=') + 1),"tsv");
+        return dictionary.typedParse(createInput(filename),optionStr);
+      }
+    }
+    return new Table(createInput(filename),optionStr);
   }
  catch (  IOException e) {
     e.printStackTrace();
