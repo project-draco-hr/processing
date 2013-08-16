@@ -1,5 +1,7 @@
 {
-  flush();
+  if (blendMode != lastBlendMode) {
+    flush();
+  }
   pgl.enable(PGL.BLEND);
   if (blendMode == REPLACE) {
     if (blendEqSupported) {
@@ -85,4 +87,5 @@
  else   if (blendMode == BURN) {
     PGraphics.showWarning(BLEND_RENDERER_ERROR,"BURN");
   }
+  lastBlendMode=blendMode;
 }
