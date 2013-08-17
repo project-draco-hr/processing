@@ -1,9 +1,13 @@
 {
-  String newName=txtRenameField.getText();
+  String newName=txtRenameField.getText().trim();
   String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
   DefaultMutableTreeNode defCU=findAllOccurrences();
   if (defCU == null) {
     editor.statusError("Can't locate definition of " + selText);
+    return;
+  }
+  if (!newName.matches("([a-zA-Z][a-zA-Z0-9_]*)|([_][a-zA-Z0-9_]+)")) {
+    JOptionPane.showConfirmDialog(new JFrame(),newName + " isn't a valid name.","Uh oh..",JOptionPane.PLAIN_MESSAGE);
     return;
   }
   errorCheckerService.pauseThread();
