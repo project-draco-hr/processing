@@ -6,6 +6,7 @@
     editor.statusError("Can't locate definition of " + selText);
     return;
   }
+  errorCheckerService.pauseThread();
   treeRename.setModel(new DefaultTreeModel(defCU));
   ((DefaultTreeModel)treeRename.getModel()).reload();
   frmOccurenceList.setTitle("Usage of " + selText);
@@ -13,12 +14,12 @@
   int lineOffsetDisplacementConst=newName.length() - selText.length();
   HashMap<Integer,Integer> lineOffsetDisplacement=new HashMap<Integer,Integer>();
   int offsetsMap[][][]=new int[defCU.getChildCount()][2][];
-  for (int i=defCU.getChildCount() - 1; i >= 0; i--) {
+  for (int i=0; i < defCU.getChildCount(); i++) {
     ASTNodeWrapper awrap=(ASTNodeWrapper)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
     offsetsMap[i][0]=awrap.getPDECodeOffsets(errorCheckerService);
     offsetsMap[i][1]=awrap.getJavaCodeOffsets(errorCheckerService);
   }
-  for (int i=defCU.getChildCount() - 1; i >= 0; i--) {
+  for (int i=0; i < defCU.getChildCount(); i++) {
     int pdeoffsets[]=offsetsMap[i][0];
     int javaoffsets[]=offsetsMap[i][1];
     int off=0;
@@ -32,6 +33,8 @@
     ErrorCheckerService.scrollToErrorLine(editor,pdeoffsets[0],pdeoffsets[1],javaoffsets[1] + off,javaoffsets[2]);
     editor.ta.setSelectedText(newName);
   }
+  errorCheckerService.resumeThread();
+  errorCheckerService.runManualErrorCheck();
   for (  Integer lineNum : lineOffsetDisplacement.keySet()) {
     log(lineNum + "line, disp" + lineOffsetDisplacement.get(lineNum));
   }
