@@ -1,0 +1,32 @@
+{
+  errorCheckerService=ecs;
+  frmOutlineView=new JFrame();
+  frmOutlineView.setAlwaysOnTop(true);
+  frmOutlineView.setUndecorated(true);
+  Point tp=errorCheckerService.getEditor().ta.getLocationOnScreen();
+  frmOutlineView.setBounds(tp.x + errorCheckerService.getEditor().ta.getWidth() - 300,tp.y,300,errorCheckerService.getEditor().ta.getHeight());
+  frmOutlineView.setLayout(new BoxLayout(frmOutlineView.getContentPane(),BoxLayout.Y_AXIS));
+  JPanel panelTop=new JPanel(), panelBottom=new JPanel();
+  searchField=new JTextField();
+  searchField.setPreferredSize(new Dimension(frmOutlineView.getWidth(),25));
+  panelTop.add(searchField);
+  frmOutlineView.add(panelTop);
+  jsp=new JScrollPane();
+  soNode=new DefaultMutableTreeNode();
+  generateSketchOutlineTree(soNode,codeTree);
+  soNode=(DefaultMutableTreeNode)soNode.getChildAt(0);
+  soTree=new JTree(soNode);
+  soTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+  soTree.setRootVisible(false);
+  for (int i=0; i < soTree.getRowCount(); i++) {
+    soTree.expandRow(i);
+  }
+  soTree.setSelectionRow(0);
+  jsp.setViewportView(soTree);
+  jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+  jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+  panelBottom.add(jsp);
+  frmOutlineView.add(jsp);
+  frmOutlineView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+  addListeners();
+}
