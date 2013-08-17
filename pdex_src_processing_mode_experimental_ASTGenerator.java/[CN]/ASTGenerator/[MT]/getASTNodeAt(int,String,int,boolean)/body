@@ -61,10 +61,10 @@
       log(getNodeAsString(simpName));
       decl=findDeclaration((SimpleName)simpName);
       if (decl != null) {
-        System.err.println("DECLA: " + decl.getClass().getName());
+        logE("DECLA: " + decl.getClass().getName());
         nodeLabel=getLabelIfType(new ASTNodeWrapper(decl),(SimpleName)simpName);
       }
- else       System.err.println("null");
+ else       logE("null");
       log(getNodeAsString(decl));
       ASTNode nearestNode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
       ClassMember cmem=resolveExpression3rdParty(nearestNode,(SimpleName)simpName,false);
@@ -76,8 +76,8 @@
   }
   if (decl != null && scrollOnly) {
     ASTNode simpName2=getNodeName(decl,nameOfNode);
-    System.err.println("FINAL String decl: " + getNodeAsString(decl));
-    System.err.println("FINAL String label: " + getNodeAsString(simpName2));
+    logE("FINAL String decl: " + getNodeAsString(decl));
+    logE("FINAL String label: " + getNodeAsString(simpName2));
     errorCheckerService.highlightNode(simpName2);
   }
   return new ASTNodeWrapper(decl,nodeLabel);

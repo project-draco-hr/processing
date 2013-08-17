@@ -45,14 +45,14 @@
       parser.setKind(ASTParser.K_EXPRESSION);
       parser.setSource(word2.toCharArray());
       ASTNode testnode=parser.createAST(null);
-      System.err.print("Typed: " + word2 + "|");
+      logE("Typed: " + word2 + "|");
       nearestNode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
       if (nearestNode == null)       nearestNode=(ASTNode)compilationUnit.types().get(0);
-      System.err.println(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(nearestNode));
+      logE(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(nearestNode));
       candidates=new ArrayList<CompletionCandidate>();
       lastPredictedWord=word2;
       if (testnode instanceof SimpleName && !noCompare) {
-        System.err.println("One word expression " + getNodeAsString(testnode));
+        logE("One word expression " + getNodeAsString(testnode));
         while (nearestNode != null) {
           if (nearestNode instanceof TypeDeclaration) {
             TypeDeclaration td=(TypeDeclaration)nearestNode;
@@ -106,7 +106,7 @@
         }
       }
  else {
-        System.err.println("Complex expression " + getNodeAsString(testnode));
+        logE("Complex expression " + getNodeAsString(testnode));
         log("candidates empty");
         ASTNode childExpr=getChildExpression(testnode);
         log("Parent expression : " + getParentExpression(testnode));
