@@ -1,5 +1,5 @@
 {
-  System.out.println("--handle Mouse Right Click--");
+  log("--handle Mouse Right Click--");
   int off=xyToOffset(evt.getX(),evt.getY());
   if (off < 0)   return null;
   int line=getLineOfOffset(off);
@@ -10,7 +10,7 @@
  else {
     int x=xToOffset(line,evt.getX()), x2=x + 1, x1=x - 1;
     int xLS=off - getLineStartNonWhiteSpaceOffset(line);
-    System.out.println("x=" + x);
+    log("x=" + x);
     if (x < 0 || x >= s.length())     return null;
     String word=s.charAt(x) + "";
     if (s.charAt(x) == ' ')     return null;
@@ -37,7 +37,7 @@
       }
     }
     if (Character.isDigit(word.charAt(0)))     return null;
-    System.out.println("Mouse click, word: " + word.trim());
+    log("Mouse click, word: " + word.trim());
     errorCheckerService.astGenerator.setLastClickedWord(line + errorCheckerService.mainClassOffset,word,xLS);
     return word.trim();
   }

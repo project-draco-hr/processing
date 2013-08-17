@@ -1,5 +1,5 @@
 {
-  System.out.println("Src:" + source);
+  log("Src:" + source);
   String sourceAlt=new String(source);
   TreeMap<Integer,Integer> offsetmap=new TreeMap<Integer,Integer>();
   final String webColorRegexp="#{1}[A-F|a-f|0-9]{6}\\W";
@@ -26,7 +26,7 @@
     sourceAlt=matcher.replaceAll("PApplet.parse" + Character.toUpperCase(dataType.charAt(0)) + dataType.substring(1)+ "(");
   }
   if (offsetmap.isEmpty()) {
-    System.out.println("No offset matching needed.");
+    log("No offset matching needed.");
     return null;
   }
   webMatcher=webPattern.matcher(sourceAlt);
@@ -37,7 +37,7 @@
   }
   colorMatcher=colorPattern.matcher(sourceAlt);
   sourceAlt=colorMatcher.replaceAll("int");
-  System.out.println(sourceAlt);
+  log(sourceAlt);
   int javaCodeMap[]=new int[source.length() * 2];
   int pdeCodeMap[]=new int[source.length() * 2];
   int pi=1, pj=1;
@@ -49,7 +49,7 @@
     for (; pj < key; pj++) {
       pdeCodeMap[pj]=pdeCodeMap[pj - 1] + 1;
     }
-    System.out.println(key + ":" + offsetmap.get(key));
+    log(key + ":" + offsetmap.get(key));
     int kval=offsetmap.get(key);
     if (kval > 0) {
       pi--;
@@ -82,12 +82,12 @@
   for (int i=0; i < pdeCodeMap.length; i++) {
     if (pdeCodeMap[i] > 0 || javaCodeMap[i] > 0 || i == 0) {
       if (i < source.length())       System.out.print(source.charAt(i));
-      System.out.print(pdeCodeMap[i] + " - " + javaCodeMap[i]);
+      log2(pdeCodeMap[i] + " - " + javaCodeMap[i]);
       if (i < sourceAlt.length())       System.out.print(sourceAlt.charAt(i));
-      System.out.print(" <-[" + i + "]");
-      System.out.println();
+      log2(" <-[" + i + "]");
+      log("");
     }
   }
-  System.out.println();
+  log("");
   return new int[][]{javaCodeMap,pdeCodeMap};
 }
