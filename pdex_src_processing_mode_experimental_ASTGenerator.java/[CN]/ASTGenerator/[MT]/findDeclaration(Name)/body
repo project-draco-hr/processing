@@ -1,5 +1,5 @@
 {
-  System.out.println("entering --findDeclaration1 -- " + findMe.toString());
+  log("entering --findDeclaration1 -- " + findMe.toString());
   ASTNode declaringClass=null;
   ASTNode parent=findMe.getParent();
   ASTNode ret=null;
@@ -10,7 +10,7 @@
       constrains.add(ASTNode.METHOD_DECLARATION);
       if (exp != null) {
         constrains.add(ASTNode.TYPE_DECLARATION);
-        System.out.println("MI EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
+        log("MI EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
         if (exp instanceof MethodInvocation) {
           SimpleType stp=extracTypeInfo(findDeclaration(((MethodInvocation)exp).getName()));
           if (stp == null)           return null;
@@ -27,7 +27,7 @@
           SimpleType stp=extracTypeInfo(findDeclaration(((SimpleName)exp)));
           if (stp == null)           return null;
           declaringClass=findDeclaration(stp.getName());
-          System.out.println("MI.SN " + getNodeAsString(declaringClass));
+          log("MI.SN " + getNodeAsString(declaringClass));
           constrains.add(ASTNode.METHOD_DECLARATION);
           return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains,declaringClass);
         }
@@ -44,7 +44,7 @@
       constrains.add(ASTNode.FIELD_DECLARATION);
       if (exp != null) {
         constrains.add(ASTNode.TYPE_DECLARATION);
-        System.out.println("FA EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
+        log("FA EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
         if (exp instanceof MethodInvocation) {
           SimpleType stp=extracTypeInfo(findDeclaration(((MethodInvocation)exp).getName()));
           if (stp == null)           return null;
@@ -62,7 +62,7 @@
           SimpleType stp=extracTypeInfo(findDeclaration(((SimpleName)exp)));
           if (stp == null)           return null;
           declaringClass=findDeclaration(stp.getName());
-          System.out.println("FA.SN " + getNodeAsString(declaringClass));
+          log("FA.SN " + getNodeAsString(declaringClass));
           constrains.add(ASTNode.METHOD_DECLARATION);
           return definedIn(declaringClass,fa.getName().toString(),constrains,declaringClass);
         }
@@ -76,9 +76,9 @@
     QualifiedName qn=(QualifiedName)parent;
     if (!findMe.toString().equals(qn.getQualifier().toString())) {
       SimpleType stp=extracTypeInfo(findDeclaration((qn.getQualifier())));
-      System.out.println(qn.getQualifier() + "->" + qn.getName());
+      log(qn.getQualifier() + "->" + qn.getName());
       declaringClass=findDeclaration(stp.getName());
-      System.out.println("QN decl class: " + getNodeAsString(declaringClass));
+      log("QN decl class: " + getNodeAsString(declaringClass));
       constrains.clear();
       constrains.add(ASTNode.TYPE_DECLARATION);
       constrains.add(ASTNode.FIELD_DECLARATION);
@@ -87,11 +87,11 @@
  else {
       if (findMe instanceof QualifiedName) {
         QualifiedName qnn=(QualifiedName)findMe;
-        System.out.println("findMe is a QN, " + (qnn.getQualifier().toString() + " other " + qnn.getName().toString()));
+        log("findMe is a QN, " + (qnn.getQualifier().toString() + " other " + qnn.getName().toString()));
         SimpleType stp=extracTypeInfo(findDeclaration((qnn.getQualifier())));
-        System.out.println(qnn.getQualifier() + "->" + qnn.getName());
+        log(qnn.getQualifier() + "->" + qnn.getName());
         declaringClass=findDeclaration(stp.getName());
-        System.out.println("QN decl class: " + getNodeAsString(declaringClass));
+        log("QN decl class: " + getNodeAsString(declaringClass));
         constrains.clear();
         constrains.add(ASTNode.TYPE_DECLARATION);
         constrains.add(ASTNode.FIELD_DECLARATION);
@@ -112,7 +112,7 @@
  else   if (parent instanceof Expression) {
   }
   while (parent != null) {
-    System.out.println("findDeclaration1 -> " + getNodeAsString(parent));
+    log("findDeclaration1 -> " + getNodeAsString(parent));
     for (    Object oprop : parent.structuralPropertiesForType()) {
       StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)oprop;
       if (prop.isChildProperty() || prop.isSimpleProperty()) {

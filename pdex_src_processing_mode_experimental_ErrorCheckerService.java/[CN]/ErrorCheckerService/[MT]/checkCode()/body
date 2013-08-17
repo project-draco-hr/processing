@@ -1,16 +1,16 @@
 {
-  System.out.println("checkCode() " + textModified.get());
+  log("checkCode() " + textModified.get());
   lastTimeStamp=System.currentTimeMillis();
   try {
     sourceCode=preprocessCode(editor.getSketch().getMainProgram());
     syntaxCheck();
-    System.out.println(editor.getSketch().getName() + "1 MCO " + mainClassOffset);
+    log(editor.getSketch().getName() + "1 MCO " + mainClassOffset);
     if (problems.length == 0 && editor.compilationCheckEnabled) {
       astGenerator.buildAST(cu);
       sourceCode=xqpreproc.doYourThing(sourceCode,programImports);
       prepareCompilerClasspath();
       compileCheck();
-      System.out.println(editor.getSketch().getName() + "2 MCO " + mainClassOffset);
+      log(editor.getSketch().getName() + "2 MCO " + mainClassOffset);
     }
     updateErrorTable();
     editor.updateErrorBar(problemsList);
@@ -27,7 +27,7 @@
     return true;
   }
  catch (  Exception e) {
-    System.out.println("Oops! [ErrorCheckerService.checkCode]: " + e);
+    log("Oops! [ErrorCheckerService.checkCode]: " + e);
     e.printStackTrace();
   }
   return false;

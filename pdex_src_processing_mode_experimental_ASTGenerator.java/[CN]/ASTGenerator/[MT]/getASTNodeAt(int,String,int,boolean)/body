@@ -1,5 +1,5 @@
 {
-  System.out.println("----getASTNodeAt----");
+  log("----getASTNodeAt----");
   if (errorCheckerService != null) {
     editor=errorCheckerService.getEditor();
     int codeIndex=editor.getSketch().getCodeIndex(editor.getCurrentTab());
@@ -11,9 +11,9 @@
       }
     }
   }
-  System.out.println("FLON: " + lineNumber);
+  log("FLON: " + lineNumber);
   ASTNode lineNode=findLineOfNode(compilationUnit,lineNumber,offset,name);
-  System.out.println("+> " + lineNode);
+  log("+> " + lineNode);
   ASTNode decl=null;
   String nodeLabel=null;
   String nameOfNode=null;
@@ -30,7 +30,7 @@
         }
       }
     }
-    System.out.println("FLON2: " + lineNumber + " LN spos "+ lineNode.getStartPosition()+ " off "+ offset+ " alt off"+ altOff);
+    log("FLON2: " + lineNumber + " LN spos "+ lineNode.getStartPosition()+ " off "+ offset+ " alt off"+ altOff);
     ASTNode parLineNode=lineNode.getParent();
     Iterator<StructuralPropertyDescriptor> it=parLineNode.structuralPropertiesForType().iterator();
     boolean flag=true;
@@ -42,7 +42,7 @@
         for (        ASTNode cnode : nodelist) {
           if (getLineNumber(cnode) == lineNumber) {
             if (cnode.getStartPosition() <= lineNode.getStartPosition() + altOff && cnode.getStartPosition() + cnode.getLength() > lineNode.getStartPosition() + altOff) {
-              System.out.println(cnode);
+              log(cnode);
               offAdjust=cnode.getStartPosition() - lineNode.getStartPosition();
               lineNode=cnode;
               altOff-=offAdjust;
@@ -53,25 +53,25 @@
         }
       }
     }
-    System.out.println("FLON3 " + lineNode.getStartPosition() + " off "+ offset+ " alt off"+ altOff);
+    log("FLON3 " + lineNode.getStartPosition() + " off "+ offset+ " alt off"+ altOff);
     ASTNode simpName=pinpointOnLine(lineNode,altOff,lineNode.getStartPosition(),name);
-    System.out.println("+++> " + simpName);
+    log("+++> " + simpName);
     if (simpName instanceof SimpleName) {
       nameOfNode=simpName.toString();
-      System.out.println(getNodeAsString(simpName));
+      log(getNodeAsString(simpName));
       decl=findDeclaration((SimpleName)simpName);
       if (decl != null) {
         System.err.println("DECLA: " + decl.getClass().getName());
         nodeLabel=getLabelIfType(new ASTNodeWrapper(decl),(SimpleName)simpName);
       }
  else       System.err.println("null");
-      System.out.println(getNodeAsString(decl));
+      log(getNodeAsString(decl));
       ASTNode nearestNode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
       ClassMember cmem=resolveExpression3rdParty(nearestNode,(SimpleName)simpName,false);
       if (cmem != null) {
-        System.out.println("CMEM-> " + cmem);
+        log("CMEM-> " + cmem);
       }
- else       System.out.println("CMEM-> null");
+ else       log("CMEM-> null");
     }
   }
   if (decl != null && scrollOnly) {

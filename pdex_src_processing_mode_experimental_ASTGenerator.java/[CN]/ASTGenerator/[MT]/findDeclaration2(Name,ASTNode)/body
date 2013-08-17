@@ -9,7 +9,7 @@
       constrains.add(ASTNode.METHOD_DECLARATION);
       if (exp != null) {
         constrains.add(ASTNode.TYPE_DECLARATION);
-        System.out.println("MI EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
+        log("MI EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
         if (exp instanceof MethodInvocation) {
           SimpleType stp=extracTypeInfo(findDeclaration2(((MethodInvocation)exp).getName(),alternateParent));
           if (stp == null)           return null;
@@ -26,7 +26,7 @@
           SimpleType stp=extracTypeInfo(findDeclaration2(((SimpleName)exp),alternateParent));
           if (stp == null)           return null;
           declaringClass=findDeclaration2(stp.getName(),alternateParent);
-          System.out.println("MI.SN " + getNodeAsString(declaringClass));
+          log("MI.SN " + getNodeAsString(declaringClass));
           constrains.add(ASTNode.METHOD_DECLARATION);
           return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains,declaringClass);
         }
@@ -44,7 +44,7 @@
       constrains.add(ASTNode.FIELD_DECLARATION);
       if (exp != null) {
         constrains.add(ASTNode.TYPE_DECLARATION);
-        System.out.println("FA EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
+        log("FA EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
         if (exp instanceof MethodInvocation) {
           SimpleType stp=extracTypeInfo(findDeclaration2(((MethodInvocation)exp).getName(),alternateParent));
           if (stp == null)           return null;
@@ -62,7 +62,7 @@
           SimpleType stp=extracTypeInfo(findDeclaration2(((SimpleName)exp),alternateParent));
           if (stp == null)           return null;
           declaringClass=findDeclaration2(stp.getName(),alternateParent);
-          System.out.println("FA.SN " + getNodeAsString(declaringClass));
+          log("FA.SN " + getNodeAsString(declaringClass));
           constrains.add(ASTNode.METHOD_DECLARATION);
           return definedIn(declaringClass,fa.getName().toString(),constrains,declaringClass);
         }
@@ -79,8 +79,8 @@
       SimpleType stp=extracTypeInfo(findDeclaration2((qn.getQualifier()),alternateParent));
       if (stp == null)       return null;
       declaringClass=findDeclaration2(stp.getName(),alternateParent);
-      System.out.println(qn.getQualifier() + "->" + qn.getName());
-      System.out.println("QN decl class: " + getNodeAsString(declaringClass));
+      log(qn.getQualifier() + "->" + qn.getName());
+      log("QN decl class: " + getNodeAsString(declaringClass));
       constrains.clear();
       constrains.add(ASTNode.TYPE_DECLARATION);
       constrains.add(ASTNode.FIELD_DECLARATION);
@@ -89,11 +89,11 @@
  else {
       if (findMe instanceof QualifiedName) {
         QualifiedName qnn=(QualifiedName)findMe;
-        System.out.println("findMe is a QN, " + (qnn.getQualifier().toString() + " other " + qnn.getName().toString()));
+        log("findMe is a QN, " + (qnn.getQualifier().toString() + " other " + qnn.getName().toString()));
         SimpleType stp=extracTypeInfo(findDeclaration2((qnn.getQualifier()),alternateParent));
-        System.out.println(qnn.getQualifier() + "->" + qnn.getName());
+        log(qnn.getQualifier() + "->" + qnn.getName());
         declaringClass=findDeclaration2(stp.getName(),alternateParent);
-        System.out.println("QN decl class: " + getNodeAsString(declaringClass));
+        log("QN decl class: " + getNodeAsString(declaringClass));
         constrains.clear();
         constrains.add(ASTNode.TYPE_DECLARATION);
         constrains.add(ASTNode.FIELD_DECLARATION);
@@ -107,7 +107,7 @@
   }
  else   if (parent instanceof Expression) {
   }
-  System.out.println("Alternate parent: " + getNodeAsString(alternateParent));
+  log("Alternate parent: " + getNodeAsString(alternateParent));
   while (alternateParent != null) {
     for (    Object oprop : alternateParent.structuralPropertiesForType()) {
       StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)oprop;

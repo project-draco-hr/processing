@@ -1,6 +1,6 @@
 {
   if (tehClass == null)   return null;
-  System.out.println("definedIn3rdPartyClass-> Looking for " + memberName + " in "+ tehClass);
+  log("definedIn3rdPartyClass-> Looking for " + memberName + " in "+ tehClass);
   String memberNameL=memberName.toLowerCase();
   if (tehClass.getDeclaringNode() instanceof TypeDeclaration) {
     TypeDeclaration td=(TypeDeclaration)tehClass.getDeclaringNode();
@@ -14,7 +14,7 @@
       if (td.getMethods()[i].getName().toString().toLowerCase().startsWith(memberNameL))       return new ClassMember(td.getMethods()[i]);
     }
     if (td.getSuperclassType() instanceof Type) {
-      System.out.println(getNodeAsString(td.getSuperclassType()) + " <-Looking into superclass of " + tehClass);
+      log(getNodeAsString(td.getSuperclassType()) + " <-Looking into superclass of " + tehClass);
       return definedIn3rdPartyClass(new ClassMember(td.getSuperclassType()),memberName);
     }
  else {
@@ -27,7 +27,7 @@
   }
  else {
     probableClass=findClassIfExists(tehClass.getTypeAsString());
-    System.out.println("Loaded " + probableClass.toString());
+    log("Loaded " + probableClass.toString());
   }
   for (  Method method : probableClass.getMethods()) {
     if (method.getName().equalsIgnoreCase(memberName)) {

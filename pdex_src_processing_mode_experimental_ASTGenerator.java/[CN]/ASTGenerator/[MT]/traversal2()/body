@@ -8,11 +8,11 @@
   options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_6);
   parser.setCompilerOptions(options);
   CompilationUnit cu=(CompilationUnit)parser.createAST(null);
-  System.out.println(CompilationUnit.propertyDescriptors(AST.JLS4).size());
+  log(CompilationUnit.propertyDescriptors(AST.JLS4).size());
   DefaultMutableTreeNode astTree=new DefaultMutableTreeNode("CompilationUnit");
   System.err.println("Errors: " + cu.getProblems().length);
   visitRecur(cu,astTree);
-  System.out.println(astTree.getChildCount());
+  log(astTree.getChildCount());
   try {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     JFrame frame2=new JFrame();
@@ -29,6 +29,6 @@
   }
   ASTNode found=NodeFinder.perform(cu,468,5);
   if (found != null) {
-    System.out.println(found);
+    log(found);
   }
 }

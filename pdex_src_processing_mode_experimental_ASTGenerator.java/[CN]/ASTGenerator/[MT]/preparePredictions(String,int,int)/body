@@ -1,6 +1,6 @@
 {
   if (caretWithinLineComment()) {
-    System.out.println("No predictions.");
+    log("No predictions.");
     return;
   }
   SwingWorker worker=new SwingWorker(){
@@ -16,8 +16,8 @@
       }
       if (word2.length() > 2 && !noCompare && word2.length() > lastPredictedWord.length()) {
         if (word2.startsWith(lastPredictedWord)) {
-          System.out.println(word + " starts with " + lastPredictedWord);
-          System.out.println("Don't recalc");
+          log(word + " starts with " + lastPredictedWord);
+          log("Don't recalc");
           if (word2.contains(".")) {
             int x=word2.lastIndexOf('.');
             trimCandidates(word2.substring(x + 1));
@@ -58,7 +58,7 @@
             TypeDeclaration td=(TypeDeclaration)nearestNode;
             if (td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY) != null) {
               SimpleType st=(SimpleType)td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY);
-              System.out.println("Superclass " + st.getName());
+              log("Superclass " + st.getName());
               for (              CompletionCandidate can : getMembersForType(st.getName().toString(),word2,noCompare,false)) {
                 candidates.add(can);
               }
@@ -92,7 +92,7 @@
           }
           nearestNode=nearestNode.getParent();
         }
-        System.out.println("Empty can. " + word2);
+        log("Empty can. " + word2);
         RegExpResourceFilter regExpResourceFilter;
         regExpResourceFilter=new RegExpResourceFilter(Pattern.compile(".*"),Pattern.compile(word2 + "[a-zA-Z_0-9]*.class",Pattern.CASE_INSENSITIVE));
         String[] resources=classPath.findResources("",regExpResourceFilter);
@@ -107,27 +107,27 @@
       }
  else {
         System.err.println("Complex expression " + getNodeAsString(testnode));
-        System.out.println("candidates empty");
+        log("candidates empty");
         ASTNode childExpr=getChildExpression(testnode);
-        System.out.println("Parent expression : " + getParentExpression(testnode));
-        System.out.println("Child expression : " + childExpr);
+        log("Parent expression : " + getParentExpression(testnode));
+        log("Child expression : " + childExpr);
         if (childExpr instanceof ASTNode) {
           if (!noCompare) {
-            System.out.println("Original testnode " + getNodeAsString(testnode));
+            log("Original testnode " + getNodeAsString(testnode));
             testnode=getParentExpression(testnode);
-            System.out.println("Corrected testnode " + getNodeAsString(testnode));
+            log("Corrected testnode " + getNodeAsString(testnode));
           }
           ClassMember expr=resolveExpression3rdParty(nearestNode,testnode,noCompare);
           if (expr == null) {
-            System.out.println("Expr is null");
+            log("Expr is null");
           }
  else {
-            System.out.println("Expr is " + expr.toString());
+            log("Expr is " + expr.toString());
             candidates=getMembersForType(expr,childExpr.toString(),noCompare,false);
           }
         }
  else {
-          System.out.println("ChildExpr is null");
+          log("ChildExpr is null");
         }
       }
       showPredictions(word);

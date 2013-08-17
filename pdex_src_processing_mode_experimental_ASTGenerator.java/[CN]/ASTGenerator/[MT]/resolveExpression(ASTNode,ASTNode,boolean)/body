@@ -1,14 +1,14 @@
 {
-  System.out.println("Resolving " + getNodeAsString(expression) + " noComp "+ noCompare);
+  log("Resolving " + getNodeAsString(expression) + " noComp "+ noCompare);
   if (expression instanceof SimpleName) {
     return findDeclaration2(((SimpleName)expression),nearestNode);
   }
  else   if (expression instanceof MethodInvocation) {
-    System.out.println("3. Method Invo " + ((MethodInvocation)expression).getName());
+    log("3. Method Invo " + ((MethodInvocation)expression).getName());
     return findDeclaration2(((MethodInvocation)expression).getName(),nearestNode);
   }
  else   if (expression instanceof FieldAccess) {
-    System.out.println("2. Field access " + getNodeAsString(((FieldAccess)expression).getExpression()) + "|||"+ getNodeAsString(((FieldAccess)expression).getName()));
+    log("2. Field access " + getNodeAsString(((FieldAccess)expression).getExpression()) + "|||"+ getNodeAsString(((FieldAccess)expression).getName()));
     if (noCompare) {
       return findDeclaration2(((FieldAccess)expression).getName(),nearestNode);
     }
@@ -17,7 +17,7 @@
     }
   }
  else   if (expression instanceof QualifiedName) {
-    System.out.println("1. Resolving " + ((QualifiedName)expression).getQualifier() + " ||| "+ ((QualifiedName)expression).getName());
+    log("1. Resolving " + ((QualifiedName)expression).getQualifier() + " ||| "+ ((QualifiedName)expression).getName());
     if (noCompare) {
       return findDeclaration2(((QualifiedName)expression).getName(),nearestNode);
     }

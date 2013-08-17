@@ -1,7 +1,7 @@
 {
   String child=childToLookFor.toLowerCase();
   ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
-  System.out.println("getMemFoType-> Looking for match " + child.toString() + " inside "+ tehClass+ " noCompare "+ noCompare+ " staticOnly "+ staticOnly);
+  log("getMemFoType-> Looking for match " + child.toString() + " inside "+ tehClass+ " noCompare "+ noCompare+ " staticOnly "+ staticOnly);
   if (tehClass == null) {
     return candidates;
   }
@@ -24,7 +24,7 @@
     }
     ArrayList<CompletionCandidate> superClassCandidates=new ArrayList<CompletionCandidate>();
     if (td.getSuperclassType() instanceof Type) {
-      System.out.println(getNodeAsString(td.getSuperclassType()) + " <-Looking into superclass of " + tehClass);
+      log(getNodeAsString(td.getSuperclassType()) + " <-Looking into superclass of " + tehClass);
       superClassCandidates=getMembersForType(new ClassMember(td.getSuperclassType()),childToLookFor,noCompare,staticOnly);
     }
  else {
@@ -42,10 +42,10 @@
  else {
     probableClass=findClassIfExists(tehClass.getTypeAsString());
     if (probableClass == null) {
-      System.out.println("Couldn't find class " + tehClass.getTypeAsString());
+      log("Couldn't find class " + tehClass.getTypeAsString());
       return candidates;
     }
-    System.out.println("Loaded " + probableClass.toString());
+    log("Loaded " + probableClass.toString());
   }
   for (  Method method : probableClass.getMethods()) {
     if (!Modifier.isStatic(method.getModifiers()) && staticOnly) {
