@@ -16,10 +16,10 @@
   if (nodes.size() > 0) {
     ASTNode retNode=nodes.get(0);
     for (    ASTNode cNode : nodes) {
-      if (getLineNumber(cNode) <= lineNumber)       retNode=cNode;
+      if (getLineNumber(cNode) <= lineNumber && lineNumber <= getLineNumber(cNode,cNode.getStartPosition() + cNode.getLength()))       retNode=cNode;
  else       break;
     }
     return retNode;
   }
-  return null;
+  return parent;
 }
