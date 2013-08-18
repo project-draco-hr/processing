@@ -1,5 +1,4 @@
 {
-  boolean notFound=true;
   for (  ErrorMarker emarker : editor.errorBar.errorPoints) {
     if (emarker.problem.lineNumber == editor.getTextArea().getCaretLine() + 1) {
       if (emarker.type == ErrorMarker.Warning) {
@@ -11,6 +10,8 @@
       return;
     }
   }
-  if (notFound) {
+  if (editor.ta.getCaretLine() != lastCaretLine) {
+    editor.statusEmpty();
+    lastCaretLine=editor.ta.getCaretLine();
   }
 }
