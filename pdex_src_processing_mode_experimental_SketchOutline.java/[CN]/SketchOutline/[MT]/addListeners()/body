@@ -1,51 +1,45 @@
 {
   searchField.addKeyListener(new KeyAdapter(){
     public void keyPressed(    KeyEvent evt){
-      internalSelection.set(true);
+      if (soTree.getRowCount() == 0)       return;
+      internalSelection=true;
       if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         if (soTree.getLastSelectedPathComponent() != null) {
           DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)soTree.getLastSelectedPathComponent();
-          if (tnode.getUserObject() != null) {
-            if (tnode.getUserObject() instanceof ASTNodeWrapper) {
-              ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
-              errorCheckerService.highlightNode(awrap);
-            }
+          if (tnode.getUserObject() instanceof ASTNodeWrapper) {
+            ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
+            errorCheckerService.highlightNode(awrap);
           }
         }
         return;
       }
  else       if (evt.getKeyCode() == KeyEvent.VK_UP) {
         if (soTree.getLastSelectedPathComponent() == null) {
-          internalSelection.set(true);
           soTree.setSelectionRow(0);
+          return;
         }
         int x=soTree.getLeadSelectionRow() - 1;
-        internalSelection.set(true);
         int step=jsp.getVerticalScrollBar().getMaximum() / soTree.getRowCount();
-        log("ss " + step);
         if (x == -1) {
-          x=tempNode.getChildCount() - 1;
-          soTree.setSelectionRow(x);
-          jsp.getVerticalScrollBar().setValue(step * soTree.getRowCount());
+          x=soTree.getRowCount() - 1;
+          jsp.getVerticalScrollBar().setValue(jsp.getVerticalScrollBar().getMaximum());
         }
  else {
-          soTree.setSelectionRow(x);
           jsp.getVerticalScrollBar().setValue((jsp.getVerticalScrollBar().getValue() - step));
         }
+        soTree.setSelectionRow(x);
         return;
       }
  else       if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
         if (soTree.getLastSelectedPathComponent() == null) {
-          internalSelection.set(true);
           soTree.setSelectionRow(0);
+          return;
         }
         int x=soTree.getLeadSelectionRow() + 1;
-        internalSelection.set(true);
         int step=jsp.getVerticalScrollBar().getMaximum() / soTree.getRowCount();
-        log("ss" + step);
-        if (x == tempNode.getChildCount()) {
+        if (x == soTree.getRowCount()) {
           x=0;
-          jsp.getVerticalScrollBar().setValue(0);
+          jsp.getVerticalScrollBar().setValue(jsp.getVerticalScrollBar().getMinimum());
         }
  else {
           jsp.getVerticalScrollBar().setValue((jsp.getVerticalScrollBar().getValue() + step));
@@ -66,7 +60,7 @@
           for (int i=0; i < soTree.getRowCount(); i++) {
             soTree.expandRow(i);
           }
-          internalSelection.set(true);
+          internalSelection=true;
           soTree.setSelectionRow(0);
         }
       }
@@ -86,8 +80,8 @@
 );
   soTree.addTreeSelectionListener(new TreeSelectionListener(){
     public void valueChanged(    TreeSelectionEvent e){
-      if (internalSelection.get()) {
-        internalSelection.set(false);
+      if (internalSelection) {
+        internalSelection=(false);
         return;
       }
       log(e);
