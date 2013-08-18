@@ -93,16 +93,18 @@
           nearestNode=nearestNode.getParent();
         }
         log("Empty can. " + word2);
-        RegExpResourceFilter regExpResourceFilter;
-        regExpResourceFilter=new RegExpResourceFilter(Pattern.compile(".*"),Pattern.compile(word2 + "[a-zA-Z_0-9]*.class",Pattern.CASE_INSENSITIVE));
-        String[] resources=classPath.findResources("",regExpResourceFilter);
-        for (        String matchedClass2 : resources) {
-          matchedClass2=matchedClass2.replace('/','.');
-          String matchedClass=matchedClass2.substring(0,matchedClass2.length() - 6);
-          if (ignorableImport(matchedClass2))           continue;
-          int d=matchedClass.lastIndexOf('.');
-          matchedClass=matchedClass.substring(d + 1);
-          candidates.add(new CompletionCandidate(matchedClass,matchedClass + " : " + matchedClass2.substring(0,d),matchedClass,CompletionCandidate.PREDEF_CLASS));
+        if (classPath != null) {
+          RegExpResourceFilter regExpResourceFilter;
+          regExpResourceFilter=new RegExpResourceFilter(Pattern.compile(".*"),Pattern.compile(word2 + "[a-zA-Z_0-9]*.class",Pattern.CASE_INSENSITIVE));
+          String[] resources=classPath.findResources("",regExpResourceFilter);
+          for (          String matchedClass2 : resources) {
+            matchedClass2=matchedClass2.replace('/','.');
+            String matchedClass=matchedClass2.substring(0,matchedClass2.length() - 6);
+            if (ignorableImport(matchedClass2))             continue;
+            int d=matchedClass.lastIndexOf('.');
+            matchedClass=matchedClass.substring(d + 1);
+            candidates.add(new CompletionCandidate(matchedClass,matchedClass + " : " + matchedClass2.substring(0,d),matchedClass,CompletionCandidate.PREDEF_CLASS));
+          }
         }
       }
  else {
