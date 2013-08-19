@@ -2,24 +2,13 @@
   final int fheight=this.getHeight();
   SwingWorker worker=new SwingWorker(){
     protected Object doInBackground() throws Exception {
-      return null;
-    }
-    protected void done(){
-      int totalLines=0;
-      int currentTab=0;
-      for (      SketchCode sc : editor.getSketch().getCode()) {
-        if (sc.isExtension("pde")) {
-          try {
-            if (editor.getSketch().getCurrentCode().equals(sc)) {
-              totalLines=Base.countLines(sc.getDocument().getText(0,sc.getDocument().getLength())) + 1;
-              break;
-            }
-          }
- catch (          Exception e) {
-            e.printStackTrace();
-          }
-        }
-        currentTab++;
+      SketchCode sc=editor.getSketch().getCurrentCode();
+      int totalLines=0, currentTab=editor.getSketch().getCurrentCodeIndex();
+      try {
+        totalLines=Base.countLines(sc.getDocument().getText(0,sc.getDocument().getLength())) + 1;
+      }
+ catch (      BadLocationException e) {
+        e.printStackTrace();
       }
       errorPointsOld.clear();
       for (      ErrorMarker marker : errorPoints) {
@@ -33,6 +22,9 @@
           errorPoints.add(new ErrorMarker(problem,(int)y,problem.isError() ? ErrorMarker.Error : ErrorMarker.Warning));
         }
       }
+      return null;
+    }
+    protected void done(){
       repaint();
     }
   }
