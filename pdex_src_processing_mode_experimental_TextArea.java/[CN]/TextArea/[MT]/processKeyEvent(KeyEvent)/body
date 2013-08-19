@@ -43,7 +43,15 @@ break;
 }
 super.processKeyEvent(evt);
 if (evt.getID() == KeyEvent.KEY_TYPED) {
+final KeyEvent evt2=evt;
+SwingWorker worker=new SwingWorker(){
+protected Object doInBackground() throws Exception {
 errorCheckerService.runManualErrorCheck();
-log(" Typing: " + fetchPhrase(evt) + " "+ (evt.getKeyChar() == KeyEvent.VK_ENTER));
+log(" Typing: " + fetchPhrase(evt2) + " "+ (evt2.getKeyChar() == KeyEvent.VK_ENTER));
+return null;
+}
+}
+;
+worker.execute();
 }
 }
