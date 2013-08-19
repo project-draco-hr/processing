@@ -1,0 +1,23 @@
+{
+  JLabel label=(JLabel)super.getListCellRendererComponent(list,value,index,isSelected,cellHasFocus);
+  if (value instanceof CompletionCandidate) {
+    CompletionCandidate cc=(CompletionCandidate)value;
+switch (cc.getType()) {
+case CompletionCandidate.LOCAL_FIELD:
+case CompletionCandidate.PREDEF_FIELD:
+      label.setIcon(editor.dmode.fieldIcon);
+    break;
+case CompletionCandidate.LOCAL_METHOD:
+case CompletionCandidate.PREDEF_METHOD:
+  label.setIcon(editor.dmode.methodIcon);
+break;
+case CompletionCandidate.LOCAL_CLASS:
+case CompletionCandidate.PREDEF_CLASS:
+label.setIcon(editor.dmode.classIcon);
+break;
+default :
+break;
+}
+}
+return label;
+}
