@@ -3,15 +3,13 @@
     @SuppressWarnings("rawtypes") @Override public void mouseClicked(    final MouseEvent e){
       SwingWorker worker=new SwingWorker(){
         protected Object doInBackground() throws Exception {
-          return null;
-        }
-        protected void done(){
           for (          ErrorMarker eMarker : errorPoints) {
             if (e.getY() >= eMarker.getY() - 2 && e.getY() <= eMarker.getY() + 2 + errorMarkerHeight) {
               errorCheckerService.scrollToErrorLine(eMarker.getProblem());
-              return;
+              return null;
             }
           }
+          return null;
         }
       }
 ;
@@ -28,9 +26,6 @@
     @SuppressWarnings("rawtypes") @Override public void mouseMoved(    final MouseEvent evt){
       SwingWorker worker=new SwingWorker(){
         protected Object doInBackground() throws Exception {
-          return null;
-        }
-        protected void done(){
           for (          ErrorMarker eMarker : errorPoints) {
             if (evt.getY() >= eMarker.getY() - 2 && evt.getY() <= eMarker.getY() + 2 + errorMarkerHeight) {
               Problem p=eMarker.getProblem();
@@ -40,6 +35,7 @@
               break;
             }
           }
+          return null;
         }
       }
 ;
