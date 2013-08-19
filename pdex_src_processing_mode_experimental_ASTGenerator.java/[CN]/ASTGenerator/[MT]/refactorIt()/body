@@ -11,8 +11,10 @@
     return;
   }
   errorCheckerService.pauseThread();
-  treeRename.setModel(new DefaultTreeModel(defCU));
-  ((DefaultTreeModel)treeRename.getModel()).reload();
+  if (treeRename.isVisible()) {
+    treeRename.setModel(new DefaultTreeModel(defCU));
+    ((DefaultTreeModel)treeRename.getModel()).reload();
+  }
   frmOccurenceList.setTitle("Usage of " + selText);
   frmOccurenceList.setLocation(editor.getX() + editor.getWidth(),editor.getY());
   frmOccurenceList.setVisible(true);
@@ -39,10 +41,6 @@
     editor.ta.setSelectedText(newName);
   }
   errorCheckerService.resumeThread();
-  errorCheckerService.runManualErrorCheck();
-  for (  Integer lineNum : lineOffsetDisplacement.keySet()) {
-    log(lineNum + "line, disp" + lineOffsetDisplacement.get(lineNum));
-  }
   editor.getSketch().setModified(true);
   errorCheckerService.runManualErrorCheck();
   frmOccurenceList.setVisible(false);
