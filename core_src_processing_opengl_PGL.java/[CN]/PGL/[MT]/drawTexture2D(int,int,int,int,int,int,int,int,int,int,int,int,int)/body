@@ -20,6 +20,9 @@
     disable(DEPTH_TEST);
     boolean depthMask=getDepthWriteMask();
     depthMask(false);
+    viewBuffer.rewind();
+    getIntegerv(VIEWPORT,viewBuffer);
+    viewport(0,0,scrW,scrH);
     useProgram(tex2DShaderProgram);
     enableVertexAttribArray(tex2DVertLoc);
     enableVertexAttribArray(tex2DTCoordLoc);
@@ -68,5 +71,6 @@
       disable(DEPTH_TEST);
     }
     depthMask(depthMask);
+    viewport(viewBuffer.get(0),viewBuffer.get(1),viewBuffer.get(2),viewBuffer.get(3));
   }
 }
