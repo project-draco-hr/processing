@@ -11,6 +11,7 @@
 synchronized (editors) {
       final int OVER=50;
       Editor lastOpened=editors.get(editors.size() - 1);
+      isMaximized=(lastOpened.getExtendedState() == Editor.MAXIMIZED_BOTH);
       editorBounds=lastOpened.getBounds();
       editorBounds.x+=OVER;
       editorBounds.y+=OVER;
@@ -18,6 +19,10 @@ synchronized (editors) {
       if (!deviceBounds.contains(editorBounds)) {
         editorBounds.x=deviceBounds.x + (int)(Math.random() * (deviceBounds.width - defaultWidth));
         editorBounds.y=deviceBounds.y + (int)(Math.random() * (deviceBounds.height - defaultHeight));
+      }
+      if (isMaximized) {
+        editorBounds.width=defaultWidth;
+        editorBounds.height=defaultHeight;
       }
     }
   }
