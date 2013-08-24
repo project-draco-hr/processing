@@ -15,11 +15,13 @@
         errorPointsOld.add(marker);
       }
       errorPoints.clear();
-      for (      Problem problem : problems) {
-        if (problem.getTabIndex() == currentTab) {
-          float y=(problem.getLineNumber() - errorCheckerService.defaultImportsOffset) / ((float)totalLines);
-          y*=fheight - 15;
-          errorPoints.add(new ErrorMarker(problem,(int)y,problem.isError() ? ErrorMarker.Error : ErrorMarker.Warning));
+synchronized (problems) {
+        for (        Problem problem : problems) {
+          if (problem.getTabIndex() == currentTab) {
+            float y=(problem.getLineNumber() - errorCheckerService.defaultImportsOffset) / ((float)totalLines);
+            y*=fheight - 15;
+            errorPoints.add(new ErrorMarker(problem,(int)y,problem.isError() ? ErrorMarker.Error : ErrorMarker.Warning));
+          }
         }
       }
       return null;
