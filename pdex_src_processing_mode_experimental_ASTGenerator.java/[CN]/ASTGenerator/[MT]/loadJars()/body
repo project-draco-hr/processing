@@ -11,8 +11,10 @@
           tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + File.separator+ "lib"+ File.separator+ "rt.jar"+ File.pathSeparatorChar);
         }
         if (errorCheckerService.classpathJars != null) {
-          for (          URL jarPath : errorCheckerService.classpathJars) {
-            tehPath.append(jarPath.getPath() + File.pathSeparatorChar);
+synchronized (errorCheckerService.classpathJars) {
+            for (            URL jarPath : errorCheckerService.classpathJars) {
+              tehPath.append(jarPath.getPath() + File.pathSeparatorChar);
+            }
           }
         }
         classPath=factory.createFromPath(tehPath.toString());

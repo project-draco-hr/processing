@@ -1,9 +1,9 @@
 {
-  stopThread=false;
+  stopThread.set(false);
   checkCode();
   if (!hasSyntaxErrors())   editor.showProblemListView(XQConsoleToggle.CONSOLE);
   astGenerator.buildAST(cu);
-  while (!stopThread) {
+  while (!stopThread.get()) {
     try {
       Thread.sleep(sleepTime);
     }
@@ -12,7 +12,7 @@
     }
     updatePaintedThingys();
     updateEditorStatus();
-    if (pauseThread)     continue;
+    if (pauseThread.get())     continue;
     if (textModified.get() == 0)     continue;
     checkCode();
     checkForMissingImports();

@@ -8,20 +8,27 @@
   options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_6);
   options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT,JavaCore.ENABLED);
   parser.setCompilerOptions(options);
-  cu=(CompilationUnit)parser.createAST(null);
-  problems=cu.getProblems();
-  problemsList=new ArrayList<Problem>();
-  for (int i=0; i < problems.length; i++) {
-    int a[]=calculateTabIndexAndLineNumber(problems[i]);
-    Problem p=new Problem(problems[i],a[0],a[1] + 1);
-    problemsList.add(p);
-  }
-  if (problems.length == 0) {
-    syntaxErrors.set(false);
-    containsErrors.set(false);
-  }
+  if (cu == null)   cu=(CompilationUnit)parser.createAST(null);
  else {
-    syntaxErrors.set(true);
-    containsErrors.set(true);
+synchronized (cu) {
+      cu=(CompilationUnit)parser.createAST(null);
+    }
+  }
+synchronized (problemsList) {
+    problems=cu.getProblems();
+    problemsList=new ArrayList<Problem>();
+    for (int i=0; i < problems.length; i++) {
+      int a[]=calculateTabIndexAndLineNumber(problems[i]);
+      Problem p=new Problem(problems[i],a[0],a[1] + 1);
+      problemsList.add(p);
+    }
+    if (problems.length == 0) {
+      syntaxErrors.set(false);
+      containsErrors.set(false);
+    }
+ else {
+      syntaxErrors.set(true);
+      containsErrors.set(true);
+    }
   }
 }
