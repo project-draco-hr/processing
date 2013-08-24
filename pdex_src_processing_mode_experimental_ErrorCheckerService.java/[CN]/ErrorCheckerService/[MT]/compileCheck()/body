@@ -8,7 +8,7 @@
       }
       FileFilter fileFilter=new FileFilter(){
         public boolean accept(        File file){
-          return (file.getName().endsWith(".jar") && !file.getName().startsWith("ExperimentalMode"));
+          return (file.getName().endsWith(".jar") && !file.getName().startsWith(editor.getMode().getClass().getSimpleName()));
         }
       }
 ;
@@ -43,6 +43,7 @@
       Problem p=new Problem(problem,a[0],a[1]);
       if ((Boolean)errorList[i][8]) {
         p.setType(Problem.ERROR);
+        containsErrors.set(true);
       }
       if ((Boolean)errorList[i][9]) {
         p.setType(Problem.WARNING);

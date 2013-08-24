@@ -1,8 +1,9 @@
 {
   syntaxErrors.set(true);
+  containsErrors.set(true);
   parser.setSource(sourceCode.toCharArray());
   parser.setKind(ASTParser.K_COMPILATION_UNIT);
-  @SuppressWarnings("unchecked") Map<String,String> options=JavaCore.getOptions();
+  Map<String,String> options=JavaCore.getOptions();
   JavaCore.setComplianceOptions(JavaCore.VERSION_1_6,options);
   options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_6);
   options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT,JavaCore.ENABLED);
@@ -15,6 +16,12 @@
     Problem p=new Problem(problems[i],a[0],a[1] + 1);
     problemsList.add(p);
   }
-  if (problems.length == 0)   syntaxErrors.set(false);
- else   syntaxErrors.set(true);
+  if (problems.length == 0) {
+    syntaxErrors.set(false);
+    containsErrors.set(false);
+  }
+ else {
+    syntaxErrors.set(true);
+    containsErrors.set(true);
+  }
 }
