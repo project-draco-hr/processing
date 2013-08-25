@@ -1,13 +1,15 @@
 {
-  for (  ErrorMarker emarker : editor.errorBar.errorPoints) {
-    if (emarker.getProblem().getLineNumber() == editor.getTextArea().getCaretLine() + 1) {
-      if (emarker.getType() == ErrorMarker.Warning) {
-        editor.statusNotice(emarker.getProblem().getMessage());
-      }
+synchronized (editor.errorBar.errorPoints) {
+    for (    ErrorMarker emarker : editor.errorBar.errorPoints) {
+      if (emarker.getProblem().getLineNumber() == editor.getTextArea().getCaretLine() + 1) {
+        if (emarker.getType() == ErrorMarker.Warning) {
+          editor.statusNotice(emarker.getProblem().getMessage());
+        }
  else {
-        editor.statusError(emarker.getProblem().getMessage());
+          editor.statusError(emarker.getProblem().getMessage());
+        }
+        return;
       }
-      return;
     }
   }
   if (editor.ta.getCaretLine() != lastCaretLine) {

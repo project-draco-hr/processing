@@ -10,17 +10,19 @@
  catch (      BadLocationException e) {
         e.printStackTrace();
       }
-      errorPointsOld.clear();
-      for (      ErrorMarker marker : errorPoints) {
-        errorPointsOld.add(marker);
-      }
-      errorPoints.clear();
+synchronized (errorPoints) {
+        errorPointsOld.clear();
+        for (        ErrorMarker marker : errorPoints) {
+          errorPointsOld.add(marker);
+        }
+        errorPoints.clear();
 synchronized (problems) {
-        for (        Problem problem : problems) {
-          if (problem.getTabIndex() == currentTab) {
-            float y=(problem.getLineNumber() - errorCheckerService.defaultImportsOffset) / ((float)totalLines);
-            y*=fheight - 15;
-            errorPoints.add(new ErrorMarker(problem,(int)y,problem.isError() ? ErrorMarker.Error : ErrorMarker.Warning));
+          for (          Problem problem : problems) {
+            if (problem.getTabIndex() == currentTab) {
+              float y=(problem.getLineNumber() - errorCheckerService.defaultImportsOffset) / ((float)totalLines);
+              y*=fheight - 15;
+              errorPoints.add(new ErrorMarker(problem,(int)y,problem.isError() ? ErrorMarker.Error : ErrorMarker.Warning));
+            }
           }
         }
       }
