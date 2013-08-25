@@ -20,6 +20,13 @@
       upper.validate();
       nextToolbar.repaint();
       toolbar=nextToolbar;
+      for (      KeyListener kl : textarea.getKeyListeners()) {
+        if (kl instanceof EditorToolbar) {
+          textarea.removeKeyListener(kl);
+          textarea.addKeyListener(toolbar);
+          break;
+        }
+      }
     }
   }
 );
