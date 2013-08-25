@@ -94,6 +94,15 @@
   }
 );
   debugMenu.add(showWarnings);
+  completionsEnabled=new JCheckBoxMenuItem("Code Completion Enabled");
+  completionsEnabled.setSelected(true);
+  completionsEnabled.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      errorCheckerService.getASTGenerator().predictionsEnabled.set(((JCheckBoxMenuItem)e.getSource()).isSelected());
+    }
+  }
+);
+  debugMenu.add(completionsEnabled);
   debugMessagesEnabled=new JCheckBoxMenuItem("Show Debug Messages");
   debugMessagesEnabled.setSelected(ExperimentalMode.DEBUG);
   debugMessagesEnabled.addActionListener(new ActionListener(){
