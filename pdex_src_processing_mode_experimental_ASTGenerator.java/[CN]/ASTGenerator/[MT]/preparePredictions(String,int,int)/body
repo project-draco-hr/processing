@@ -96,8 +96,8 @@
       for (      String matchedClass2 : resources) {
         matchedClass2=matchedClass2.replace('/','.');
         String matchedClass=matchedClass2.substring(0,matchedClass2.length() - 6);
-        if (ignorableImport(matchedClass2))         continue;
         int d=matchedClass.lastIndexOf('.');
+        if (ignorableImport(matchedClass2,matchedClass.substring(d + 1)))         continue;
         matchedClass=matchedClass.substring(d + 1);
         candidates.add(new CompletionCandidate(matchedClass,matchedClass + " : " + matchedClass2.substring(0,d),matchedClass,CompletionCandidate.PREDEF_CLASS));
       }

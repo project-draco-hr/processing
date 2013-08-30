@@ -2,8 +2,8 @@
   for (  ImportStatement impS : errorCheckerService.getProgramImports()) {
     if (impName.startsWith(impS.getPackageName()))     return false;
   }
-  for (  String impS : ignoredImports) {
-    if (impName.startsWith(impS))     return true;
+  for (  String impS : allowedImports) {
+    if (impName.startsWith(impS) && className.indexOf('.') == -1)     return false;
   }
-  return false;
+  return true;
 }
