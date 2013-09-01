@@ -1,15 +1,15 @@
 {
   final EditorToolbar nextToolbar;
-  if (debugToolbarShown) {
+  if (debugToolbarEnabled.get()) {
     if (javaToolbar == null)     javaToolbar=createToolbar();
     nextToolbar=javaToolbar;
-    debugToolbarShown=false;
+    debugToolbarEnabled.set(false);
     log("Switching to Java Mode Toolbar");
   }
  else {
     if (debugToolbar == null)     debugToolbar=new DebugToolbar(this,getBase());
     nextToolbar=debugToolbar;
-    debugToolbarShown=true;
+    debugToolbarEnabled.set(true);
     log("Switching to Debugger Toolbar");
   }
   SwingUtilities.invokeLater(new Runnable(){
@@ -27,6 +27,7 @@
           break;
         }
       }
+      ta.repaint();
     }
   }
 );
