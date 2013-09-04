@@ -5,7 +5,13 @@
     loadAttributes();
     loadUniforms();
   }
+  setCommonUniforms();
   if (-1 < vertexLoc)   pgl.enableVertexAttribArray(vertexLoc);
   if (-1 < colorLoc)   pgl.enableVertexAttribArray(colorLoc);
-  setCommonUniforms();
+  if (-1 < texCoordLoc)   pgl.enableVertexAttribArray(texCoordLoc);
+  if (-1 < normalLoc)   pgl.enableVertexAttribArray(normalLoc);
+  if (-1 < normalMatrixLoc) {
+    pgCurrent.updateGLNormal();
+    setUniformMatrix(normalMatrixLoc,pgCurrent.glNormal);
+  }
 }

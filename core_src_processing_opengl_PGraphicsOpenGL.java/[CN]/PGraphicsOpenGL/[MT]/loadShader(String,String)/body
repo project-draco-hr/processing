@@ -1,10 +1,21 @@
 {
-  int shaderType=getShaderType(vertFilename);
-  if (shaderType == -1) {
-    shaderType=getShaderType(fragFilename);
+  int vertType=getShaderType(vertFilename);
+  int fragType=getShaderType(fragFilename);
+  int shaderType=-1;
+  if (vertType == -1 && fragType == -1) {
+    shaderType=PShader.COLOR;
   }
-  if (shaderType == -1) {
-    PGraphics.showWarning(INVALID_PROCESSING_SHADER_ERROR);
+ else   if (vertType == -1) {
+    shaderType=fragType;
+  }
+ else   if (fragType == -1) {
+    shaderType=vertType;
+  }
+ else   if (fragType == vertType) {
+    shaderType=vertType;
+  }
+ else {
+    PGraphics.showWarning(INCONSISTENT_SHADER_TYPES);
     return null;
   }
   PShader shader=null;
