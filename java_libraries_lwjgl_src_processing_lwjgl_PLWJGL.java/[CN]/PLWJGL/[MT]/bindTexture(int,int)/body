@@ -1,0 +1,16 @@
+{
+  GL11.glBindTexture(target,texture);
+  if (boundTextures == null) {
+    maxTexUnits=getMaxTexUnits();
+    boundTextures=new int[maxTexUnits][2];
+  }
+  if (maxTexUnits <= activeTexUnit) {
+    throw new RuntimeException(TEXUNIT_ERROR);
+  }
+  if (target == TEXTURE_2D) {
+    boundTextures[activeTexUnit][0]=texture;
+  }
+ else   if (target == TEXTURE_RECTANGLE) {
+    boundTextures[activeTexUnit][1]=texture;
+  }
+}
