@@ -1,0 +1,25 @@
+{
+  if (texture == null || changedFrontTex) {
+    if (USE_JOGL_FBOLAYER) {
+      texture=new Texture();
+      texture.init(pg.width,pg.height,backTexAttach.getName(),TEXTURE_2D,RGBA,frontTexAttach.getWidth(),frontTexAttach.getHeight(),frontTexAttach.minFilter,frontTexAttach.magFilter,frontTexAttach.wrapS,frontTexAttach.wrapT);
+      texture.invertedY(true);
+      texture.colorBuffer(true);
+    }
+ else {
+      texture=new Texture();
+      texture.init(pg.width,pg.height,glColorTex.get(frontTex),TEXTURE_2D,RGBA,fboWidth,fboHeight,NEAREST,NEAREST,CLAMP_TO_EDGE,CLAMP_TO_EDGE);
+      texture.invertedY(true);
+      texture.colorBuffer(true);
+    }
+  }
+ else {
+    if (USE_JOGL_FBOLAYER) {
+      texture.glName=frontTexAttach.getName();
+    }
+ else {
+      texture.glName=glColorTex.get(frontTex);
+    }
+  }
+  return texture;
+}

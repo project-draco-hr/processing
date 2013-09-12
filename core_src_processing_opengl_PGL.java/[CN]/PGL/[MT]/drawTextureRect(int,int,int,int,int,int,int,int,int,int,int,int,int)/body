@@ -1,5 +1,5 @@
 {
-  if (!loadedTexRectShader || texRectShaderContext.hashCode() != context.hashCode()) {
+  if (!loadedTexRectShader || texRectShaderContext != contextID) {
     texRectVertShader=createShader(VERTEX_SHADER,texVertShaderSource);
     texRectFragShader=createShader(FRAGMENT_SHADER,texRectFragShaderSource);
     if (0 < texRectVertShader && 0 < texRectFragShader) {
@@ -10,7 +10,7 @@
       texRectTCoordLoc=getAttribLocation(texRectShaderProgram,"inTexcoord");
     }
     loadedTexRectShader=true;
-    texRectShaderContext=context;
+    texRectShaderContext=contextID;
   }
   if (texData == null) {
     texData=allocateDirectFloatBuffer(texCoords.length);

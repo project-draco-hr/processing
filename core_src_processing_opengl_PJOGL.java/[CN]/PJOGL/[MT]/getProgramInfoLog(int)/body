@@ -1,0 +1,13 @@
+{
+  int[] val={0};
+  gl2.glGetShaderiv(program,GL2.GL_INFO_LOG_LENGTH,val,0);
+  int length=val[0];
+  if (0 < length) {
+    byte[] log=new byte[length];
+    gl2.glGetProgramInfoLog(program,length,val,0,log,0);
+    return new String(log);
+  }
+ else {
+    return "Unknow error";
+  }
+}
