@@ -62,12 +62,8 @@
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasAWT,BorderLayout.CENTER);
     canvasAWT.requestFocusInWindow();
-    pg.parent.removeListeners(pg.parent);
-    pg.parent.addListeners(canvasAWT);
     canvas=canvasAWT;
     canvasNEWT=null;
-    listener=new PGLListener();
-    canvasAWT.addGLEventListener(listener);
   }
  else   if (WINDOW_TOOLKIT == NEWT) {
     window=GLWindow.create(caps);
@@ -78,24 +74,10 @@
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasNEWT,BorderLayout.CENTER);
     canvasNEWT.requestFocusInWindow();
-    if (EVENTS_TOOLKIT == NEWT) {
-      NEWTMouseListener mouseListener=new NEWTMouseListener();
-      window.addMouseListener(mouseListener);
-      NEWTKeyListener keyListener=new NEWTKeyListener();
-      window.addKeyListener(keyListener);
-      NEWTWindowListener winListener=new NEWTWindowListener();
-      window.addWindowListener(winListener);
-    }
- else     if (EVENTS_TOOLKIT == AWT) {
-      pg.parent.removeListeners(canvasNEWT);
-      pg.parent.addListeners(canvasNEWT);
-    }
     canvas=canvasNEWT;
     canvasAWT=null;
-    listener=new PGLListener();
-    window.addGLEventListener(listener);
   }
-  canvas.setFocusTraversalKeysEnabled(false);
+  registerListeners();
   fboLayerCreated=false;
   fboLayerInUse=false;
   firstFrame=true;
