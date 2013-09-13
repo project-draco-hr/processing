@@ -1,5 +1,5 @@
 {
-  if (!loadedTex2DShader || tex2DShaderContext != contextID) {
+  if (!loadedTex2DShader || tex2DShaderContext != glContext) {
     tex2DVertShader=createShader(VERTEX_SHADER,texVertShaderSource);
     tex2DFragShader=createShader(FRAGMENT_SHADER,tex2DFragShaderSource);
     if (0 < tex2DVertShader && 0 < tex2DFragShader) {
@@ -10,7 +10,7 @@
       tex2DTCoordLoc=getAttribLocation(tex2DShaderProgram,"inTexcoord");
     }
     loadedTex2DShader=true;
-    tex2DShaderContext=contextID;
+    tex2DShaderContext=glContext;
   }
   if (texData == null) {
     texData=allocateDirectFloatBuffer(texCoords.length);

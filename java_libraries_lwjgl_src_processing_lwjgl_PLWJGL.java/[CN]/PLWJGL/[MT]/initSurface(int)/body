@@ -24,7 +24,16 @@
     for (int i=0; i < modes.length; i++) {
       bpp=PApplet.max(modes[i].getBitsPerPixel(),bpp);
     }
-    PixelFormat format=new PixelFormat(bpp,request_alpha_bits,request_depth_bits,request_stencil_bits,1);
+    PixelFormat format;
+    if (USE_FBOLAYER_BY_DEFAULT) {
+      format=new PixelFormat(bpp,REQUESTED_ALPHA_BITS,REQUESTED_DEPTH_BITS,REQUESTED_STENCIL_BITS,1);
+      reqNumSamples=qualityToSamples(antialias);
+      fboLayerRequested=true;
+    }
+ else {
+      format=new PixelFormat(bpp,REQUESTED_ALPHA_BITS,REQUESTED_DEPTH_BITS,REQUESTED_STENCIL_BITS,antialias);
+      fboLayerRequested=false;
+    }
     Display.setDisplayMode(new DisplayMode(pg.parent.width,pg.parent.height));
     int argb=pg.backgroundColor;
     float r=((argb >> 16) & 0xff) / 255.0f;
@@ -37,15 +46,13 @@
  catch (  LWJGLException e) {
     e.printStackTrace();
   }
-  context=Display.getDrawable().hashCode();
+  glContext=Display.getDrawable().hashCode();
   keyPoller=new KeyPoller(pg.parent);
   keyPoller.start();
   mousePoller=new MousePoller(pg.parent);
   mousePoller.start();
-  reqNumSamples=qualityToSamples(antialias);
   fboLayerCreated=false;
   fboLayerInUse=false;
   firstFrame=true;
-  needToClearBuffers=true;
   setFps=false;
 }

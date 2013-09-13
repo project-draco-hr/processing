@@ -8,11 +8,7 @@
       pg.setCache(pg,texture);
     }
  else {
-      texture=new Texture();
-      texture.init(pg.width,pg.height,glColorTex.get(backTex),TEXTURE_2D,RGBA,fboWidth,fboHeight,NEAREST,NEAREST,CLAMP_TO_EDGE,CLAMP_TO_EDGE);
-      texture.invertedY(true);
-      texture.colorBuffer(true);
-      pg.setCache(pg,texture);
+      texture=super.wrapBackTexture(null);
     }
   }
  else {
@@ -20,7 +16,7 @@
       texture.glName=backTexAttach.getName();
     }
  else {
-      texture.glName=glColorTex.get(backTex);
+      texture=super.wrapBackTexture(texture);
     }
   }
   return texture;
