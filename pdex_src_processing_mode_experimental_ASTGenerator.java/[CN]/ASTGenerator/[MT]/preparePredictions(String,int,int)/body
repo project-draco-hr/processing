@@ -1,5 +1,6 @@
 {
   if (!predictionsEnabled.get())   return;
+  if (word.length() < predictionMinLength)   return;
   if (caretWithinLineComment()) {
     log("No predictions.");
     return;
@@ -10,7 +11,7 @@
     word2=word2.substring(0,word2.length() - 1);
     noCompare=true;
   }
-  if (word2.length() > 2 && !noCompare && word2.length() > lastPredictedWord.length()) {
+  if (word2.length() >= predictionMinLength && !noCompare && word2.length() > lastPredictedWord.length()) {
     if (word2.startsWith(lastPredictedWord)) {
       log(word + " starts with " + lastPredictedWord);
       log("Don't recalc");
