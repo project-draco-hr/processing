@@ -57,27 +57,12 @@
   debugMenu.add(toggleVariableInspectorMenuItem);
   debugMenu.addSeparator();
   JCheckBoxMenuItem item;
-  final DebugEditor thisEditor=this;
   item=new JCheckBoxMenuItem("Error Checker Enabled");
   item.setSelected(ExperimentalMode.errorCheckEnabled);
   item.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       ExperimentalMode.errorCheckEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
-      if (!((JCheckBoxMenuItem)e.getSource()).isSelected()) {
-        errorCheckerService.pauseThread();
-        System.out.println(thisEditor.getSketch().getName() + " - Error Checker paused.");
-        errorBar.errorPoints.clear();
-        errorCheckerService.problemsList.clear();
-        errorCheckerService.updateErrorTable();
-        errorCheckerService.updateEditorStatus();
-        getTextArea().repaint();
-        errorBar.repaint();
-      }
- else {
-        errorCheckerService.resumeThread();
-        System.out.println(thisEditor.getSketch().getName() + " - Error Checker resumed.");
-        errorCheckerService.runManualErrorCheck();
-      }
+      errorCheckerService.handleErrorCheckingToggle();
     }
   }
 );
@@ -105,7 +90,7 @@
 );
   debugMenu.add(showWarnings);
   completionsEnabled=new JCheckBoxMenuItem("Code Completion Enabled");
-  completionsEnabled.setSelected(true);
+  completionsEnabled.setSelected(ExperimentalMode.codeCompletionsEnabled);
   completionsEnabled.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       ExperimentalMode.codeCompletionsEnabled=(((JCheckBoxMenuItem)e.getSource()).isSelected());
@@ -129,7 +114,7 @@
   writeErrorLog.setSelected(ExperimentalMode.errorLogsEnabled);
   writeErrorLog.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      ExperimentalMode.errorLogsEnabled=!ExperimentalMode.errorLogsEnabled;
+      ExperimentalMode.errorLogsEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
     }
   }
 );
