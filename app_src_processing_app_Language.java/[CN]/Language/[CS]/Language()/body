@@ -1,0 +1,24 @@
+{
+  this.language=Locale.getDefault().getLanguage();
+  this.languages=new HashMap<String,String>();
+  this.languages.put("en","English");
+  this.languages.put("de","Deutsch");
+  if (!this.languages.containsKey(this.language)) {
+    this.language="en";
+  }
+  try {
+    File file=Base.getContentFile("lib/language.txt");
+    if (file.exists()) {
+      String language=PApplet.loadStrings(file)[0];
+      language=language.trim().toLowerCase();
+      if (!language.equals("")) {
+        this.language=language;
+      }
+    }
+    Base.saveFile(this.language,file);
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  this.bundle=ResourceBundle.getBundle("processing.app.language.PDE",new Locale(this.language));
+}
