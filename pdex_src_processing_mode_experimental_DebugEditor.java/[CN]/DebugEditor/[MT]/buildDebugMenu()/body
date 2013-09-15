@@ -59,9 +59,10 @@
   JCheckBoxMenuItem item;
   final DebugEditor thisEditor=this;
   item=new JCheckBoxMenuItem("Error Checker Enabled");
-  item.setSelected(true);
+  item.setSelected(ExperimentalMode.errorCheckEnabled);
   item.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
+      ExperimentalMode.errorCheckEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
       if (!((JCheckBoxMenuItem)e.getSource()).isSelected()) {
         errorCheckerService.pauseThread();
         System.out.println(thisEditor.getSketch().getName() + " - Error Checker paused.");
@@ -94,10 +95,10 @@
 );
   debugMenu.add(problemWindowMenuCB);
   showWarnings=new JCheckBoxMenuItem("Warnings Enabled");
-  showWarnings.setSelected(true);
+  showWarnings.setSelected(ExperimentalMode.warningsEnabled);
   showWarnings.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      errorCheckerService.warningsEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
+      ExperimentalMode.warningsEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
       errorCheckerService.runManualErrorCheck();
     }
   }
@@ -107,7 +108,7 @@
   completionsEnabled.setSelected(true);
   completionsEnabled.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      errorCheckerService.getASTGenerator().predictionsEnabled.set(((JCheckBoxMenuItem)e.getSource()).isSelected());
+      ExperimentalMode.codeCompletionsEnabled=(((JCheckBoxMenuItem)e.getSource()).isSelected());
     }
   }
 );
@@ -125,10 +126,10 @@
   showOutline.addActionListener(this);
   debugMenu.add(showOutline);
   writeErrorLog=new JCheckBoxMenuItem("Write Errors to Log");
-  writeErrorLog.setSelected(enableErrorLogging);
+  writeErrorLog.setSelected(ExperimentalMode.errorLogsEnabled);
   writeErrorLog.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      enableErrorLogging=!enableErrorLogging;
+      ExperimentalMode.errorLogsEnabled=!ExperimentalMode.errorLogsEnabled;
     }
   }
 );
