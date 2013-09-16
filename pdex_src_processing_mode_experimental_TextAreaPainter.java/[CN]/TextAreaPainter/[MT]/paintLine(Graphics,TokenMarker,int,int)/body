@@ -4,11 +4,12 @@
     paintLineBgColor(gfx,line,x + ta.getGutterWidth());
     paintGutterLine(gfx,line,x);
     paintGutterText(gfx,line,x);
-    paintErrorLine(gfx,line,x);
-    super.paintLine(gfx,tokenMarker,line,x + ta.getGutterWidth());
   }
- else {
-    paintErrorLine(gfx,line,x);
+  paintErrorLine(gfx,line,x);
+  try {
     super.paintLine(gfx,tokenMarker,line,x);
+  }
+ catch (  NullPointerException e) {
+    log(e.getMessage());
   }
 }
