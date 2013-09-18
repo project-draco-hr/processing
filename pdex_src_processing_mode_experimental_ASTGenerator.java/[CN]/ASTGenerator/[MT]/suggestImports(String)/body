@@ -36,7 +36,7 @@
     Toolkit.setIcon(frmImportSuggest);
     frmImportSuggest.setLayout(new BoxLayout(frmImportSuggest.getContentPane(),BoxLayout.Y_AXIS));
     ((JComponent)frmImportSuggest.getContentPane()).setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-    JLabel lbl=new JLabel("<html>The class \"" + className + "\" couldn't be determined, choose the import you need from the following list.</html>");
+    JLabel lbl=new JLabel("<html>The class \"" + className + "\" couldn't be determined. You are probably missing one of the following imports:</html>");
     JScrollPane jsp=new JScrollPane();
     jsp.setViewportView(classList);
     JButton btnInsertImport=new JButton("Insert import");
@@ -61,10 +61,33 @@
       }
     }
 );
-    frmImportSuggest.add(lbl);
-    frmImportSuggest.add(jsp);
-    frmImportSuggest.add(btnInsertImport);
+    JButton btnCancel=new JButton("Cancel");
+    btnCancel.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        frmImportSuggest.setVisible(false);
+      }
+    }
+);
+    JPanel panelTop=new JPanel(), panelBottom=new JPanel(), panelLabel=new JPanel();
+    panelTop.setLayout(new BoxLayout(panelTop,BoxLayout.Y_AXIS));
+    panelTop.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+    panelLabel.setLayout(new BorderLayout());
+    panelLabel.add(lbl,BorderLayout.CENTER);
+    panelTop.add(panelLabel);
+    panelTop.add(Box.createRigidArea(new Dimension(1,5)));
+    panelTop.add(jsp);
+    panelBottom.setLayout(new BoxLayout(panelBottom,BoxLayout.X_AXIS));
+    panelBottom.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+    panelBottom.setLayout(new BoxLayout(panelBottom,BoxLayout.X_AXIS));
+    panelBottom.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+    panelBottom.add(Box.createHorizontalGlue());
+    panelBottom.add(btnInsertImport);
+    panelBottom.add(Box.createRigidArea(new Dimension(15,0)));
+    panelBottom.add(btnCancel);
+    frmImportSuggest.add(panelTop);
+    frmImportSuggest.add(panelBottom);
     frmImportSuggest.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+    frmImportSuggest.setTitle("Import Suggestion");
     frmImportSuggest.setLocation(editor.getX() + (editor.getWidth() - frmImportSuggest.getWidth()) / 2,editor.getY() + (editor.getHeight() - frmImportSuggest.getHeight()) / 2);
     editor.ta.hideSuggestion();
     frmImportSuggest.setVisible(true);
