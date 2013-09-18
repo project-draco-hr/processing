@@ -10,20 +10,13 @@
   application.setEnabledPreferencesMenu(true);
   if (PApplet.javaVersion <= 1.6f) {
     try {
-      Class<?> appClass=Application.class;
-      Method method=appClass.getMethod("setDefaultMenuBar",new Class[]{JMenuBar.class});
-      if (method != null) {
-        JMenuBar defaultMenuBar=new JMenuBar();
-        JMenu fileMenu=buildFileMenu(base);
-        defaultMenuBar.add(fileMenu);
-        method.invoke(application,new Object[]{defaultMenuBar});
-        Base.defaultFileMenu=fileMenu;
-      }
+      JMenuBar defaultMenuBar=new JMenuBar();
+      JMenu fileMenu=buildFileMenu(base);
+      defaultMenuBar.add(fileMenu);
+      application.setDefaultMenuBar(new JMenuBar());
+      Base.defaultFileMenu=fileMenu;
     }
- catch (    InvocationTargetException ite) {
-      ite.getTargetException().printStackTrace();
-    }
-catch (    Exception e) {
+ catch (    Exception e) {
       e.printStackTrace();
     }
   }
