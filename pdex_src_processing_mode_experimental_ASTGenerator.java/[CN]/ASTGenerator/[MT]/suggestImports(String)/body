@@ -15,6 +15,15 @@
       log("Res: " + res);
     }
   }
+  if (editor.getSketch().hasCodeFolder()) {
+    File codeFolder=editor.getSketch().getCodeFolder();
+    ClassPath cp=factory.createFromPath(Base.contentsToClassPath(codeFolder));
+    resources=cp.findResources("",regf);
+    for (    String res : resources) {
+      candidates.add(res);
+      log("Res: " + res);
+    }
+  }
   resources=new String[candidates.size()];
   for (int i=0; i < resources.length; i++) {
     resources[i]=candidates.get(i).replace('/','.').substring(0,candidates.get(i).length() - 6);
@@ -57,6 +66,7 @@
     frmImportSuggest.add(btnInsertImport);
     frmImportSuggest.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     frmImportSuggest.setLocation(editor.getX() + (editor.getWidth() - frmImportSuggest.getWidth()) / 2,editor.getY() + (editor.getHeight() - frmImportSuggest.getHeight()) / 2);
+    editor.ta.hideSuggestion();
     frmImportSuggest.setVisible(true);
   }
 }
