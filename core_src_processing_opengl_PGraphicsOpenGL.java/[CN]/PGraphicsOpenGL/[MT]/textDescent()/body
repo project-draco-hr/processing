@@ -1,11 +1,8 @@
 {
-  if (textFont == null) {
-    defaultFontOrDeath("textAscent");
-  }
-  Font font=(Font)textFont.getNative();
-  if (font != null) {
-    FontMetrics metrics=parent.getFontMetrics(font);
-    return metrics.getDescent();
-  }
-  return super.textDescent();
+  if (textFont == null)   defaultFontOrDeath("textAscent");
+  Object font=textFont.getNative();
+  float descent=0;
+  if (font != null)   descent=pgl.getFontDescent(font);
+  if (descent == 0)   descent=super.textDescent();
+  return descent;
 }
