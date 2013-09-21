@@ -2,9 +2,7 @@
   FileOutputStream output=new FileOutputStream(file);
   PropertyLister xout=new PropertyLister(output);
   xout.writeStartDocument();
-  xout.println(PLIST_DTD);
-  xout.writeStartElement(PLIST_TAG,PLIST_VERSION_ATTRIBUTE,"1.0");
-  xout.writeStartElement(DICT_TAG);
+  xout.writeStartDictElement();
   xout.writeProperty("CFBundleDevelopmentRegion","English");
   xout.writeProperty("CFBundleExecutable",executableName);
   xout.writeProperty("CFBundleIconFile",(icon == null) ? DEFAULT_ICON_NAME : icon.getName());
@@ -35,11 +33,11 @@
   }
   xout.writeProperty("JVMMainClassName",mainClassName);
   xout.writeKey("CFBundleDocumentTypes");
-  xout.writeStartElement(ARRAY_TAG);
+  xout.writeStartArrayElement();
   for (  BundleDocument bundleDocument : bundleDocuments) {
-    xout.writeStartElement(DICT_TAG);
+    xout.writeStartDictElement();
     xout.writeKey("CFBundleTypeExtensions");
-    xout.writeStartElement(ARRAY_TAG);
+    xout.writeStartArrayElement();
     for (    String extension : bundleDocument.getExtensions()) {
       xout.writeString(extension);
     }
@@ -58,28 +56,27 @@
   }
   xout.writeEndElement();
   xout.writeKey("LSArchitecturePriority");
-  xout.writeStartElement(ARRAY_TAG);
+  xout.writeStartArrayElement();
   for (  String architecture : architectures) {
     xout.writeString(architecture);
   }
   xout.writeEndElement();
   xout.writeKey("LSEnvironment");
-  xout.writeStartElement(DICT_TAG);
+  xout.writeStartDictElement();
   xout.writeKey("LC_CTYPE");
   xout.writeString("UTF-8");
   xout.writeEndElement();
   xout.writeKey("JVMOptions");
-  xout.writeStartElement(ARRAY_TAG);
+  xout.writeStartArrayElement();
   for (  String option : options) {
     xout.writeString(option);
   }
   xout.writeEndElement();
   xout.writeKey("JVMArguments");
-  xout.writeStartElement(ARRAY_TAG);
+  xout.writeStartArrayElement();
   for (  String argument : arguments) {
     xout.writeString(argument);
   }
-  xout.writeEndElement();
   xout.writeEndElement();
   xout.writeEndElement();
   xout.writeEndDocument();
