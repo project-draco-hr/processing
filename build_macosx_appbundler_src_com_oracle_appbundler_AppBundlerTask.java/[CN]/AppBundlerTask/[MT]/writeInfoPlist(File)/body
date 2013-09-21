@@ -15,6 +15,9 @@
   plist.writeProperty("CFBundleVersion",version);
   plist.writeProperty("CFBundleSignature",signature);
   plist.writeProperty("NSHumanReadableCopyright",copyright);
+  if (getInfo != null) {
+    plist.writeProperty("CFBundleGetInfoString",getInfo);
+  }
   if (applicationCategory != null) {
     plist.writeProperty("LSApplicationCategoryType",applicationCategory);
   }
@@ -44,7 +47,7 @@
     plist.writeEndElement();
     if (bundleDocument.hasIcon()) {
       plist.writeKey("CFBundleTypeIconFile");
-      plist.writeString(bundleDocument.getIcon());
+      plist.writeString(bundleDocument.getIconName());
     }
     plist.writeKey("CFBundleTypeName");
     plist.writeString(bundleDocument.getName());
