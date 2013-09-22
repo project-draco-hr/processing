@@ -6,10 +6,10 @@
   String jdwpArg="-agentlib:jdwp=transport=dt_socket,address=" + portStr + ",server=y,suspend=y";
   String[] commandArgs=null;
   if (!Base.isMacOS()) {
-    commandArgs=new String[]{"java",jdwpArg};
+    commandArgs=new String[]{Base.getJavaPath(),jdwpArg};
   }
  else {
-    if (true) {
+    if (false) {
       if (System.getProperty("os.version").startsWith("10.6")) {
         commandArgs=new String[]{"/usr/libexec/java_home","--version","1.6","--exec","java","-d" + Base.getNativeBits(),jdwpArg};
       }
@@ -18,7 +18,7 @@
       }
     }
  else {
-      commandArgs=new String[]{"/Library/Java/JavaVirtualMachines/jdk1.7.0_40.jdk/Contents/Home/bin/java",jdwpArg};
+      commandArgs=new String[]{Base.getJavaPath(),jdwpArg};
     }
   }
   commandArgs=PApplet.concat(commandArgs,vmParams);
