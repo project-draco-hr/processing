@@ -1,9 +1,8 @@
 {
   try {
-    output.write(bytes);
-    output.flush();
+    port.writeBytes(src);
   }
- catch (  Exception e) {
-    e.printStackTrace();
+ catch (  SerialPortException e) {
+    throw new RuntimeException("Error writing to serial port " + e.getPortName() + ": "+ e.getExceptionType());
   }
 }

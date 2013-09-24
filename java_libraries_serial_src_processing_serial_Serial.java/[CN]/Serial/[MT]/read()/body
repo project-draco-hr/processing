@@ -1,11 +1,13 @@
 {
-  if (bufferIndex == bufferLast)   return -1;
+  if (inBuffer == readOffset) {
+    return -1;
+  }
 synchronized (buffer) {
-    int outgoing=buffer[bufferIndex++] & 0xff;
-    if (bufferIndex == bufferLast) {
-      bufferIndex=0;
-      bufferLast=0;
+    int ret=buffer[readOffset++] & 0xFF;
+    if (inBuffer == readOffset) {
+      inBuffer=0;
+      readOffset=0;
     }
-    return outgoing;
+    return ret;
   }
 }

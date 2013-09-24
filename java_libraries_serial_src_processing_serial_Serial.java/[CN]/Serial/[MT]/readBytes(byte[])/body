@@ -1,14 +1,18 @@
 {
-  if (bufferIndex == bufferLast)   return 0;
+  if (inBuffer == readOffset) {
+    return 0;
+  }
 synchronized (buffer) {
-    int length=bufferLast - bufferIndex;
-    if (length > outgoing.length)     length=outgoing.length;
-    System.arraycopy(buffer,bufferIndex,outgoing,0,length);
-    bufferIndex+=length;
-    if (bufferIndex == bufferLast) {
-      bufferIndex=0;
-      bufferLast=0;
+    int toCopy=inBuffer - readOffset;
+    if (dest.length < toCopy) {
+      toCopy=dest.length;
     }
-    return length;
+    System.arraycopy(buffer,readOffset,dest,0,toCopy);
+    readOffset+=toCopy;
+    if (inBuffer == readOffset) {
+      inBuffer=0;
+      readOffset=0;
+    }
+    return toCopy;
   }
 }
