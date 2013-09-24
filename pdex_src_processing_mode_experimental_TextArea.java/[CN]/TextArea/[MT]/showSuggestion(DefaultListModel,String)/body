@@ -1,7 +1,7 @@
 {
+  hideSuggestion();
   if (defListModel.size() == 0) {
     log("TextArea: No suggestions to show.");
-    hideSuggestion();
     return;
   }
   int position=getCaretPosition();
@@ -18,8 +18,6 @@
   if (subWord.length() < 2) {
     return;
   }
-  if (suggestion == null)   suggestion=new CompletionPanel(this,position,subWord,defListModel,location,editor);
- else   suggestion.updateList(defListModel,subWord,location,position);
-  suggestion.setVisible(true);
+  suggestion=new CompletionPanel(this,position,subWord,defListModel,location,editor);
   requestFocusInWindow();
 }
