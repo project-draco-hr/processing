@@ -1,9 +1,12 @@
 {
   boolean success=false;
   try {
-    URLConnection conn=source.openConnection();
-    conn.setConnectTimeout(2000);
-    conn.setReadTimeout(5000);
+    HttpURLConnection conn=(HttpURLConnection)source.openConnection();
+    HttpURLConnection.setFollowRedirects(true);
+    conn.setConnectTimeout(15 * 1000);
+    conn.setReadTimeout(60 * 1000);
+    conn.setRequestMethod("GET");
+    conn.connect();
     int fileSize=conn.getContentLength();
     progress.startTask("Downloading",fileSize);
     InputStream in=conn.getInputStream();
