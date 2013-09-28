@@ -1,3 +1,12 @@
 {
-  this(PApplet.createReader(input),options);
+  DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+  try {
+    factory.setAttribute("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
+  }
+ catch (  IllegalArgumentException e) {
+  }
+  factory.setExpandEntityReferences(false);
+  DocumentBuilder builder=factory.newDocumentBuilder();
+  Document document=builder.parse(new InputSource(input));
+  node=document.getDocumentElement();
 }
