@@ -1,6 +1,6 @@
 {
   String[] source=parent.loadStrings(filename);
-  int type=-1;
+  int type=PShader.POLY;
   for (int i=0; i < source.length; i++) {
     String line=source[i].trim();
     if (line.indexOf("#define PROCESSING_POINT_SHADER") == 0) {
@@ -20,6 +20,15 @@
     }
  else     if (line.indexOf("#define PROCESSING_TEXLIGHT_SHADER") == 0) {
       type=PShader.TEXLIGHT;
+    }
+ else     if (line.indexOf("#define PROCESSING_POLYGON_SHADER") == 0) {
+      type=PShader.POLY;
+    }
+ else     if (line.indexOf("#define PROCESSING_TRIANGLES_SHADER") == 0) {
+      type=PShader.POLY;
+    }
+ else     if (line.indexOf("#define PROCESSING_QUADS_SHADER") == 0) {
+      type=PShader.POLY;
     }
   }
   return type;

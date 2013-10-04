@@ -1,6 +1,5 @@
 {
   int shaderType=getShaderType(fragFilename);
-  if (shaderType == -1)   shaderType=PShader.COLOR;
   PShader shader=null;
   if (shaderType == PShader.POINT) {
     shader=new PointShader(parent);
@@ -11,20 +10,24 @@
     shader.setVertexShader(defLineShaderVertURL);
   }
  else   if (shaderType == PShader.TEXLIGHT) {
-    shader=new TexlightShader(parent);
+    shader=new PolyShader(parent);
     shader.setVertexShader(defTexlightShaderVertURL);
   }
  else   if (shaderType == PShader.LIGHT) {
-    shader=new LightShader(parent);
+    shader=new PolyShader(parent);
     shader.setVertexShader(defLightShaderVertURL);
   }
  else   if (shaderType == PShader.TEXTURE) {
-    shader=new TextureShader(parent);
+    shader=new PolyShader(parent);
     shader.setVertexShader(defTextureShaderVertURL);
   }
  else   if (shaderType == PShader.COLOR) {
-    shader=new ColorShader(parent);
+    shader=new PolyShader(parent);
     shader.setVertexShader(defColorShaderVertURL);
+  }
+ else {
+    shader=new PolyShader(parent);
+    shader.setVertexShader(defTexlightShaderVertURL);
   }
   shader.setFragmentShader(fragFilename);
   return shader;

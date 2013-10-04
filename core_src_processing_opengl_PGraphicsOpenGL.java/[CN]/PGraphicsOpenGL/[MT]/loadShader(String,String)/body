@@ -3,7 +3,7 @@
   int fragType=getShaderType(fragFilename);
   int shaderType=-1;
   if (vertType == -1 && fragType == -1) {
-    shaderType=PShader.COLOR;
+    shaderType=PShader.POLY;
   }
  else   if (vertType == -1) {
     shaderType=fragType;
@@ -29,20 +29,24 @@
       shader.setFragmentShader(defLineShaderFragURL);
     }
  else     if (shaderType == PShader.TEXLIGHT) {
-      shader=new TexlightShader(parent);
+      shader=new PolyShader(parent);
       shader.setFragmentShader(defTextureShaderFragURL);
     }
  else     if (shaderType == PShader.LIGHT) {
-      shader=new LightShader(parent);
+      shader=new PolyShader(parent);
       shader.setFragmentShader(defColorShaderFragURL);
     }
  else     if (shaderType == PShader.TEXTURE) {
-      shader=new TextureShader(parent);
+      shader=new PolyShader(parent);
       shader.setFragmentShader(defTextureShaderFragURL);
     }
  else     if (shaderType == PShader.COLOR) {
-      shader=new ColorShader(parent);
+      shader=new PolyShader(parent);
       shader.setFragmentShader(defColorShaderFragURL);
+    }
+ else {
+      shader=new PolyShader(parent);
+      shader.setVertexShader(defTexlightShaderVertURL);
     }
     if (shader != null) {
       shader.setVertexShader(vertFilename);
@@ -55,17 +59,8 @@
  else     if (shaderType == PShader.LINE) {
       shader=new LineShader(parent,vertFilename,fragFilename);
     }
- else     if (shaderType == PShader.TEXLIGHT) {
-      shader=new TexlightShader(parent,vertFilename,fragFilename);
-    }
- else     if (shaderType == PShader.LIGHT) {
-      shader=new LightShader(parent,vertFilename,fragFilename);
-    }
- else     if (shaderType == PShader.TEXTURE) {
-      shader=new TextureShader(parent,vertFilename,fragFilename);
-    }
- else     if (shaderType == PShader.COLOR) {
-      shader=new ColorShader(parent,vertFilename,fragFilename);
+ else {
+      shader=new PolyShader(parent,vertFilename,fragFilename);
     }
   }
   return shader;
