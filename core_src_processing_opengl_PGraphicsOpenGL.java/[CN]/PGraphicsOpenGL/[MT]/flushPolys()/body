@@ -2,7 +2,7 @@
   updatePolyBuffers(lights,texCache.hasTextures);
   for (int i=0; i < texCache.size; i++) {
     Texture tex=texCache.getTexture(i);
-    BaseShader shader=getPolyShader(lights,tex != null);
+    PolyShader shader=getPolyShader(lights,tex != null);
     shader.bind();
     int first=texCache.firstCache[i];
     int last=texCache.lastCache[i];
@@ -22,8 +22,14 @@
         shader.setEmissiveAttribute(glPolyEmissive,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
         shader.setShininessAttribute(glPolyShininess,1,PGL.FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
       }
+ else       if (shader.supportLighting()) {
+        PGraphics.showWarning(LIGHT_SHADER_ERROR);
+      }
       if (tex != null) {
         shader.setTexture(tex);
+      }
+ else       if (shader.supportsTexturing()) {
+        PGraphics.showWarning(TEXTURE_SHADER_ERROR);
       }
       pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,glPolyIndex);
       pgl.drawElements(PGL.TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
