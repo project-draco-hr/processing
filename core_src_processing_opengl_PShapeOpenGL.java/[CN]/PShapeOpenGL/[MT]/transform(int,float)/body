@@ -1,13 +1,8 @@
 {
-  int dimensions;
-  if (type == ROTATE) {
-    dimensions=args.length == 1 ? 2 : 3;
+  int ncoords=is3D ? 3 : 2;
+  checkMatrix(ncoords);
+  calcTransform(type,ncoords,args);
+  if (tessellated) {
+    applyMatrixImpl(transform);
   }
- else   if (type == MATRIX) {
-    dimensions=args.length == 6 ? 2 : 3;
-  }
- else {
-    dimensions=args.length;
-  }
-  transformImpl(type,dimensions,args);
 }
