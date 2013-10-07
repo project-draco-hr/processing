@@ -3,29 +3,30 @@
     requestFocusInWindow();
     return;
   }
-  if (evt.isPopupTrigger() && (popup != null)) {
-    popup.show(painter,evt.getX(),evt.getY());
+  if (event.isPopupTrigger() && (popup != null)) {
+    System.out.println("firing popup press");
+    popup.show(painter,event.getX(),event.getY());
     return;
   }
-  int line=yToLine(evt.getY());
-  int offset=xToOffset(line,evt.getX());
+  int line=yToLine(event.getY());
+  int offset=xToOffset(line,event.getX());
   int dot=getLineStartOffset(line) + offset;
   selectLine=false;
   selectWord=false;
-switch (evt.getClickCount()) {
+switch (event.getClickCount()) {
 case 1:
-    doSingleClick(evt,line,offset,dot);
+    doSingleClick(event,line,offset,dot);
   break;
 case 2:
 try {
-  doDoubleClick(evt,line,offset,dot);
+  doDoubleClick(event,line,offset,dot);
 }
  catch (BadLocationException bl) {
   bl.printStackTrace();
 }
 break;
 case 3:
-doTripleClick(evt,line,offset,dot);
+doTripleClick(event,line,offset,dot);
 break;
 }
 }
