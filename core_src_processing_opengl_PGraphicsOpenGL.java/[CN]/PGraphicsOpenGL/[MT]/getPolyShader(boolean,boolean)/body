@@ -1,8 +1,9 @@
 {
   PolyShader shader;
+  boolean useDefault=polyShader == null;
   if (lit) {
     if (tex) {
-      if (polyShader == null) {
+      if (useDefault || !polyShader.checkType(PShader.TEXLIGHT)) {
         if (defTexlightShader == null) {
           defTexlightShader=new PolyShader(parent,defTexlightShaderVertURL,defTextureShaderFragURL);
         }
@@ -13,7 +14,7 @@
       }
     }
  else {
-      if (polyShader == null) {
+      if (useDefault || !polyShader.checkType(PShader.LIGHT)) {
         if (defLightShader == null) {
           defLightShader=new PolyShader(parent,defLightShaderVertURL,defColorShaderFragURL);
         }
@@ -25,8 +26,12 @@
     }
   }
  else {
+    if (polyShader != null && polyShader.accessLightAttribs()) {
+      PGraphics.showWarning(SHADER_NEED_LIGHT_ATTRIBS);
+      useDefault=true;
+    }
     if (tex) {
-      if (polyShader == null) {
+      if (useDefault || !polyShader.checkType(PShader.TEXTURE)) {
         if (defTextureShader == null) {
           defTextureShader=new PolyShader(parent,defTextureShaderVertURL,defTextureShaderFragURL);
         }
@@ -37,7 +42,7 @@
       }
     }
  else {
-      if (polyShader == null) {
+      if (useDefault || !polyShader.checkType(PShader.COLOR)) {
         if (defColorShader == null) {
           defColorShader=new PolyShader(parent,defColorShaderVertURL,defColorShaderFragURL);
         }
