@@ -1,20 +1,30 @@
 {
+  texture=tex;
   float scaleu=1;
   float scalev=1;
   float dispu=0;
   float dispv=0;
-  if (tex.invertedX()) {
-    scaleu=-1;
-    dispu=1;
+  if (tex != null) {
+    if (tex.invertedX()) {
+      scaleu=-1;
+      dispu=1;
+    }
+    if (tex.invertedY()) {
+      scalev=-1;
+      dispv=1;
+    }
+    scaleu*=tex.maxTexcoordU();
+    dispu*=tex.maxTexcoordU();
+    scalev*=tex.maxTexcoordV();
+    dispv*=tex.maxTexcoordV();
+    setUniformValue(texOffsetLoc,1.0f / tex.width,1.0f / tex.height);
+    if (-1 < textureLoc) {
+      texUnit=getLastTexUnit() + 1;
+      setUniformValue(textureLoc,texUnit);
+      pgl.activeTexture(PGL.TEXTURE0 + texUnit);
+      tex.bind();
+    }
   }
-  if (tex.invertedY()) {
-    scalev=-1;
-    dispv=1;
-  }
-  scaleu*=tex.maxTexcoordU();
-  dispu*=tex.maxTexcoordU();
-  scalev*=tex.maxTexcoordV();
-  dispv*=tex.maxTexcoordV();
   if (-1 < texMatrixLoc) {
     if (tcmat == null) {
       tcmat=new float[16];
@@ -36,13 +46,5 @@
     tcmat[11]=0;
     tcmat[15]=0;
     setUniformMatrix(texMatrixLoc,tcmat);
-  }
-  setUniformValue(texOffsetLoc,1.0f / tex.width,1.0f / tex.height);
-  if (-1 < textureLoc) {
-    texUnit=getLastTexUnit() + 1;
-    setUniformValue(textureLoc,texUnit);
-    pgl.activeTexture(PGL.TEXTURE0 + texUnit);
-    tex.bind();
-    texture=tex;
   }
 }

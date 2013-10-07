@@ -1,5 +1,8 @@
 {
-  updatePolyBuffers(lights,texCache.hasTextures);
+  boolean customShader=polyShader != null;
+  boolean needNormals=customShader ? polyShader.accessNormals() : false;
+  boolean needTexCoords=customShader ? polyShader.accessTexCoords() : false;
+  updatePolyBuffers(lights,texCache.hasTextures,needNormals,needTexCoords);
   for (int i=0; i < texCache.size; i++) {
     Texture tex=texCache.getTexture(i);
     PolyShader shader=getPolyShader(lights,tex != null);
@@ -13,8 +16,6 @@
       int voffset=cache.vertexOffset[n];
       shader.setVertexAttribute(glPolyVertex,4,PGL.FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
       shader.setColorAttribute(glPolyColor,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-      shader.setNormalAttribute(glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
-      shader.setTexcoordAttribute(glPolyTexcoord,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
       if (lights) {
         shader.setNormalAttribute(glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
         shader.setAmbientAttribute(glPolyAmbient,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
@@ -22,14 +23,12 @@
         shader.setEmissiveAttribute(glPolyEmissive,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
         shader.setShininessAttribute(glPolyShininess,1,PGL.FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
       }
- else       if (shader.supportLighting()) {
-        PGraphics.showWarning(LIGHT_SHADER_ERROR);
+      if (lights || needNormals) {
+        shader.setNormalAttribute(glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
       }
-      if (tex != null) {
+      if (tex != null || needTexCoords) {
+        shader.setTexcoordAttribute(glPolyTexcoord,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
         shader.setTexture(tex);
-      }
- else       if (shader.supportsTexturing()) {
-        PGraphics.showWarning(TEXTURE_SHADER_ERROR);
       }
       pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,glPolyIndex);
       pgl.drawElements(PGL.TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
