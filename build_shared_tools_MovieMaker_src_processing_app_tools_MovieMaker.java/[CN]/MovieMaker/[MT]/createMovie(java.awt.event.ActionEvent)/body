@@ -73,12 +73,21 @@ public boolean accept(File f){
 }
 }
 );
+if (imgFiles == null || imgFiles.length == 0) {
+return new RuntimeException("No image files found.");
+}
 Arrays.sort(imgFiles);
 }
 if (originalSize) {
-ImageIcon temp=new ImageIcon(imgFiles[0].getAbsolutePath());
-width=temp.getIconWidth();
-height=temp.getIconHeight();
+BufferedImage temp=readImage(imgFiles[0]);
+if (temp == null) {
+return new RuntimeException("Coult not read " + imgFiles[0].getAbsolutePath());
+}
+width=temp.getWidth();
+height=temp.getHeight();
+if (width <= 0 || height <= 0) {
+return new RuntimeException("Could not read " + imgFiles[0].getName() + ", it may be bad.");
+}
 }
 if (movieFile.exists()) {
 movieFile.delete();
