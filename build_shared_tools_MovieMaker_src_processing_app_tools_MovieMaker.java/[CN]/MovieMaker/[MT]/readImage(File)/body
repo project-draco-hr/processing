@@ -1,6 +1,9 @@
 {
-  Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+  Thread current=Thread.currentThread();
+  ClassLoader origLoader=Thread.currentThread().getContextClassLoader();
+  current.setContextClassLoader(getClass().getClassLoader());
   BufferedImage image=ImageIO.read(file);
+  current.setContextClassLoader(origLoader);
   if (image == null) {
     String path=file.getAbsolutePath();
     if (path.toLowerCase().endsWith(".tga")) {
