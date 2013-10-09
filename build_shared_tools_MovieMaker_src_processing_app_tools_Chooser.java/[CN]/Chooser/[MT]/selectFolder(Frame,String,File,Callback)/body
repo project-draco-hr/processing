@@ -1,0 +1,26 @@
+{
+  File selectedFile=null;
+  if (System.getProperty("os.name").contains("Mac") && useNativeSelect) {
+    FileDialog fileDialog=new FileDialog(parentFrame,prompt,FileDialog.LOAD);
+    System.setProperty("apple.awt.fileDialogForDirectories","true");
+    fileDialog.setVisible(true);
+    System.setProperty("apple.awt.fileDialogForDirectories","false");
+    String filename=fileDialog.getFile();
+    if (filename != null) {
+      selectedFile=new File(fileDialog.getDirectory(),fileDialog.getFile());
+    }
+  }
+ else {
+    JFileChooser fileChooser=new JFileChooser();
+    fileChooser.setDialogTitle(prompt);
+    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    if (defaultSelection != null) {
+      fileChooser.setSelectedFile(defaultSelection);
+    }
+    int result=fileChooser.showOpenDialog(parentFrame);
+    if (result == JFileChooser.APPROVE_OPTION) {
+      selectedFile=fileChooser.getSelectedFile();
+    }
+  }
+  callback.handle(selectedFile);
+}

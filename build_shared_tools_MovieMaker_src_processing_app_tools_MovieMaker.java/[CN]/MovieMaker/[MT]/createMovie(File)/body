@@ -1,4 +1,5 @@
 {
+  createMovieButton.setEnabled(false);
   final File soundFile=soundFileField.getText().trim().length() == 0 ? null : new File(soundFileField.getText().trim());
   final File imageFolder=imageFolderField.getText().trim().length() == 0 ? null : new File(imageFolderField.getText().trim());
   final String streaming="fastStartCompressed";
@@ -40,26 +41,6 @@ prefs.putInt("movie.height",height);
 prefs.putDouble("movie.fps",fps);
 prefs.putInt("movie.compression",compressionBox.getSelectedIndex());
 prefs.putBoolean("movie.originalSize",originalSizeCheckBox.isSelected());
-if (movieFileChooser == null) {
-movieFileChooser=new JFileChooser();
-if (prefs.get("movie.outputFile",null) != null) {
-movieFileChooser.setSelectedFile(new File(prefs.get("movie.outputFile",null)));
-}
- else {
-if (imageFolderField.getText().length() > 0) {
-movieFileChooser.setCurrentDirectory(new File(imageFolderField.getText()).getParentFile());
-}
- else if (soundFileField.getText().length() > 0) {
-movieFileChooser.setCurrentDirectory(new File(soundFileField.getText()).getParentFile());
-}
-}
-}
-if (JFileChooser.APPROVE_OPTION != movieFileChooser.showSaveDialog(this)) {
-return;
-}
-final File movieFile=movieFileChooser.getSelectedFile().getPath().toLowerCase().endsWith(".mov") ? movieFileChooser.getSelectedFile() : new File(movieFileChooser.getSelectedFile().getPath() + ".mov");
-prefs.put("movie.outputFile",movieFile.getPath());
-createMovieButton.setEnabled(false);
 final boolean originalSize=originalSizeCheckBox.isSelected();
 SwingWorker w=new SwingWorker(){
 @Override protected Object doInBackground(){

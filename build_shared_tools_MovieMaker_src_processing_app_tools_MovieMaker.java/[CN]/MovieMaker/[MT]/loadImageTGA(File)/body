@@ -1,61 +1,61 @@
 {
   InputStream is=new FileInputStream(file);
-  if (is == null)   return null;
-  byte header[]=new byte[18];
-  int offset=0;
-  do {
-    int count=is.read(header,offset,header.length - offset);
-    if (count == -1)     return null;
-    offset+=count;
-  }
+  try {
+    byte header[]=new byte[18];
+    int offset=0;
+    do {
+      int count=is.read(header,offset,header.length - offset);
+      if (count == -1)       return null;
+      offset+=count;
+    }
  while (offset < 18);
-  int format=0;
-  final int RGB=1;
-  final int ARGB=2;
-  final int ALPHA=4;
-  if (((header[2] == 3) || (header[2] == 11)) && (header[16] == 8) && ((header[17] == 0x8) || (header[17] == 0x28))) {
-    format=ALPHA;
-  }
- else   if (((header[2] == 2) || (header[2] == 10)) && (header[16] == 24) && ((header[17] == 0x20) || (header[17] == 0))) {
-    format=RGB;
-  }
- else   if (((header[2] == 2) || (header[2] == 10)) && (header[16] == 32) && ((header[17] == 0x8) || (header[17] == 0x28))) {
-    format=ARGB;
-  }
-  if (format == 0) {
-    throw new IOException("Unknown .tga file format for " + file.getName());
-  }
-  int w=((header[13] & 0xff) << 8) + (header[12] & 0xff);
-  int h=((header[15] & 0xff) << 8) + (header[14] & 0xff);
-  int[] pixels=new int[w * h];
-  boolean reversed=(header[17] & 0x20) == 0;
-  if ((header[2] == 2) || (header[2] == 3)) {
-    if (reversed) {
-      int index=(h - 1) * w;
+    int format=0;
+    final int RGB=1;
+    final int ARGB=2;
+    final int ALPHA=4;
+    if (((header[2] == 3) || (header[2] == 11)) && (header[16] == 8) && ((header[17] == 0x8) || (header[17] == 0x28))) {
+      format=ALPHA;
+    }
+ else     if (((header[2] == 2) || (header[2] == 10)) && (header[16] == 24) && ((header[17] == 0x20) || (header[17] == 0))) {
+      format=RGB;
+    }
+ else     if (((header[2] == 2) || (header[2] == 10)) && (header[16] == 32) && ((header[17] == 0x8) || (header[17] == 0x28))) {
+      format=ARGB;
+    }
+    if (format == 0) {
+      throw new IOException("Unknown .tga file format for " + file.getName());
+    }
+    int w=((header[13] & 0xff) << 8) + (header[12] & 0xff);
+    int h=((header[15] & 0xff) << 8) + (header[14] & 0xff);
+    int[] pixels=new int[w * h];
+    boolean reversed=(header[17] & 0x20) == 0;
+    if ((header[2] == 2) || (header[2] == 3)) {
+      if (reversed) {
+        int index=(h - 1) * w;
 switch (format) {
 case ALPHA:
-        for (int y=h - 1; y >= 0; y--) {
-          for (int x=0; x < w; x++) {
-            pixels[index + x]=is.read();
+          for (int y=h - 1; y >= 0; y--) {
+            for (int x=0; x < w; x++) {
+              pixels[index + x]=is.read();
+            }
+            index-=w;
           }
-          index-=w;
-        }
-      break;
+        break;
 case RGB:
-    for (int y=h - 1; y >= 0; y--) {
-      for (int x=0; x < w; x++) {
-        pixels[index + x]=is.read() | (is.read() << 8) | (is.read() << 16)| 0xff000000;
+      for (int y=h - 1; y >= 0; y--) {
+        for (int x=0; x < w; x++) {
+          pixels[index + x]=is.read() | (is.read() << 8) | (is.read() << 16)| 0xff000000;
+        }
+        index-=w;
       }
-      index-=w;
-    }
-  break;
+    break;
 case ARGB:
-for (int y=h - 1; y >= 0; y--) {
-  for (int x=0; x < w; x++) {
-    pixels[index + x]=is.read() | (is.read() << 8) | (is.read() << 16)| (is.read() << 24);
+  for (int y=h - 1; y >= 0; y--) {
+    for (int x=0; x < w; x++) {
+      pixels[index + x]=is.read() | (is.read() << 8) | (is.read() << 16)| (is.read() << 24);
+    }
+    index-=w;
   }
-  index-=w;
-}
 }
 }
  else {
@@ -63,7 +63,7 @@ int count=w * h;
 switch (format) {
 case ALPHA:
 for (int i=0; i < count; i++) {
-pixels[i]=is.read();
+  pixels[i]=is.read();
 }
 break;
 case RGB:
@@ -134,9 +134,14 @@ System.arraycopy(temp,0,pixels,z * w,w);
 }
 }
 }
+is.close();
 int type=(format == RGB) ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
 BufferedImage image=new BufferedImage(w,h,type);
 WritableRaster wr=image.getRaster();
 wr.setDataElements(0,0,w,h,pixels);
 return image;
+}
+  finally {
+is.close();
+}
 }
