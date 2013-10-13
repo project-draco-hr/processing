@@ -34,16 +34,6 @@
  catch (  NumberFormatException e) {
     System.err.println("Ignoring bad memory setting");
   }
-  if (Base.isMacOS()) {
-    String oldBits=get("run.options.bits");
-    String newBits=bitsThirtyTwoButton.isSelected() ? "32" : "64";
-    if (!oldBits.equals(newBits)) {
-      set("run.options.bits",newBits);
-      for (      Mode m : base.getModeList()) {
-        m.rebuildLibraryList();
-      }
-    }
-  }
   String newSizeText=fontSizeField.getText();
   try {
     int newSize=Integer.parseInt(newSizeText.trim());

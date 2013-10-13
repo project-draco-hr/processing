@@ -4,23 +4,7 @@
   int port=8000 + (int)(Math.random() * 1000);
   String portStr=String.valueOf(port);
   String jdwpArg="-agentlib:jdwp=transport=dt_socket,address=" + portStr + ",server=y,suspend=y";
-  String[] commandArgs=null;
-  if (!Base.isMacOS()) {
-    commandArgs=new String[]{Base.getJavaPath(),jdwpArg};
-  }
- else {
-    if (false) {
-      if (System.getProperty("os.version").startsWith("10.6")) {
-        commandArgs=new String[]{"/usr/libexec/java_home","--version","1.6","--exec","java","-d" + Base.getNativeBits(),jdwpArg};
-      }
- else {
-        commandArgs=new String[]{"/usr/libexec/java_home","--request","--version","1.6","--exec","java","-d" + Base.getNativeBits(),jdwpArg};
-      }
-    }
- else {
-      commandArgs=new String[]{Base.getJavaPath(),jdwpArg};
-    }
-  }
+  String[] commandArgs=new String[]{Base.getJavaPath(),jdwpArg};
   commandArgs=PApplet.concat(commandArgs,vmParams);
   commandArgs=PApplet.concat(commandArgs,sketchParams);
   launchJava(commandArgs);
