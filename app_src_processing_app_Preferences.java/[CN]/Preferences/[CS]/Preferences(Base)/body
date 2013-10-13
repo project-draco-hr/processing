@@ -51,7 +51,8 @@
   Container box=Box.createHorizontalBox();
   label=new JLabel("Editor font size: ");
   box.add(label);
-  fontSizeField=new JTextField(4);
+  fontSizeField=new JComboBox<Integer>(FONT_SIZES);
+  fontSizeField.setEditable(true);
   box.add(fontSizeField);
   label=new JLabel("  (requires restart of Processing)");
   box.add(label);
@@ -59,7 +60,7 @@
   d=box.getPreferredSize();
   box.setBounds(left,top,d.width,d.height);
   Font editorFont=Preferences.getFont("editor.font");
-  fontSizeField.setText(String.valueOf(editorFont.getSize()));
+  fontSizeField.setSelectedItem(editorFont.getSize());
   top+=d.height + GUI_BETWEEN;
   editorAntialiasBox=new JCheckBox("Use smooth text in editor window " + "(requires restart of Processing)");
   pain.add(editorAntialiasBox);

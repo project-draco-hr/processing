@@ -34,16 +34,20 @@
  catch (  NumberFormatException e) {
     System.err.println("Ignoring bad memory setting");
   }
-  String fontFamily=(String)fontSelectionBox.getSelectedItem();
-  String newSizeText=fontSizeField.getText();
-  try {
-    int newSize=Integer.parseInt(newSizeText.trim());
-    String pieces[]=PApplet.split(get("editor.font"),',');
-    pieces[2]=String.valueOf(newSize);
-    set("editor.font",PApplet.join(pieces,','));
+  if (fontSelectionBox.isEnabled()) {
+    String fontFamily=(String)fontSelectionBox.getSelectedItem();
+    set("editor.font.family",fontFamily);
   }
- catch (  Exception e) {
-    Base.log("ignoring invalid font size " + newSizeText);
+  try {
+    Object selection=fontSizeField.getSelectedItem();
+    if (selection instanceof String) {
+      selection=Integer.parseInt((String)selection);
+    }
+    set("editor.font.size",String.valueOf(selection));
+  }
+ catch (  NumberFormatException e) {
+    Base.log("Ignoring invalid font size " + fontSizeField);
+    fontSizeField.setSelectedItem(getInteger("editor.font.size"));
   }
   setBoolean("editor.input_method_support",inputMethodBox.isSelected());
   if (autoAssociateBox != null) {
