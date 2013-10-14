@@ -1,16 +1,17 @@
 {
   HashMap<String,JMenuItem> toolItems=new HashMap<String,JMenuItem>();
   for (  final ToolContribution tool : tools) {
-    if (safeTool(tool,null)) {
-      String title=tool.getMenuTitle();
-      final JMenuItem item=new JMenuItem(title);
-      item.addActionListener(new ActionListener(){
-        public void actionPerformed(        ActionEvent e){
-          safeTool(tool,item);
-        }
-      }
-);
-      toolItems.put(title,item);
+    try {
+      tool.init(Editor.this);
+      addToolItem(tool,toolItems);
+    }
+ catch (    NoSuchMethodError nsme) {
+      System.err.println("\"" + tool.getMenuTitle() + "\" is not "+ "compatible with this version of Processing");
+      nsme.printStackTrace();
+    }
+catch (    Exception ex) {
+      System.err.println("An error occurred inside \"" + tool.getMenuTitle() + "\"");
+      ex.printStackTrace();
     }
   }
   ArrayList<String> toolList=new ArrayList<String>(toolItems.keySet());
