@@ -10,7 +10,9 @@
       if (!defaultFont.equals(gfx.getFont()))       gfx.setFont(defaultFont);
     }
  else {
-      styles[id].setGraphicsFlags(gfx,defaultFont);
+      SyntaxStyle ss=styles[id];
+      gfx.setColor(ss.getColor());
+      gfx.setFont(ss.isBold() ? defaults.boldFont : defaults.plainFont);
     }
     line.count=length;
     x=Utilities.drawTabbedText(line,x,y,gfx,expander,0);
