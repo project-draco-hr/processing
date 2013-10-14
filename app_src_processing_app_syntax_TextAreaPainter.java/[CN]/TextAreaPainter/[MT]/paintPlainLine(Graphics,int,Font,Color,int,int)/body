@@ -1,15 +1,17 @@
 {
-  paintHighlight(gfx,line,y);
+  if (!printing) {
+    paintHighlight(gfx,line,y);
+  }
   textArea.getLineText(line,currentLine);
   gfx.setFont(defaultFont);
   gfx.setColor(defaultColor);
   y+=fm.getHeight();
   x=Utilities.drawTabbedText(currentLine,x,y,gfx,this,0);
   if (compositionTextPainter != null && compositionTextPainter.hasComposedTextLayout()) {
-    compositionTextPainter.draw(gfx,lineHighlightColor);
+    compositionTextPainter.draw(gfx,defaults.lineHighlightColor);
   }
-  if (eolMarkers) {
-    gfx.setColor(eolMarkerColor);
+  if (defaults.eolMarkers) {
+    gfx.setColor(defaults.eolMarkerColor);
     gfx.drawString(".",x,y);
   }
 }
