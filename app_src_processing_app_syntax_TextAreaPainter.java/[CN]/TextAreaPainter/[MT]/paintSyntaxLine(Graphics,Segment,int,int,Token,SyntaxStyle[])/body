@@ -1,13 +1,11 @@
 {
-  Font defaultFont=gfx.getFont();
-  Color defaultColor=gfx.getColor();
   for (; ; ) {
     byte id=tokens.id;
     if (id == Token.END)     break;
     int length=tokens.length;
     if (id == Token.NULL) {
-      if (!defaultColor.equals(gfx.getColor()))       gfx.setColor(defaultColor);
-      if (!defaultFont.equals(gfx.getFont()))       gfx.setFont(defaultFont);
+      gfx.setColor(defaults.fgcolor);
+      gfx.setFont(defaults.plainFont);
     }
  else {
       SyntaxStyle ss=styles[id];
@@ -15,7 +13,7 @@
       gfx.setFont(ss.isBold() ? defaults.boldFont : defaults.plainFont);
     }
     line.count=length;
-    x=Utilities.drawTabbedText(line,x,y,gfx,expander,0);
+    x=Utilities.drawTabbedText(line,x,y,gfx,this,0);
     line.offset+=length;
     tokens=tokens.next;
   }
