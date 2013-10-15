@@ -13,7 +13,11 @@
       gfx.setFont(ss.isBold() ? boldFont : plainFont);
     }
     line.count=length;
-    x=Utilities.drawTabbedText(line,x,y,gfx,this,0);
+    int w=fm.charWidth(' ');
+    for (int i=0; i < line.count; i++) {
+      gfx.drawChars(line.array,line.offset + i,1,x,y);
+      x+=w;
+    }
     line.offset+=length;
     tokens=tokens.next;
   }

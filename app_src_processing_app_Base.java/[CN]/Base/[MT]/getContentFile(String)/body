@@ -2,16 +2,30 @@
   if (processingRoot == null) {
     String path=Base.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     String decodedPath=PApplet.urlDecode(path);
-    File jarFolder=new File(decodedPath).getParentFile();
-    if (jarFolder.getName().equals("lib")) {
-      processingRoot=jarFolder.getParentFile();
+    System.out.println("path is " + decodedPath);
+    if (decodedPath.contains("/app/bin")) {
+      if (Base.isMacOS()) {
+        processingRoot=new File(path,"../../build/macosx/work/Processing.app/Contents/Java");
+      }
+ else       if (Base.isWindows()) {
+        processingRoot=new File(path,"../../build/windows/work");
+      }
+ else       if (Base.isLinux()) {
+        processingRoot=new File(path,"../../build/linux/work");
+      }
     }
- else     if (Base.isMacOS()) {
-      processingRoot=jarFolder;
-    }
-    if (processingRoot == null || !processingRoot.exists()) {
-      System.err.println("Could not find lib folder via " + jarFolder.getAbsolutePath() + ", switching to user.dir");
-      processingRoot=new File(System.getProperty("user.dir"));
+ else {
+      File jarFolder=new File(decodedPath).getParentFile();
+      if (jarFolder.getName().equals("lib")) {
+        processingRoot=jarFolder.getParentFile();
+      }
+ else       if (Base.isMacOS()) {
+        processingRoot=jarFolder;
+      }
+      if (processingRoot == null || !processingRoot.exists()) {
+        System.err.println("Could not find lib folder via " + jarFolder.getAbsolutePath() + ", switching to user.dir");
+        processingRoot=new File(System.getProperty("user.dir"));
+      }
     }
   }
   return new File(processingRoot,name);
