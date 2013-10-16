@@ -1,7 +1,15 @@
 {
+  setForeground(defaults.fgcolor);
+  setBackground(defaults.bgcolor);
   String fontFamily=Preferences.get("editor.font.family");
   int fontSize=Preferences.getInteger("editor.font.size");
   plainFont=new Font(fontFamily,Font.PLAIN,fontSize);
+  if (!fontFamily.equals(plainFont.getFamily())) {
+    System.err.println("Primary font not available, resetting to monospaced");
+    fontFamily="Monospaced";
+    Preferences.set("editor.font.family",fontFamily);
+    plainFont=new Font(fontFamily,Font.PLAIN,fontSize);
+  }
   boldFont=new Font(fontFamily,Font.BOLD,fontSize);
   antialias=Preferences.getBoolean("editor.antialias");
   fm=super.getFontMetrics(plainFont);

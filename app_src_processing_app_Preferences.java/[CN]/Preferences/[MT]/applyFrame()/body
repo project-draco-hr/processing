@@ -49,6 +49,17 @@
     Base.log("Ignoring invalid font size " + fontSizeField);
     fontSizeField.setSelectedItem(getInteger("editor.font.size"));
   }
+  try {
+    Object selection=consoleSizeField.getSelectedItem();
+    if (selection instanceof String) {
+      selection=Integer.parseInt((String)selection);
+    }
+    set("console.font.size",String.valueOf(selection));
+  }
+ catch (  NumberFormatException e) {
+    Base.log("Ignoring invalid font size " + consoleSizeField);
+    consoleSizeField.setSelectedItem(getInteger("console.font.size"));
+  }
   setBoolean("editor.input_method_support",inputMethodBox.isSelected());
   if (autoAssociateBox != null) {
     setBoolean("platform.auto_file_type_associations",autoAssociateBox.isSelected());
