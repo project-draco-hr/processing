@@ -1,6 +1,6 @@
 {
   super.bind();
-  if (pgCurrent == null) {
+  if (pg == null) {
     setRenderer(PGraphicsOpenGL.pgCurrent);
     loadAttributes();
     loadUniforms();
@@ -8,13 +8,13 @@
   if (-1 < vertexLoc)   pgl.enableVertexAttribArray(vertexLoc);
   if (-1 < colorLoc)   pgl.enableVertexAttribArray(colorLoc);
   if (-1 < directionLoc)   pgl.enableVertexAttribArray(directionLoc);
-  if (pgCurrent.getHint(ENABLE_STROKE_PERSPECTIVE) && pgCurrent.nonOrthoProjection()) {
+  if (pg.getHint(ENABLE_STROKE_PERSPECTIVE) && pg.nonOrthoProjection()) {
     setUniformValue(perspectiveLoc,1);
   }
  else {
     setUniformValue(perspectiveLoc,0);
   }
-  if (pgCurrent.getHint(DISABLE_OPTIMIZED_STROKE)) {
+  if (pg.getHint(DISABLE_OPTIMIZED_STROKE)) {
     setUniformValue(scaleLoc,1.0f,1.0f,1.0f);
   }
  else {

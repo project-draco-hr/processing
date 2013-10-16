@@ -69,11 +69,13 @@ if (bl > maxRounding) bl=maxRounding;
 inGeo.setMaterial(fillColor,strokeColor,strokeWeight,ambientColor,specularColor,emissiveColor,shininess);
 inGeo.setNormal(normalX,normalY,normalZ);
 if (rounded) {
-inGeo.addRect(a,b,c,d,tl,tr,br,bl,fill,stroke,bezierDetail);
+saveBezierVertexSettings();
+inGeo.addRect(a,b,c,d,tl,tr,br,bl,stroke);
 tessellator.tessellatePolygon(false,true,true);
+restoreBezierVertexSettings();
 }
  else {
-inGeo.addRect(a,b,c,d,fill,stroke);
+inGeo.addRect(a,b,c,d,stroke);
 tessellator.tessellateQuads();
 }
 }

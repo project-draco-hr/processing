@@ -1,6 +1,6 @@
 {
   super.bind();
-  if (pgCurrent == null) {
+  if (pg == null) {
     setRenderer(PGraphicsOpenGL.pgCurrent);
     loadAttributes();
     loadUniforms();
@@ -11,22 +11,22 @@
   if (-1 < texCoordLoc)   pgl.enableVertexAttribArray(texCoordLoc);
   if (-1 < normalLoc)   pgl.enableVertexAttribArray(normalLoc);
   if (-1 < normalMatLoc) {
-    pgCurrent.updateGLNormal();
-    setUniformMatrix(normalMatLoc,pgCurrent.glNormal);
+    pg.updateGLNormal();
+    setUniformMatrix(normalMatLoc,pg.glNormal);
   }
   if (-1 < ambientLoc)   pgl.enableVertexAttribArray(ambientLoc);
   if (-1 < specularLoc)   pgl.enableVertexAttribArray(specularLoc);
   if (-1 < emissiveLoc)   pgl.enableVertexAttribArray(emissiveLoc);
   if (-1 < shininessLoc)   pgl.enableVertexAttribArray(shininessLoc);
-  int count=pgCurrent.lightCount;
+  int count=pg.lightCount;
   setUniformValue(lightCountLoc,count);
   if (0 < count) {
-    setUniformVector(lightPositionLoc,pgCurrent.lightPosition,4,count);
-    setUniformVector(lightNormalLoc,pgCurrent.lightNormal,3,count);
-    setUniformVector(lightAmbientLoc,pgCurrent.lightAmbient,3,count);
-    setUniformVector(lightDiffuseLoc,pgCurrent.lightDiffuse,3,count);
-    setUniformVector(lightSpecularLoc,pgCurrent.lightSpecular,3,count);
-    setUniformVector(lightFalloffLoc,pgCurrent.lightFalloffCoefficients,3,count);
-    setUniformVector(lightSpotLoc,pgCurrent.lightSpotParameters,2,count);
+    setUniformVector(lightPositionLoc,pg.lightPosition,4,count);
+    setUniformVector(lightNormalLoc,pg.lightNormal,3,count);
+    setUniformVector(lightAmbientLoc,pg.lightAmbient,3,count);
+    setUniformVector(lightDiffuseLoc,pg.lightDiffuse,3,count);
+    setUniformVector(lightSpecularLoc,pg.lightSpecular,3,count);
+    setUniformVector(lightFalloffLoc,pg.lightFalloffCoefficients,3,count);
+    setUniformVector(lightSpotLoc,pg.lightSpotParameters,2,count);
   }
 }

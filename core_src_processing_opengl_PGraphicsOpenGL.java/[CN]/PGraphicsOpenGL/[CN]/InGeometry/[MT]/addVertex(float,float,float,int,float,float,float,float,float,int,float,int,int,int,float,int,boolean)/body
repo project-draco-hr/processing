@@ -1,0 +1,41 @@
+{
+  vertexCheck();
+  int index;
+  index=3 * vertexCount;
+  vertices[index++]=x;
+  vertices[index++]=y;
+  vertices[index]=z;
+  colors[vertexCount]=PGL.javaToNativeARGB(fcolor);
+  index=3 * vertexCount;
+  normals[index++]=nx;
+  normals[index++]=ny;
+  normals[index]=nz;
+  index=2 * vertexCount;
+  texcoords[index++]=u;
+  texcoords[index]=v;
+  strokeColors[vertexCount]=PGL.javaToNativeARGB(scolor);
+  strokeWeights[vertexCount]=sweight;
+  ambient[vertexCount]=PGL.javaToNativeARGB(am);
+  specular[vertexCount]=PGL.javaToNativeARGB(sp);
+  emissive[vertexCount]=PGL.javaToNativeARGB(em);
+  shininess[vertexCount]=shine;
+  breaks[vertexCount]=brk;
+  if (code == BEZIER_VERTEX || code == QUADRATIC_VERTEX || code == CURVE_VERTEX || (code == VERTEX && codes != null) || brk) {
+    if (codes == null) {
+      codes=new int[vertexCount];
+      Arrays.fill(codes,0,vertexCount,VERTEX);
+    }
+    if (brk) {
+      codeCheck();
+      codes[vertexCount]=BREAK;
+      codeCount++;
+    }
+    if (code != -1) {
+      codeCheck();
+      codes[vertexCount]=code;
+      codeCount++;
+    }
+  }
+  vertexCount++;
+  return vertexCount - 1;
+}

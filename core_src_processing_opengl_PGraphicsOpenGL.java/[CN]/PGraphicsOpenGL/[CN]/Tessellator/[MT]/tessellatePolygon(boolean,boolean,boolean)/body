@@ -1,6 +1,6 @@
 {
   beginTex();
-  int nInVert=in.lastVertex - in.firstVertex + 1;
+  int nInVert=in.vertexCount;
   if (fill && 3 <= nInVert) {
     firstPolyIndexCache=-1;
     boolean clamp=clampPolygon();
@@ -13,30 +13,33 @@
       gluTess.setWindingRule(PGL.TESS_WINDING_ODD);
     }
     gluTess.beginContour();
-    for (int i=in.firstVertex; i <= in.lastVertex; i++) {
-      boolean breakPt=in.breaks[i];
-      if (breakPt) {
+    int vidx=0;
+    int cidx=0;
+    while (vidx < in.vertexCount) {
+      boolean brk=in.breaks[vidx];
+      int code=VERTEX;
+      if (in.codes != null) {
+      }
+      if (brk) {
         gluTess.endContour();
         gluTess.beginContour();
       }
-      int fa=(in.colors[i] >> 24) & 0xFF;
-      int fr=(in.colors[i] >> 16) & 0xFF;
-      int fg=(in.colors[i] >> 8) & 0xFF;
-      int fb=(in.colors[i] >> 0) & 0xFF;
-      int aa=(in.ambient[i] >> 24) & 0xFF;
-      int ar=(in.ambient[i] >> 16) & 0xFF;
-      int ag=(in.ambient[i] >> 8) & 0xFF;
-      int ab=(in.ambient[i] >> 0) & 0xFF;
-      int sa=(in.specular[i] >> 24) & 0xFF;
-      int sr=(in.specular[i] >> 16) & 0xFF;
-      int sg=(in.specular[i] >> 8) & 0xFF;
-      int sb=(in.specular[i] >> 0) & 0xFF;
-      int ea=(in.emissive[i] >> 24) & 0xFF;
-      int er=(in.emissive[i] >> 16) & 0xFF;
-      int eg=(in.emissive[i] >> 8) & 0xFF;
-      int eb=(in.emissive[i] >> 0) & 0xFF;
-      double[] vertex=new double[]{in.vertices[3 * i + 0],in.vertices[3 * i + 1],in.vertices[3 * i + 2],fa,fr,fg,fb,in.normals[3 * i + 0],in.normals[3 * i + 1],in.normals[3 * i + 2],in.texcoords[2 * i + 0],in.texcoords[2 * i + 1],aa,ar,ag,ab,sa,sr,sg,sb,ea,er,eg,eb,in.shininess[i]};
-      gluTess.addVertex(vertex);
+      if (code == BEZIER_VERTEX) {
+        addBezierVertex(vidx);
+        vidx+=3;
+      }
+ else       if (code == QUADRATIC_VERTEX) {
+        addQuadraticVertex(vidx);
+        vidx+=2;
+      }
+ else       if (code == CURVE_VERTEX) {
+        addCurveVertex(vidx);
+        vidx++;
+      }
+ else {
+        addVertex(vidx);
+        vidx++;
+      }
     }
     gluTess.endContour();
     gluTess.endPolygon();

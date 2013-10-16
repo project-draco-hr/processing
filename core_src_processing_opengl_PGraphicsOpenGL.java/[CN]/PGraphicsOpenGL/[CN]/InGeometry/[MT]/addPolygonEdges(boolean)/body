@@ -1,7 +1,7 @@
 {
-  int start=firstVertex;
+  int start=0;
   boolean begin=true;
-  for (int i=firstVertex + 1; i <= lastVertex; i++) {
+  for (int i=1; i <= vertexCount - 1; i++) {
     if (breaks[i]) {
       if (closed) {
         addEdge(i - 1,start,begin,false);
@@ -11,7 +11,7 @@
       begin=true;
     }
  else {
-      if (i == lastVertex) {
+      if (i == vertexCount - 1) {
         if (closed && start + 1 < i) {
           addEdge(i - 1,i,begin,false);
           addEdge(i,start,false,false);
@@ -22,7 +22,7 @@
         }
       }
  else {
-        if (i < lastVertex && breaks[i + 1] && !closed) {
+        if ((i < vertexCount - 1) && breaks[i + 1] && !closed) {
           addEdge(i - 1,i,begin,true);
         }
  else {
