@@ -20,19 +20,19 @@
   emissive[vertexCount]=PGL.javaToNativeARGB(em);
   shininess[vertexCount]=shine;
   breaks[vertexCount]=brk;
-  if (code == BEZIER_VERTEX || code == QUADRATIC_VERTEX || code == CURVE_VERTEX || (code == VERTEX && codes != null) || brk) {
+  if (brk || (code == VERTEX && codes != null) || code == BEZIER_VERTEX || code == QUADRATIC_VERTEX || code == CURVE_VERTEX) {
     if (codes == null) {
-      codes=new int[vertexCount];
-      Arrays.fill(codes,0,vertexCount,VERTEX);
+      codes=new int[PApplet.max(PGL.DEFAULT_IN_VERTICES,vertexCount)];
+      Arrays.fill(codes,0,codes.length,VERTEX);
     }
     if (brk) {
       codeCheck();
-      codes[vertexCount]=BREAK;
+      codes[codeCount]=BREAK;
       codeCount++;
     }
     if (code != -1) {
       codeCheck();
-      codes[vertexCount]=code;
+      codes[codeCount]=code;
       codeCount++;
     }
   }
