@@ -1,8 +1,21 @@
 {
   int start=0;
   boolean begin=true;
-  for (int i=1; i <= vertexCount - 1; i++) {
-    if (breaks[i]) {
+  int i=0;
+  int c=0;
+  while (i < vertexCount) {
+    int code=VERTEX;
+    boolean brk=false;
+    boolean brk1=false;
+    if (codes != null && c < codes.length) {
+      code=codes[c++];
+      if (code == BREAK && c < codes.length) {
+        brk=true;
+        code=codes[c++];
+      }
+      if (c < codes.length)       brk1=codes[c] == BREAK;
+    }
+    if (brk) {
       if (closed) {
         addEdge(i - 1,start,begin,false);
         closeEdge(i - 1,start);
@@ -22,7 +35,7 @@
         }
       }
  else {
-        if ((i < vertexCount - 1) && breaks[i + 1] && !closed) {
+        if ((i < vertexCount - 1) && brk1 && !closed) {
           addEdge(i - 1,i,begin,true);
         }
  else {
@@ -30,6 +43,18 @@
         }
       }
       begin=false;
+    }
+    if (code == BEZIER_VERTEX) {
+      i+=3;
+    }
+ else     if (code == QUADRATIC_VERTEX) {
+      i+=2;
+    }
+ else     if (code == CURVE_VERTEX) {
+      i++;
+    }
+ else {
+      i++;
     }
   }
 }

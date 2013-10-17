@@ -13,16 +13,16 @@
       gluTess.setWindingRule(PGL.TESS_WINDING_ODD);
     }
     gluTess.beginContour();
-    int vidx=0;
-    int cidx=0;
-    while (vidx < in.vertexCount) {
+    int i=0;
+    int c=0;
+    while (i < in.vertexCount) {
       int code=VERTEX;
       boolean brk=false;
-      if (in.codes != null) {
-        code=in.codes[cidx];
-        if (code == BREAK) {
+      if (in.codes != null && c < in.codes.length) {
+        code=in.codes[c++];
+        if (code == BREAK && c < in.codes.length) {
           brk=true;
-          code=in.codes[cidx++];
+          code=in.codes[c++];
         }
       }
       if (brk) {
@@ -30,20 +30,20 @@
         gluTess.beginContour();
       }
       if (code == BEZIER_VERTEX) {
-        addBezierVertex(vidx);
-        vidx+=3;
+        addBezierVertex(i);
+        i+=3;
       }
  else       if (code == QUADRATIC_VERTEX) {
-        addQuadraticVertex(vidx);
-        vidx+=2;
+        addQuadraticVertex(i);
+        i+=2;
       }
  else       if (code == CURVE_VERTEX) {
-        addCurveVertex(vidx);
-        vidx++;
+        addCurveVertex(i);
+        i++;
       }
  else {
-        addVertex(vidx);
-        vidx++;
+        addVertex(i);
+        i++;
       }
     }
     gluTess.endContour();
