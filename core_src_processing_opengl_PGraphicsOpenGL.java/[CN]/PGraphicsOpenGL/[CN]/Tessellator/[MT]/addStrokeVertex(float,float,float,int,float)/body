@@ -1,0 +1,24 @@
+{
+  int idx=pathVertexCount;
+  if (beginPath + 1 < idx) {
+    in.addEdge(idx - 2,idx - 1,beginPath == idx - 2,false);
+  }
+  if (pathVertexCount == pathVertices.length / 3) {
+    int newSize=pathVertexCount << 1;
+    float vtemp[]=new float[3 * newSize];
+    PApplet.arrayCopy(pathVertices,0,vtemp,0,3 * pathVertexCount);
+    pathVertices=vtemp;
+    int ctemp[]=new int[newSize];
+    PApplet.arrayCopy(pathColors,0,ctemp,0,newSize);
+    pathColors=ctemp;
+    float wtemp[]=new float[newSize];
+    PApplet.arrayCopy(pathWeights,0,wtemp,0,newSize);
+    pathWeights=wtemp;
+  }
+  pathVertices[3 * idx + 0]=x;
+  pathVertices[3 * idx + 1]=y;
+  pathVertices[3 * idx + 2]=z;
+  pathColors[idx]=c;
+  pathWeights[idx]=w;
+  pathVertexCount++;
+}

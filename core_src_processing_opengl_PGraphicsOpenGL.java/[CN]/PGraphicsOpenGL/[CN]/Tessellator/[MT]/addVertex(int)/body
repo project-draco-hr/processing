@@ -1,21 +1,35 @@
 {
   pg.curveVertexCount=0;
-  int fa=(in.colors[i] >> 24) & 0xFF;
-  int fr=(in.colors[i] >> 16) & 0xFF;
-  int fg=(in.colors[i] >> 8) & 0xFF;
-  int fb=(in.colors[i] >> 0) & 0xFF;
-  int aa=(in.ambient[i] >> 24) & 0xFF;
-  int ar=(in.ambient[i] >> 16) & 0xFF;
-  int ag=(in.ambient[i] >> 8) & 0xFF;
-  int ab=(in.ambient[i] >> 0) & 0xFF;
-  int sa=(in.specular[i] >> 24) & 0xFF;
-  int sr=(in.specular[i] >> 16) & 0xFF;
-  int sg=(in.specular[i] >> 8) & 0xFF;
-  int sb=(in.specular[i] >> 0) & 0xFF;
-  int ea=(in.emissive[i] >> 24) & 0xFF;
-  int er=(in.emissive[i] >> 16) & 0xFF;
-  int eg=(in.emissive[i] >> 8) & 0xFF;
-  int eb=(in.emissive[i] >> 0) & 0xFF;
-  double[] vertex=new double[]{in.vertices[3 * i + 0],in.vertices[3 * i + 1],in.vertices[3 * i + 2],fa,fr,fg,fb,in.normals[3 * i + 0],in.normals[3 * i + 1],in.normals[3 * i + 2],in.texcoords[2 * i + 0],in.texcoords[2 * i + 1],aa,ar,ag,ab,sa,sr,sg,sb,ea,er,eg,eb,in.shininess[i]};
+  float x=in.vertices[3 * i + 0];
+  float y=in.vertices[3 * i + 1];
+  float z=in.vertices[3 * i + 2];
+  int strokeColor=0;
+  float strokeWeight=0;
+  if (stroke) {
+    strokeColor=in.strokeColors[i];
+    strokeWeight=in.strokeWeights[i];
+  }
+  int fcol=in.colors[i];
+  int fa=(fcol >> 24) & 0xFF;
+  int fr=(fcol >> 16) & 0xFF;
+  int fg=(fcol >> 8) & 0xFF;
+  int fb=(fcol >> 0) & 0xFF;
+  int acol=in.ambient[i];
+  int aa=(acol >> 24) & 0xFF;
+  int ar=(acol >> 16) & 0xFF;
+  int ag=(acol >> 8) & 0xFF;
+  int ab=(acol >> 0) & 0xFF;
+  int scol=in.specular[i];
+  int sa=(scol >> 24) & 0xFF;
+  int sr=(scol >> 16) & 0xFF;
+  int sg=(scol >> 8) & 0xFF;
+  int sb=(scol >> 0) & 0xFF;
+  int ecol=in.emissive[i];
+  int ea=(ecol >> 24) & 0xFF;
+  int er=(ecol >> 16) & 0xFF;
+  int eg=(ecol >> 8) & 0xFF;
+  int eb=(ecol >> 0) & 0xFF;
+  double[] vertex=new double[]{x,y,z,fa,fr,fg,fb,in.normals[3 * i + 0],in.normals[3 * i + 1],in.normals[3 * i + 2],in.texcoords[2 * i + 0],in.texcoords[2 * i + 1],aa,ar,ag,ab,sa,sr,sg,sb,ea,er,eg,eb,in.shininess[i]};
   gluTess.addVertex(vertex);
+  if (stroke)   addStrokeVertex(x,y,z,strokeColor,strokeWeight);
 }
