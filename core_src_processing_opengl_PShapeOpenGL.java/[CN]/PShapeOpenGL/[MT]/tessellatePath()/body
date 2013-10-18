@@ -77,7 +77,10 @@ boolean bez=inGeo.hasBezierVertex();
 boolean quad=inGeo.hasQuadraticVertex();
 boolean curv=inGeo.hasCurveVertex();
 if (bez || quad) saveBezierVertexSettings();
-if (curv) saveCurveVertexSettings();
+if (curv) {
+saveCurveVertexSettings();
+tessellator.resetCurveVertexCount();
+}
 tessellator.tessellatePolygon(false,close,true);
 if (bez || quad) restoreBezierVertexSettings();
 if (curv) restoreCurveVertexSettings();
