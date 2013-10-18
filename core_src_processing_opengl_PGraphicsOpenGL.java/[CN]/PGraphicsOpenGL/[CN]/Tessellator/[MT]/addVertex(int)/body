@@ -9,27 +9,35 @@
     strokeColor=in.strokeColors[i];
     strokeWeight=in.strokeWeights[i];
   }
-  int fcol=in.colors[i];
-  int fa=(fcol >> 24) & 0xFF;
-  int fr=(fcol >> 16) & 0xFF;
-  int fg=(fcol >> 8) & 0xFF;
-  int fb=(fcol >> 0) & 0xFF;
-  int acol=in.ambient[i];
-  int aa=(acol >> 24) & 0xFF;
-  int ar=(acol >> 16) & 0xFF;
-  int ag=(acol >> 8) & 0xFF;
-  int ab=(acol >> 0) & 0xFF;
-  int scol=in.specular[i];
-  int sa=(scol >> 24) & 0xFF;
-  int sr=(scol >> 16) & 0xFF;
-  int sg=(scol >> 8) & 0xFF;
-  int sb=(scol >> 0) & 0xFF;
-  int ecol=in.emissive[i];
-  int ea=(ecol >> 24) & 0xFF;
-  int er=(ecol >> 16) & 0xFF;
-  int eg=(ecol >> 8) & 0xFF;
-  int eb=(ecol >> 0) & 0xFF;
-  double[] vertex=new double[]{x,y,z,fa,fr,fg,fb,in.normals[3 * i + 0],in.normals[3 * i + 1],in.normals[3 * i + 2],in.texcoords[2 * i + 0],in.texcoords[2 * i + 1],aa,ar,ag,ab,sa,sr,sg,sb,ea,er,eg,eb,in.shininess[i]};
-  gluTess.addVertex(vertex);
+  if (fill) {
+    int fcol=in.colors[i];
+    int fa=(fcol >> 24) & 0xFF;
+    int fr=(fcol >> 16) & 0xFF;
+    int fg=(fcol >> 8) & 0xFF;
+    int fb=(fcol >> 0) & 0xFF;
+    int acol=in.ambient[i];
+    int aa=(acol >> 24) & 0xFF;
+    int ar=(acol >> 16) & 0xFF;
+    int ag=(acol >> 8) & 0xFF;
+    int ab=(acol >> 0) & 0xFF;
+    int scol=in.specular[i];
+    int sa=(scol >> 24) & 0xFF;
+    int sr=(scol >> 16) & 0xFF;
+    int sg=(scol >> 8) & 0xFF;
+    int sb=(scol >> 0) & 0xFF;
+    int ecol=in.emissive[i];
+    int ea=(ecol >> 24) & 0xFF;
+    int er=(ecol >> 16) & 0xFF;
+    int eg=(ecol >> 8) & 0xFF;
+    int eb=(ecol >> 0) & 0xFF;
+    float nx=in.normals[3 * i + 0];
+    float ny=in.normals[3 * i + 1];
+    float nz=in.normals[3 * i + 2];
+    float u=in.texcoords[2 * i + 0];
+    float v=in.texcoords[2 * i + 1];
+    float sh=in.shininess[i];
+    double[] vertex=new double[]{x,y,z,fa,fr,fg,fb,nx,ny,nz,u,v,aa,ar,ag,ab,sa,sr,sg,sb,ea,er,eg,eb,sh};
+    gluTess.addVertex(vertex);
+  }
   if (stroke)   addStrokeVertex(x,y,z,strokeColor,strokeWeight);
 }

@@ -1,24 +1,26 @@
 {
   beginTex();
   int nInVert=in.vertexCount;
-  if (fill && 3 <= nInVert) {
+  if (3 <= nInVert) {
     firstPolyIndexCache=-1;
     boolean clamp=clampPolygon();
     callback.init(in.renderMode == RETAINED,false,calcNormals,clamp);
-    gluTess.beginPolygon();
-    if (solid) {
-      gluTess.setWindingRule(PGL.TESS_WINDING_NONZERO);
-    }
+    if (fill) {
+      gluTess.beginPolygon();
+      if (solid) {
+        gluTess.setWindingRule(PGL.TESS_WINDING_NONZERO);
+      }
  else {
-      gluTess.setWindingRule(PGL.TESS_WINDING_ODD);
+        gluTess.setWindingRule(PGL.TESS_WINDING_ODD);
+      }
+      gluTess.beginContour();
     }
-    int i=0;
-    int c=0;
-    gluTess.beginContour();
     if (stroke) {
       beginPolygonStroke();
       beginStrokePath();
     }
+    int i=0;
+    int c=0;
     while (i < in.vertexCount) {
       int code=VERTEX;
       boolean brk=false;
@@ -34,8 +36,10 @@
           endStrokePath(closed);
           beginStrokePath();
         }
-        gluTess.endContour();
-        gluTess.beginContour();
+        if (fill) {
+          gluTess.endContour();
+          gluTess.beginContour();
+        }
       }
       if (code == BEZIER_VERTEX) {
         addBezierVertex(i);
@@ -58,8 +62,10 @@
       endStrokePath(closed);
       endPolygonStroke();
     }
-    gluTess.endContour();
-    gluTess.endPolygon();
+    if (fill) {
+      gluTess.endContour();
+      gluTess.endPolygon();
+    }
   }
   endTex();
   if (stroke)   tessellateStrokePath();
