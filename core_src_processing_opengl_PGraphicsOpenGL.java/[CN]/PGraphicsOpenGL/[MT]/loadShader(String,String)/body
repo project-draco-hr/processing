@@ -1,74 +1,13 @@
 {
-  int vertType=getShaderType(vertFilename);
-  int fragType=getShaderType(fragFilename);
-  int shaderType=-1;
-  if (vertType == -1 && fragType == -1) {
-    shaderType=PShader.POLY;
-  }
- else   if (vertType == -1) {
-    shaderType=fragType;
-  }
- else   if (fragType == -1) {
-    shaderType=vertType;
-  }
- else   if (fragType == vertType) {
-    shaderType=vertType;
-  }
- else   if (2 <= fragType && 2 <= vertType) {
-    shaderType=PShader.POLY;
-  }
- else {
-    PGraphics.showWarning(INCONSISTENT_SHADER_TYPES);
+  if (fragFilename == null || fragFilename.equals("")) {
+    PGraphics.showWarning(MISSING_FRAGMENT_SHADER);
     return null;
   }
-  PShader shader=null;
-  if (fragFilename == null || fragFilename.equals("")) {
-    if (shaderType == PShader.POINT) {
-      shader=new PointShader(parent);
-      shader.setFragmentShader(defPointShaderFragURL);
-    }
- else     if (shaderType == PShader.LINE) {
-      shader=new LineShader(parent);
-      shader.setFragmentShader(defLineShaderFragURL);
-    }
- else     if (shaderType == PShader.TEXLIGHT) {
-      shader=new PolyShader(parent);
-      shader.setFragmentShader(defTextureShaderFragURL);
-      ((PolyShader)shader).setType(PShader.TEXLIGHT);
-    }
- else     if (shaderType == PShader.LIGHT) {
-      shader=new PolyShader(parent);
-      shader.setFragmentShader(defColorShaderFragURL);
-      ((PolyShader)shader).setType(PShader.LIGHT);
-    }
- else     if (shaderType == PShader.TEXTURE) {
-      shader=new PolyShader(parent);
-      shader.setFragmentShader(defTextureShaderFragURL);
-      ((PolyShader)shader).setType(PShader.TEXTURE);
-    }
- else     if (shaderType == PShader.COLOR) {
-      shader=new PolyShader(parent);
-      shader.setFragmentShader(defColorShaderFragURL);
-      ((PolyShader)shader).setType(PShader.COLOR);
-    }
- else {
-      shader=new PolyShader(parent);
-      shader.setVertexShader(defTextureShaderVertURL);
-    }
-    if (shader != null) {
-      shader.setVertexShader(vertFilename);
-    }
+ else   if (fragFilename == null || fragFilename.equals("")) {
+    PGraphics.showWarning(MISSING_VERTEX_SHADER);
+    return null;
   }
  else {
-    if (shaderType == PShader.POINT) {
-      shader=new PointShader(parent,vertFilename,fragFilename);
-    }
- else     if (shaderType == PShader.LINE) {
-      shader=new LineShader(parent,vertFilename,fragFilename);
-    }
- else {
-      shader=new PolyShader(parent,vertFilename,fragFilename);
-    }
+    return new PShader(parent,vertFilename,fragFilename);
   }
-  return shader;
 }

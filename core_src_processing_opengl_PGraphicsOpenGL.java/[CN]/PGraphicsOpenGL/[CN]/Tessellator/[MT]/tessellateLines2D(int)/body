@@ -1,7 +1,6 @@
 {
   int nvert=lineCount * 4;
   int nind=lineCount * 2 * 3;
-  int first=in.firstVertex;
   if (noCapsJoins(nvert)) {
     tess.polyVertexCheck(nvert);
     tess.polyIndexCheck(nind);
@@ -10,8 +9,8 @@
     if (firstPolyIndexCache == -1)     firstPolyIndexCache=index;
     boolean clamp=clampLines2D(lineCount);
     for (int ln=0; ln < lineCount; ln++) {
-      int i0=first + 2 * ln + 0;
-      int i1=first + 2 * ln + 1;
+      int i0=2 * ln + 0;
+      int i1=2 * ln + 1;
       index=addLineSegment2D(i0,i1,index,false,clamp);
     }
     lastLineIndexCache=lastPolyIndexCache=index;
@@ -19,8 +18,8 @@
  else {
     LinePath path=new LinePath(LinePath.WIND_NON_ZERO);
     for (int ln=0; ln < lineCount; ln++) {
-      int i0=first + 2 * ln + 0;
-      int i1=first + 2 * ln + 1;
+      int i0=2 * ln + 0;
+      int i1=2 * ln + 1;
       path.moveTo(in.vertices[3 * i0 + 0],in.vertices[3 * i0 + 1],in.strokeColors[i0]);
       path.lineTo(in.vertices[3 * i1 + 0],in.vertices[3 * i1 + 1],in.strokeColors[i1]);
     }

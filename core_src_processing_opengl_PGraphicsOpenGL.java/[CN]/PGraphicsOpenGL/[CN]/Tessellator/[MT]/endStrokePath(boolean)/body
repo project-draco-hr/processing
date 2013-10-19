@@ -1,0 +1,12 @@
+{
+  int idx=pathVertexCount;
+  if (beginPath + 1 < idx) {
+    boolean begin=beginPath == idx - 2;
+    boolean end=begin || !closed;
+    in.addEdge(idx - 2,idx - 1,begin,end);
+    if (!end) {
+      in.addEdge(idx - 1,beginPath,false,false);
+      in.closeEdge(idx - 1,beginPath);
+    }
+  }
+}

@@ -1,6 +1,5 @@
 {
   this.parent=parent;
-  pgMain=(PGraphicsOpenGL)parent.g;
   pgl=PGraphicsOpenGL.pgl;
   this.vertexURL=null;
   this.fragmentURL=null;
@@ -11,4 +10,21 @@
   glFragment=0;
   intBuffer=PGL.allocateIntBuffer(1);
   floatBuffer=PGL.allocateFloatBuffer(1);
+  int vertType=PGraphicsOpenGL.pgPrimary.getShaderType(vertFilename,-1);
+  int fragType=PGraphicsOpenGL.pgPrimary.getShaderType(fragFilename,-1);
+  if (vertType == -1 && fragType == -1) {
+    type=PShader.POLY;
+  }
+ else   if (vertType == -1) {
+    type=fragType;
+  }
+ else   if (fragType == -1) {
+    type=vertType;
+  }
+ else   if (fragType == vertType) {
+    type=vertType;
+  }
+ else {
+    PGraphics.showWarning(PGraphicsOpenGL.INCONSISTENT_SHADER_TYPES);
+  }
 }

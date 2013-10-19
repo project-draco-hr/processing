@@ -1,13 +1,13 @@
 {
   beginTex();
-  int nInVert=in.lastVertex - in.firstVertex + 1;
+  int nInVert=in.vertexCount;
   if (fill && 3 <= nInVert) {
     int nInInd=3 * (nInVert - 2);
     setRawSize(nInInd);
     int idx=0;
     boolean clamp=clampTriangleFan();
-    for (int i=in.firstVertex + 1; i < in.lastVertex; i++) {
-      rawIndices[idx++]=in.firstVertex;
+    for (int i=1; i < in.vertexCount - 1; i++) {
+      rawIndices[idx++]=0;
       rawIndices[idx++]=i;
       rawIndices[idx++]=i + 1;
     }
