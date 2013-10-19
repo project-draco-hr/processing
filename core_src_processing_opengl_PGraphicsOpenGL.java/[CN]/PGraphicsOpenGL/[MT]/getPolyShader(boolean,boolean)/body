@@ -1,5 +1,5 @@
 {
-  PolyShader shader;
+  PShader shader;
   boolean useDefault=polyShader == null;
   if (polyShader != null) {
     polyShader.setRenderer(this);
@@ -8,9 +8,9 @@
   }
   if (lit) {
     if (tex) {
-      if (useDefault || !polyShader.checkType(PShader.TEXLIGHT)) {
+      if (useDefault || !polyShader.checkPolyType(PShader.TEXLIGHT)) {
         if (defTexlightShader == null) {
-          defTexlightShader=new PolyShader(parent,defTexlightShaderVertURL,defTextureShaderFragURL);
+          defTexlightShader=new PShader(parent,defTexlightShaderVertURL,defTextureShaderFragURL);
         }
         shader=defTexlightShader;
       }
@@ -19,9 +19,9 @@
       }
     }
  else {
-      if (useDefault || !polyShader.checkType(PShader.LIGHT)) {
+      if (useDefault || !polyShader.checkPolyType(PShader.LIGHT)) {
         if (defLightShader == null) {
-          defLightShader=new PolyShader(parent,defLightShaderVertURL,defColorShaderFragURL);
+          defLightShader=new PShader(parent,defLightShaderVertURL,defColorShaderFragURL);
         }
         shader=defLightShader;
       }
@@ -36,9 +36,9 @@
       useDefault=true;
     }
     if (tex) {
-      if (useDefault || !polyShader.checkType(PShader.TEXTURE)) {
+      if (useDefault || !polyShader.checkPolyType(PShader.TEXTURE)) {
         if (defTextureShader == null) {
-          defTextureShader=new PolyShader(parent,defTextureShaderVertURL,defTextureShaderFragURL);
+          defTextureShader=new PShader(parent,defTextureShaderVertURL,defTextureShaderFragURL);
         }
         shader=defTextureShader;
       }
@@ -47,9 +47,9 @@
       }
     }
  else {
-      if (useDefault || !polyShader.checkType(PShader.COLOR)) {
+      if (useDefault || !polyShader.checkPolyType(PShader.COLOR)) {
         if (defColorShader == null) {
-          defColorShader=new PolyShader(parent,defColorShaderVertURL,defColorShaderFragURL);
+          defColorShader=new PShader(parent,defColorShaderVertURL,defColorShaderFragURL);
         }
         shader=defColorShader;
       }
