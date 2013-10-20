@@ -6,25 +6,21 @@
     return false;
   }
   File folder=null;
-  for (  String platformName : PConstants.platformNames) {
-    int platform=Base.getPlatformIndex(platformName);
-    if (Preferences.getBoolean("export.application.platform." + platformName)) {
-      if (Library.hasMultipleArch(platform,importedLibraries)) {
-        folder=new File(sketch.getFolder(),"application." + platformName + "32");
-        if (!exportApplication(folder,platform,32)) {
-          return false;
-        }
-        folder=new File(sketch.getFolder(),"application." + platformName + "64");
-        if (!exportApplication(folder,platform,64)) {
-          return false;
-        }
-      }
+  String platformName=Base.getPlatformName();
+  if (Library.hasMultipleArch(PApplet.platform,importedLibraries)) {
+    folder=new File(sketch.getFolder(),"application." + platformName + "32");
+    if (!exportApplication(folder,PApplet.platform,32)) {
+      return false;
+    }
+    folder=new File(sketch.getFolder(),"application." + platformName + "64");
+    if (!exportApplication(folder,PApplet.platform,64)) {
+      return false;
+    }
+  }
  else {
-        folder=new File(sketch.getFolder(),"application." + platformName);
-        if (!exportApplication(folder,platform,0)) {
-          return false;
-        }
-      }
+    folder=new File(sketch.getFolder(),"application." + platformName);
+    if (!exportApplication(folder,PApplet.platform,0)) {
+      return false;
     }
   }
   return true;
