@@ -8,13 +8,17 @@
   File folder=null;
   String platformName=Base.getPlatformName();
   if (Library.hasMultipleArch(PApplet.platform,importedLibraries)) {
-    folder=new File(sketch.getFolder(),"application." + platformName + "32");
-    if (!exportApplication(folder,PApplet.platform,32)) {
-      return false;
+    if (Base.getNativeBits() == 32) {
+      folder=new File(sketch.getFolder(),"application." + platformName + "32");
+      if (!exportApplication(folder,PApplet.platform,32)) {
+        return false;
+      }
     }
-    folder=new File(sketch.getFolder(),"application." + platformName + "64");
-    if (!exportApplication(folder,PApplet.platform,64)) {
-      return false;
+ else     if (Base.getNativeBits() == 64) {
+      folder=new File(sketch.getFolder(),"application." + platformName + "64");
+      if (!exportApplication(folder,PApplet.platform,64)) {
+        return false;
+      }
     }
   }
  else {
