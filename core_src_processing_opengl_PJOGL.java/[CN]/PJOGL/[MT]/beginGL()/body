@@ -1,9 +1,10 @@
 {
-  if (gl2x != null) {
+  GL2 glfixfunc=gl2x != null ? gl2x : gl3bc;
+  if (glfixfunc != null) {
     if (projMatrix == null) {
       projMatrix=new float[16];
     }
-    gl2x.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+    glfixfunc.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
     projMatrix[0]=pg.projection.m00;
     projMatrix[1]=pg.projection.m10;
     projMatrix[2]=pg.projection.m20;
@@ -20,11 +21,11 @@
     projMatrix[13]=pg.projection.m13;
     projMatrix[14]=pg.projection.m23;
     projMatrix[15]=pg.projection.m33;
-    gl2x.glLoadMatrixf(projMatrix,0);
+    glfixfunc.glLoadMatrixf(projMatrix,0);
     if (mvMatrix == null) {
       mvMatrix=new float[16];
     }
-    gl2x.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+    glfixfunc.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
     mvMatrix[0]=pg.modelview.m00;
     mvMatrix[1]=pg.modelview.m10;
     mvMatrix[2]=pg.modelview.m20;
@@ -41,6 +42,6 @@
     mvMatrix[13]=pg.modelview.m13;
     mvMatrix[14]=pg.modelview.m23;
     mvMatrix[15]=pg.modelview.m33;
-    gl2x.glLoadMatrixf(mvMatrix,0);
+    glfixfunc.glLoadMatrixf(mvMatrix,0);
   }
 }
