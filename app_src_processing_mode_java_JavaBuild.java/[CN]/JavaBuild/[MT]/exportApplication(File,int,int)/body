@@ -31,6 +31,12 @@
     Base.copyDir(new File(contentsOrig,"Resources/en.lproj"),new File(resourcesFolder,"en.lproj"));
     Base.copyFile(mode.getContentFile("application/sketch.icns"),new File(resourcesFolder,"sketch.icns"));
   }
+ else   if (exportPlatform == PConstants.LINUX) {
+    Base.copyDirNative(Base.getJavaHome(),new File(destFolder,"java"));
+  }
+ else   if (exportPlatform == PConstants.WINDOWS) {
+    Base.copyDir(Base.getJavaHome(),new File(destFolder,"java"));
+  }
   if (!jarFolder.exists())   jarFolder.mkdirs();
   if (exportPlatform == PConstants.WINDOWS) {
     if (exportBits == 64) {
