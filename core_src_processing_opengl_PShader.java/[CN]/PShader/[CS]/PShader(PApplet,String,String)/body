@@ -5,13 +5,15 @@
   this.fragmentURL=null;
   this.vertexFilename=vertFilename;
   this.fragmentFilename=fragFilename;
+  loadFragmentShader(fragFilename);
+  loadVertexShader(vertFilename);
   glProgram=0;
   glVertex=0;
   glFragment=0;
   intBuffer=PGL.allocateIntBuffer(1);
   floatBuffer=PGL.allocateFloatBuffer(1);
-  int vertType=getShaderType(parent.loadStrings(vertFilename),-1);
-  int fragType=getShaderType(parent.loadStrings(fragFilename),-1);
+  int vertType=getShaderType(vertexShaderSource,-1);
+  int fragType=getShaderType(fragmentShaderSource,-1);
   if (vertType == -1 && fragType == -1) {
     type=PShader.POLY;
   }

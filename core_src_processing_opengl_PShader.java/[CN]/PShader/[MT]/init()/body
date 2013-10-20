@@ -2,41 +2,23 @@
   if (glProgram == 0 || contextIsOutdated()) {
     context=pgl.getCurrentContext();
     glProgram=PGraphicsOpenGL.createGLSLProgramObject(context);
-    boolean hasVert=false;
-    if (vertexFilename != null) {
-      hasVert=loadVertexShader(vertexFilename);
-    }
- else     if (vertexURL != null) {
-      hasVert=loadVertexShader(vertexURL);
-    }
- else {
-      PGraphics.showException("Vertex shader filenames and URLs are " + "both null!");
-    }
-    boolean hasFrag=false;
-    if (fragmentFilename != null) {
-      hasFrag=loadFragmentShader(fragmentFilename);
-    }
- else     if (fragmentURL != null) {
-      hasFrag=loadFragmentShader(fragmentURL);
-    }
- else {
-      PGraphics.showException("Fragment shader filenames and URLs are " + "both null!");
-    }
     boolean vertRes=true;
-    if (hasVert) {
+    if (hasVertexShader()) {
       vertRes=compileVertexShader();
     }
+ else {
+      PGraphics.showException("Doesn't have a vertex shader");
+    }
     boolean fragRes=true;
-    if (hasFrag) {
+    if (hasFragmentShader()) {
       fragRes=compileFragmentShader();
     }
+ else {
+      PGraphics.showException("Doesn't have a fragment shader");
+    }
     if (vertRes && fragRes) {
-      if (hasVert) {
-        pgl.attachShader(glProgram,glVertex);
-      }
-      if (hasFrag) {
-        pgl.attachShader(glProgram,glFragment);
-      }
+      pgl.attachShader(glProgram,glVertex);
+      pgl.attachShader(glProgram,glFragment);
       setup();
       pgl.linkProgram(glProgram);
       pgl.getProgramiv(glProgram,PGL.LINK_STATUS,intBuffer);

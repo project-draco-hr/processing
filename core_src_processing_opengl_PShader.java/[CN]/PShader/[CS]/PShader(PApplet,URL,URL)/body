@@ -5,26 +5,15 @@
   this.fragmentURL=fragURL;
   this.vertexFilename=null;
   this.fragmentFilename=null;
+  loadFragmentShader(fragURL);
+  loadVertexShader(vertURL);
   glProgram=0;
   glVertex=0;
   glFragment=0;
   intBuffer=PGL.allocateIntBuffer(1);
   floatBuffer=PGL.allocateFloatBuffer(1);
-  int vertType=-1, fragType=-1;
-  try {
-    String[] source=PApplet.loadStrings(vertURL.openStream());
-    vertType=getShaderType(source,-1);
-  }
- catch (  IOException e) {
-    PGraphics.showException("Vertex URL cannot be accessed both null!");
-  }
-  try {
-    String[] source=PApplet.loadStrings(fragURL.openStream());
-    fragType=getShaderType(source,-1);
-  }
- catch (  IOException e) {
-    PGraphics.showException("Fragment URL cannot be accessed both null!");
-  }
+  int vertType=getShaderType(vertexShaderSource,-1);
+  int fragType=getShaderType(fragmentShaderSource,-1);
   if (vertType == -1 && fragType == -1) {
     type=PShader.POLY;
   }
