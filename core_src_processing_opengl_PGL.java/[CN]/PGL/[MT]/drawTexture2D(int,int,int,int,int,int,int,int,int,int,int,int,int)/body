@@ -11,6 +11,10 @@
     }
     loadedTex2DShader=true;
     tex2DShaderContext=glContext;
+    genBuffers(1,intBuffer);
+    texGeoVBO=intBuffer.get(0);
+    bindBuffer(ARRAY_BUFFER,texGeoVBO);
+    bufferData(ARRAY_BUFFER,16 * SIZEOF_FLOAT,null,STATIC_DRAW);
   }
   if (texData == null) {
     texData=allocateDirectFloatBuffer(texCoords.length);
@@ -51,12 +55,15 @@
       enabledTex=true;
     }
     bindTexture(TEXTURE_2D,id);
-    bindBuffer(ARRAY_BUFFER,0);
     texData.position(0);
-    vertexAttribPointer(tex2DVertLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,texData);
-    texData.position(2);
-    vertexAttribPointer(tex2DTCoordLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,texData);
+    bindBuffer(PGL.ARRAY_BUFFER,texGeoVBO);
+    bufferData(PGL.ARRAY_BUFFER,16 * SIZEOF_FLOAT,texData,PGL.STATIC_DRAW);
+    pg.report("HERE 1");
+    vertexAttribPointer(tex2DVertLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,0);
+    vertexAttribPointer(tex2DTCoordLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,2 * SIZEOF_FLOAT);
     drawArrays(TRIANGLE_STRIP,0,4);
+    pg.report("HERE 3");
+    bindBuffer(ARRAY_BUFFER,0);
     bindTexture(TEXTURE_2D,0);
     if (enabledTex) {
       disableTexturing(TEXTURE_2D);
