@@ -12,13 +12,15 @@
   floatBuffer=PGL.allocateFloatBuffer(1);
   int vertType=-1, fragType=-1;
   try {
-    vertType=PGraphicsOpenGL.pgPrimary.getShaderType(vertURL,-1);
+    String[] source=PApplet.loadStrings(vertURL.openStream());
+    vertType=getShaderType(source,-1);
   }
  catch (  IOException e) {
     PGraphics.showException("Vertex URL cannot be accessed both null!");
   }
   try {
-    fragType=PGraphicsOpenGL.pgPrimary.getShaderType(fragURL,-1);
+    String[] source=PApplet.loadStrings(fragURL.openStream());
+    fragType=getShaderType(source,-1);
   }
  catch (  IOException e) {
     PGraphics.showException("Fragment URL cannot be accessed both null!");
