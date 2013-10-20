@@ -11,29 +11,22 @@
   File dotAppFolder=null;
   if (exportPlatform == PConstants.MACOSX) {
     dotAppFolder=new File(destFolder,sketch.getName() + ".app");
-    File dotAppSkeleton=mode.getContentFile("application/template.app");
-    Base.copyDir(dotAppSkeleton,dotAppFolder);
-    String stubName="Contents/MacOS/JavaApplicationStub";
-    if (Base.isWindows()) {
-      File warningFile=new File(destFolder,"readme.txt");
-      PrintWriter pw=PApplet.createWriter(warningFile);
-      pw.println("This application was created on Windows, which does not");
-      pw.println("properly support setting files as \"executable\",");
-      pw.println("a necessity for applications on Mac OS X.");
-      pw.println();
-      pw.println("To fix this, use the Terminal on Mac OS X, and from this");
-      pw.println("directory, type the following:");
-      pw.println();
-      pw.println("chmod +x " + dotAppFolder.getName() + "/"+ stubName);
-      pw.flush();
-      pw.close();
-    }
- else {
-      File stubFile=new File(dotAppFolder,stubName);
-      String stubPath=stubFile.getAbsolutePath();
-      Runtime.getRuntime().exec(new String[]{"chmod","+x",stubPath});
-    }
-    jarFolder=new File(dotAppFolder,"Contents/Resources/Java");
+    File contentsOrig=new File(Base.getJavaHome(),"../../../../..");
+    File contentsFolder=new File(dotAppFolder,"Contents");
+    contentsFolder.mkdirs();
+    jarFolder=new File(contentsFolder,"Java");
+    File macosFolder=new File(contentsFolder,"MacOS");
+    macosFolder.mkdirs();
+    Base.copyFile(new File(contentsOrig,"MacOS/Processing"),new File(contentsFolder,"MacOS/" + sketch.getName()));
+    File pkgInfo=new File(contentsFolder,"PkgInfo");
+    PrintWriter writer=PApplet.createWriter(pkgInfo);
+    writer.println("APPL????");
+    writer.flush();
+    writer.close();
+    Base.copyDirNative(new File(contentsOrig,"PlugIns"),new File(contentsFolder,"PlugIns"));
+    File resourcesFolder=new File(contentsFolder,"Resources");
+    Base.copyDir(new File(contentsOrig,"Resources/en.lproj"),new File(resourcesFolder,"en.lproj"));
+    Base.copyFile(mode.getContentFile("application/sketch.icns"),new File(resourcesFolder,"sketch.icns"));
   }
   if (!jarFolder.exists())   jarFolder.mkdirs();
   if (exportPlatform == PConstants.WINDOWS) {

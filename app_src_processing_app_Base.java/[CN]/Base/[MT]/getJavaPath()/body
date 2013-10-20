@@ -1,20 +1,4 @@
 {
-  if (isMacOS()) {
-    File[] plugins=getContentFile("../PlugIns").listFiles(new FilenameFilter(){
-      public boolean accept(      File dir,      String name){
-        return name.endsWith(".jdk") && dir.isDirectory();
-      }
-    }
-);
-    File javaBinary=new File(plugins[0],"Contents/Home/jre/bin/java");
-    return javaBinary.getAbsolutePath();
-  }
- else   if (isLinux()) {
-    return getContentFile("java/bin/java").getAbsolutePath();
-  }
- else   if (isWindows()) {
-    return getContentFile("java/bin/java.exe").getAbsolutePath();
-  }
-  System.err.println("No appropriate platform found. " + "Hoping that Java is in the path.");
-  return Base.isWindows() ? "java.exe" : "java";
+  String javaPath="bin/java" + (isWindows() ? ".exe" : "");
+  return new File(getJavaHome(),javaPath).getAbsolutePath();
 }
