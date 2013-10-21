@@ -1,0 +1,20 @@
+{
+  try {
+    String[] vertSrc0=PApplet.loadStrings(url.openStream());
+    String[] vertSrc=new String[vertSrc0.length + 1];
+    vertSrc[0]="#version 150";
+    for (int i=0; i < vertSrc0.length; i++) {
+      String line=vertSrc0[i];
+      System.out.print(line + " ---> ");
+      line=line.replace("attribute","in");
+      line=line.replace("varying","out");
+      vertSrc[i + 1]=line;
+      System.out.println(line);
+    }
+    return vertSrc;
+  }
+ catch (  IOException e) {
+    PGraphics.showException("Cannot load vertex shader " + url.getFile());
+  }
+  return null;
+}
