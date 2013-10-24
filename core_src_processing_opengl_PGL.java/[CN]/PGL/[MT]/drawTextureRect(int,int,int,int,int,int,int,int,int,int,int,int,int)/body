@@ -1,22 +1,5 @@
 {
-  if (!loadedTexRectShader || texRectShaderContext != glContext) {
-    texRectVertShader=createShader(VERTEX_SHADER,texVertShaderSource[shaderSource]);
-    texRectFragShader=createShader(FRAGMENT_SHADER,texRectFragShaderSource[shaderSource]);
-    if (0 < texRectVertShader && 0 < texRectFragShader) {
-      texRectShaderProgram=createProgram(texRectVertShader,texRectFragShader);
-    }
-    if (0 < texRectShaderProgram) {
-      texRectVertLoc=getAttribLocation(texRectShaderProgram,"inVertex");
-      texRectTCoordLoc=getAttribLocation(texRectShaderProgram,"inTexcoord");
-      texRectSamplerLoc=getUniformLocation(texRectShaderProgram,"textureSampler");
-    }
-    loadedTexRectShader=true;
-    texRectShaderContext=glContext;
-    genBuffers(1,intBuffer);
-    texGeoVBO=intBuffer.get(0);
-    bindBuffer(ARRAY_BUFFER,texGeoVBO);
-    bufferData(ARRAY_BUFFER,16 * SIZEOF_FLOAT,null,STATIC_DRAW);
-  }
+  initTexRectShader();
   if (texData == null) {
     texData=allocateDirectFloatBuffer(texCoords.length);
   }

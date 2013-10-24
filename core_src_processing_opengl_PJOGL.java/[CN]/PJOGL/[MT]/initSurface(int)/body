@@ -5,14 +5,16 @@
     }
  else     if (PROFILE == 3) {
       profile=GLProfile.getGL2GL3();
-      shaderSource=1;
     }
  else     if (PROFILE == 4) {
       profile=GLProfile.getGL4ES3();
-      shaderSource=1;
     }
  else     throw new RuntimeException(UNSUPPORTED_GLPROF_ERROR);
-    System.out.println(profile);
+    if (2 < PROFILE) {
+      texVertShaderSource=convertVertexSource(texVertShaderSource,120,150);
+      tex2DFragShaderSource=convertFragmentSource(tex2DFragShaderSource,120,150);
+      texRectFragShaderSource=convertFragmentSource(texRectFragShaderSource,120,150);
+    }
   }
  else {
     if (canvasAWT != null) {

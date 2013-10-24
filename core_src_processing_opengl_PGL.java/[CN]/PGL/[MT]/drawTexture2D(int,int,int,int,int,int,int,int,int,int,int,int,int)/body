@@ -1,25 +1,5 @@
 {
-  if (!loadedTex2DShader || tex2DShaderContext != glContext) {
-    tex2DVertShader=createShader(VERTEX_SHADER,texVertShaderSource[shaderSource]);
-    tex2DFragShader=createShader(FRAGMENT_SHADER,tex2DFragShaderSource[shaderSource]);
-    if (0 < tex2DVertShader && 0 < tex2DFragShader) {
-      tex2DShaderProgram=createProgram(tex2DVertShader,tex2DFragShader);
-    }
-    if (0 < tex2DShaderProgram) {
-      tex2DVertLoc=getAttribLocation(tex2DShaderProgram,"inVertex");
-      tex2DTCoordLoc=getAttribLocation(tex2DShaderProgram,"inTexcoord");
-      tex2DSamplerLoc=getUniformLocation(tex2DShaderProgram,"textureSampler");
-    }
-    loadedTex2DShader=true;
-    tex2DShaderContext=glContext;
-    genBuffers(1,intBuffer);
-    texGeoVBO=intBuffer.get(0);
-    bindBuffer(ARRAY_BUFFER,texGeoVBO);
-    bufferData(ARRAY_BUFFER,16 * SIZEOF_FLOAT,null,STATIC_DRAW);
-  }
-  if (texData == null) {
-    texData=allocateDirectFloatBuffer(texCoords.length);
-  }
+  initTex2DShader();
   if (0 < tex2DShaderProgram) {
     boolean depthTest=getDepthTest();
     disable(DEPTH_TEST);
