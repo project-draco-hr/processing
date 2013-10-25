@@ -1,4 +1,10 @@
 {
   String javaPath="bin/java" + (isWindows() ? ".exe" : "");
-  return new File(getJavaHome(),javaPath).getAbsolutePath();
+  File javaFile=new File(getJavaHome(),javaPath);
+  try {
+    return javaFile.getCanonicalPath();
+  }
+ catch (  IOException e) {
+    return javaFile.getAbsolutePath();
+  }
 }

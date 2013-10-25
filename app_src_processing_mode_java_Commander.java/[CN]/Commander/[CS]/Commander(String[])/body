@@ -6,7 +6,7 @@
   File outputFolder=null;
   boolean force=false;
   int platform=PApplet.platform;
-  int platformBits=0;
+  int platformBits=Base.getNativeBits();
   int task=HELP;
   boolean embedJava=true;
   try {
@@ -120,9 +120,6 @@
           JavaBuild build=new JavaBuild(sketch);
           build.build(true);
           if (build != null) {
-            if (platformBits == 0 && Library.hasMultipleArch(platform,build.getImportedLibraries())) {
-              complainAndQuit("This sketch can be exported for 32- or 64-bit, please specify one.",true);
-            }
             success=build.exportApplication(outputFolder,platform,platformBits,embedJava);
           }
         }
