@@ -7,23 +7,24 @@
   }
   File folder=null;
   String platformName=Base.getPlatformName();
+  boolean embedJava=Preferences.getBoolean("export.application.embed_java");
   if (Library.hasMultipleArch(PApplet.platform,importedLibraries)) {
     if (Base.getNativeBits() == 32) {
       folder=new File(sketch.getFolder(),"application." + platformName + "32");
-      if (!exportApplication(folder,PApplet.platform,32)) {
+      if (!exportApplication(folder,PApplet.platform,32,embedJava)) {
         return false;
       }
     }
  else     if (Base.getNativeBits() == 64) {
       folder=new File(sketch.getFolder(),"application." + platformName + "64");
-      if (!exportApplication(folder,PApplet.platform,64)) {
+      if (!exportApplication(folder,PApplet.platform,64,embedJava)) {
         return false;
       }
     }
   }
  else {
     folder=new File(sketch.getFolder(),"application." + platformName);
-    if (!exportApplication(folder,PApplet.platform,0)) {
+    if (!exportApplication(folder,PApplet.platform,0,embedJava)) {
       return false;
     }
   }

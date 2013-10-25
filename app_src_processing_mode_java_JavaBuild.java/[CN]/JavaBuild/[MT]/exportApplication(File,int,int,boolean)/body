@@ -9,12 +9,15 @@
   mode.prepareExportFolder(destFolder);
   File jarFolder=new File(destFolder,"lib");
   File dotAppFolder=null;
-  String jdkFolderName=null;
+  String jvmRuntime="";
   if (exportPlatform == PConstants.MACOSX) {
     dotAppFolder=new File(destFolder,sketch.getName() + ".app");
     File contentsOrig=new File(Base.getJavaHome(),"../../../../..");
-    File jdkFolder=new File(Base.getJavaHome(),"../../..");
-    jdkFolderName=jdkFolder.getCanonicalFile().getName();
+    if (embedJava) {
+      File jdkFolder=new File(Base.getJavaHome(),"../../..");
+      String jdkFolderName=jdkFolder.getCanonicalFile().getName();
+      jvmRuntime="<key>JVMRuntime</key>\n    <string>" + jdkFolderName + "</string>";
+    }
     File contentsFolder=new File(dotAppFolder,"Contents");
     contentsFolder.mkdirs();
     jarFolder=new File(contentsFolder,"Java");
@@ -26,16 +29,22 @@
     writer.println("APPL????");
     writer.flush();
     writer.close();
-    Base.copyDirNative(new File(contentsOrig,"PlugIns"),new File(contentsFolder,"PlugIns"));
+    if (embedJava) {
+      Base.copyDirNative(new File(contentsOrig,"PlugIns"),new File(contentsFolder,"PlugIns"));
+    }
     File resourcesFolder=new File(contentsFolder,"Resources");
     Base.copyDir(new File(contentsOrig,"Resources/en.lproj"),new File(resourcesFolder,"en.lproj"));
     Base.copyFile(mode.getContentFile("application/sketch.icns"),new File(resourcesFolder,"sketch.icns"));
   }
  else   if (exportPlatform == PConstants.LINUX) {
-    Base.copyDirNative(Base.getJavaHome(),new File(destFolder,"java"));
+    if (embedJava) {
+      Base.copyDirNative(Base.getJavaHome(),new File(destFolder,"java"));
+    }
   }
  else   if (exportPlatform == PConstants.WINDOWS) {
-    Base.copyDir(Base.getJavaHome(),new File(destFolder,"java"));
+    if (embedJava) {
+      Base.copyDir(Base.getJavaHome(),new File(destFolder,"java"));
+    }
   }
   if (!jarFolder.exists())   jarFolder.mkdirs();
   if (exportPlatform == PConstants.WINDOWS) {
@@ -145,8 +154,8 @@
       if (lines[i].indexOf("@@") != -1) {
         StringBuffer sb=new StringBuffer(lines[i]);
         int index=0;
-        while ((index=sb.indexOf("@@jdk_folder@@")) != -1) {
-          sb.replace(index,index + "@@jdk_folder@@".length(),jdkFolderName);
+        while ((index=sb.indexOf("@@jvm_runtime@@")) != -1) {
+          sb.replace(index,index + "@@jvm_runtime@@".length(),jvmRuntime);
         }
         while ((index=sb.indexOf("@@jvm_options_list@@")) != -1) {
           sb.replace(index,index + "@@jvm_options_list@@".length(),jvmOptionsList.toString());

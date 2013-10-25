@@ -8,6 +8,7 @@
   int platform=PApplet.platform;
   int platformBits=0;
   int task=HELP;
+  boolean embedJava=true;
   try {
     systemOut=new PrintStream(System.out,true,"UTF-8");
     systemErr=new PrintStream(System.err,true,"UTF-8");
@@ -33,11 +34,14 @@
  else     if (arg.equals(exportApplicationArg)) {
       task=EXPORT;
     }
+ else     if (arg.equals(noJavaArg)) {
+      embedJava=false;
+    }
  else     if (arg.startsWith(platformArg)) {
       complainAndQuit("The --platform option has been removed from Processing 2.1.",false);
     }
  else     if (arg.startsWith(bitsArg)) {
-      complainAndQuit("The --platform option has been removed from Processing 2.1.",false);
+      complainAndQuit("The --bits option has been removed from Processing 2.1.",false);
     }
  else     if (arg.startsWith(sketchArg)) {
       sketchPath=arg.substring(sketchArg.length());
@@ -119,7 +123,7 @@
             if (platformBits == 0 && Library.hasMultipleArch(platform,build.getImportedLibraries())) {
               complainAndQuit("This sketch can be exported for 32- or 64-bit, please specify one.",true);
             }
-            success=build.exportApplication(outputFolder,platform,platformBits);
+            success=build.exportApplication(outputFolder,platform,platformBits,embedJava);
           }
         }
       }
