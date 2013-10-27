@@ -1,5 +1,9 @@
 {
   if ((x < 0) || (y < 0) || (x >= width)|| (y >= height))   return 0;
-  getRaster().getDataElements(x,y,getset);
+  WritableRaster raster=getRaster();
+  raster.getDataElements(x,y,getset);
+  if (raster.getNumBands() == 3) {
+    return getset[0] | 0xff000000;
+  }
   return getset[0];
 }
