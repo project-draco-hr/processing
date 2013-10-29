@@ -1,23 +1,26 @@
 {
-  if (bufferIndex == bufferLast)   return null;
-  byte what=(byte)interesting;
+  if (inBuffer == readOffset) {
+    return null;
+  }
 synchronized (buffer) {
     int found=-1;
-    for (int k=bufferIndex; k < bufferLast; k++) {
-      if (buffer[k] == what) {
-        found=k;
+    for (int i=readOffset; i < inBuffer; i++) {
+      if (buffer[i] == (byte)inByte) {
+        found=i;
         break;
       }
     }
-    if (found == -1)     return null;
-    int length=found - bufferIndex + 1;
-    byte outgoing[]=new byte[length];
-    System.arraycopy(buffer,bufferIndex,outgoing,0,length);
-    bufferIndex+=length;
-    if (bufferIndex == bufferLast) {
-      bufferIndex=0;
-      bufferLast=0;
+    if (found == -1) {
+      return null;
     }
-    return outgoing;
+    int toCopy=found - readOffset + 1;
+    byte[] dest=new byte[toCopy];
+    System.arraycopy(buffer,readOffset,dest,0,toCopy);
+    readOffset+=toCopy;
+    if (inBuffer == readOffset) {
+      inBuffer=0;
+      readOffset=0;
+    }
+    return dest;
   }
 }

@@ -1,6 +1,9 @@
 {
-  setBoolean("editor.antialias",editorAntialiasBox.isSelected());
+  setBoolean("editor.smooth",editorAntialiasBox.isSelected());
   setBoolean("export.delete_target_folder",deletePreviousBox.isSelected());
+  boolean wine=whinyBox.isSelected();
+  setBoolean("header.hide.image",wine);
+  setBoolean("buttons.hide.image",wine);
   String oldPath=get("sketchbook.path");
   String newPath=sketchbookLocationField.getText();
   if (!newPath.equals(oldPath)) {
@@ -31,25 +34,31 @@
  catch (  NumberFormatException e) {
     System.err.println("Ignoring bad memory setting");
   }
-  if (Base.isMacOS()) {
-    String oldBits=get("run.options.bits");
-    String newBits=bitsThirtyTwoButton.isSelected() ? "32" : "64";
-    if (!oldBits.equals(newBits)) {
-      set("run.options.bits",newBits);
-      for (      Mode m : base.getModeList()) {
-        m.rebuildLibraryList();
-      }
-    }
+  if (fontSelectionBox.isEnabled()) {
+    String fontFamily=(String)fontSelectionBox.getSelectedItem();
+    set("editor.font.family",fontFamily);
   }
-  String newSizeText=fontSizeField.getText();
   try {
-    int newSize=Integer.parseInt(newSizeText.trim());
-    String pieces[]=PApplet.split(get("editor.font"),',');
-    pieces[2]=String.valueOf(newSize);
-    set("editor.font",PApplet.join(pieces,','));
+    Object selection=fontSizeField.getSelectedItem();
+    if (selection instanceof String) {
+      selection=Integer.parseInt((String)selection);
+    }
+    set("editor.font.size",String.valueOf(selection));
   }
- catch (  Exception e) {
-    Base.log("ignoring invalid font size " + newSizeText);
+ catch (  NumberFormatException e) {
+    Base.log("Ignoring invalid font size " + fontSizeField);
+    fontSizeField.setSelectedItem(getInteger("editor.font.size"));
+  }
+  try {
+    Object selection=consoleSizeField.getSelectedItem();
+    if (selection instanceof String) {
+      selection=Integer.parseInt((String)selection);
+    }
+    set("console.font.size",String.valueOf(selection));
+  }
+ catch (  NumberFormatException e) {
+    Base.log("Ignoring invalid font size " + consoleSizeField);
+    consoleSizeField.setSelectedItem(getInteger("console.font.size"));
   }
   setBoolean("editor.input_method_support",inputMethodBox.isSelected());
   if (autoAssociateBox != null) {

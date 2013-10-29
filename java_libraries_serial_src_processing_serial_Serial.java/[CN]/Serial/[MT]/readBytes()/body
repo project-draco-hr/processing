@@ -1,11 +1,12 @@
 {
-  if (bufferIndex == bufferLast)   return null;
+  if (inBuffer == readOffset) {
+    return null;
+  }
 synchronized (buffer) {
-    int length=bufferLast - bufferIndex;
-    byte outgoing[]=new byte[length];
-    System.arraycopy(buffer,bufferIndex,outgoing,0,length);
-    bufferIndex=0;
-    bufferLast=0;
-    return outgoing;
+    byte[] ret=new byte[inBuffer - readOffset];
+    System.arraycopy(buffer,readOffset,ret,0,ret.length);
+    inBuffer=0;
+    readOffset=0;
+    return ret;
   }
 }

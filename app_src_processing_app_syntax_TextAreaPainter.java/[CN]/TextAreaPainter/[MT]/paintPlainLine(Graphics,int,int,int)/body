@@ -1,0 +1,19 @@
+{
+  if (!printing) {
+    paintHighlight(gfx,line,y);
+  }
+  textArea.getLineText(line,currentLine);
+  y+=fm.getHeight();
+  int w=fm.charWidth(' ');
+  for (int i=0; i < currentLine.count; i++) {
+    gfx.drawChars(currentLine.array,currentLine.offset + i,1,x,y);
+    x+=w;
+  }
+  if (compositionTextPainter != null && compositionTextPainter.hasComposedTextLayout()) {
+    compositionTextPainter.draw(gfx,defaults.lineHighlightColor);
+  }
+  if (defaults.eolMarkers) {
+    gfx.setColor(defaults.eolMarkerColor);
+    gfx.drawString(".",x,y);
+  }
+}

@@ -1,0 +1,31 @@
+{
+  if (application == null) {
+    application=Application.getApplication();
+  }
+  if (adapter == null) {
+    adapter=new ThinkDifferent(base);
+  }
+  application.addApplicationListener(adapter);
+  application.setEnabledAboutMenu(true);
+  application.setEnabledPreferencesMenu(true);
+  JMenuBar defaultMenuBar=new JMenuBar();
+  JMenu fileMenu=buildFileMenu(base);
+  defaultMenuBar.add(fileMenu);
+  Base.defaultFileMenu=fileMenu;
+  if (PApplet.javaVersion <= 1.6f) {
+    try {
+      application.setDefaultMenuBar(defaultMenuBar);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+  }
+ else {
+    JFrame offscreen=new JFrame();
+    offscreen.setUndecorated(true);
+    offscreen.setJMenuBar(defaultMenuBar);
+    Dimension screen=Toolkit.getScreenSize();
+    offscreen.setLocation(screen.width,screen.height);
+    offscreen.setVisible(true);
+  }
+}

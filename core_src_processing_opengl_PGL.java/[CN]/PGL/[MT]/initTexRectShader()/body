@@ -1,0 +1,22 @@
+{
+  if (!loadedTexRectShader || texRectShaderContext != glContext) {
+    String vertSource=PApplet.join(texVertShaderSource,"\n");
+    String fragSource=PApplet.join(texRectFragShaderSource,"\n");
+    texRectVertShader=createShader(VERTEX_SHADER,vertSource);
+    texRectFragShader=createShader(FRAGMENT_SHADER,fragSource);
+    if (0 < texRectVertShader && 0 < texRectFragShader) {
+      texRectShaderProgram=createProgram(texRectVertShader,texRectFragShader);
+    }
+    if (0 < texRectShaderProgram) {
+      texRectVertLoc=getAttribLocation(texRectShaderProgram,"position");
+      texRectTCoordLoc=getAttribLocation(texRectShaderProgram,"texCoord");
+      texRectSamplerLoc=getUniformLocation(texRectShaderProgram,"texMap");
+    }
+    loadedTexRectShader=true;
+    texRectShaderContext=glContext;
+    genBuffers(1,intBuffer);
+    texGeoVBO=intBuffer.get(0);
+    bindBuffer(ARRAY_BUFFER,texGeoVBO);
+    bufferData(ARRAY_BUFFER,16 * SIZEOF_FLOAT,null,STATIC_DRAW);
+  }
+}

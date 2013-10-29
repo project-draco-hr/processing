@@ -1,59 +1,75 @@
 {
-  BaseShader shader;
+  PShader shader;
+  boolean useDefault=polyShader == null;
+  if (polyShader != null) {
+    polyShader.setRenderer(this);
+    polyShader.loadAttributes();
+    polyShader.loadUniforms();
+  }
   if (lit) {
     if (tex) {
-      if (texlightShader == null) {
+      if (useDefault || !polyShader.checkPolyType(PShader.TEXLIGHT)) {
         if (defTexlightShader == null) {
-          defTexlightShader=new TexlightShader(parent,defTexlightShaderVertURL,defTextureShaderFragURL);
+          String[] vertSource=pgl.loadVertexShader(defTexlightShaderVertURL,120);
+          String[] fragSource=pgl.loadFragmentShader(defTextureShaderFragURL,120);
+          defTexlightShader=new PShader(parent,vertSource,fragSource);
         }
         shader=defTexlightShader;
-        texlightShaderCheck();
       }
  else {
-        shader=texlightShader;
+        shader=polyShader;
       }
     }
  else {
-      if (lightShader == null) {
+      if (useDefault || !polyShader.checkPolyType(PShader.LIGHT)) {
         if (defLightShader == null) {
-          defLightShader=new LightShader(parent,defLightShaderVertURL,defColorShaderFragURL);
+          String[] vertSource=pgl.loadVertexShader(defLightShaderVertURL,120);
+          String[] fragSource=pgl.loadFragmentShader(defColorShaderFragURL,120);
+          defLightShader=new PShader(parent,vertSource,fragSource);
         }
         shader=defLightShader;
-        lightShaderCheck();
       }
  else {
-        shader=lightShader;
+        shader=polyShader;
       }
     }
   }
  else {
+    if (polyShader != null && polyShader.accessLightAttribs()) {
+      PGraphics.showWarning(SHADER_NEED_LIGHT_ATTRIBS);
+      useDefault=true;
+    }
     if (tex) {
-      if (textureShader == null) {
+      if (useDefault || !polyShader.checkPolyType(PShader.TEXTURE)) {
         if (defTextureShader == null) {
-          defTextureShader=new TextureShader(parent,defTextureShaderVertURL,defTextureShaderFragURL);
+          String[] vertSource=pgl.loadVertexShader(defTextureShaderVertURL,120);
+          String[] fragSource=pgl.loadFragmentShader(defTextureShaderFragURL,120);
+          defTextureShader=new PShader(parent,vertSource,fragSource);
         }
         shader=defTextureShader;
-        textureShaderCheck();
       }
  else {
-        shader=textureShader;
+        shader=polyShader;
       }
     }
  else {
-      if (colorShader == null) {
+      if (useDefault || !polyShader.checkPolyType(PShader.COLOR)) {
         if (defColorShader == null) {
-          defColorShader=new ColorShader(parent,defColorShaderVertURL,defColorShaderFragURL);
+          String[] vertSource=pgl.loadVertexShader(defColorShaderVertURL,120);
+          String[] fragSource=pgl.loadFragmentShader(defColorShaderFragURL,120);
+          defColorShader=new PShader(parent,vertSource,fragSource);
         }
         shader=defColorShader;
-        colorShaderCheck();
       }
  else {
-        shader=colorShader;
+        shader=polyShader;
       }
     }
   }
-  shader.setRenderer(this);
-  shader.loadAttributes();
-  shader.loadUniforms();
+  if (shader != polyShader) {
+    shader.setRenderer(this);
+    shader.loadAttributes();
+    shader.loadUniforms();
+  }
   return shader;
 }

@@ -1,0 +1,109 @@
+{
+  createMovieButton.setEnabled(false);
+  final File soundFile=soundFileField.getText().trim().length() == 0 ? null : new File(soundFileField.getText().trim());
+  final File imageFolder=imageFolderField.getText().trim().length() == 0 ? null : new File(imageFolderField.getText().trim());
+  final String streaming="fastStartCompressed";
+  if (soundFile == null && imageFolder == null) {
+    JOptionPane.showMessageDialog(this,"<html>You need to specify a folder with<br>image files and/or a sound file.");
+    return;
+  }
+  final double fps;
+  try {
+    width=Integer.parseInt(widthField.getText());
+    height=Integer.parseInt(heightField.getText());
+    fps=Double.parseDouble(fpsField.getText());
+  }
+ catch (  Throwable t) {
+    JOptionPane.showMessageDialog(this,"<html>Width, Height and FPS must be numeric.");
+    return;
+  }
+  if (width < 1 || height < 1 || fps < 1) {
+    JOptionPane.showMessageDialog(this,"<html>Width, Height and FPS must be greater than zero.");
+    return;
+  }
+  final QuickTimeWriter.VideoFormat videoFormat;
+switch (compressionBox.getSelectedIndex()) {
+case 0:
+    videoFormat=QuickTimeWriter.VideoFormat.RLE;
+  break;
+case 1:
+videoFormat=QuickTimeWriter.VideoFormat.JPG;
+break;
+case 2:
+default :
+videoFormat=QuickTimeWriter.VideoFormat.PNG;
+break;
+}
+prefs.put("movie.imageFolder",imageFolderField.getText());
+prefs.put("movie.soundFile",soundFileField.getText());
+prefs.putInt("movie.width",width);
+prefs.putInt("movie.height",height);
+prefs.putDouble("movie.fps",fps);
+prefs.putInt("movie.compression",compressionBox.getSelectedIndex());
+prefs.putBoolean("movie.originalSize",originalSizeCheckBox.isSelected());
+final boolean originalSize=originalSizeCheckBox.isSelected();
+SwingWorker w=new SwingWorker(){
+@Override protected Object doInBackground(){
+try {
+File[] imgFiles=null;
+if (imageFolder != null) {
+imgFiles=imageFolder.listFiles(new FileFilter(){
+FileSystemView fsv=FileSystemView.getFileSystemView();
+public boolean accept(File f){
+  return f.isFile() && !fsv.isHiddenFile(f) && !f.getName().equals("Thumbs.db");
+}
+}
+);
+if (imgFiles == null || imgFiles.length == 0) {
+return new RuntimeException("No image files found.");
+}
+Arrays.sort(imgFiles);
+}
+if (originalSize) {
+BufferedImage temp=readImage(imgFiles[0]);
+if (temp == null) {
+return new RuntimeException("Coult not read " + imgFiles[0].getAbsolutePath());
+}
+width=temp.getWidth();
+height=temp.getHeight();
+if (width <= 0 || height <= 0) {
+return new RuntimeException("Could not read " + imgFiles[0].getName() + ", it may be bad.");
+}
+}
+if (movieFile.exists()) {
+movieFile.delete();
+}
+if (imageFolder != null && soundFile != null) {
+writeVideoAndAudio(movieFile,imgFiles,soundFile,width,height,fps,videoFormat,streaming);
+}
+ else if (imageFolder != null) {
+writeVideoOnlyVFR(movieFile,imgFiles,width,height,fps,videoFormat,streaming);
+}
+ else {
+writeAudioOnly(movieFile,soundFile,streaming);
+}
+return null;
+}
+ catch (Throwable t) {
+return t;
+}
+}
+@Override protected void done(){
+Object o;
+try {
+o=get();
+}
+ catch (Exception ex) {
+o=ex;
+}
+if (o instanceof Throwable) {
+Throwable t=(Throwable)o;
+t.printStackTrace();
+JOptionPane.showMessageDialog(MovieMaker.this,"<html>Creating the QuickTime Movie failed.<br>" + (t.getMessage() == null ? t.toString() : t.getMessage()),"Sorry",JOptionPane.ERROR_MESSAGE);
+}
+createMovieButton.setEnabled(true);
+}
+}
+;
+w.execute();
+}

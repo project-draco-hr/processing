@@ -1,25 +1,13 @@
 {
-  if (!loadedTex2DShader || tex2DShaderContext.hashCode() != context.hashCode()) {
-    tex2DVertShader=createShader(VERTEX_SHADER,texVertShaderSource);
-    tex2DFragShader=createShader(FRAGMENT_SHADER,tex2DFragShaderSource);
-    if (0 < tex2DVertShader && 0 < tex2DFragShader) {
-      tex2DShaderProgram=createProgram(tex2DVertShader,tex2DFragShader);
-    }
-    if (0 < tex2DShaderProgram) {
-      tex2DVertLoc=getAttribLocation(tex2DShaderProgram,"inVertex");
-      tex2DTCoordLoc=getAttribLocation(tex2DShaderProgram,"inTexcoord");
-    }
-    loadedTex2DShader=true;
-    tex2DShaderContext=context;
-  }
-  if (texData == null) {
-    texData=allocateDirectFloatBuffer(texCoords.length);
-  }
+  initTex2DShader();
   if (0 < tex2DShaderProgram) {
     boolean depthTest=getDepthTest();
     disable(DEPTH_TEST);
     boolean depthMask=getDepthWriteMask();
     depthMask(false);
+    viewBuffer.rewind();
+    getIntegerv(VIEWPORT,viewBuffer);
+    viewport(0,0,scrW,scrH);
     useProgram(tex2DShaderProgram);
     enableVertexAttribArray(tex2DVertLoc);
     enableVertexAttribArray(tex2DTCoordLoc);
@@ -48,12 +36,14 @@
       enabledTex=true;
     }
     bindTexture(TEXTURE_2D,id);
-    bindBuffer(ARRAY_BUFFER,0);
+    uniform1i(tex2DSamplerLoc,0);
     texData.position(0);
-    vertexAttribPointer(tex2DVertLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,texData);
-    texData.position(2);
-    vertexAttribPointer(tex2DTCoordLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,texData);
+    bindBuffer(PGL.ARRAY_BUFFER,texGeoVBO);
+    bufferData(PGL.ARRAY_BUFFER,16 * SIZEOF_FLOAT,texData,PGL.STATIC_DRAW);
+    vertexAttribPointer(tex2DVertLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,0);
+    vertexAttribPointer(tex2DTCoordLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,2 * SIZEOF_FLOAT);
     drawArrays(TRIANGLE_STRIP,0,4);
+    bindBuffer(ARRAY_BUFFER,0);
     bindTexture(TEXTURE_2D,0);
     if (enabledTex) {
       disableTexturing(TEXTURE_2D);
@@ -68,5 +58,6 @@
       disable(DEPTH_TEST);
     }
     depthMask(depthMask);
+    viewport(viewBuffer.get(0),viewBuffer.get(1),viewBuffer.get(2),viewBuffer.get(3));
   }
 }

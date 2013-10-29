@@ -7,6 +7,20 @@
   }
   factory.setExpandEntityReferences(false);
   DocumentBuilder builder=factory.newDocumentBuilder();
-  Document document=builder.parse(new InputSource(reader));
+  Document document=builder.parse(new InputSource(new Reader(){
+    @Override public int read(    char[] cbuf,    int off,    int len) throws IOException {
+      int count=reader.read(cbuf,off,len);
+      for (int i=0; i < count; i++) {
+        if (cbuf[off + i] == '\u2028') {
+          cbuf[off + i]='\n';
+        }
+      }
+      return count;
+    }
+    @Override public void close() throws IOException {
+      reader.close();
+    }
+  }
+));
   node=document.getDocumentElement();
 }

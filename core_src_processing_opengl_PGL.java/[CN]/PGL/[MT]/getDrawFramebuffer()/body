@@ -1,16 +1,4 @@
 {
-  if (fboLayerInUse) {
-    if (1 < numSamples) {
-      return glMultiFbo.get(0);
-    }
- else {
-      return glColorFbo.get(0);
-    }
-  }
- else   if (capabilities.isFBO()) {
-    return context.getDefaultDrawFramebuffer();
-  }
- else {
-    return 0;
-  }
+  if (fboLayerInUse)   return 1 < numSamples ? glMultiFbo.get(0) : glColorFbo.get(0);
+ else   return 0;
 }

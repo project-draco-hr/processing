@@ -32,13 +32,18 @@
   Graphics2D g2=(Graphics2D)g;
   if (Toolkit.highResDisplay()) {
     g2.scale(2,2);
+    if (Base.isUsableOracleJava()) {
+      g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    }
   }
  else {
     g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
   }
-  g.setColor(backgroundColor);
+  g.setColor(hiding ? hideColor : bgColor);
   g.fillRect(0,0,imageW,imageH);
-  editor.getMode().drawBackground(g,Preferences.GRID_SIZE);
+  if (!hiding) {
+    editor.getMode().drawBackground(g,Preferences.GRID_SIZE);
+  }
   if (tabs.length != sketch.getCodeCount()) {
     tabs=new Tab[sketch.getCodeCount()];
     for (int i=0; i < tabs.length; i++) {

@@ -1,9 +1,9 @@
 {
   pm.startTask("Removing",ProgressMonitor.UNKNOWN);
   boolean doBackup=Preferences.getBoolean("contribution.backup.on_remove");
-  if (requiresRestart()) {
+  if (getType().requiresRestart()) {
     if (!doBackup || (doBackup && backup(editor,false,status))) {
-      if (setDeletionFlag()) {
+      if (setDeletionFlag(true)) {
         contribListing.replaceContribution(this,this);
       }
     }

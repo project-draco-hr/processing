@@ -5,7 +5,7 @@
     properties=Base.readSettings(propertiesFile);
     name=properties.get("name");
     id=properties.get("id");
-    category=ContributionListing.getCategory(properties.get("category"));
+    categories=parseCategories(properties.get("category"));
     if (name == null) {
       name=folder.getName();
     }
@@ -25,5 +25,6 @@
  else {
     Base.log("No properties file at " + propertiesFile.getAbsolutePath());
     name=folder.getName();
+    categories=defaultCategory();
   }
 }

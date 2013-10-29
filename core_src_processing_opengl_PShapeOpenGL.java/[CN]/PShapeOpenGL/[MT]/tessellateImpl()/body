@@ -18,12 +18,13 @@
       tessellator.setInGeometry(inGeo);
       tessellator.setTessGeometry(tessGeo);
       tessellator.setFill(fill || image != null);
+      tessellator.setTexCache(null,null,null);
       tessellator.setStroke(stroke);
       tessellator.setStrokeColor(strokeColor);
       tessellator.setStrokeWeight(strokeWeight);
       tessellator.setStrokeCap(strokeCap);
       tessellator.setStrokeJoin(strokeJoin);
-      tessellator.setTexCache(null,null,null);
+      tessellator.setRenderer(pg);
       tessellator.setTransform(matrix);
       tessellator.set3D(is3D());
       if (family == GEOMETRY) {
@@ -65,8 +66,17 @@
           tessellator.tessellateQuadStrip();
         }
  else         if (kind == POLYGON) {
-          if (stroke)           inGeo.addPolygonEdges(isClosed);
-          tessellator.tessellatePolygon(isSolid,isClosed,normalMode == NORMAL_MODE_AUTO);
+          boolean bez=inGeo.hasBezierVertex();
+          boolean quad=inGeo.hasQuadraticVertex();
+          boolean curv=inGeo.hasCurveVertex();
+          if (bez || quad)           saveBezierVertexSettings();
+          if (curv) {
+            saveCurveVertexSettings();
+            tessellator.resetCurveVertexCount();
+          }
+          tessellator.tessellatePolygon(solid,close,normalMode == NORMAL_MODE_AUTO);
+          if (bez || quad)           restoreBezierVertexSettings();
+          if (curv)           restoreCurveVertexSettings();
         }
       }
  else       if (family == PRIMITIVE) {

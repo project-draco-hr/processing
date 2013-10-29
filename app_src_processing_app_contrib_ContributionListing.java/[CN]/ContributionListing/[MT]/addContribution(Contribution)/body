@@ -1,15 +1,17 @@
 {
-  if (librariesByCategory.containsKey(contribution.getCategory())) {
-    List<Contribution> list=librariesByCategory.get(contribution.getCategory());
-    list.add(contribution);
-    Collections.sort(list,nameComparator);
-  }
+  for (  String category : contribution.getCategories()) {
+    if (librariesByCategory.containsKey(category)) {
+      List<Contribution> list=librariesByCategory.get(category);
+      list.add(contribution);
+      Collections.sort(list,nameComparator);
+    }
  else {
-    ArrayList<Contribution> list=new ArrayList<Contribution>();
-    list.add(contribution);
-    librariesByCategory.put(contribution.getCategory(),list);
+      ArrayList<Contribution> list=new ArrayList<Contribution>();
+      list.add(contribution);
+      librariesByCategory.put(category,list);
+    }
+    allContributions.add(contribution);
+    notifyAdd(contribution);
+    Collections.sort(allContributions,nameComparator);
   }
-  allContributions.add(contribution);
-  notifyAdd(contribution);
-  Collections.sort(allContributions,nameComparator);
 }

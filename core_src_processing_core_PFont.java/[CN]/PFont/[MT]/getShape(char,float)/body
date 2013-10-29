@@ -1,0 +1,46 @@
+{
+  Font font=(Font)getNative();
+  if (font == null) {
+    throw new IllegalArgumentException("getShape() only works on fonts loaded with createFont()");
+  }
+  PShape s=new PShape(PShape.PATH);
+  float[] iterPoints=new float[6];
+  char[] textArray=new char[]{ch};
+  @SuppressWarnings("deprecation") FontRenderContext frc=Toolkit.getDefaultToolkit().getFontMetrics(font).getFontRenderContext();
+  GlyphVector gv=font.createGlyphVector(frc,textArray);
+  Shape shp=gv.getOutline();
+  PathIterator iter=(detail == 0) ? shp.getPathIterator(null) : shp.getPathIterator(null,detail);
+  int contours=0;
+  while (!iter.isDone()) {
+    int type=iter.currentSegment(iterPoints);
+switch (type) {
+case PathIterator.SEG_MOVETO:
+      if (contours == 0) {
+        s.beginShape();
+      }
+ else {
+        s.beginContour();
+      }
+    contours++;
+  s.vertex(iterPoints[0],iterPoints[1]);
+break;
+case PathIterator.SEG_LINETO:
+s.vertex(iterPoints[0],iterPoints[1]);
+break;
+case PathIterator.SEG_QUADTO:
+s.quadraticVertex(iterPoints[0],iterPoints[1],iterPoints[2],iterPoints[3]);
+break;
+case PathIterator.SEG_CUBICTO:
+s.quadraticVertex(iterPoints[0],iterPoints[1],iterPoints[2],iterPoints[3],iterPoints[4],iterPoints[5]);
+break;
+case PathIterator.SEG_CLOSE:
+if (contours > 1) {
+s.endContour();
+}
+break;
+}
+iter.next();
+}
+s.endShape(CLOSE);
+return s;
+}

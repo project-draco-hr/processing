@@ -19,8 +19,14 @@
         super.finished();
         updateContributionListing();
         updateCategoryChooser();
-        if (isError()) {
-          status.setErrorMessage("An error occured when downloading " + "the list of available contributions.");
+        if (error) {
+          if (exception instanceof SocketTimeoutException) {
+            status.setErrorMessage("Connection timed out while " + "downloading the contribution list.");
+          }
+ else {
+            status.setErrorMessage("Could not download the list" + "of available contributions.");
+          }
+          exception.printStackTrace();
         }
       }
     }

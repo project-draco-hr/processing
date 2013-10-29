@@ -1,0 +1,25 @@
+{
+  if (!loadedTex2DShader || tex2DShaderContext != glContext) {
+    String vertSource=PApplet.join(texVertShaderSource,"\n");
+    String fragSource=PApplet.join(tex2DFragShaderSource,"\n");
+    tex2DVertShader=createShader(VERTEX_SHADER,vertSource);
+    tex2DFragShader=createShader(FRAGMENT_SHADER,fragSource);
+    if (0 < tex2DVertShader && 0 < tex2DFragShader) {
+      tex2DShaderProgram=createProgram(tex2DVertShader,tex2DFragShader);
+    }
+    if (0 < tex2DShaderProgram) {
+      tex2DVertLoc=getAttribLocation(tex2DShaderProgram,"position");
+      tex2DTCoordLoc=getAttribLocation(tex2DShaderProgram,"texCoord");
+      tex2DSamplerLoc=getUniformLocation(tex2DShaderProgram,"texMap");
+    }
+    loadedTex2DShader=true;
+    tex2DShaderContext=glContext;
+    genBuffers(1,intBuffer);
+    texGeoVBO=intBuffer.get(0);
+    bindBuffer(ARRAY_BUFFER,texGeoVBO);
+    bufferData(ARRAY_BUFFER,16 * SIZEOF_FLOAT,null,STATIC_DRAW);
+  }
+  if (texData == null) {
+    texData=allocateDirectFloatBuffer(texCoords.length);
+  }
+}

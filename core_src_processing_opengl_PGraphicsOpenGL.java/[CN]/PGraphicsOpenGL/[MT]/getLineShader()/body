@@ -1,8 +1,10 @@
 {
-  LineShader shader;
+  PShader shader;
   if (lineShader == null) {
     if (defLineShader == null) {
-      defLineShader=new LineShader(parent,defLineShaderVertURL,defLineShaderFragURL);
+      String[] vertSource=pgl.loadVertexShader(defLineShaderVertURL,120);
+      String[] fragSource=pgl.loadFragmentShader(defLineShaderFragURL,120);
+      defLineShader=new PShader(parent,vertSource,fragSource);
     }
     shader=defLineShader;
   }

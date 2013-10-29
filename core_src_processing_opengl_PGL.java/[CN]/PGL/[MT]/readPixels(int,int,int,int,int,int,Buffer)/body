@@ -1,5 +1,6 @@
 {
-  PGraphicsOpenGL.pgCurrent.beginPixelsOp(PGraphicsOpenGL.OP_READ);
+  boolean needEndBegin=format != STENCIL_INDEX && format != DEPTH_COMPONENT && format != DEPTH_STENCIL;
+  if (needEndBegin)   pg.beginReadPixels();
   readPixelsImpl(x,y,width,height,format,type,buffer);
-  PGraphicsOpenGL.pgCurrent.endPixelsOp();
+  if (needEndBegin)   pg.endReadPixels();
 }

@@ -1,0 +1,30 @@
+{
+  if (-1 < transformMatLoc) {
+    pg.updateGLProjmodelview();
+    setUniformMatrix(transformMatLoc,pg.glProjmodelview);
+  }
+  if (-1 < modelviewMatLoc) {
+    pg.updateGLModelview();
+    setUniformMatrix(modelviewMatLoc,pg.glModelview);
+  }
+  if (-1 < projectionMatLoc) {
+    pg.updateGLProjection();
+    setUniformMatrix(projectionMatLoc,pg.glProjection);
+  }
+  if (-1 < viewportLoc) {
+    float x=pg.viewport.get(0);
+    float y=pg.viewport.get(1);
+    float w=pg.viewport.get(2);
+    float h=pg.viewport.get(3);
+    setUniformValue(viewportLoc,x,y,w,h);
+  }
+  if (-1 < bufferLoc) {
+    bufferUnit=getLastTexUnit() + 1;
+    setUniformValue(bufferLoc,bufferUnit);
+    pgl.activeTexture(PGL.TEXTURE0 + bufferUnit);
+    pg.bindFrontTexture();
+  }
+ else {
+    bufferUnit=-1;
+  }
+}

@@ -1,0 +1,17 @@
+{
+  Thread current=Thread.currentThread();
+  ClassLoader origLoader=Thread.currentThread().getContextClassLoader();
+  current.setContextClassLoader(getClass().getClassLoader());
+  BufferedImage image=ImageIO.read(file);
+  current.setContextClassLoader(origLoader);
+  if (image == null) {
+    String path=file.getAbsolutePath();
+    if (path.toLowerCase().endsWith(".tga")) {
+      return loadImageTGA(file);
+    }
+ else     if (path.toLowerCase().endsWith(".tif")) {
+      throw new IOException("Try TGA or PNG images instead of TIFF.");
+    }
+  }
+  return image;
+}

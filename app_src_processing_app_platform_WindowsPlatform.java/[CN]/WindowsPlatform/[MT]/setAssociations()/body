@@ -1,0 +1,10 @@
+{
+  final REGISTRY_ROOT_KEY rootKey=REGISTRY_ROOT_KEY.CURRENT_USER;
+  final String docPrefix="Software\\Classes\\" + REG_DOC;
+  if (WindowsRegistry.createKey(rootKey,"Software\\Classes",".pde") && WindowsRegistry.setStringValue(rootKey,"Software\\Classes\\.pde","",REG_DOC) && WindowsRegistry.createKey(rootKey,"Software\\Classes",REG_DOC)&& WindowsRegistry.setStringValue(rootKey,docPrefix,"",APP_NAME + " Source Code")&& WindowsRegistry.createKey(rootKey,docPrefix,"shell")&& WindowsRegistry.createKey(rootKey,docPrefix + "\\shell","open")&& WindowsRegistry.createKey(rootKey,docPrefix + "\\shell\\open","command")&& WindowsRegistry.setStringValue(rootKey,docPrefix + "\\shell\\open\\command","",REG_OPEN_COMMAND)) {
+  }
+ else {
+    Base.log("Could not associate files, turning off auto-associate pref.");
+    Preferences.setBoolean("platform.auto_file_type_associations",false);
+  }
+}

@@ -1,0 +1,11 @@
+{
+  char[] pszPath=new char[WinDef.MAX_PATH];
+  HRESULT hResult=Shell32.INSTANCE.SHGetFolderPath(null,ShlObj.CSIDL_APPDATA,null,ShlObj.SHGFP_TYPE_CURRENT,pszPath);
+  if (!hResult.equals(WinError.S_OK)) {
+    System.err.println(Kernel32Util.formatMessageFromHR(hResult));
+    throw new Exception("Problem city, population: your computer.");
+  }
+  String appDataPath=new String(pszPath);
+  int len=appDataPath.indexOf("\0");
+  return appDataPath.substring(0,len);
+}

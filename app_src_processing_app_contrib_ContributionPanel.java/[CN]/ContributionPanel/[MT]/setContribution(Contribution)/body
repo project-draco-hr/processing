@@ -15,9 +15,11 @@
     description.append(toHtmlLinks(contrib.getAuthorList()));
   }
   description.append("<br/>");
-  boolean isFlagged=contrib.isDeletionFlagged();
-  if (isFlagged) {
-    description.append(ContributionListPanel.DELETION_MESSAGE);
+  if (contrib.isDeletionFlagged()) {
+    description.append(REMOVE_RESTART_MESSAGE);
+  }
+ else   if (contrib.isRestartFlagged()) {
+    description.append(INSTALL_RESTART_MESSAGE);
   }
  else {
     String sentence=contrib.getSentence();
@@ -35,12 +37,12 @@
   if (contribListing.hasUpdates(contrib)) {
     StringBuilder versionText=new StringBuilder();
     versionText.append("<html><body><i>");
-    if (isFlagged) {
-      versionText.append("To finish an update, reinstall this contribution after the restart.");
+    if (contrib.isDeletionFlagged()) {
+      versionText.append("To finish an update, reinstall this contribution after restarting.");
     }
  else {
       versionText.append("New version available!");
-      if (contrib.requiresRestart()) {
+      if (contrib.getType().requiresRestart()) {
         versionText.append(" To update, first remove the current version.");
       }
     }
@@ -53,13 +55,13 @@
     notificationBlock.setVisible(false);
   }
   updateButton.setEnabled(true);
-  if (contrib != null && !contrib.requiresRestart()) {
+  if (contrib != null && !contrib.getType().requiresRestart()) {
     updateButton.setVisible(isSelected() && contribListing.hasUpdates(contrib));
   }
   installRemoveButton.removeActionListener(installActionListener);
   installRemoveButton.removeActionListener(removeActionListener);
   installRemoveButton.removeActionListener(undoActionListener);
-  if (isFlagged) {
+  if (contrib.isDeletionFlagged()) {
     installRemoveButton.addActionListener(undoActionListener);
     installRemoveButton.setText("Undo");
   }

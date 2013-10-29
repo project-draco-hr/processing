@@ -7,22 +7,21 @@
     int index=in.renderMode == RETAINED ? tess.polyIndexCache.addNew() : tess.polyIndexCache.getLast();
     firstLineIndexCache=index;
     if (firstPolyIndexCache == -1)     firstPolyIndexCache=index;
-    int i0=in.firstVertex;
+    int i0=0;
     boolean clamp=clampLineLoop2D(lineCount);
     for (int ln=0; ln < lineCount - 1; ln++) {
-      int i1=in.firstVertex + ln + 1;
+      int i1=ln + 1;
       index=addLineSegment2D(i0,i1,index,false,clamp);
       i0=i1;
     }
-    index=addLineSegment2D(in.lastVertex,in.firstVertex,index,false,clamp);
+    index=addLineSegment2D(0,in.vertexCount - 1,index,false,clamp);
     lastLineIndexCache=lastPolyIndexCache=index;
   }
  else {
-    int first=in.firstVertex;
     LinePath path=new LinePath(LinePath.WIND_NON_ZERO);
-    path.moveTo(in.vertices[3 * first + 0],in.vertices[3 * first + 1],in.strokeColors[first]);
+    path.moveTo(in.vertices[0],in.vertices[1],in.strokeColors[0]);
     for (int ln=0; ln < lineCount - 1; ln++) {
-      int i1=first + ln + 1;
+      int i1=ln + 1;
       path.lineTo(in.vertices[3 * i1 + 0],in.vertices[3 * i1 + 1],in.strokeColors[i1]);
     }
     path.closePath();

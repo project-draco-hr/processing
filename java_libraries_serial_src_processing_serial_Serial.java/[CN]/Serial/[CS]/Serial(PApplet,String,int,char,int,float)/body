@@ -1,47 +1,45 @@
 {
   this.parent=parent;
-  if (PApplet.platform == PConstants.MACOSX) {
-    File lockFolder=new File("/var/lock");
-    if (!lockFolder.exists() || !lockFolder.canRead() || !lockFolder.canWrite()|| !lockFolder.canExecute()) {
-      final String MESSAGE="To use the serial library, first open\n" + "Applications -> Utilities -> Terminal.app\n" + "and enter the following:\n"+ "sudo mkdir -p /var/lock\n"+ "sudo chmod 777 /var/lock";
-      System.err.println(MESSAGE);
-      final String msg="Please use Tools \u2192 Fix the Serial Library.";
-      throw new RuntimeException(msg);
-    }
+  parent.registerMethod("dispose",this);
+  parent.registerMethod("pre",this);
+  if (parity == 'O') {
+    parity=SerialPort.PARITY_ODD;
   }
-  this.rate=irate;
-  parity=SerialPort.PARITY_NONE;
-  if (iparity == 'E')   parity=SerialPort.PARITY_EVEN;
-  if (iparity == 'O')   parity=SerialPort.PARITY_ODD;
-  this.databits=idatabits;
-  stopbits=SerialPort.STOPBITS_1;
-  if (istopbits == 1.5f)   stopbits=SerialPort.STOPBITS_1_5;
-  if (istopbits == 2)   stopbits=SerialPort.STOPBITS_2;
+ else   if (parity == 'E') {
+    parity=SerialPort.PARITY_EVEN;
+  }
+ else   if (parity == 'M') {
+    parity=SerialPort.PARITY_MARK;
+  }
+ else   if (parity == 'S') {
+    parity=SerialPort.PARITY_SPACE;
+  }
+ else {
+    parity=SerialPort.PARITY_NONE;
+  }
+  int stopBitsIdx=SerialPort.STOPBITS_1;
+  if (stopBits == 1.5f) {
+    stopBitsIdx=SerialPort.STOPBITS_1_5;
+  }
+ else   if (stopBits == 2) {
+    stopBitsIdx=SerialPort.STOPBITS_2;
+  }
+  port=new SerialPort(portName);
   try {
-    Enumeration<?> portList=CommPortIdentifier.getPortIdentifiers();
-    while (portList.hasMoreElements()) {
-      CommPortIdentifier portId=(CommPortIdentifier)portList.nextElement();
-      if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-        if (portId.getName().equals(iname)) {
-          port=(SerialPort)portId.open("serial madness",2000);
-          input=port.getInputStream();
-          output=port.getOutputStream();
-          port.setSerialPortParams(rate,databits,stopbits,parity);
-          port.addEventListener(this);
-          port.notifyOnDataAvailable(true);
-        }
-      }
-    }
+    port.openPort();
+    port.setParams(baudRate,dataBits,stopBitsIdx,parity);
+    port.addEventListener(this,SerialPort.MASK_RXCHAR);
+  }
+ catch (  SerialPortException e) {
+    throw new RuntimeException("Error opening serial port " + e.getPortName() + ": "+ e.getExceptionType());
+  }
+  try {
+    serialEventMethod=parent.getClass().getMethod("serialEvent",new Class[]{this.getClass()});
   }
  catch (  Exception e) {
-    errorMessage("<init>",e);
-    port=null;
-    input=null;
-    output=null;
   }
-  parent.registerMethod("dispose",this);
   try {
-    serialEventMethod=parent.getClass().getMethod("serialEvent",new Class[]{Serial.class});
+    serialAvailableMethod=parent.getClass().getMethod("serialAvailable",new Class[]{this.getClass()});
   }
  catch (  Exception e) {
   }

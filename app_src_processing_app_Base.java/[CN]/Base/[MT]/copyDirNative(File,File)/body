@@ -1,0 +1,18 @@
+{
+  Process process=null;
+  if (Base.isMacOS() || Base.isLinux()) {
+    process=Runtime.getRuntime().exec(new String[]{"cp","-a",sourceDir.getAbsolutePath(),targetDir.getAbsolutePath()});
+  }
+ else {
+    throw new RuntimeException("Not yet implemented on Windows");
+  }
+  try {
+    int result=process.waitFor();
+    if (result != 0) {
+      throw new IOException("Error while copying (result " + result + ")");
+    }
+  }
+ catch (  InterruptedException e) {
+    e.printStackTrace();
+  }
+}

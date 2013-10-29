@@ -1,5 +1,5 @@
 {
-  pg=(PGraphicsOpenGL)parent.g;
+  pg=PGraphicsOpenGL.pgCurrent;
   pgl=PGraphicsOpenGL.pgl;
   context=pgl.createEmptyContext();
   glPolyVertex=0;
@@ -25,7 +25,7 @@
   this.parent=null;
   this.tessellated=false;
   if (family == GEOMETRY || family == PRIMITIVE || family == PATH) {
-    inGeo=pg.newInGeometry(PGraphicsOpenGL.RETAINED);
+    inGeo=PGraphicsOpenGL.newInGeometry(pg,PGraphicsOpenGL.RETAINED);
   }
   textureMode=pg.textureMode;
   colorMode(pg.colorMode,pg.colorModeX,pg.colorModeY,pg.colorModeZ,pg.colorModeA);
@@ -43,10 +43,17 @@
   specularColor=pg.specularColor;
   emissiveColor=pg.emissiveColor;
   shininess=pg.shininess;
+  sphereDetailU=pg.sphereDetailU;
+  sphereDetailV=pg.sphereDetailV;
+  bezierDetail=pg.bezierDetail;
+  curveDetail=pg.curveDetail;
+  curveTightness=pg.curveTightness;
+  rectMode=CORNER;
+  ellipseMode=CORNER;
   normalX=normalY=0;
   normalZ=1;
   normalMode=NORMAL_MODE_AUTO;
-  breakShape=true;
+  breakShape=false;
   if (family == GROUP) {
     shapeCreated=true;
   }

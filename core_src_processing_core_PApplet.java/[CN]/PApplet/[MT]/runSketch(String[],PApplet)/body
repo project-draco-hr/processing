@@ -92,8 +92,9 @@
     GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
     displayDevice=environment.getDefaultScreenDevice();
   }
-  Frame frame=new Frame(displayDevice.getDefaultConfiguration());
-  frame.setBackground(new Color(0xCC,0xCC,0xCC));
+  Frame frame=new JFrame(displayDevice.getDefaultConfiguration());
+  final Color defaultGray=new Color(0xCC,0xCC,0xCC);
+  ((JFrame)frame).getContentPane().setBackground(defaultGray);
   final PApplet applet;
   if (constructedApplet != null) {
     applet=constructedApplet;
@@ -121,7 +122,7 @@
   if (present) {
     frame.setUndecorated(true);
     if (backgroundColor != null) {
-      frame.setBackground(backgroundColor);
+      ((JFrame)frame).getContentPane().setBackground(backgroundColor);
     }
     frame.setBounds(screenRect);
     frame.setVisible(true);
@@ -172,6 +173,8 @@
     Insets insets=frame.getInsets();
     int windowW=Math.max(applet.width,MIN_WINDOW_WIDTH) + insets.left + insets.right;
     int windowH=Math.max(applet.height,MIN_WINDOW_HEIGHT) + insets.top + insets.bottom;
+    int contentW=Math.max(applet.width,MIN_WINDOW_WIDTH);
+    int contentH=Math.max(applet.height,MIN_WINDOW_HEIGHT);
     frame.setSize(windowW,windowH);
     if (location != null) {
       frame.setLocation(location[0],location[1]);
@@ -200,10 +203,9 @@
       frame.setLocation(frameLoc.x,30);
     }
     if (backgroundColor != null) {
-      frame.setBackground(backgroundColor);
+      ((JFrame)frame).getContentPane().setBackground(backgroundColor);
     }
-    int usableWindowH=windowH - insets.top - insets.bottom;
-    applet.setBounds((windowW - applet.width) / 2,insets.top + (usableWindowH - applet.height) / 2,applet.width,applet.height);
+    applet.setBounds((contentW - applet.width) / 2,(contentH - applet.height) / 2,applet.width,applet.height);
     if (external) {
       applet.setupExternalMessages();
     }
@@ -218,6 +220,15 @@
     applet.setupFrameResizeListener();
     if (applet.displayable()) {
       frame.setVisible(true);
+      if (platform == LINUX) {
+        Insets irlInsets=frame.getInsets();
+        if (!irlInsets.equals(insets)) {
+          insets=irlInsets;
+          windowW=Math.max(applet.width,MIN_WINDOW_WIDTH) + insets.left + insets.right;
+          windowH=Math.max(applet.height,MIN_WINDOW_HEIGHT) + insets.top + insets.bottom;
+          frame.setSize(windowW,windowH);
+        }
+      }
     }
   }
 }

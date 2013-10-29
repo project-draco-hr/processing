@@ -1,0 +1,217 @@
+{
+  for (  Library library : importedLibraries) {
+    if (!library.supportsArch(exportPlatform,exportBits)) {
+      String pn=PConstants.platformNames[exportPlatform];
+      Base.showWarning("Quibbles 'n Bits","The application." + pn + exportBits+ " folder will not be created\n"+ "because no "+ exportBits+ "-bit version of "+ library.getName()+ " is available for "+ pn,null);
+      return true;
+    }
+  }
+  mode.prepareExportFolder(destFolder);
+  File jarFolder=new File(destFolder,"lib");
+  File dotAppFolder=null;
+  String jvmRuntime="";
+  if (exportPlatform == PConstants.MACOSX) {
+    dotAppFolder=new File(destFolder,sketch.getName() + ".app");
+    File contentsOrig=new File(Base.getJavaHome(),"../../../../..");
+    if (embedJava) {
+      File jdkFolder=new File(Base.getJavaHome(),"../../..");
+      String jdkFolderName=jdkFolder.getCanonicalFile().getName();
+      jvmRuntime="<key>JVMRuntime</key>\n    <string>" + jdkFolderName + "</string>";
+    }
+    File contentsFolder=new File(dotAppFolder,"Contents");
+    contentsFolder.mkdirs();
+    jarFolder=new File(contentsFolder,"Java");
+    File macosFolder=new File(contentsFolder,"MacOS");
+    macosFolder.mkdirs();
+    Base.copyFile(new File(contentsOrig,"MacOS/Processing"),new File(contentsFolder,"MacOS/" + sketch.getName()));
+    File pkgInfo=new File(contentsFolder,"PkgInfo");
+    PrintWriter writer=PApplet.createWriter(pkgInfo);
+    writer.println("APPL????");
+    writer.flush();
+    writer.close();
+    if (embedJava) {
+      Base.copyDirNative(new File(contentsOrig,"PlugIns"),new File(contentsFolder,"PlugIns"));
+    }
+    File resourcesFolder=new File(contentsFolder,"Resources");
+    Base.copyDir(new File(contentsOrig,"Resources/en.lproj"),new File(resourcesFolder,"en.lproj"));
+    Base.copyFile(mode.getContentFile("application/sketch.icns"),new File(resourcesFolder,"sketch.icns"));
+  }
+ else   if (exportPlatform == PConstants.LINUX) {
+    if (embedJava) {
+      Base.copyDirNative(Base.getJavaHome(),new File(destFolder,"java"));
+    }
+  }
+ else   if (exportPlatform == PConstants.WINDOWS) {
+    if (embedJava) {
+      Base.copyDir(Base.getJavaHome(),new File(destFolder,"java"));
+    }
+  }
+  if (!jarFolder.exists())   jarFolder.mkdirs();
+  if (exportPlatform == PConstants.WINDOWS) {
+    if (exportBits == 64) {
+      File batFile=new File(destFolder,sketch.getName() + ".bat");
+      PrintWriter writer=PApplet.createWriter(batFile);
+      writer.println("@echo off");
+      writer.println("java -Djava.ext.dirs=lib -Djava.library.path=lib " + sketch.getName());
+      writer.flush();
+      writer.close();
+    }
+ else {
+      Base.copyFile(mode.getContentFile("application/template.exe"),new File(destFolder,sketch.getName() + ".exe"));
+    }
+  }
+  Vector<String> jarListVector=new Vector<String>();
+  FileOutputStream zipOutputFile=new FileOutputStream(new File(jarFolder,sketch.getName() + ".jar"));
+  ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
+  addManifest(zos);
+  addClasses(zos,binFolder);
+  if (sketch.hasDataFolder()) {
+    if (exportPlatform == PConstants.MACOSX) {
+      Base.copyDir(sketch.getDataFolder(),new File(jarFolder,"data"));
+    }
+ else {
+      Base.copyDir(sketch.getDataFolder(),new File(destFolder,"data"));
+    }
+  }
+  if (sketch.hasCodeFolder()) {
+    String includes=Base.contentsToClassPath(sketch.getCodeFolder());
+    String[] codeList=PApplet.splitTokens(includes,File.pathSeparator);
+    for (int i=0; i < codeList.length; i++) {
+      if (codeList[i].toLowerCase().endsWith(".jar") || codeList[i].toLowerCase().endsWith(".zip")) {
+        File exportFile=new File(codeList[i]);
+        String exportFilename=exportFile.getName();
+        Base.copyFile(exportFile,new File(jarFolder,exportFilename));
+        jarListVector.add(exportFilename);
+      }
+ else {
+      }
+    }
+  }
+  zos.flush();
+  zos.close();
+  jarListVector.add(sketch.getName() + ".jar");
+  for (  Library library : importedLibraries) {
+    for (    File exportFile : library.getApplicationExports(exportPlatform,exportBits)) {
+      String exportName=exportFile.getName();
+      if (!exportFile.exists()) {
+        System.err.println(exportFile.getName() + " is mentioned in export.txt, but it's " + "a big fat lie and does not exist.");
+      }
+ else       if (exportFile.isDirectory()) {
+        Base.copyDir(exportFile,new File(jarFolder,exportName));
+      }
+ else       if (exportName.toLowerCase().endsWith(".zip") || exportName.toLowerCase().endsWith(".jar")) {
+        Base.copyFile(exportFile,new File(jarFolder,exportName));
+        jarListVector.add(exportName);
+      }
+ else {
+        Base.copyFile(exportFile,new File(jarFolder,exportName));
+      }
+    }
+  }
+  String jarList[]=new String[jarListVector.size()];
+  jarListVector.copyInto(jarList);
+  StringBuffer exportClassPath=new StringBuffer();
+  if (exportPlatform == PConstants.MACOSX) {
+    for (int i=0; i < jarList.length; i++) {
+      if (i != 0)       exportClassPath.append(":");
+      exportClassPath.append("$JAVAROOT/" + jarList[i]);
+    }
+  }
+ else   if (exportPlatform == PConstants.WINDOWS) {
+    for (int i=0; i < jarList.length; i++) {
+      if (i != 0)       exportClassPath.append(",");
+      exportClassPath.append(jarList[i]);
+    }
+  }
+ else {
+    for (int i=0; i < jarList.length; i++) {
+      if (i != 0)       exportClassPath.append(":");
+      exportClassPath.append("$APPDIR/lib/" + jarList[i]);
+    }
+  }
+  List<String> runOptions=new ArrayList<String>();
+  if (Preferences.getBoolean("run.options.memory")) {
+    runOptions.add("-Xms" + Preferences.get("run.options.memory.initial") + "m");
+    runOptions.add("-Xmx" + Preferences.get("run.options.memory.maximum") + "m");
+  }
+  StringBuilder jvmOptionsList=new StringBuilder();
+  for (  String opt : runOptions) {
+    jvmOptionsList.append("      <string>");
+    jvmOptionsList.append(opt);
+    jvmOptionsList.append("</string>");
+    jvmOptionsList.append('\n');
+  }
+  if (exportPlatform == PConstants.MACOSX) {
+    String PLIST_TEMPLATE="Info.plist.tmpl";
+    File plistTemplate=new File(sketch.getFolder(),PLIST_TEMPLATE);
+    if (!plistTemplate.exists()) {
+      plistTemplate=mode.getContentFile("application/Info.plist.tmpl");
+    }
+    File plistFile=new File(dotAppFolder,"Contents/Info.plist");
+    PrintWriter pw=PApplet.createWriter(plistFile);
+    String lines[]=PApplet.loadStrings(plistTemplate);
+    for (int i=0; i < lines.length; i++) {
+      if (lines[i].indexOf("@@") != -1) {
+        StringBuffer sb=new StringBuffer(lines[i]);
+        int index=0;
+        while ((index=sb.indexOf("@@jvm_runtime@@")) != -1) {
+          sb.replace(index,index + "@@jvm_runtime@@".length(),jvmRuntime);
+        }
+        while ((index=sb.indexOf("@@jvm_options_list@@")) != -1) {
+          sb.replace(index,index + "@@jvm_options_list@@".length(),jvmOptionsList.toString());
+        }
+        while ((index=sb.indexOf("@@sketch@@")) != -1) {
+          sb.replace(index,index + "@@sketch@@".length(),sketch.getName());
+        }
+        while ((index=sb.indexOf("@@lsuipresentationmode@@")) != -1) {
+          sb.replace(index,index + "@@lsuipresentationmode@@".length(),Preferences.getBoolean("export.application.fullscreen") ? "4" : "0");
+        }
+        lines[i]=sb.toString();
+      }
+      pw.print(lines[i] + "\n");
+    }
+    pw.flush();
+    pw.close();
+  }
+ else   if (exportPlatform == PConstants.WINDOWS) {
+    File argsFile=new File(destFolder + "/lib/args.txt");
+    PrintWriter pw=PApplet.createWriter(argsFile);
+    pw.print(runOptions + "\r\n");
+    pw.print(sketch.getName() + "\r\n");
+    pw.print(exportClassPath);
+    pw.flush();
+    pw.close();
+  }
+ else {
+    File shellScript=new File(destFolder,sketch.getName());
+    PrintWriter pw=PApplet.createWriter(shellScript);
+    pw.print("#!/bin/sh\n\n");
+    pw.print("APPDIR=$(dirname \"$0\")\n");
+    pw.print("java " + Preferences.get("run.options") + " -Djava.library.path=\"$APPDIR:$APPDIR/lib\""+ " -cp \""+ exportClassPath+ "\""+ " "+ sketch.getName()+ " \"$@\"\n");
+    pw.flush();
+    pw.close();
+    String shellPath=shellScript.getAbsolutePath();
+    if (!Base.isWindows()) {
+      Runtime.getRuntime().exec(new String[]{"chmod","+x",shellPath});
+    }
+  }
+  File sourceFolder=new File(destFolder,"source");
+  sourceFolder.mkdirs();
+  for (  SketchCode code : sketch.getCode()) {
+    try {
+      code.copyTo(new File(sourceFolder,code.getFileName()));
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+  }
+  String preprocFilename=sketch.getName() + ".java";
+  File preprocFile=new File(srcFolder,preprocFilename);
+  if (preprocFile.exists()) {
+    Base.copyFile(preprocFile,new File(sourceFolder,preprocFilename));
+  }
+ else {
+    System.err.println("Could not copy source file: " + preprocFile.getAbsolutePath());
+  }
+  return true;
+}

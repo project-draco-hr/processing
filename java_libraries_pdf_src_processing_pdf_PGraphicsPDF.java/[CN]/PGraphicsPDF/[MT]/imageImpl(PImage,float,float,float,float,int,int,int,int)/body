@@ -1,0 +1,15 @@
+{
+  pushMatrix();
+  translate(x1,y1);
+  int imageWidth=image.width;
+  int imageHeight=image.height;
+  scale((x2 - x1) / (float)imageWidth,(y2 - y1) / (float)imageHeight);
+  if (u2 - u1 == imageWidth && v2 - v1 == imageHeight) {
+    g2.drawImage((Image)image.getNative(),0,0,null);
+  }
+ else {
+    PImage tmp=image.get(u1,v1,u2 - u1,v2 - v1);
+    g2.drawImage((Image)tmp.getNative(),0,0,null);
+  }
+  popMatrix();
+}

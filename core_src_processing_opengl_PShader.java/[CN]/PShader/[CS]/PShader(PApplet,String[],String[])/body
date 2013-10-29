@@ -1,0 +1,32 @@
+{
+  this.parent=parent;
+  pgl=PGraphicsOpenGL.pgl;
+  this.vertexURL=null;
+  this.fragmentURL=null;
+  this.vertexFilename=null;
+  this.fragmentFilename=null;
+  vertexShaderSource=vertSource;
+  fragmentShaderSource=fragSource;
+  glProgram=0;
+  glVertex=0;
+  glFragment=0;
+  intBuffer=PGL.allocateIntBuffer(1);
+  floatBuffer=PGL.allocateFloatBuffer(1);
+  int vertType=getShaderType(vertexShaderSource,-1);
+  int fragType=getShaderType(fragmentShaderSource,-1);
+  if (vertType == -1 && fragType == -1) {
+    type=PShader.POLY;
+  }
+ else   if (vertType == -1) {
+    type=fragType;
+  }
+ else   if (fragType == -1) {
+    type=vertType;
+  }
+ else   if (fragType == vertType) {
+    type=vertType;
+  }
+ else {
+    PGraphics.showWarning(PGraphicsOpenGL.INCONSISTENT_SHADER_TYPES);
+  }
+}

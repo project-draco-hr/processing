@@ -1,29 +1,25 @@
 {
-  editorAntialiasBox.setSelected(getBoolean("editor.antialias"));
+  editorAntialiasBox.setSelected(getBoolean("editor.smooth"));
   inputMethodBox.setSelected(getBoolean("editor.input_method_support"));
   deletePreviousBox.setSelected(getBoolean("export.delete_target_folder"));
   sketchbookLocationField.setText(get("sketchbook.path"));
   checkUpdatesBox.setSelected(getBoolean("update.check"));
+  whinyBox.setSelected(getBoolean("header.hide.image") || getBoolean("buttons.hide.image"));
   updateDisplayList();
   int displayNum=getInteger("run.display");
   if (displayNum >= 0 && displayNum < displayCount) {
     displaySelectionBox.setSelectedIndex(displayNum);
   }
-  memoryOverrideBox.setSelected(getBoolean("run.options.memory"));
-  memoryField.setText(get("run.options.memory.maximum"));
-  if (Base.isMacOS()) {
-    String bits=Preferences.get("run.options.bits");
-    if (bits.equals("32")) {
-      bitsThirtyTwoButton.setSelected(true);
-    }
- else     if (bits.equals("64")) {
-      bitsSixtyFourButton.setSelected(true);
-    }
-    if (System.getProperty("os.version").startsWith("10.5")) {
-      bitsSixtyFourButton.setSelected(true);
-      bitsThirtyTwoButton.setEnabled(false);
+  new Thread(new Runnable(){
+    public void run(){
+      initFontList();
     }
   }
+).start();
+  fontSizeField.setSelectedItem(getInteger("editor.font.size"));
+  consoleSizeField.setSelectedItem(getInteger("console.font.size"));
+  memoryOverrideBox.setSelected(getBoolean("run.options.memory"));
+  memoryField.setText(get("run.options.memory.maximum"));
   if (autoAssociateBox != null) {
     autoAssociateBox.setSelected(getBoolean("platform.auto_file_type_associations"));
   }

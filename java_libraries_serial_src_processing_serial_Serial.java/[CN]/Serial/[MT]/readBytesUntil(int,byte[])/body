@@ -1,26 +1,29 @@
 {
-  if (bufferIndex == bufferLast)   return 0;
-  byte what=(byte)interesting;
+  if (inBuffer == readOffset) {
+    return 0;
+  }
 synchronized (buffer) {
     int found=-1;
-    for (int k=bufferIndex; k < bufferLast; k++) {
-      if (buffer[k] == what) {
-        found=k;
+    for (int i=readOffset; i < inBuffer; i++) {
+      if (buffer[i] == (byte)inByte) {
+        found=i;
         break;
       }
     }
-    if (found == -1)     return 0;
-    int length=found - bufferIndex + 1;
-    if (length > outgoing.length) {
-      System.err.println("readBytesUntil() byte buffer is" + " too small for the " + length + " bytes up to and including char "+ interesting);
+    if (found == -1) {
+      return 0;
+    }
+    int toCopy=found - readOffset + 1;
+    if (dest.length < toCopy) {
+      System.err.println("The buffer passed to readBytesUntil() is to small " + "to contain " + toCopy + " bytes up to and including "+ "char "+ (byte)inByte);
       return -1;
     }
-    System.arraycopy(buffer,bufferIndex,outgoing,0,length);
-    bufferIndex+=length;
-    if (bufferIndex == bufferLast) {
-      bufferIndex=0;
-      bufferLast=0;
+    System.arraycopy(buffer,readOffset,dest,0,toCopy);
+    readOffset+=toCopy;
+    if (inBuffer == readOffset) {
+      inBuffer=0;
+      readOffset=0;
     }
-    return length;
+    return toCopy;
   }
 }
