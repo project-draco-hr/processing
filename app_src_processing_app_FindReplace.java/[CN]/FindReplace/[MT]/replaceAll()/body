@@ -1,9 +1,19 @@
 {
   editor.setSelection(0,0);
   boolean foundAtLeastOne=false;
-  while (true) {
+  int startTab=-1, startIndex=-1, c=50000;
+  while (--c > 0) {
     if (find(false,false)) {
-      foundAtLeastOne=true;
+      if (editor.getSketch().getCurrentCodeIndex() == startTab && editor.getSelectionStart() == startIndex) {
+        Toolkit.beep();
+        editor.statusNotice("Reached beginning of search!");
+        break;
+      }
+      if (!foundAtLeastOne) {
+        foundAtLeastOne=true;
+        startTab=editor.getSketch().getCurrentCodeIndex();
+        startIndex=editor.getSelectionStart();
+      }
       replace();
     }
  else {
