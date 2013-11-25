@@ -2,7 +2,14 @@
   if (inBuffer == readOffset) {
     return -1;
   }
+  long start=System.nanoTime();
 synchronized (buffer) {
+    long len=System.nanoTime() - start;
+    if (maxSyncTime < len) {
+      maxSyncTime=len;
+    }
+    sumSyncTime+=len;
+    countSyncs++;
     int ret=buffer[inBuffer - 1] & 0xFF;
     inBuffer=0;
     readOffset=0;
