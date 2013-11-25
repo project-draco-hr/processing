@@ -1,6 +1,13 @@
 {
   try {
+    long start=System.nanoTime();
     port.writeString(src);
+    long len=System.nanoTime() - start;
+    if (maxWriteTime < len) {
+      maxWriteTime=len;
+    }
+    sumWriteTime+=len;
+    countWrites++;
   }
  catch (  SerialPortException e) {
     throw new RuntimeException("Error writing to serial port " + e.getPortName() + ": "+ e.getExceptionType());

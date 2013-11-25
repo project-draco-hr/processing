@@ -1,5 +1,12 @@
 {
+  long start=System.nanoTime();
 synchronized (buffer) {
+    long len=System.nanoTime() - start;
+    if (maxSyncTime < len) {
+      maxSyncTime=len;
+    }
+    sumSyncTime+=len;
+    countSyncs++;
     inBuffer=0;
     readOffset=0;
   }
