@@ -26,6 +26,15 @@
     }
     protected void done(){
       if (codeTree != null) {
+        if (SHOWAST) {
+          if (jtree.hasFocus() || frmASTView.hasFocus())           return;
+          jtree.setModel(new DefaultTreeModel(codeTree));
+          ((DefaultTreeModel)jtree.getModel()).reload();
+          jtree.validate();
+          if (!frmASTView.isVisible()) {
+            frmASTView.setVisible(true);
+          }
+        }
       }
     }
   }
