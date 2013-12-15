@@ -9,7 +9,9 @@
       while (0 < (toRead=port.getInputBufferBytesCount())) {
         long start=System.nanoTime();
 synchronized (buffer) {
-          toRead=1;
+          if (serialEventMethod != null) {
+            toRead=1;
+          }
           long len=System.nanoTime() - start;
           if (maxReadSyncTime < len) {
             maxReadSyncTime=len;
