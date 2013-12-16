@@ -1,54 +1,25 @@
 {
   if (event.getEventType() == SerialPortEvent.RXCHAR) {
     int toRead;
-    countEvents++;
-    if (firstEvent == 0) {
-      firstEvent=System.nanoTime();
-    }
     try {
       while (0 < (toRead=port.getInputBufferBytesCount())) {
-        long start=System.nanoTime();
 synchronized (buffer) {
-          toRead=1;
-          long len=System.nanoTime() - start;
-          if (maxReadSyncTime < len) {
-            maxReadSyncTime=len;
+          if (serialEventMethod != null) {
+            toRead=1;
           }
-          sumReadSyncTime+=len;
           if (buffer.length < inBuffer + toRead) {
             byte temp[]=new byte[buffer.length << 1];
             System.arraycopy(buffer,0,temp,0,inBuffer);
             buffer=temp;
           }
-          if (maxBufferLength < buffer.length) {
-            maxBufferLength=buffer.length;
-          }
-          start=System.nanoTime();
           byte[] read=port.readBytes(toRead);
-          len=System.nanoTime() - start;
-          if (maxReadTime < len) {
-            maxReadTime=len;
-          }
-          sumReadTime+=len;
-          if (maxRead < read.length) {
-            maxRead=read.length;
-          }
-          sumRead+=read.length;
-          countReads++;
           System.arraycopy(read,0,buffer,inBuffer,read.length);
           inBuffer+=read.length;
         }
         if (serialEventMethod != null) {
           if ((0 < bufferUntilSize && bufferUntilSize <= inBuffer - readOffset) || (0 == bufferUntilSize && bufferUntilByte == buffer[inBuffer - 1])) {
             try {
-              start=System.nanoTime();
               serialEventMethod.invoke(parent,new Object[]{this});
-              long len=System.nanoTime() - start;
-              if (maxFuncTime < len) {
-                maxFuncTime=len;
-              }
-              sumFuncTime+=len;
-              countFuncs++;
             }
  catch (            Exception e) {
               System.err.println("Error, disabling serialEvent() for " + port.getPortName());
