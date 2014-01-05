@@ -6,7 +6,27 @@
   }
   flush();
   Texture tex=getTexture(src);
-  pgl.drawTexture(tex.glTarget,tex.glName,tex.glWidth,tex.glHeight,width,height,sx,tex.height - (sy + sh),sx + sw,tex.height - sy,dx,height - (dy + dh),dx + dw,height - dy);
+  boolean invX=tex.invertedX();
+  boolean invY=tex.invertedY();
+  int scrX0, scrX1;
+  int scrY0, scrY1;
+  if (invX) {
+    scrX0=dx + dw;
+    scrX1=dx;
+  }
+ else {
+    scrX0=dx;
+    scrX1=dx + dw;
+  }
+  if (invY) {
+    scrY0=height - (dy + dh);
+    scrY1=height - dy;
+  }
+ else {
+    scrY0=height - dy;
+    scrY1=height - (dy + dh);
+  }
+  pgl.drawTexture(tex.glTarget,tex.glName,tex.glWidth,tex.glHeight,width,height,sx,tex.height - (sy + sh),sx + sw,tex.height - sy,scrX0,scrY0,scrX1,scrY1);
   if (needEndDraw) {
     endDraw();
   }
