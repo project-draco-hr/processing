@@ -1,10 +1,10 @@
 {
+  isSaving=true;
   Sketch sc=editor.getSketch();
-  File autosaveDir=new File(sc.getFolder().getAbsolutePath() + File.separator + ".autosave");
   boolean deleteOldSave=false;
   String oldSave=null;
   if (!autosaveDir.exists()) {
-    autosaveDir=new File(sc.getFolder().getAbsolutePath(),".autosave");
+    autosaveDir=new File(sc.getFolder().getAbsolutePath(),"_autosave");
     autosaveDir.mkdir();
   }
  else {
@@ -20,12 +20,14 @@
   File newFolder=new File(newParentDir,sanitaryName);
   if (!sanitaryName.equals(newName) && newFolder.exists()) {
     Base.showMessage("Cannot Save","A sketch with the cleaned name\n" + "???" + sanitaryName + "??? already exists.");
+    isSaving=false;
     return false;
   }
   newName=sanitaryName;
   for (int i=1; i < sc.getCodeCount(); i++) {
     if (newName.equalsIgnoreCase(sc.getCode()[i].getPrettyName())) {
       Base.showMessage("Nope","You can't save the sketch as \"" + newName + "\"\n"+ "because the sketch already has a tab with that name.");
+      isSaving=false;
       return false;
     }
   }
@@ -74,5 +76,6 @@
   File newFile=new File(newFolder,newName + ".pde");
   sc.getCode()[0].saveAs(newFile);
   if (deleteOldSave)   Base.removeDir(new File(oldSave));
+  isSaving=false;
   return true;
 }
