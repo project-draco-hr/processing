@@ -2,7 +2,8 @@
   if (autosaveDir.exists()) {
     String prevSaves[]=Base.listFiles(autosaveDir,false);
     if (prevSaves.length > 0) {
-      pastSave=new File(prevSaves[0]);
+      File t=new File(Base.listFiles(new File(prevSaves[0]),false)[0]);
+      pastSave=new File(t.getAbsolutePath() + File.separator + t.getName()+ ".pde");
       return true;
     }
   }
