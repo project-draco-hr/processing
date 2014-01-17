@@ -36,7 +36,7 @@
   String sanitaryName=Sketch.checkName(newName);
   File newFolder=new File(newParentDir,sanitaryName);
   if (!sanitaryName.equals(newName) && newFolder.exists()) {
-    Base.showMessage("Cannot Save","A sketch with the cleaned name\n" + "???" + sanitaryName + "??? already exists.");
+    Base.showMessage("Cannot Save","A sketch with the cleaned name\n" + "???????" + sanitaryName + "???????? already exists.");
     return false;
   }
   newName=sanitaryName;
@@ -89,14 +89,14 @@
     }
   }
 );
-  for (  File copyable : copyItems) {
-    if (copyable.isDirectory()) {
-      Base.copyDir(copyable,new File(newFolder,copyable.getName()));
-    }
- else {
-      Base.copyFile(copyable,new File(newFolder,copyable.getName()));
+  final File newFolder2=newFolder;
+  final File[] copyItems2=copyItems;
+  javax.swing.SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      ProgressBarGUI p=new ProgressBarGUI(copyItems2,newFolder2);
     }
   }
+);
   for (int i=1; i < codeCount; i++) {
     File newFile=new File(newFolder,code[i].getFileName());
     code[i].saveAs(newFile);
