@@ -1,12 +1,13 @@
 {
-  if (fbStackDepth == 0) {
+  PGraphicsOpenGL ppg=getPrimaryPG();
+  if (ppg.fbStackDepth == 0) {
     throw new RuntimeException("popFramebuffer call is unbalanced.");
   }
-  fbStackDepth--;
-  FrameBuffer fbo=fbStack[fbStackDepth];
-  if (currentFramebuffer != fbo) {
-    currentFramebuffer.finish();
-    currentFramebuffer=fbo;
-    currentFramebuffer.bind();
+  ppg.fbStackDepth--;
+  FrameBuffer fbo=ppg.fbStack[ppg.fbStackDepth];
+  if (ppg.currentFramebuffer != fbo) {
+    ppg.currentFramebuffer.finish();
+    ppg.currentFramebuffer=fbo;
+    ppg.currentFramebuffer.bind();
   }
 }

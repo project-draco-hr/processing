@@ -1,6 +1,6 @@
 {
-  if (!loadedTex2DShader) {
-    System.out.println("initializing texture shader");
+  if (!loadedTex2DShader || tex2DShaderContext != glContext) {
+    System.out.println("Initializing PGL texture shader");
     String vertSource=PApplet.join(texVertShaderSource,"\n");
     String fragSource=PApplet.join(tex2DFragShaderSource,"\n");
     tex2DVertShader=createShader(VERTEX_SHADER,vertSource);
@@ -19,6 +19,7 @@
     texGeoVBO=intBuffer.get(0);
     bindBuffer(ARRAY_BUFFER,texGeoVBO);
     bufferData(ARRAY_BUFFER,16 * SIZEOF_FLOAT,null,STATIC_DRAW);
+    System.out.println("Done!");
   }
   if (texData == null) {
     texData=allocateDirectFloatBuffer(texCoords.length);

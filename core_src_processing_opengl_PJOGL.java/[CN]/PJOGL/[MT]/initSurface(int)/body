@@ -1,43 +1,7 @@
 {
-  if (profile == null) {
-    if (PROFILE == 2) {
-      try {
-        profile=GLProfile.getGL2ES1();
-      }
- catch (      GLException ex) {
-        profile=GLProfile.getMaxFixedFunc(true);
-      }
-    }
- else     if (PROFILE == 3) {
-      try {
-        profile=GLProfile.getGL2GL3();
-      }
- catch (      GLException ex) {
-        profile=GLProfile.getMaxProgrammable(true);
-      }
-      if (!profile.isGL3()) {
-        PGraphics.showWarning("Requested profile GL3 but is not available, got: " + profile);
-      }
-    }
- else     if (PROFILE == 4) {
-      try {
-        profile=GLProfile.getGL4ES3();
-      }
- catch (      GLException ex) {
-        profile=GLProfile.getMaxProgrammable(true);
-      }
-      if (!profile.isGL4()) {
-        PGraphics.showWarning("Requested profile GL4 but is not available, got: " + profile);
-      }
-    }
- else     throw new RuntimeException(UNSUPPORTED_GLPROF_ERROR);
-    if (2 < PROFILE) {
-      texVertShaderSource=convertVertexSource(texVertShaderSource,120,150);
-      tex2DFragShaderSource=convertFragmentSource(tex2DFragShaderSource,120,150);
-      texRectFragShaderSource=convertFragmentSource(texRectFragShaderSource,120,150);
-    }
-  }
- else {
+  checkPrimary();
+  System.out.println("initializing surface");
+  if (canvasAWT != null && canvasNEWT != null) {
     if (canvasAWT != null) {
       canvasAWT.removeGLEventListener(listener);
       pg.parent.removeListeners(canvasAWT);
@@ -117,4 +81,5 @@
   fboLayerInUse=false;
   firstFrame=true;
   setFps=false;
+  System.out.println("done");
 }
