@@ -1,27 +1,30 @@
 {
-  if (!loadedTex2DShader || tex2DShaderContext != glContext) {
+  PGL ppgl=primaryPGL ? this : pg.getPrimaryPGL();
+  if (!ppgl.loadedTex2DShader || ppgl.tex2DShaderContext != ppgl.glContext) {
     System.out.println("Initializing PGL texture shader");
     String vertSource=PApplet.join(texVertShaderSource,"\n");
     String fragSource=PApplet.join(tex2DFragShaderSource,"\n");
-    tex2DVertShader=createShader(VERTEX_SHADER,vertSource);
-    tex2DFragShader=createShader(FRAGMENT_SHADER,fragSource);
-    if (0 < tex2DVertShader && 0 < tex2DFragShader) {
-      tex2DShaderProgram=createProgram(tex2DVertShader,tex2DFragShader);
+    ppgl.tex2DVertShader=createShader(VERTEX_SHADER,vertSource);
+    ppgl.tex2DFragShader=createShader(FRAGMENT_SHADER,fragSource);
+    if (0 < ppgl.tex2DVertShader && 0 < ppgl.tex2DFragShader) {
+      ppgl.tex2DShaderProgram=createProgram(ppgl.tex2DVertShader,ppgl.tex2DFragShader);
     }
-    if (0 < tex2DShaderProgram) {
-      tex2DVertLoc=getAttribLocation(tex2DShaderProgram,"position");
-      tex2DTCoordLoc=getAttribLocation(tex2DShaderProgram,"texCoord");
-      tex2DSamplerLoc=getUniformLocation(tex2DShaderProgram,"texMap");
+    if (0 < ppgl.tex2DShaderProgram) {
+      ppgl.tex2DVertLoc=getAttribLocation(ppgl.tex2DShaderProgram,"position");
+      ppgl.tex2DTCoordLoc=getAttribLocation(ppgl.tex2DShaderProgram,"texCoord");
+      ppgl.tex2DSamplerLoc=getUniformLocation(ppgl.tex2DShaderProgram,"texMap");
     }
-    loadedTex2DShader=true;
-    tex2DShaderContext=glContext;
-    genBuffers(1,intBuffer);
-    texGeoVBO=intBuffer.get(0);
-    bindBuffer(ARRAY_BUFFER,texGeoVBO);
-    bufferData(ARRAY_BUFFER,16 * SIZEOF_FLOAT,null,STATIC_DRAW);
-    System.out.println("Done!");
+    ppgl.loadedTex2DShader=true;
+    ppgl.tex2DShaderContext=ppgl.glContext;
+    if (ppgl.texGeoVBO == 0) {
+      genBuffers(1,intBuffer);
+      ppgl.texGeoVBO=intBuffer.get(0);
+      bindBuffer(ARRAY_BUFFER,ppgl.texGeoVBO);
+      bufferData(ARRAY_BUFFER,16 * SIZEOF_FLOAT,null,STATIC_DRAW);
+    }
   }
   if (texData == null) {
     texData=allocateDirectFloatBuffer(texCoords.length);
   }
+  return ppgl;
 }
