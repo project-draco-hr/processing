@@ -3,9 +3,9 @@
   if (width == 0 || height == 0) {
     throw new RuntimeException("PFramebuffer: size undefined.");
   }
-  PGraphicsOpenGL.pushFramebuffer();
-  PGraphicsOpenGL.setFramebuffer(this);
-  glDepthStencil=PGraphicsOpenGL.createRenderBufferObject(context);
+  pg.pushFramebuffer();
+  pg.setFramebuffer(this);
+  glDepthStencil=PGraphicsOpenGL.createRenderBufferObject(context,pgl);
   pgl.bindRenderbuffer(PGL.RENDERBUFFER,glDepthStencil);
   if (multisample) {
     pgl.renderbufferStorageMultisample(PGL.RENDERBUFFER,nsamples,PGL.DEPTH24_STENCIL8,width,height);
@@ -15,5 +15,5 @@
   }
   pgl.framebufferRenderbuffer(PGL.FRAMEBUFFER,PGL.DEPTH_ATTACHMENT,PGL.RENDERBUFFER,glDepthStencil);
   pgl.framebufferRenderbuffer(PGL.FRAMEBUFFER,PGL.STENCIL_ATTACHMENT,PGL.RENDERBUFFER,glDepthStencil);
-  PGraphicsOpenGL.popFramebuffer();
+  pg.popFramebuffer();
 }

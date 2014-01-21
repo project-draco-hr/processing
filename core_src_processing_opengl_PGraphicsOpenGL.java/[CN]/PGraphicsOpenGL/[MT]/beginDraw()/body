@@ -1,18 +1,20 @@
 {
+  if (primarySurface) {
+    setCurrentPG(this);
+  }
+ else {
+    pgl.getGL(getPrimaryPGL());
+    getPrimaryPG().setCurrentPG(this);
+  }
   report("top beginDraw()");
   if (!checkGLThread()) {
     return;
   }
   if (drawing) {
-    PGraphics.showWarning(ALREADY_DRAWING_ERROR);
     return;
   }
-  if (pgCurrent != null && !pgCurrent.primarySurface && !this.primarySurface) {
-    PGraphics.showWarning(NESTED_DRAW_ERROR);
-    return;
-  }
-  if (!primarySurface && pgPrimary.texCache.containsTexture(this)) {
-    pgPrimary.flush();
+  if (!primarySurface && getPrimaryPG().texCache.containsTexture(this)) {
+    getPrimaryPG().flush();
   }
   if (!glParamsRead) {
     getGLParameters();
@@ -25,7 +27,6 @@
     beginOffscreenDraw();
   }
   setDrawDefaults();
-  pgCurrent=this;
   drawing=true;
   report("bot beginDraw()");
 }

@@ -1,5 +1,5 @@
 {
-  if (!shader.isPolyShader() || !shader.supportsTexturing()) {
+  if (!shader.isPolyShader()) {
     PGraphics.showWarning(INVALID_FILTER_SHADER_ERROR);
     return;
   }
@@ -11,7 +11,7 @@
   }
   loadTexture();
   if (filterTexture == null || filterTexture.contextIsOutdated()) {
-    filterTexture=new Texture(texture.width,texture.height,texture.getParameters());
+    filterTexture=new Texture(this,texture.width,texture.height,texture.getParameters());
     filterTexture.invertedY(true);
     filterImage=wrapTexture(filterTexture);
   }

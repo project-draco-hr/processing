@@ -1,0 +1,26 @@
+{
+  for (  PGraphics pg : GLW.windows.keySet()) {
+    GLWindow win=GLW.windows.get(pg);
+    if (win == null) {
+      win=GLWindow.create(sharedCaps);
+      win.setSharedAutoDrawable(sharedDrawable);
+      win.setSize(pg.width,pg.height);
+      win.setTitle("TEST");
+      win.setVisible(true);
+      GLW.windows.put(pg,win);
+      NEWTListener listener=new NEWTListener(pg);
+      win.addGLEventListener(listener);
+      NEWTMouseListener mouseListener=new NEWTMouseListener();
+      win.addMouseListener(mouseListener);
+      NEWTKeyListener keyListener=new NEWTKeyListener();
+      win.addKeyListener(keyListener);
+      NEWTWindowListener winListener=new NEWTWindowListener();
+      win.addWindowListener(winListener);
+      win.addWindowListener(new WindowAdapter(){
+        @Override public void windowDestroyNotify(        final WindowEvent e){
+        }
+      }
+);
+    }
+  }
+}
