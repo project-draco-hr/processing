@@ -3,11 +3,10 @@
     requestFocusInWindow();
     return;
   }
-  if (!Base.isWindows()) {
-    if (event.isPopupTrigger() && (popup != null)) {
-      popup.show(painter,event.getX(),event.getY());
-      return;
-    }
+  boolean windowsRightClick=Base.isWindows() && (event.getButton() == MouseEvent.BUTTON3);
+  if ((event.isPopupTrigger() || windowsRightClick) && (popup != null)) {
+    popup.show(painter,event.getX(),event.getY());
+    return;
   }
   int line=yToLine(event.getY());
   int offset=xToOffset(line,event.getX());
