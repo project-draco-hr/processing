@@ -3,9 +3,11 @@
     requestFocusInWindow();
     return;
   }
-  if (event.isPopupTrigger() && (popup != null)) {
-    popup.show(painter,event.getX(),event.getY());
-    return;
+  if (!Base.isWindows()) {
+    if (event.isPopupTrigger() && (popup != null)) {
+      popup.show(painter,event.getX(),event.getY());
+      return;
+    }
   }
   int line=yToLine(event.getY());
   int offset=xToOffset(line,event.getX());
