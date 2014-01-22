@@ -1,12 +1,13 @@
 {
   PShader shader;
+  PGraphicsOpenGL ppg=getPrimaryPG();
   if (pointShader == null) {
-    if (defPointShader == null) {
+    if (ppg.defPointShader == null) {
       String[] vertSource=pgl.loadVertexShader(defPointShaderVertURL,120);
       String[] fragSource=pgl.loadFragmentShader(defPointShaderFragURL,120);
-      defPointShader=new PShader(parent,vertSource,fragSource);
+      ppg.defPointShader=new PShader(parent,vertSource,fragSource);
     }
-    shader=defPointShader;
+    shader=ppg.defPointShader;
   }
  else {
     shader=pointShader;

@@ -8,14 +8,14 @@
   }
   boolean packed=depthBits == 24 && stencilBits == 8 && packedDepthStencilSupported;
   if (PGraphicsOpenGL.fboMultisampleSupported && 1 < quality) {
-    multisampleFramebuffer=new FrameBuffer(texture.glWidth,texture.glHeight,quality,0,depthBits,stencilBits,packed,false);
+    multisampleFramebuffer=new FrameBuffer(this,texture.glWidth,texture.glHeight,quality,0,depthBits,stencilBits,packed,false);
     multisampleFramebuffer.clear();
     offscreenMultisample=true;
-    offscreenFramebuffer=new FrameBuffer(texture.glWidth,texture.glHeight,1,1,0,0,false,false);
+    offscreenFramebuffer=new FrameBuffer(this,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
   }
  else {
     quality=0;
-    offscreenFramebuffer=new FrameBuffer(texture.glWidth,texture.glHeight,1,1,depthBits,stencilBits,packed,false);
+    offscreenFramebuffer=new FrameBuffer(this,texture.glWidth,texture.glHeight,1,1,depthBits,stencilBits,packed,false);
     offscreenMultisample=false;
   }
   offscreenFramebuffer.setColorBuffer(texture);
