@@ -1,2 +1,151 @@
 {
+  String sketchPath=null;
+  File sketchFolder=null;
+  String pdePath=null;
+  String outputPath=null;
+  File outputFolder=null;
+  boolean outputSet=false;
+  boolean force=false;
+  int platform=PApplet.platform;
+  int platformBits=Base.getNativeBits();
+  int task=HELP;
+  boolean embedJava=true;
+  try {
+    systemOut=new PrintStream(System.out,true,"UTF-8");
+    systemErr=new PrintStream(System.err,true,"UTF-8");
+  }
+ catch (  UnsupportedEncodingException e) {
+    e.printStackTrace();
+    System.exit(1);
+  }
+  for (  String arg : args) {
+    if (arg.length() == 0) {
+    }
+ else     if (arg.equals(helpArg)) {
+    }
+ else     if (arg.equals(buildArg)) {
+      task=BUILD;
+    }
+ else     if (arg.equals(runArg)) {
+      task=RUN;
+    }
+ else     if (arg.equals(presentArg)) {
+      task=PRESENT;
+    }
+ else     if (arg.equals(exportApplicationArg)) {
+      task=EXPORT;
+    }
+ else     if (arg.equals(noJavaArg)) {
+      embedJava=false;
+    }
+ else     if (arg.startsWith(platformArg)) {
+      complainAndQuit("The --platform option has been removed from Processing 2.1.",false);
+    }
+ else     if (arg.startsWith(bitsArg)) {
+      complainAndQuit("The --bits option has been removed from Processing 2.1.",false);
+    }
+ else     if (arg.startsWith(sketchArg)) {
+      sketchPath=arg.substring(sketchArg.length());
+      sketchFolder=new File(sketchPath);
+      if (!sketchFolder.exists()) {
+        complainAndQuit(sketchFolder + " does not exist.",false);
+      }
+      File pdeFile=new File(sketchFolder,sketchFolder.getName() + ".pde");
+      if (!pdeFile.exists()) {
+        complainAndQuit("Not a valid sketch folder. " + pdeFile + " does not exist.",true);
+      }
+      pdePath=pdeFile.getAbsolutePath();
+    }
+ else     if (arg.startsWith(outputArg)) {
+      outputSet=true;
+      outputPath=arg.substring(outputArg.length());
+    }
+ else     if (arg.equals(forceArg)) {
+      force=true;
+    }
+ else {
+      complainAndQuit("I don't know anything about " + arg + ".",true);
+    }
+  }
+  if (task == HELP) {
+    printCommandLine(systemOut);
+    System.exit(0);
+  }
+  if (outputSet) {
+    if (outputPath == null) {
+      complainAndQuit("An output path must be specified.",true);
+    }
+    outputFolder=new File(outputPath);
+    if (outputFolder.exists()) {
+      if (force) {
+        Base.removeDir(outputFolder);
+      }
+ else {
+        complainAndQuit("The output folder already exists. " + "Use --force to remove it.",false);
+      }
+    }
+    if (!outputFolder.mkdirs()) {
+      complainAndQuit("Could not create the output folder.",false);
+    }
+  }
+  Preferences.init();
+  Base.locateSketchbookFolder();
+  if (sketchPath == null) {
+    complainAndQuit("No sketch path specified.",true);
+  }
+ else {
+    if (outputSet) {
+      if (outputPath.equals(sketchPath)) {
+        complainAndQuit("The sketch path and output path cannot be identical.",false);
+      }
+    }
+    boolean success=false;
+    JavaMode javaMode=(JavaMode)ModeContribution.load(null,Base.getContentFile("modes/java"),"processing.mode.java.JavaMode").getMode();
+    try {
+      sketch=new Sketch(pdePath,javaMode);
+      if (!outputSet) {
+        outputFolder=sketch.makeTempFolder();
+      }
+      if (task == BUILD || task == RUN || task == PRESENT) {
+        JavaBuild build=new JavaBuild(sketch);
+        File srcFolder=new File(outputFolder,"source");
+        String className=build.build(srcFolder,outputFolder,true);
+        if (className != null) {
+          success=true;
+          if (task == RUN || task == PRESENT) {
+            Runner runner=new Runner(build,this);
+            runner.launch(task == PRESENT);
+          }
+        }
+ else {
+          success=false;
+        }
+      }
+ else       if (task == EXPORT) {
+        if (outputPath == null) {
+          javaMode.handleExportApplication(sketch);
+        }
+ else {
+          JavaBuild build=new JavaBuild(sketch);
+          build.build(true);
+          if (build != null) {
+            success=build.exportApplication(outputFolder,platform,platformBits,embedJava);
+          }
+        }
+      }
+      if (!success) {
+        System.exit(1);
+      }
+      systemOut.println("Finished.");
+      System.exit(0);
+    }
+ catch (    SketchException re) {
+      statusError(re);
+      System.exit(1);
+    }
+catch (    IOException e) {
+      e.printStackTrace();
+      System.exit(1);
+    }
+  }
 }
