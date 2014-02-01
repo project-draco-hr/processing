@@ -1,10 +1,11 @@
 {
   if (completionList.getSelectedValue() != null) {
     try {
-      String selectedSuggestion=((CompletionCandidate)completionList.getSelectedValue()).getCompletionString().substring(subWord.length());
-      logE(subWord + " <= subword,Inserting suggestion=> " + selectedSuggestion+ " Current sub: "+ fetchPhrase());
-      textarea.getDocument().remove(insertionPosition - subWord.length(),subWord.length());
-      textarea.getDocument().insertString(insertionPosition - subWord.length(),((CompletionCandidate)completionList.getSelectedValue()).getCompletionString(),null);
+      String currentSubword=fetchCurrentSubword();
+      String selectedSuggestion=((CompletionCandidate)completionList.getSelectedValue()).getCompletionString().substring(currentSubword.length());
+      logE(subWord + " <= subword,Inserting suggestion=> " + selectedSuggestion+ " Current sub: "+ currentSubword);
+      textarea.getDocument().remove(insertionPosition - currentSubword.length(),currentSubword.length());
+      textarea.getDocument().insertString(insertionPosition - currentSubword.length(),((CompletionCandidate)completionList.getSelectedValue()).getCompletionString(),null);
       if (selectedSuggestion.endsWith(")")) {
         if (!selectedSuggestion.endsWith("()")) {
           int x=selectedSuggestion.indexOf('(');
