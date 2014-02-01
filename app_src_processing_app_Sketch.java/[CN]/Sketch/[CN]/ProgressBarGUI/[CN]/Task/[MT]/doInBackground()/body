@@ -8,14 +8,14 @@
   setProgress(0);
   for (  File copyable : ProgressBarGUI.this.copyItems) {
     if (copyable.isDirectory()) {
-      Base.copyDir(copyable,new File(ProgressBarGUI.this.newFolder,copyable.getName()));
+      Base.copyDir(copyable,new File(ProgressBarGUI.this.newFolder,copyable.getName()),this,progress,totalSize);
+      progress+=getFileLength(copyable);
     }
  else {
       Base.copyFile(copyable,new File(ProgressBarGUI.this.newFolder,copyable.getName()));
+      progress+=getFileLength(copyable);
+      setProgress((int)Math.min(Math.ceil((double)progress * 100.0 / (double)totalSize),100));
     }
-    progress+=getFileLength(copyable);
-    setProgress((int)Math.min(Math.ceil((double)progress * 100.0 / (double)totalSize),100));
-    System.out.println("" + (int)Math.min(Math.ceil((double)progress * 100.0 / (double)totalSize),100));
   }
   return null;
 }

@@ -1,6 +1,7 @@
 {
   String newParentDir=null;
   String newName=null;
+  final String oldName2=folder.getName();
   final String PROMPT="Save sketch folder as...";
   if (Preferences.getBoolean("chooser.files.native")) {
     FileDialog fd=new FileDialog(editor,PROMPT,FileDialog.SAVE);
@@ -36,7 +37,7 @@
   String sanitaryName=Sketch.checkName(newName);
   File newFolder=new File(newParentDir,sanitaryName);
   if (!sanitaryName.equals(newName) && newFolder.exists()) {
-    Base.showMessage("Cannot Save","A sketch with the cleaned name\n" + "???????" + sanitaryName + "???????? already exists.");
+    Base.showMessage("Cannot Save","A sketch with the cleaned name\n" + "???" + sanitaryName + "??? already exists.");
     return false;
   }
   newName=sanitaryName;
@@ -91,9 +92,10 @@
 );
   final File newFolder2=newFolder;
   final File[] copyItems2=copyItems;
+  final String newName2=newName;
   javax.swing.SwingUtilities.invokeLater(new Runnable(){
     public void run(){
-      ProgressBarGUI p=new ProgressBarGUI(copyItems2,newFolder2);
+      ProgressBarGUI p=new ProgressBarGUI(copyItems2,newFolder2,oldName2,newName2);
     }
   }
 );
