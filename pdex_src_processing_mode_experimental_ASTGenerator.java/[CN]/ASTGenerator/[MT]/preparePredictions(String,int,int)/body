@@ -1,8 +1,11 @@
 {
+  if (predictionOngoing.get())   return;
   if (!ExperimentalMode.codeCompletionsEnabled)   return;
   if (word.length() < predictionMinLength)   return;
+  predictionOngoing.set(true);
   if (caretWithinLineComment()) {
     log("No predictions.");
+    predictionOngoing.set(false);
     return;
   }
   String word2=ASTNodeWrapper.getJavaCode(word);
@@ -24,6 +27,7 @@
       }
       showPredictions(word);
       lastPredictedWord=word2;
+      predictionOngoing.set(false);
       return;
     }
   }
@@ -134,4 +138,5 @@
     }
   }
   showPredictions(word);
+  predictionOngoing.set(false);
 }

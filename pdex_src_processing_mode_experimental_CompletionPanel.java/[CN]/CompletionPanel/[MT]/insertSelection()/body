@@ -2,7 +2,7 @@
   if (completionList.getSelectedValue() != null) {
     try {
       String selectedSuggestion=((CompletionCandidate)completionList.getSelectedValue()).getCompletionString().substring(subWord.length());
-      logE(subWord + " <= subword,Inserting suggestion=> " + selectedSuggestion);
+      logE(subWord + " <= subword,Inserting suggestion=> " + selectedSuggestion+ " Current sub: "+ fetchPhrase());
       textarea.getDocument().remove(insertionPosition - subWord.length(),subWord.length());
       textarea.getDocument().insertString(insertionPosition - subWord.length(),((CompletionCandidate)completionList.getSelectedValue()).getCompletionString(),null);
       if (selectedSuggestion.endsWith(")")) {
@@ -16,6 +16,7 @@
  else {
         textarea.setCaretPosition(insertionPosition + selectedSuggestion.length());
       }
+      log("Suggestion inserted: " + System.currentTimeMillis());
       return true;
     }
  catch (    BadLocationException e1) {
