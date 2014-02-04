@@ -1,6 +1,12 @@
 {
+  if (backgroundA == 1) {
+    pgl.colorMask(false,false,false,true);
+    pgl.clearColor(0,0,0,backgroundA);
+    pgl.clear(PGL.COLOR_BUFFER_BIT);
+    pgl.colorMask(true,true,true,true);
+  }
   if (offscreenMultisample) {
-    multisampleFramebuffer.copy(offscreenFramebuffer,getCurrentFB());
+    multisampleFramebuffer.copyColor(offscreenFramebuffer);
   }
   popFramebuffer();
   texture.updateTexels();
