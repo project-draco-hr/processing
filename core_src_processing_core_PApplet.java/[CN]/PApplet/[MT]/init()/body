@@ -2,6 +2,13 @@
   if (checkRetina()) {
     useActive=false;
   }
+  if (javaVersion >= 1.7f) {
+    try {
+      revalidateMethod=getClass().getMethod("revalidate",new Class[]{});
+    }
+ catch (    Exception e) {
+    }
+  }
   setFocusTraversalKeysEnabled(false);
   finished=false;
   looping=true;
@@ -21,6 +28,7 @@
   }
  catch (  Exception e) {
   }
+  checkDisplaySize();
   Dimension size=getSize();
   if ((size.width != 0) && (size.height != 0)) {
     g=makeGraphics(size.width,size.height,sketchRenderer(),null,true);
