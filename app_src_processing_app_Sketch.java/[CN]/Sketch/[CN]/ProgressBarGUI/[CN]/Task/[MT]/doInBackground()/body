@@ -12,9 +12,11 @@
       progress+=getFileLength(copyable);
     }
  else {
-      Base.copyFile(copyable,new File(ProgressBarGUI.this.newFolder,copyable.getName()));
-      progress+=getFileLength(copyable);
-      setProgress((int)Math.min(Math.ceil((double)progress * 100.0 / (double)totalSize),100));
+      Base.copyFile(copyable,new File(ProgressBarGUI.this.newFolder,copyable.getName()),this,progress,totalSize);
+      if (getFileLength(copyable) < 524288) {
+        progress+=getFileLength(copyable);
+        setProgress((int)Math.min(Math.ceil((double)progress * 100.0 / (double)totalSize),100));
+      }
     }
   }
   return null;
