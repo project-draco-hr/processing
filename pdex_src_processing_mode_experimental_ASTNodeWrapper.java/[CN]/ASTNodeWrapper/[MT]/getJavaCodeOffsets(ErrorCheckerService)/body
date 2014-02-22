@@ -1,5 +1,6 @@
 {
   int nodeOffset=Node.getStartPosition(), nodeLength=Node.getLength();
+  log("0.nodeOffset " + nodeOffset);
   ASTNode thisNode=Node;
   while (thisNode.getParent() != null) {
     if (getLineNumber(thisNode.getParent()) == lineNumber) {
@@ -10,15 +11,45 @@
     }
   }
   int altStartPos=thisNode.getStartPosition();
+  log("1.Altspos " + altStartPos);
   thisNode=thisNode.getParent();
+  int jdocOffset;
+  Javadoc jd=null;
+  if (thisNode instanceof TypeDeclaration) {
+    jd=((TypeDeclaration)thisNode).getJavadoc();
+    log("Has t jdoc " + ((TypeDeclaration)thisNode).getJavadoc());
+  }
+ else   if (thisNode instanceof MethodDeclaration) {
+    jd=((MethodDeclaration)thisNode).getJavadoc();
+    log("Has m jdoc " + jd);
+  }
+ else   if (thisNode instanceof FieldDeclaration) {
+    jd=((FieldDeclaration)thisNode).getJavadoc();
+    log("Has f jdoc " + ((FieldDeclaration)thisNode).getJavadoc());
+  }
+  if (jd != null) {
+    jdocOffset=jd.getLength();
+    log("jdoc offset: " + jdocOffset);
+    while (thisNode.getParent() != null) {
+      if (getLineNumber2(thisNode.getParent()) == getLineNumber2(getNode())) {
+        thisNode=thisNode.getParent();
+      }
+ else {
+        break;
+      }
+    }
+  }
+  log("Visiting children of node " + getNodeAsString(thisNode));
   Iterator<StructuralPropertyDescriptor> it=thisNode.structuralPropertiesForType().iterator();
   boolean flag=true;
   while (it.hasNext()) {
     StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
     if (prop.isChildListProperty()) {
       List<ASTNode> nodelist=(List<ASTNode>)thisNode.getStructuralProperty(prop);
+      log("prop " + prop);
       for (      ASTNode cnode : nodelist) {
-        if (getLineNumber(cnode) == lineNumber) {
+        log("Visiting node " + getNodeAsString(cnode));
+        if (getLineNumber2(cnode) == lineNumber) {
           if (flag) {
             altStartPos=cnode.getStartPosition();
             flag=false;
@@ -37,5 +68,8 @@
   String pdeCode=ecs.getPDECodeAtLine(pdeoffsets[0],pdeoffsets[1] - 1).trim();
   int vals[]=createOffsetMapping(pdeCode,nodeOffset - altStartPos,nodeLength);
   if (vals != null)   return new int[]{lineNumber,nodeOffset + vals[0] - altStartPos,vals[1]};
- else   return new int[]{lineNumber,nodeOffset - altStartPos,nodeLength};
+ else {
+    log("joff[1] = " + (nodeOffset - altStartPos));
+    return new int[]{lineNumber,nodeOffset - altStartPos,nodeLength};
+  }
 }
