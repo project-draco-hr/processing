@@ -1,0 +1,15 @@
+{
+  List<ASTNode> list=td.modifiers();
+  list=td.modifiers();
+  SimpleName sn=(SimpleName)getNode();
+  int lineNum=getLineNumber(sn);
+  log("SN " + sn + ", "+ lineNum);
+  for (  ASTNode astNode : list) {
+    if (getLineNumber(astNode) == lineNum) {
+      log("first node in that line " + astNode);
+      log("diff " + (sn.getStartPosition() - astNode.getStartPosition()));
+      return (astNode.getStartPosition());
+    }
+  }
+  return 0;
+}

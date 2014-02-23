@@ -1,0 +1,31 @@
+{
+  int minLineNum=lineNumber, maxLineNum=((CompilationUnit)thisNode.getRoot()).getLineNumber(thisNode.getStartPosition());
+  log("Visiting children of node " + getNodeAsString(thisNode));
+  Iterator<StructuralPropertyDescriptor> it=thisNode.structuralPropertiesForType().iterator();
+  boolean flag=true;
+  int altStartPos=0;
+  while (it.hasNext()) {
+    StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
+    if (prop.isChildListProperty()) {
+      List<ASTNode> nodelist=(List<ASTNode>)thisNode.getStructuralProperty(prop);
+      log("prop " + prop);
+      for (      ASTNode cnode : nodelist) {
+        log("Visiting node " + getNodeAsString(cnode));
+        if (getLineNumber(cnode) >= minLineNum && getLineNumber(cnode) <= maxLineNum) {
+          if (flag) {
+            altStartPos=cnode.getStartPosition();
+            flag=false;
+          }
+ else {
+            if (cnode == Node) {
+              break;
+            }
+          }
+          testForMultilineDecl(cnode);
+          FieldDeclaration f;
+        }
+      }
+    }
+  }
+  log("Altspos " + altStartPos);
+}
