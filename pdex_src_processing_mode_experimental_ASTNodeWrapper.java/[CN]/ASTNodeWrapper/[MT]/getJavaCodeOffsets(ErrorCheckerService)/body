@@ -13,7 +13,6 @@
   int altStartPos=thisNode.getStartPosition();
   log("1.Altspos " + altStartPos);
   thisNode=thisNode.getParent();
-  int jdocOffset;
   Javadoc jd=null;
   if (thisNode instanceof TypeDeclaration) {
     jd=((TypeDeclaration)thisNode).getJavadoc();
@@ -29,11 +28,9 @@
     FieldDeclaration fd=((FieldDeclaration)thisNode);
     jd=fd.getJavadoc();
     log("Has f jdoc " + fd.getJavadoc());
-    altStartPos=getLen(fd);
+    altStartPos=getJavadocOffset(fd);
   }
-  if (jd != null) {
-  }
- else {
+  if (jd == null) {
     log("Visiting children of node " + getNodeAsString(thisNode));
     Iterator<StructuralPropertyDescriptor> it=thisNode.structuralPropertiesForType().iterator();
     boolean flag=true;
