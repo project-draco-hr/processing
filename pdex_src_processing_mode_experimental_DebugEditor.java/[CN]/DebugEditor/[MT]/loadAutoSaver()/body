@@ -5,11 +5,9 @@
     autosaver.init();
     return;
   }
-  if (viewingAutosaveBackup)   return;
   File pastSave=autosaver.getPastSave();
   int response=Base.showYesNoQuestion(this,"Unsaved backup found!","An automatic backup of \"" + pastSave.getParentFile().getName() + "\" sketch has been found. This may mean Processing "+ "was closed unexpectedly last time.","Select YES to view it or NO to delete the backup.");
   if (response == JOptionPane.YES_OPTION) {
-    viewingAutosaveBackup=true;
     handleOpenInternal(pastSave.getAbsolutePath());
     log("loadAutoSaver, viewing autosave? " + viewingAutosaveBackup);
     return;

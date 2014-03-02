@@ -6,9 +6,15 @@
   }
  else {
     saveTime=timeOut * 60 * 1000;
-    ExperimentalMode.log("AutoSaver Interval(mins): " + timeOut);
+    log("AutoSaver Interval(mins): " + timeOut);
   }
-  autosaveDir=new File(editor.getSketch().getFolder().getAbsolutePath() + File.separator + "_autosave");
-  sketchFolder=editor.getSketch().getFolder();
   checkIfBackup();
+  if (isAutoSaveBackup) {
+    sketchBackupFolder=sketchFolder;
+  }
+ else {
+    autosaveDir=new File(editor.getSketch().getFolder().getAbsolutePath() + File.separator + AUTOSAVEFOLDER);
+    sketchFolder=editor.getSketch().getFolder();
+    sketchBackupFolder=autosaveDir;
+  }
 }

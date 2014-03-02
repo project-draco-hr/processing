@@ -6,14 +6,8 @@
     clearBreakpointedLines();
     variableInspector().reset();
   }
-  if (!viewingAutosaveBackup) {
-    log("Sketch isn't a backup");
-    if (autosaver != null) {
-      log("stopping autosaver in handleOpenInternal");
-      autosaver.stop();
-    }
-    loadAutoSaver();
-  }
+  loadAutoSaver();
+  viewingAutosaveBackup=autosaver.isAutoSaveBackup();
   log("handleOpenInternal, viewing autosave? " + viewingAutosaveBackup);
   return didOpen;
 }
