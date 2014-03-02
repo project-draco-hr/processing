@@ -1,11 +1,19 @@
 {
+  log("handleOpenInternal, path: " + path);
   boolean didOpen=super.handleOpenInternal(path);
   if (didOpen && dbg != null) {
     dbg.clearBreakpoints();
     clearBreakpointedLines();
     variableInspector().reset();
   }
-  if (autosaver != null)   autosaver.stop();
-  loadAutoSaver();
+  if (!viewingAutosaveBackup) {
+    log("Sketch isn't a backup");
+    if (autosaver != null) {
+      log("stopping autosaver in handleOpenInternal");
+      autosaver.stop();
+    }
+    loadAutoSaver();
+  }
+  log("handleOpenInternal, viewing autosave? " + viewingAutosaveBackup);
   return didOpen;
 }

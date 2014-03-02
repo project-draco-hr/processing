@@ -1,4 +1,12 @@
 {
+  log("handleSave, viewing autosave? " + viewingAutosaveBackup);
+  if (viewingAutosaveBackup) {
+    File files[]=autosaver.getSketchBackupFolder().listFiles();
+    File src=autosaver.getSketchBackupFolder(), dst=autosaver.getSketchFolder();
+    for (    File f : files) {
+      log("Copying " + f.getAbsolutePath() + " to "+ dst.getAbsolutePath());
+    }
+  }
   final List<String> modified=new ArrayList();
   for (int i=0; i < getSketch().getCodeCount(); i++) {
     SketchCode tab=getSketch().getCode(i);

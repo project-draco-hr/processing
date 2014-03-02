@@ -1,5 +1,8 @@
 {
   if (ExperimentalMode.errorLogsEnabled)   writeErrorsToFile();
-  if (autosaver != null)   autosaver.stop();
+  if (autosaver != null && !viewingAutosaveBackup) {
+    log("stopping autosaver in internalCloseRunner");
+    autosaver.stop();
+  }
   super.internalCloseRunner();
 }
