@@ -5,13 +5,15 @@
   float textPoints[]=new float[6];
   float lastX=0;
   float lastY=0;
+  boolean open=false;
   beginShape();
   while (!outline.isDone()) {
     int type=outline.currentSegment(textPoints);
-    if (type == PGL.SEG_MOVETO) {
+    if (!open) {
+      beginContour();
+      open=true;
     }
- else     if (type == PGL.SEG_LINETO) {
-      if (type == PGL.SEG_MOVETO)       beginContour();
+    if (type == PGL.SEG_MOVETO || type == PGL.SEG_LINETO) {
       vertex(x + textPoints[0],y + textPoints[1]);
       lastX=textPoints[0];
       lastY=textPoints[1];
@@ -34,6 +36,7 @@
     }
  else     if (type == PGL.SEG_CLOSE) {
       endContour();
+      open=false;
     }
     outline.next();
   }
