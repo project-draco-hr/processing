@@ -60,29 +60,41 @@
       simpName=pinpointOnLine(lineNode.getParent(),altOff,lineNode.getStartPosition(),name);
     }
     log("2+++> " + simpName);
-    if (simpName instanceof SimpleName) {
-      nameOfNode=simpName.toString();
-      log(getNodeAsString(simpName));
-      decl=findDeclaration((SimpleName)simpName);
-      if (decl != null) {
-        logE("DECLA: " + decl.getClass().getName());
-        nodeLabel=getLabelIfType(new ASTNodeWrapper(decl),(SimpleName)simpName);
-      }
- else       logE("null");
-      log(getNodeAsString(decl));
-      ASTNode nearestNode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
-      ClassMember cmem=resolveExpression3rdParty(nearestNode,(SimpleName)simpName,false);
-      if (cmem != null) {
-        log("CMEM-> " + cmem);
-      }
- else       log("CMEM-> null");
-    }
-  }
-  if (decl != null && scrollOnly) {
-    ASTNode simpName2=getNodeName(decl,nameOfNode);
-    logE("FINAL String decl: " + getNodeAsString(decl));
-    logE("FINAL String label: " + getNodeAsString(simpName2));
-    errorCheckerService.highlightNode(simpName2);
-  }
-  return new ASTNodeWrapper(decl,nodeLabel);
+    if (simpName == null && lineNode instanceof SimpleName) {
+switch (lineNode.getParent().getNodeType()) {
+case ASTNode.TYPE_DECLARATION:
+case ASTNode.METHOD_DECLARATION:
+case ASTNode.FIELD_DECLARATION:
+case ASTNode.VARIABLE_DECLARATION_FRAGMENT:
+        decl=lineNode.getParent();
+      return new ASTNodeWrapper(decl,"");
+default :
+    break;
+}
+}
+if (simpName instanceof SimpleName) {
+nameOfNode=simpName.toString();
+log(getNodeAsString(simpName));
+decl=findDeclaration((SimpleName)simpName);
+if (decl != null) {
+  logE("DECLA: " + decl.getClass().getName());
+  nodeLabel=getLabelIfType(new ASTNodeWrapper(decl),(SimpleName)simpName);
+}
+ else logE("null");
+log(getNodeAsString(decl));
+ASTNode nearestNode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
+ClassMember cmem=resolveExpression3rdParty(nearestNode,(SimpleName)simpName,false);
+if (cmem != null) {
+  log("CMEM-> " + cmem);
+}
+ else log("CMEM-> null");
+}
+}
+if (decl != null && scrollOnly) {
+ASTNode simpName2=getNodeName(decl,nameOfNode);
+logE("FINAL String decl: " + getNodeAsString(decl));
+logE("FINAL String label: " + getNodeAsString(simpName2));
+errorCheckerService.highlightNode(simpName2);
+}
+return new ASTNodeWrapper(decl,nodeLabel);
 }
