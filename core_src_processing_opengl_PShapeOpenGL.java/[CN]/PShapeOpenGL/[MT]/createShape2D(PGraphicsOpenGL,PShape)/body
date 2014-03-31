@@ -1,0 +1,23 @@
+{
+  PShapeOpenGL dest=null;
+  if (src.getFamily() == GROUP) {
+    dest=PGraphics2D.createShapeImpl(pg,GROUP);
+    copyGroup2D(pg,src,dest);
+  }
+ else   if (src.getFamily() == PRIMITIVE) {
+    dest=PGraphics2D.createShapeImpl(pg,src.getKind(),src.getParams());
+    PShape.copyPrimitive(src,dest);
+  }
+ else   if (src.getFamily() == GEOMETRY) {
+    dest=PGraphics2D.createShapeImpl(pg,PShape.GEOMETRY);
+    PShape.copyGeometry(src,dest);
+  }
+ else   if (src.getFamily() == PATH) {
+    dest=PGraphics2D.createShapeImpl(pg,PATH);
+    PShape.copyPath(src,dest);
+  }
+  dest.setName(src.getName());
+  dest.width=src.width;
+  dest.height=src.height;
+  return dest;
+}

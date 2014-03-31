@@ -10,7 +10,15 @@
           Rectangle oldBounds=getBounds();
           if (!newBounds.equals(oldBounds)) {
             setBounds(newBounds);
-            revalidate();
+            if (revalidateMethod != null) {
+              try {
+                revalidateMethod.invoke(PApplet.this);
+              }
+ catch (              Exception ex) {
+                ex.printStackTrace();
+                revalidateMethod=null;
+              }
+            }
           }
         }
       }

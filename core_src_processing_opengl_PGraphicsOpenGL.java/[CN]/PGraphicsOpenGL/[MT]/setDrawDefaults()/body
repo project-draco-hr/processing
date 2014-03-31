@@ -32,7 +32,12 @@
   }
   pgl.disable(PGL.POLYGON_SMOOTH);
   if (sized) {
-    background(backgroundColor);
+    if (primarySurface) {
+      background(backgroundColor);
+    }
+ else {
+      background(0x00 << 24 | (backgroundColor & 0xFFFFFF));
+    }
     defaultPerspective();
     defaultCamera();
     sized=false;

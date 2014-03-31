@@ -1,9 +1,9 @@
 {
-  initTexRectShader();
+  PGL ppgl=initTexRectShader();
   if (texData == null) {
     texData=allocateDirectFloatBuffer(texCoords.length);
   }
-  if (0 < texRectShaderProgram) {
+  if (0 < ppgl.texRectShaderProgram) {
     boolean depthTest=getDepthTest();
     disable(DEPTH_TEST);
     boolean depthMask=getDepthWriteMask();
@@ -11,9 +11,9 @@
     viewBuffer.rewind();
     getIntegerv(VIEWPORT,viewBuffer);
     viewport(0,0,scrW,scrH);
-    useProgram(texRectShaderProgram);
-    enableVertexAttribArray(texRectVertLoc);
-    enableVertexAttribArray(texRectTCoordLoc);
+    useProgram(ppgl.texRectShaderProgram);
+    enableVertexAttribArray(ppgl.texRectVertLoc);
+    enableVertexAttribArray(ppgl.texRectTCoordLoc);
     texCoords[0]=2 * (float)scrX0 / scrW - 1;
     texCoords[1]=2 * (float)scrY0 / scrH - 1;
     texCoords[2]=texX0;
@@ -39,20 +39,20 @@
       enabledTex=true;
     }
     bindTexture(TEXTURE_RECTANGLE,id);
-    uniform1i(texRectSamplerLoc,0);
+    uniform1i(ppgl.texRectSamplerLoc,0);
     texData.position(0);
-    bindBuffer(ARRAY_BUFFER,texGeoVBO);
+    bindBuffer(ARRAY_BUFFER,ppgl.texRectGeoVBO);
     bufferData(ARRAY_BUFFER,16 * SIZEOF_FLOAT,texData,STATIC_DRAW);
-    vertexAttribPointer(texRectVertLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,0);
-    vertexAttribPointer(texRectTCoordLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,2 * SIZEOF_FLOAT);
+    vertexAttribPointer(ppgl.texRectVertLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,0);
+    vertexAttribPointer(ppgl.texRectTCoordLoc,2,FLOAT,false,4 * SIZEOF_FLOAT,2 * SIZEOF_FLOAT);
     drawArrays(TRIANGLE_STRIP,0,4);
     bindBuffer(ARRAY_BUFFER,0);
     bindTexture(TEXTURE_RECTANGLE,0);
     if (enabledTex) {
       disableTexturing(TEXTURE_RECTANGLE);
     }
-    disableVertexAttribArray(texRectVertLoc);
-    disableVertexAttribArray(texRectTCoordLoc);
+    disableVertexAttribArray(ppgl.texRectVertLoc);
+    disableVertexAttribArray(ppgl.texRectTCoordLoc);
     useProgram(0);
     if (depthTest) {
       enable(DEPTH_TEST);

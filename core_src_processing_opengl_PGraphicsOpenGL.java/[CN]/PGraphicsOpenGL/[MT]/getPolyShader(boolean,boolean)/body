@@ -1,5 +1,6 @@
 {
   PShader shader;
+  PGraphicsOpenGL ppg=getPrimaryPG();
   boolean useDefault=polyShader == null;
   if (polyShader != null) {
     polyShader.setRenderer(this);
@@ -9,12 +10,12 @@
   if (lit) {
     if (tex) {
       if (useDefault || !polyShader.checkPolyType(PShader.TEXLIGHT)) {
-        if (defTexlightShader == null) {
+        if (ppg.defTexlightShader == null) {
           String[] vertSource=pgl.loadVertexShader(defTexlightShaderVertURL,120);
           String[] fragSource=pgl.loadFragmentShader(defTextureShaderFragURL,120);
-          defTexlightShader=new PShader(parent,vertSource,fragSource);
+          ppg.defTexlightShader=new PShader(parent,vertSource,fragSource);
         }
-        shader=defTexlightShader;
+        shader=ppg.defTexlightShader;
       }
  else {
         shader=polyShader;
@@ -22,12 +23,12 @@
     }
  else {
       if (useDefault || !polyShader.checkPolyType(PShader.LIGHT)) {
-        if (defLightShader == null) {
+        if (ppg.defLightShader == null) {
           String[] vertSource=pgl.loadVertexShader(defLightShaderVertURL,120);
           String[] fragSource=pgl.loadFragmentShader(defColorShaderFragURL,120);
-          defLightShader=new PShader(parent,vertSource,fragSource);
+          ppg.defLightShader=new PShader(parent,vertSource,fragSource);
         }
-        shader=defLightShader;
+        shader=ppg.defLightShader;
       }
  else {
         shader=polyShader;
@@ -41,12 +42,12 @@
     }
     if (tex) {
       if (useDefault || !polyShader.checkPolyType(PShader.TEXTURE)) {
-        if (defTextureShader == null) {
+        if (ppg.defTextureShader == null) {
           String[] vertSource=pgl.loadVertexShader(defTextureShaderVertURL,120);
           String[] fragSource=pgl.loadFragmentShader(defTextureShaderFragURL,120);
-          defTextureShader=new PShader(parent,vertSource,fragSource);
+          ppg.defTextureShader=new PShader(parent,vertSource,fragSource);
         }
-        shader=defTextureShader;
+        shader=ppg.defTextureShader;
       }
  else {
         shader=polyShader;
@@ -54,12 +55,12 @@
     }
  else {
       if (useDefault || !polyShader.checkPolyType(PShader.COLOR)) {
-        if (defColorShader == null) {
+        if (ppg.defColorShader == null) {
           String[] vertSource=pgl.loadVertexShader(defColorShaderVertURL,120);
           String[] fragSource=pgl.loadFragmentShader(defColorShaderFragURL,120);
-          defColorShader=new PShader(parent,vertSource,fragSource);
+          ppg.defColorShader=new PShader(parent,vertSource,fragSource);
         }
-        shader=defColorShader;
+        shader=ppg.defColorShader;
       }
  else {
         shader=polyShader;
