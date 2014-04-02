@@ -7,11 +7,11 @@
   setProgress(0);
   for (  File copyable : ProgressFrame.this.copyItems) {
     if (copyable.isDirectory()) {
-      Base.copyDir(copyable,new File(ProgressFrame.this.newFolder,copyable.getName()),this,progress,totalSize);
+      copyDir(copyable,new File(ProgressFrame.this.newFolder,copyable.getName()),this,progress,totalSize);
       progress+=getFileLength(copyable);
     }
  else {
-      Base.copyFile(copyable,new File(ProgressFrame.this.newFolder,copyable.getName()),this,progress,totalSize);
+      copyFile(copyable,new File(ProgressFrame.this.newFolder,copyable.getName()),this,progress,totalSize);
       if (getFileLength(copyable) < 524288) {
         progress+=getFileLength(copyable);
         setProgress((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
