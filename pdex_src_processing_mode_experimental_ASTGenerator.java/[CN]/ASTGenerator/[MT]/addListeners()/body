@@ -14,6 +14,24 @@
           if (tnode.getUserObject() instanceof ASTNodeWrapper) {
             ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
             errorCheckerService.highlightNode(awrap);
+            try {
+              int javaLineNumber=getLineNumber(awrap.getNode());
+              int pdeOffs[]=errorCheckerService.calculateTabIndexAndLineNumber(javaLineNumber);
+              PlainDocument javaSource=new PlainDocument();
+              javaSource.insertString(0,errorCheckerService.sourceCode,null);
+              Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber - 1);
+              if (lineElement == null) {
+                return;
+              }
+              String javaLine=javaSource.getText(lineElement.getStartOffset(),lineElement.getEndOffset() - lineElement.getStartOffset());
+              editor.getSketch().setCurrentCode(pdeOffs[0]);
+              String pdeLine=editor.getLineText(pdeOffs[1]);
+              log("JL " + javaLine + " LSO "+ lineElement.getStartOffset()+ ","+ lineElement.getEndOffset());
+              log("PL " + pdeLine);
+            }
+ catch (            BadLocationException e) {
+              e.printStackTrace();
+            }
           }
         }
       }
