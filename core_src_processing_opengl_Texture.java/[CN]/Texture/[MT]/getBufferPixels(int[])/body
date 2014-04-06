@@ -1,12 +1,10 @@
 {
-  boolean addToUsed=false;
   BufferData data=null;
   if (usedBuffers != null && 0 < usedBuffers.size()) {
     data=usedBuffers.getLast();
   }
  else   if (bufferCache != null && 0 < bufferCache.size()) {
-    data=bufferCache.remove(0);
-    addToUsed=true;
+    data=bufferCache.getLast();
   }
   if (data != null) {
     if ((data.w != width) || (data.h != height)) {
@@ -15,10 +13,11 @@
     data.rgbBuf.rewind();
     data.rgbBuf.get(pixels);
     convertToARGB(pixels);
-    if (addToUsed) {
-      if (usedBuffers == null) {
-        usedBuffers=new LinkedList<BufferData>();
-      }
+    if (usedBuffers == null) {
+      usedBuffers=new LinkedList<BufferData>();
+    }
+    while (0 < bufferCache.size()) {
+      data=bufferCache.remove(0);
       usedBuffers.add(data);
     }
   }
