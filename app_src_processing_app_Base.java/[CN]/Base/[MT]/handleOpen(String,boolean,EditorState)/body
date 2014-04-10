@@ -1,15 +1,29 @@
 {
-  File file=new File(path);
-  if (!file.exists())   return null;
+  final File file=new File(path);
+  if (!file.exists()) {
+    return null;
+  }
+  for (  Editor editor : editors) {
+    if (editor.getSketch().getMainFile().equals(file)) {
+      editor.toFront();
+      handleRecent(editor);
+      return editor;
+    }
+  }
   if (!Sketch.isSanitaryName(file.getName())) {
     Base.showWarning("You're tricky, but not tricky enough",file.getName() + " is not a valid name for a sketch.\n" + "Better to stick to ASCII, no spaces, and make sure\n"+ "it doesn't start with a number.",null);
     return null;
   }
-  for (  Editor editor : editors) {
-    if (editor.getSketch().getMainFilePath().equals(path)) {
-      editor.toFront();
-      handleRecent(editor);
-      return editor;
+  if (!nextMode.canEdit(file)) {
+    for (    final Mode mode : getModeList()) {
+      if (mode.canEdit(file)) {
+        nextMode=mode;
+        break;
+      }
+    }
+    if (!nextMode.canEdit(file)) {
+      Base.showWarning("Wrong Mode",nextMode.getTitle() + " doesn't understand that kind of file.\n" + "It prefers files with the extension ."+ nextMode.getDefaultExtension()+ ".",null);
+      return null;
     }
   }
   try {
