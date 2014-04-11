@@ -15,38 +15,11 @@
     return null;
   }
   if (!nextMode.canEdit(file)) {
-    for (    final Mode mode : getModeList()) {
-      if (mode.canEdit(file)) {
-        nextMode=mode;
-        break;
-      }
-    }
-    if (!nextMode.canEdit(file)) {
-      Base.showWarning("Wrong Mode",nextMode.getTitle() + " doesn't understand that kind of file.\n" + "It prefers files with the extension ."+ nextMode.getDefaultExtension()+ ".",null);
+    final Mode mode=selectMode(file);
+    if (mode == null) {
       return null;
     }
-  }
-  try {
-    File sketchFolder=new File(path).getParentFile();
-    File sketchProps=new File(sketchFolder,"sketch.properties");
-    if (sketchProps.exists()) {
-      Settings props=new Settings(sketchProps);
-      String modeTitle=props.get("mode");
-      String modeIdentifier=props.get("mode.id");
-      if (modeTitle != null && modeIdentifier != null) {
-        Mode mode=findMode(modeIdentifier);
-        if (mode != null) {
-          nextMode=mode;
-        }
- else {
-          final String msg="This sketch was last used in ???" + modeTitle + "??? mode,\n"+ "which does not appear to be installed. The sketch will\n"+ "be opened in ???"+ nextMode.getTitle()+ "??? mode instead.";
-          Base.showWarning("Depeche Mode",msg,null);
-        }
-      }
-    }
-  }
- catch (  Exception e) {
-    e.printStackTrace();
+    nextMode=mode;
   }
   Editor editor=nextMode.createEditor(this,path,state);
   if (editor == null) {
