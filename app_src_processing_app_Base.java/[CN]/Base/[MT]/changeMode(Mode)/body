@@ -5,21 +5,11 @@
       Base.showWarning("Save","Please save the sketch before changing the mode.",null);
     }
  else {
-      String mainPath=sketch.getMainFilePath();
-      boolean wasUntitled=sketch.isUntitled();
-      File sketchProps=new File(sketch.getFolder(),"sketch.properties");
-      try {
-        Settings props=new Settings(sketchProps);
-        props.set("mode",mode.getTitle());
-        props.set("mode.id",mode.getIdentifier());
-        props.save();
+      if (sketch.isUntitled()) {
+        handleClose(activeEditor,true);
       }
- catch (      IOException e) {
-        e.printStackTrace();
-      }
-      EditorState state=activeEditor.state;
-      handleClose(activeEditor,true);
-      handleOpen(mainPath,wasUntitled,state);
+      nextMode=mode;
+      handleNew();
     }
   }
 }
