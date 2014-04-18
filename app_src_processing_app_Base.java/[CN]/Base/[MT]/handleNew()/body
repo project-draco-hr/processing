@@ -39,16 +39,7 @@
     if (!newbieFile.createNewFile()) {
       throw new IOException(newbieFile + " already exists.");
     }
-    final File sketchProps=new File(newbieDir,"sketch.properties");
-    try {
-      final Settings settings=new Settings(sketchProps);
-      settings.set("mode",nextMode.getTitle());
-      settings.set("mode.id",nextMode.getIdentifier());
-      settings.save();
-    }
- catch (    IOException e) {
-      System.err.println("While creating " + sketchProps + ": "+ e.getMessage());
-    }
+    saveModeSettings(new File(newbieDir,"sketch.properties"),nextMode);
     String path=newbieFile.getAbsolutePath();
     handleOpen(path,true);
   }
