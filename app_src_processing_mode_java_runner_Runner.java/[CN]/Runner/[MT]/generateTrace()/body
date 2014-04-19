@@ -13,7 +13,10 @@
           EventQueue eventQueue=vm.eventQueue();
           EventSet eventSet=eventQueue.remove();
           for (          Event event : eventSet) {
-            if (event instanceof ExceptionEvent) {
+            if (event instanceof VMStartEvent) {
+              vm.resume();
+            }
+ else             if (event instanceof ExceptionEvent) {
               exceptionEvent((ExceptionEvent)event);
             }
  else             if (event instanceof VMDisconnectEvent) {
@@ -34,13 +37,6 @@
   outThread=new StreamRedirectThread("JVM stdout Reader",process.getInputStream(),System.out);
   errThread.start();
   outThread.start();
-  try {
-    Thread.sleep(1000);
-  }
- catch (  InterruptedException ex) {
-    Thread.currentThread().interrupt();
-  }
-  vm.resume();
   try {
     if (eventThread != null)     eventThread.join();
     errThread.join();
