@@ -34,6 +34,12 @@
   outThread=new StreamRedirectThread("JVM stdout Reader",process.getInputStream(),System.out);
   errThread.start();
   outThread.start();
+  try {
+    Thread.sleep(1000);
+  }
+ catch (  InterruptedException ex) {
+    Thread.currentThread().interrupt();
+  }
   vm.resume();
   try {
     if (eventThread != null)     eventThread.join();
