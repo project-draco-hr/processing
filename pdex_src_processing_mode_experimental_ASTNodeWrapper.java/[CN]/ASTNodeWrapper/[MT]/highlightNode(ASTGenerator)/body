@@ -35,11 +35,13 @@
     }
     log("count=" + count);
     index=0;
-    while (count > 0) {
-      index=pdeLine.indexOf(lookingFor,index);
-      if (index != -1) {
-        count--;
-        index+=lookingFor.length();
+    matcher=toFind.matcher(pdeLine);
+    while (matcher.find()) {
+      count--;
+      if (count == 0) {
+        log("Found on pde line lso: " + matcher.start());
+        index=matcher.end();
+        break;
       }
     }
     log("pde lso " + (index - lookingFor.length()));
