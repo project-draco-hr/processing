@@ -1,7 +1,13 @@
 {
+  this.parent=parent;
   this.socket=socket;
   input=socket.getInputStream();
   output=socket.getOutputStream();
   thread=new Thread(this);
   thread.start();
+  try {
+    disconnectEventMethod=parent.getClass().getMethod("disconnectEvent",new Class[]{Client.class});
+  }
+ catch (  Exception e) {
+  }
 }
