@@ -3,12 +3,26 @@
     Sketch sketch=activeEditor.getSketch();
     if (sketch.isModified()) {
       Base.showWarning("Save","Please save the sketch before changing the mode.",null);
+      return;
+    }
+    nextMode=mode;
+    boolean newModeCanHandleCurrentSource=true;
+    for (    final SketchCode code : sketch.getCode()) {
+      if (!mode.validExtension(code.getExtension())) {
+        newModeCanHandleCurrentSource=false;
+        break;
+      }
+    }
+    if (newModeCanHandleCurrentSource) {
+      final File props=new File(sketch.getCodeFolder(),"sketch.properties");
+      saveModeSettings(props,nextMode);
+      handleClose(activeEditor,true);
+      handleOpen(sketch.getMainFilePath());
     }
  else {
       if (sketch.isUntitled()) {
         handleClose(activeEditor,true);
       }
-      nextMode=mode;
       handleNew();
     }
   }
