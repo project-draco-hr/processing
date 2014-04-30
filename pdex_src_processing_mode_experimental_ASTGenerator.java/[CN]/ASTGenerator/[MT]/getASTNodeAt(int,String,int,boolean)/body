@@ -1,5 +1,5 @@
 {
-  log("----getASTNodeAt----");
+  log("----getASTNodeAt---- CU State: " + errorCheckerService.compilationUnitState);
   if (errorCheckerService != null) {
     editor=errorCheckerService.getEditor();
     int codeIndex=editor.getSketch().getCodeIndex(editor.getCurrentTab());
@@ -11,9 +11,9 @@
       }
     }
   }
-  log("FLON: " + lineNumber);
+  log("FLON: Node line number " + lineNumber);
   ASTNode lineNode=findLineOfNode(compilationUnit,lineNumber,offset,name);
-  log("+> " + lineNode);
+  log("Node text +> " + lineNode);
   ASTNode decl=null;
   String nodeLabel=null;
   String nameOfNode=null;
@@ -30,7 +30,7 @@
         }
       }
     }
-    log("FLON2: " + lineNumber + " LN spos "+ lineNode.getStartPosition()+ " off "+ offset+ " alt off"+ altOff);
+    log("FLON2: " + lineNumber + " LN start pos "+ lineNode.getStartPosition()+ " off "+ offset+ " alt off"+ altOff);
     ASTNode parLineNode=lineNode.getParent();
     Iterator<StructuralPropertyDescriptor> it=parLineNode.structuralPropertiesForType().iterator();
     boolean flag=true;
@@ -53,13 +53,13 @@
         }
       }
     }
-    log("FLON3 " + lineNode.getStartPosition() + " off "+ offset+ " alt off"+ altOff);
+    log("FLON3 new alt off: " + altOff);
     ASTNode simpName=pinpointOnLine(lineNode,altOff,lineNode.getStartPosition(),name);
     if (simpName == null) {
-      log("1+++> " + simpName);
+      log("pinpointOnLine 1+++> " + simpName);
       simpName=pinpointOnLine(lineNode.getParent(),altOff,lineNode.getStartPosition(),name);
     }
-    log("2+++> " + simpName);
+    log("pinpointOnLine 2+++> " + simpName);
     if (simpName == null && lineNode instanceof SimpleName) {
 switch (lineNode.getParent().getNodeType()) {
 case ASTNode.TYPE_DECLARATION:
