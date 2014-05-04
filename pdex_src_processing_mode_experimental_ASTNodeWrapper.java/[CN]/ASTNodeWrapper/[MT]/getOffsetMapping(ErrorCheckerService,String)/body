@@ -1,7 +1,11 @@
 {
   log("Src:" + source);
   String sourceAlt=new String(source);
+  String sourceJava=ecs.astGenerator.getJavaSourceCodeline(lineNumber);
   TreeMap<Integer,Integer> offsetmap=new TreeMap<Integer,Integer>();
+  if (sourceJava.trim().startsWith("public") && !source.startsWith("public")) {
+    offsetmap.put(0,6);
+  }
   final String webColorRegexp="#{1}[A-F|a-f|0-9]{6}\\W";
   Pattern webPattern=Pattern.compile(webColorRegexp);
   Matcher webMatcher=webPattern.matcher(sourceAlt);
@@ -37,6 +41,8 @@
   }
   colorMatcher=colorPattern.matcher(sourceAlt);
   sourceAlt=colorMatcher.replaceAll("int");
+  log("From direct source: ");
+  sourceAlt=sourceJava;
   log(sourceAlt);
   int javaCodeMap[]=new int[source.length() * 2];
   int pdeCodeMap[]=new int[source.length() * 2];
@@ -55,16 +61,20 @@
       pi--;
       pj--;
       for (int i=0; i < kval; i++, pi++, pj++) {
-        javaCodeMap[pi]=javaCodeMap[pi - 1];
-        pdeCodeMap[pj]=pdeCodeMap[pj - 1] + 1;
+        if (pi > 1 && pj > 1) {
+          javaCodeMap[pi]=javaCodeMap[pi - 1];
+          pdeCodeMap[pj]=pdeCodeMap[pj - 1] + 1;
+        }
       }
     }
  else {
       pi--;
       pj--;
       for (int i=0; i < -kval; i++, pi++, pj++) {
-        javaCodeMap[pi]=javaCodeMap[pi - 1] + 1;
-        pdeCodeMap[pj]=pdeCodeMap[pj - 1];
+        if (pi > 1 && pj > 1) {
+          javaCodeMap[pi]=javaCodeMap[pi - 1] + 1;
+          pdeCodeMap[pj]=pdeCodeMap[pj - 1];
+        }
       }
     }
     keySum+=kval;
