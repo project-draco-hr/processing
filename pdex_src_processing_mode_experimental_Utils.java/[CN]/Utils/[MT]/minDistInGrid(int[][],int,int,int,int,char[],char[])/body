@@ -1,0 +1,26 @@
+{
+  if (i < s1.length && j < s2.length) {
+    System.out.print(s1[i] + " <-> " + s2[j]);
+    if (s1[i] != s2[j])     System.out.println("--");
+  }
+  System.out.println();
+  if (i == fi && j == fj) {
+    System.out.println("Reached end.");
+  }
+ else {
+    int a=Integer.MAX_VALUE, b=a, c=a;
+    if (i < fi)     a=g[i + 1][j];
+    if (i < fi && j < fj)     b=g[i][j + 1];
+    if (i < fi && j < fj)     c=g[i + 1][j + 1];
+    int mini=Math.min(a,Math.min(b,c));
+    if (mini == a) {
+      minDistInGrid(g,i + 1,j,fi,fj,s1,s2);
+    }
+ else     if (mini == b) {
+      minDistInGrid(g,i,j + 1,fi,fj,s1,s2);
+    }
+ else     if (mini == c) {
+      minDistInGrid(g,i + 1,j + 1,fi,fj,s1,s2);
+    }
+  }
+}
