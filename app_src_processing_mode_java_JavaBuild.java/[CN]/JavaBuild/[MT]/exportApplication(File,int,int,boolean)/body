@@ -52,7 +52,8 @@
       File batFile=new File(destFolder,sketch.getName() + ".bat");
       PrintWriter writer=PApplet.createWriter(batFile);
       writer.println("@echo off");
-      writer.println("java -Djava.ext.dirs=lib -Djava.library.path=lib " + sketch.getName());
+      String javaPath=embedJava ? ".\\java\\bin\\java.exe" : "java";
+      writer.println(javaPath + " -Djava.ext.dirs=lib -Djava.library.path=lib " + sketch.getName());
       writer.flush();
       writer.close();
     }
@@ -187,6 +188,9 @@
     PrintWriter pw=PApplet.createWriter(shellScript);
     pw.print("#!/bin/sh\n\n");
     pw.print("APPDIR=$(dirname \"$0\")\n");
+    if (embedJava) {
+      pw.print("$APPDIR/java/bin/");
+    }
     pw.print("java " + Preferences.get("run.options") + " -Djava.library.path=\"$APPDIR:$APPDIR/lib\""+ " -cp \""+ exportClassPath+ "\""+ " "+ sketch.getName()+ " \"$@\"\n");
     pw.flush();
     pw.close();

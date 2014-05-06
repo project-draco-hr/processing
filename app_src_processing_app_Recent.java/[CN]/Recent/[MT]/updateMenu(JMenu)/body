@@ -1,57 +1,7 @@
 {
   menu.removeAll();
   String sketchbookPath=Base.getSketchbookFolder().getAbsolutePath();
-  for (  final Record rec : records) {
-    String recPath=new File(rec.getPath()).getParent();
-    String purtyPath=null;
-    if (recPath.startsWith(sketchbookPath)) {
-      purtyPath="sketchbook \u2192 " + recPath.substring(sketchbookPath.length() + 1);
-    }
- else {
-      ArrayList<Mode> modes=base.getModeList();
-      for (      Mode mode : modes) {
-        File examplesFolder=mode.getExamplesFolder();
-        String examplesPath=examplesFolder.getAbsolutePath();
-        if (recPath.startsWith(examplesPath)) {
-          String modePrefix=mode.getTitle() + " ";
-          if (mode.getTitle().equals("Standard")) {
-            modePrefix="";
-          }
-          purtyPath=modePrefix + "examples \u2192 " + recPath.substring(examplesPath.length() + 1);
-          break;
-        }
-        if (mode.coreLibraries != null) {
-          for (          Library lib : mode.coreLibraries) {
-            examplesFolder=lib.getExamplesFolder();
-            examplesPath=examplesFolder.getAbsolutePath();
-            if (recPath.startsWith(examplesPath)) {
-              purtyPath=lib.getName() + " examples \u2192 " + recPath.substring(examplesPath.length() + 1);
-              break;
-            }
-          }
-        }
-        if (mode.contribLibraries != null) {
-          for (          Library lib : mode.contribLibraries) {
-            examplesFolder=lib.getExamplesFolder();
-            examplesPath=examplesFolder.getAbsolutePath();
-            if (recPath.startsWith(examplesPath)) {
-              purtyPath=lib.getName() + " examples \u2192 " + recPath.substring(examplesPath.length() + 1);
-              break;
-            }
-          }
-        }
-      }
-    }
-    if (purtyPath == null) {
-      purtyPath=recPath;
-    }
-    JMenuItem item=new JMenuItem(purtyPath);
-    item.addActionListener(new ActionListener(){
-      public void actionPerformed(      ActionEvent e){
-        base.handleOpen(rec.path);
-      }
-    }
-);
-    menu.insert(item,0);
+  for (  Record rec : records) {
+    updateMenuRecord(menu,rec,sketchbookPath);
   }
 }

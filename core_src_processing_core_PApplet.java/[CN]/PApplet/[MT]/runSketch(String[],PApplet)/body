@@ -18,22 +18,7 @@
   GraphicsDevice displayDevice=null;
   boolean hideStop=false;
   String param=null, value=null;
-  String folder=null;
-  try {
-    folder=System.getProperty("user.dir");
-    if (platform == MACOSX) {
-      String jarPath=PApplet.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-      jarPath=urlDecode(jarPath);
-      if (jarPath.contains("Contents/Java/")) {
-        String appPath=jarPath.substring(0,jarPath.indexOf(".app") + 4);
-        File containingFolder=new File(appPath).getParentFile();
-        folder=containingFolder.getAbsolutePath();
-      }
-    }
-  }
- catch (  Exception e) {
-    e.printStackTrace();
-  }
+  String folder=calcSketchPath();
   int argIndex=0;
   while (argIndex < args.length) {
     int equals=args[argIndex].indexOf('=');
