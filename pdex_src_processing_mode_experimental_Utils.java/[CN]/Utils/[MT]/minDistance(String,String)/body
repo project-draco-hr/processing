@@ -27,14 +27,13 @@
       }
     }
   }
-  int maxLen=Math.max(len1,len2);
-  int pdeCodeMap[]=new int[maxLen], javaCodeMap[]=new int[maxLen];
-  System.out.println("Edit distance1: " + dp[len1][len2]);
-  minDistInGrid(dp,len1,len2,0,0,word1.toCharArray(),word2.toCharArray(),pdeCodeMap,javaCodeMap,maxLen);
+  ArrayList<OfsSet> alist=new ArrayList<Utils.OfsSet>();
+  minDistInGrid(dp,len1,len2,0,0,word1.toCharArray(),word2.toCharArray(),alist);
   System.out.println("PDE-to-Java");
-  for (int i=0; i < maxLen; i++) {
-    System.out.print(pdeCodeMap[i] + " <-> " + javaCodeMap[i]);
-    System.out.println(", " + word1.charAt(pdeCodeMap[i]) + " <-> "+ word2.charAt(javaCodeMap[i]));
+  for (int i=0; i < alist.size(); i++) {
+    System.out.print(alist.get(i).pdeOffset + " <-> " + alist.get(i).javaOffset);
+    System.out.println(", " + word1.charAt(alist.get(i).pdeOffset) + " <-> "+ word2.charAt(alist.get(i).javaOffset));
   }
+  System.out.println("Length " + alist.size());
   return dp[len1][len2];
 }
