@@ -12,7 +12,7 @@
     String[] jarList=new String[]{"pde.jar","antlr.jar","jna.jar","ant.jar","ant-launcher.jar","org-netbeans-swing-outline.jar","com.ibm.icu_4.4.2.v20110823.jar","jdi.jar","jdimodel.jar","org.eclipse.osgi_3.8.1.v20120830-144521.jar","core/library/core.jar"};
     String classPath=PApplet.join(jarList,":");
     String javaRoot=Base.getContentFile(".").getCanonicalPath();
-    writer.println("cd \"" + javaRoot + "\" && "+ Base.getJavaPath()+ " -cp \""+ classPath+ "\""+ " processing.mode.java.Commander \"$@\"");
+    writer.println("cd \"" + javaRoot + "\" && "+ Base.getJavaPath()+ " -Djna.nosys=true"+ " -cp \""+ classPath+ "\""+ " processing.mode.java.Commander \"$@\"");
     writer.flush();
     writer.close();
     file.setExecutable(true);
