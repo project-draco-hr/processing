@@ -1,19 +1,19 @@
 {
-  final Project p=new Project();
+  Project p=new Project();
   String path=buildFile.getAbsolutePath().replace('\\','/');
   p.setUserProperty("ant.file",path);
   p.setUserProperty("build.compiler","extJavac");
   final DefaultLogger consoleLogger=new DefaultLogger();
   consoleLogger.setErrorPrintStream(System.err);
   consoleLogger.setOutputPrintStream(System.out);
-  consoleLogger.setMessageOutputLevel(Project.MSG_INFO);
+  consoleLogger.setMessageOutputLevel(Project.MSG_ERR);
   p.addBuildListener(consoleLogger);
-  final DefaultLogger errorLogger=new DefaultLogger();
-  final ByteArrayOutputStream errb=new ByteArrayOutputStream();
-  final PrintStream errp=new PrintStream(errb);
+  DefaultLogger errorLogger=new DefaultLogger();
+  ByteArrayOutputStream errb=new ByteArrayOutputStream();
+  PrintStream errp=new PrintStream(errb);
   errorLogger.setErrorPrintStream(errp);
-  final ByteArrayOutputStream outb=new ByteArrayOutputStream();
-  final PrintStream outp=new PrintStream(outb);
+  ByteArrayOutputStream outb=new ByteArrayOutputStream();
+  PrintStream outp=new PrintStream(outb);
   errorLogger.setOutputPrintStream(outp);
   errorLogger.setMessageOutputLevel(Project.MSG_INFO);
   p.addBuildListener(errorLogger);
