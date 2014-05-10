@@ -47,20 +47,6 @@
     }
   }
   if (!jarFolder.exists())   jarFolder.mkdirs();
-  if (exportPlatform == PConstants.WINDOWS) {
-    if (exportBits == 64) {
-      File batFile=new File(destFolder,sketch.getName() + ".bat");
-      PrintWriter writer=PApplet.createWriter(batFile);
-      writer.println("@echo off");
-      String javaPath=embedJava ? ".\\java\\bin\\java.exe" : "java";
-      writer.println(javaPath + " -Djna.nosys=true -Djava.ext.dirs=lib -Djava.library.path=lib " + sketch.getName());
-      writer.flush();
-      writer.close();
-    }
- else {
-      Base.copyFile(mode.getContentFile("application/template.exe"),new File(destFolder,sketch.getName() + ".exe"));
-    }
-  }
   Vector<String> jarListVector=new Vector<String>();
   FileOutputStream zipOutputFile=new FileOutputStream(new File(jarFolder,sketch.getName() + ".jar"));
   ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
@@ -135,18 +121,18 @@
     runOptions.add("-Xms" + Preferences.get("run.options.memory.initial") + "m");
     runOptions.add("-Xmx" + Preferences.get("run.options.memory.maximum") + "m");
   }
-  StringBuilder jvmOptionsList=new StringBuilder();
-  for (  String opt : runOptions) {
-    jvmOptionsList.append("      <string>");
-    jvmOptionsList.append(opt);
-    jvmOptionsList.append("</string>");
-    jvmOptionsList.append('\n');
-  }
   if (exportPlatform == PConstants.MACOSX) {
+    StringBuilder runOptionsXML=new StringBuilder();
+    for (    String opt : runOptions) {
+      runOptionsXML.append("      <string>");
+      runOptionsXML.append(opt);
+      runOptionsXML.append("</string>");
+      runOptionsXML.append('\n');
+    }
     String PLIST_TEMPLATE="Info.plist.tmpl";
     File plistTemplate=new File(sketch.getFolder(),PLIST_TEMPLATE);
     if (!plistTemplate.exists()) {
-      plistTemplate=mode.getContentFile("application/Info.plist.tmpl");
+      plistTemplate=mode.getContentFile("application/" + PLIST_TEMPLATE);
     }
     File plistFile=new File(dotAppFolder,"Contents/Info.plist");
     PrintWriter pw=PApplet.createWriter(plistFile);
@@ -159,7 +145,7 @@
           sb.replace(index,index + "@@jvm_runtime@@".length(),jvmRuntime);
         }
         while ((index=sb.indexOf("@@jvm_options_list@@")) != -1) {
-          sb.replace(index,index + "@@jvm_options_list@@".length(),jvmOptionsList.toString());
+          sb.replace(index,index + "@@jvm_options_list@@".length(),runOptionsXML.toString());
         }
         while ((index=sb.indexOf("@@sketch@@")) != -1) {
           sb.replace(index,index + "@@sketch@@".length(),sketch.getName());
@@ -175,13 +161,35 @@
     pw.close();
   }
  else   if (exportPlatform == PConstants.WINDOWS) {
-    File argsFile=new File(destFolder + "/lib/args.txt");
-    PrintWriter pw=PApplet.createWriter(argsFile);
-    pw.print(PApplet.join(runOptions.toArray(new String[0])," ") + "\r\n");
-    pw.print(sketch.getName() + "\r\n");
-    pw.print(exportClassPath);
-    pw.flush();
-    pw.close();
+    XML project=new XML("project");
+    XML target=project.addChild("target");
+    target.setString("name","windows");
+    XML taskdef=target.addChild("taskdef");
+    taskdef.setString("name","launch4j");
+    taskdef.setString("classname","net.sf.launch4j.ant.Launch4jTask");
+    String launchPath=mode.getContentFile("application/launch4j").getAbsolutePath();
+    taskdef.setString("classpath",launchPath + "/launch4j.jar:" + launchPath+ "/lib/xstream.jar");
+    XML launch4j=target.addChild("launch4j");
+    XML config=launch4j.addChild("config");
+    config.setString("headerType","gui");
+    File exeFile=new File(destFolder,sketch.getName() + ".exe");
+    config.setString("outfile",exeFile.getAbsolutePath());
+    config.setString("dontWrapJar","true");
+    config.setString("jarPath",jarList[0]);
+    XML clazzPath=config.addChild("classPath");
+    clazzPath.setString("mainClass",sketch.getName());
+    for (int i=1; i < jarList.length; i++) {
+      String jarName=jarList[i];
+      clazzPath.addChild("cp").setContent(jarName);
+    }
+    XML jre=config.addChild("jre");
+    jre.setString("minVersion","1.7.0_40");
+    for (    String opt : runOptions) {
+      jre.addChild("opt").setContent(opt);
+    }
+    File buildFile=new File(destFolder + "build.xml");
+    project.save(buildFile);
+    buildWindowsLauncher(buildFile,"windows");
   }
  else {
     File shellScript=new File(destFolder,sketch.getName());
