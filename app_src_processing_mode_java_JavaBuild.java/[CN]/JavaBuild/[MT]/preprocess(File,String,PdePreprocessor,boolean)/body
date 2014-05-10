@@ -112,6 +112,10 @@ catch (  Exception ex) {
   for (  String item : result.extraImports) {
     int dot=item.lastIndexOf('.');
     String entry=(dot == -1) ? item : item.substring(0,dot);
+    if (item.startsWith("static ")) {
+      int dot2=item.lastIndexOf('.');
+      entry=entry.substring(7,(dot2 == -1) ? entry.length() : dot2);
+    }
     Library library=mode.getLibrary(entry);
     if (library != null) {
       if (!importedLibraries.contains(library)) {
@@ -123,7 +127,7 @@ catch (  Exception ex) {
  else {
       boolean found=false;
       if (codeFolderPackages != null) {
-        String itemPkg=item.substring(0,item.lastIndexOf('.'));
+        String itemPkg=entry;
         for (        String pkg : codeFolderPackages) {
           if (pkg.equals(itemPkg)) {
             found=true;
@@ -131,7 +135,7 @@ catch (  Exception ex) {
           }
         }
       }
-      if (ignorableImport(item)) {
+      if (ignorableImport(entry + '.')) {
         found=true;
       }
       if (!found) {
