@@ -5,8 +5,8 @@
   }
   final String prompt="Open a Processing sketch...";
   if (Preferences.getBoolean("chooser.files.native")) {
-    FileDialog fd=new FileDialog(activeEditor,prompt,FileDialog.LOAD);
-    fd.setFilenameFilter(new FilenameFilter(){
+    FileDialog openDialog=new FileDialog(activeEditor,prompt,FileDialog.LOAD);
+    openDialog.setFilenameFilter(new FilenameFilter(){
       public boolean accept(      File dir,      String name){
         for (        String ext : extensions) {
           if (name.toLowerCase().endsWith("." + ext)) {
@@ -17,20 +17,20 @@
       }
     }
 );
-    fd.setVisible(true);
-    String directory=fd.getDirectory();
-    String filename=fd.getFile();
+    openDialog.setVisible(true);
+    String directory=openDialog.getDirectory();
+    String filename=openDialog.getFile();
     if (filename != null) {
       File inputFile=new File(directory,filename);
       handleOpen(inputFile.getAbsolutePath());
     }
   }
  else {
-    if (fileChooser == null) {
-      fileChooser=new JFileChooser();
+    if (openChooser == null) {
+      openChooser=new JFileChooser();
     }
-    fileChooser.setDialogTitle(prompt);
-    fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter(){
+    openChooser.setDialogTitle(prompt);
+    openChooser.setFileFilter(new javax.swing.filechooser.FileFilter(){
       public boolean accept(      File file){
         if (file.isDirectory()) {
           return true;
@@ -47,8 +47,8 @@
       }
     }
 );
-    if (fileChooser.showOpenDialog(activeEditor) == JFileChooser.APPROVE_OPTION) {
-      handleOpen(fileChooser.getSelectedFile().getAbsolutePath());
+    if (openChooser.showOpenDialog(activeEditor) == JFileChooser.APPROVE_OPTION) {
+      handleOpen(openChooser.getSelectedFile().getAbsolutePath());
     }
   }
 }
