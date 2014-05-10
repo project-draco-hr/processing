@@ -26,9 +26,11 @@
     }
   }
  else {
-    JFileChooser fc=new JFileChooser();
-    fc.setDialogTitle(prompt);
-    fc.setFileFilter(new javax.swing.filechooser.FileFilter(){
+    if (fileChooser == null) {
+      fileChooser=new JFileChooser();
+    }
+    fileChooser.setDialogTitle(prompt);
+    fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter(){
       public boolean accept(      File file){
         if (file.isDirectory()) {
           return true;
@@ -45,8 +47,8 @@
       }
     }
 );
-    if (fc.showOpenDialog(activeEditor) == JFileChooser.APPROVE_OPTION) {
-      handleOpen(fc.getSelectedFile().getAbsolutePath());
+    if (fileChooser.showOpenDialog(activeEditor) == JFileChooser.APPROVE_OPTION) {
+      handleOpen(fileChooser.getSelectedFile().getAbsolutePath());
     }
   }
 }
