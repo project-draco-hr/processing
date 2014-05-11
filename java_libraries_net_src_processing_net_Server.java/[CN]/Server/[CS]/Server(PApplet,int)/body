@@ -1,20 +1,3 @@
 {
-  this.parent=parent;
-  this.port=port;
-  try {
-    server=new ServerSocket(this.port);
-    clients=new Client[10];
-    thread=new Thread(this);
-    thread.start();
-    parent.registerMethod("dispose",this);
-    try {
-      serverEventMethod=parent.getClass().getMethod("serverEvent",new Class[]{Server.class,Client.class});
-    }
- catch (    Exception e) {
-    }
-  }
- catch (  IOException e) {
-    e.printStackTrace();
-    thread=null;
-  }
+  this(parent,port,null);
 }
