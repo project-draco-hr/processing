@@ -10,6 +10,7 @@
   File jarFolder=new File(destFolder,"lib");
   File dotAppFolder=null;
   String jvmRuntime="";
+  String jdkPath=null;
   if (exportPlatform == PConstants.MACOSX) {
     dotAppFolder=new File(destFolder,sketch.getName() + ".app");
     File contentsOrig=new File(Base.getJavaHome(),"../../../../..");
@@ -17,6 +18,7 @@
       File jdkFolder=new File(Base.getJavaHome(),"../../..");
       String jdkFolderName=jdkFolder.getCanonicalFile().getName();
       jvmRuntime="<key>JVMRuntime</key>\n    <string>" + jdkFolderName + "</string>";
+      jdkPath=new File(dotAppFolder,"Contents/PlugIns/" + jdkFolderName + ".jdk").getAbsolutePath();
     }
     File contentsFolder=new File(dotAppFolder,"Contents");
     contentsFolder.mkdirs();
@@ -160,6 +162,13 @@
     }
     pw.flush();
     pw.close();
+    if (Base.isMacOS() && new File("/usr/bin/codesign_allocate").exists()) {
+      if (embedJava) {
+        ProcessHelper.ffs("codesign","--force","--sign","-",jdkPath);
+      }
+      String appPath=dotAppFolder.getAbsolutePath();
+      ProcessHelper.ffs("codesign","--force","--sign","-",appPath);
+    }
   }
  else   if (exportPlatform == PConstants.WINDOWS) {
     File buildFile=new File(destFolder,"launch4j-build.xml");
