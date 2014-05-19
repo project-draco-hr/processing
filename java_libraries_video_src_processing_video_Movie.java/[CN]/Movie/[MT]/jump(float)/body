@@ -5,19 +5,14 @@
   }
   float fps=getSourceFrameRate();
   int frame=(int)(where * fps);
-  final float seconds=frame / fps;
-  Thread seeker=new Thread(){
-    @Override public void run(){
-      long pos=Video.secToNanoLong(seconds);
-      boolean res=playbin.seek(rate,Format.TIME,SeekFlags.FLUSH,SeekType.SET,pos,SeekType.NONE,-1);
-      if (!res) {
-        PGraphics.showWarning("Seek operation failed.");
-      }
-      seeking=true;
-      playbin.getState();
-      seeking=false;
-    }
+  where=frame / fps;
+  boolean res;
+  long pos=Video.secToNanoLong(where);
+  res=playbin.seek(rate,Format.TIME,SeekFlags.FLUSH,SeekType.SET,pos,SeekType.NONE,-1);
+  if (!res) {
+    PGraphics.showWarning("Seek operation failed.");
   }
-;
-  seeker.start();
+  seeking=true;
+  playbin.getState();
+  seeking=false;
 }

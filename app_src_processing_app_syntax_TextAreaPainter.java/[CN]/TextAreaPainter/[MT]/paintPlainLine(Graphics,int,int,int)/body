@@ -4,10 +4,9 @@
   }
   textArea.getLineText(line,currentLine);
   y+=fm.getHeight();
-  int w=fm.charWidth(' ');
   for (int i=0; i < currentLine.count; i++) {
     gfx.drawChars(currentLine.array,currentLine.offset + i,1,x,y);
-    x+=w;
+    x=currentLine.array[currentLine.offset + i] == '\t' ? (int)nextTabStop(x,i) : x + fm.charWidth(currentLine.array[currentLine.offset + i]);
   }
   if (compositionTextPainter != null && compositionTextPainter.hasComposedTextLayout()) {
     compositionTextPainter.draw(gfx,defaults.lineHighlightColor);
