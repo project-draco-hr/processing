@@ -1,0 +1,23 @@
+{
+  String title=tool.getMenuTitle();
+  final JMenuItem item=new JMenuItem(title);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      try {
+        tool.run();
+      }
+ catch (      NoSuchMethodError nsme) {
+        statusError("\"" + tool.getMenuTitle() + "\" is not"+ "compatible with this version of Processing");
+        Base.log("Incompatible tool found during tool.run()",nsme);
+        item.setEnabled(false);
+      }
+catch (      Exception ex) {
+        statusError("An error occurred inside \"" + tool.getMenuTitle() + "\"");
+        ex.printStackTrace();
+        item.setEnabled(false);
+      }
+    }
+  }
+);
+  toolItems.put(title,item);
+}

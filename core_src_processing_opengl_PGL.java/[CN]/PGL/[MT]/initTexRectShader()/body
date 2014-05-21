@@ -1,0 +1,24 @@
+{
+  PGL ppgl=primaryPGL ? this : pg.getPrimaryPGL();
+  if (!ppgl.loadedTexRectShader || ppgl.texRectShaderContext != ppgl.glContext) {
+    String vertSource=PApplet.join(texVertShaderSource,"\n");
+    String fragSource=PApplet.join(texRectFragShaderSource,"\n");
+    ppgl.texRectVertShader=createShader(VERTEX_SHADER,vertSource);
+    ppgl.texRectFragShader=createShader(FRAGMENT_SHADER,fragSource);
+    if (0 < ppgl.texRectVertShader && 0 < ppgl.texRectFragShader) {
+      ppgl.texRectShaderProgram=createProgram(ppgl.texRectVertShader,ppgl.texRectFragShader);
+    }
+    if (0 < ppgl.texRectShaderProgram) {
+      ppgl.texRectVertLoc=getAttribLocation(ppgl.texRectShaderProgram,"position");
+      ppgl.texRectTCoordLoc=getAttribLocation(ppgl.texRectShaderProgram,"texCoord");
+      ppgl.texRectSamplerLoc=getUniformLocation(ppgl.texRectShaderProgram,"texMap");
+    }
+    ppgl.loadedTexRectShader=true;
+    ppgl.texRectShaderContext=ppgl.glContext;
+    genBuffers(1,intBuffer);
+    ppgl.texRectGeoVBO=intBuffer.get(0);
+    bindBuffer(ARRAY_BUFFER,ppgl.texRectGeoVBO);
+    bufferData(ARRAY_BUFFER,16 * SIZEOF_FLOAT,null,STATIC_DRAW);
+  }
+  return ppgl;
+}

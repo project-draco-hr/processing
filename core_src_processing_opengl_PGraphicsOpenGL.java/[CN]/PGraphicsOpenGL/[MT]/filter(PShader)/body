@@ -1,5 +1,5 @@
 {
-  if (!(shader instanceof TextureShader)) {
+  if (!shader.isPolyShader()) {
     PGraphics.showWarning(INVALID_FILTER_SHADER_ERROR);
     return;
   }
@@ -11,7 +11,7 @@
   }
   loadTexture();
   if (filterTexture == null || filterTexture.contextIsOutdated()) {
-    filterTexture=new Texture(texture.width,texture.height,texture.getParameters());
+    filterTexture=new Texture(this,texture.width,texture.height,texture.getParameters());
     filterTexture.invertedY(true);
     filterImage=wrapTexture(filterTexture);
   }
@@ -27,8 +27,8 @@
   stroke=false;
   int prevBlendMode=blendMode;
   blendMode(REPLACE);
-  TextureShader prevTexShader=textureShader;
-  textureShader=(TextureShader)shader;
+  PShader prevShader=polyShader;
+  polyShader=shader;
   beginShape(QUADS);
   texture(filterImage);
   vertex(0,0,0,0);
@@ -37,7 +37,7 @@
   vertex(0,height,0,1);
   endShape();
   end2D();
-  textureShader=prevTexShader;
+  polyShader=prevShader;
   stroke=prevStroke;
   lights=prevLights;
   textureMode=prevTextureMode;

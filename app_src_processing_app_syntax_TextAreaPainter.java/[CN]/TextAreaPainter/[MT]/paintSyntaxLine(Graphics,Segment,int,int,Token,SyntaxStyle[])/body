@@ -1,0 +1,24 @@
+{
+  for (; ; ) {
+    byte id=tokens.id;
+    if (id == Token.END)     break;
+    int length=tokens.length;
+    if (id == Token.NULL) {
+      gfx.setColor(defaults.fgcolor);
+      gfx.setFont(plainFont);
+    }
+ else {
+      SyntaxStyle ss=styles[id];
+      gfx.setColor(ss.getColor());
+      gfx.setFont(ss.isBold() ? boldFont : plainFont);
+    }
+    line.count=length;
+    for (int i=0; i < line.count; i++) {
+      gfx.drawChars(line.array,line.offset + i,1,x,y);
+      x=line.array[line.offset + i] == '\t' ? (int)nextTabStop(x,i) : x + fm.charWidth(line.array[line.offset + i]);
+    }
+    line.offset+=length;
+    tokens=tokens.next;
+  }
+  return x;
+}

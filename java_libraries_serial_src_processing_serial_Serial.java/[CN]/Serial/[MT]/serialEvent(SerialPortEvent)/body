@@ -1,32 +1,38 @@
 {
-  if (serialEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+  if (event.getEventType() == SerialPortEvent.RXCHAR) {
+    int toRead;
     try {
-      while (input.available() > 0) {
+      while (0 < (toRead=port.getInputBufferBytesCount())) {
 synchronized (buffer) {
-          if (bufferLast == buffer.length) {
-            byte temp[]=new byte[bufferLast << 1];
-            System.arraycopy(buffer,0,temp,0,bufferLast);
+          if (serialEventMethod != null) {
+            toRead=1;
+          }
+          if (buffer.length < inBuffer + toRead) {
+            byte temp[]=new byte[buffer.length << 1];
+            System.arraycopy(buffer,0,temp,0,inBuffer);
             buffer=temp;
           }
-          buffer[bufferLast++]=(byte)input.read();
-          if (serialEventMethod != null) {
-            if ((bufferUntil && (buffer[bufferLast - 1] == bufferUntilByte)) || (!bufferUntil && ((bufferLast - bufferIndex) >= bufferSize))) {
-              try {
-                serialEventMethod.invoke(parent,new Object[]{this});
-              }
- catch (              Exception e) {
-                String msg="error, disabling serialEvent() for " + port;
-                System.err.println(msg);
-                e.printStackTrace();
-                serialEventMethod=null;
-              }
+          byte[] read=port.readBytes(toRead);
+          System.arraycopy(read,0,buffer,inBuffer,read.length);
+          inBuffer+=read.length;
+        }
+        if (serialEventMethod != null) {
+          if ((0 < bufferUntilSize && bufferUntilSize <= inBuffer - readOffset) || (0 == bufferUntilSize && bufferUntilByte == buffer[inBuffer - 1])) {
+            try {
+              serialEventMethod.invoke(parent,this);
+            }
+ catch (            Exception e) {
+              System.err.println("Error, disabling serialEvent() for " + port.getPortName());
+              System.err.println(e.getLocalizedMessage());
+              serialEventMethod=null;
             }
           }
         }
+        invokeSerialAvailable=true;
       }
     }
- catch (    IOException e) {
-      errorMessage("serialEvent",e);
+ catch (    SerialPortException e) {
+      throw new RuntimeException("Error reading from serial port " + e.getPortName() + ": "+ e.getExceptionType());
     }
   }
 }

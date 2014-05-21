@@ -1,0 +1,13 @@
+{
+  Path sourcePath=source.toPath();
+  Path destinationPath=destination.toPath();
+  destination.getParentFile().mkdirs();
+  Files.copy(sourcePath,destinationPath,StandardCopyOption.REPLACE_EXISTING,LinkOption.NOFOLLOW_LINKS);
+  if (Files.isDirectory(sourcePath,LinkOption.NOFOLLOW_LINKS)) {
+    String[] files=source.list();
+    for (int i=0; i < files.length; i++) {
+      String file=files[i];
+      copy(new File(source,file),new File(destination,file));
+    }
+  }
+}

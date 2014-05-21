@@ -17,7 +17,6 @@
       painter.currentLineIndex=line;
       tokens=painter.currentLineTokens=tokenMarker.markTokens(lineSegment,line);
     }
-    Font defaultFont=painter.getFont();
     SyntaxStyle[] styles=painter.getStyles();
     for (; ; ) {
       byte id=tokens.id;
@@ -28,7 +27,7 @@
         fm=painter.getFontMetrics();
       }
  else {
-        fm=styles[id].getFontMetrics(defaultFont,this);
+        fm=painter.getFontMetrics(styles[id]);
       }
       int length=tokens.length;
       if (offset + segmentOffset < lineSegment.offset + length) {

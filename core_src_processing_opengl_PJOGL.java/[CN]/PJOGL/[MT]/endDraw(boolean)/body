@@ -1,0 +1,15 @@
+{
+  if (isFBOBacked()) {
+    if (USE_JOGL_FBOLAYER) {
+      if (!clear0 && isFBOBacked() && !isMultisampled()&& frontFBO != null && backFBO != null) {
+        frontFBO.bind(gl);
+        gl.glDisable(GL.GL_BLEND);
+        drawTexture(TEXTURE_2D,backTexAttach.getName(),backTexAttach.getWidth(),backTexAttach.getHeight(),pg.width,pg.height,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
+        backFBO.bind(gl);
+      }
+    }
+ else {
+      super.endDraw(clear0);
+    }
+  }
+}

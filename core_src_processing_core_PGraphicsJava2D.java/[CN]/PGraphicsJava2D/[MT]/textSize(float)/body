@@ -1,12 +1,15 @@
 {
   if (textFont == null) {
-    defaultFontOrDeath("textAscent",size);
+    defaultFontOrDeath("textSize",size);
   }
   Font font=(Font)textFont.getNative();
   if (font != null) {
-    Font dfont=font.deriveFont(size);
-    g2.setFont(dfont);
-    textFont.setNative(dfont);
+    Map<TextAttribute,Object> map=new Hashtable<TextAttribute,Object>();
+    map.put(TextAttribute.SIZE,size);
+    map.put(TextAttribute.KERNING,TextAttribute.KERNING_ON);
+    font=font.deriveFont(map);
+    g2.setFont(font);
+    textFont.setNative(font);
   }
   super.textSize(size);
 }

@@ -18,12 +18,7 @@
   GraphicsDevice displayDevice=null;
   boolean hideStop=false;
   String param=null, value=null;
-  String folder=null;
-  try {
-    folder=System.getProperty("user.dir");
-  }
- catch (  Exception e) {
-  }
+  String folder=calcSketchPath();
   int argIndex=0;
   while (argIndex < args.length) {
     int equals=args[argIndex].indexOf('=');
@@ -93,7 +88,7 @@
     displayDevice=environment.getDefaultScreenDevice();
   }
   Frame frame=new JFrame(displayDevice.getDefaultConfiguration());
-  frame.setBackground(new Color(0xCC,0xCC,0xCC));
+  ((JFrame)frame).getContentPane().setBackground(WINDOW_BGCOLOR);
   final PApplet applet;
   if (constructedApplet != null) {
     applet=constructedApplet;
@@ -121,7 +116,7 @@
   if (present) {
     frame.setUndecorated(true);
     if (backgroundColor != null) {
-      frame.setBackground(backgroundColor);
+      ((JFrame)frame).getContentPane().setBackground(backgroundColor);
     }
     frame.setBounds(screenRect);
     frame.setVisible(true);
@@ -202,7 +197,7 @@
       frame.setLocation(frameLoc.x,30);
     }
     if (backgroundColor != null) {
-      frame.setBackground(backgroundColor);
+      ((JFrame)frame).getContentPane().setBackground(backgroundColor);
     }
     applet.setBounds((contentW - applet.width) / 2,(contentH - applet.height) / 2,applet.width,applet.height);
     if (external) {

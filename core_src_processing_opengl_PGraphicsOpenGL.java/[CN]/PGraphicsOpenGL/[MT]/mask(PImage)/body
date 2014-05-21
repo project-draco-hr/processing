@@ -2,9 +2,10 @@
   if (alpha.width != width || alpha.height != height) {
     throw new RuntimeException("The PImage used with mask() must be " + "the same size as the applet.");
   }
-  if (maskShader == null) {
-    maskShader=new TextureShader(parent,defTextureShaderVertURL,maskShaderFragURL);
+  PGraphicsOpenGL ppg=getPrimaryPG();
+  if (ppg.maskShader == null) {
+    ppg.maskShader=new PShader(parent,defTextureShaderVertURL,maskShaderFragURL);
   }
-  maskShader.set("mask",alpha);
-  filter(maskShader);
+  ppg.maskShader.set("mask",alpha);
+  filter(ppg.maskShader);
 }

@@ -1,11 +1,10 @@
 {
   report("top endDraw()");
   if (!drawing) {
-    PGraphics.showWarning(NO_BEGIN_DRAW_ERROR);
     return;
   }
   flush();
-  if (PGL.SAVE_SURFACE_TO_PIXELS_HACK && (!pgPrimary.initialized || parent.frameCount == 0)) {
+  if (PGL.SAVE_SURFACE_TO_PIXELS_HACK && (!getPrimaryPG().initialized || parent.frameCount == 0)) {
     saveSurfaceToPixels();
     restoreSurface=true;
   }
@@ -15,11 +14,11 @@
  else {
     endOffscreenDraw();
   }
-  if (pgCurrent == pgPrimary) {
-    pgCurrent=null;
+  if (primarySurface) {
+    setCurrentPG(null);
   }
  else {
-    pgCurrent=pgPrimary;
+    getPrimaryPG().setCurrentPG(getPrimaryPG());
   }
   drawing=false;
   report("bot endDraw()");

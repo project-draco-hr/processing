@@ -1,6 +1,6 @@
 {
   if (!editable) {
-    throw new InternalError("Text component" + " read only");
+    throw new InternalError("Text component read only");
   }
   document.beginCompoundEdit();
   try {
@@ -21,11 +21,14 @@
         int lineEnd=lineElement.getEndOffset() - 1;
         int rectStart=Math.min(lineEnd,lineStart + start);
         document.remove(rectStart,Math.min(lineEnd - rectStart,end - start));
-        if (selectedText == null)         continue;
-        currNewline=selectedText.indexOf('\n',lastNewline);
-        if (currNewline == -1)         currNewline=selectedText.length();
-        document.insertString(rectStart,selectedText.substring(lastNewline,currNewline),null);
-        lastNewline=Math.min(selectedText.length(),currNewline + 1);
+        if (selectedText != null) {
+          currNewline=selectedText.indexOf('\n',lastNewline);
+          if (currNewline == -1) {
+            currNewline=selectedText.length();
+          }
+          document.insertString(rectStart,selectedText.substring(lastNewline,currNewline),null);
+          lastNewline=Math.min(selectedText.length(),currNewline + 1);
+        }
       }
       if (selectedText != null && currNewline != selectedText.length()) {
         int offset=map.getElement(selectionEndLine).getEndOffset() - 1;
@@ -42,7 +45,7 @@
   }
  catch (  BadLocationException bl) {
     bl.printStackTrace();
-    throw new InternalError("Cannot replace" + " selection");
+    throw new InternalError("Cannot replace selection");
   }
  finally {
     document.endCompoundEdit();

@@ -12,8 +12,6 @@
   }
  else {
     pgl.enable(PGL.MULTISAMPLE);
-    pgl.disable(PGL.POINT_SMOOTH);
-    pgl.disable(PGL.LINE_SMOOTH);
     pgl.disable(PGL.POLYGON_SMOOTH);
   }
   pgl.viewport(viewport.get(0),viewport.get(1),viewport.get(2),viewport.get(3));
@@ -33,6 +31,9 @@
  else {
     pgl.depthMask(true);
   }
-  currentFramebuffer.bind();
-  pgl.drawBuffer(currentFramebuffer.getDefaultDrawBuffer());
+  FrameBuffer fb=getCurrentFB();
+  if (fb != null) {
+    fb.bind();
+    pgl.drawBuffer(fb.getDefaultDrawBuffer());
+  }
 }

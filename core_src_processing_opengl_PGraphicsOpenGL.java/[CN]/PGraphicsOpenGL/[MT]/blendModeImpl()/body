@@ -23,9 +23,12 @@
   }
  else   if (blendMode == SUBTRACT) {
     if (blendEqSupported) {
-      pgl.blendEquation(PGL.FUNC_ADD);
+      pgl.blendEquation(PGL.FUNC_REVERSE_SUBTRACT);
+      pgl.blendFunc(PGL.ONE,PGL.SRC_ALPHA);
     }
-    pgl.blendFunc(PGL.ONE_MINUS_DST_COLOR,PGL.ZERO);
+ else {
+      PGraphics.showWarning(BLEND_DRIVER_ERROR,"SUBTRACT");
+    }
   }
  else   if (blendMode == LIGHTEST) {
     if (blendEqSupported) {
@@ -45,15 +48,6 @@
       PGraphics.showWarning(BLEND_DRIVER_ERROR,"DARKEST");
     }
   }
- else   if (blendMode == DIFFERENCE) {
-    if (blendEqSupported) {
-      pgl.blendEquation(PGL.FUNC_REVERSE_SUBTRACT);
-      pgl.blendFunc(PGL.ONE,PGL.ONE);
-    }
- else {
-      PGraphics.showWarning(BLEND_DRIVER_ERROR,"DIFFERENCE");
-    }
-  }
  else   if (blendMode == EXCLUSION) {
     if (blendEqSupported) {
       pgl.blendEquation(PGL.FUNC_ADD);
@@ -71,6 +65,9 @@
       pgl.blendEquation(PGL.FUNC_ADD);
     }
     pgl.blendFunc(PGL.ONE_MINUS_DST_COLOR,PGL.ONE);
+  }
+ else   if (blendMode == DIFFERENCE) {
+    PGraphics.showWarning(BLEND_RENDERER_ERROR,"DIFFERENCE");
   }
  else   if (blendMode == OVERLAY) {
     PGraphics.showWarning(BLEND_RENDERER_ERROR,"OVERLAY");

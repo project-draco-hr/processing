@@ -3,20 +3,20 @@
     throw new RuntimeException("Source texture is null");
   }
   if (tempFbo == null) {
-    tempFbo=new FrameBuffer(glWidth,glHeight);
+    tempFbo=new FrameBuffer(pg,glWidth,glHeight);
   }
   tempFbo.setColorBuffer(this);
   tempFbo.disableDepthTest();
-  PGraphicsOpenGL.pushFramebuffer();
-  PGraphicsOpenGL.setFramebuffer(tempFbo);
+  pg.pushFramebuffer();
+  pg.setFramebuffer(tempFbo);
   pgl.clearColor(0,0,0,0);
   pgl.clear(PGL.COLOR_BUFFER_BIT);
   if (scale) {
-    pgl.drawTexture(tex.glTarget,tex.glName,tex.glWidth,tex.glHeight,tempFbo.width,tempFbo.height,x,y,w,h,0,0,width,height);
+    pgl.drawTexture(tex.glTarget,tex.glName,tex.glWidth,tex.glHeight,tempFbo.width,tempFbo.height,x,y,x + w,y + h,0,0,width,height);
   }
  else {
-    pgl.drawTexture(tex.glTarget,tex.glName,tex.glWidth,tex.glHeight,tempFbo.width,tempFbo.height,x,y,w,h,x,y,w,h);
+    pgl.drawTexture(tex.glTarget,tex.glName,tex.glWidth,tex.glHeight,tempFbo.width,tempFbo.height,x,y,x + w,y + h,x,y,x + w,y + h);
   }
-  PGraphicsOpenGL.popFramebuffer();
+  pg.popFramebuffer();
   updateTexels(x,y,w,h);
 }

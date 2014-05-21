@@ -1,54 +1,48 @@
 {
-  File file=new File(path);
-  if (!file.exists())   return null;
-  if (!Sketch.isSanitaryName(file.getName())) {
-    Base.showWarning("You're tricky, but not tricky enough",file.getName() + " is not a valid name for a sketch.\n" + "Better to stick to ASCII, no spaces, and make sure\n"+ "it doesn't start with a number.",null);
-    return null;
-  }
-  for (  Editor editor : editors) {
-    if (editor.getSketch().getMainFilePath().equals(path)) {
-      editor.toFront();
-      handleRecent(editor);
-      return editor;
-    }
-  }
   try {
-    File sketchFolder=new File(path).getParentFile();
-    File sketchProps=new File(sketchFolder,"sketch.properties");
-    if (sketchProps.exists()) {
-      Settings props=new Settings(sketchProps);
-      String modeTitle=props.get("mode");
-      String modeIdentifier=props.get("mode.id");
-      if (modeTitle != null && modeIdentifier != null) {
-        Mode mode=findMode(modeIdentifier);
-        if (mode != null) {
-          nextMode=mode;
-        }
- else {
-          final String msg="This sketch was last used in ???" + modeTitle + "??? mode,\n"+ "which does not appear to be installed. The sketch will\n"+ "be opened in ???"+ nextMode.getTitle()+ "??? mode instead.";
-          Base.showWarning("Depeche Mode",msg,null);
-        }
+    final File file=new File(path);
+    if (!file.exists()) {
+      return null;
+    }
+    for (    Editor editor : editors) {
+      if (editor.getSketch().getMainFile().equals(file)) {
+        editor.toFront();
+        handleRecent(editor);
+        return editor;
       }
     }
-  }
- catch (  Exception e) {
-    e.printStackTrace();
-  }
-  Editor editor=nextMode.createEditor(this,path,state);
-  if (editor == null) {
-    if (nextMode == coreModes[0]) {
-      Base.showError("Editor Problems","An error occurred while trying to change modes.\n" + "We'll have to quit for now because it's an\n" + "unfortunate bit of indigestion.",null);
+    if (!Sketch.isSanitaryName(file.getName())) {
+      Base.showWarning("You're tricky, but not tricky enough",file.getName() + " is not a valid name for a sketch.\n" + "Better to stick to ASCII, no spaces, and make sure\n"+ "it doesn't start with a number.",null);
+      return null;
     }
+    if (!nextMode.canEdit(file)) {
+      final Mode mode=selectMode(file);
+      if (mode == null) {
+        return null;
+      }
+      nextMode=mode;
+    }
+    Editor editor=nextMode.createEditor(this,path,state);
+    if (editor == null) {
+      if (nextMode == coreModes[0]) {
+        Base.showError("Editor Problems","An error occurred while trying to change modes.\n" + "We'll have to quit for now because it's an\n" + "unfortunate bit of indigestion.",null);
+      }
  else {
-      editor=coreModes[0].createEditor(this,path,state);
+        editor=coreModes[0].createEditor(this,path,state);
+      }
     }
+    if (editor.getSketch() == null) {
+      return null;
+    }
+    editor.getSketch().setUntitled(untitled);
+    editors.add(editor);
+    handleRecent(editor);
+    editor.setVisible(true);
+    return editor;
   }
-  if (editor.getSketch() == null) {
+ catch (  Throwable t) {
+    showBadnessTrace("Terrible News","A serious error occurred while " + "trying to create a new editor window.",t,false);
+    nextMode=coreModes[0];
     return null;
   }
-  editor.getSketch().setUntitled(untitled);
-  editors.add(editor);
-  handleRecent(editor);
-  editor.setVisible(true);
-  return editor;
 }

@@ -2,12 +2,13 @@
   tessellator.setInGeometry(inGeo);
   tessellator.setTessGeometry(tessGeo);
   tessellator.setFill(fill || textureImage != null);
+  tessellator.setTexCache(texCache,textureImage);
   tessellator.setStroke(stroke);
   tessellator.setStrokeColor(strokeColor);
   tessellator.setStrokeWeight(strokeWeight);
   tessellator.setStrokeCap(strokeCap);
   tessellator.setStrokeJoin(strokeJoin);
-  tessellator.setTexCache(texCache,textureImage0,textureImage);
+  tessellator.setRenderer(this);
   tessellator.setTransform(modelview);
   tessellator.set3D(is3D());
   if (shape == POINTS) {
@@ -48,7 +49,6 @@
     tessellator.tessellateQuadStrip();
   }
  else   if (shape == POLYGON) {
-    if (stroke && defaultEdges)     inGeo.addPolygonEdges(mode == CLOSE);
     tessellator.tessellatePolygon(false,mode == CLOSE,normalMode == NORMAL_MODE_AUTO);
   }
 }

@@ -17,7 +17,7 @@
  else {
     if (op == OP_READ) {
       if (offscreenMultisample) {
-        multisampleFramebuffer.copy(offscreenFramebuffer,currentFramebuffer);
+        multisampleFramebuffer.copyColor(offscreenFramebuffer);
       }
       pixfb=offscreenFramebuffer;
     }
@@ -25,16 +25,16 @@
       pixfb=offscreenMultisample ? multisampleFramebuffer : offscreenFramebuffer;
     }
   }
-  if (pixfb != currentFramebuffer) {
+  if (pixfb != getCurrentFB()) {
     pushFramebuffer();
     setFramebuffer(pixfb);
     pixOpChangedFB=true;
   }
   if (op == OP_READ) {
-    pgl.readBuffer(currentFramebuffer.getDefaultDrawBuffer());
+    pgl.readBuffer(getCurrentFB().getDefaultDrawBuffer());
   }
  else   if (op == OP_WRITE) {
-    pgl.drawBuffer(currentFramebuffer.getDefaultDrawBuffer());
+    pgl.drawBuffer(getCurrentFB().getDefaultDrawBuffer());
   }
   pixelsOp=op;
 }

@@ -1,17 +1,22 @@
 {
-  if (shapeCreated && matrix != null) {
+  if (shapeCreated && matrix != null && transformStack != null) {
     if (family == GROUP) {
       updateTessellation();
     }
-    boolean res=matrix.invert();
-    if (res) {
-      if (tessellated) {
-        applyMatrixImpl(matrix);
-      }
-      matrix=null;
-    }
+    if (tessellated) {
+      PMatrix mat=popTransform();
+      while (mat != null) {
+        boolean res=mat.invert();
+        if (res) {
+          applyMatrixImpl(mat);
+        }
  else {
-      PGraphics.showWarning("The transformation matrix cannot be inverted");
+          PGraphics.showWarning("Transformation applied on the shape cannot be inverted");
+        }
+        mat=popTransform();
+      }
     }
+    matrix.reset();
+    transformStack.clear();
   }
 }

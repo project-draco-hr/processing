@@ -1,12 +1,12 @@
 {
   beginTex();
-  int nInVert=in.lastVertex - in.firstVertex + 1;
+  int nInVert=in.vertexCount;
   if (fill && 3 <= nInVert) {
     int nInInd=3 * (nInVert - 2);
     setRawSize(nInInd);
     int idx=0;
     boolean clamp=clampTriangleStrip();
-    for (int i=in.firstVertex + 1; i < in.lastVertex; i++) {
+    for (int i=1; i < in.vertexCount - 1; i++) {
       rawIndices[idx++]=i;
       if (i % 2 == 0) {
         rawIndices[idx++]=i - 1;

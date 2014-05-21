@@ -1,23 +1,25 @@
 {
-  if (getLineLength(line) == 0)   return;
-  try {
-    int bracket=bracketHelper.findMatchingBracket(document.getText(0,document.getLength()),Math.max(0,dot - 1));
-    if (bracket != -1) {
-      int mark=getMarkPosition();
-      if (bracket > mark) {
-        bracket++;
-        mark--;
+  if (getLineLength(line) != 0) {
+    try {
+      String text=document.getText(0,document.getLength());
+      int bracket=bracketHelper.findMatchingBracket(text,Math.max(0,dot - 1));
+      if (bracket != -1) {
+        int mark=getMarkPosition();
+        if (bracket > mark) {
+          bracket++;
+          mark--;
+        }
+        select(mark,bracket);
+        return;
       }
-      select(mark,bracket);
-      return;
     }
+ catch (    BadLocationException bl) {
+      bl.printStackTrace();
+    }
+    setNewSelectionWord(line,offset);
+    select(newSelectionStart,newSelectionEnd);
+    selectWord=true;
+    selectionAncorStart=selectionStart;
+    selectionAncorEnd=selectionEnd;
   }
- catch (  BadLocationException bl) {
-    bl.printStackTrace();
-  }
-  setNewSelectionWord(line,offset);
-  select(newSelectionStart,newSelectionEnd);
-  selectWord=true;
-  selectionAncorStart=selectionStart;
-  selectionAncorEnd=selectionEnd;
 }

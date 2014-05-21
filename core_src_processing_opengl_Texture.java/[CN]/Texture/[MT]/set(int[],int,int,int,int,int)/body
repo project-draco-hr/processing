@@ -7,7 +7,7 @@
     PGraphics.showWarning("The pixel array has a length of " + pixels.length + ", but it should be at least "+ w * h);
     return;
   }
-  if (pixels.length == 0) {
+  if (pixels.length == 0 || w == 0 || h == 0) {
     return;
   }
   boolean enabledTex=false;
@@ -19,21 +19,21 @@
   if (usingMipmaps) {
     if (PGraphicsOpenGL.autoMipmapGenSupported) {
       loadPixels(w * h);
-      convertToRGBA(pixels,rgbaPixels,format,w,h);
+      convertToRGBA(pixels,format,w,h);
       updatePixelBuffer(rgbaPixels);
       pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
       pgl.generateMipmap(glTarget);
     }
  else {
       loadPixels(w * h);
-      convertToRGBA(pixels,rgbaPixels,format,w,h);
+      convertToRGBA(pixels,format,w,h);
       updatePixelBuffer(rgbaPixels);
       pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
     }
   }
  else {
     loadPixels(w * h);
-    convertToRGBA(pixels,rgbaPixels,format,w,h);
+    convertToRGBA(pixels,format,w,h);
     updatePixelBuffer(rgbaPixels);
     pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
   }
@@ -41,5 +41,7 @@
   if (enabledTex) {
     pgl.disableTexturing(glTarget);
   }
+  releasePixelBuffer();
+  releaseRGBAPixels();
   updateTexels(x,y,w,h);
 }

@@ -8,20 +8,21 @@
   File folder=null;
   for (  String platformName : PConstants.platformNames) {
     int platform=Base.getPlatformIndex(platformName);
+    boolean embedJava=(platform == PApplet.platform) && Preferences.getBoolean("export.application.embed_java");
     if (Preferences.getBoolean("export.application.platform." + platformName)) {
       if (Library.hasMultipleArch(platform,importedLibraries)) {
         folder=new File(sketch.getFolder(),"application." + platformName + "32");
-        if (!exportApplication(folder,platform,32)) {
+        if (!exportApplication(folder,platform,32,embedJava && Base.getNativeBits() == 32)) {
           return false;
         }
         folder=new File(sketch.getFolder(),"application." + platformName + "64");
-        if (!exportApplication(folder,platform,64)) {
+        if (!exportApplication(folder,platform,64,embedJava && Base.getNativeBits() == 64)) {
           return false;
         }
       }
  else {
         folder=new File(sketch.getFolder(),"application." + platformName);
-        if (!exportApplication(folder,platform,0)) {
+        if (!exportApplication(folder,platform,0,embedJava)) {
           return false;
         }
       }

@@ -58,7 +58,13 @@ case DOUBLE:
 output.writeDouble(row.getDouble(col));
 break;
 case CATEGORY:
-output.writeInt(columnCategories[col].index(row.getString(col)));
+String peace=row.getString(col);
+if (peace.equals(missingString)) {
+output.writeInt(missingCategory);
+}
+ else {
+output.writeInt(columnCategories[col].index(peace));
+}
 break;
 }
 }

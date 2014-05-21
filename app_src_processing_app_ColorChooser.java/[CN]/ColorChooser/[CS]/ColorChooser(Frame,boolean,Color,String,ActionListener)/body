@@ -1,0 +1,51 @@
+{
+  window=new JDialog(owner,"Color Selector",modal);
+  window.getContentPane().setLayout(new BorderLayout());
+  Box box=Box.createHorizontalBox();
+  box.setBorder(new EmptyBorder(12,12,12,12));
+  range=new ColorRange();
+  range.init();
+  Box rangeBox=new Box(BoxLayout.Y_AXIS);
+  rangeBox.setAlignmentY(0);
+  rangeBox.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+  rangeBox.add(range);
+  box.add(rangeBox);
+  box.add(Box.createHorizontalStrut(10));
+  slider=new ColorSlider();
+  slider.init();
+  Box sliderBox=new Box(BoxLayout.Y_AXIS);
+  sliderBox.setAlignmentY(0);
+  sliderBox.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+  sliderBox.add(slider);
+  box.add(sliderBox);
+  box.add(Box.createHorizontalStrut(10));
+  box.add(createColorFields(buttonName,buttonListener));
+  box.add(Box.createHorizontalStrut(10));
+  window.getContentPane().add(box,BorderLayout.CENTER);
+  window.pack();
+  window.setResizable(false);
+  window.setLocationRelativeTo(null);
+  window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+  window.addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      hide();
+    }
+  }
+);
+  Toolkit.registerWindowCloseKeys(window.getRootPane(),new ActionListener(){
+    public void actionPerformed(    ActionEvent actionEvent){
+      hide();
+    }
+  }
+);
+  Toolkit.setIcon(window);
+  colorListener=new ColorListener();
+  hueField.getDocument().addDocumentListener(colorListener);
+  saturationField.getDocument().addDocumentListener(colorListener);
+  brightnessField.getDocument().addDocumentListener(colorListener);
+  redField.getDocument().addDocumentListener(colorListener);
+  greenField.getDocument().addDocumentListener(colorListener);
+  blueField.getDocument().addDocumentListener(colorListener);
+  hexField.getDocument().addDocumentListener(colorListener);
+  setColor(initialColor);
+}

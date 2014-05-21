@@ -5,16 +5,13 @@
   float centerY=y + vr;
   int startLUT=(int)(0.5f + (start / TWO_PI) * SINCOS_LENGTH);
   int stopLUT=(int)(0.5f + (stop / TWO_PI) * SINCOS_LENGTH);
-  if (fill) {
-    addVertex(centerX,centerY,VERTEX);
-  }
+  int idx0=addVertex(centerX,centerY,VERTEX,true);
   int increment=1;
-  int idx0, pidx, idx;
-  idx0=pidx=idx=0;
+  int pidx=0, idx=0;
   for (int i=startLUT; i < stopLUT; i+=increment) {
     int ii=i % SINCOS_LENGTH;
     if (ii < 0)     ii+=SINCOS_LENGTH;
-    idx=addVertex(centerX + cosLUT[ii] * hr,centerY + sinLUT[ii] * vr,VERTEX);
+    idx=addVertex(centerX + cosLUT[ii] * hr,centerY + sinLUT[ii] * vr,VERTEX,i == startLUT && !fill);
     if (stroke) {
       if (arcMode == PIE) {
         addEdge(pidx,idx,i == startLUT,false);
@@ -23,10 +20,9 @@
         addEdge(pidx,idx,i == startLUT + 1,arcMode == 0 && i == stopLUT - 1);
       }
     }
-    if (startLUT == i)     idx0=idx;
     pidx=idx;
   }
-  idx=addVertex(centerX + cosLUT[stopLUT % SINCOS_LENGTH] * hr,centerY + sinLUT[stopLUT % SINCOS_LENGTH] * vr,VERTEX);
+  idx=addVertex(centerX + cosLUT[stopLUT % SINCOS_LENGTH] * hr,centerY + sinLUT[stopLUT % SINCOS_LENGTH] * vr,VERTEX,false);
   if (stroke) {
     if (arcMode == PIE) {
       addEdge(idx,idx0,false,false);
@@ -38,7 +34,7 @@
     int i=startLUT;
     int ii=i % SINCOS_LENGTH;
     if (ii < 0)     ii+=SINCOS_LENGTH;
-    idx=addVertex(centerX + cosLUT[ii] * hr,centerY + sinLUT[ii] * vr,VERTEX);
+    idx=addVertex(centerX + cosLUT[ii] * hr,centerY + sinLUT[ii] * vr,VERTEX,false);
     if (stroke && arcMode == CHORD) {
       addEdge(pidx,idx,false,true);
     }

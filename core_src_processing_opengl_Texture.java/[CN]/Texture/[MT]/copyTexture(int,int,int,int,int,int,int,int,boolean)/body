@@ -1,17 +1,17 @@
 {
   if (tempFbo == null) {
-    tempFbo=new FrameBuffer(glWidth,glHeight);
+    tempFbo=new FrameBuffer(pg,glWidth,glHeight);
   }
   tempFbo.setColorBuffer(this);
   tempFbo.disableDepthTest();
-  PGraphicsOpenGL.pushFramebuffer();
-  PGraphicsOpenGL.setFramebuffer(tempFbo);
+  pg.pushFramebuffer();
+  pg.setFramebuffer(tempFbo);
   if (scale) {
     pgl.drawTexture(texTarget,texName,texWidth,texHeight,tempFbo.width,tempFbo.height,x,y,w,h,0,0,width,height);
   }
  else {
     pgl.drawTexture(texTarget,texName,texWidth,texHeight,tempFbo.width,tempFbo.height,x,y,w,h,x,y,w,h);
   }
-  PGraphicsOpenGL.popFramebuffer();
+  pg.popFramebuffer();
   updateTexels(x,y,w,h);
 }

@@ -1,5 +1,6 @@
 {
-  if (event.getAction() == MouseEvent.DRAG || event.getAction() == MouseEvent.MOVE) {
+  final int action=event.getAction();
+  if (action == MouseEvent.DRAG || action == MouseEvent.MOVE || action == MouseEvent.PRESS) {
     pmouseX=emouseX;
     pmouseY=emouseY;
     mouseX=event.getX();
@@ -19,7 +20,7 @@
     firstMouse=false;
   }
   mouseEvent=event;
-switch (event.getAction()) {
+switch (action) {
 case MouseEvent.PRESS:
     mousePressed=true;
   break;
@@ -28,7 +29,7 @@ mousePressed=false;
 break;
 }
 handleMethods("mouseEvent",new Object[]{event});
-switch (event.getAction()) {
+switch (action) {
 case MouseEvent.PRESS:
 mousePressed(event);
 break;
@@ -54,7 +55,7 @@ case MouseEvent.WHEEL:
 mouseWheel(event);
 break;
 }
-if ((event.getAction() == MouseEvent.DRAG) || (event.getAction() == MouseEvent.MOVE)) {
+if ((action == MouseEvent.DRAG) || (action == MouseEvent.MOVE)) {
 emouseX=mouseX;
 emouseY=mouseY;
 }

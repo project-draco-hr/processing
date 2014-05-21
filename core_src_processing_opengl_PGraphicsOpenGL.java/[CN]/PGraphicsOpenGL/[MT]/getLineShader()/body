@@ -1,10 +1,13 @@
 {
-  LineShader shader;
+  PShader shader;
+  PGraphicsOpenGL ppg=getPrimaryPG();
   if (lineShader == null) {
-    if (defLineShader == null) {
-      defLineShader=new LineShader(parent,defLineShaderVertURL,defLineShaderFragURL);
+    if (ppg.defLineShader == null) {
+      String[] vertSource=pgl.loadVertexShader(defLineShaderVertURL,120);
+      String[] fragSource=pgl.loadFragmentShader(defLineShaderFragURL,120);
+      ppg.defLineShader=new PShader(parent,vertSource,fragSource);
     }
-    shader=defLineShader;
+    shader=ppg.defLineShader;
   }
  else {
     shader=lineShader;

@@ -1,34 +1,39 @@
 {
-  int shaderType=getShaderType(fragFilename);
-  if (shaderType == -1) {
-    PGraphics.showWarning(INVALID_PROCESSING_SHADER_ERROR);
+  if (fragFilename == null || fragFilename.equals("")) {
+    PGraphics.showWarning(MISSING_FRAGMENT_SHADER);
     return null;
   }
-  PShader shader=null;
-  if (shaderType == PShader.POINT) {
-    shader=new PointShader(parent);
-    shader.setVertexShader(defPointShaderVertURL);
-  }
- else   if (shaderType == PShader.LINE) {
-    shader=new LineShader(parent);
-    shader.setVertexShader(defLineShaderVertURL);
-  }
- else   if (shaderType == PShader.TEXLIGHT) {
-    shader=new TexlightShader(parent);
-    shader.setVertexShader(defTexlightShaderVertURL);
-  }
- else   if (shaderType == PShader.LIGHT) {
-    shader=new LightShader(parent);
-    shader.setVertexShader(defLightShaderVertURL);
-  }
- else   if (shaderType == PShader.TEXTURE) {
-    shader=new TextureShader(parent);
-    shader.setVertexShader(defTextureShaderVertURL);
-  }
- else   if (shaderType == PShader.COLOR) {
-    shader=new ColorShader(parent);
-    shader.setVertexShader(defColorShaderVertURL);
-  }
+  int type=PShader.getShaderType(parent.loadStrings(fragFilename),PShader.POLY);
+  PShader shader=new PShader(parent);
+  shader.setType(type);
   shader.setFragmentShader(fragFilename);
+  if (type == PShader.POINT) {
+    String[] vertSource=pgl.loadVertexShader(defPointShaderVertURL,120);
+    shader.setVertexShader(vertSource);
+  }
+ else   if (type == PShader.LINE) {
+    String[] vertSource=pgl.loadVertexShader(defLineShaderVertURL,120);
+    shader.setVertexShader(vertSource);
+  }
+ else   if (type == PShader.TEXLIGHT) {
+    String[] vertSource=pgl.loadVertexShader(defTexlightShaderVertURL,120);
+    shader.setVertexShader(vertSource);
+  }
+ else   if (type == PShader.LIGHT) {
+    String[] vertSource=pgl.loadVertexShader(defLightShaderVertURL,120);
+    shader.setVertexShader(vertSource);
+  }
+ else   if (type == PShader.TEXTURE) {
+    String[] vertSource=pgl.loadVertexShader(defTextureShaderVertURL,120);
+    shader.setVertexShader(vertSource);
+  }
+ else   if (type == PShader.COLOR) {
+    String[] vertSource=pgl.loadVertexShader(defColorShaderVertURL,120);
+    shader.setVertexShader(vertSource);
+  }
+ else {
+    String[] vertSource=pgl.loadVertexShader(defTextureShaderVertURL,120);
+    shader.setVertexShader(vertSource);
+  }
   return shader;
 }

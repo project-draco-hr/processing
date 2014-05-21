@@ -6,17 +6,27 @@
     existing.put(contrib.getFolder(),contrib);
   }
   File[] potential=ContributionType.MODE.listCandidates(modesFolder);
-  for (  File folder : potential) {
-    if (!existing.containsKey(folder)) {
-      try {
-        contribModes.add(new ModeContribution(base,folder,null));
-      }
- catch (      IgnorableException ig) {
-        Base.log(ig.getMessage());
-      }
-catch (      Exception e) {
-        e.printStackTrace();
+  if (potential != null) {
+    for (    File folder : potential) {
+      if (!existing.containsKey(folder)) {
+        try {
+          contribModes.add(new ModeContribution(base,folder,null));
+        }
+ catch (        IgnorableException ig) {
+          Base.log(ig.getMessage());
+        }
+catch (        Throwable e) {
+          e.printStackTrace();
+        }
       }
     }
+  }
+  final String usemode=System.getProperty("usemode");
+  if (usemode != null) {
+    final String[] modeinfo=usemode.split(":",2);
+    final String modeClass=modeinfo[0];
+    final String modeResourcePath=modeinfo[1];
+    System.err.println("Attempting to load " + modeClass + " with resources at "+ modeResourcePath);
+    contribModes.add(ModeContribution.load(base,new File(modeResourcePath),modeClass));
   }
 }

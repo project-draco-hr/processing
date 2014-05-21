@@ -1,10 +1,10 @@
 {
   if (screenFb)   return;
-  PGraphicsOpenGL.pushFramebuffer();
-  PGraphicsOpenGL.setFramebuffer(this);
-  glMultisample=PGraphicsOpenGL.createRenderBufferObject(context);
+  pg.pushFramebuffer();
+  pg.setFramebuffer(this);
+  glMultisample=PGraphicsOpenGL.createRenderBufferObject(context,pgl);
   pgl.bindRenderbuffer(PGL.RENDERBUFFER,glMultisample);
   pgl.renderbufferStorageMultisample(PGL.RENDERBUFFER,nsamples,PGL.RGBA8,width,height);
   pgl.framebufferRenderbuffer(PGL.FRAMEBUFFER,PGL.COLOR_ATTACHMENT0,PGL.RENDERBUFFER,glMultisample);
-  PGraphicsOpenGL.popFramebuffer();
+  pg.popFramebuffer();
 }

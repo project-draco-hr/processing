@@ -12,13 +12,7 @@
     }
     long now=System.nanoTime();
     if (frameCount == 0) {
-      GraphicsConfiguration gc=getGraphicsConfiguration();
-      if (gc == null)       return;
-      GraphicsDevice displayDevice=getGraphicsConfiguration().getDevice();
-      if (displayDevice == null)       return;
-      Rectangle screenRect=displayDevice.getDefaultConfiguration().getBounds();
-      displayWidth=screenRect.width;
-      displayHeight=screenRect.height;
+      checkDisplaySize();
       try {
         setup();
       }
@@ -54,7 +48,9 @@
       }
  else {
         Graphics screen=getGraphics();
-        screen.drawImage(g.image,0,0,width,height,null);
+        if (screen != null) {
+          screen.drawImage(g.image,0,0,width,height,null);
+        }
       }
     }
  else {

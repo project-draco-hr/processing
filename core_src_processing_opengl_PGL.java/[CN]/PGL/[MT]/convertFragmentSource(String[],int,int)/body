@@ -1,0 +1,19 @@
+{
+  if (version0 == 120 && version1 == 150) {
+    String[] fragSrc=new String[fragSrc0.length + 2];
+    fragSrc[0]="#version 150";
+    fragSrc[1]="out vec4 fragColor;";
+    for (int i=0; i < fragSrc0.length; i++) {
+      String line=fragSrc0[i];
+      line=line.replace("varying","in");
+      line=line.replace("attribute","in");
+      line=line.replace("gl_FragColor","fragColor");
+      line=line.replace("texture","texMap");
+      line=line.replace("texMap2D(","texture(");
+      line=line.replace("texMap2DRect(","texture(");
+      fragSrc[i + 2]=line;
+    }
+    return fragSrc;
+  }
+  return fragSrc0;
+}

@@ -12,7 +12,18 @@
       nv=(int)params[2];
     }
   }
+  if (nu < 3 || nv < 2) {
+    nu=nv=30;
+  }
+  int savedDetailU=pg.sphereDetailU;
+  int savedDetailV=pg.sphereDetailV;
+  if (pg.sphereDetailU != nu || pg.sphereDetailV != nv) {
+    pg.sphereDetail(nu,nv);
+  }
   inGeo.setMaterial(fillColor,strokeColor,strokeWeight,ambientColor,specularColor,emissiveColor,shininess);
   int[] indices=inGeo.addSphere(r,nu,nv,fill,stroke);
   tessellator.tessellateTriangles(indices);
+  if (savedDetailU != nu || savedDetailV != nv) {
+    pg.sphereDetail(savedDetailU,savedDetailV);
+  }
 }

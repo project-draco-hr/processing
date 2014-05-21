@@ -1,8 +1,11 @@
 {
-  updatePolyBuffers(lights,texCache.hasTextures);
+  boolean customShader=polyShader != null;
+  boolean needNormals=customShader ? polyShader.accessNormals() : false;
+  boolean needTexCoords=customShader ? polyShader.accessTexCoords() : false;
+  updatePolyBuffers(lights,texCache.hasTextures,needNormals,needTexCoords);
   for (int i=0; i < texCache.size; i++) {
     Texture tex=texCache.getTexture(i);
-    BaseShader shader=getPolyShader(lights,tex != null);
+    PShader shader=getPolyShader(lights,tex != null);
     shader.bind();
     int first=texCache.firstCache[i];
     int last=texCache.lastCache[i];
@@ -20,14 +23,14 @@
         shader.setEmissiveAttribute(glPolyEmissive,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
         shader.setShininessAttribute(glPolyShininess,1,PGL.FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
       }
-      if (tex != null) {
+      if (lights || needNormals) {
         shader.setNormalAttribute(glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+      }
+      if (tex != null || needTexCoords) {
         shader.setTexcoordAttribute(glPolyTexcoord,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
         shader.setTexture(tex);
       }
-      pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,glPolyIndex);
-      pgl.drawElements(PGL.TRIANGLES,icount,PGL.INDEX_TYPE,ioffset * PGL.SIZEOF_INDEX);
-      pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,0);
+      shader.draw(glPolyIndex,icount,ioffset);
     }
     shader.unbind();
   }
