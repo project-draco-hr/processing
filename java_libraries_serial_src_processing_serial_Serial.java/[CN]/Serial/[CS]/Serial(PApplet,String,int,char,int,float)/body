@@ -33,14 +33,6 @@
  catch (  SerialPortException e) {
     throw new RuntimeException("Error opening serial port " + e.getPortName() + ": "+ e.getExceptionType());
   }
-  try {
-    serialEventMethod=parent.getClass().getMethod("serialEvent",new Class[]{this.getClass()});
-  }
- catch (  Exception e) {
-  }
-  try {
-    serialAvailableMethod=parent.getClass().getMethod("serialAvailable",new Class[]{this.getClass()});
-  }
- catch (  Exception e) {
-  }
+  serialEventMethod=findCallback("serialEvent");
+  serialAvailableMethod=findCallback("serialAvailable");
 }

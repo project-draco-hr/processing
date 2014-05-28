@@ -1,14 +1,15 @@
 {
-  final boolean save_s_flg=s_flag;
-  buf.append(c=next());
+  final boolean saved_s_flag=s_flag;
+  char ch;
+  buf.append(ch=nextChar());
   while (true) {
-    buf.append(c=next());
-    while ((c != '/')) {
-      if (c == '\n') {
+    buf.append(ch=nextChar());
+    while (ch != '/') {
+      if (ch == '\n') {
         writeIndentedComment();
         s_flag=true;
       }
-      buf.append(c=next());
+      buf.append(ch=nextChar());
     }
     if (buf.length() >= 2 && buf.charAt(buf.length() - 2) == '*') {
       jdoc_flag=false;
@@ -16,7 +17,7 @@
     }
   }
   writeIndentedComment();
-  s_flag=save_s_flg;
+  s_flag=saved_s_flag;
   jdoc_flag=false;
   return;
 }
