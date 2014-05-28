@@ -24,6 +24,7 @@
 );
   sketchMenu.add(item);
   sketchMenu.addSeparator();
+  final Editor editorName=this;
   sketchMenu.addMenuListener(new MenuListener(){
     java.util.List<JMenuItem> menuList=new java.util.ArrayList<JMenuItem>();
     JMenu openSketchesSubmenu=new JMenu("Open Sketches");
@@ -31,7 +32,13 @@
       java.util.List<Editor> ed=base.getEditors();
       JMenuItem item;
       for (      final Editor editor2 : ed) {
-        item=new JMenuItem(editor2.getSketch().getName());
+        if (editorName.getSketch().getName().trim().contains(editor2.getSketch().getName().trim())) {
+          item=new JCheckBoxMenuItem(editor2.getSketch().getName());
+          item.setSelected(true);
+        }
+ else {
+          item=new JMenuItem(editor2.getSketch().getName());
+        }
         item.setText(editor2.getSketch().getName() + " (" + editor2.getMode().getTitle()+ ")");
         item.addActionListener(new ActionListener(){
           @Override public void actionPerformed(          ActionEvent e){
