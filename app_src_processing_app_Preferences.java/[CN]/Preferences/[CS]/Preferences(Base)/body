@@ -70,21 +70,57 @@
   colorBox.add(label);
   final String colorTip="<html>" + "Select the background color used when using Present.<br/>" + "Present is used to present a sketch in full-screen, <br/>"+ "accessible from the Sketch menu.";
   label.setToolTipText(colorTip);
-  presentColor=new JTextField("          ");
+  presentColor=new JTextField("      ");
   presentColor.setOpaque(true);
   presentColor.setEnabled(false);
   presentColor.setBorder(BorderFactory.createLineBorder(Color.BLACK));
   presentColor.setBackground(Preferences.getColor("run.present.bgcolor"));
-  colorBox.add(presentColor);
-  colorBox.add(Box.createHorizontalStrut(GUI_SMALL));
-  label=new JLabel("#");
-  colorBox.add(label);
+  presentColor.setForeground(Preferences.getColor("run.present.bgcolor"));
   presentColorHex=new JTextField(6);
   presentColorHex.setText(Preferences.get("run.present.bgcolor").substring(1));
-  presentColorHex.setEditable(false);
-  presentColorHex.setBackground(Color.WHITE);
+  presentColorHex.getDocument().addDocumentListener(new DocumentListener(){
+    @Override public void removeUpdate(    DocumentEvent e){
+      final String colorValue=presentColorHex.getText().toUpperCase();
+      if (colorValue.length() == 7 && (colorValue.startsWith("#")))       EventQueue.invokeLater(new Runnable(){
+        public void run(){
+          presentColorHex.setText(colorValue.substring(1));
+        }
+      }
+);
+      if (colorValue.length() == 6 && colorValue.matches("[0123456789ABCDEF]*")) {
+        presentColor.setBackground(new Color(Integer.parseInt(colorValue.substring(0,2),16),Integer.parseInt(colorValue.substring(2,4),16),Integer.parseInt(colorValue.substring(4,6),16)));
+        if (!colorValue.equals(presentColorHex.getText()))         EventQueue.invokeLater(new Runnable(){
+          public void run(){
+            presentColorHex.setText(colorValue);
+          }
+        }
+);
+      }
+    }
+    @Override public void insertUpdate(    DocumentEvent e){
+      final String colorValue=presentColorHex.getText().toUpperCase();
+      if (colorValue.length() == 7 && (colorValue.startsWith("#")))       EventQueue.invokeLater(new Runnable(){
+        public void run(){
+          presentColorHex.setText(colorValue.substring(1));
+        }
+      }
+);
+      if (colorValue.length() == 6 && colorValue.matches("[0123456789ABCDEF]*")) {
+        presentColor.setBackground(new Color(Integer.parseInt(colorValue.substring(0,2),16),Integer.parseInt(colorValue.substring(2,4),16),Integer.parseInt(colorValue.substring(4,6),16)));
+        if (!colorValue.equals(presentColorHex.getText()))         EventQueue.invokeLater(new Runnable(){
+          public void run(){
+            presentColorHex.setText(colorValue);
+          }
+        }
+);
+      }
+    }
+    @Override public void changedUpdate(    DocumentEvent e){
+    }
+  }
+);
   final CustomColorChooser c=new CustomColorChooser(Preferences.getColor("run.present.bgcolor"),presentColorHex,presentColor);
-  presentColorHex.addMouseListener(new MouseListener(){
+  presentColor.addMouseListener(new MouseListener(){
     @Override public void mouseReleased(    MouseEvent e){
     }
     @Override public void mousePressed(    MouseEvent e){
@@ -98,6 +134,17 @@
     }
   }
 );
+  presentColorHex.addInputMethodListener(new InputMethodListener(){
+    @Override public void inputMethodTextChanged(    InputMethodEvent event){
+    }
+    @Override public void caretPositionChanged(    InputMethodEvent event){
+    }
+  }
+);
+  colorBox.add(presentColor);
+  colorBox.add(Box.createHorizontalStrut(GUI_SMALL));
+  label=new JLabel("#");
+  colorBox.add(label);
   colorBox.add(presentColorHex);
   pain.add(colorBox);
   d=colorBox.getPreferredSize();
