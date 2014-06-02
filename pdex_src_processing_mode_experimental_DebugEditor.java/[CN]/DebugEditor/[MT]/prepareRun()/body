@@ -1,0 +1,20 @@
+{
+  super.prepareRun();
+  try {
+    if (sketch.isUntitled()) {
+      if (handleSave(true))       statusTimedNotice("Saved. Running...",5);
+ else       statusTimedNotice("Save Canceled. Running anyway...",5);
+    }
+ else     if (sketch.isModified()) {
+      Object[] options={"Save","Continue Without Saving"};
+      int op=JOptionPane.showOptionDialog(new Frame(),"There are unsaved changes in your sketch. Save before proceeding?",this.getSketch().getName(),JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
+      if (op == JOptionPane.YES_OPTION) {
+        if (handleSave(true))         statusTimedNotice("Saved. Running...",5);
+      }
+ else       if (op == JOptionPane.NO_OPTION)       statusTimedNotice("Not saved. Running...",5);
+    }
+  }
+ catch (  Exception e) {
+    statusError(e);
+  }
+}
