@@ -3,12 +3,13 @@
   final String cleanText=normalizedText + (normalizedText.endsWith("\n") ? "" : "\n");
   result.setLength(0);
   indentValue=Preferences.getInteger("editor.tabs.size");
-  boolean forFlag=a_flg=if_flg=false;
+  boolean forFlag=if_flg=false;
   s_flag=true;
   int forParenthLevel=0;
-  conditionalLevel=parenLevel=c_level=if_lev=level=0;
+  conditionalLevel=parenLevel=curlyLvl=if_lev=level=0;
   tabs=0;
   jdoc_flag=false;
+  char cc;
   int[] s_level=new int[10];
   sp_flg=new int[20][10];
   s_ind=new int[20][10];
@@ -21,14 +22,13 @@
   chars=cleanText.toCharArray();
   EOF=false;
   while (!EOF) {
-    c=nextChar();
+    char c=nextChar();
 switch (c) {
 default :
       buf.append(c);
-    l_char=c;
-  break;
+    break;
 case ',':
-trimRight(buf);
+  trimRight(buf);
 buf.append(c);
 buf.append(' ');
 advanceToNonSpace();
@@ -51,15 +51,13 @@ buf.append(c);
 break;
 case '\n':
 if (EOF) {
+writeIndentedLine();
 break;
 }
 elseFlag=lookup("else");
-if (elseFlag) {
-gotElse();
-}
+if (elseFlag) gotElse();
 if (lookup_com("//")) {
-final char lastChar=buf.charAt(buf.length() - 1);
-if (lastChar == '\n') {
+if (buf.charAt(buf.length() - 1) == '\n') {
 buf.setLength(buf.length() - 1);
 }
 }
@@ -70,22 +68,19 @@ if (elseFlag) {
 p_flg[level]++;
 tabs++;
 }
- else if (getLastNonWhitespace() == l_char) {
-a_flg=true;
-}
 break;
 case '{':
 elseFlag=lookup("else");
 if (elseFlag) gotElse();
-if (s_if_lev.length == c_level) {
+if (s_if_lev.length == curlyLvl) {
 s_if_lev=PApplet.expand(s_if_lev);
 s_if_flg=PApplet.expand(s_if_flg);
 }
-s_if_lev[c_level]=if_lev;
-s_if_flg[c_level]=if_flg;
+s_if_lev[curlyLvl]=if_lev;
+s_if_flg[curlyLvl]=if_flg;
 if_lev=0;
 if_flg=false;
-c_level++;
+curlyLvl++;
 if (s_flag && p_flg[level] != 0) {
 p_flg[level]--;
 tabs--;
@@ -94,7 +89,7 @@ trimRight(buf);
 if (buf.length() > 0 || (result.length() > 0 && !Character.isWhitespace(result.charAt(result.length() - 1)))) buf.append(" ");
 buf.append(c);
 writeIndentedLine();
-readUntilNewLine();
+readForNewLine();
 writeIndentedLine();
 result.append("\n");
 tabs++;
@@ -102,22 +97,22 @@ s_flag=true;
 if (p_flg[level] > 0) {
 ind[level]=1;
 level++;
-s_level[level]=c_level;
+s_level[level]=curlyLvl;
 }
 break;
 case '}':
-c_level--;
-if (c_level < 0) {
-c_level=0;
+curlyLvl--;
+if (curlyLvl < 0) {
+curlyLvl=0;
 buf.append(c);
 writeIndentedLine();
 }
  else {
-if_lev=s_if_lev[c_level] - 1;
+if_lev=s_if_lev[curlyLvl] - 1;
 if (if_lev < 0) {
 if_lev=0;
 }
-if_flg=s_if_flg[c_level];
+if_flg=s_if_flg[curlyLvl];
 trimRight(buf);
 writeIndentedLine();
 tabs--;
@@ -128,11 +123,11 @@ result.append(c);
 if (peek() == ';') {
 result.append(nextChar());
 }
-readUntilNewLine();
+readForNewLine();
 writeIndentedLine();
 result.append('\n');
 s_flag=true;
-if (c_level < s_level[level]) {
+if (curlyLvl < s_level[level]) {
 if (level > 0) {
 level--;
 }
@@ -160,8 +155,7 @@ s_flag=true;
 cc=nextChar();
 }
 buf.append(cc);
-if (readUntilNewLine()) {
-l_char=cc;
+if (readForNewLine()) {
 chars[pos--]='\n';
 }
 break;
@@ -178,7 +172,7 @@ if (p_flg[level] > 0 && ind[level] == 0) {
 tabs-=p_flg[level];
 p_flg[level]=0;
 }
-readUntilNewLine();
+readForNewLine();
 writeIndentedLine();
 result.append("\n");
 s_flag=true;
@@ -202,7 +196,6 @@ buf.append(c);
 break;
 case ':':
 if (peek() == ':') {
-writeIndentedLine();
 result.append(c).append(nextChar());
 break;
 }
@@ -230,7 +223,7 @@ tabs++;
 if (peek() == ';') {
 result.append(nextChar());
 }
-readUntilNewLine();
+readForNewLine();
 writeIndentedLine();
 result.append('\n');
 s_flag=true;
@@ -259,15 +252,12 @@ parenLevel--;
 if (forFlag && forParenthLevel > parenLevel) {
 forFlag=false;
 }
-if (parenLevel < 0) {
-parenLevel=0;
-}
+if (parenLevel < 0) parenLevel=0;
 buf.append(c);
 writeIndentedLine();
-if (readUntilNewLine()) {
+if (readForNewLine()) {
 chars[pos--]='\n';
 if (parenLevel != 0) {
-a_flg=true;
 }
  else if (tabs > 0 && !isCast) {
 p_flg[level]++;
@@ -295,14 +285,17 @@ forFlag=true;
 }
  else if (isIf) {
 writeIndentedLine();
-s_tabs[c_level][if_lev]=tabs;
-sp_flg[c_level][if_lev]=p_flg[level];
-s_ind[c_level][if_lev]=ind[level];
+s_tabs[curlyLvl][if_lev]=tabs;
+sp_flg[curlyLvl][if_lev]=p_flg[level];
+s_ind[curlyLvl][if_lev]=ind[level];
 if_lev++;
 if_flg=true;
 }
 }
 }
 final String formatted=result.toString();
+if (!formatted.replaceAll("[\\s\\*/]","").equals(source.replaceAll("[\\s\\*/]",""))) {
+throw new RuntimeException("The autoformatter did something funny. Please" + "copy and paste your sketch into a new issue on GitHub.");
+}
 return formatted.equals(cleanText) ? source : formatted;
 }

@@ -1,33 +1,24 @@
 {
-  final boolean saved_s_flag=s_flag;
-  if (buf.length() > 0) {
-    if (s_flag) {
-      printIndentation();
-      s_flag=false;
-    }
-    int i=0;
-    while (buf.charAt(i) == ' ') {
-      i++;
-    }
-    if (lookup_com("/**")) {
-      jdoc_flag=true;
-    }
-    if (buf.charAt(i) == '/' && buf.charAt(i + 1) == '*') {
-      if (saved_s_flag && getLastNonWhitespace() != ';') {
-        result.append(buf.substring(i));
-      }
- else {
-        result.append(buf);
-      }
+  if (buf.length() == 0)   return;
+  int firstNonSpace=0;
+  while (buf.charAt(firstNonSpace) == ' ')   firstNonSpace++;
+  if (lookup_com("/**"))   jdoc_flag=true;
+  if (s_flag)   printIndentation();
+  if (buf.charAt(firstNonSpace) == '/' && buf.charAt(firstNonSpace + 1) == '*') {
+    if (s_flag && lastNonWhitespace != ';') {
+      result.append(buf.substring(firstNonSpace));
     }
  else {
-      if (buf.charAt(i) == '*' || !jdoc_flag) {
-        result.append((" " + buf.substring(i)));
-      }
- else {
-        result.append((" * " + buf.substring(i)));
-      }
+      result.append(buf);
     }
-    buf.setLength(0);
   }
+ else {
+    if (buf.charAt(firstNonSpace) == '*' || !jdoc_flag) {
+      result.append(" " + buf.substring(firstNonSpace));
+    }
+ else {
+      result.append(" * " + buf.substring(firstNonSpace));
+    }
+  }
+  buf.setLength(0);
 }

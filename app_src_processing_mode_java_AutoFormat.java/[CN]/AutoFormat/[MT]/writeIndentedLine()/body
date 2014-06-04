@@ -1,21 +1,16 @@
 {
   if (buf.length() == 0) {
     if (s_flag) {
-      s_flag=a_flg=elseFlag=false;
+      s_flag=indentFlag=elseFlag=false;
     }
     return;
   }
   if (s_flag) {
-    final boolean shouldIndent=(tabs > 0) && (buf.charAt(0) != '{') && a_flg;
-    if (shouldIndent) {
-      tabs++;
-    }
+    boolean shouldIndent=(buf.charAt(0) != '{');
+    if (shouldIndent)     tabs++;
     printIndentation();
     s_flag=false;
-    if (shouldIndent) {
-      tabs--;
-    }
-    a_flg=false;
+    if (shouldIndent)     tabs--;
   }
   if (elseFlag) {
     if (lastNonSpaceChar() == '}') {
