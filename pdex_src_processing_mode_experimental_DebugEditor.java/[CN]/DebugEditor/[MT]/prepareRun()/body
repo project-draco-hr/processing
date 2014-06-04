@@ -1,7 +1,8 @@
 {
   super.prepareRun();
+  if (!ExperimentalMode.autoSaveEnabled)   return;
   try {
-    if (sketch.isUntitled()) {
+    if (sketch.isUntitled() && ExperimentalMode.untitledAutoSaveEnabled) {
       if (handleSave(true))       statusTimedNotice("Saved. Running...",5);
  else       statusTimedNotice("Save Canceled. Running anyway...",5);
     }
