@@ -2,11 +2,7 @@
   super.prepareRun();
   if (!ExperimentalMode.autoSaveEnabled)   return;
   try {
-    if (sketch.isUntitled() && ExperimentalMode.untitledAutoSaveEnabled) {
-      if (handleSave(true))       statusTimedNotice("Saved. Running...",5);
- else       statusTimedNotice("Save Canceled. Running anyway...",5);
-    }
- else     if (sketch.isModified()) {
+    if (sketch.isModified() && !sketch.isUntitled()) {
       Object[] options={"Save","Continue Without Saving"};
       int op=JOptionPane.showOptionDialog(new Frame(),"There are unsaved changes in your sketch. Save before proceeding?",this.getSketch().getName(),JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
       if (op == JOptionPane.YES_OPTION) {
