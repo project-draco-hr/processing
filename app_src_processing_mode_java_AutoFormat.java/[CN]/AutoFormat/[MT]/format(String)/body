@@ -8,7 +8,7 @@
   int forParenthLevel=0;
   conditionalLevel=parenLevel=curlyLvl=if_lev=level=0;
   tabs=0;
-  jdoc_flag=false;
+  jdoc_flag=continuationFlag=inStatementFlag=false;
   char cc;
   int[] s_level=new int[10];
   sp_flg=new int[20][10];
@@ -25,10 +25,11 @@
     char c=nextChar();
 switch (c) {
 default :
-      buf.append(c);
-    break;
+      inStatementFlag=true;
+    buf.append(c);
+  break;
 case ',':
-  trimRight(buf);
+trimRight(buf);
 buf.append(c);
 buf.append(' ');
 advanceToNonSpace();
@@ -68,8 +69,10 @@ if (elseFlag) {
 p_flg[level]++;
 tabs++;
 }
+continuationFlag=inStatementFlag;
 break;
 case '{':
+inStatementFlag=false;
 elseFlag=lookup("else");
 if (elseFlag) gotElse();
 if (s_if_lev.length == curlyLvl) {
@@ -101,6 +104,7 @@ s_level[level]=curlyLvl;
 }
 break;
 case '}':
+inStatementFlag=false;
 curlyLvl--;
 if (curlyLvl < 0) {
 curlyLvl=0;
@@ -141,6 +145,7 @@ ind[level]=0;
 break;
 case '"':
 case '\'':
+inStatementFlag=true;
 buf.append(c);
 cc=nextChar();
 while (!EOF && cc != c) {
@@ -166,6 +171,7 @@ buf.append("; ");
 advanceToNonSpace();
 break;
 }
+inStatementFlag=false;
 buf.append(c);
 writeIndentedLine();
 if (p_flg[level] > 0 && ind[level] == 0) {
@@ -249,17 +255,13 @@ break;
 case ')':
 final boolean isCast=castFlags.isEmpty() ? false : castFlags.pop();
 parenLevel--;
-if (forFlag && forParenthLevel > parenLevel) {
-forFlag=false;
-}
+if (forFlag && forParenthLevel > parenLevel) forFlag=false;
 if (parenLevel < 0) parenLevel=0;
 buf.append(c);
 writeIndentedLine();
 if (readForNewLine()) {
 chars[pos--]='\n';
-if (parenLevel != 0) {
-}
- else if (tabs > 0 && !isCast) {
+if (parenLevel == 0 && tabs > 0 && !isCast) {
 p_flg[level]++;
 tabs++;
 ind[level]=0;
@@ -277,11 +279,9 @@ buf.append(' ');
 }
 buf.append(c);
 parenLevel++;
-if (isFor) {
-if (!forFlag) {
+if (isFor && !forFlag) {
 forParenthLevel=parenLevel;
 forFlag=true;
-}
 }
  else if (isIf) {
 writeIndentedLine();
@@ -295,7 +295,7 @@ if_flg=true;
 }
 final String formatted=result.toString();
 if (!formatted.replaceAll("[\\s\\*/]","").equals(source.replaceAll("[\\s\\*/]",""))) {
-throw new RuntimeException("The autoformatter did something funny. Please" + "copy and paste your sketch into a new issue on GitHub.");
+throw new RuntimeException("The autoformatter did something funny. Please" + "copy and paste your sketch into a new issue on GitHub. \n" + "https://github.com/processing/processing/issues/new");
 }
 return formatted.equals(cleanText) ? source : formatted;
 }
