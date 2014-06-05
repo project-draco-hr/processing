@@ -6,12 +6,14 @@
   options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_6);
   options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT,JavaCore.ENABLED);
   parser.setCompilerOptions(options);
-  if (cu == null)   cu=(CompilationUnit)parser.createAST(null);
+  if (compileCheckCU == null)   compileCheckCU=(CompilationUnit)parser.createAST(null);
  else {
-synchronized (cu) {
-      if (!hasSyntaxErrors())       cu=(CompilationUnit)parser.createAST(null);
+synchronized (compileCheckCU) {
+      compileCheckCU=(CompilationUnit)parser.createAST(null);
     }
   }
+  if (!hasSyntaxErrors())   lastCorrectCU=compileCheckCU;
+  cu=compileCheckCU;
   compilationUnitState=2;
   try {
     if (loadCompClass) {

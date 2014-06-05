@@ -51,9 +51,9 @@
     MethodInvocation mi=(MethodInvocation)testnode;
     System.out.println(mi.getName() + "," + mi.getExpression()+ ","+ mi.typeArguments().size());
   }
-  nearestNode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
+  nearestNode=findClosestNode(lineNumber,(ASTNode)errorCheckerService.getLastCorrectCU().types().get(0));
   if (nearestNode == null) {
-    nearestNode=(ASTNode)compilationUnit.types().get(0);
+    nearestNode=(ASTNode)errorCheckerService.getLastCorrectCU().types().get(0);
   }
   logE(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(nearestNode));
   candidates=new ArrayList<CompletionCandidate>();
