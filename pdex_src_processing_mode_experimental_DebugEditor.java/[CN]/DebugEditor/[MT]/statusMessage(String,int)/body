@@ -1,0 +1,33 @@
+{
+  if (what.equals(statusMessage) && type == statusMessageType) {
+    return;
+  }
+  statusMessage=what;
+  statusMessageType=type;
+switch (type) {
+case STATUS_COMPILER_ERR:
+case STATUS_ERR:
+    super.statusError(what);
+  break;
+case STATUS_INFO:
+case STATUS_WARNING:
+statusNotice(what);
+break;
+}
+SwingWorker s=new SwingWorker<Void,Void>(){
+@Override protected Void doInBackground() throws Exception {
+try {
+log("SW 1");
+Thread.sleep(2 * 1000);
+log("SW 2");
+}
+ catch (InterruptedException e) {
+e.printStackTrace();
+}
+statusEmpty();
+return null;
+}
+}
+;
+s.execute();
+}
