@@ -1,4 +1,5 @@
 {
+  int originalLN=lineNumber - errorCheckerService.mainClassOffset;
   log("----getASTNodeAt---- CU State: " + errorCheckerService.compilationUnitState);
   if (errorCheckerService != null) {
     editor=errorCheckerService.getEditor();
@@ -18,48 +19,15 @@
   String nodeLabel=null;
   String nameOfNode=null;
   if (lineNode != null) {
-    ASTNodeWrapper lineNodeWrap=new ASTNodeWrapper(lineNode);
-    int altOff=offset;
-    int ret[][]=lineNodeWrap.getOffsetMapping(errorCheckerService);
-    if (ret != null) {
-      altOff=0;
-      int javaCodeMap[]=ret[0], pdeCodeMap[]=ret[1];
-      for (; altOff < javaCodeMap.length; altOff++) {
-        if (javaCodeMap[altOff] == pdeCodeMap[offset]) {
-          break;
-        }
-      }
-    }
-    log("FLON2: " + lineNumber + " LN start pos "+ lineNode.getStartPosition()+ " off "+ offset+ " alt off"+ altOff);
-    ASTNode parLineNode=lineNode.getParent();
-    Iterator<StructuralPropertyDescriptor> it=parLineNode.structuralPropertiesForType().iterator();
-    boolean flag=true;
-    int offAdjust=0;
-    while (it.hasNext() && flag) {
-      StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
-      if (prop.isChildListProperty()) {
-        List<ASTNode> nodelist=(List<ASTNode>)parLineNode.getStructuralProperty(prop);
-        for (        ASTNode cnode : nodelist) {
-          if (getLineNumber(cnode) == lineNumber) {
-            if (cnode.getStartPosition() <= lineNode.getStartPosition() + altOff && cnode.getStartPosition() + cnode.getLength() > lineNode.getStartPosition() + altOff) {
-              log(cnode);
-              offAdjust=cnode.getStartPosition() - lineNode.getStartPosition();
-              lineNode=cnode;
-              altOff-=offAdjust;
-              flag=false;
-              break;
-            }
-          }
-        }
-      }
-    }
-    log("FLON3 new alt off: " + altOff);
-    ASTNode simpName=pinpointOnLine(lineNode,altOff,lineNode.getStartPosition(),name);
-    if (simpName == null) {
-      log("pinpointOnLine 1+++> " + simpName);
-      simpName=pinpointOnLine(lineNode.getParent(),altOff,lineNode.getStartPosition(),name);
-    }
-    log("pinpointOnLine 2+++> " + simpName);
+    String pdeCodeLine=errorCheckerService.getPDECodeAtLine(editor.getSketch().getCurrentCodeIndex(),originalLN);
+    String javaCodeLine=getJavaSourceCodeline(lineNumber);
+    log(originalLN + " PDE :" + pdeCodeLine);
+    log("JAVA:" + javaCodeLine);
+    log("Clicked on: " + name + " start offset: "+ offset);
+    OffsetMatcher ofm=new OffsetMatcher(pdeCodeLine,javaCodeLine);
+    int javaOffset=ofm.getJavaOffForPdeOff(offset,name.length());
+    ASTNode simpName=null;
+    if (simpName == null)     return null;
     if (simpName == null && lineNode instanceof SimpleName) {
 switch (lineNode.getParent().getNodeType()) {
 case ASTNode.TYPE_DECLARATION:
