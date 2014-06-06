@@ -8,6 +8,12 @@
     editor.statusMessage("Can't perform action until syntax errors are fixed :(",DebugEditor.STATUS_WARNING);
     return;
   }
+  DefaultMutableTreeNode defCU=findAllOccurrences();
+  String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
+  if (defCU == null) {
+    editor.statusMessage(selText + " isn't defined in this sketch, so it can't" + " be renamed",DebugEditor.STATUS_ERR);
+    return;
+  }
   if (!frmRename.isVisible()) {
     frmRename.setLocation(editor.getX() + (editor.getWidth() - frmRename.getWidth()) / 2,editor.getY() + (editor.getHeight() - frmRename.getHeight()) / 2);
     frmRename.setVisible(true);
