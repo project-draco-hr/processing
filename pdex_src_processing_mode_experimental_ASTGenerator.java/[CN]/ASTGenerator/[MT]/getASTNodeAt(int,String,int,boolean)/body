@@ -80,7 +80,12 @@ if (decl != null) {
   logE("DECLA: " + decl.getClass().getName());
   nodeLabel=getLabelIfType(new ASTNodeWrapper(decl),(SimpleName)simpName);
 }
- else logE("null");
+ else {
+  logE("null");
+  if (scrollOnly) {
+    editor.statusMessage(simpName + " is not defined in this sketch",DebugEditor.STATUS_ERR);
+  }
+}
 log(getNodeAsString(decl));
 ASTNode nearestNode=findClosestNode(lineNumber,(ASTNode)compilationUnit.types().get(0));
 ClassMember cmem=resolveExpression3rdParty(nearestNode,(SimpleName)simpName,false);

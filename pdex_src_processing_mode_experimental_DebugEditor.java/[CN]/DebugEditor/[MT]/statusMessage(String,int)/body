@@ -1,0 +1,34 @@
+{
+  if (type != STATUS_EMPTY) {
+    if (what.equals(statusMessage) && type == statusMessageType) {
+      return;
+    }
+  }
+  statusMessage=new String(what);
+  statusMessageType=type;
+switch (type) {
+case STATUS_COMPILER_ERR:
+case STATUS_ERR:
+    super.statusError(what);
+  break;
+case STATUS_INFO:
+case STATUS_WARNING:
+statusNotice(what);
+break;
+}
+if (type == STATUS_COMPILER_ERR) return;
+SwingWorker s=new SwingWorker<Void,Void>(){
+@Override protected Void doInBackground() throws Exception {
+try {
+Thread.sleep(2 * 1000);
+}
+ catch (InterruptedException e) {
+e.printStackTrace();
+}
+statusEmpty();
+return null;
+}
+}
+;
+s.execute();
+}

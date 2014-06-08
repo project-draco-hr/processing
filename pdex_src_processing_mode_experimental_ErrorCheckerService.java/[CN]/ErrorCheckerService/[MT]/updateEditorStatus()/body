@@ -4,16 +4,16 @@
     for (    ErrorMarker emarker : editor.errorBar.errorPoints) {
       if (emarker.getProblem().getLineNumber() == editor.getTextArea().getCaretLine() + 1) {
         if (emarker.getType() == ErrorMarker.Warning) {
-          editor.statusNotice(emarker.getProblem().getMessage());
+          editor.statusMessage(emarker.getProblem().getMessage(),DebugEditor.STATUS_INFO);
         }
  else {
-          editor.statusError(emarker.getProblem().getMessage());
+          editor.statusMessage(emarker.getProblem().getMessage(),DebugEditor.STATUS_COMPILER_ERR);
         }
         return;
       }
     }
   }
-  if (editor.getStatusMode() == EditorStatus.ERR || editor.getStatusMode() == EditorStatus.NOTICE) {
+  if (editor.statusMessageType == DebugEditor.STATUS_COMPILER_ERR) {
     editor.statusEmpty();
     return;
   }

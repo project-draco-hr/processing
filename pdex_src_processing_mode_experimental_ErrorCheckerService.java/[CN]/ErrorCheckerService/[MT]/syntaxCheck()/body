@@ -26,6 +26,10 @@ synchronized (problemsList) {
     if (problems.length == 0) {
       syntaxErrors.set(false);
       containsErrors.set(false);
+      parser.setSource(sourceCode.toCharArray());
+      parser.setKind(ASTParser.K_COMPILATION_UNIT);
+      parser.setCompilerOptions(options);
+      lastCorrectCU=(CompilationUnit)parser.createAST(null);
     }
  else {
       syntaxErrors.set(true);
