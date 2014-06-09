@@ -12,7 +12,7 @@
       }
     }
   }
-  log("FLON: Node line number " + lineNumber);
+  log("getASTNodeAt: Node line number " + lineNumber);
   ASTNode lineNode=findLineOfNode(compilationUnit,lineNumber,offset,name);
   log("Node text +> " + lineNode);
   ASTNode decl=null;
@@ -27,9 +27,7 @@
     OffsetMatcher ofm=new OffsetMatcher(pdeCodeLine,javaCodeLine);
     int javaOffset=ofm.getJavaOffForPdeOff(offset,name.length()) + lineNode.getStartPosition();
     log("JAVA ast offset: " + (javaOffset));
-    dfsLookForASTNode(errorCheckerService.getLatestCU(),name,javaOffset,javaOffset + name.length());
-    ASTNode simpName=null;
-    if (simpName == null)     return null;
+    ASTNode simpName=dfsLookForASTNode(errorCheckerService.getLatestCU(),name,javaOffset,javaOffset + name.length());
     if (simpName == null && lineNode instanceof SimpleName) {
 switch (lineNode.getParent().getNodeType()) {
 case ASTNode.TYPE_DECLARATION:
