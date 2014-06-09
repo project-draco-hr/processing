@@ -25,7 +25,9 @@
     log("JAVA:" + javaCodeLine);
     log("Clicked on: " + name + " start offset: "+ offset);
     OffsetMatcher ofm=new OffsetMatcher(pdeCodeLine,javaCodeLine);
-    int javaOffset=ofm.getJavaOffForPdeOff(offset,name.length());
+    int javaOffset=ofm.getJavaOffForPdeOff(offset,name.length()) + lineNode.getStartPosition();
+    log("JAVA ast offset: " + (javaOffset));
+    dfsLookForASTNode(errorCheckerService.getLatestCU(),name,javaOffset,javaOffset + name.length() - 1);
     ASTNode simpName=null;
     if (simpName == null)     return null;
     if (simpName == null && lineNode instanceof SimpleName) {

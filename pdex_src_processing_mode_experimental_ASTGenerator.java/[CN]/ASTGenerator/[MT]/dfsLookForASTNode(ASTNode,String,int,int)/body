@@ -1,0 +1,39 @@
+{
+  log("dfsLookForASTNode() lookin for " + name + " Offsets: "+ startOffset+ ","+ endOffset);
+  Stack stack=new Stack<ASTNode>();
+  stack.push(root);
+  while (!stack.isEmpty()) {
+    ASTNode node=(ASTNode)stack.pop();
+    log("Popped from stack: " + getNodeAsString(node));
+    Iterator<StructuralPropertyDescriptor> it=node.structuralPropertiesForType().iterator();
+    while (it.hasNext()) {
+      StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
+      if (prop.isChildProperty() || prop.isSimpleProperty()) {
+        if (node.getStructuralProperty(prop) instanceof ASTNode) {
+          ASTNode temp=(ASTNode)node.getStructuralProperty(prop);
+          if (temp.getStartPosition() <= startOffset && (temp.getStartPosition() + temp.getLength()) >= endOffset) {
+            if (temp instanceof SimpleName) {
+              if (name.equals(temp.toString())) {
+                log("Found simplename: " + getNodeAsString(temp));
+                return temp;
+              }
+            }
+ else             stack.push(temp);
+            log("Pushed onto stack: " + getNodeAsString(temp));
+          }
+        }
+      }
+ else       if (prop.isChildListProperty()) {
+        List<ASTNode> nodelist=(List<ASTNode>)node.getStructuralProperty(prop);
+        for (        ASTNode temp : nodelist) {
+          if (temp.getStartPosition() <= startOffset && (temp.getStartPosition() + temp.getLength()) >= endOffset) {
+            stack.push(temp);
+            log("Pushed onto stack: " + getNodeAsString(temp));
+          }
+        }
+      }
+    }
+  }
+  log("dfsLookForASTNode() not found " + name);
+  return null;
+}
