@@ -20,12 +20,27 @@
   frmOccurenceList.setVisible(true);
   int lineOffsetDisplacementConst=newName.length() - selText.length();
   HashMap<Integer,Integer> lineOffsetDisplacement=new HashMap<Integer,Integer>();
-  int offsetsMap[][][]=new int[defCU.getChildCount()][2][];
+  int pdeOffsets[][]=new int[defCU.getChildCount()][3];
   for (int i=0; i < defCU.getChildCount(); i++) {
     ASTNodeWrapper awrap=(ASTNodeWrapper)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
-    offsetsMap[i][0]=awrap.getPDECodeOffsets(errorCheckerService);
-    offsetsMap[i][1]=awrap.getJavaCodeOffsets(errorCheckerService);
-    log(getNodeAsString(awrap.getNode()) + ", " + awrap.getPDECodeOffsetForSN(this));
+    int ans[]=errorCheckerService.calculateTabIndexAndLineNumber(awrap.getLineNumber());
+    pdeOffsets[i][0]=ans[0];
+    pdeOffsets[i][1]=ans[1];
+    pdeOffsets[i][2]=awrap.getPDECodeOffsetForSN(this);
+  }
+  for (int i=0; i < defCU.getChildCount(); i++) {
+    ASTNodeWrapper awrap=(ASTNodeWrapper)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
+    int off=0;
+    if (lineOffsetDisplacement.get(awrap.getLineNumber()) != null) {
+      off=lineOffsetDisplacement.get(awrap.getLineNumber());
+      lineOffsetDisplacement.put(awrap.getLineNumber(),lineOffsetDisplacementConst + off);
+    }
+ else {
+      lineOffsetDisplacement.put(awrap.getLineNumber(),lineOffsetDisplacementConst);
+    }
+    logE(getNodeAsString(awrap.getNode()) + ", T:" + pdeOffsets[i][0]+ ", L:"+ pdeOffsets[i][1]+ ", O:"+ pdeOffsets[i][2]);
+    highlightPDECode(pdeOffsets[i][0],pdeOffsets[i][1],pdeOffsets[i][2] + off,awrap.getNode().toString().length());
+    editor.ta.setSelectedText(newName);
   }
   errorCheckerService.resumeThread();
   editor.getSketch().setModified(true);
