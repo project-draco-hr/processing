@@ -4,7 +4,6 @@
   stack.push(root);
   while (!stack.isEmpty()) {
     ASTNode node=(ASTNode)stack.pop();
-    log("Popped from stack: " + getNodeAsString(node));
     Iterator<StructuralPropertyDescriptor> it=node.structuralPropertiesForType().iterator();
     while (it.hasNext()) {
       StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
@@ -13,7 +12,6 @@
           ASTNode temp=(ASTNode)node.getStructuralProperty(prop);
           if (temp.getStartPosition() <= startOffset && (temp.getStartPosition() + temp.getLength()) >= endOffset) {
             if (temp instanceof SimpleName) {
-              log("Found possible simplename: " + getNodeAsString(temp));
               if (name.equals(temp.toString())) {
                 log("Found simplename: " + getNodeAsString(temp));
                 return temp;
@@ -21,7 +19,6 @@
               log("Bummer, didn't match");
             }
  else             stack.push(temp);
-            log("Pushed onto stack: " + getNodeAsString(temp));
           }
         }
       }
@@ -31,6 +28,14 @@
           if (temp.getStartPosition() <= startOffset && (temp.getStartPosition() + temp.getLength()) >= endOffset) {
             stack.push(temp);
             log("Pushed onto stack: " + getNodeAsString(temp));
+            if (temp instanceof SimpleName) {
+              if (name.equals(temp.toString())) {
+                log("Found simplename: " + getNodeAsString(temp));
+                return temp;
+              }
+              log("Bummer, didn't match");
+            }
+ else             stack.push(temp);
           }
         }
       }
