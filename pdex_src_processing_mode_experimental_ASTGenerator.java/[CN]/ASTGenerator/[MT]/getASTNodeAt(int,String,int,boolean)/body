@@ -1,5 +1,6 @@
 {
-  int originalLN=lineNumber - errorCheckerService.mainClassOffset;
+  int originalLN=lineNumber;
+  lineNumber+=errorCheckerService.mainClassOffset;
   log("----getASTNodeAt---- CU State: " + errorCheckerService.compilationUnitState);
   if (errorCheckerService != null) {
     editor=errorCheckerService.getEditor();
@@ -12,6 +13,7 @@
       }
     }
   }
+  lineNumber=pdeLineNumToJavaLineNum(lineNumber);
   log("getASTNodeAt: Node line number " + lineNumber);
   ASTNode lineNode=findLineOfNode(compilationUnit,lineNumber,offset,name);
   log("Node text +> " + lineNode);
