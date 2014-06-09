@@ -1,8 +1,8 @@
 {
-  int len1=word1.length();
-  int len2=word2.length();
-  log(word1 + " len: " + len1);
-  log(word2 + " len: " + len2);
+  int len1=pdeCodeLine.length();
+  int len2=javaCodeLine.length();
+  log(pdeCodeLine + " len: " + len1);
+  log(javaCodeLine + " len: " + len2);
   int[][] dp=new int[len1 + 1][len2 + 1];
   for (int i=0; i <= len1; i++) {
     dp[i][0]=i;
@@ -11,9 +11,9 @@
     dp[0][j]=j;
   }
   for (int i=0; i < len1; i++) {
-    char c1=word1.charAt(i);
+    char c1=pdeCodeLine.charAt(i);
     for (int j=0; j < len2; j++) {
-      char c2=word2.charAt(j);
+      char c2=javaCodeLine.charAt(j);
       if (c1 == c2) {
         dp[i + 1][j + 1]=dp[i][j];
       }
@@ -29,6 +29,6 @@
   }
   ArrayList<OffsetPair> alist=new ArrayList<OffsetMatcher.OffsetPair>();
   offsetMatch=alist;
-  minDistInGrid(dp,len1,len2,0,0,word1.toCharArray(),word2.toCharArray(),alist);
+  minDistInGrid(dp,len1,len2,0,0,pdeCodeLine.toCharArray(),javaCodeLine.toCharArray(),alist);
   return dp[len1][len2];
 }
