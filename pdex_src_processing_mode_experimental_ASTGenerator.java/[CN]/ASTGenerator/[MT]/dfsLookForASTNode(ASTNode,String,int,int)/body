@@ -13,10 +13,12 @@
           ASTNode temp=(ASTNode)node.getStructuralProperty(prop);
           if (temp.getStartPosition() <= startOffset && (temp.getStartPosition() + temp.getLength()) >= endOffset) {
             if (temp instanceof SimpleName) {
+              log("Found possible simplename: " + getNodeAsString(temp));
               if (name.equals(temp.toString())) {
                 log("Found simplename: " + getNodeAsString(temp));
                 return temp;
               }
+              log("Bummer, didn't match");
             }
  else             stack.push(temp);
             log("Pushed onto stack: " + getNodeAsString(temp));
