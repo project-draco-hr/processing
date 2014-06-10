@@ -1,6 +1,7 @@
 {
   PlainDocument javaSource=new PlainDocument();
   PlainDocument pdeTabs[]=new PlainDocument[editor.getSketch().getCodeCount()];
+  log("calcPDEOffsetsForProbList() mco: " + mainClassOffset);
   try {
     javaSource.insertString(0,sourceCode,null);
     for (int i=0; i < pdeTabs.length; i++) {
@@ -33,7 +34,7 @@
       log("calcPDEOffsetsForProbList(): J " + javaLine);
       OffsetMatcher ofm=new OffsetMatcher(pdeLine,javaLine);
       int pdeOffset=ofm.getPdeOffForJavaOff(prbStart - lineElement.getStartOffset(),(prbEnd - p.getIProblem().getSourceStart()));
-      p.setPDEOffsets(pdeOffset,prbEnd - prbStart);
+      p.setPDEOffsets(pdeOffset,pdeOffset + prbEnd - prbStart);
     }
   }
  catch (  BadLocationException e) {

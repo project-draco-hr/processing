@@ -15,7 +15,6 @@
         isWarning=true;
       }
       problem=emarker.getProblem();
-      log(problem.toString());
       break;
     }
   }
@@ -28,17 +27,18 @@
   int start=ta.getLineStartOffset(line) + problem.getPDELineStartOffset();
   int pLength=problem.getPDELineStopOffset() + 1 - problem.getPDELineStartOffset();
   try {
-    String linetext=null;
+    String badCode=null;
+    String goodCode=null;
     try {
-      linetext=ta.getDocument().getText(start,pLength);
-      log("paintErrorLine() LineText: " + linetext);
+      badCode=ta.getDocument().getText(start,pLength);
+      goodCode=ta.getDocument().getText(ta.getLineStartOffset(line),problem.getPDELineStartOffset());
     }
  catch (    BadLocationException bl) {
       return;
     }
-    int aw=fm.stringWidth(trimRight(linetext)) + ta.getHorizontalOffset();
-    int rw=fm.stringWidth(linetext.trim());
-    int x1=0 + (aw - rw), y1=y + fm.getHeight() - 2, x2=x1 + rw;
+    int aw=fm.stringWidth(trimRight(badCode)) + ta.getHorizontalOffset();
+    int rw=fm.stringWidth(badCode.trim());
+    int x1=fm.stringWidth(goodCode) + (aw - rw), y1=y + fm.getHeight() - 2, x2=x1 + rw;
     x1+=ta.getGutterWidth();
     x2+=ta.getGutterWidth();
     gfx.setColor(errorColor);
