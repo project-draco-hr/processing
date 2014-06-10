@@ -7,12 +7,15 @@
   }
   boolean notFound=true;
   boolean isWarning=false;
+  Problem problem=null;
   for (  ErrorMarker emarker : errorCheckerService.getEditor().errorBar.errorPoints) {
     if (emarker.getProblem().getLineNumber() == line + 1) {
       notFound=false;
       if (emarker.getType() == ErrorMarker.Warning) {
         isWarning=true;
       }
+      problem=emarker.getProblem();
+      log(problem.toString());
       break;
     }
   }
@@ -22,11 +25,13 @@
   int y=ta.lineToY(line);
   y+=fm.getLeading() + fm.getMaxDescent();
   int height=fm.getHeight();
-  int start=ta.getLineStartOffset(line);
+  int start=ta.getLineStartOffset(line) + problem.getPDELineStartOffset();
+  int pLength=problem.getPDELineStopOffset() + 1 - problem.getPDELineStartOffset();
   try {
     String linetext=null;
     try {
-      linetext=ta.getDocument().getText(start,ta.getLineStopOffset(line) - start - 1);
+      linetext=ta.getDocument().getText(start,pLength);
+      log("paintErrorLine() LineText: " + linetext);
     }
  catch (    BadLocationException bl) {
       return;
