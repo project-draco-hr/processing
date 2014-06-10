@@ -4,16 +4,7 @@
   }
   if (p == null)   return;
   try {
-    int pkgNameOffset=("package " + className + ";\n").length();
-    int prbStart=p.getIProblem().getSourceStart() - pkgNameOffset, prbEnd=p.getIProblem().getSourceEnd() - pkgNameOffset;
-    log("Scrolling to problem: " + p.toString());
-    log("P start: " + prbStart + " to "+ prbEnd+ " pkgOffset "+ pkgNameOffset);
-    int lineNumber=p.getIProblem().getSourceLineNumber();
-    Element lineElement=astGenerator.getJavaSourceCodeElement(lineNumber);
-    log("Line element off " + lineElement.getStartOffset());
-    OffsetMatcher ofm=new OffsetMatcher(astGenerator.getPDESourceCodeLine(lineNumber),astGenerator.getJavaSourceCodeLine(lineNumber));
-    int pdeOffset=ofm.getPdeOffForJavaOff(prbStart - lineElement.getStartOffset(),(prbEnd - p.getIProblem().getSourceStart()));
-    astGenerator.highlightPDECode(p.getTabIndex(),p.getLineNumber(),pdeOffset,(prbEnd - prbStart + 1));
+    astGenerator.highlightPDECode(p.getTabIndex(),p.getLineNumber() - 1,p.getPDELineStartOffset(),(p.getPDELineStopOffset() - p.getPDELineStartOffset() + 1));
     editor.getTextArea().scrollTo(p.getLineNumber() - 1,0);
     editor.repaint();
   }
