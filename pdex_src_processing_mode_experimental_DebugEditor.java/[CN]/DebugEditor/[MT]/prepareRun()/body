@@ -1,64 +1,7 @@
 {
+  wasSaved=false;
+  autoSave();
   super.prepareRun();
-  if (!ExperimentalMode.autoSaveEnabled)   return;
-  try {
-    if (sketch.isModified() && !sketch.isUntitled()) {
-      if (ExperimentalMode.autoSavePromptEnabled) {
-        final JDialog autoSaveDialog=new JDialog(base.getActiveEditor(),this.getSketch().getName(),true);
-        Container container=autoSaveDialog.getContentPane();
-        JPanel panel=new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(4,0,2,2));
-        panel.setLayout(new BoxLayout(panel,BoxLayout.PAGE_AXIS));
-        JPanel panel1=new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel label=new JLabel("<html><body>&nbsp;There are unsaved" + " changes in your sketch.<br />" + "&nbsp;&nbsp;&nbsp; Do you want to save it before"+ " running? </body></html>");
-        label.setFont(new Font(label.getFont().getName(),Font.PLAIN,label.getFont().getSize() + 1));
-        panel1.add(label);
-        panel.add(panel1);
-        final JCheckBox dontRedisplay=new JCheckBox("Remember this decision");
-        panel1=new JPanel(new FlowLayout(FlowLayout.CENTER,8,2));
-        JButton button=new JButton("Save and Run");
-        button.addActionListener(new ActionListener(){
-          @Override public void actionPerformed(          ActionEvent e){
-            if (handleSave(true))             statusTimedNotice("Saved. Running...",5);
-            if (dontRedisplay.isSelected()) {
-              ExperimentalMode.autoSavePromptEnabled=!dontRedisplay.isSelected();
-              ExperimentalMode.defaultAutoSaveEnabled=true;
-              dmode.savePreferences();
-            }
-            autoSaveDialog.dispose();
-          }
-        }
-);
-        panel1.add(button);
-        button=new JButton("Run, Don't Save");
-        button.addActionListener(new ActionListener(){
-          @Override public void actionPerformed(          ActionEvent e){
-            statusTimedNotice("Not saved. Running...",5);
-            if (dontRedisplay.isSelected()) {
-              ExperimentalMode.autoSavePromptEnabled=!dontRedisplay.isSelected();
-              ExperimentalMode.defaultAutoSaveEnabled=false;
-              dmode.savePreferences();
-            }
-            autoSaveDialog.dispose();
-          }
-        }
-);
-        panel1.add(button);
-        panel.add(panel1);
-        panel1=new JPanel();
-        panel1.setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        panel1.add(dontRedisplay);
-        panel.add(panel1);
-        container.add(panel);
-        autoSaveDialog.setResizable(false);
-        autoSaveDialog.pack();
-        autoSaveDialog.setLocationRelativeTo(base.getActiveEditor());
-        autoSaveDialog.setVisible(true);
-      }
- else       if (ExperimentalMode.defaultAutoSaveEnabled)       handleSave(true);
-    }
-  }
- catch (  Exception e) {
-    statusError(e);
-  }
+  if (wasSaved)   statusTimedNotice("Saved. Running...",5);
+ else   statusTimedNotice("Not saved. Running...",5);
 }
