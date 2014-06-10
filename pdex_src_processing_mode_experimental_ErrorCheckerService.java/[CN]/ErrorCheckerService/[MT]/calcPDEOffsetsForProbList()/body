@@ -16,7 +16,9 @@
     }
     int pkgNameOffset=("package " + className + ";\n").length();
     for (    Problem p : problemsList) {
+      int prbStart=p.getIProblem().getSourceStart() - pkgNameOffset, prbEnd=p.getIProblem().getSourceEnd() - pkgNameOffset;
       log(p.toString());
+      log("IProblem Start " + prbStart + ", End "+ prbEnd);
       int javaLineNumber=p.getIProblem().getSourceLineNumber() - 1;
       Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber);
       if (lineElement == null) {
@@ -24,7 +26,6 @@
         continue;
       }
       String javaLine=javaSource.getText(lineElement.getStartOffset(),lineElement.getEndOffset() - lineElement.getStartOffset());
-      int prbStart=p.getIProblem().getSourceStart() - pkgNameOffset, prbEnd=p.getIProblem().getSourceEnd() - pkgNameOffset;
       Element pdeLineElement=pdeTabs[p.getTabIndex()].getDefaultRootElement().getElement(p.getLineNumber());
       if (pdeLineElement == null) {
         log("calcPDEOffsetsForProbList(): Couldn't fetch pdelinenum " + javaLineNumber);
@@ -32,7 +33,7 @@
       }
       String pdeLine=pdeTabs[p.getTabIndex()].getText(pdeLineElement.getStartOffset(),pdeLineElement.getEndOffset() - pdeLineElement.getStartOffset());
       OffsetMatcher ofm=new OffsetMatcher(pdeLine,javaLine);
-      int pdeOffset=ofm.getPdeOffForJavaOff(prbStart - lineElement.getStartOffset(),(prbEnd - p.getIProblem().getSourceStart()));
+      int pdeOffset=ofm.getPdeOffForJavaOff(prbStart - lineElement.getStartOffset(),(prbEnd - prbStart + 1));
       p.setPDEOffsets(pdeOffset,pdeOffset + prbEnd - prbStart);
     }
   }
