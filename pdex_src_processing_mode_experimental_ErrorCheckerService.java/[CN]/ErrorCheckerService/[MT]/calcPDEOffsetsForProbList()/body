@@ -1,0 +1,23 @@
+{
+  PlainDocument javaSource=new PlainDocument();
+  try {
+    javaSource.insertString(0,sourceCode,null);
+    int pkgNameOffset=("package " + className + ";\n").length();
+    for (    Problem p : problemsList) {
+      int javaLineNumber=p.getIProblem().getSourceLineNumber();
+      Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber - 1);
+      if (lineElement == null) {
+        log("calcPDEOffsetsForProbList(): Couldn't fetch javalinenum " + javaLineNumber);
+        continue;
+      }
+      String javaLine=javaSource.getText(lineElement.getStartOffset(),lineElement.getEndOffset() - lineElement.getStartOffset());
+      int prbStart=p.getIProblem().getSourceStart() - pkgNameOffset, prbEnd=p.getIProblem().getSourceEnd() - pkgNameOffset;
+      OffsetMatcher ofm=new OffsetMatcher(astGenerator.getPDESourceCodeLine(javaLineNumber),javaLine);
+      int pdeOffset=ofm.getPdeOffForJavaOff(prbStart - lineElement.getStartOffset(),(prbEnd - p.getIProblem().getSourceStart()));
+      p.setPDEOffsets(pdeOffset,prbEnd - prbStart);
+    }
+  }
+ catch (  BadLocationException e) {
+    e.printStackTrace();
+  }
+}
