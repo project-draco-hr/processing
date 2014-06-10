@@ -7,21 +7,8 @@
       errorData[i][2]=problemsList.get(i).getLineNumber() + "";
       if (tempErrorLog.size() < 200)       tempErrorLog.put(problemsList.get(i).getMessage(),problemsList.get(i).getIProblem());
     }
-    if (errorWindow != null) {
-      DefaultTableModel tm=new DefaultTableModel(errorData,XQErrorTable.columnNames);
-      if (errorWindow.isVisible()) {
-        errorWindow.updateTable(tm);
-      }
-      editor.updateTable(tm);
-      slashAnimationIndex++;
-      if (slashAnimationIndex == slashAnimation.length) {
-        slashAnimationIndex=0;
-      }
-      if (editor != null) {
-        String info=slashAnimation[slashAnimationIndex] + " T:" + (System.currentTimeMillis() - lastTimeStamp)+ "ms";
-        errorWindow.setTitle("Problems - " + editor.getSketch().getName() + " "+ info);
-      }
-    }
+    DefaultTableModel tm=new DefaultTableModel(errorData,XQErrorTable.columnNames);
+    editor.updateTable(tm);
   }
  catch (  Exception e) {
     log("Exception at updateErrorTable() " + e);
