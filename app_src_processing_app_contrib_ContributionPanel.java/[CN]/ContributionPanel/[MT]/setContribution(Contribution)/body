@@ -48,7 +48,9 @@
       versionText.append("To finish an update, reinstall this contribution after restarting.");
     }
  else {
-      versionText.append("New version available!");
+      String latestVersion=contribListing.getLatestVersion(contrib);
+      if (latestVersion != null)       versionText.append("New version (" + latestVersion + ") available!");
+ else       versionText.append("New version available!");
       if (contrib.getType().requiresRestart()) {
         versionText.append(" To update, first remove the current version.");
       }
