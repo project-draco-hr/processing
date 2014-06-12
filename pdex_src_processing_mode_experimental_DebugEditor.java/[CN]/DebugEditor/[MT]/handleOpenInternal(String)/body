@@ -1,0 +1,13 @@
+{
+  log("handleOpenInternal, path: " + path);
+  boolean didOpen=super.handleOpenInternal(path);
+  if (didOpen && dbg != null) {
+    dbg.clearBreakpoints();
+    clearBreakpointedLines();
+    variableInspector().reset();
+  }
+  autosaver=new AutoSaveUtil(this,ExperimentalMode.autoSaveInterval);
+  viewingAutosaveBackup=autosaver.isAutoSaveBackup();
+  log("handleOpenInternal, viewing autosave? " + viewingAutosaveBackup);
+  return didOpen;
+}

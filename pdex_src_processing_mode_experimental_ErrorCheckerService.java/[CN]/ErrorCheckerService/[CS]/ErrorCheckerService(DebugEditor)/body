@@ -1,0 +1,18 @@
+{
+  ensureMinP5Version();
+  this.editor=debugEditor;
+  stopThread=new AtomicBoolean(false);
+  pauseThread=new AtomicBoolean(false);
+  problemsList=new ArrayList<Problem>();
+  classpathJars=new ArrayList<URL>();
+  initParser();
+  xqpreproc=new XQPreprocessor();
+  PdePreprocessor pdePrepoc=new PdePreprocessor(null);
+  defaultImportsOffset=pdePrepoc.getCoreImports().length + pdePrepoc.getDefaultImports().length + 1;
+  astGenerator=new ASTGenerator(this);
+  syntaxErrors=new AtomicBoolean(true);
+  containsErrors=new AtomicBoolean(true);
+  errorMsgSimplifier=new ErrorMessageSimplifier();
+  tempErrorLog=new TreeMap<String,IProblem>();
+  sketchChangedListener=new SketchChangedListener();
+}

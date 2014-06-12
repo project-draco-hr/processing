@@ -1,0 +1,53 @@
+{
+  this.addMouseListener(new MouseAdapter(){
+    @SuppressWarnings("rawtypes") @Override public void mouseClicked(    final MouseEvent e){
+      SwingWorker worker=new SwingWorker(){
+        protected Object doInBackground() throws Exception {
+          for (          ErrorMarker eMarker : errorPoints) {
+            if (e.getY() >= eMarker.getY() - 2 && e.getY() <= eMarker.getY() + 2 + errorMarkerHeight) {
+              errorCheckerService.scrollToErrorLine(eMarker.getProblem());
+              return null;
+            }
+          }
+          return null;
+        }
+      }
+;
+      try {
+        worker.execute();
+      }
+ catch (      Exception exp) {
+        System.out.println("Errorbar mouseClicked is slacking." + exp.getMessage());
+      }
+    }
+  }
+);
+  this.addMouseMotionListener(new MouseMotionListener(){
+    @SuppressWarnings("rawtypes") @Override public void mouseMoved(    final MouseEvent evt){
+      SwingWorker worker=new SwingWorker(){
+        protected Object doInBackground() throws Exception {
+          for (          ErrorMarker eMarker : errorPoints) {
+            if (evt.getY() >= eMarker.getY() - 2 && evt.getY() <= eMarker.getY() + 2 + errorMarkerHeight) {
+              Problem p=eMarker.getProblem();
+              String msg=(p.isError() ? "Error: " : "Warning: ") + p.getMessage();
+              setToolTipText(msg);
+              setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+              break;
+            }
+          }
+          return null;
+        }
+      }
+;
+      try {
+        worker.execute();
+      }
+ catch (      Exception exp) {
+        System.out.println("Errorbar mousemoved Worker is slacking." + exp.getMessage());
+      }
+    }
+    @Override public void mouseDragged(    MouseEvent arg0){
+    }
+  }
+);
+}

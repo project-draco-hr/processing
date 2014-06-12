@@ -1,0 +1,12 @@
+{
+  if (!(value instanceof VariableNode)) {
+    return super.getTableCellEditorComponent(table,value,isSelected,row,column);
+  }
+  VariableNode var=(VariableNode)value;
+  if (var.getType() == VariableNode.TYPE_STRING && var.getValue() == null) {
+    return super.getTableCellEditorComponent(table,"",isSelected,row,column);
+  }
+ else {
+    return super.getTableCellEditorComponent(table,var.getStringValue(),isSelected,row,column);
+  }
+}

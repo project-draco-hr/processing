@@ -1,0 +1,96 @@
+{
+  for (  Event e : es) {
+    Logger.getLogger(Debugger.class.getName()).log(Level.INFO,"*** VM Event: {0}",e.toString());
+    if (e instanceof VMStartEvent) {
+      Logger.getLogger(Debugger.class.getName()).log(Level.INFO,"requesting event on main class load: {0}",mainClassName);
+      ClassPrepareRequest mainClassPrepare=runtime.vm().eventRequestManager().createClassPrepareRequest();
+      mainClassPrepare.addClassFilter(mainClassName);
+      mainClassPrepare.enable();
+      for (      SketchCode tab : editor.getSketch().getCode()) {
+        if (tab.isExtension("java")) {
+          Logger.getLogger(Debugger.class.getName()).log(Level.INFO,"requesting event on class load: {0}",tab.getPrettyName());
+          ClassPrepareRequest customClassPrepare=runtime.vm().eventRequestManager().createClassPrepareRequest();
+          customClassPrepare.addClassFilter(tab.getPrettyName());
+          customClassPrepare.enable();
+        }
+      }
+      runtime.vm().resume();
+    }
+ else     if (e instanceof ClassPrepareEvent) {
+      ClassPrepareEvent ce=(ClassPrepareEvent)e;
+      ReferenceType rt=ce.referenceType();
+      currentThread=ce.thread();
+      paused=true;
+      if (rt.name().equals(mainClassName)) {
+        mainClass=rt;
+        Logger.getLogger(Debugger.class.getName()).log(Level.INFO,"main class load: {0}",rt.name());
+        started=true;
+      }
+ else {
+        classes.add(rt);
+        Logger.getLogger(Debugger.class.getName()).log(Level.INFO,"class load: {0}",rt.name());
+      }
+      for (      ClassLoadListener listener : classLoadListeners) {
+        if (listener != null) {
+          listener.classLoaded(rt);
+        }
+      }
+      paused=false;
+      runtime.vm().resume();
+    }
+ else     if (e instanceof BreakpointEvent) {
+      BreakpointEvent be=(BreakpointEvent)e;
+      currentThread=be.thread();
+      updateVariableInspector(currentThread);
+      final LineID newCurrentLine=locationToLineID(be.location());
+      javax.swing.SwingUtilities.invokeLater(new Runnable(){
+        @Override public void run(){
+          editor.setCurrentLine(newCurrentLine);
+          if (editor.toolbar() != null) {
+            editor.toolbar().deactivate(DebugToolbar.STEP);
+            editor.toolbar().deactivate(DebugToolbar.CONTINUE);
+          }
+        }
+      }
+);
+      if (requestedStep != null) {
+        runtime.vm().eventRequestManager().deleteEventRequest(requestedStep);
+        requestedStep=null;
+      }
+      resumeOtherThreads(currentThread);
+      paused=true;
+      editor.statusHalted();
+    }
+ else     if (e instanceof StepEvent) {
+      StepEvent se=(StepEvent)e;
+      currentThread=se.thread();
+      updateVariableInspector(currentThread);
+      final LineID newCurrentLine=locationToLineID(se.location());
+      javax.swing.SwingUtilities.invokeLater(new Runnable(){
+        @Override public void run(){
+          editor.setCurrentLine(newCurrentLine);
+          if (editor.toolbar() != null) {
+            editor.toolbar().deactivate(DebugToolbar.STEP);
+            editor.toolbar().deactivate(DebugToolbar.CONTINUE);
+          }
+        }
+      }
+);
+      EventRequestManager mgr=runtime.vm().eventRequestManager();
+      mgr.deleteEventRequest(se.request());
+      requestedStep=null;
+      paused=true;
+      editor.statusHalted();
+      if (!locationIsVisible(se.location())) {
+        stepOutIntoViewOrContinue();
+      }
+    }
+ else     if (e instanceof VMDisconnectEvent) {
+      stopDebug();
+    }
+ else     if (e instanceof VMDeathEvent) {
+      started=false;
+      editor.statusEmpty();
+    }
+  }
+}

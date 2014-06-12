@@ -1,0 +1,22 @@
+{
+  Iterator<StructuralPropertyDescriptor> it=node.structuralPropertiesForType().iterator();
+  while (it.hasNext()) {
+    StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
+    if (prop.isChildProperty() || prop.isSimpleProperty()) {
+      if (node.getStructuralProperty(prop) != null) {
+        if (node.getStructuralProperty(prop) instanceof ASTNode) {
+          ASTNode cnode=(ASTNode)node.getStructuralProperty(prop);
+          log(getNodeAsString(cnode));
+          printRecur(cnode);
+        }
+      }
+    }
+ else     if (prop.isChildListProperty()) {
+      List<ASTNode> nodelist=(List<ASTNode>)node.getStructuralProperty(prop);
+      for (      ASTNode cnode : nodelist) {
+        log(getNodeAsString(cnode));
+        printRecur(cnode);
+      }
+    }
+  }
+}

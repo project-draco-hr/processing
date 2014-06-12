@@ -1,0 +1,11 @@
+{
+  dbg.removeClassLoadListener(this);
+  dbg.editor().removeBreakpointedLine(line.lineIdx());
+  if (dbg.isPaused()) {
+    detach();
+  }
+  line.stopTracking();
+  if (dbg.editor().isInCurrentTab(line)) {
+    dbg.editor().getSketch().setModified(true);
+  }
+}

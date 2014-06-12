@@ -1,0 +1,144 @@
+{
+  if (predictionOngoing.get())   return;
+  if (!ExperimentalMode.codeCompletionsEnabled)   return;
+  if (word.length() < predictionMinLength)   return;
+  predictionOngoing.set(true);
+  if (caretWithinLineComment()) {
+    log("No predictions.");
+    predictionOngoing.set(false);
+    return;
+  }
+  String word2=ASTNodeWrapper.getJavaCode(word);
+  boolean noCompare=false;
+  if (word2.endsWith(".")) {
+    word2=word2.substring(0,word2.length() - 1);
+    noCompare=true;
+  }
+  if (word2.length() >= predictionMinLength && !noCompare && word2.length() > lastPredictedWord.length()) {
+    if (word2.startsWith(lastPredictedWord)) {
+      log(word + " starts with " + lastPredictedWord);
+      log("Don't recalc");
+      if (word2.contains(".")) {
+        int x=word2.lastIndexOf('.');
+        trimCandidates(word2.substring(x + 1));
+      }
+ else {
+        trimCandidates(word2);
+      }
+      showPredictions(word);
+      lastPredictedWord=word2;
+      predictionOngoing.set(false);
+      return;
+    }
+  }
+  int lineNumber=line;
+  if (errorCheckerService != null) {
+    editor=errorCheckerService.getEditor();
+    int codeIndex=editor.getSketch().getCodeIndex(editor.getCurrentTab());
+    if (codeIndex > 0)     for (int i=0; i < codeIndex; i++) {
+      SketchCode sc=editor.getSketch().getCode(i);
+      int len=Base.countLines(sc.getProgram()) + 1;
+      lineNumber+=len;
+    }
+  }
+  ASTNode nearestNode=null;
+  ASTParser parser=ASTParser.newParser(AST.JLS4);
+  parser.setKind(ASTParser.K_EXPRESSION);
+  parser.setSource(word2.toCharArray());
+  ASTNode testnode=parser.createAST(null);
+  logE("Typed: " + word2 + "|"+ " temp Node type: "+ testnode.getClass().getSimpleName());
+  if (testnode instanceof MethodInvocation) {
+    MethodInvocation mi=(MethodInvocation)testnode;
+    System.out.println(mi.getName() + "," + mi.getExpression()+ ","+ mi.typeArguments().size());
+  }
+  nearestNode=findClosestNode(lineNumber,(ASTNode)errorCheckerService.getLastCorrectCU().types().get(0));
+  if (nearestNode == null) {
+    nearestNode=(ASTNode)errorCheckerService.getLastCorrectCU().types().get(0);
+  }
+  logE(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(nearestNode));
+  candidates=new ArrayList<CompletionCandidate>();
+  lastPredictedWord=word2;
+  if (testnode instanceof SimpleName && !noCompare) {
+    logE("One word expression " + getNodeAsString(testnode));
+    while (nearestNode != null) {
+      if (nearestNode instanceof TypeDeclaration) {
+        TypeDeclaration td=(TypeDeclaration)nearestNode;
+        if (td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY) != null) {
+          SimpleType st=(SimpleType)td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY);
+          log("Superclass " + st.getName());
+          for (          CompletionCandidate can : getMembersForType(st.getName().toString(),word2,noCompare,false)) {
+            candidates.add(can);
+          }
+        }
+      }
+      List<StructuralPropertyDescriptor> sprops=nearestNode.structuralPropertiesForType();
+      for (      StructuralPropertyDescriptor sprop : sprops) {
+        ASTNode cnode=null;
+        if (!sprop.isChildListProperty()) {
+          if (nearestNode.getStructuralProperty(sprop) instanceof ASTNode) {
+            cnode=(ASTNode)nearestNode.getStructuralProperty(sprop);
+            CompletionCandidate[] types=checkForTypes(cnode);
+            if (types != null) {
+              for (int i=0; i < types.length; i++) {
+                if (types[i].getElementName().toLowerCase().startsWith(word2.toLowerCase()))                 candidates.add(types[i]);
+              }
+            }
+          }
+        }
+ else {
+          List<ASTNode> nodelist=(List<ASTNode>)nearestNode.getStructuralProperty(sprop);
+          for (          ASTNode clnode : nodelist) {
+            CompletionCandidate[] types=checkForTypes(clnode);
+            if (types != null) {
+              for (int i=0; i < types.length; i++) {
+                if (types[i].getElementName().toLowerCase().startsWith(word2.toLowerCase()))                 candidates.add(types[i]);
+              }
+            }
+          }
+        }
+      }
+      nearestNode=nearestNode.getParent();
+    }
+    log("Empty can. " + word2);
+    if (classPath != null) {
+      RegExpResourceFilter regExpResourceFilter;
+      regExpResourceFilter=new RegExpResourceFilter(Pattern.compile(".*"),Pattern.compile(word2 + "[a-zA-Z_0-9]*.class",Pattern.CASE_INSENSITIVE));
+      String[] resources=classPath.findResources("",regExpResourceFilter);
+      for (      String matchedClass2 : resources) {
+        matchedClass2=matchedClass2.replace('/','.');
+        String matchedClass=matchedClass2.substring(0,matchedClass2.length() - 6);
+        int d=matchedClass.lastIndexOf('.');
+        if (ignorableImport(matchedClass2,matchedClass.substring(d + 1)))         continue;
+        matchedClass=matchedClass.substring(d + 1);
+        candidates.add(new CompletionCandidate(matchedClass,matchedClass + " : " + matchedClass2.substring(0,d),matchedClass,CompletionCandidate.PREDEF_CLASS));
+      }
+    }
+  }
+ else {
+    logE("Complex expression " + getNodeAsString(testnode));
+    log("candidates empty");
+    ASTNode childExpr=getChildExpression(testnode);
+    log("Parent expression : " + getParentExpression(testnode));
+    log("Child expression : " + childExpr);
+    if (childExpr instanceof ASTNode) {
+      if (!noCompare) {
+        log("Original testnode " + getNodeAsString(testnode));
+        testnode=getParentExpression(testnode);
+        log("Corrected testnode " + getNodeAsString(testnode));
+      }
+      ClassMember expr=resolveExpression3rdParty(nearestNode,testnode,noCompare);
+      if (expr == null) {
+        log("Expr is null");
+      }
+ else {
+        log("Expr is " + expr.toString());
+        candidates=getMembersForType(expr,childExpr.toString(),noCompare,false);
+      }
+    }
+ else {
+      log("ChildExpr is null");
+    }
+  }
+  showPredictions(word);
+  predictionOngoing.set(false);
+}
