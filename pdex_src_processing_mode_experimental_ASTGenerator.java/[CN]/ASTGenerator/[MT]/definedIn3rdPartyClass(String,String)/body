@@ -1,0 +1,13 @@
+{
+  Class<?> probableClass=findClassIfExists(className);
+  if (probableClass == null) {
+    log("Couldn't load " + className);
+    return null;
+  }
+  if (memberName.equals("THIS")) {
+    return new ClassMember(probableClass);
+  }
+ else {
+    return definedIn3rdPartyClass(new ClassMember(probableClass),memberName);
+  }
+}

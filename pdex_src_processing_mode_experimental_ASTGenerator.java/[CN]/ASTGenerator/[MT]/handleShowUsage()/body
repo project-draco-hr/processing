@@ -1,0 +1,26 @@
+{
+  log("Last clicked word:" + lastClickedWord);
+  if (lastClickedWord == null && editor.ta.getSelectedText() == null) {
+    editor.statusMessage("Highlight the class/function/variable name first",DebugEditor.STATUS_INFO);
+    return;
+  }
+  if (errorCheckerService.hasSyntaxErrors()) {
+    editor.statusMessage("Can't perform action until syntax errors are " + "fixed :(",DebugEditor.STATUS_WARNING);
+    return;
+  }
+  DefaultMutableTreeNode defCU=findAllOccurrences();
+  String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
+  if (defCU == null) {
+    editor.statusMessage("Can't locate definition of " + selText,DebugEditor.STATUS_ERR);
+    return;
+  }
+  if (defCU.getChildCount() == 0)   return;
+  treeRename.setModel(new DefaultTreeModel(defCU));
+  ((DefaultTreeModel)treeRename.getModel()).reload();
+  treeRename.setRootVisible(false);
+  frmOccurenceList.setTitle("Usage of \"" + selText + "\" : "+ defCU.getChildCount()+ " time(s)");
+  frmOccurenceList.setLocation(editor.getX() + editor.getWidth(),editor.getY());
+  frmOccurenceList.setVisible(true);
+  lastClickedWord=null;
+  lastClickedWordNode=null;
+}

@@ -1,0 +1,97 @@
+{
+  jtree.addTreeSelectionListener(new TreeSelectionListener(){
+    @Override public void valueChanged(    TreeSelectionEvent e){
+      log(e);
+      SwingWorker worker=new SwingWorker(){
+        @Override protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          if (jtree.getLastSelectedPathComponent() == null) {
+            return;
+          }
+          DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)jtree.getLastSelectedPathComponent();
+          if (tnode.getUserObject() instanceof ASTNodeWrapper) {
+            ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
+            errorCheckerService.highlightNode(awrap);
+            try {
+              int javaLineNumber=getLineNumber(awrap.getNode());
+              int pdeOffs[]=errorCheckerService.calculateTabIndexAndLineNumber(javaLineNumber);
+              PlainDocument javaSource=new PlainDocument();
+              javaSource.insertString(0,errorCheckerService.sourceCode,null);
+              Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber - 1);
+              if (lineElement == null) {
+                return;
+              }
+              String javaLine=javaSource.getText(lineElement.getStartOffset(),lineElement.getEndOffset() - lineElement.getStartOffset());
+              editor.getSketch().setCurrentCode(pdeOffs[0]);
+              String pdeLine=editor.getLineText(pdeOffs[1]);
+              log("JL " + javaLine + " LSO "+ lineElement.getStartOffset()+ ","+ lineElement.getEndOffset());
+              log("PL " + pdeLine);
+            }
+ catch (            BadLocationException e) {
+              e.printStackTrace();
+            }
+          }
+        }
+      }
+;
+      worker.execute();
+    }
+  }
+);
+  btnRename.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      if (txtRenameField.getText().length() == 0)       return;
+      SwingWorker worker=new SwingWorker(){
+        @Override protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          refactorIt();
+        }
+      }
+;
+      worker.execute();
+    }
+  }
+);
+  btnListOccurrence.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      SwingWorker worker=new SwingWorker(){
+        @Override protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          handleShowUsage();
+        }
+      }
+;
+      worker.execute();
+    }
+  }
+);
+  treeRename.addTreeSelectionListener(new TreeSelectionListener(){
+    @Override public void valueChanged(    TreeSelectionEvent e){
+      log(e);
+      SwingWorker worker=new SwingWorker(){
+        @Override protected Object doInBackground() throws Exception {
+          return null;
+        }
+        protected void done(){
+          if (treeRename.getLastSelectedPathComponent() == null) {
+            return;
+          }
+          DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)treeRename.getLastSelectedPathComponent();
+          if (tnode.getUserObject() instanceof ASTNodeWrapper) {
+            ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
+            awrap.highlightNode(thisASTGenerator);
+          }
+        }
+      }
+;
+      worker.execute();
+    }
+  }
+);
+}

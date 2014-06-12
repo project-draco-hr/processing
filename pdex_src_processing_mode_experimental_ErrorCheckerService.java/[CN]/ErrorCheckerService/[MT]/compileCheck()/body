@@ -1,0 +1,99 @@
+{
+  parser.setSource(sourceCode.toCharArray());
+  parser.setKind(ASTParser.K_COMPILATION_UNIT);
+  Map<String,String> options=JavaCore.getOptions();
+  JavaCore.setComplianceOptions(JavaCore.VERSION_1_6,options);
+  options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_6);
+  options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT,JavaCore.ENABLED);
+  parser.setCompilerOptions(options);
+  if (compileCheckCU == null)   compileCheckCU=(CompilationUnit)parser.createAST(null);
+ else {
+synchronized (compileCheckCU) {
+      compileCheckCU=(CompilationUnit)parser.createAST(null);
+    }
+  }
+  if (!hasSyntaxErrors())   lastCorrectCU=compileCheckCU;
+  cu=compileCheckCU;
+  compilationUnitState=2;
+  try {
+    if (loadCompClass) {
+      File f=editor.getMode().getContentFile("mode");
+      if (!f.exists()) {
+        System.err.println("Could not locate the files required for on-the-fly error checking. Bummer.");
+        return;
+      }
+      FileFilter fileFilter=new FileFilter(){
+        public boolean accept(        File file){
+          return (file.getName().endsWith(".jar") && !file.getName().startsWith(editor.getMode().getClass().getSimpleName()));
+        }
+      }
+;
+      File[] jarFiles=f.listFiles(fileFilter);
+      classpath=new URL[classpathJars.size() + jarFiles.length];
+      int ii=0;
+      for (; ii < classpathJars.size(); ii++) {
+        classpath[ii]=classpathJars.get(ii);
+      }
+      for (int i=0; i < jarFiles.length; i++) {
+        classpath[ii++]=jarFiles[i].toURI().toURL();
+      }
+      compilationChecker=null;
+      checkerClass=null;
+      classLoader=null;
+      System.gc();
+      classLoader=new URLClassLoader(classpath);
+      checkerClass=Class.forName("CompilationChecker",true,classLoader);
+      compilationChecker=checkerClass.newInstance();
+      loadCompClass=false;
+    }
+    if (compilerSettings == null) {
+      prepareCompilerSetting();
+    }
+    Method getErrors=checkerClass.getMethod("getErrorsAsObjArr",new Class[]{String.class,String.class,Map.class});
+    Object[][] errorList=(Object[][])getErrors.invoke(compilationChecker,className,sourceCode,compilerSettings);
+    if (errorList == null) {
+      return;
+    }
+synchronized (problemsList) {
+      problems=new DefaultProblem[errorList.length];
+      for (int i=0; i < errorList.length; i++) {
+        problems[i]=new DefaultProblem((char[])errorList[i][0],(String)errorList[i][1],((Integer)errorList[i][2]).intValue(),(String[])errorList[i][3],((Integer)errorList[i][4]).intValue(),((Integer)errorList[i][5]).intValue(),((Integer)errorList[i][6]).intValue(),((Integer)errorList[i][7]).intValue() - 1,0);
+        IProblem problem=problems[i];
+        int a[]=calculateTabIndexAndLineNumber(problem.getSourceLineNumber());
+        Problem p=new Problem(problem,a[0],a[1]);
+        if ((Boolean)errorList[i][8]) {
+          p.setType(Problem.ERROR);
+          containsErrors.set(true);
+        }
+        if ((Boolean)errorList[i][9]) {
+          p.setType(Problem.WARNING);
+        }
+        if (p.isWarning() && !ExperimentalMode.warningsEnabled) {
+          continue;
+        }
+        problemsList.add(p);
+      }
+    }
+  }
+ catch (  ClassNotFoundException e) {
+    System.err.println("Compiltation Checker files couldn't be found! " + e + " compileCheck() problem.");
+    pauseThread();
+  }
+catch (  MalformedURLException e) {
+    System.err.println("Compiltation Checker files couldn't be found! " + e + " compileCheck() problem.");
+    pauseThread();
+  }
+catch (  Exception e) {
+    System.err.println("compileCheck() problem." + e);
+    e.printStackTrace();
+    pauseThread();
+  }
+catch (  NoClassDefFoundError e) {
+    System.err.println(e + " compileCheck() problem. Somebody tried to mess with Experimental Mode files.");
+    pauseThread();
+  }
+catch (  OutOfMemoryError e) {
+    System.err.println("Processing has used up its maximum alloted memory. Please close some Processing " + " windows and then reopen this sketch.");
+    pauseThread();
+  }
+}

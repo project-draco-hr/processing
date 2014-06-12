@@ -1,0 +1,18 @@
+{
+  constantsMap=new TreeMap<Integer,String>();
+  Class probClass=DefaultProblem.class;
+  Field f[]=probClass.getFields();
+  for (  Field field : f) {
+    if (Modifier.isStatic(field.getModifiers()))     try {
+      Object val=field.get(null);
+      if (val instanceof Integer) {
+        constantsMap.put((Integer)(val),field.getName());
+      }
+    }
+ catch (    Exception e) {
+      System.out.println("Here");
+      e.printStackTrace();
+      break;
+    }
+  }
+}

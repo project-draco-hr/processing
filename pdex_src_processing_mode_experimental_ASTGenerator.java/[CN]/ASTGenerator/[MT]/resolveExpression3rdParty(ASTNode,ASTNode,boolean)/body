@@ -1,0 +1,135 @@
+{
+  log("Resolve 3rdParty expr-- " + getNodeAsString(astNode) + " nearest node "+ getNodeAsString(nearestNode));
+  ClassMember scopeParent=null;
+  SimpleType stp=null;
+  if (astNode instanceof SimpleName) {
+    ASTNode decl=findDeclaration2(((SimpleName)astNode),nearestNode);
+    if (decl != null) {
+      log(getNodeAsString(astNode) + " found decl -> " + getNodeAsString(decl));
+      return new ClassMember(extracTypeInfo(decl));
+    }
+ else {
+      Class tehClass=findClassIfExists(((SimpleName)astNode).toString());
+      if (tehClass != null) {
+        return new ClassMember(tehClass);
+      }
+    }
+    astNode=astNode.getParent();
+  }
+switch (astNode.getNodeType()) {
+case ASTNode.FIELD_ACCESS:
+    FieldAccess fa=(FieldAccess)astNode;
+  if (fa.getExpression() == null) {
+    log("FA,Not implemented.");
+    return null;
+  }
+ else {
+    if (fa.getExpression() instanceof SimpleName) {
+      stp=extracTypeInfo(findDeclaration2((SimpleName)fa.getExpression(),nearestNode));
+      if (stp == null) {
+        Class tehClass=findClassIfExists(((SimpleName)fa.getExpression()).toString());
+        if (tehClass != null) {
+          return definedIn3rdPartyClass(new ClassMember(tehClass),fa.getName().toString());
+        }
+        log("FA resolve 3rd par, Can't resolve " + fa.getExpression());
+        return null;
+      }
+      log("FA, SN Type " + getNodeAsString(stp));
+      scopeParent=definedIn3rdPartyClass(stp.getName().toString(),"THIS");
+    }
+ else {
+      scopeParent=resolveExpression3rdParty(nearestNode,fa.getExpression(),noCompare);
+    }
+    log("FA, ScopeParent " + scopeParent);
+    return definedIn3rdPartyClass(scopeParent,fa.getName().toString());
+  }
+case ASTNode.METHOD_INVOCATION:
+MethodInvocation mi=(MethodInvocation)astNode;
+ASTNode temp=findDeclaration2(mi.getName(),nearestNode);
+if (temp instanceof MethodDeclaration) {
+log(mi.getName() + " was found locally," + getNodeAsString(extracTypeInfo(temp)));
+return new ClassMember(extracTypeInfo(temp));
+}
+if (mi.getExpression() == null) {
+log("MI,Not implemented.");
+return null;
+}
+ else {
+if (mi.getExpression() instanceof SimpleName) {
+stp=extracTypeInfo(findDeclaration2((SimpleName)mi.getExpression(),nearestNode));
+if (stp == null) {
+Class tehClass=findClassIfExists(((SimpleName)mi.getExpression()).toString());
+if (tehClass != null) {
+  return definedIn3rdPartyClass(new ClassMember(tehClass),mi.getName().toString());
+}
+log("MI resolve 3rd par, Can't resolve " + mi.getExpression());
+return null;
+}
+log("MI, SN Type " + getNodeAsString(stp));
+ASTNode typeDec=findDeclaration2(stp.getName(),nearestNode);
+if (typeDec == null) {
+log(stp.getName() + " couldn't be found locally..");
+Class tehClass=findClassIfExists(stp.getName().toString());
+if (tehClass != null) {
+  return definedIn3rdPartyClass(new ClassMember(tehClass),mi.getName().toString());
+}
+}
+return definedIn3rdPartyClass(new ClassMember(typeDec),mi.getName().toString());
+}
+ else {
+log("MI EXP.." + getNodeAsString(mi.getExpression()));
+scopeParent=resolveExpression3rdParty(nearestNode,mi.getExpression(),noCompare);
+log("MI, ScopeParent " + scopeParent);
+return definedIn3rdPartyClass(scopeParent,mi.getName().toString());
+}
+}
+case ASTNode.QUALIFIED_NAME:
+QualifiedName qn=(QualifiedName)astNode;
+ASTNode temp2=findDeclaration2(qn.getName(),nearestNode);
+if (temp2 instanceof FieldDeclaration) {
+log(qn.getName() + " was found locally," + getNodeAsString(extracTypeInfo(temp2)));
+return new ClassMember(extracTypeInfo(temp2));
+}
+if (qn.getQualifier() == null) {
+log("QN,Not implemented.");
+return null;
+}
+ else {
+if (qn.getQualifier() instanceof SimpleName) {
+stp=extracTypeInfo(findDeclaration2(qn.getQualifier(),nearestNode));
+if (stp == null) {
+Class tehClass=findClassIfExists(qn.getQualifier().toString());
+if (tehClass != null) {
+return definedIn3rdPartyClass(new ClassMember(tehClass),qn.getName().toString());
+}
+log("QN resolve 3rd par, Can't resolve " + qn.getQualifier());
+return null;
+}
+log("QN, SN Local Type " + getNodeAsString(stp));
+ASTNode typeDec=findDeclaration2(stp.getName(),nearestNode);
+if (typeDec == null) {
+log(stp.getName() + " couldn't be found locally..");
+Class tehClass=findClassIfExists(stp.getName().toString());
+if (tehClass != null) {
+return definedIn3rdPartyClass(new ClassMember(tehClass),qn.getName().toString());
+}
+log("QN resolve 3rd par, Can't resolve " + qn.getQualifier());
+return null;
+}
+return definedIn3rdPartyClass(new ClassMember(typeDec),qn.getName().toString());
+}
+ else {
+scopeParent=resolveExpression3rdParty(nearestNode,qn.getQualifier(),noCompare);
+log("QN, ScopeParent " + scopeParent);
+return definedIn3rdPartyClass(scopeParent,qn.getName().toString());
+}
+}
+case ASTNode.ARRAY_ACCESS:
+ArrayAccess arac=(ArrayAccess)astNode;
+return resolveExpression3rdParty(nearestNode,arac.getArray(),noCompare);
+default :
+log("Unaccounted type " + getNodeAsString(astNode));
+break;
+}
+return null;
+}
