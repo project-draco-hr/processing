@@ -39,6 +39,13 @@
  else     if (version.toLowerCase().startsWith("v"))     description.append(version);
  else     description.append("v" + version);
   }
+  long lastUpdatedUTC=contrib.getLastUpdated();
+  if (lastUpdatedUTC != 0) {
+    DateFormat dateFormatter=DateFormat.getDateInstance(DateFormat.MEDIUM);
+    Date lastUpdatedDate=new Date(lastUpdatedUTC);
+    if (version != null && !version.isEmpty())     description.append(", ");
+    description.append("Last Updated on " + dateFormatter.format(lastUpdatedDate));
+  }
   description.append("</body></html>");
   descriptionBlock.setText(description.toString());
   if (contribListing.hasUpdates(contrib)) {
