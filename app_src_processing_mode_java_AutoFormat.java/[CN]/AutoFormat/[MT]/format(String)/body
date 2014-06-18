@@ -4,11 +4,11 @@
   result.setLength(0);
   indentValue=Preferences.getInteger("editor.tabs.size");
   boolean forFlag=if_flg=false;
-  s_flag=true;
+  startFlag=true;
   int forParenthLevel=0;
   conditionalLevel=parenLevel=curlyLvl=if_lev=level=0;
   tabs=0;
-  jdoc_flag=continuationFlag=inStatementFlag=false;
+  jdoc_flag=overflowFlag=inStatementFlag=false;
   char cc;
   int[] s_level=new int[10];
   sp_flg=new int[20][10];
@@ -29,9 +29,9 @@ default :
     buf.append(c);
   break;
 case ',':
+inStatementFlag=true;
 trimRight(buf);
-buf.append(c);
-buf.append(' ');
+buf.append(", ");
 advanceToNonSpace();
 break;
 case ' ':
@@ -39,22 +39,15 @@ case '\t':
 elseFlag=lookup("else");
 if (elseFlag) {
 gotElse();
-if ((!s_flag) || buf.length() > 0) {
-buf.append(c);
-}
+if (!startFlag || buf.length() > 0) buf.append(c);
 writeIndentedLine();
-s_flag=false;
+startFlag=false;
 break;
 }
-if ((!s_flag) || buf.length() > 0) {
-buf.append(c);
-}
+if (!startFlag || buf.length() > 0) buf.append(c);
 break;
 case '\n':
-if (EOF) {
-writeIndentedLine();
-break;
-}
+if (EOF) break;
 elseFlag=lookup("else");
 if (elseFlag) gotElse();
 if (lookup_com("//")) {
@@ -64,15 +57,21 @@ buf.setLength(buf.length() - 1);
 }
 writeIndentedLine();
 result.append("\n");
-s_flag=true;
+startFlag=true;
 if (elseFlag) {
 p_flg[level]++;
 tabs++;
 }
-continuationFlag=inStatementFlag;
+ else overflowFlag=inStatementFlag;
 break;
 case '{':
-inStatementFlag=false;
+char prevChar=prevNonWhitespace();
+if (prevChar == '=' || prevChar == ']') arrayFlag=true;
+if (arrayFlag) {
+buf.append(c);
+break;
+}
+ else inStatementFlag=false;
 elseFlag=lookup("else");
 if (elseFlag) gotElse();
 if (s_if_lev.length == curlyLvl) {
@@ -84,19 +83,21 @@ s_if_flg[curlyLvl]=if_flg;
 if_lev=0;
 if_flg=false;
 curlyLvl++;
-if (s_flag && p_flg[level] != 0) {
+if (startFlag && p_flg[level] != 0) {
 p_flg[level]--;
 tabs--;
 }
 trimRight(buf);
-if (buf.length() > 0 || (result.length() > 0 && !Character.isWhitespace(result.charAt(result.length() - 1)))) buf.append(" ");
+if (buf.length() > 0 || (result.length() > 0 && !Character.isWhitespace(result.charAt(result.length() - 1)))) {
+buf.append(" ");
+}
 buf.append(c);
 writeIndentedLine();
 readForNewLine();
 writeIndentedLine();
 result.append("\n");
 tabs++;
-s_flag=true;
+startFlag=true;
 if (p_flg[level] > 0) {
 ind[level]=1;
 level++;
@@ -104,7 +105,11 @@ s_level[level]=curlyLvl;
 }
 break;
 case '}':
-inStatementFlag=false;
+if (arrayFlag) {
+buf.append(c);
+break;
+}
+ else inStatementFlag=false;
 curlyLvl--;
 if (curlyLvl < 0) {
 curlyLvl=0;
@@ -124,17 +129,16 @@ trimRight(result);
 result.append("\n");
 printIndentation();
 result.append(c);
-if (peek() == ';') {
+if (peek() == ';' || arrayFlag) {
+if (peek() == ' ') advanceToNonSpace();
 result.append(nextChar());
 }
 readForNewLine();
 writeIndentedLine();
 result.append('\n');
-s_flag=true;
-if (curlyLvl < s_level[level]) {
-if (level > 0) {
+startFlag=true;
+if (curlyLvl < s_level[level] && level > 0) {
 level--;
-}
 }
 if (ind[level] != 0) {
 tabs-=p_flg[level];
@@ -155,7 +159,7 @@ buf.append(cc=nextChar());
 }
 if (cc == '\n') {
 writeIndentedLine();
-s_flag=true;
+startFlag=true;
 }
 cc=nextChar();
 }
@@ -171,7 +175,6 @@ buf.append("; ");
 advanceToNonSpace();
 break;
 }
-inStatementFlag=false;
 buf.append(c);
 writeIndentedLine();
 if (p_flg[level] > 0 && ind[level] == 0) {
@@ -181,7 +184,7 @@ p_flg[level]=0;
 readForNewLine();
 writeIndentedLine();
 result.append("\n");
-s_flag=true;
+startFlag=true;
 if (if_lev > 0) {
 if (if_flg) {
 if_lev--;
@@ -191,6 +194,8 @@ if_flg=false;
 if_lev=0;
 }
 }
+arrayFlag=false;
+inStatementFlag=false;
 break;
 case '\\':
 buf.append(c);
@@ -217,8 +222,9 @@ advanceToNonSpace();
 break;
 }
 buf.append(c);
+inStatementFlag=false;
 if (!lookup("default") && !lookup("case")) {
-s_flag=false;
+startFlag=false;
 writeIndentedLine();
 }
  else {
@@ -232,7 +238,7 @@ result.append(nextChar());
 readForNewLine();
 writeIndentedLine();
 result.append('\n');
-s_flag=true;
+startFlag=true;
 break;
 case '/':
 final char next=peek();
