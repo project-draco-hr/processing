@@ -1,21 +1,13 @@
 {
   ArrayList<ModeContribution> contribModes=base.getModeContribs();
-  contribModes.remove(contribModes.indexOf(this));
-  List<Editor> editorList=base.getEditors();
-  for (  Editor editor : editorList) {
-    Component[] j=editor.getModeMenu().getPopupMenu().getComponents();
-    for (    Component component : j) {
-      JRadioButtonMenuItem cbmi=null;
-      if (component instanceof JRadioButtonMenuItem) {
-        cbmi=(JRadioButtonMenuItem)component;
-        if (cbmi.getText().equals(mode.toString()))         editor.getModeMenu().getPopupMenu().remove(component);
-      }
+  int botherToRemove=contribModes.indexOf(this);
+  if (botherToRemove != -1) {
+    contribModes.remove(botherToRemove);
+    try {
+      ((URLClassLoader)loader).close();
     }
-  }
-  try {
-    ((URLClassLoader)loader).close();
-  }
- catch (  IOException e) {
-    e.printStackTrace();
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
   }
 }

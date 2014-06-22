@@ -13,6 +13,10 @@
             LocalContribution contribution=ad.install(editor,contribZip,false,status);
             if (contribution != null) {
               contribListing.replaceContribution(ad,contribution);
+              if (contribution.getType() == ContributionType.MODE) {
+                ArrayList<ModeContribution> contribModes=editor.getBase().getModeContribs();
+                contribModes.add((ModeContribution)contribution);
+              }
               refreshInstalled(editor);
             }
             installProgress.finished();

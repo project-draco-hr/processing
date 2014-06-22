@@ -31,10 +31,27 @@
   updateButton.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       listPanel.contribManager.status.clear();
-      updateButton.setEnabled(false);
-      AvailableContribution ad=contribListing.getAvailableContribution(contrib);
-      String url=ad.link;
-      installContribution(ad,url);
+      if (contrib.getType() == ContributionType.MODE) {
+        installRemoveButton.setEnabled(false);
+        installProgressBar.setVisible(true);
+        installProgressBar.setIndeterminate(true);
+        ((LocalContribution)contrib).removeContribution(listPanel.contribManager.editor,new JProgressMonitor(installProgressBar){
+          public void finishedAction(){
+            resetInstallProgressBarState();
+            updateButton.setEnabled(false);
+            AvailableContribution ad=contribListing.getAvailableContribution(contrib);
+            String url=ad.link;
+            installContribution(ad,url);
+          }
+        }
+,listPanel.contribManager.status);
+      }
+ else {
+        updateButton.setEnabled(false);
+        AvailableContribution ad=contribListing.getAvailableContribution(contrib);
+        String url=ad.link;
+        installContribution(ad,url);
+      }
     }
   }
 );
