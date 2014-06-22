@@ -1,0 +1,41 @@
+{
+  byte[] secondBytes=new byte[8];
+  byte[] fractionBytes=new byte[8];
+  for (int i=0; i < 4; i++) {
+    secondBytes[i]=0;
+    fractionBytes[i]=0;
+  }
+  boolean isImmediate=true;
+  for (int i=4; i < 8; i++) {
+    secondBytes[i]=bytes[streamPosition++];
+    if (secondBytes[i] > 0) {
+      isImmediate=false;
+    }
+  }
+  for (int i=4; i < 8; i++) {
+    fractionBytes[i]=bytes[streamPosition++];
+    if (i < 7) {
+      if (fractionBytes[i] > 0) {
+        isImmediate=false;
+      }
+    }
+ else {
+      if (fractionBytes[i] > 1) {
+        isImmediate=false;
+      }
+    }
+  }
+  if (isImmediate) {
+    return OSCBundle.TIMESTAMP_IMMEDIATE;
+  }
+  BigInteger secsSince1900=new BigInteger(secondBytes);
+  long secsSince1970=secsSince1900.longValue() - OSCBundle.SECONDS_FROM_1900_TO_1970.longValue();
+  if (secsSince1970 < 0) {
+    secsSince1970=0;
+  }
+  long fraction=(new BigInteger(fractionBytes).longValue());
+  fraction=(fraction * 1000) / 0x100000000L;
+  fraction=(fraction > 0) ? fraction + 1 : 0;
+  long millisecs=(secsSince1970 * 1000) + fraction;
+  return new Date(millisecs);
+}

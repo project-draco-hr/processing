@@ -1,0 +1,14 @@
+{
+  OSCPortOut sender=new OSCPortOut(InetAddress.getByName("localhost"),port);
+  ArrayList<Object> args=new ArrayList<Object>();
+  args.add(new Integer(index));
+  args.add(new Long(val));
+  OSCMessage msg=new OSCMessage("/tm_change_long",args);
+  try {
+    sender.send(msg);
+  }
+ catch (  Exception e) {
+    System.out.println("TweakMode: error sending new value of long " + index);
+    System.out.println(e.toString());
+  }
+}

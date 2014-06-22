@@ -1,0 +1,37 @@
+{
+  type=t;
+  name=n;
+  varIndex=vi;
+  strValue=v;
+  tabIndex=ti;
+  line=l;
+  startChar=sc;
+  endChar=ec;
+  decimalPlaces=dp;
+  incValue=(float)(1 / Math.pow(10,decimalPlaces));
+  if (type == "int") {
+    value=newValue=Integer.parseInt(strValue);
+    strNewValue=strValue;
+    textFormat="%d";
+  }
+ else   if (type == "hex") {
+    Long val=Long.parseLong(strValue.substring(2,strValue.length()),16);
+    value=newValue=val.intValue();
+    strNewValue=strValue;
+    textFormat="0x%x";
+  }
+ else   if (type == "webcolor") {
+    Long val=Long.parseLong(strValue.substring(1,strValue.length()),16);
+    val=val | 0xff000000;
+    value=newValue=val.intValue();
+    strNewValue=strValue;
+    textFormat="#%06x";
+  }
+ else   if (type == "float") {
+    value=newValue=Float.parseFloat(strValue);
+    strNewValue=strValue;
+    textFormat="%.0" + decimalPlaces + "f";
+  }
+  newStartChar=startChar;
+  newEndChar=endChar;
+}
