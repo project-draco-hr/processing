@@ -1,0 +1,125 @@
+{
+  debugMenu=new JMenu("PDE X");
+  JCheckBoxMenuItem toggleDebugger=new JCheckBoxMenuItem("Show Debug Toolbar");
+  toggleDebugger.setSelected(false);
+  toggleDebugger.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      switchToolbars();
+    }
+  }
+);
+  debugMenu.add(toggleDebugger);
+  debugMenuItem=Toolkit.newJMenuItemAlt("Debug",KeyEvent.VK_R);
+  debugMenuItem.addActionListener(this);
+  continueMenuItem=Toolkit.newJMenuItem("Continue",KeyEvent.VK_U);
+  continueMenuItem.addActionListener(this);
+  stopMenuItem=new JMenuItem("Stop");
+  stopMenuItem.addActionListener(this);
+  toggleBreakpointMenuItem=Toolkit.newJMenuItem("Toggle Breakpoint",KeyEvent.VK_B);
+  toggleBreakpointMenuItem.addActionListener(this);
+  listBreakpointsMenuItem=new JMenuItem("List Breakpoints");
+  listBreakpointsMenuItem.addActionListener(this);
+  stepOverMenuItem=Toolkit.newJMenuItem("Step",KeyEvent.VK_H);
+  stepOverMenuItem.addActionListener(this);
+  stepIntoMenuItem=Toolkit.newJMenuItemShift("Step Into",KeyEvent.VK_H);
+  stepIntoMenuItem.addActionListener(this);
+  stepOutMenuItem=Toolkit.newJMenuItemAlt("Step Out",KeyEvent.VK_H);
+  stepOutMenuItem.addActionListener(this);
+  printStackTraceMenuItem=new JMenuItem("Print Stack Trace");
+  printStackTraceMenuItem.addActionListener(this);
+  printLocalsMenuItem=new JMenuItem("Print Locals");
+  printLocalsMenuItem.addActionListener(this);
+  printThisMenuItem=new JMenuItem("Print Fields");
+  printThisMenuItem.addActionListener(this);
+  printSourceMenuItem=new JMenuItem("Print Source Location");
+  printSourceMenuItem.addActionListener(this);
+  printThreads=new JMenuItem("Print Threads");
+  printThreads.addActionListener(this);
+  toggleVariableInspectorMenuItem=Toolkit.newJMenuItem("Toggle Variable Inspector",KeyEvent.VK_I);
+  toggleVariableInspectorMenuItem.addActionListener(this);
+  debugMenu.add(debugMenuItem);
+  debugMenu.add(continueMenuItem);
+  debugMenu.add(stopMenuItem);
+  debugMenu.addSeparator();
+  debugMenu.add(toggleBreakpointMenuItem);
+  debugMenu.add(listBreakpointsMenuItem);
+  debugMenu.addSeparator();
+  debugMenu.add(stepOverMenuItem);
+  debugMenu.add(stepIntoMenuItem);
+  debugMenu.add(stepOutMenuItem);
+  debugMenu.addSeparator();
+  debugMenu.add(printStackTraceMenuItem);
+  debugMenu.add(printLocalsMenuItem);
+  debugMenu.add(printThisMenuItem);
+  debugMenu.add(printSourceMenuItem);
+  debugMenu.add(printThreads);
+  debugMenu.addSeparator();
+  debugMenu.add(toggleVariableInspectorMenuItem);
+  debugMenu.addSeparator();
+  JCheckBoxMenuItem item;
+  item=new JCheckBoxMenuItem("Error Checker Enabled");
+  item.setSelected(ExperimentalMode.errorCheckEnabled);
+  item.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      ExperimentalMode.errorCheckEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
+      errorCheckerService.handleErrorCheckingToggle();
+      dmode.savePreferences();
+    }
+  }
+);
+  debugMenu.add(item);
+  showWarnings=new JCheckBoxMenuItem("Warnings Enabled");
+  showWarnings.setSelected(ExperimentalMode.warningsEnabled);
+  showWarnings.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      ExperimentalMode.warningsEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
+      errorCheckerService.runManualErrorCheck();
+      dmode.savePreferences();
+    }
+  }
+);
+  debugMenu.add(showWarnings);
+  completionsEnabled=new JCheckBoxMenuItem("Code Completion Enabled");
+  completionsEnabled.setSelected(ExperimentalMode.codeCompletionsEnabled);
+  completionsEnabled.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      ExperimentalMode.codeCompletionsEnabled=(((JCheckBoxMenuItem)e.getSource()).isSelected());
+      dmode.savePreferences();
+    }
+  }
+);
+  debugMenu.add(completionsEnabled);
+  debugMessagesEnabled=new JCheckBoxMenuItem("Show Debug Messages");
+  debugMessagesEnabled.setSelected(ExperimentalMode.DEBUG);
+  debugMessagesEnabled.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      ExperimentalMode.DEBUG=((JCheckBoxMenuItem)e.getSource()).isSelected();
+      dmode.savePreferences();
+    }
+  }
+);
+  debugMenu.add(debugMessagesEnabled);
+  showOutline=Toolkit.newJMenuItem("Show Outline",KeyEvent.VK_L);
+  showOutline.addActionListener(this);
+  debugMenu.add(showOutline);
+  writeErrorLog=new JCheckBoxMenuItem("Write Errors to Log");
+  writeErrorLog.setSelected(ExperimentalMode.errorLogsEnabled);
+  writeErrorLog.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      ExperimentalMode.errorLogsEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
+      dmode.savePreferences();
+    }
+  }
+);
+  debugMenu.add(writeErrorLog);
+  debugMenu.addSeparator();
+  JMenuItem jitem=new JMenuItem("PDE X on GitHub");
+  jitem.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      Base.openURL("https://github.com/processing/processing-experimental");
+    }
+  }
+);
+  debugMenu.add(jitem);
+  return debugMenu;
+}

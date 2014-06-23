@@ -1,0 +1,26 @@
+{
+  super(defaults);
+  this.editor=editor;
+  ComponentListener[] componentListeners=painter.getComponentListeners();
+  mouseListeners=painter.getMouseListeners();
+  MouseMotionListener[] mouseMotionListeners=painter.getMouseMotionListeners();
+  remove(painter);
+  customPainter=new TextAreaPainter(this,defaults);
+  painter=customPainter;
+  for (  ComponentListener cl : componentListeners) {
+    painter.addComponentListener(cl);
+  }
+  for (  MouseMotionListener mml : mouseMotionListeners) {
+    painter.addMouseMotionListener(mml);
+  }
+  MouseHandler mouseHandler=new MouseHandler();
+  painter.addMouseListener(mouseHandler);
+  painter.addMouseMotionListener(mouseHandler);
+  add(CENTER,painter);
+  ExperimentalMode theme=(ExperimentalMode)editor.getMode();
+  gutterBgColor=theme.getThemeColor("gutter.bgcolor",gutterBgColor);
+  gutterLineColor=theme.getThemeColor("gutter.linecolor",gutterLineColor);
+  gutterPadding=theme.getInteger("gutter.padding");
+  breakpointMarker=theme.loadThemeString("breakpoint.marker",breakpointMarker);
+  currentLineMarker=theme.loadThemeString("currentline.marker",currentLineMarker);
+}

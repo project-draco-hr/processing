@@ -1,0 +1,135 @@
+{
+  log("entering --findDeclaration1 -- " + findMe.toString());
+  ASTNode declaringClass=null;
+  ASTNode parent=findMe.getParent();
+  ASTNode ret=null;
+  ArrayList<Integer> constrains=new ArrayList<Integer>();
+  if (parent.getNodeType() == ASTNode.METHOD_INVOCATION) {
+    Expression exp=(Expression)((MethodInvocation)parent).getStructuralProperty(MethodInvocation.EXPRESSION_PROPERTY);
+    if (((MethodInvocation)parent).getName().toString().equals(findMe.toString())) {
+      constrains.add(ASTNode.METHOD_DECLARATION);
+      if (exp != null) {
+        constrains.add(ASTNode.TYPE_DECLARATION);
+        log("MI EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
+        if (exp instanceof MethodInvocation) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((MethodInvocation)exp).getName()));
+          if (stp == null)           return null;
+          declaringClass=findDeclaration(stp.getName());
+          return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains,declaringClass);
+        }
+ else         if (exp instanceof FieldAccess) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((FieldAccess)exp).getName()));
+          if (stp == null)           return null;
+          declaringClass=findDeclaration((stp.getName()));
+          return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains,declaringClass);
+        }
+        if (exp instanceof SimpleName) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((SimpleName)exp)));
+          if (stp == null)           return null;
+          declaringClass=findDeclaration(stp.getName());
+          log("MI.SN " + getNodeAsString(declaringClass));
+          constrains.add(ASTNode.METHOD_DECLARATION);
+          return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains,declaringClass);
+        }
+      }
+    }
+ else {
+      parent=parent.getParent();
+    }
+  }
+ else   if (parent.getNodeType() == ASTNode.FIELD_ACCESS) {
+    FieldAccess fa=(FieldAccess)parent;
+    Expression exp=fa.getExpression();
+    if (fa.getName().toString().equals(findMe.toString())) {
+      constrains.add(ASTNode.FIELD_DECLARATION);
+      if (exp != null) {
+        constrains.add(ASTNode.TYPE_DECLARATION);
+        log("FA EXP: " + exp.toString() + " of type "+ exp.getClass().getName()+ " parent: "+ exp.getParent());
+        if (exp instanceof MethodInvocation) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((MethodInvocation)exp).getName()));
+          if (stp == null)           return null;
+          declaringClass=findDeclaration(stp.getName());
+          return definedIn(declaringClass,fa.getName().toString(),constrains,declaringClass);
+        }
+ else         if (exp instanceof FieldAccess) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((FieldAccess)exp).getName()));
+          if (stp == null)           return null;
+          declaringClass=findDeclaration((stp.getName()));
+          constrains.add(ASTNode.TYPE_DECLARATION);
+          return definedIn(declaringClass,fa.getName().toString(),constrains,declaringClass);
+        }
+        if (exp instanceof SimpleName) {
+          SimpleType stp=extracTypeInfo(findDeclaration(((SimpleName)exp)));
+          if (stp == null)           return null;
+          declaringClass=findDeclaration(stp.getName());
+          log("FA.SN " + getNodeAsString(declaringClass));
+          constrains.add(ASTNode.METHOD_DECLARATION);
+          return definedIn(declaringClass,fa.getName().toString(),constrains,declaringClass);
+        }
+      }
+    }
+ else {
+      parent=parent.getParent();
+    }
+  }
+ else   if (parent.getNodeType() == ASTNode.QUALIFIED_NAME) {
+    QualifiedName qn=(QualifiedName)parent;
+    if (!findMe.toString().equals(qn.getQualifier().toString())) {
+      SimpleType stp=extracTypeInfo(findDeclaration((qn.getQualifier())));
+      log(qn.getQualifier() + "->" + qn.getName());
+      declaringClass=findDeclaration(stp.getName());
+      log("QN decl class: " + getNodeAsString(declaringClass));
+      constrains.clear();
+      constrains.add(ASTNode.TYPE_DECLARATION);
+      constrains.add(ASTNode.FIELD_DECLARATION);
+      return definedIn(declaringClass,qn.getName().toString(),constrains,null);
+    }
+ else {
+      if (findMe instanceof QualifiedName) {
+        QualifiedName qnn=(QualifiedName)findMe;
+        log("findMe is a QN, " + (qnn.getQualifier().toString() + " other " + qnn.getName().toString()));
+        SimpleType stp=extracTypeInfo(findDeclaration((qnn.getQualifier())));
+        log(qnn.getQualifier() + "->" + qnn.getName());
+        declaringClass=findDeclaration(stp.getName());
+        log("QN decl class: " + getNodeAsString(declaringClass));
+        constrains.clear();
+        constrains.add(ASTNode.TYPE_DECLARATION);
+        constrains.add(ASTNode.FIELD_DECLARATION);
+        return definedIn(declaringClass,qnn.getName().toString(),constrains,null);
+      }
+    }
+  }
+ else   if (parent.getNodeType() == ASTNode.SIMPLE_TYPE) {
+    constrains.add(ASTNode.TYPE_DECLARATION);
+    if (parent.getParent().getNodeType() == ASTNode.CLASS_INSTANCE_CREATION)     constrains.add(ASTNode.CLASS_INSTANCE_CREATION);
+  }
+ else   if (parent.getNodeType() == ASTNode.TYPE_DECLARATION) {
+    TypeDeclaration td=(TypeDeclaration)parent;
+    if (findMe.equals(td.getName())) {
+      return parent;
+    }
+  }
+ else   if (parent instanceof Expression) {
+  }
+  while (parent != null) {
+    log("findDeclaration1 -> " + getNodeAsString(parent));
+    for (    Object oprop : parent.structuralPropertiesForType()) {
+      StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)oprop;
+      if (prop.isChildProperty() || prop.isSimpleProperty()) {
+        if (parent.getStructuralProperty(prop) instanceof ASTNode) {
+          ret=definedIn((ASTNode)parent.getStructuralProperty(prop),findMe.toString(),constrains,declaringClass);
+          if (ret != null)           return ret;
+        }
+      }
+ else       if (prop.isChildListProperty()) {
+        List<ASTNode> nodelist=(List<ASTNode>)parent.getStructuralProperty(prop);
+        for (        ASTNode retNode : nodelist) {
+          ret=definedIn(retNode,findMe.toString(),constrains,declaringClass);
+          if (ret != null)           return ret;
+        }
+      }
+    }
+    parent=parent.getParent();
+  }
+  return null;
+}

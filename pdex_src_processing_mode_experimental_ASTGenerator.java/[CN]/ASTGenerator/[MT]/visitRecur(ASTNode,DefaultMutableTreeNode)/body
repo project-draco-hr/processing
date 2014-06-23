@@ -1,0 +1,33 @@
+{
+  Iterator<StructuralPropertyDescriptor> it=node.structuralPropertiesForType().iterator();
+  DefaultMutableTreeNode ctnode=null;
+  while (it.hasNext()) {
+    StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)it.next();
+    if (prop.isChildProperty() || prop.isSimpleProperty()) {
+      if (node.getStructuralProperty(prop) != null) {
+        if (node.getStructuralProperty(prop) instanceof ASTNode) {
+          ASTNode cnode=(ASTNode)node.getStructuralProperty(prop);
+          if (isAddableASTNode(cnode)) {
+            ctnode=new DefaultMutableTreeNode(new ASTNodeWrapper((ASTNode)node.getStructuralProperty(prop)));
+            tnode.add(ctnode);
+            visitRecur(cnode,ctnode);
+          }
+        }
+ else {
+          tnode.add(new DefaultMutableTreeNode(node.getStructuralProperty(prop)));
+        }
+      }
+    }
+ else     if (prop.isChildListProperty()) {
+      List<ASTNode> nodelist=(List<ASTNode>)node.getStructuralProperty(prop);
+      for (      ASTNode cnode : nodelist) {
+        if (isAddableASTNode(cnode)) {
+          ctnode=new DefaultMutableTreeNode(new ASTNodeWrapper(cnode));
+          tnode.add(ctnode);
+          visitRecur(cnode,ctnode);
+        }
+ else         visitRecur(cnode,tnode);
+      }
+    }
+  }
+}

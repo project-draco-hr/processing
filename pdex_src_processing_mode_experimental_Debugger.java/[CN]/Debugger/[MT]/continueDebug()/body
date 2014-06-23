@@ -1,0 +1,13 @@
+{
+  if (editor.toolbar() != null)   editor.toolbar().activate(DebugToolbar.CONTINUE);
+  editor.variableInspector().lock();
+  editor.clearCurrentLine();
+  if (!isStarted()) {
+    startDebug();
+  }
+ else   if (isPaused()) {
+    runtime.vm().resume();
+    paused=false;
+    editor.statusBusy();
+  }
+}

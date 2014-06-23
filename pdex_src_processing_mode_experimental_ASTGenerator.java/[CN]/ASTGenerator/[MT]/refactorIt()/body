@@ -1,0 +1,47 @@
+{
+  String newName=txtRenameField.getText().trim();
+  String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
+  DefaultMutableTreeNode defCU=findAllOccurrences();
+  if (defCU == null) {
+    editor.statusMessage("Can't locate definition of " + selText,DebugEditor.STATUS_ERR);
+    return;
+  }
+  if (!newName.matches("([a-zA-Z][a-zA-Z0-9_]*)|([_][a-zA-Z0-9_]+)")) {
+    JOptionPane.showConfirmDialog(new JFrame(),newName + " isn't a valid name.","Uh oh..",JOptionPane.PLAIN_MESSAGE);
+    return;
+  }
+  errorCheckerService.pauseThread();
+  if (treeRename.isVisible()) {
+    treeRename.setModel(new DefaultTreeModel(defCU));
+    ((DefaultTreeModel)treeRename.getModel()).reload();
+  }
+  int lineOffsetDisplacementConst=newName.length() - selText.length();
+  HashMap<Integer,Integer> lineOffsetDisplacement=new HashMap<Integer,Integer>();
+  int pdeOffsets[][]=new int[defCU.getChildCount()][3];
+  for (int i=0; i < defCU.getChildCount(); i++) {
+    ASTNodeWrapper awrap=(ASTNodeWrapper)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
+    int ans[]=errorCheckerService.calculateTabIndexAndLineNumber(awrap.getLineNumber());
+    pdeOffsets[i][0]=ans[0];
+    pdeOffsets[i][1]=ans[1];
+    pdeOffsets[i][2]=awrap.getPDECodeOffsetForSN(this);
+  }
+  for (int i=0; i < defCU.getChildCount(); i++) {
+    ASTNodeWrapper awrap=(ASTNodeWrapper)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
+    int off=0;
+    if (lineOffsetDisplacement.get(awrap.getLineNumber()) != null) {
+      off=lineOffsetDisplacement.get(awrap.getLineNumber());
+      lineOffsetDisplacement.put(awrap.getLineNumber(),lineOffsetDisplacementConst + off);
+    }
+ else {
+      lineOffsetDisplacement.put(awrap.getLineNumber(),lineOffsetDisplacementConst);
+    }
+    highlightPDECode(pdeOffsets[i][0],pdeOffsets[i][1],pdeOffsets[i][2] + off,awrap.getNode().toString().length());
+    editor.ta.setSelectedText(newName);
+  }
+  errorCheckerService.resumeThread();
+  editor.getSketch().setModified(true);
+  errorCheckerService.runManualErrorCheck();
+  frmRename.setVisible(false);
+  lastClickedWord=null;
+  lastClickedWordNode=null;
+}

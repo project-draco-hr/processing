@@ -1,0 +1,31 @@
+{
+  log("findClosestNode to line " + lineNumber);
+  ASTNode parent=findClosestParentNode(lineNumber,node);
+  log("findClosestParentNode returned " + getNodeAsString(parent));
+  if (parent == null)   return null;
+  if (getLineNumber(parent) == lineNumber) {
+    log(parent + "|PNode " + getLineNumber(parent)+ ", lfor "+ lineNumber);
+    return parent;
+  }
+  List<ASTNode> nodes=null;
+  if (parent instanceof TypeDeclaration) {
+    nodes=(List<ASTNode>)((TypeDeclaration)parent).bodyDeclarations();
+  }
+ else   if (parent instanceof Block) {
+    nodes=(List<ASTNode>)((Block)parent).statements();
+  }
+ else {
+    System.err.println("THIS CONDITION SHOULD NOT OCCUR - findClosestNode " + getNodeAsString(parent));
+    return null;
+  }
+  if (nodes.size() > 0) {
+    ASTNode retNode=parent;
+    for (int i=0; i < nodes.size(); i++) {
+      ASTNode cNode=nodes.get(i);
+      log(cNode + "|cNode " + getLineNumber(cNode)+ ", lfor "+ lineNumber);
+      if (getLineNumber(cNode) <= lineNumber)       retNode=cNode;
+    }
+    return retNode;
+  }
+  return parent;
+}

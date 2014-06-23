@@ -1,0 +1,58 @@
+{
+  if (className == null) {
+    return null;
+  }
+  Class tehClass=null;
+  tehClass=loadClass(className);
+  if (tehClass instanceof Class) {
+    log(tehClass.getName() + " located straightaway");
+    return tehClass;
+  }
+  log("Looking in the classloader for " + className);
+  ArrayList<ImportStatement> imports=errorCheckerService.getProgramImports();
+  for (  ImportStatement impS : imports) {
+    String temp=impS.getPackageName();
+    if (temp.endsWith("*")) {
+      temp=temp.substring(0,temp.length() - 1) + className;
+    }
+ else {
+      int x=temp.lastIndexOf('.');
+      if (!temp.substring(x + 1).equals(className)) {
+        continue;
+      }
+    }
+    tehClass=loadClass(temp);
+    if (tehClass instanceof Class) {
+      log(tehClass.getName() + " located.");
+      return tehClass;
+    }
+    log("Doesn't exist in package: " + impS.getImportName());
+  }
+  PdePreprocessor p=new PdePreprocessor(null);
+  for (  String impS : p.getCoreImports()) {
+    tehClass=loadClass(impS.substring(0,impS.length() - 1) + className);
+    if (tehClass instanceof Class) {
+      log(tehClass.getName() + " located.");
+      return tehClass;
+    }
+    log("Doesn't exist in package: " + impS);
+  }
+  for (  String impS : p.getDefaultImports()) {
+    if (className.equals(impS) || impS.endsWith(className)) {
+      tehClass=loadClass(impS);
+      if (tehClass instanceof Class) {
+        log(tehClass.getName() + " located.");
+        return tehClass;
+      }
+      log("Doesn't exist in package: " + impS);
+    }
+  }
+  String daddy="java.lang." + className;
+  tehClass=loadClass(daddy);
+  if (tehClass instanceof Class) {
+    log(tehClass.getName() + " located.");
+    return tehClass;
+  }
+  log("Doesn't exist in java.lang");
+  return tehClass;
+}
