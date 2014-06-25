@@ -1,21 +1,6 @@
 {
-  System.out.println("here321");
-  try {
-    System.out.println((base == null) ? "Null :(" : "what?!");
-  }
- catch (  Exception e) {
-    e.printStackTrace();
-  }
-  System.out.println("Here too?!");
-  for (  ModeContribution m : base.getModeContribs())   if (m.isInstalled()) {
-    System.out.println(m.getName());
-    Contribution advertised=getAvailableContribution(m);
-    if (advertised == null) {
-    }
- else {
-      System.out.println("Here2");
-      if (advertised.getVersion() > m.getVersion())       return true;
-    }
-  }
+  for (  ModeContribution m : base.getModeContribs())   if (hasUpdates(m))   return true;
+  for (  Library l : base.getActiveEditor().getMode().contribLibraries)   if (hasUpdates(l))   return true;
+  for (  ToolContribution t : base.getActiveEditor().contribTools)   if (hasUpdates(t))   return true;
   return false;
 }
