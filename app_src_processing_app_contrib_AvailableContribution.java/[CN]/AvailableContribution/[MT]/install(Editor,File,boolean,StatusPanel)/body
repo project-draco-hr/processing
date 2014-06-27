@@ -24,14 +24,14 @@
       LocalContribution newContrib=type.load(editor.getBase(),contribFolder);
       File newContribFolder=newContrib.getFolder();
       installedContrib=newContrib.copyAndLoad(editor,confirmReplace,status);
-      if (newContrib != null && type.requiresRestart()) {
+      if (newContrib != null && type.requiresRestart() && type != ContributionType.MODE) {
         installedContrib.setRestartFlag();
       }
       newContrib=null;
       System.gc();
       if (Base.isWindows()) {
         try {
-          Thread.sleep(1000);
+          Thread.sleep(2000);
         }
  catch (        InterruptedException e) {
           e.printStackTrace();
