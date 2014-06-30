@@ -1,0 +1,25 @@
+{
+  if (problem == null)   return null;
+  IProblem iprob=problem.getIProblem();
+  String args[]=iprob.getArguments();
+  log("Simplifying message: " + problem.getMessage() + " ID: "+ getIDName(iprob.getID()));
+  log("Arg count: " + args.length);
+  for (int i=0; i < args.length; i++) {
+    log("Arg " + args[i]);
+  }
+  String result=null;
+switch (iprob.getID()) {
+case IProblem.ParsingError:
+    if (args.length > 0) {
+      result="Problem with code syntax: Consider removing \"" + args[0] + "\"";
+      break;
+    }
+case IProblem.ParsingErrorInsertToComplete:
+  if (args.length > 0) {
+    result="Problem with code syntax: Consider adding \"" + args[0] + "\"";
+    break;
+  }
+}
+log("Simplified Error Msg: " + result);
+return result;
+}
