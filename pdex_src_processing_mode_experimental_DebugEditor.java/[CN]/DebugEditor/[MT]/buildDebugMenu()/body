@@ -1,5 +1,5 @@
 {
-  debugMenu=new JMenu("PDE X");
+  debugMenu=new JMenu("Debug");
   JCheckBoxMenuItem toggleDebugger=new JCheckBoxMenuItem("Show Debug Toolbar");
   toggleDebugger.setSelected(false);
   toggleDebugger.addActionListener(new ActionListener(){
@@ -56,70 +56,5 @@
   debugMenu.addSeparator();
   debugMenu.add(toggleVariableInspectorMenuItem);
   debugMenu.addSeparator();
-  JCheckBoxMenuItem item;
-  item=new JCheckBoxMenuItem("Error Checker Enabled");
-  item.setSelected(ExperimentalMode.errorCheckEnabled);
-  item.addActionListener(new ActionListener(){
-    @Override public void actionPerformed(    ActionEvent e){
-      ExperimentalMode.errorCheckEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
-      errorCheckerService.handleErrorCheckingToggle();
-      dmode.savePreferences();
-    }
-  }
-);
-  debugMenu.add(item);
-  showWarnings=new JCheckBoxMenuItem("Warnings Enabled");
-  showWarnings.setSelected(ExperimentalMode.warningsEnabled);
-  showWarnings.addActionListener(new ActionListener(){
-    @Override public void actionPerformed(    ActionEvent e){
-      ExperimentalMode.warningsEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
-      errorCheckerService.runManualErrorCheck();
-      dmode.savePreferences();
-    }
-  }
-);
-  debugMenu.add(showWarnings);
-  completionsEnabled=new JCheckBoxMenuItem("Code Completion Enabled");
-  completionsEnabled.setSelected(ExperimentalMode.codeCompletionsEnabled);
-  completionsEnabled.addActionListener(new ActionListener(){
-    @Override public void actionPerformed(    ActionEvent e){
-      ExperimentalMode.codeCompletionsEnabled=(((JCheckBoxMenuItem)e.getSource()).isSelected());
-      dmode.savePreferences();
-    }
-  }
-);
-  debugMenu.add(completionsEnabled);
-  debugMessagesEnabled=new JCheckBoxMenuItem("Show Debug Messages");
-  debugMessagesEnabled.setSelected(ExperimentalMode.DEBUG);
-  debugMessagesEnabled.addActionListener(new ActionListener(){
-    @Override public void actionPerformed(    ActionEvent e){
-      ExperimentalMode.DEBUG=((JCheckBoxMenuItem)e.getSource()).isSelected();
-      dmode.savePreferences();
-    }
-  }
-);
-  debugMenu.add(debugMessagesEnabled);
-  showOutline=Toolkit.newJMenuItem("Show Outline",KeyEvent.VK_L);
-  showOutline.addActionListener(this);
-  debugMenu.add(showOutline);
-  writeErrorLog=new JCheckBoxMenuItem("Write Errors to Log");
-  writeErrorLog.setSelected(ExperimentalMode.errorLogsEnabled);
-  writeErrorLog.addActionListener(new ActionListener(){
-    @Override public void actionPerformed(    ActionEvent e){
-      ExperimentalMode.errorLogsEnabled=((JCheckBoxMenuItem)e.getSource()).isSelected();
-      dmode.savePreferences();
-    }
-  }
-);
-  debugMenu.add(writeErrorLog);
-  debugMenu.addSeparator();
-  JMenuItem jitem=new JMenuItem("PDE X on GitHub");
-  jitem.addActionListener(new ActionListener(){
-    @Override public void actionPerformed(    ActionEvent e){
-      Base.openURL("https://github.com/processing/processing-experimental");
-    }
-  }
-);
-  debugMenu.add(jitem);
   return debugMenu;
 }

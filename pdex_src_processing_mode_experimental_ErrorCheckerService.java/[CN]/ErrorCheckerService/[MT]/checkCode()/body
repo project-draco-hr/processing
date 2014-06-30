@@ -15,18 +15,17 @@
       log(editor.getSketch().getName() + "2 MCO " + mainClassOffset);
     }
     astGenerator.buildAST(cu);
-    if (ExperimentalMode.errorCheckEnabled) {
-      calcPDEOffsetsForProbList();
-      updateErrorTable();
-      editor.updateErrorBar(problemsList);
-      updateEditorStatus();
-      editor.getTextArea().repaint();
-      updatePaintedThingys();
-      editor.updateErrorToggle();
-    }
- else {
+    if (!ExperimentalMode.errorCheckEnabled) {
+      problemsList.clear();
       log("Error Check disabled, so not updating UI.");
     }
+    calcPDEOffsetsForProbList();
+    updateErrorTable();
+    editor.updateErrorBar(problemsList);
+    updateEditorStatus();
+    editor.getTextArea().repaint();
+    updatePaintedThingys();
+    editor.updateErrorToggle();
     int x=textModified.get();
     if (x >= 2) {
       textModified.set(2);
