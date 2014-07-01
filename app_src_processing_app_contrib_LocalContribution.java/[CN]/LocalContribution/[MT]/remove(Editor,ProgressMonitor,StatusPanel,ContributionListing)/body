@@ -41,8 +41,14 @@
     }
   }
  else {
-    if (!doBackup) {
-      status.setErrorMessage("Could not delete the contribution's files");
+    if (getType().requiresRestart()) {
+      if (!doBackup || (doBackup && backup(editor,false,status))) {
+        if (setDeletionFlag(true)) {
+          contribListing.replaceContribution(this,this);
+        }
+        isRemoveOnRestart=true;
+      }
+ else       status.setErrorMessage("Could not delete the contribution's files");
     }
   }
   ContributionManager.refreshInstalled(editor);
