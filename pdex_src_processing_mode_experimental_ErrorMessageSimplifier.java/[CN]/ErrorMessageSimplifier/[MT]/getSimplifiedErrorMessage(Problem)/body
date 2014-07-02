@@ -11,7 +11,12 @@
 switch (iprob.getID()) {
 case IProblem.ParsingError:
     if (args.length > 0) {
-      result="Problem with code syntax: Consider removing \"" + args[0] + "\"";
+      if (problem.getMessage().endsWith("expected")) {
+        result="Probably a \"" + args[args.length - 1] + "\" should go here";
+      }
+ else {
+        result="Problem with code syntax: Consider removing \"" + args[0] + "\"";
+      }
       break;
     }
 case IProblem.ParsingErrorInsertToComplete:
@@ -75,6 +80,16 @@ break;
 case IProblem.UndefinedMethod:
 if (args.length > 2) {
 result="I don't know the function \"" + args[args.length - 2] + "\"";
+}
+break;
+case IProblem.ParameterMismatch:
+if (args.length > 3) {
+if (args[2].trim().length() == 0) {
+result="The method \"" + args[1] + "\" doesn't expect any parameters";
+}
+ else {
+result="The method \"" + args[1] + "\" expects parameters ("+ getSimpleName(args[2])+ ")";
+}
 }
 break;
 }
