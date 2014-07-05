@@ -43,14 +43,15 @@
  else {
     if (getType().requiresRestart()) {
       if (!doBackup || (doBackup && backup(editor,false,status))) {
+        status.setMessage("");
         if (setDeletionFlag(true)) {
           contribListing.replaceContribution(this,this);
         }
-        isRemoveOnRestart=true;
       }
  else       status.setErrorMessage("Could not delete the contribution's files");
     }
   }
   ContributionManager.refreshInstalled(editor);
-  pm.finished();
+  if (success)   pm.finished();
+ else   pm.cancel();
 }

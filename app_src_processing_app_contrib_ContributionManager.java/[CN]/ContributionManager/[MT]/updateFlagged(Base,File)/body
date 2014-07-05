@@ -1,0 +1,23 @@
+{
+  File[] markedForUpdate=root.listFiles(new FileFilter(){
+    public boolean accept(    File folder){
+      return (folder.isDirectory() && LocalContribution.isUpdateFlagged(folder));
+    }
+  }
+);
+  ArrayList<String> updateContribsNames=new ArrayList<String>();
+  LinkedList<AvailableContribution> updateContribsList=new LinkedList<AvailableContribution>();
+  for (  File folder : markedForUpdate) {
+    updateContribsNames.add(folder.getName());
+    Base.removeDir(folder);
+  }
+  for (  AvailableContribution availableContribs : contribListing.advertisedContributions) {
+    if (updateContribsNames.contains(availableContribs.getName())) {
+      updateContribsList.add(availableContribs);
+    }
+  }
+  for (  AvailableContribution contribToUpdate : updateContribsList) {
+    installOnStartUp(base,contribToUpdate);
+    contribListing.replaceContribution(contribToUpdate,contribToUpdate);
+  }
+}

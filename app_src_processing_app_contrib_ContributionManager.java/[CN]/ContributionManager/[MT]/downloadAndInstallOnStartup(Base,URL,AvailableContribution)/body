@@ -1,0 +1,35 @@
+{
+  new Thread(new Runnable(){
+    public void run(){
+      String filename=url.getFile();
+      filename=filename.substring(filename.lastIndexOf('/') + 1);
+      try {
+        File contribZip=File.createTempFile("download",filename);
+        contribZip.setWritable(true);
+        try {
+          download(url,contribZip);
+          StatusPanel status=new StatusPanel();
+          LocalContribution contribution=ad.installOnStartup(base,contribZip,status);
+          if (contribution != null) {
+            contribListing.replaceContribution(ad,contribution);
+            if (contribution.getType() == ContributionType.MODE) {
+              ArrayList<ModeContribution> contribModes=base.getModeContribs();
+              if (contribModes != null)               contribModes.add((ModeContribution)contribution);
+            }
+            if (base.getActiveEditor() != null)             refreshInstalled(base.getActiveEditor());
+          }
+          System.out.println(status.getText());
+          contribZip.delete();
+        }
+ catch (        Exception e) {
+          e.printStackTrace();
+          System.out.println("Error during download and install of " + ad.getName());
+        }
+      }
+ catch (      IOException e) {
+        System.err.println("Could not write to temporary directory during download and install of " + ad.getName());
+      }
+    }
+  }
+).start();
+}

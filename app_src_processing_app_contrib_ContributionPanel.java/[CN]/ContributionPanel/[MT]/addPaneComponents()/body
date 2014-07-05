@@ -31,7 +31,7 @@
   updateButton.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       listPanel.contribManager.status.clear();
-      if (contrib.getType() == ContributionType.MODE) {
+      if (contrib.getType().requiresRestart()) {
         installRemoveButton.setEnabled(false);
         installProgressBar.setVisible(true);
         installProgressBar.setIndeterminate(true);
@@ -47,6 +47,12 @@
             super.cancel();
             resetInstallProgressBarState();
             installRemoveButton.setEnabled(true);
+            if (contrib.isDeletionFlagged()) {
+              ((LocalContribution)contrib).setUpdateFlag(true);
+              ((LocalContribution)contrib).setDeletionFlag(false);
+              contribListing.replaceContribution(contrib,contrib);
+              updateButton.setVisible(false);
+            }
           }
         }
 ,listPanel.contribManager.status);

@@ -1,0 +1,27 @@
+{
+  boolean success=false;
+  try {
+    HttpURLConnection conn=(HttpURLConnection)source.openConnection();
+    HttpURLConnection.setFollowRedirects(true);
+    conn.setConnectTimeout(15 * 1000);
+    conn.setReadTimeout(60 * 1000);
+    conn.setRequestMethod("GET");
+    conn.connect();
+    InputStream in=conn.getInputStream();
+    FileOutputStream out=new FileOutputStream(dest);
+    byte[] b=new byte[8192];
+    int amount;
+    while ((amount=in.read(b)) != -1) {
+      out.write(b,0,amount);
+    }
+    out.flush();
+    out.close();
+    success=true;
+  }
+ catch (  SocketTimeoutException ste) {
+  }
+catch (  IOException ioe) {
+    ioe.printStackTrace();
+  }
+  return success;
+}
