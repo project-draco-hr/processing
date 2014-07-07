@@ -1,5 +1,4 @@
 {
-  WatchKey key=null;
   try {
     WatchService watchService=FileSystems.getDefault().newWatchService();
     key=sketch.getFolder().toPath().register(watchService,StandardWatchEventKinds.ENTRY_MODIFY);
@@ -7,12 +6,12 @@
  catch (  IOException e) {
   }
   final WatchKey finKey=key;
-  if (key != null) {
+  if (finKey != null) {
     Thread th=new Thread(new Runnable(){
       @Override public void run(){
         while (true) {
           try {
-            Thread.sleep(5000);
+            Thread.sleep(FILE_CHECK_DELAY);
           }
  catch (          InterruptedException e) {
           }
