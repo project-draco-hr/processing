@@ -1,0 +1,34 @@
+{
+  try {
+    String[] elements=mode.split(",");
+    int type=RGB;
+    if (elements[0].trim().equals("HSB")) {
+      type=HSB;
+    }
+    if (elements.length == 1) {
+      return new ColorMode(context,type,255,255,255,255);
+    }
+ else     if (elements.length == 2) {
+      float max=Float.parseFloat(elements[1].trim());
+      return new ColorMode(context,type,max,max,max,max);
+    }
+ else     if (elements.length == 4) {
+      float r=Float.parseFloat(elements[1].trim());
+      float g=Float.parseFloat(elements[2].trim());
+      float b=Float.parseFloat(elements[3].trim());
+      return new ColorMode(context,type,r,g,b,255);
+    }
+ else     if (elements.length == 5) {
+      float r=Float.parseFloat(elements[1].trim());
+      float g=Float.parseFloat(elements[2].trim());
+      float b=Float.parseFloat(elements[3].trim());
+      float a=Float.parseFloat(elements[4].trim());
+      return new ColorMode(context,type,r,g,b,a);
+    }
+  }
+ catch (  Exception e) {
+  }
+  ColorMode newMode=new ColorMode(context);
+  newMode.unrecognizedMode=true;
+  return newMode;
+}

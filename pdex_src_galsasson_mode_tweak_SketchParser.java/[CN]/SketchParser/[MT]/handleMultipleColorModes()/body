@@ -1,0 +1,28 @@
+{
+  Map<String,Integer> modeCount=new HashMap<String,Integer>();
+  for (  ColorMode cm : colorModes) {
+    Integer prev=modeCount.get(cm.drawContext);
+    if (prev == null) {
+      prev=0;
+    }
+    modeCount.put(cm.drawContext,prev + 1);
+  }
+  ArrayList<String> multipleContexts=new ArrayList<String>();
+  Set<String> allContexts=modeCount.keySet();
+  for (  String context : allContexts) {
+    if (modeCount.get(context) > 1) {
+      multipleContexts.add(context);
+    }
+  }
+  for (int i=0; i < codeTabs.length; i++) {
+    ArrayList<ColorControlBox> toDelete=new ArrayList<ColorControlBox>();
+    for (    String context : multipleContexts) {
+      for (      ColorControlBox ccb : colorBoxes[i]) {
+        if (ccb.drawContext.equals(context) && !ccb.isHex) {
+          toDelete.add(ccb);
+        }
+      }
+    }
+    colorBoxes[i].removeAll(toDelete);
+  }
+}

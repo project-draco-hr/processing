@@ -1,0 +1,13 @@
+{
+  OSCPortOut sender=new OSCPortOut(InetAddress.getByName("localhost"),port);
+  ArrayList<Object> args=new ArrayList<Object>();
+  args.add(new Integer(index));
+  args.add(new Float(val));
+  OSCMessage msg=new OSCMessage("/tm_change_float",args);
+  try {
+    sender.send(msg);
+  }
+ catch (  Exception e) {
+    System.out.println("TweakMode: error sending new value of float " + index);
+  }
+}

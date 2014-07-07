@@ -1,0 +1,60 @@
+{
+  SketchCode[] code=sketch.getCode();
+  if (code.length < 1)   return false;
+  if (handles.length == 0)   return false;
+  int setupStartPos=SketchParser.getSetupStart(baseCode[0]);
+  if (setupStartPos < 0) {
+    return false;
+  }
+  for (int tab=0; tab < code.length; tab++) {
+    int charInc=0;
+    String c=baseCode[tab];
+    for (    Handle n : handles[tab]) {
+      c=replaceString(c,n.startChar + charInc,n.endChar + charInc,n.name);
+      charInc+=n.name.length() - n.strValue.length();
+    }
+    code[tab].setProgram(c);
+  }
+  String c=code[0].getProgram();
+  String header;
+  header="\n\n" + "/*************************/\n" + "/* MODIFIED BY TWEAKMODE */\n"+ "/*************************/\n"+ "\n\n";
+  header+="import oscP5.*;\n";
+  header+="import netP5.*;\n\n";
+  header+="OscP5 tweakmode_oscP5;\n\n";
+  int numOfInts=howManyInts(handles);
+  int numOfFloats=howManyFloats(handles);
+  if (numOfInts > 0) {
+    header+="int[] tweakmode_int = new int[" + numOfInts + "];\n";
+  }
+  if (numOfFloats > 0) {
+    header+="float[] tweakmode_float = new float[" + numOfFloats + "];\n\n";
+  }
+  header+="public class TweakMode_OscHandler {\n" + "  public void oscEvent(OscMessage msg) {\n" + "    String type = msg.addrPattern();\n";
+  if (numOfInts > 0) {
+    header+="    if (type.contains(\"/tm_change_int\")) {\n" + "      int index = msg.get(0).intValue();\n" + "      int value = msg.get(1).intValue();\n"+ "      tweakmode_int[index] = value;\n"+ "    }\n";
+    if (numOfFloats > 0) {
+      header+="    else ";
+    }
+  }
+  if (numOfFloats > 0) {
+    header+="if (type.contains(\"/tm_change_float\")) {\n" + "      int index = msg.get(0).intValue();\n" + "      float value = msg.get(1).floatValue();\n"+ "      tweakmode_float[index] = value;\n"+ "    }\n";
+  }
+  header+="  }\n" + "}\n";
+  header+="TweakMode_OscHandler tweakmode_oscHandler = new TweakMode_OscHandler();\n";
+  header+="void tweakmode_initAllVars() {\n";
+  for (int i=0; i < handles.length; i++) {
+    for (    Handle n : handles[i]) {
+      header+="  " + n.name + " = "+ n.strValue+ ";\n";
+    }
+  }
+  header+="}\n\n";
+  header+="void tweakmode_initOSC() {\n";
+  header+="  tweakmode_oscP5 = new OscP5(tweakmode_oscHandler," + oscPort + ");\n";
+  header+="}\n";
+  header+="\n\n\n\n\n";
+  String addToSetup="\n  tweakmode_initAllVars();\n  tweakmode_initOSC();\n\n";
+  setupStartPos=SketchParser.getSetupStart(c);
+  c=replaceString(c,setupStartPos,setupStartPos,addToSetup);
+  code[0].setProgram(header + c);
+  return true;
+}

@@ -1,0 +1,55 @@
+{
+  try {
+    if (handles.size() == 1) {
+      if (isBW) {
+        float gray=handles.get(0).newValue.floatValue();
+        return verifiedGrayColor(gray);
+      }
+ else {
+        int argb=handles.get(0).newValue.intValue();
+        return verifiedHexColor(argb);
+      }
+    }
+ else     if (handles.size() == 2) {
+      if (isBW) {
+        float gray=handles.get(0).newValue.floatValue();
+        return verifiedGrayColor(gray);
+      }
+ else {
+        int argb=handles.get(0).newValue.intValue();
+        float a=handles.get(1).newValue.floatValue();
+        return verifiedHexColor(argb,a);
+      }
+    }
+ else     if (handles.size() == 3) {
+      float v1=handles.get(0).newValue.floatValue();
+      float v2=handles.get(1).newValue.floatValue();
+      float v3=handles.get(2).newValue.floatValue();
+      if (colorMode.modeType == ColorMode.RGB) {
+        return verifiedRGBColor(v1,v2,v3,colorMode.aMax);
+      }
+ else {
+        return verifiedHSBColor(v1,v2,v3,colorMode.aMax);
+      }
+    }
+ else     if (handles.size() == 4) {
+      float v1=handles.get(0).newValue.floatValue();
+      float v2=handles.get(1).newValue.floatValue();
+      float v3=handles.get(2).newValue.floatValue();
+      float a=handles.get(3).newValue.floatValue();
+      if (colorMode.modeType == ColorMode.RGB) {
+        return verifiedRGBColor(v1,v2,v3,a);
+      }
+ else {
+        return verifiedHSBColor(v1,v2,v3,a);
+      }
+    }
+  }
+ catch (  Exception e) {
+    System.out.println("error parsing color value: " + e.toString());
+    ilegalColor=true;
+    return Color.WHITE;
+  }
+  ilegalColor=true;
+  return Color.WHITE;
+}
