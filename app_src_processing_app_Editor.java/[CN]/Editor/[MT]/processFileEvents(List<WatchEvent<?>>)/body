@@ -1,0 +1,15 @@
+{
+  for (  WatchEvent<?> e : events) {
+    if (saved)     break;
+    if (e.kind().equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
+      int response=Base.showYesNoQuestion(Editor.this,"File Modified","A file has been modified externally","Would you like to reload the sketch?");
+      if (response == 0) {
+        sketch.reload();
+        header.rebuild();
+      }
+    }
+ else {
+    }
+  }
+  saved=false;
+}
