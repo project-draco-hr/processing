@@ -1,0 +1,37 @@
+{
+  Map settings=new HashMap();
+  settings.put(CompilerOptions.OPTION_LineNumberAttribute,CompilerOptions.GENERATE);
+  settings.put(CompilerOptions.OPTION_SourceFileAttribute,CompilerOptions.GENERATE);
+  CompilerOptions ops=new CompilerOptions(settings);
+  CompileRequestorImpl requestor=new CompileRequestorImpl();
+  Compiler compiler=new Compiler(new NameEnvironmentImpl(unit),DefaultErrorHandlingPolicies.proceedWithAllProblems(),ops,requestor,new DefaultProblemFactory(Locale.getDefault()));
+  compiler.compile(new ICompilationUnit[]{unit});
+  List problems=requestor.getProblems();
+  boolean error=false;
+  for (Iterator it=problems.iterator(); it.hasNext(); ) {
+    IProblem problem=(IProblem)it.next();
+    StringBuffer buffer=new StringBuffer();
+    buffer.append(problem.getMessage());
+    buffer.append(" line: ");
+    buffer.append(problem.getSourceLineNumber());
+    String msg=buffer.toString();
+    if (problem.isError()) {
+      error=true;
+      msg="Error:\n" + msg + " "+ problem.toString();
+    }
+ else     if (problem.isWarning())     msg="Warning:\n" + msg;
+    System.out.println(msg);
+  }
+  if (!error && runIt) {
+    try {
+      ClassLoader loader=new CustomClassLoader(getClass().getClassLoader(),requestor.getResults());
+      String className=CharOperation.toString(unit.getPackageName()) + "." + new String(unit.getMainTypeName());
+      Class clazz=loader.loadClass(className);
+      Method m=clazz.getMethod("main",new Class[]{String[].class});
+      m.invoke(clazz,new Object[]{new String[0]});
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+  }
+}
