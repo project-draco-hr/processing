@@ -5,38 +5,64 @@
   float centerY=y + vr;
   int startLUT=(int)(0.5f + (start / TWO_PI) * SINCOS_LENGTH);
   int stopLUT=(int)(0.5f + (stop / TWO_PI) * SINCOS_LENGTH);
-  int idx0=addVertex(centerX,centerY,VERTEX,true);
-  int increment=1;
-  int pidx=0, idx=0;
-  for (int i=startLUT; i < stopLUT; i+=increment) {
-    int ii=i % SINCOS_LENGTH;
+  int length=PApplet.constrain(stopLUT - startLUT,0,SINCOS_LENGTH);
+  boolean fullCircle=length == SINCOS_LENGTH;
+  if (fullCircle && arcMode == CHORD) {
+    length-=1;
+    stopLUT-=1;
+  }
+{
+    startLUT%=SINCOS_LENGTH;
+    if (startLUT < 0)     startLUT+=SINCOS_LENGTH;
+    stopLUT%=SINCOS_LENGTH;
+    if (stopLUT < 0)     stopLUT+=SINCOS_LENGTH;
+  }
+  int idx0;
+  if (arcMode == CHORD || arcMode == OPEN) {
+    float relX=(cosLUT[startLUT] + cosLUT[stopLUT]) * 0.5f * hr;
+    float relY=(sinLUT[startLUT] + sinLUT[stopLUT]) * 0.5f * vr;
+    idx0=addVertex(centerX + relX,centerY + relY,VERTEX,true);
+  }
+ else {
+    idx0=addVertex(centerX,centerY,VERTEX,true);
+  }
+  int inc;
+{
+    float sx1=pg.screenX(x,y);
+    float sy1=pg.screenY(x,y);
+    float sx2=pg.screenX(x + w,y + h);
+    float sy2=pg.screenY(x + w,y + h);
+    int accuracy=PApplet.min(MAX_POINT_ACCURACY,PApplet.max(MIN_POINT_ACCURACY,(int)(TWO_PI * PApplet.dist(sx1,sy1,sx2,sy2) / POINT_ACCURACY_FACTOR)));
+    inc=PApplet.max(1,SINCOS_LENGTH / accuracy);
+  }
+  int idx=idx0;
+  int pidx;
+  int i=-inc;
+  int ii;
+  do {
+    i+=inc;
+    i=PApplet.min(i,length);
+    ii=stopLUT - i;
     if (ii < 0)     ii+=SINCOS_LENGTH;
-    idx=addVertex(centerX + cosLUT[ii] * hr,centerY + sinLUT[ii] * vr,VERTEX,i == startLUT && !fill);
+    pidx=idx;
+    idx=addVertex(centerX + cosLUT[ii] * hr,centerY + sinLUT[ii] * vr,VERTEX,i == 0 && !fill);
     if (stroke) {
-      if (arcMode == PIE) {
-        addEdge(pidx,idx,i == startLUT,false);
+      if (arcMode == CHORD || arcMode == PIE) {
+        addEdge(pidx,idx,i == 0,false);
       }
- else       if (startLUT < i) {
-        addEdge(pidx,idx,i == startLUT + 1,arcMode == 0 && i == stopLUT - 1);
+ else       if (0 < i) {
+        addEdge(pidx,idx,i == inc,i == length && !fullCircle);
       }
     }
-    pidx=idx;
   }
-  idx=addVertex(centerX + cosLUT[stopLUT % SINCOS_LENGTH] * hr,centerY + sinLUT[stopLUT % SINCOS_LENGTH] * vr,VERTEX,false);
+ while (i < length);
   if (stroke) {
-    if (arcMode == PIE) {
+    if (arcMode == CHORD || arcMode == PIE) {
       addEdge(idx,idx0,false,false);
       closeEdge(idx,idx0);
     }
-  }
-  if (arcMode == CHORD || arcMode == OPEN) {
-    pidx=idx;
-    int i=startLUT;
-    int ii=i % SINCOS_LENGTH;
-    if (ii < 0)     ii+=SINCOS_LENGTH;
-    idx=addVertex(centerX + cosLUT[ii] * hr,centerY + sinLUT[ii] * vr,VERTEX,false);
-    if (stroke && arcMode == CHORD) {
-      addEdge(pidx,idx,false,true);
+ else     if (fullCircle) {
+      closeEdge(pidx,idx);
     }
   }
 }
