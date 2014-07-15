@@ -1,5 +1,4 @@
 {
-  log("dfsLookForASTNode() lookin for " + name + " Offsets: "+ startOffset+ ","+ endOffset);
   Stack stack=new Stack<ASTNode>();
   stack.push(root);
   while (!stack.isEmpty()) {
@@ -13,10 +12,8 @@
           if (temp.getStartPosition() <= startOffset && (temp.getStartPosition() + temp.getLength()) >= endOffset) {
             if (temp instanceof SimpleName) {
               if (name.equals(temp.toString())) {
-                log("Found simplename: " + getNodeAsString(temp));
                 return temp;
               }
-              log("Bummer, didn't match");
             }
  else             stack.push(temp);
           }
@@ -27,13 +24,10 @@
         for (        ASTNode temp : nodelist) {
           if (temp.getStartPosition() <= startOffset && (temp.getStartPosition() + temp.getLength()) >= endOffset) {
             stack.push(temp);
-            log("Pushed onto stack: " + getNodeAsString(temp));
             if (temp instanceof SimpleName) {
               if (name.equals(temp.toString())) {
-                log("Found simplename: " + getNodeAsString(temp));
                 return temp;
               }
-              log("Bummer, didn't match");
             }
  else             stack.push(temp);
           }
@@ -41,6 +35,5 @@
       }
     }
   }
-  log("dfsLookForASTNode() not found " + name);
   return null;
 }
