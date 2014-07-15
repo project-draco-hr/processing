@@ -3,16 +3,15 @@
   frmOutlineView.setAlwaysOnTop(true);
   frmOutlineView.setUndecorated(true);
   Point tp=errorCheckerService.getEditor().ta.getLocationOnScreen();
-  int minWidth=(int)(editor.getMinimumSize().width * 0.7f), maxWidth=(int)(editor.getMinimumSize().width * 0.9f);
-  minWidth=Math.min(minWidth,estimateFrameWidth());
+  lblCaption=new JLabel("Tabs List (type to filter)");
+  int minWidth=estimateFrameWidth(), maxWidth=(int)(editor.getMinimumSize().width * 0.9f);
   frmOutlineView.setLayout(new BoxLayout(frmOutlineView.getContentPane(),BoxLayout.Y_AXIS));
   JPanel panelTop=new JPanel(), panelMiddle=new JPanel(), panelBottom=new JPanel();
   panelTop.setLayout(new GridBagLayout());
   panelMiddle.setLayout(new BoxLayout(panelMiddle,BoxLayout.Y_AXIS));
   panelBottom.setLayout(new BoxLayout(panelBottom,BoxLayout.Y_AXIS));
-  JLabel label=new JLabel("Tabs List (type to filter)");
-  label.setAlignmentX(Component.LEFT_ALIGNMENT);
-  panelTop.add(label);
+  lblCaption.setAlignmentX(Component.LEFT_ALIGNMENT);
+  panelTop.add(lblCaption);
   searchField=new JTextField();
   searchField.setMinimumSize(new Dimension(minWidth,25));
   panelMiddle.add(searchField);
@@ -32,5 +31,9 @@
   frmOutlineView.setBounds(tp.x + errorCheckerService.getEditor().ta.getWidth() - minWidth,tp.y,minWidth,estimateFrameHeight());
   frmOutlineView.setMinimumSize(new Dimension(minWidth,Math.min(errorCheckerService.getEditor().ta.getHeight(),frmOutlineView.getHeight())));
   frmOutlineView.setLocation(tp.x + errorCheckerService.getEditor().ta.getWidth() / 2 - frmOutlineView.getWidth() / 2,frmOutlineView.getY() + (editor.ta.getHeight() - frmOutlineView.getHeight()) / 2);
+  DefaultTreeCellRenderer renderer=(DefaultTreeCellRenderer)tabTree.getCellRenderer();
+  renderer.setLeafIcon(null);
+  renderer.setClosedIcon(null);
+  renderer.setOpenIcon(null);
   addListeners();
 }
