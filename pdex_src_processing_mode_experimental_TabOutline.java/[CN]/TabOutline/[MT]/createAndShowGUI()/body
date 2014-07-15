@@ -6,12 +6,16 @@
   int minWidth=(int)(editor.getMinimumSize().width * 0.7f), maxWidth=(int)(editor.getMinimumSize().width * 0.9f);
   minWidth=Math.min(minWidth,estimateFrameWidth());
   frmOutlineView.setLayout(new BoxLayout(frmOutlineView.getContentPane(),BoxLayout.Y_AXIS));
-  JPanel panelTop=new JPanel(), panelBottom=new JPanel();
-  panelTop.setLayout(new BoxLayout(panelTop,BoxLayout.Y_AXIS));
+  JPanel panelTop=new JPanel(), panelMiddle=new JPanel(), panelBottom=new JPanel();
+  panelTop.setLayout(new GridBagLayout());
+  panelMiddle.setLayout(new BoxLayout(panelMiddle,BoxLayout.Y_AXIS));
   panelBottom.setLayout(new BoxLayout(panelBottom,BoxLayout.Y_AXIS));
+  JLabel label=new JLabel("Tabs List (type to filter)");
+  label.setAlignmentX(Component.LEFT_ALIGNMENT);
+  panelTop.add(label);
   searchField=new JTextField();
   searchField.setMinimumSize(new Dimension(minWidth,25));
-  panelTop.add(searchField);
+  panelMiddle.add(searchField);
   jsp=new JScrollPane();
   populateTabTree();
   jsp.setViewportView(tabTree);
@@ -21,6 +25,7 @@
   jsp.setMaximumSize(new Dimension(maxWidth,editor.ta.getHeight() - 10));
   panelBottom.add(jsp);
   frmOutlineView.add(panelTop);
+  frmOutlineView.add(panelMiddle);
   frmOutlineView.add(panelBottom);
   frmOutlineView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
   frmOutlineView.pack();
