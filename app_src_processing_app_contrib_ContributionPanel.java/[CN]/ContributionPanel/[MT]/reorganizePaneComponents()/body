@@ -1,0 +1,51 @@
+{
+  BorderLayout layout=(BorderLayout)this.getLayout();
+  remove(layout.getLayoutComponent(BorderLayout.SOUTH));
+  remove(layout.getLayoutComponent(BorderLayout.EAST));
+  JPanel updateBox=new JPanel();
+  updateBox.setLayout(new BorderLayout());
+  updateBox.add(notificationBlock,BorderLayout.WEST);
+  updateBox.setBorder(new EmptyBorder(4,7,7,7));
+  updateBox.setOpaque(false);
+  add(updateBox,BorderLayout.SOUTH);
+  JPanel rightPane=new JPanel();
+  rightPane.setInheritsPopupMenu(true);
+  rightPane.setOpaque(false);
+  rightPane.setLayout(new BoxLayout(rightPane,BoxLayout.Y_AXIS));
+  rightPane.setMinimumSize(new Dimension(ContributionPanel.BUTTON_WIDTH,1));
+  add(rightPane,BorderLayout.EAST);
+  if (updateButton.isVisible() && !isRemoveInProgress && !contrib.isDeletionFlagged()) {
+    JPanel updateRemovePanel=new JPanel();
+    updateRemovePanel.setLayout(new FlowLayout());
+    updateRemovePanel.setOpaque(false);
+    updateRemovePanel.add(updateButton);
+    updateRemovePanel.add(installRemoveButton);
+    updateBox.add(updateRemovePanel,BorderLayout.EAST);
+    JPanel barPane=new JPanel();
+    barPane.setOpaque(false);
+    barPane.add(installProgressBar);
+    rightPane.add(barPane);
+    if (isUpdateInProgress)     ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,PROGRESS_BAR_CONSTRAINT);
+  }
+ else {
+    updateBox.add(updateButton,BorderLayout.EAST);
+    barButtonCardPane.removeAll();
+    JPanel barPane=new JPanel();
+    barPane.setOpaque(false);
+    barPane.add(installProgressBar);
+    JPanel buttonPane=new JPanel();
+    buttonPane.setOpaque(false);
+    buttonPane.add(installRemoveButton);
+    barButtonCardPane.add(buttonPane,BUTTON_CONSTRAINT);
+    barButtonCardPane.add(barPane,PROGRESS_BAR_CONSTRAINT);
+    if (isInstallInProgress || isRemoveInProgress || isUpdateInProgress)     ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,PROGRESS_BAR_CONSTRAINT);
+ else     ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,BUTTON_CONSTRAINT);
+    rightPane.add(barButtonCardPane);
+  }
+  Dimension d=installProgressBar.getPreferredSize();
+  Dimension d2=installRemoveButton.getPreferredSize();
+  d.width=ContributionPanel.BUTTON_WIDTH;
+  d.height=Math.max(d.height,d2.height);
+  rightPane.setMinimumSize(d);
+  rightPane.setPreferredSize(d);
+}

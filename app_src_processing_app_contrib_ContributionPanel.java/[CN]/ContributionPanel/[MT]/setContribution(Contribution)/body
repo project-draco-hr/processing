@@ -54,7 +54,7 @@
   if (contribListing.hasUpdates(contrib)) {
     StringBuilder versionText=new StringBuilder();
     versionText.append("<html><body><i>");
-    if (contrib.isUpdateFlagged()) {
+    if (contrib.isUpdateFlagged() || contrib.isDeletionFlagged()) {
       ;
     }
  else {
@@ -72,7 +72,7 @@
   }
   updateButton.setEnabled(true);
   if (contrib != null) {
-    updateButton.setVisible(isSelected() && contribListing.hasUpdates(contrib) && !contrib.isUpdateFlagged());
+    updateButton.setVisible((contribListing.hasUpdates(contrib) && !contrib.isUpdateFlagged() && !contrib.isDeletionFlagged()) || isUpdateInProgress);
   }
   installRemoveButton.removeActionListener(installActionListener);
   installRemoveButton.removeActionListener(removeActionListener);
@@ -85,6 +85,8 @@
     installRemoveButton.addActionListener(removeActionListener);
     installRemoveButton.setText(Language.text("contributions.remove"));
     installRemoveButton.setVisible(true);
+    installRemoveButton.setEnabled(!contrib.isUpdateFlagged());
+    reorganizePaneComponents();
   }
  else {
     installRemoveButton.addActionListener(installActionListener);
