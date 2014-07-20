@@ -48,6 +48,7 @@
           @Override public void cancel(){
             super.cancel();
             resetInstallProgressBarState();
+            listPanel.contribManager.status.setMessage("");
             isUpdateInProgress=false;
             installRemoveButton.setEnabled(true);
             if (contrib.isDeletionFlagged()) {
@@ -55,7 +56,7 @@
               ((LocalContribution)contrib).setDeletionFlag(false);
               contribListing.replaceContribution(contrib,contrib);
             }
-            listPanel.contribManager.status.setMessage("");
+            listPanel.contribManager.restartButton.setVisible(true);
           }
         }
 ,listPanel.contribManager.status);
