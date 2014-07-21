@@ -7,8 +7,14 @@
 );
   ArrayList<String> updateContribsNames=new ArrayList<String>();
   LinkedList<AvailableContribution> updateContribsList=new LinkedList<AvailableContribution>();
+  String type=root.getName().substring(root.getName().lastIndexOf('/') + 1);
+  String propFileName=null;
+  if (type.equalsIgnoreCase("tools"))   propFileName="tool.properties";
+ else   if (type.equalsIgnoreCase("modes"))   propFileName="mode.properties";
+ else   if (type.equalsIgnoreCase("libraries"))   propFileName="libraries.properties";
   for (  File folder : markedForUpdate) {
-    updateContribsNames.add(folder.getName());
+    HashMap<String,String> properties=Base.readSettings(new File(folder,propFileName));
+    updateContribsNames.add(properties.get("name"));
     Base.removeDir(folder);
   }
   for (  AvailableContribution availableContribs : contribListing.advertisedContributions) {

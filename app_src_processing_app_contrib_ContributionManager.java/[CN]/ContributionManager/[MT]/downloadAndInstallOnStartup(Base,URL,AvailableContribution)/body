@@ -14,7 +14,13 @@
             contribListing.replaceContribution(ad,contribution);
             if (contribution.getType() == ContributionType.MODE) {
               ArrayList<ModeContribution> contribModes=base.getModeContribs();
-              if (contribModes != null)               contribModes.add((ModeContribution)contribution);
+              if (contribModes != null) {
+                contribModes.add((ModeContribution)contribution);
+                if (contribution.getType() == ContributionType.MODE && base.getActiveEditor() != null) {
+                  ArrayList<ModeContribution> contribModesList=base.getModeContribs();
+                  if (!contribModesList.contains(contribution))                   contribModesList.add((ModeContribution)contribution);
+                }
+              }
             }
             if (base.getActiveEditor() != null)             refreshInstalled(base.getActiveEditor());
           }
