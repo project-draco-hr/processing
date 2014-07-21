@@ -24,11 +24,19 @@
       LocalContribution newContrib=type.load(editor.getBase(),contribFolder);
       File newContribFolder=newContrib.getFolder();
       installedContrib=newContrib.copyAndLoad(editor,confirmReplace,status);
+      if (newContrib.getType() == ContributionType.MODE) {
+        ((ModeContribution)newContrib).clearClassLoader(editor.getBase());
+        System.out.println("ismode");
+      }
+ else       if (newContrib.getType() == ContributionType.TOOL) {
+        ((ToolContribution)newContrib).clearClassLoader(editor.getBase());
+        System.out.println("istool");
+      }
       newContrib=null;
       System.gc();
       if (Base.isWindows()) {
         try {
-          Thread.sleep(2000);
+          Thread.sleep(1000);
         }
  catch (        InterruptedException e) {
           e.printStackTrace();
