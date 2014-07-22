@@ -6,10 +6,14 @@
     restartButton.setVisible(false);
     restartButton.addActionListener(new ActionListener(){
       @Override public void actionPerformed(      ActionEvent arg0){
-        for (        Editor ed : editor.getBase().getEditors())         if (ed.getSketch().isModified() || ed.getSketch().isUntitled()) {
-          int option=Base.showYesNoQuestion(editor,title,"Unsaved changes have been found","Are you sure you want to restart Processing without saving first?");
-          if (option == JOptionPane.NO_OPTION)           return;
- else           break;
+        Iterator<Editor> iter=editor.getBase().getEditors().iterator();
+        while (iter.hasNext()) {
+          Editor ed=iter.next();
+          if (ed.getSketch().isModified() || ed.getSketch().isUntitled()) {
+            int option=Base.showYesNoQuestion(editor,title,"Unsaved changes have been found","Are you sure you want to restart Processing without saving first?");
+            if (option == JOptionPane.NO_OPTION)             return;
+ else             break;
+          }
         }
         StringBuilder cmd=new StringBuilder();
         cmd.append(System.getProperty("java.home") + File.separator + "bin"+ File.separator+ "java ");

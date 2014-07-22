@@ -1,0 +1,67 @@
+{
+  String contribFolderName=getFolder().getName();
+  File contribTypeFolder=getType().getSketchbookFolder();
+  File contribFolder=new File(contribTypeFolder,contribFolderName);
+  if (status != null) {
+    Editor editor=base.getActiveEditor();
+    ArrayList<LocalContribution> oldContribs=getType().listContributions(editor);
+    if (contribFolder.exists() && !contribFolder.isDirectory()) {
+      contribFolder.delete();
+      contribFolder=new File(contribTypeFolder,contribFolderName);
+    }
+    for (    LocalContribution oldContrib : oldContribs) {
+      if ((oldContrib.getFolder().exists() && oldContrib.getFolder().equals(contribFolder)) || (oldContrib.getId() != null && oldContrib.getId().equals(getId()))) {
+        if (oldContrib.getType().requiresRestart()) {
+          if (!oldContrib.backup(editor,false,status)) {
+            return null;
+          }
+        }
+ else {
+          int result=0;
+          boolean doBackup=Preferences.getBoolean("contribution.backup.on_install");
+          if (confirmReplace) {
+            if (doBackup) {
+              result=Base.showYesNoQuestion(editor,"Replace","Replace pre-existing \"" + oldContrib.getName() + "\" library?","A pre-existing copy of the \"" + oldContrib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ "in <i>libraries/old</i> before replacing it.");
+              if (result != JOptionPane.YES_OPTION || !oldContrib.backup(editor,true,status)) {
+                return null;
+              }
+            }
+ else {
+              result=Base.showYesNoQuestion(editor,"Replace","Replace pre-existing \"" + oldContrib.getName() + "\" library?","A pre-existing copy of the \"" + oldContrib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will permanently delete this library and all of its contents<br>"+ "before replacing it.");
+              if (result != JOptionPane.YES_OPTION || !oldContrib.getFolder().delete()) {
+                return null;
+              }
+            }
+          }
+ else {
+            if ((doBackup && !oldContrib.backup(editor,true,status)) || (!doBackup && !oldContrib.getFolder().delete())) {
+              return null;
+            }
+          }
+        }
+      }
+    }
+    if (contribFolder.exists()) {
+      Base.removeDir(contribFolder);
+    }
+  }
+ else {
+    if (contribFolder.exists() && contribFolder.isDirectory()) {
+      Base.removeDir(contribFolder);
+    }
+ else     if (contribFolder.exists()) {
+      contribFolder.delete();
+      contribFolder=new File(contribTypeFolder,contribFolderName);
+    }
+  }
+  File oldFolder=getFolder();
+  try {
+    Base.copyDir(oldFolder,contribFolder);
+  }
+ catch (  IOException e) {
+    status.setErrorMessage("Could not copy " + getTypeName() + " \""+ getName()+ "\" to the sketchbook.");
+    e.printStackTrace();
+    return null;
+  }
+  return getType().load(base,contribFolder);
+}

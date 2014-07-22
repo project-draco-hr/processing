@@ -34,12 +34,15 @@
         LocalContribution installed=(LocalContribution)contrib;
         installed.setDeletionFlag(false);
         contribListing.replaceContribution(contrib,contrib);
-        ArrayList<Contribution> contribsList=contribListing.allContributions;
+        Iterator<Contribution> contribsListIter=contribListing.allContributions.iterator();
         boolean toBeRestarted=false;
-        for (        Contribution contribElement : contribsList)         if (contrib.getType().equals(contribElement.getType())) {
-          if (contribElement.isDeletionFlagged() || contribElement.isUpdateFlagged()) {
-            toBeRestarted=!toBeRestarted;
-            break;
+        while (contribsListIter.hasNext()) {
+          Contribution contribElement=contribsListIter.next();
+          if (contrib.getType().equals(contribElement.getType())) {
+            if (contribElement.isDeletionFlagged() || contribElement.isUpdateFlagged()) {
+              toBeRestarted=!toBeRestarted;
+              break;
+            }
           }
         }
         listPanel.contribManager.restartButton.setVisible(toBeRestarted);

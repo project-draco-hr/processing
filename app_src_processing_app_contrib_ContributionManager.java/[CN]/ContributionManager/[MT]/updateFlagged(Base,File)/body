@@ -17,12 +17,16 @@
     updateContribsNames.add(properties.get("name"));
     Base.removeDir(folder);
   }
-  for (  AvailableContribution availableContribs : contribListing.advertisedContributions) {
+  Iterator<AvailableContribution> iter=contribListing.advertisedContributions.iterator();
+  while (iter.hasNext()) {
+    AvailableContribution availableContribs=iter.next();
     if (updateContribsNames.contains(availableContribs.getName())) {
       updateContribsList.add(availableContribs);
     }
   }
-  for (  AvailableContribution contribToUpdate : updateContribsList) {
+  Iterator<AvailableContribution> iter2=updateContribsList.iterator();
+  while (iter2.hasNext()) {
+    AvailableContribution contribToUpdate=iter2.next();
     installOnStartUp(base,contribToUpdate);
     contribListing.replaceContribution(contribToUpdate,contribToUpdate);
   }

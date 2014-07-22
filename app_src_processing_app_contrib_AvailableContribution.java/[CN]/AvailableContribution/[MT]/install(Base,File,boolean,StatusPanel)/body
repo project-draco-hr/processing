@@ -4,31 +4,37 @@
     tempFolder=type.createTempFolder();
   }
  catch (  IOException e) {
-    status.setErrorMessage("Could not create a temporary folder to install.");
+    if (status != null)     status.setErrorMessage("Could not create a temporary folder to install.");
     return null;
   }
   Base.unzip(contribArchive,tempFolder);
   File contribFolder=null;
   if (type.isCandidate(tempFolder)) {
-    status.setErrorMessage(getName() + " needs to be repackaged according to the " + type.getTitle()+ " guidelines.");
+    if (status != null)     status.setErrorMessage(getName() + " needs to be repackaged according to the " + type.getTitle()+ " guidelines.");
     return null;
   }
   contribFolder=type.findCandidate(tempFolder);
   LocalContribution installedContrib=null;
   if (contribFolder == null) {
-    status.setErrorMessage("Could not find a " + type + " in the downloaded file.");
+    if (status != null)     status.setErrorMessage("Could not find a " + type + " in the downloaded file.");
   }
  else {
     File propFile=new File(contribFolder,type + ".properties");
     if (writePropertiesFile(propFile)) {
       LocalContribution newContrib=type.load(base,contribFolder);
       File newContribFolder=newContrib.getFolder();
-      installedContrib=newContrib.copyAndLoadOnStartup(base,status);
+      installedContrib=newContrib.copyAndLoad(base,confirmReplace,status);
+      if (newContrib.getType() == ContributionType.MODE) {
+        ((ModeContribution)newContrib).clearClassLoader(base);
+      }
+ else       if (newContrib.getType() == ContributionType.TOOL) {
+        ((ToolContribution)newContrib).clearClassLoader(base);
+      }
       newContrib=null;
       System.gc();
       if (Base.isWindows()) {
         try {
-          Thread.sleep(2000);
+          Thread.sleep(1000);
         }
  catch (        InterruptedException e) {
           e.printStackTrace();
@@ -37,7 +43,7 @@
       Base.removeDir(newContribFolder);
     }
  else {
-      status.setErrorMessage("Error overwriting .properties file.");
+      if (status != null)       status.setErrorMessage("Error overwriting .properties file.");
     }
   }
   if (tempFolder.exists()) {
