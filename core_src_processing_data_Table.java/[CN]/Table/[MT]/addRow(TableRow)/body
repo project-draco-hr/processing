@@ -3,7 +3,6 @@
   ensureBounds(row,source.getColumnCount() - 1);
   for (int col=0; col < columns.length; col++) {
 switch (columnTypes[col]) {
-case CATEGORY:
 case INT:
       setInt(row,col,source.getInt(col));
     break;
@@ -18,6 +17,13 @@ setDouble(row,col,source.getDouble(col));
 break;
 case STRING:
 setString(row,col,source.getString(col));
+break;
+case CATEGORY:
+int index=source.getInt(col);
+setInt(row,col,index);
+if (columnCategories[col].hasCategory(index)) {
+columnCategories[col].setCategory(index,source.getString(col));
+}
 break;
 default :
 throw new RuntimeException("no types");
