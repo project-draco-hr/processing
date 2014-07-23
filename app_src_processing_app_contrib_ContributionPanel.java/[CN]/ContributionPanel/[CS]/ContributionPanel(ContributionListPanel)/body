@@ -71,11 +71,24 @@
           public void cancel(){
             super.cancel();
             resetInstallProgressBarState();
-            listPanel.contribManager.restartButton.setVisible(true);
             isRemoveInProgress=false;
             installRemoveButton.setEnabled(true);
             reorganizePaneComponents();
             setSelected(true);
+            boolean isModeActive=false;
+            if (contrib.getType() == ContributionType.MODE) {
+              ModeContribution m=(ModeContribution)contrib;
+              Iterator<Editor> iter=listPanel.contribManager.editor.getBase().getEditors().iterator();
+              while (iter.hasNext()) {
+                Editor e=iter.next();
+                if (e.getMode().equals(m.getMode())) {
+                  isModeActive=true;
+                  break;
+                }
+              }
+            }
+            if (!isModeActive)             listPanel.contribManager.restartButton.setVisible(true);
+ else             updateButton.setEnabled(true);
           }
         }
 ,listPanel.contribManager.status);

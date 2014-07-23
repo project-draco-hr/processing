@@ -1,8 +1,20 @@
 {
   File contribLocn=ac.getType().getSketchbookFolder();
+  for (  File contribDir : contribLocn.listFiles())   if (contribDir.isDirectory()) {
+    File[] contents=contribDir.listFiles(new FilenameFilter(){
+      @Override public boolean accept(      File dir,      String file){
+        return file.equals(ac.getType() + ".properties");
+      }
+    }
+);
+    if (contents.length > 0 && Base.readSettings(contents[0]).get("name").equals(ac.getName())) {
+      return;
+    }
+  }
   try {
     new File(contribLocn,ac.getName()).createNewFile();
   }
  catch (  IOException e) {
+    System.err.println("The unupdated contribution marker seems to not like " + ac.getName() + ". You may have to install it manually to update...");
   }
 }

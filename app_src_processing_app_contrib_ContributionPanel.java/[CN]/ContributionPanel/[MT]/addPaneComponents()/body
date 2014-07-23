@@ -56,13 +56,27 @@
               ((LocalContribution)contrib).setDeletionFlag(false);
               contribListing.replaceContribution(contrib,contrib);
             }
-            listPanel.contribManager.restartButton.setVisible(true);
+            boolean isModeActive=false;
+            if (contrib.getType() == ContributionType.MODE) {
+              ModeContribution m=(ModeContribution)contrib;
+              Iterator<Editor> iter=listPanel.contribManager.editor.getBase().getEditors().iterator();
+              while (iter.hasNext()) {
+                Editor e=iter.next();
+                if (e.getMode().equals(m.getMode())) {
+                  isModeActive=true;
+                  break;
+                }
+              }
+            }
+            if (!isModeActive)             listPanel.contribManager.restartButton.setVisible(true);
+ else             updateButton.setEnabled(true);
           }
         }
 ,listPanel.contribManager.status);
       }
  else {
         updateButton.setEnabled(false);
+        installRemoveButton.setEnabled(false);
         AvailableContribution ad=contribListing.getAvailableContribution(contrib);
         String url=ad.link;
         installContribution(ad,url);
