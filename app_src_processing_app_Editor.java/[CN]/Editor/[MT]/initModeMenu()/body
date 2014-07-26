@@ -5,8 +5,10 @@
     JRadioButtonMenuItem item=new JRadioButtonMenuItem(m.getTitle());
     item.addActionListener(new ActionListener(){
       public void actionPerformed(      ActionEvent e){
-        base.changeMode(m);
-        if (sketch.isModified()) {
+        if (!sketch.isModified()) {
+          base.changeMode(m);
+        }
+ else {
           for (          Component c : modeMenu.getPopupMenu().getComponents()) {
             if (c instanceof JRadioButtonMenuItem) {
               if (((JRadioButtonMenuItem)c).getText() == mode.getTitle()) {
