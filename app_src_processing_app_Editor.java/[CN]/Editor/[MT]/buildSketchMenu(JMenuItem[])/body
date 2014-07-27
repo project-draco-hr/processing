@@ -26,7 +26,6 @@
   sketchMenu.addSeparator();
   sketchMenu.addMenuListener(new MenuListener(){
     List<JMenuItem> menuList=new ArrayList<JMenuItem>();
-    JMenu windowMenu=new JMenu("Window");
     @Override public void menuSelected(    MenuEvent event){
       JMenuItem item;
       for (      final Editor editor : base.getEditors()) {
@@ -46,17 +45,15 @@
           }
         }
 );
-        windowMenu.add(item);
+        sketchMenu.add(item);
         menuList.add(item);
       }
-      sketchMenu.add(windowMenu);
     }
     @Override public void menuDeselected(    MenuEvent event){
       for (      JMenuItem item : menuList) {
-        windowMenu.remove(item);
+        sketchMenu.remove(item);
       }
       menuList.clear();
-      sketchMenu.remove(windowMenu);
     }
     @Override public void menuCanceled(    MenuEvent event){
       menuDeselected(event);

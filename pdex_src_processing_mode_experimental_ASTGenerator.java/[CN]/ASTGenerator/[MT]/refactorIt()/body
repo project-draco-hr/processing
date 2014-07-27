@@ -25,6 +25,7 @@
     pdeOffsets[i][1]=ans[1];
     pdeOffsets[i][2]=awrap.getPDECodeOffsetForSN(this);
   }
+  editor.startCompoundEdit();
   for (int i=0; i < defCU.getChildCount(); i++) {
     ASTNodeWrapper awrap=(ASTNodeWrapper)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
     int off=0;
@@ -38,6 +39,7 @@
     highlightPDECode(pdeOffsets[i][0],pdeOffsets[i][1],pdeOffsets[i][2] + off,awrap.getNode().toString().length());
     editor.ta.setSelectedText(newName);
   }
+  editor.stopCompoundEdit();
   errorCheckerService.resumeThread();
   editor.getSketch().setModified(true);
   errorCheckerService.runManualErrorCheck();

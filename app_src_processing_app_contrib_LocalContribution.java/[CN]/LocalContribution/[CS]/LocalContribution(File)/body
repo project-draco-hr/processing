@@ -21,6 +21,12 @@
       System.err.println("Please contact the library author to fix it according to the guidelines.");
     }
     prettyVersion=properties.get("prettyVersion");
+    try {
+      lastUpdated=Long.parseLong(properties.get("lastUpdated"));
+    }
+ catch (    NumberFormatException e) {
+      lastUpdated=0;
+    }
   }
  else {
     Base.log("No properties file at " + propertiesFile.getAbsolutePath());

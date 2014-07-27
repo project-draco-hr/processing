@@ -1,6 +1,5 @@
 {
   int pdeLineNumber=lineNumber + errorCheckerService.mainClassOffset;
-  log("----getASTNodeAt---- CU State: " + errorCheckerService.compilationUnitState);
   if (errorCheckerService != null) {
     editor=errorCheckerService.getEditor();
     int codeIndex=editor.getSketch().getCodeIndex(editor.getCurrentTab());
@@ -12,21 +11,15 @@
       }
     }
   }
-  log("getASTNodeAt: Node line number " + pdeLineNumber);
   ASTNode lineNode=findLineOfNode(compilationUnit,pdeLineNumber,offset,name);
-  log("Node text +> " + lineNode);
   ASTNode decl=null;
   String nodeLabel=null;
   String nameOfNode=null;
   if (lineNode != null) {
     String pdeCodeLine=errorCheckerService.getPDECodeAtLine(editor.getSketch().getCurrentCodeIndex(),lineNumber);
     String javaCodeLine=getJavaSourceCodeLine(pdeLineNumber);
-    log(lineNumber + " Original Line num.\nPDE :" + pdeCodeLine);
-    log("JAVA:" + javaCodeLine);
-    log("Clicked on: " + name + " start offset: "+ offset);
     OffsetMatcher ofm=new OffsetMatcher(pdeCodeLine,javaCodeLine);
     int javaOffset=ofm.getJavaOffForPdeOff(offset,name.length()) + lineNode.getStartPosition();
-    log("JAVA ast offset: " + (javaOffset));
     ASTNode simpName=dfsLookForASTNode(errorCheckerService.getLatestCU(),name,javaOffset,javaOffset + name.length());
     if (simpName == null && lineNode instanceof SimpleName) {
 switch (lineNode.getParent().getNodeType()) {
@@ -42,25 +35,19 @@ default :
 }
 if (simpName instanceof SimpleName) {
 nameOfNode=simpName.toString();
-log(getNodeAsString(simpName));
 decl=findDeclaration((SimpleName)simpName);
 if (decl != null) {
-  logE("DECLA: " + decl.getClass().getName());
   nodeLabel=getLabelIfType(new ASTNodeWrapper(decl),(SimpleName)simpName);
 }
  else {
-  logE("null");
   if (scrollOnly) {
     editor.statusMessage(simpName + " is not defined in this sketch",DebugEditor.STATUS_ERR);
   }
 }
-log(getNodeAsString(decl));
 }
 }
 if (decl != null && scrollOnly) {
 ASTNode simpName2=getNodeName(decl,nameOfNode);
-logE("FINAL String decl: " + getNodeAsString(decl));
-logE("FINAL String label: " + getNodeAsString(simpName2));
 ASTNodeWrapper declWrap=new ASTNodeWrapper(simpName2,nodeLabel);
 if (!declWrap.highlightNode(this)) {
 logE("Highlighting failed.");

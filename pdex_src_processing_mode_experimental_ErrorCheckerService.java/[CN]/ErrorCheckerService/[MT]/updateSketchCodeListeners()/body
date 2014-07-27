@@ -1,6 +1,7 @@
 {
   for (  final SketchCode sc : editor.getSketch().getCode()) {
     boolean flag=false;
+    if (sc.getDocument() == null || ((SyntaxDocument)sc.getDocument()).getDocumentListeners() == null)     continue;
     for (    DocumentListener dl : ((SyntaxDocument)sc.getDocument()).getDocumentListeners()) {
       if (dl.equals(sketchChangedListener)) {
         flag=true;
@@ -8,7 +9,6 @@
       }
     }
     if (!flag) {
-      log("Adding doc listener to " + sc.getPrettyName());
       sc.getDocument().addDocumentListener(sketchChangedListener);
     }
   }

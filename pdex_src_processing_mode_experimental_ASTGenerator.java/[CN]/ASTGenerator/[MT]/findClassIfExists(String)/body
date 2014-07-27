@@ -5,7 +5,6 @@
   Class tehClass=null;
   tehClass=loadClass(className);
   if (tehClass instanceof Class) {
-    log(tehClass.getName() + " located straightaway");
     return tehClass;
   }
   log("Looking in the classloader for " + className);
@@ -26,7 +25,6 @@
       log(tehClass.getName() + " located.");
       return tehClass;
     }
-    log("Doesn't exist in package: " + impS.getImportName());
   }
   PdePreprocessor p=new PdePreprocessor(null);
   for (  String impS : p.getCoreImports()) {
@@ -35,7 +33,6 @@
       log(tehClass.getName() + " located.");
       return tehClass;
     }
-    log("Doesn't exist in package: " + impS);
   }
   for (  String impS : p.getDefaultImports()) {
     if (className.equals(impS) || impS.endsWith(className)) {
@@ -44,7 +41,6 @@
         log(tehClass.getName() + " located.");
         return tehClass;
       }
-      log("Doesn't exist in package: " + impS);
     }
   }
   String daddy="java.lang." + className;
@@ -53,6 +49,5 @@
     log(tehClass.getName() + " located.");
     return tehClass;
   }
-  log("Doesn't exist in java.lang");
   return tehClass;
 }

@@ -2,7 +2,6 @@
   try {
     PlainDocument javaSource=new PlainDocument();
     PlainDocument pdeTabs[]=new PlainDocument[editor.getSketch().getCodeCount()];
-    log("calcPDEOffsetsForProbList() mco: " + mainClassOffset + " CU state: "+ compilationUnitState);
     javaSource.insertString(0,sourceCode,null);
     for (int i=0; i < pdeTabs.length; i++) {
       SketchCode sc=editor.getSketch().getCode(i);
@@ -18,8 +17,6 @@
     if (compilationUnitState != 2)     pkgNameOffset=0;
     for (    Problem p : problemsList) {
       int prbStart=p.getIProblem().getSourceStart() - pkgNameOffset, prbEnd=p.getIProblem().getSourceEnd() - pkgNameOffset;
-      log(p.toString());
-      log("IProblem Start " + prbStart + ", End "+ prbEnd);
       int javaLineNumber=p.getSourceLineNumber() - ((compilationUnitState != 2) ? 1 : 2);
       Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber);
       if (lineElement == null) {

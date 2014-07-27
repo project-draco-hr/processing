@@ -32,6 +32,20 @@
     }
     description.append(sentence);
   }
+  String version=contrib.getPrettyVersion();
+  if (version != null && !version.isEmpty()) {
+    description.append("<br/>");
+    if (version.toLowerCase().startsWith("build"))     description.append("v" + version.substring(5,version.indexOf(',')).trim());
+ else     if (version.toLowerCase().startsWith("v"))     description.append(version);
+ else     description.append("v" + version);
+  }
+  long lastUpdatedUTC=contrib.getLastUpdated();
+  if (lastUpdatedUTC != 0) {
+    DateFormat dateFormatter=DateFormat.getDateInstance(DateFormat.MEDIUM);
+    Date lastUpdatedDate=new Date(lastUpdatedUTC);
+    if (version != null && !version.isEmpty())     description.append(", ");
+    description.append("Last Updated on " + dateFormatter.format(lastUpdatedDate));
+  }
   description.append("</body></html>");
   descriptionBlock.setText(description.toString());
   if (contribListing.hasUpdates(contrib)) {
@@ -41,7 +55,9 @@
       versionText.append("To finish an update, reinstall this contribution after restarting.");
     }
  else {
-      versionText.append("New version available!");
+      String latestVersion=contribListing.getLatestVersion(contrib);
+      if (latestVersion != null)       versionText.append("New version (" + latestVersion + ") available!");
+ else       versionText.append("New version available!");
       if (contrib.getType().requiresRestart()) {
         versionText.append(" To update, first remove the current version.");
       }
