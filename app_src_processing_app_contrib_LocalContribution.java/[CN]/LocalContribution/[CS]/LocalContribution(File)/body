@@ -27,6 +27,13 @@
  catch (    NumberFormatException e) {
       lastUpdated=0;
     }
+    try {
+      compatibleVersions=parseCompatibleVersions(properties.get("compatibleVersions"));
+    }
+ catch (    NumberFormatException nfe) {
+      compatibleVersions=null;
+      System.err.println("The format of the compatibleVersions field is incorrect for " + name);
+    }
   }
  else {
     Base.log("No properties file at " + propertiesFile.getAbsolutePath());
