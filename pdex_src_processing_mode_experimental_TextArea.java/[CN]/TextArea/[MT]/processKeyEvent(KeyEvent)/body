@@ -59,7 +59,7 @@ return;
 final KeyEvent evt2=evt;
 if (evt.isAltDown() || evt.isControlDown() || evt.isMetaDown()) {
 if (ExperimentalMode.ccTriggerEnabled && keyChar == KeyEvent.VK_SPACE && (evt.isControlDown() || evt.isMetaDown())) {
-SwingWorker worker=new SwingWorker(){
+SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
 protected Object doInBackground() throws Exception {
 if (ExperimentalMode.codeCompletionsEnabled && ExperimentalMode.ccTriggerEnabled) {
 getDocument().remove(getCaretPosition() - 1,1);
@@ -74,7 +74,7 @@ worker.execute();
 }
 return;
 }
-SwingWorker worker=new SwingWorker(){
+SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
 protected Object doInBackground() throws Exception {
 if (ExperimentalMode.codeCompletionsEnabled && (!ExperimentalMode.ccTriggerEnabled || suggestion.isVisible())) {
 log("[KeyEvent]" + evt2.getKeyChar() + "  |Prediction started: "+ System.currentTimeMillis());
