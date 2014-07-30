@@ -11,7 +11,15 @@
     }
     return columnCategories[column].key(cat);
   }
- else {
-    return String.valueOf(Array.get(columns[column],row));
+ else   if (columnTypes[column] == FLOAT) {
+    if (Float.isNaN(getFloat(row,column))) {
+      return null;
+    }
   }
+ else   if (columnTypes[column] == DOUBLE) {
+    if (Double.isNaN(getFloat(row,column))) {
+      return null;
+    }
+  }
+  return String.valueOf(Array.get(columns[column],row));
 }
