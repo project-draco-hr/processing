@@ -1,35 +1,29 @@
 {
-  if (!reloadEnabled) {
-    return;
-  }
   try {
     WatchService watchService=FileSystems.getDefault().newWatchService();
-    key=sketch.getFolder().toPath().register(watchService,StandardWatchEventKinds.ENTRY_MODIFY);
+    Path folderPath=sketch.getFolder().toPath();
+    watcherKey=folderPath.register(watchService,StandardWatchEventKinds.ENTRY_MODIFY);
   }
  catch (  IOException e) {
+    e.printStackTrace();
   }
-  final WatchKey finKey=key;
+  final WatchKey finKey=watcherKey;
   if (finKey != null) {
-    WindowFocusListener fl=new WindowFocusListener(){
+    addWindowFocusListener(new WindowFocusListener(){
       @Override public void windowGainedFocus(      WindowEvent arg0){
-        if (!reloadEnabled) {
-          return;
+        if (finKey.isValid()) {
+          List<WatchEvent<?>> events=finKey.pollEvents();
+          processFileEvents(events);
         }
-        if (!finKey.isValid()) {
-          return;
-        }
-        List<WatchEvent<?>> events=finKey.pollEvents();
-        processFileEvents(events);
       }
       @Override public void windowLostFocus(      WindowEvent arg0){
         List<WatchEvent<?>> events=finKey.pollEvents();
-        if (!saved) {
+        if (!watcherSave) {
           processFileEvents(events);
         }
-        saved=false;
+        watcherSave=false;
       }
     }
-;
-    this.addWindowFocusListener(fl);
+);
   }
 }

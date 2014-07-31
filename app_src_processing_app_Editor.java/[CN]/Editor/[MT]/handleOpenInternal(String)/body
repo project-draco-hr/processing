@@ -52,7 +52,9 @@
     Base.showWarning("Error","Could not create the sketch.",e);
     return false;
   }
-  initFileChangeListener();
+  if (Preferences.getBoolean("editor.watcher")) {
+    initFileChangeListener();
+  }
   header.rebuild();
   updateTitle();
   Preferences.save();
