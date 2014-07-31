@@ -2,24 +2,24 @@
   if (activeEditor.getMode() != mode) {
     Sketch sketch=activeEditor.getSketch();
     nextMode=mode;
-    boolean newModeCanHandleCurrentSource=true;
-    for (    final SketchCode code : sketch.getCode()) {
-      if (!mode.validExtension(code.getExtension())) {
-        newModeCanHandleCurrentSource=false;
-        break;
-      }
-    }
-    if (newModeCanHandleCurrentSource) {
-      final File props=new File(sketch.getCodeFolder(),"sketch.properties");
-      saveModeSettings(props,nextMode);
+    if (sketch.isUntitled()) {
       handleClose(activeEditor,true);
-      handleOpen(sketch.getMainFilePath());
+      handleNew();
     }
  else {
-      if (sketch.isUntitled()) {
-        handleClose(activeEditor,true);
+      boolean newModeCanHandleCurrentSource=true;
+      for (      final SketchCode code : sketch.getCode()) {
+        if (!mode.validExtension(code.getExtension())) {
+          newModeCanHandleCurrentSource=false;
+          break;
+        }
       }
-      handleNew();
+      if (newModeCanHandleCurrentSource) {
+        final File props=new File(sketch.getCodeFolder(),"sketch.properties");
+        saveModeSettings(props,nextMode);
+        handleClose(activeEditor,true);
+        handleOpen(sketch.getMainFilePath());
+      }
     }
   }
 }
