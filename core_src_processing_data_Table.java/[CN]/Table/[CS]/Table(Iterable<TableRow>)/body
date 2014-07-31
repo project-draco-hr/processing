@@ -1,10 +1,20 @@
 {
   init();
-  boolean typed=false;
-  for (  TableRow row : rows) {
-    if (!typed) {
-      setColumnTypes(row.getColumnTypes());
+  int row=0;
+  int alloc=10;
+  for (  TableRow incoming : rows) {
+    if (row == 0) {
+      setColumnTypes(incoming.getColumnTypes());
+      setColumnTitles(incoming.getColumnTitles());
+      setRowCount(alloc);
     }
-    addRow(row);
+ else     if (row == alloc) {
+      alloc*=2;
+      setRowCount(alloc);
+    }
+    setRow(row++,incoming);
+  }
+  if (row != alloc) {
+    setRowCount(row);
   }
 }

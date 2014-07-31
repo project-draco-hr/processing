@@ -1,0 +1,10 @@
+{
+  if (!isStarted()) {
+    return;
+  }
+  for (  ThreadReference other : vm().allThreads()) {
+    if (!other.equals(t) && other.isSuspended()) {
+      other.resume();
+    }
+  }
+}

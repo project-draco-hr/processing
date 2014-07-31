@@ -2,6 +2,8 @@
   char[] c=new char[100];
   int count=0;
   boolean insideQuote=false;
+  int alloc=100;
+  setRowCount(100);
   int row=0;
   int col=0;
   int ch;
@@ -40,11 +42,16 @@
         }
         setString(row,col,new String(c,0,count));
         count=0;
-        if (row == 0 && header) {
+        row++;
+        if (row == 1 && header) {
           removeTitleRow();
           header=false;
+          row=0;
         }
-        row++;
+        if (row == alloc) {
+          alloc*=2;
+          setRowCount(alloc);
+        }
         col=0;
       }
  else       if (ch == ',') {
@@ -63,5 +70,9 @@
   }
   if (count > 0) {
     setString(row,col,new String(c,0,count));
+  }
+  row++;
+  if (alloc != row) {
+    setRowCount(row);
   }
 }

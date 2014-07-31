@@ -21,7 +21,14 @@
   StyleConstants.setFontFamily(errStyle,font.getFamily());
   StyleConstants.setBold(errStyle,font.isBold());
   StyleConstants.setItalic(errStyle,font.isItalic());
-  consoleTextPane.setBackground(bgColor);
+  if (UIManager.getLookAndFeel().getID().equals("Nimbus")) {
+    getViewport().setBackground(bgColor);
+    consoleTextPane.setOpaque(false);
+    consoleTextPane.setBackground(new Color(0,0,0,0));
+  }
+ else {
+    consoleTextPane.setBackground(bgColor);
+  }
   FontMetrics metrics=this.getFontMetrics(font);
   int height=metrics.getAscent() + metrics.getDescent();
   int lines=Preferences.getInteger("console.lines");

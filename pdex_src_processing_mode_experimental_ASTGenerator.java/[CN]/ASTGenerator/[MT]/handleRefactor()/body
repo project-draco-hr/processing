@@ -1,0 +1,33 @@
+{
+  if (editor.hasJavaTabs)   return;
+  log("Last clicked word:" + lastClickedWord);
+  if (lastClickedWord == null && editor.ta.getSelectedText() == null) {
+    editor.statusMessage("Highlight the class/function/variable name first",DebugEditor.STATUS_INFO);
+    return;
+  }
+  if (errorCheckerService.hasSyntaxErrors()) {
+    editor.statusMessage("Can't perform action until syntax errors are fixed :(",DebugEditor.STATUS_WARNING);
+    return;
+  }
+  DefaultMutableTreeNode defCU=findAllOccurrences();
+  String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
+  if (defCU == null) {
+    editor.statusMessage(selText + " isn't defined in this sketch, so it can't" + " be renamed",DebugEditor.STATUS_ERR);
+    return;
+  }
+  if (!frmRename.isVisible()) {
+    frmRename.setLocation(editor.getX() + (editor.getWidth() - frmRename.getWidth()) / 2,editor.getY() + (editor.getHeight() - frmRename.getHeight()) / 2);
+    frmRename.setVisible(true);
+    SwingUtilities.invokeLater(new Runnable(){
+      @Override public void run(){
+        String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
+        frmOccurenceList.setTitle("All occurrences of " + selText);
+        lblRefactorOldName.setText("Current name: " + selText);
+        txtRenameField.setText("");
+        txtRenameField.requestFocus();
+      }
+    }
+);
+  }
+  frmRename.toFront();
+}

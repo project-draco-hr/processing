@@ -1,0 +1,58 @@
+{
+  if (!loadCompClass) {
+    return;
+  }
+synchronized (classpathJars) {
+    classpathJars=new ArrayList<URL>();
+    String entry="";
+    boolean codeFolderChecked=false;
+    for (    ImportStatement impstat : programImports) {
+      String item=impstat.getImportName();
+      int dot=item.lastIndexOf('.');
+      entry=(dot == -1) ? item : item.substring(0,dot);
+      entry=entry.substring(6).trim();
+      if (ignorableImport(entry)) {
+        continue;
+      }
+      Library library=null;
+      try {
+        library=editor.getMode().getLibrary(entry);
+        String libraryPath[]=PApplet.split(library.getClassPath().substring(1).trim(),File.pathSeparatorChar);
+        for (int i=0; i < libraryPath.length; i++) {
+          classpathJars.add(new File(libraryPath[i]).toURI().toURL());
+        }
+      }
+ catch (      Exception e) {
+        if (library == null && !codeFolderChecked) {
+          if (editor.getSketch().hasCodeFolder()) {
+            File codeFolder=editor.getSketch().getCodeFolder();
+            String codeFolderClassPath=Base.contentsToClassPath(codeFolder);
+            codeFolderChecked=true;
+            if (codeFolderClassPath.equalsIgnoreCase("")) {
+              System.err.println("Experimental Mode: Yikes! Can't find \"" + entry + "\" library! Line: "+ impstat.getLineNumber()+ " in tab: "+ editor.getSketch().getCode(impstat.getTab()).getPrettyName());
+              System.out.println("Please make sure that the library is present in <sketchbook " + "folder>/libraries folder or in the code folder of your sketch");
+            }
+            String codeFolderPath[]=PApplet.split(codeFolderClassPath.substring(1).trim(),File.pathSeparatorChar);
+            try {
+              for (int i=0; i < codeFolderPath.length; i++) {
+                classpathJars.add(new File(codeFolderPath[i]).toURI().toURL());
+              }
+            }
+ catch (            Exception e2) {
+              System.out.println("Yikes! codefolder, prepareImports(): " + e2);
+            }
+          }
+ else {
+            System.err.println("Experimental Mode: Yikes! Can't find \"" + entry + "\" library! Line: "+ impstat.getLineNumber()+ " in tab: "+ editor.getSketch().getCode(impstat.getTab()).getPrettyName());
+            System.out.println("Please make sure that the library is present in <sketchbook " + "folder>/libraries folder or in the code folder of your sketch");
+          }
+        }
+ else {
+          System.err.println("Yikes! There was some problem in prepareImports(): " + e);
+          System.err.println("I was processing: " + entry);
+        }
+      }
+    }
+  }
+  astGenerator.loadJars();
+}

@@ -1,0 +1,42 @@
+{
+  final int fheight=this.getHeight();
+  SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
+    protected Object doInBackground() throws Exception {
+      SketchCode sc=editor.getSketch().getCurrentCode();
+      int totalLines=0, currentTab=editor.getSketch().getCurrentCodeIndex();
+      try {
+        totalLines=Base.countLines(sc.getDocument().getText(0,sc.getDocument().getLength())) + 1;
+      }
+ catch (      BadLocationException e) {
+        e.printStackTrace();
+      }
+synchronized (errorPoints) {
+        errorPointsOld.clear();
+        for (        ErrorMarker marker : errorPoints) {
+          errorPointsOld.add(marker);
+        }
+        errorPoints.clear();
+synchronized (problems) {
+          for (          Problem problem : problems) {
+            if (problem.getTabIndex() == currentTab) {
+              float y=(problem.getLineNumber() - errorCheckerService.defaultImportsOffset) / ((float)totalLines);
+              y*=fheight - 15;
+              errorPoints.add(new ErrorMarker(problem,(int)y,problem.isError() ? ErrorMarker.Error : ErrorMarker.Warning));
+            }
+          }
+        }
+      }
+      return null;
+    }
+    protected void done(){
+      repaint();
+    }
+  }
+;
+  try {
+    worker.execute();
+  }
+ catch (  Exception exp) {
+    System.out.println("Errorbar update markers is slacking." + exp.getMessage());
+  }
+}

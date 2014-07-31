@@ -1,0 +1,17 @@
+{
+  if (doc != null && pos != null) {
+    int offset=pos.getOffset();
+    int oldLineIdx=lineIdx;
+    lineIdx=doc.getDefaultRootElement().getElementIndex(offset);
+    if (lineIdx != oldLineIdx) {
+      for (      LineListener l : listeners) {
+        if (l != null) {
+          l.lineChanged(this,oldLineIdx,lineIdx);
+        }
+ else {
+          listeners.remove(l);
+        }
+      }
+    }
+  }
+}
