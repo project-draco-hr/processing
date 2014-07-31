@@ -1,4 +1,7 @@
 {
+  if (!reloadEnabled) {
+    return;
+  }
   try {
     WatchService watchService=FileSystems.getDefault().newWatchService();
     key=sketch.getFolder().toPath().register(watchService,StandardWatchEventKinds.ENTRY_MODIFY);
@@ -7,17 +10,21 @@
   }
   final WatchKey finKey=key;
   if (finKey != null) {
-    addFocusListener(new FocusListener(){
-      @Override public void focusLost(      FocusEvent e){
-      }
-      @Override public void focusGained(      FocusEvent e){
+    WindowFocusListener fl=new WindowFocusListener(){
+      @Override public void windowGainedFocus(      WindowEvent arg0){
+        if (!reloadEnabled) {
+          return;
+        }
         if (!finKey.isValid()) {
           return;
         }
         List<WatchEvent<?>> events=finKey.pollEvents();
         processFileEvents(events);
       }
+      @Override public void windowLostFocus(      WindowEvent arg0){
+      }
     }
-);
+;
+    this.addWindowFocusListener(fl);
   }
 }
