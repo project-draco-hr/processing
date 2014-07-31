@@ -1,0 +1,15 @@
+{
+  if (!isStarted()) {
+    startDebug();
+  }
+ else   if (isPaused()) {
+    editor.variableInspector().lock();
+    if (editor.toolbar() != null)     editor.toolbar().activate(DebugToolbar.STEP);
+    requestedStep=runtime.vm().eventRequestManager().createStepRequest(currentThread,StepRequest.STEP_LINE,stepDepth);
+    requestedStep.addCountFilter(1);
+    requestedStep.enable();
+    paused=false;
+    runtime.vm().resume();
+    editor.statusBusy();
+  }
+}

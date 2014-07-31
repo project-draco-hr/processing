@@ -1,0 +1,46 @@
+{
+  try {
+    PlainDocument javaSource=new PlainDocument();
+    PlainDocument pdeTabs[]=new PlainDocument[editor.getSketch().getCodeCount()];
+    javaSource.insertString(0,sourceCode,null);
+    for (int i=0; i < pdeTabs.length; i++) {
+      SketchCode sc=editor.getSketch().getCode(i);
+      pdeTabs[i]=new PlainDocument();
+      if (editor.getSketch().getCurrentCode().equals(sc)) {
+        pdeTabs[i].insertString(0,sc.getDocument().getText(0,sc.getDocument().getLength()),null);
+      }
+ else {
+        pdeTabs[i].insertString(0,sc.getProgram(),null);
+      }
+    }
+    int pkgNameOffset=("package " + className + ";\n").length();
+    if (compilationUnitState != 2)     pkgNameOffset=0;
+    for (    Problem p : problemsList) {
+      int prbStart=p.getIProblem().getSourceStart() - pkgNameOffset, prbEnd=p.getIProblem().getSourceEnd() - pkgNameOffset;
+      int javaLineNumber=p.getSourceLineNumber() - ((compilationUnitState != 2) ? 1 : 2);
+      Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber);
+      if (lineElement == null) {
+        log("calcPDEOffsetsForProbList(): Couldn't fetch javalinenum " + javaLineNumber + "\nProblem: "+ p);
+        p.setPDEOffsets(-1,-1);
+        continue;
+      }
+      String javaLine=javaSource.getText(lineElement.getStartOffset(),lineElement.getEndOffset() - lineElement.getStartOffset());
+      Element pdeLineElement=pdeTabs[p.getTabIndex()].getDefaultRootElement().getElement(p.getLineNumber());
+      if (pdeLineElement == null) {
+        log("calcPDEOffsetsForProbList(): Couldn't fetch pdelinenum " + javaLineNumber + "\nProblem: "+ p);
+        p.setPDEOffsets(-1,-1);
+        continue;
+      }
+      String pdeLine=pdeTabs[p.getTabIndex()].getText(pdeLineElement.getStartOffset(),pdeLineElement.getEndOffset() - pdeLineElement.getStartOffset());
+      OffsetMatcher ofm=new OffsetMatcher(pdeLine,javaLine);
+      int pdeOffset=ofm.getPdeOffForJavaOff(prbStart - lineElement.getStartOffset(),(prbEnd - prbStart + 1));
+      p.setPDEOffsets(pdeOffset,pdeOffset + prbEnd - prbStart);
+    }
+  }
+ catch (  BadLocationException ble) {
+    ble.printStackTrace();
+  }
+catch (  Exception e) {
+    e.printStackTrace();
+  }
+}

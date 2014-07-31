@@ -5,7 +5,7 @@ case INT:
       int[] intData=new int[rowCount];
       for (int row=0; row < rowCount; row++) {
         String s=getString(row,column);
-        intData[row]=PApplet.parseInt(s,missingInt);
+        intData[row]=(s == null) ? missingInt : PApplet.parseInt(s,missingInt);
       }
       columns[column]=intData;
       break;
@@ -16,7 +16,7 @@ case LONG:
     for (int row=0; row < rowCount; row++) {
       String s=getString(row,column);
       try {
-        longData[row]=Long.parseLong(s);
+        longData[row]=(s == null) ? missingLong : Long.parseLong(s);
       }
  catch (      NumberFormatException nfe) {
         longData[row]=missingLong;
@@ -30,7 +30,7 @@ case FLOAT:
   float[] floatData=new float[rowCount];
   for (int row=0; row < rowCount; row++) {
     String s=getString(row,column);
-    floatData[row]=PApplet.parseFloat(s,missingFloat);
+    floatData[row]=(s == null) ? missingFloat : PApplet.parseFloat(s,missingFloat);
   }
   columns[column]=floatData;
   break;
@@ -41,7 +41,7 @@ double[] doubleData=new double[rowCount];
 for (int row=0; row < rowCount; row++) {
   String s=getString(row,column);
   try {
-    doubleData[row]=Double.parseDouble(s);
+    doubleData[row]=(s == null) ? missingDouble : Double.parseDouble(s);
   }
  catch (  NumberFormatException nfe) {
     doubleData[row]=missingDouble;

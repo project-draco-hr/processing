@@ -4,7 +4,7 @@
   boolean wine=whinyBox.isSelected();
   setBoolean("header.hide.image",wine);
   setBoolean("buttons.hide.image",wine);
-  String oldPath=get("sketchbook.path");
+  String oldPath=getSketchbookPath();
   String newPath=sketchbookLocationField.getText();
   if (!newPath.equals(oldPath)) {
     base.setSketchbookFolder(new File(newPath));
@@ -71,10 +71,15 @@
     Base.log("Ignoring invalid font size " + consoleSizeField);
     consoleSizeField.setSelectedItem(getInteger("console.font.size"));
   }
+  setColor("run.present.bgcolor",presentColor.getBackground());
   setBoolean("editor.input_method_support",inputMethodBox.isSelected());
   if (autoAssociateBox != null) {
     setBoolean("platform.auto_file_type_associations",autoAssociateBox.isSelected());
   }
+  setBoolean("pdex.errorCheckEnabled",errorCheckerBox.isSelected());
+  setBoolean("pdex.warningsEnabled",warningsCheckerBox.isSelected());
+  setBoolean("pdex.ccEnabled",codeCompletionBox.isSelected());
+  setBoolean("pdex.ccTriggerEnabled",codeCompletionTriggerBox.isSelected());
   for (  Editor editor : base.getEditors()) {
     editor.applyPreferences();
   }

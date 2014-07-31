@@ -1,0 +1,29 @@
+{
+  stopThread.set(false);
+  checkCode();
+  if (!hasSyntaxErrors())   editor.showProblemListView(XQConsoleToggle.CONSOLE);
+  astGenerator.buildAST(cu);
+  handleErrorCheckingToggle();
+  while (!stopThread.get()) {
+    try {
+      Thread.sleep(sleepTime);
+    }
+ catch (    Exception e) {
+      log("Oops! [ErrorCheckerThreaded]: " + e);
+    }
+    updatePaintedThingys();
+    updateEditorStatus();
+    updateSketchCodeListeners();
+    if (pauseThread.get())     continue;
+    if (textModified.get() == 0)     continue;
+    checkCode();
+    checkForMissingImports();
+  }
+  astGenerator.disposeAllWindows();
+  compilationChecker=null;
+  checkerClass=null;
+  classLoader=null;
+  System.gc();
+  logE("Thread stopped: " + editor.getSketch().getName());
+  System.gc();
+}

@@ -1,0 +1,22 @@
+{
+  List<ASTNode> list=(List<ASTNode>)md.modifiers();
+  SimpleName sn=(SimpleName)getNode();
+  int lineNum=getLineNumber(sn);
+  log("SN " + sn + ", "+ lineNum);
+  for (  ASTNode astNode : list) {
+    if (getLineNumber(astNode) == lineNum) {
+      log("first node in that line " + astNode);
+      log("diff " + (sn.getStartPosition() - astNode.getStartPosition()));
+      return (astNode.getStartPosition());
+    }
+  }
+  if (!md.isConstructor()) {
+    Type tp=md.getReturnType2();
+    if (getLineNumber(tp) == lineNum) {
+      log("first node in that line " + tp);
+      log("diff " + (sn.getStartPosition() - tp.getStartPosition()));
+      return (tp.getStartPosition());
+    }
+  }
+  return 0;
+}

@@ -8,6 +8,9 @@
   descriptionBlock.setContentType("text/html");
   setTextStyle(descriptionBlock);
   descriptionBlock.setOpaque(false);
+  if (UIManager.getLookAndFeel().getID().equals("Nimbus")) {
+    descriptionBlock.setBackground(new Color(0,0,0,0));
+  }
   descriptionBlock.setBorder(new EmptyBorder(4,7,7,7));
   descriptionBlock.setHighlighter(null);
   add(descriptionBlock,BorderLayout.CENTER);
@@ -27,6 +30,7 @@
   updateButton.setVisible(false);
   updateButton.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
+      listPanel.contribManager.status.clear();
       updateButton.setEnabled(false);
       AvailableContribution ad=contribListing.getAvailableContribution(contrib);
       String url=ad.link;

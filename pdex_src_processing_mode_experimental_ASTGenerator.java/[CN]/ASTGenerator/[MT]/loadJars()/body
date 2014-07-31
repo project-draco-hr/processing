@@ -1,0 +1,39 @@
+{
+  Thread t=new Thread(new Runnable(){
+    public void run(){
+      try {
+        factory=new ClassPathFactory();
+        StringBuffer tehPath=new StringBuffer(System.getProperty("java.class.path"));
+        if (Base.isMacOS()) {
+          tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + File.separator+ "bundle"+ File.separator+ "Classes"+ File.separator+ "classes.jar"+ File.pathSeparatorChar);
+        }
+ else {
+          tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + File.separator+ "lib"+ File.separator+ "rt.jar"+ File.pathSeparatorChar);
+        }
+        if (errorCheckerService.classpathJars != null) {
+synchronized (errorCheckerService.classpathJars) {
+            for (            URL jarPath : errorCheckerService.classpathJars) {
+              tehPath.append(jarPath.getPath() + File.pathSeparatorChar);
+            }
+          }
+        }
+        classPath=factory.createFromPath(tehPath.toString());
+        log("Classpath created " + (classPath != null));
+        log("Sketch classpath jars loaded.");
+        if (Base.isMacOS()) {
+          File f=new File(System.getProperty("java.home") + File.separator + "bundle"+ File.separator+ "Classes"+ File.separator+ "classes.jar");
+          log(f.getAbsolutePath() + " | classes.jar found?" + f.exists());
+        }
+ else {
+          File f=new File(System.getProperty("java.home") + File.separator + "lib"+ File.separator+ "rt.jar"+ File.separator);
+          log(f.getAbsolutePath() + " | rt.jar found?" + f.exists());
+        }
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+);
+  t.start();
+}

@@ -19,6 +19,9 @@
     }
   }
 );
+  if (!Base.isMacOS()) {
+    Preferences.setBoolean("export.application.platform.macosx",false);
+  }
   final JCheckBox macosxButton=new JCheckBox("Mac OS X");
   macosxButton.setSelected(Preferences.getBoolean("export.application.platform.macosx"));
   macosxButton.addItemListener(new ItemListener(){
@@ -27,6 +30,10 @@
     }
   }
 );
+  if (!Base.isMacOS()) {
+    macosxButton.setEnabled(false);
+    macosxButton.setToolTipText("Mac OS X export is only available on Mac OS X");
+  }
   final JCheckBox linuxButton=new JCheckBox("Linux");
   linuxButton.setSelected(Preferences.getBoolean("export.application.platform.linux"));
   linuxButton.addItemListener(new ItemListener(){

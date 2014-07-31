@@ -1,0 +1,20 @@
+{
+  if (edt == null) {
+    return false;
+  }
+  try {
+    edt.toFront();
+    edt.getSketch().setCurrentCode(tabIndex);
+    int lsno=edt.getTextArea().getLineStartNonWhiteSpaceOffset(lineNoInTab - 1) + lineStartOffset;
+    edt.setSelection(lsno,lsno + length);
+    edt.getTextArea().scrollTo(lineNoInTab - 1,0);
+    edt.repaint();
+    log(lineStartOffset + " LSO,len " + length);
+  }
+ catch (  Exception e) {
+    System.err.println(e + " : Error while selecting text in static scrollToErrorLine()");
+    e.printStackTrace();
+    return false;
+  }
+  return true;
+}
