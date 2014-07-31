@@ -1,0 +1,14 @@
+{
+  try {
+    Class<?> appClass=Class.forName("com.apple.eawt.Application");
+    Method getAppMethod=appClass.getMethod("getApplication");
+    Object app=getAppMethod.invoke(null,new Object[0]);
+    Method requestMethod=appClass.getMethod("requestToggleFullScreen",Window.class);
+    requestMethod.invoke(app,window);
+  }
+ catch (  ClassNotFoundException cnfe) {
+  }
+catch (  Exception e) {
+    e.printStackTrace();
+  }
+}
