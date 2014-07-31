@@ -135,10 +135,12 @@ if (Preferences.getBoolean("editor.indent")) {
   if (spaceCount < 0) {
     textarea.setSelectionEnd(textarea.getSelectionStop() - spaceCount);
     textarea.setSelectedText("\n");
+    textarea.setCaretPosition(textarea.getCaretPosition() + extraCount + spaceCount);
   }
  else {
     String insertion="\n" + spaces(spaceCount);
     textarea.setSelectedText(insertion);
+    textarea.setCaretPosition(textarea.getCaretPosition() + extraCount);
   }
   if (braceCount > 0) {
     int sel=textarea.getSelectionStart();
