@@ -1,0 +1,27 @@
+{
+  this.language=Locale.getDefault().getLanguage();
+  this.languages=new HashMap<String,String>();
+  this.languages.put(Locale.ENGLISH.getLanguage(),Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
+  this.languages.put(Locale.GERMAN.getLanguage(),Locale.GERMAN.getDisplayLanguage(Locale.GERMAN));
+  this.languages.put(Locale.JAPANESE.getLanguage(),Locale.JAPANESE.getDisplayLanguage(Locale.JAPANESE));
+  if (!this.languages.containsKey(this.language)) {
+    this.language="en";
+  }
+  try {
+    File file=Base.getContentFile("lib/language.txt");
+    if (file.exists()) {
+      String language=PApplet.loadStrings(file)[0];
+      language=language.trim().toLowerCase();
+      if (!language.equals("")) {
+        this.language=language;
+      }
+ else {
+        Base.saveFile(this.language,file);
+      }
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  this.bundle=ResourceBundle.getBundle(Language.FILE,new Locale(this.language),new UTF8Control());
+}

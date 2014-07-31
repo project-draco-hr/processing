@@ -120,18 +120,23 @@
     ASTNode childExpr=getChildExpression(testnode);
     log("Parent expression : " + getParentExpression(testnode));
     log("Child expression : " + childExpr);
-    if (!noCompare) {
-      log("Original testnode " + getNodeAsString(testnode));
-      testnode=getParentExpression(testnode);
-      log("Corrected testnode " + getNodeAsString(testnode));
-    }
-    ClassMember expr=resolveExpression3rdParty(nearestNode,testnode,noCompare);
-    if (expr == null) {
-      log("Expr is null");
+    if (childExpr != null) {
+      if (!noCompare) {
+        log("Original testnode " + getNodeAsString(testnode));
+        testnode=getParentExpression(testnode);
+        log("Corrected testnode " + getNodeAsString(testnode));
+      }
+      ClassMember expr=resolveExpression3rdParty(nearestNode,testnode,noCompare);
+      if (expr == null) {
+        log("Expr is null");
+      }
+ else {
+        log("Expr is " + expr.toString());
+        candidates=getMembersForType(expr,childExpr.toString(),noCompare,false);
+      }
     }
  else {
-      log("Expr is " + expr.toString());
-      candidates=getMembersForType(expr,childExpr.toString(),noCompare,false);
+      log("ChildExpr is null");
     }
   }
   showPredictions(word);

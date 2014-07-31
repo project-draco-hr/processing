@@ -5,10 +5,13 @@
       continue;
     }
  else     if (offsetMatch.get(i).pdeOffset == pdeOff) {
-      while (offsetMatch.get(--i).pdeOffset == pdeOff) {
+      while (i > 0 && offsetMatch.get(--i).pdeOffset == pdeOff) {
       }
-      int javaOff=offsetMatch.get(++i).javaOffset;
-      while (i > 0 && offsetMatch.get(--i).javaOffset == javaOff)       ;
+      if (i + 1 < offsetMatch.size()) {
+        int javaOff=offsetMatch.get(++i).javaOffset;
+        while (i > 0 && offsetMatch.get(--i).javaOffset == javaOff) {
+        }
+      }
       int j=i + 1;
       if (j > -1 && j < offsetMatch.size())       return offsetMatch.get(j).javaOffset;
     }
