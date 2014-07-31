@@ -22,6 +22,11 @@
         processFileEvents(events);
       }
       @Override public void windowLostFocus(      WindowEvent arg0){
+        List<WatchEvent<?>> events=finKey.pollEvents();
+        if (!saved) {
+          processFileEvents(events);
+        }
+        saved=false;
       }
     }
 ;
