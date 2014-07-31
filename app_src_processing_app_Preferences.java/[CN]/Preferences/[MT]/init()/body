@@ -21,16 +21,16 @@
   defaults=(HashMap<String,String>)table.clone();
   setColor("run.window.bgcolor",SystemColor.control);
   preferencesFile=Base.getSettingsFile(PREFS_FILE);
-  if (!preferencesFile.exists()) {
-    save();
-  }
- else {
+  if (preferencesFile.exists()) {
     try {
       load(new FileInputStream(preferencesFile));
     }
  catch (    Exception ex) {
       Base.showError("Error reading preferences","Error reading the preferences file. " + "Please delete (or move)\n" + preferencesFile.getAbsolutePath() + " and restart Processing.",ex);
     }
+  }
+  if (checkSketchbookPref() || !preferencesFile.exists()) {
+    save();
   }
   PApplet.useNativeSelect=Preferences.getBoolean("chooser.files.native");
   String proxyHost=get("proxy.host");

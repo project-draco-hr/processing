@@ -43,13 +43,14 @@
     return false;
   }
   if (!sourceFile.equals(destFile)) {
-    try {
-      Base.copyFile(sourceFile,destFile);
+    final File sourceFile2=sourceFile;
+    final File destFile2=destFile;
+    javax.swing.SwingUtilities.invokeLater(new Runnable(){
+      public void run(){
+        new ProgressFrame(sourceFile2,destFile2,editor);
+      }
     }
- catch (    IOException e) {
-      Base.showWarning("Error adding file","Could not add '" + filename + "' to the sketch.",e);
-      return false;
-    }
+);
   }
   if (codeExtension != null) {
     SketchCode newCode=new SketchCode(destFile,codeExtension);
