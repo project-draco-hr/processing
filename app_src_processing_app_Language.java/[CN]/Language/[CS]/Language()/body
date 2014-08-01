@@ -1,12 +1,11 @@
 {
   this.language=Locale.getDefault().getLanguage();
-  this.languages=new HashMap<String,String>();
-  final String[] SUPPORTED={"de","en","es","fr","ja","nl","pt"};
-  for (  String code : SUPPORTED) {
+  languages=new HashMap<String,String>();
+  for (  String code : listSupported()) {
     languages.put(code,Locale.forLanguageTag(code).getDisplayLanguage(Locale.forLanguageTag(code)));
   }
-  if (!this.languages.containsKey(this.language)) {
-    this.language="en";
+  if (!languages.containsKey(language)) {
+    language="en";
   }
   try {
     File file=Base.getContentFile("lib/language.txt");
@@ -24,5 +23,5 @@
  catch (  Exception e) {
     e.printStackTrace();
   }
-  this.bundle=ResourceBundle.getBundle(Language.FILE,new Locale(this.language),new UTF8Control());
+  bundle=ResourceBundle.getBundle(Language.FILE,new Locale(this.language),new UTF8Control());
 }

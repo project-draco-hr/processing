@@ -1,9 +1,10 @@
 {
   enableHyperlinks=alreadySelected;
-  if (contrib != null && !contrib.getType().requiresRestart()) {
-    updateButton.setVisible(isSelected() && contribListing.hasUpdates(contrib));
+  if (contrib != null) {
+    updateButton.setVisible((contribListing.hasUpdates(contrib) && !contrib.isUpdateFlagged() && !contrib.isDeletionFlagged()) || isUpdateInProgress);
   }
-  installRemoveButton.setVisible(isSelected() || installRemoveButton.getText().equals(Language.text("contributions.remove")));
+  installRemoveButton.setVisible(isSelected() || installRemoveButton.getText().equals(Language.text("contributions.remove")) || isUpdateInProgress);
+  reorganizePaneComponents();
 {
     JEditorPane editorPane=descriptionBlock;
     editorPane.removeHyperlinkListener(ContributionListPanel.nullHyperlinkListener);

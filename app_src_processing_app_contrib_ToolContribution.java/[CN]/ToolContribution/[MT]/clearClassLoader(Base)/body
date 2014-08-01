@@ -1,0 +1,23 @@
+{
+  try {
+    ((URLClassLoader)this.loader).close();
+  }
+ catch (  IOException e1) {
+    e1.printStackTrace();
+  }
+  Iterator<Editor> editorIter=base.getEditors().iterator();
+  while (editorIter.hasNext()) {
+    Editor editor=editorIter.next();
+    ArrayList<ToolContribution> contribTools=editor.contribTools;
+    for (    ToolContribution toolContrib : contribTools)     if (toolContrib.getName().equals(this.name)) {
+      try {
+        ((URLClassLoader)toolContrib.loader).close();
+        editor.contribTools.remove(toolContrib);
+        break;
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+}

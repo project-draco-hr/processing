@@ -21,6 +21,9 @@
  else   if (contrib.isRestartFlagged()) {
     description.append(INSTALL_RESTART_MESSAGE);
   }
+ else   if (contrib.isUpdateFlagged()) {
+    description.append(UPDATE_RESTART_MESSAGE);
+  }
  else {
     String sentence=contrib.getSentence();
     if (sentence == null || sentence.isEmpty()) {
@@ -51,16 +54,13 @@
   if (contribListing.hasUpdates(contrib)) {
     StringBuilder versionText=new StringBuilder();
     versionText.append("<html><body><i>");
-    if (contrib.isDeletionFlagged()) {
-      versionText.append("To finish an update, reinstall this contribution after restarting.");
+    if (contrib.isUpdateFlagged() || contrib.isDeletionFlagged()) {
+      ;
     }
  else {
       String latestVersion=contribListing.getLatestVersion(contrib);
       if (latestVersion != null)       versionText.append("New version (" + latestVersion + ") available!");
  else       versionText.append("New version available!");
-      if (contrib.getType().requiresRestart()) {
-        versionText.append(" To update, first remove the current version.");
-      }
     }
     versionText.append("</i></body></html>");
     notificationBlock.setText(versionText.toString());
@@ -71,8 +71,8 @@
     notificationBlock.setVisible(false);
   }
   updateButton.setEnabled(true);
-  if (contrib != null && !contrib.getType().requiresRestart()) {
-    updateButton.setVisible(isSelected() && contribListing.hasUpdates(contrib));
+  if (contrib != null) {
+    updateButton.setVisible((contribListing.hasUpdates(contrib) && !contrib.isUpdateFlagged() && !contrib.isDeletionFlagged()) || isUpdateInProgress);
   }
   installRemoveButton.removeActionListener(installActionListener);
   installRemoveButton.removeActionListener(removeActionListener);
@@ -85,6 +85,8 @@
     installRemoveButton.addActionListener(removeActionListener);
     installRemoveButton.setText(Language.text("contributions.remove"));
     installRemoveButton.setVisible(true);
+    installRemoveButton.setEnabled(!contrib.isUpdateFlagged());
+    reorganizePaneComponents();
   }
  else {
     installRemoveButton.addActionListener(installActionListener);
