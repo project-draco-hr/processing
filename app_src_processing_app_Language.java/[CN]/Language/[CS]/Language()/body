@@ -1,6 +1,6 @@
 {
   String systemLanguage=Locale.getDefault().getLanguage();
-  String language=Preferences.get(PREF);
+  language=loadLanguage();
   boolean writePrefs=false;
   if (language == null) {
     language=systemLanguage;
@@ -15,7 +15,7 @@
     writePrefs=true;
   }
   if (writePrefs) {
-    Preferences.save();
+    saveLanguage(language);
   }
   bundle=ResourceBundle.getBundle(Language.FILE,new Locale(this.language),new UTF8Control());
 }
