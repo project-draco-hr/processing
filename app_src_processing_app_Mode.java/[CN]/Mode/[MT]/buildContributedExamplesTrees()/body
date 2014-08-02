@@ -2,7 +2,10 @@
   DefaultMutableTreeNode node=new DefaultMutableTreeNode("Contributed Examples");
   JTree examplesTree=new JTree(node);
   try {
-    File[] subfolders=getContributedExampleCategoryFolders();
+    File[] subfolders=ContributionType.EXAMPLE.listCandidates(examplesContribFolder);
+    if (subfolders == null) {
+      subfolders=new File[0];
+    }
     for (    File sub : subfolders) {
       DefaultMutableTreeNode subNode=new DefaultMutableTreeNode(sub.getName());
       if (base.addSketches(subNode,sub)) {
