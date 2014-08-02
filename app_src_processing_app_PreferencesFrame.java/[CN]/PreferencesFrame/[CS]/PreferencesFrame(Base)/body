@@ -4,6 +4,10 @@
   dialog.setResizable(false);
   Container pain=dialog.getContentPane();
   pain.setLayout(null);
+  final int GUI_BETWEEN=Preferences.GUI_BETWEEN;
+  final int GUI_BIG=Preferences.GUI_BIG;
+  final int GUI_SMALL=Preferences.GUI_SMALL;
+  final int BUTTON_WIDTH=Preferences.BUTTON_WIDTH;
   int top=GUI_BIG;
   int left=GUI_BIG;
   int right=0;
@@ -19,11 +23,11 @@
   sketchbookLocationField=new JTextField(40);
   pain.add(sketchbookLocationField);
   d=sketchbookLocationField.getPreferredSize();
-  button=new JButton(PROMPT_BROWSE);
+  button=new JButton(Preferences.PROMPT_BROWSE);
   button.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       File dflt=new File(sketchbookLocationField.getText());
-      PApplet.selectFolder(Language.text("preferences.sketchbook_location.popup"),"sketchbookCallback",dflt,Preferences.this,dialog);
+      PApplet.selectFolder(Language.text("preferences.sketchbook_location.popup"),"sketchbookCallback",dflt,PreferencesFrame.this,dialog);
     }
   }
 );
@@ -269,7 +273,7 @@
   label.setBounds(left,top,d.width,d.height);
   right=Math.max(right,left + d.width);
   top+=d.height;
-  label=new JLabel(preferencesFile.getAbsolutePath());
+  label=new JLabel(Preferences.getSketchbookPath());
   final JLabel clickable=label;
   label.addMouseListener(new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
@@ -295,7 +299,7 @@
   label.setBounds(left,top,d.width,d.height);
   right=Math.max(right,left + d.width);
   top+=d.height;
-  button=new JButton(PROMPT_OK);
+  button=new JButton(Preferences.PROMPT_OK);
   button.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       applyFrame();
@@ -305,11 +309,11 @@
 );
   pain.add(button);
   d2=button.getPreferredSize();
-  BUTTON_HEIGHT=d2.height;
+  int BUTTON_HEIGHT=d2.height;
   h=right - (BUTTON_WIDTH + GUI_SMALL + BUTTON_WIDTH);
   button.setBounds(h,top,BUTTON_WIDTH,BUTTON_HEIGHT);
   h+=BUTTON_WIDTH + GUI_SMALL;
-  button=new JButton(PROMPT_CANCEL);
+  button=new JButton(Preferences.PROMPT_CANCEL);
   button.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       disposeFrame();

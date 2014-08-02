@@ -1,15 +1,15 @@
 {
-  setBoolean("editor.smooth",editorAntialiasBox.isSelected());
-  setBoolean("export.delete_target_folder",deletePreviousBox.isSelected());
+  Preferences.setBoolean("editor.smooth",editorAntialiasBox.isSelected());
+  Preferences.setBoolean("export.delete_target_folder",deletePreviousBox.isSelected());
   boolean wine=whinyBox.isSelected();
-  setBoolean("header.hide.image",wine);
-  setBoolean("buttons.hide.image",wine);
-  String oldPath=getSketchbookPath();
+  Preferences.setBoolean("header.hide.image",wine);
+  Preferences.setBoolean("buttons.hide.image",wine);
+  String oldPath=Preferences.getSketchbookPath();
   String newPath=sketchbookLocationField.getText();
   if (!newPath.equals(oldPath)) {
     base.setSketchbookFolder(new File(newPath));
   }
-  setBoolean("update.check",checkUpdatesBox.isSelected());
+  Preferences.setBoolean("update.check",checkUpdatesBox.isSelected());
   Map<String,String> languages=Language.getLanguages();
   String language="";
   for (  Map.Entry<String,String> lang : languages.entrySet()) {
@@ -21,7 +21,7 @@
   if (!language.equals(Language.getLanguage()) && !language.equals("")) {
     Language.saveLanguage(language);
   }
-  int oldDisplayIndex=getInteger("run.display");
+  int oldDisplayIndex=Preferences.getInteger("run.display");
   int displayIndex=0;
   for (int d=0; d < displaySelectionBox.getItemCount(); d++) {
     if (displaySelectionBox.getSelectedIndex() == d) {
@@ -29,57 +29,57 @@
     }
   }
   if (oldDisplayIndex != displayIndex) {
-    setInteger("run.display",displayIndex);
+    Preferences.setInteger("run.display",displayIndex);
     for (    Editor editor : base.getEditors()) {
       editor.setSketchLocation(null);
     }
   }
-  setBoolean("run.options.memory",memoryOverrideBox.isSelected());
+  Preferences.setBoolean("run.options.memory",memoryOverrideBox.isSelected());
   int memoryMin=Preferences.getInteger("run.options.memory.initial");
   int memoryMax=Preferences.getInteger("run.options.memory.maximum");
   try {
     memoryMax=Integer.parseInt(memoryField.getText().trim());
     if (memoryMax < memoryMin)     memoryMax=memoryMin;
-    setInteger("run.options.memory.maximum",memoryMax);
+    Preferences.setInteger("run.options.memory.maximum",memoryMax);
   }
  catch (  NumberFormatException e) {
     System.err.println("Ignoring bad memory setting");
   }
   if (fontSelectionBox.isEnabled()) {
     String fontFamily=(String)fontSelectionBox.getSelectedItem();
-    set("editor.font.family",fontFamily);
+    Preferences.set("editor.font.family",fontFamily);
   }
   try {
     Object selection=fontSizeField.getSelectedItem();
     if (selection instanceof String) {
       selection=Integer.parseInt((String)selection);
     }
-    set("editor.font.size",String.valueOf(selection));
+    Preferences.set("editor.font.size",String.valueOf(selection));
   }
  catch (  NumberFormatException e) {
     Base.log("Ignoring invalid font size " + fontSizeField);
-    fontSizeField.setSelectedItem(getInteger("editor.font.size"));
+    fontSizeField.setSelectedItem(Preferences.getInteger("editor.font.size"));
   }
   try {
     Object selection=consoleSizeField.getSelectedItem();
     if (selection instanceof String) {
       selection=Integer.parseInt((String)selection);
     }
-    set("console.font.size",String.valueOf(selection));
+    Preferences.set("console.font.size",String.valueOf(selection));
   }
  catch (  NumberFormatException e) {
     Base.log("Ignoring invalid font size " + consoleSizeField);
-    consoleSizeField.setSelectedItem(getInteger("console.font.size"));
+    consoleSizeField.setSelectedItem(Preferences.getInteger("console.font.size"));
   }
-  setColor("run.present.bgcolor",presentColor.getBackground());
-  setBoolean("editor.input_method_support",inputMethodBox.isSelected());
+  Preferences.setColor("run.present.bgcolor",presentColor.getBackground());
+  Preferences.setBoolean("editor.input_method_support",inputMethodBox.isSelected());
   if (autoAssociateBox != null) {
-    setBoolean("platform.auto_file_type_associations",autoAssociateBox.isSelected());
+    Preferences.setBoolean("platform.auto_file_type_associations",autoAssociateBox.isSelected());
   }
-  setBoolean("pdex.errorCheckEnabled",errorCheckerBox.isSelected());
-  setBoolean("pdex.warningsEnabled",warningsCheckerBox.isSelected());
-  setBoolean("pdex.ccEnabled",codeCompletionBox.isSelected());
-  setBoolean("pdex.ccTriggerEnabled",codeCompletionTriggerBox.isSelected());
+  Preferences.setBoolean("pdex.errorCheckEnabled",errorCheckerBox.isSelected());
+  Preferences.setBoolean("pdex.warningsEnabled",warningsCheckerBox.isSelected());
+  Preferences.setBoolean("pdex.ccEnabled",codeCompletionBox.isSelected());
+  Preferences.setBoolean("pdex.ccTriggerEnabled",codeCompletionTriggerBox.isSelected());
   for (  Editor editor : base.getEditors()) {
     editor.applyPreferences();
   }
