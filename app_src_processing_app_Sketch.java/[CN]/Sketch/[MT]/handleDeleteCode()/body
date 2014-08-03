@@ -9,8 +9,8 @@
     return;
   }
   Object[] options={"OK","Cancel"};
-  String prompt=(currentIndex == 0) ? "Are you sure you want to delete this sketch?" : "Are you sure you want to delete \"" + current.getPrettyName() + "\"?";
-  int result=JOptionPane.showOptionDialog(editor,prompt,"Delete",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+  String prompt=(currentIndex == 0) ? Language.text("warn.delete.sketch") : Language.interpolate("warn.delete.file",current.getPrettyName());
+  int result=JOptionPane.showOptionDialog(editor,prompt,Language.text("warn.delete"),JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
   if (result == JOptionPane.YES_OPTION) {
     if (currentIndex == 0) {
       Base.removeDir(folder);
