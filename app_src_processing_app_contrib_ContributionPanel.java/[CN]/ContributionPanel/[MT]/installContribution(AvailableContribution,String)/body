@@ -11,10 +11,15 @@
     JProgressMonitor installProgress=new JProgressMonitor(installProgressBar){
       public void finishedAction(){
         resetInstallProgressBarState();
-        installRemoveButton.setEnabled(true);
+        installRemoveButton.setEnabled(!contrib.isUpdateFlagged());
         if (isError()) {
-          listPanel.contribManager.status.setErrorMessage("An error occured while downloading the contribution.");
+          listPanel.contribManager.status.setErrorMessage(Language.text("contributions.download_error"));
         }
+        ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,BUTTON_CONSTRAINT);
+        isInstallInProgress=false;
+        if (isUpdateInProgress)         isUpdateInProgress=!isUpdateInProgress;
+        updateButton.setVisible(contribListing.hasUpdates(contrib) && !contrib.isUpdateFlagged());
+        setSelected(true);
       }
     }
 ;

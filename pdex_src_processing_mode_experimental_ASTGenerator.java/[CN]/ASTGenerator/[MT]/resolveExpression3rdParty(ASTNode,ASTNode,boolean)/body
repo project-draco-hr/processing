@@ -10,7 +10,7 @@
       return new ClassMember(extracTypeInfo(decl));
     }
  else {
-      Class tehClass=findClassIfExists(((SimpleName)astNode).toString());
+      Class<?> tehClass=findClassIfExists(((SimpleName)astNode).toString());
       if (tehClass != null) {
         return new ClassMember(tehClass);
       }
@@ -28,7 +28,7 @@ case ASTNode.FIELD_ACCESS:
     if (fa.getExpression() instanceof SimpleName) {
       stp=extracTypeInfo(findDeclaration2((SimpleName)fa.getExpression(),nearestNode));
       if (stp == null) {
-        Class tehClass=findClassIfExists(((SimpleName)fa.getExpression()).toString());
+        Class<?> tehClass=findClassIfExists(((SimpleName)fa.getExpression()).toString());
         if (tehClass != null) {
           return definedIn3rdPartyClass(new ClassMember(tehClass),fa.getName().toString());
         }

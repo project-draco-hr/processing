@@ -1,0 +1,13 @@
+{
+  if (availableContrib.link == null) {
+    Base.showWarning("Update on Restart of " + availableContrib.getName() + "failed","Your operating system " + "doesn't appear to be supported. You should visit the " + availableContrib.getType() + "'s library for more info.");
+    return;
+  }
+  try {
+    URL downloadUrl=new URL(availableContrib.link);
+    ContributionManager.downloadAndInstallOnStartup(base,downloadUrl,availableContrib);
+  }
+ catch (  MalformedURLException e) {
+    Base.showWarning("Update on Restart of " + availableContrib.getName() + "failed",ContributionListPanel.MALFORMED_URL_MESSAGE,e);
+  }
+}
