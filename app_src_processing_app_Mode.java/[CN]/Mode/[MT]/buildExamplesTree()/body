@@ -1,26 +1,22 @@
 {
   DefaultMutableTreeNode node=new DefaultMutableTreeNode("Examples");
-  JTree examplesTree=new JTree(node);
   try {
     File[] subfolders=getExampleCategoryFolders();
+    DefaultMutableTreeNode modeExParent=new DefaultMutableTreeNode("Mode Examples");
     for (    File sub : subfolders) {
       DefaultMutableTreeNode subNode=new DefaultMutableTreeNode(sub.getName());
       if (base.addSketches(subNode,sub)) {
-        node.add(subNode);
+        modeExParent.add(subNode);
       }
     }
     boolean any=false;
-    DefaultMutableTreeNode libParent=new DefaultMutableTreeNode("Libraries");
     for (    Library lib : coreLibraries) {
       if (lib.hasExamples()) {
         DefaultMutableTreeNode libNode=new DefaultMutableTreeNode(lib.getName());
-        any|=base.addSketches(libNode,lib.getExamplesFolder());
-        libParent.add(libNode);
+        if (base.addSketches(libNode,lib.getExamplesFolder()))         modeExParent.add(libNode);
       }
     }
-    if (any) {
-      node.add(libParent);
-    }
+    if (modeExParent.getChildCount() > 0)     node.add(modeExParent);
     any=false;
     for (    Library lib : contribLibraries) {
       if (lib.hasExamples()) {
@@ -28,7 +24,7 @@
       }
     }
     if (any) {
-      DefaultMutableTreeNode contribParent=new DefaultMutableTreeNode("Contributed Libraries");
+      DefaultMutableTreeNode contribParent=new DefaultMutableTreeNode("Library Examples");
       for (      Library lib : contribLibraries) {
         if (lib.hasExamples()) {
           DefaultMutableTreeNode libNode=new DefaultMutableTreeNode(lib.getName());
@@ -42,5 +38,7 @@
  catch (  IOException e) {
     e.printStackTrace();
   }
-  return examplesTree;
+  DefaultMutableTreeNode contribExampleNode=buildContributedExamplesTrees();
+  if (contribExampleNode.getChildCount() > 0)   node.add(contribExampleNode);
+  return node;
 }
