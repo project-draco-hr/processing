@@ -9,7 +9,7 @@
         try {
           download(url,contribZip,downloadProgress);
           if (!downloadProgress.isCanceled() && !downloadProgress.isError()) {
-            installProgress.startTask("Installing...",ProgressMonitor.UNKNOWN);
+            installProgress.startTask(Language.text("contributions.progress.installing"),ProgressMonitor.UNKNOWN);
             LocalContribution contribution=ad.install(editor.getBase(),contribZip,false,status);
             if (contribution != null) {
               contribListing.replaceContribution(ad,contribution);
@@ -25,11 +25,11 @@
         }
  catch (        Exception e) {
           e.printStackTrace();
-          status.setErrorMessage("Error during download and install.");
+          status.setErrorMessage(Language.text("contributions.errors.download_and_install"));
         }
       }
  catch (      IOException e) {
-        status.setErrorMessage("Could not write to temporary directory.");
+        status.setErrorMessage(Language.text("contributions.errors.temporary_directory"));
       }
     }
   }

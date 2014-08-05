@@ -4,19 +4,19 @@
     tempFolder=type.createTempFolder();
   }
  catch (  IOException e) {
-    if (status != null)     status.setErrorMessage("Could not create a temporary folder to install.");
+    if (status != null)     status.setErrorMessage(Language.text("contributions.errors.temporary_directory"));
     return null;
   }
   Base.unzip(contribArchive,tempFolder);
   File contribFolder=null;
   if (type.isCandidate(tempFolder)) {
-    if (status != null)     status.setErrorMessage(getName() + " needs to be repackaged according to the " + type.getTitle()+ " guidelines.");
+    if (status != null)     status.setErrorMessage(Language.interpolate("contributions.errors.needs_repackage",getName(),type.getTitle()));
     return null;
   }
   contribFolder=type.findCandidate(tempFolder);
   LocalContribution installedContrib=null;
   if (contribFolder == null) {
-    if (status != null)     status.setErrorMessage("Could not find a " + type + " in the downloaded file.");
+    if (status != null)     status.setErrorMessage(Language.interpolate("contributions.errors.no_contribution_found",type));
   }
  else {
     File propFile=new File(contribFolder,type + ".properties");
@@ -43,7 +43,7 @@
       Base.removeDir(newContribFolder);
     }
  else {
-      if (status != null)       status.setErrorMessage("Error overwriting .properties file.");
+      if (status != null)       status.setErrorMessage(Language.text("contributions.errors.overwriting_properties"));
     }
   }
   if (tempFolder.exists()) {

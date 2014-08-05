@@ -1,6 +1,6 @@
 {
   if (availableContrib.link == null) {
-    Base.showWarning("Update on Restart of " + availableContrib.getName() + "failed","Your operating system " + "doesn't appear to be supported. You should visit the " + availableContrib.getType() + "'s library for more info.");
+    Base.showWarning(Language.interpolate("contributions.errors.update_on_restart_failed",availableContrib.getName()),Language.text("contributions.unsupported_operating_system"));
     return;
   }
   try {
@@ -8,6 +8,6 @@
     ContributionManager.downloadAndInstallOnStartup(base,downloadUrl,availableContrib);
   }
  catch (  MalformedURLException e) {
-    Base.showWarning("Update on Restart of " + availableContrib.getName() + "failed",ContributionListPanel.MALFORMED_URL_MESSAGE,e);
+    Base.showWarning(Language.interpolate("contributions.errors.update_on_restart_failed",availableContrib.getName()),Language.text("contributions.errors.malformed_url"),e);
   }
 }
