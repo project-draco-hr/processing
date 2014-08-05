@@ -1,6 +1,10 @@
 {
   if (singleInstance == null) {
-    singleInstance=new ContributionListing();
+synchronized (ContributionListing.class) {
+      if (singleInstance == null) {
+        singleInstance=new ContributionListing();
+      }
+    }
   }
   return singleInstance;
 }
