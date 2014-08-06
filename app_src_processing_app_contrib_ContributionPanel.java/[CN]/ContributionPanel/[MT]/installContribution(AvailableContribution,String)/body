@@ -11,16 +11,21 @@
     JProgressMonitor installProgress=new JProgressMonitor(installProgressBar){
       public void finishedAction(){
         resetInstallProgressBarState();
-        installRemoveButton.setEnabled(true);
+        installRemoveButton.setEnabled(!contrib.isUpdateFlagged());
         if (isError()) {
-          listPanel.contribManager.status.setErrorMessage("An error occured while downloading the contribution.");
+          listPanel.contribManager.status.setErrorMessage(Language.text("contrib.download_error"));
         }
+        ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,BUTTON_CONSTRAINT);
+        isInstallInProgress=false;
+        if (isUpdateInProgress)         isUpdateInProgress=!isUpdateInProgress;
+        updateButton.setVisible(contribListing.hasUpdates(contrib) && !contrib.isUpdateFlagged());
+        setSelected(true);
       }
     }
 ;
     ContributionManager.downloadAndInstall(listPanel.contribManager.editor,downloadUrl,ad,downloadProgress,installProgress,listPanel.contribManager.status);
   }
  catch (  MalformedURLException e) {
-    Base.showWarning(ContributionListPanel.INSTALL_FAILURE_TITLE,ContributionListPanel.MALFORMED_URL_MESSAGE,e);
+    Base.showWarning(Language.text("contrib.errors.install_failed"),Language.text("contrib.errors.malformed_url"),e);
   }
 }
