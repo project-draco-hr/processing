@@ -1,0 +1,16 @@
+{
+  File examplesFolder=Base.getSketchbookExamplesPackagesFolder();
+  ArrayList<ExamplesPackageContribution> contribExamples=base.getExampleContribs();
+  HashMap<File,ExamplesPackageContribution> existing=new HashMap<File,ExamplesPackageContribution>();
+  for (  ExamplesPackageContribution contrib : contribExamples) {
+    existing.put(contrib.getFolder(),contrib);
+  }
+  File[] potential=ContributionType.EXAMPLES_PACKAGE.listCandidates(examplesFolder);
+  if (potential != null) {
+    for (    File folder : potential) {
+      if (!existing.containsKey(folder)) {
+        contribExamples.add(new ExamplesPackageContribution(folder));
+      }
+    }
+  }
+}
