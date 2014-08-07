@@ -59,7 +59,7 @@ return null;
 if (mi.getExpression() instanceof SimpleName) {
 stp=extracTypeInfo(findDeclaration2((SimpleName)mi.getExpression(),nearestNode));
 if (stp == null) {
-Class tehClass=findClassIfExists(((SimpleName)mi.getExpression()).toString());
+Class<?> tehClass=findClassIfExists(((SimpleName)mi.getExpression()).toString());
 if (tehClass != null) {
   return definedIn3rdPartyClass(new ClassMember(tehClass),mi.getName().toString());
 }
@@ -70,7 +70,7 @@ log("MI, SN Type " + getNodeAsString(stp));
 ASTNode typeDec=findDeclaration2(stp.getName(),nearestNode);
 if (typeDec == null) {
 log(stp.getName() + " couldn't be found locally..");
-Class tehClass=findClassIfExists(stp.getName().toString());
+Class<?> tehClass=findClassIfExists(stp.getName().toString());
 if (tehClass != null) {
   return definedIn3rdPartyClass(new ClassMember(tehClass),mi.getName().toString());
 }
@@ -99,7 +99,7 @@ return null;
 if (qn.getQualifier() instanceof SimpleName) {
 stp=extracTypeInfo(findDeclaration2(qn.getQualifier(),nearestNode));
 if (stp == null) {
-Class tehClass=findClassIfExists(qn.getQualifier().toString());
+Class<?> tehClass=findClassIfExists(qn.getQualifier().toString());
 if (tehClass != null) {
 return definedIn3rdPartyClass(new ClassMember(tehClass),qn.getName().toString());
 }
@@ -110,7 +110,7 @@ log("QN, SN Local Type " + getNodeAsString(stp));
 ASTNode typeDec=findDeclaration2(stp.getName(),nearestNode);
 if (typeDec == null) {
 log(stp.getName() + " couldn't be found locally..");
-Class tehClass=findClassIfExists(stp.getName().toString());
+Class<?> tehClass=findClassIfExists(stp.getName().toString());
 if (tehClass != null) {
 return definedIn3rdPartyClass(new ClassMember(tehClass),qn.getName().toString());
 }
