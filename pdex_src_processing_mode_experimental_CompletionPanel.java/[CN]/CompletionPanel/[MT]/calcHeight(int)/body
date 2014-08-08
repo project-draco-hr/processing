@@ -1,6 +1,9 @@
 {
+  int maxHeight=250;
   FontMetrics fm=textarea.getGraphics().getFontMetrics();
-  float h=(fm.getHeight() + (fm.getDescent()) * 0.5f) * (itemCount);
-  if (scrollPane.getHorizontalScrollBar().isVisible())   h+=scrollPane.getHorizontalScrollBar().getHeight() + fm.getHeight() + (fm.getDescent() + fm.getAscent()) * 0.8f;
-  return Math.min(250,(int)h);
+  float itemHeight=Math.max((fm.getHeight() + (fm.getDescent()) * 0.5f),editor.dmode.classIcon.getIconHeight() * 1.2f);
+  if (horizontalScrollBarVisible)   itemCount++;
+  if (itemCount < 4)   itemHeight*=1.3f;
+  float h=itemHeight * (itemCount);
+  return Math.min(maxHeight,(int)h);
 }
