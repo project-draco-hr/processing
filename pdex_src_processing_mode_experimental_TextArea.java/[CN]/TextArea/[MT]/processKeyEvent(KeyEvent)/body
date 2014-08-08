@@ -9,12 +9,12 @@
       }
     }
   }
- else   if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+ else   if (evt.getKeyCode() == KeyEvent.VK_ENTER && evt.getID() == KeyEvent.KEY_PRESSED) {
     if (suggestion != null) {
       if (suggestion.isVisible()) {
         if (suggestion.insertSelection()) {
-          hideSuggestion();
           evt.consume();
+          prepareSuggestions(evt);
           return;
         }
       }
@@ -79,16 +79,6 @@ hideSuggestion();
 }
 return;
 }
-SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
-protected Object doInBackground() throws Exception {
-if (ExperimentalMode.codeCompletionsEnabled && (!ExperimentalMode.ccTriggerEnabled || suggestion.isVisible())) {
-log("[KeyEvent]" + evt2.getKeyChar() + "  |Prediction started");
-log("Typing: " + fetchPhrase(evt2));
-}
-return null;
-}
-}
-;
-worker.execute();
+prepareSuggestions(evt2);
 }
 }
