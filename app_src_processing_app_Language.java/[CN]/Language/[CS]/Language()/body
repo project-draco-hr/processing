@@ -1,27 +1,21 @@
 {
-  this.language=Locale.getDefault().getLanguage();
-  this.languages=new HashMap<String,String>();
-  this.languages.put(Locale.ENGLISH.getLanguage(),Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
-  this.languages.put(Locale.GERMAN.getLanguage(),Locale.GERMAN.getDisplayLanguage(Locale.GERMAN));
-  this.languages.put(Locale.JAPANESE.getLanguage(),Locale.JAPANESE.getDisplayLanguage(Locale.JAPANESE));
-  if (!this.languages.containsKey(this.language)) {
-    this.language="en";
+  String systemLanguage=Locale.getDefault().getLanguage();
+  language=loadLanguage();
+  boolean writePrefs=false;
+  if (language == null) {
+    language=systemLanguage;
+    writePrefs=true;
   }
-  try {
-    File file=Base.getContentFile("lib/language.txt");
-    if (file.exists()) {
-      String language=PApplet.loadStrings(file)[0];
-      language=language.trim().toLowerCase();
-      if (!language.equals("")) {
-        this.language=language;
-      }
- else {
-        Base.saveFile(this.language,file);
-      }
-    }
+  languages=new HashMap<String,String>();
+  for (  String code : listSupported()) {
+    languages.put(code,Locale.forLanguageTag(code).getDisplayLanguage(Locale.forLanguageTag(code)));
   }
- catch (  Exception e) {
-    e.printStackTrace();
+  if (!languages.containsKey(language)) {
+    language="en";
+    writePrefs=true;
   }
-  this.bundle=ResourceBundle.getBundle(Language.FILE,new Locale(this.language),new UTF8Control());
+  if (writePrefs) {
+    saveLanguage(language);
+  }
+  bundle=ResourceBundle.getBundle(Language.FILE,new Locale(this.language),new UTF8Control());
 }

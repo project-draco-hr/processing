@@ -1,0 +1,53 @@
+{
+  File tempFolder=null;
+  try {
+    tempFolder=type.createTempFolder();
+  }
+ catch (  IOException e) {
+    if (status != null)     status.setErrorMessage(Language.text("contrib.errors.temporary_directory"));
+    return null;
+  }
+  Base.unzip(contribArchive,tempFolder);
+  File contribFolder=null;
+  if (type.isCandidate(tempFolder)) {
+    if (status != null)     status.setErrorMessage(Language.interpolate("contrib.errors.needs_repackage",getName(),type.getTitle()));
+    return null;
+  }
+  contribFolder=type.findCandidate(tempFolder);
+  LocalContribution installedContrib=null;
+  if (contribFolder == null) {
+    if (status != null)     status.setErrorMessage(Language.interpolate("contrib.errors.no_contribution_found",type));
+  }
+ else {
+    File propFile=new File(contribFolder,type + ".properties");
+    if (writePropertiesFile(propFile)) {
+      LocalContribution newContrib=type.load(base,contribFolder);
+      File newContribFolder=newContrib.getFolder();
+      installedContrib=newContrib.copyAndLoad(base,confirmReplace,status);
+      if (newContrib.getType() == ContributionType.MODE) {
+        ((ModeContribution)newContrib).clearClassLoader(base);
+      }
+ else       if (newContrib.getType() == ContributionType.TOOL) {
+        ((ToolContribution)newContrib).clearClassLoader(base);
+      }
+      newContrib=null;
+      System.gc();
+      if (Base.isWindows()) {
+        try {
+          Thread.sleep(1000);
+        }
+ catch (        InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+      Base.removeDir(newContribFolder);
+    }
+ else {
+      if (status != null)       status.setErrorMessage(Language.text("contrib.errors.overwriting_properties"));
+    }
+  }
+  if (tempFolder.exists()) {
+    Base.removeDir(tempFolder);
+  }
+  return installedContrib;
+}
