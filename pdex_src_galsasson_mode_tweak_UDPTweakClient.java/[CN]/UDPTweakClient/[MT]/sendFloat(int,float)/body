@@ -1,0 +1,18 @@
+{
+  if (!initialized) {
+    return false;
+  }
+  try {
+    byte[] buf=new byte[12];
+    ByteBuffer bb=ByteBuffer.wrap(buf);
+    bb.putInt(0,VAR_FLOAT);
+    bb.putInt(4,index);
+    bb.putFloat(8,val);
+    DatagramPacket packet=new DatagramPacket(buf,buf.length,address,sketchPort);
+    socket.send(packet);
+  }
+ catch (  Exception e) {
+    return false;
+  }
+  return true;
+}

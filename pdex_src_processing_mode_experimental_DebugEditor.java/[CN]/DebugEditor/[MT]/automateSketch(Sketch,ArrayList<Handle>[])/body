@@ -6,6 +6,13 @@
   if (setupStartPos < 0) {
     return false;
   }
+  int port=(int)(Math.random() * 0xf000) + 0xff0;
+  tweakClient=new UDPTweakClient(port);
+  for (int tab=0; tab < code.length; tab++) {
+    for (    Handle h : handles[tab]) {
+      h.setTweakClient(tweakClient);
+    }
+  }
   for (int tab=0; tab < code.length; tab++) {
     int charInc=0;
     String c=baseCode[tab];
@@ -18,9 +25,9 @@
   String c=code[0].getProgram();
   String header;
   header="\n\n" + "/*************************/\n" + "/* MODIFIED BY TWEAKMODE */\n"+ "/*************************/\n"+ "\n\n";
-  header+="import oscP5.*;\n";
-  header+="import netP5.*;\n\n";
-  header+="OscP5 tweakmode_oscP5;\n\n";
+  header+="import java.net.*;\n";
+  header+="import java.io.*;\n";
+  header+="import java.nio.*;\n\n";
   int numOfInts=howManyInts(handles);
   int numOfFloats=howManyFloats(handles);
   if (numOfInts > 0) {
@@ -29,18 +36,8 @@
   if (numOfFloats > 0) {
     header+="float[] tweakmode_float = new float[" + numOfFloats + "];\n\n";
   }
-  header+="public class TweakMode_OscHandler {\n" + "  public void oscEvent(OscMessage msg) {\n" + "    String type = msg.addrPattern();\n";
-  if (numOfInts > 0) {
-    header+="    if (type.contains(\"/tm_change_int\")) {\n" + "      int index = msg.get(0).intValue();\n" + "      int value = msg.get(1).intValue();\n"+ "      tweakmode_int[index] = value;\n"+ "    }\n";
-    if (numOfFloats > 0) {
-      header+="    else ";
-    }
-  }
-  if (numOfFloats > 0) {
-    header+="if (type.contains(\"/tm_change_float\")) {\n" + "      int index = msg.get(0).intValue();\n" + "      float value = msg.get(1).floatValue();\n"+ "      tweakmode_float[index] = value;\n"+ "    }\n";
-  }
-  header+="  }\n" + "}\n";
-  header+="TweakMode_OscHandler tweakmode_oscHandler = new TweakMode_OscHandler();\n";
+  header+=UDPTweakClient.getServerCode(port,numOfInts > 0,numOfFloats > 0);
+  header+="TweakModeServer tweakmode_Server;\n";
   header+="void tweakmode_initAllVars() {\n";
   for (int i=0; i < handles.length; i++) {
     for (    Handle n : handles[i]) {
@@ -48,13 +45,20 @@
     }
   }
   header+="}\n\n";
-  header+="void tweakmode_initOSC() {\n";
-  header+="  tweakmode_oscP5 = new OscP5(tweakmode_oscHandler," + oscPort + ");\n";
+  header+="void tweakmode_initCommunication() {\n";
+  header+="	tweakmode_Server = new TweakModeServer();\n";
+  header+="	tweakmode_Server.setup();\n";
+  header+="	tweakmode_Server.start();\n";
   header+="}\n";
   header+="\n\n\n\n\n";
-  String addToSetup="\n  tweakmode_initAllVars();\n  tweakmode_initOSC();\n\n";
+  String addToSetup="\n" + "	tweakmode_initAllVars();\n" + "	tweakmode_initCommunication();\n\n";
   setupStartPos=SketchParser.getSetupStart(c);
   c=replaceString(c,setupStartPos,setupStartPos,addToSetup);
   code[0].setProgram(header + c);
+  System.out.println("\nModified code:\n");
+  for (int i=0; i < code.length; i++) {
+    System.out.println("file " + i + "\n=========");
+    System.out.println(code[i].getProgram());
+  }
   return true;
 }
