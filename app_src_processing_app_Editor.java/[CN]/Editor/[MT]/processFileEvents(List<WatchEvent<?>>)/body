@@ -1,6 +1,21 @@
 {
   didReload=false;
   for (  WatchEvent<?> e : events) {
+    boolean openedFile=false;
+    if (((Path)e.context()).getFileName().toString().startsWith(".goutputstream")) {
+      openedFile=true;
+    }
+    if (!openedFile) {
+      for (      SketchCode sc : sketch.getCode()) {
+        if (sc.getFileName().equals(((Path)e.context()).getFileName().toString())) {
+          openedFile=true;
+          break;
+        }
+      }
+    }
+    if (!openedFile) {
+      continue;
+    }
     if (didReload) {
       break;
     }
