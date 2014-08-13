@@ -7,29 +7,38 @@
     conn.setReadTimeout(60 * 1000);
     conn.setRequestMethod("GET");
     conn.connect();
-    int fileSize=conn.getContentLength();
-    progress.startTask("Downloading",fileSize);
+    if (progress != null) {
+      int fileSize=conn.getContentLength();
+      progress.startTask(Language.text("contributions.progress.downloading"),fileSize);
+    }
     InputStream in=conn.getInputStream();
     FileOutputStream out=new FileOutputStream(dest);
     byte[] b=new byte[8192];
     int amount;
-    int total=0;
-    while (!progress.isCanceled() && (amount=in.read(b)) != -1) {
-      out.write(b,0,amount);
-      total+=amount;
-      progress.setProgress(total);
+    if (progress != null) {
+      int total=0;
+      while (!progress.isCanceled() && (amount=in.read(b)) != -1) {
+        out.write(b,0,amount);
+        total+=amount;
+        progress.setProgress(total);
+      }
+    }
+ else {
+      while ((amount=in.read(b)) != -1) {
+        out.write(b,0,amount);
+      }
     }
     out.flush();
     out.close();
     success=true;
   }
  catch (  SocketTimeoutException ste) {
-    progress.error(ste);
+    if (progress != null)     progress.error(ste);
   }
 catch (  IOException ioe) {
-    progress.error(ioe);
+    if (progress != null)     progress.error(ioe);
     ioe.printStackTrace();
   }
-  progress.finished();
+  if (progress != null)   progress.finished();
   return success;
 }

@@ -1,0 +1,23 @@
+{
+  if (doc == null) {
+    return;
+  }
+  if (doc == this.doc) {
+    return;
+  }
+  try {
+    Element line=doc.getDefaultRootElement().getElement(lineIdx);
+    if (line == null) {
+      return;
+    }
+    String lineText=doc.getText(line.getStartOffset(),line.getEndOffset() - line.getStartOffset());
+    pos=doc.createPosition(line.getStartOffset() + nonWhiteSpaceOffset(lineText));
+    this.doc=doc;
+    doc.addDocumentListener(this);
+  }
+ catch (  BadLocationException ex) {
+    Logger.getLogger(LineID.class.getName()).log(Level.SEVERE,null,ex);
+    pos=null;
+    this.doc=null;
+  }
+}

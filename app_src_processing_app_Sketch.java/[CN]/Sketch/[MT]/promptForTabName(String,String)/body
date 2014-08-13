@@ -1,0 +1,52 @@
+{
+  final JTextField field=new JTextField(oldName);
+  field.addKeyListener(new KeyAdapter(){
+    public void keyTyped(    KeyEvent event){
+      char ch=event.getKeyChar();
+      if ((ch == '_') || (ch == '.') || (('A' <= ch) && (ch <= 'Z'))|| (('a' <= ch) && (ch <= 'z'))) {
+      }
+ else       if (ch == ' ') {
+        String t=field.getText();
+        int start=field.getSelectionStart();
+        int end=field.getSelectionEnd();
+        field.setText(t.substring(0,start) + "_" + t.substring(end));
+        field.setCaretPosition(start + 1);
+        event.consume();
+      }
+ else       if ((ch >= '0') && (ch <= '9')) {
+        if (field.getCaretPosition() == 0 || field.getSelectionStart() == 0) {
+          event.consume();
+        }
+      }
+ else       if (ch == KeyEvent.VK_ENTER) {
+        Container parent=field.getParent();
+        while (!(parent instanceof JOptionPane)) {
+          parent=parent.getParent();
+        }
+        JOptionPane pane=(JOptionPane)parent;
+        final JPanel pnlBottom=(JPanel)pane.getComponent(pane.getComponentCount() - 1);
+        for (int i=0; i < pnlBottom.getComponents().length; i++) {
+          Component component=pnlBottom.getComponents()[i];
+          if (component instanceof JButton) {
+            final JButton okButton=(JButton)component;
+            if (okButton.getText().equalsIgnoreCase("OK")) {
+              ActionListener[] actionListeners=okButton.getActionListeners();
+              if (actionListeners.length > 0) {
+                actionListeners[0].actionPerformed(null);
+                event.consume();
+              }
+            }
+          }
+        }
+      }
+ else {
+        event.consume();
+      }
+    }
+  }
+);
+  int userReply=JOptionPane.showOptionDialog(editor,new Object[]{prompt,field},Language.text("editor.tab.new"),JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,null,new Object[]{Preferences.PROMPT_OK,Preferences.PROMPT_CANCEL},field);
+  if (userReply == JOptionPane.OK_OPTION) {
+    nameCode(field.getText());
+  }
+}

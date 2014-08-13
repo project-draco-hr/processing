@@ -21,6 +21,9 @@
  else   if (contrib.isRestartFlagged()) {
     description.append(INSTALL_RESTART_MESSAGE);
   }
+ else   if (contrib.isUpdateFlagged()) {
+    description.append(UPDATE_RESTART_MESSAGE);
+  }
  else {
     String sentence=contrib.getSentence();
     if (sentence == null || sentence.isEmpty()) {
@@ -32,19 +35,32 @@
     }
     description.append(sentence);
   }
+  String version=contrib.getPrettyVersion();
+  if (version != null && !version.isEmpty()) {
+    description.append("<br/>");
+    if (version.toLowerCase().startsWith("build"))     description.append("v" + version.substring(5,version.indexOf(',')).trim());
+ else     if (version.toLowerCase().startsWith("v"))     description.append(version);
+ else     description.append("v" + version);
+  }
+  long lastUpdatedUTC=contrib.getLastUpdated();
+  if (lastUpdatedUTC != 0) {
+    DateFormat dateFormatter=DateFormat.getDateInstance(DateFormat.MEDIUM);
+    Date lastUpdatedDate=new Date(lastUpdatedUTC);
+    if (version != null && !version.isEmpty())     description.append(", ");
+    description.append("Last Updated on " + dateFormatter.format(lastUpdatedDate));
+  }
   description.append("</body></html>");
   descriptionBlock.setText(description.toString());
   if (contribListing.hasUpdates(contrib)) {
     StringBuilder versionText=new StringBuilder();
     versionText.append("<html><body><i>");
-    if (contrib.isDeletionFlagged()) {
-      versionText.append("To finish an update, reinstall this contribution after restarting.");
+    if (contrib.isUpdateFlagged() || contrib.isDeletionFlagged()) {
+      ;
     }
  else {
-      versionText.append("New version available!");
-      if (contrib.getType().requiresRestart()) {
-        versionText.append(" To update, first remove the current version.");
-      }
+      String latestVersion=contribListing.getLatestVersion(contrib);
+      if (latestVersion != null)       versionText.append("New version (" + latestVersion + ") available!");
+ else       versionText.append("New version available!");
     }
     versionText.append("</i></body></html>");
     notificationBlock.setText(versionText.toString());
@@ -55,24 +71,26 @@
     notificationBlock.setVisible(false);
   }
   updateButton.setEnabled(true);
-  if (contrib != null && !contrib.getType().requiresRestart()) {
-    updateButton.setVisible(isSelected() && contribListing.hasUpdates(contrib));
+  if (contrib != null) {
+    updateButton.setVisible((contribListing.hasUpdates(contrib) && !contrib.isUpdateFlagged() && !contrib.isDeletionFlagged()) || isUpdateInProgress);
   }
   installRemoveButton.removeActionListener(installActionListener);
   installRemoveButton.removeActionListener(removeActionListener);
   installRemoveButton.removeActionListener(undoActionListener);
   if (contrib.isDeletionFlagged()) {
     installRemoveButton.addActionListener(undoActionListener);
-    installRemoveButton.setText("Undo");
+    installRemoveButton.setText(Language.text("contributions.undo"));
   }
  else   if (contrib.isInstalled()) {
     installRemoveButton.addActionListener(removeActionListener);
-    installRemoveButton.setText("Remove");
+    installRemoveButton.setText(Language.text("contributions.remove"));
     installRemoveButton.setVisible(true);
+    installRemoveButton.setEnabled(!contrib.isUpdateFlagged());
+    reorganizePaneComponents();
   }
  else {
     installRemoveButton.addActionListener(installActionListener);
-    installRemoveButton.setText("Install");
+    installRemoveButton.setText(Language.text("contributions.install"));
   }
   contextMenu.removeAll();
   if (contrib.isInstalled()) {

@@ -1,0 +1,12 @@
+{
+  ArrayList<Range> notations[]=new ArrayList[codeTabs.length];
+  Pattern p=Pattern.compile("[+\\-]?(?:0|[1-9]\\d*)(?:\\.\\d*)?[eE][+\\-]?\\d+");
+  for (int i=0; i < codeTabs.length; i++) {
+    notations[i]=new ArrayList<Range>();
+    Matcher m=p.matcher(codeTabs[i]);
+    while (m.find()) {
+      notations[i].add(new Range(m.start(),m.end()));
+    }
+  }
+  return notations;
+}

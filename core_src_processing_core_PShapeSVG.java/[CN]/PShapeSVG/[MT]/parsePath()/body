@@ -11,7 +11,7 @@
   for (int i=0; i < pathDataChars.length; i++) {
     char c=pathDataChars[i];
     boolean separate=false;
-    if (c == 'M' || c == 'm' || c == 'L' || c == 'l' || c == 'H' || c == 'h' || c == 'V' || c == 'v' || c == 'C' || c == 'c' || c == 'S' || c == 's' || c == 'Q' || c == 'q' || c == 'T' || c == 't' || c == 'Z' || c == 'z' || c == ',') {
+    if (c == 'M' || c == 'm' || c == 'L' || c == 'l' || c == 'H' || c == 'h' || c == 'V' || c == 'v' || c == 'C' || c == 'c' || c == 'S' || c == 's' || c == 'Q' || c == 'q' || c == 'T' || c == 't' || c == 'A' || c == 'a' || c == 'Z' || c == 'z' || c == ',') {
       separate=true;
       if (i != 0) {
         pathBuffer.append("|");
@@ -66,6 +66,8 @@ break;
 case 'm':
 cx=cx + PApplet.parseFloat(pathTokens[i + 1]);
 cy=cy + PApplet.parseFloat(pathTokens[i + 2]);
+movetoX=cx;
+movetoY=cy;
 parsePathMoveto(cx,cy);
 implicitCommand='l';
 i+=3;
@@ -251,6 +253,38 @@ parsePathQuadto(ctrlX,ctrlY,endX,endY);
 cx=endX;
 cy=endY;
 i+=3;
+prevCurve=true;
+}
+break;
+case 'A':
+{
+float rx=PApplet.parseFloat(pathTokens[i + 1]);
+float ry=PApplet.parseFloat(pathTokens[i + 2]);
+float angle=PApplet.parseFloat(pathTokens[i + 3]);
+boolean fa=PApplet.parseFloat(pathTokens[i + 4]) != 0;
+boolean fs=PApplet.parseFloat(pathTokens[i + 5]) != 0;
+float endX=PApplet.parseFloat(pathTokens[i + 6]);
+float endY=PApplet.parseFloat(pathTokens[i + 7]);
+parsePathArcto(cx,cy,rx,ry,angle,fa,fs,endX,endY);
+cx=endX;
+cy=endY;
+i+=8;
+prevCurve=true;
+}
+break;
+case 'a':
+{
+float rx=PApplet.parseFloat(pathTokens[i + 1]);
+float ry=PApplet.parseFloat(pathTokens[i + 2]);
+float angle=PApplet.parseFloat(pathTokens[i + 3]);
+boolean fa=PApplet.parseFloat(pathTokens[i + 4]) != 0;
+boolean fs=PApplet.parseFloat(pathTokens[i + 5]) != 0;
+float endX=cx + PApplet.parseFloat(pathTokens[i + 6]);
+float endY=cy + PApplet.parseFloat(pathTokens[i + 7]);
+parsePathArcto(cx,cy,rx,ry,angle,fa,fs,endX,endY);
+cx=endX;
+cy=endY;
+i+=8;
 prevCurve=true;
 }
 break;

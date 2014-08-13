@@ -1,25 +1,25 @@
 {
   if (activeEditor.getMode() != mode) {
     Sketch sketch=activeEditor.getSketch();
-    if (sketch.isModified()) {
-      Base.showWarning("Save","Please save the sketch before changing the mode.",null);
+    nextMode=mode;
+    if (sketch.isUntitled()) {
+      handleClose(activeEditor,true);
+      handleNew();
     }
  else {
-      String mainPath=sketch.getMainFilePath();
-      boolean wasUntitled=sketch.isUntitled();
-      File sketchProps=new File(sketch.getFolder(),"sketch.properties");
-      try {
-        Settings props=new Settings(sketchProps);
-        props.set("mode",mode.getTitle());
-        props.set("mode.id",mode.getIdentifier());
-        props.save();
+      boolean newModeCanHandleCurrentSource=true;
+      for (      final SketchCode code : sketch.getCode()) {
+        if (!mode.validExtension(code.getExtension())) {
+          newModeCanHandleCurrentSource=false;
+          break;
+        }
       }
- catch (      IOException e) {
-        e.printStackTrace();
+      if (newModeCanHandleCurrentSource) {
+        final File props=new File(sketch.getCodeFolder(),"sketch.properties");
+        saveModeSettings(props,nextMode);
+        handleClose(activeEditor,true);
+        handleOpen(sketch.getMainFilePath());
       }
-      EditorState state=activeEditor.state;
-      handleClose(activeEditor,true);
-      handleOpen(mainPath,wasUntitled,state);
     }
   }
 }

@@ -1,0 +1,16 @@
+{
+  streamPosition=8;
+  Date timestamp=readTimeTag();
+  OSCBundle bundle=new OSCBundle(timestamp);
+  OSCByteArrayToJavaConverter myConverter=new OSCByteArrayToJavaConverter();
+  while (streamPosition < bytesLength) {
+    int packetLength=((Integer)readInteger()).intValue();
+    byte[] packetBytes=new byte[packetLength];
+    for (int i=0; i < packetLength; i++) {
+      packetBytes[i]=bytes[streamPosition++];
+    }
+    OSCPacket packet=myConverter.convert(packetBytes,packetLength);
+    bundle.addPacket(packet);
+  }
+  return bundle;
+}

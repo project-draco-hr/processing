@@ -10,9 +10,13 @@
           download(url,contribZip,downloadProgress);
           if (!downloadProgress.isCanceled() && !downloadProgress.isError()) {
             installProgress.startTask("Installing...",ProgressMonitor.UNKNOWN);
-            LocalContribution contribution=ad.install(editor,contribZip,false,status);
+            LocalContribution contribution=ad.install(editor.getBase(),contribZip,false,status);
             if (contribution != null) {
               contribListing.replaceContribution(ad,contribution);
+              if (contribution.getType() == ContributionType.MODE) {
+                ArrayList<ModeContribution> contribModes=editor.getBase().getModeContribs();
+                if (!contribModes.contains(contribution))                 contribModes.add((ModeContribution)contribution);
+              }
               refreshInstalled(editor);
             }
             installProgress.finished();
@@ -29,5 +33,5 @@
       }
     }
   }
-).start();
+,"Contribution Installer").start();
 }

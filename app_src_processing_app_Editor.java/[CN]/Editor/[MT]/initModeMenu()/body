@@ -1,24 +1,35 @@
 {
   modeMenu=new JMenu();
+  ButtonGroup modeGroup=new ButtonGroup();
   for (  final Mode m : base.getModeList()) {
-    if (mode == m) {
-      JRadioButtonMenuItem item=new JRadioButtonMenuItem(m.getTitle());
-      item.setSelected(true);
-      modeMenu.add(item);
-    }
- else {
-      JMenuItem item=new JMenuItem(m.getTitle());
-      item.addActionListener(new ActionListener(){
-        public void actionPerformed(        ActionEvent e){
+    JRadioButtonMenuItem item=new JRadioButtonMenuItem(m.getTitle());
+    item.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        if (!sketch.isModified()) {
           base.changeMode(m);
         }
+ else {
+          Base.showWarning("Save","Please save the sketch before changing the mode.",null);
+          for (          Component c : modeMenu.getPopupMenu().getComponents()) {
+            if (c instanceof JRadioButtonMenuItem) {
+              if (((JRadioButtonMenuItem)c).getText() == mode.getTitle()) {
+                ((JRadioButtonMenuItem)c).setSelected(true);
+                break;
+              }
+            }
+          }
+        }
       }
+    }
 );
-      modeMenu.add(item);
+    modeMenu.add(item);
+    modeGroup.add(item);
+    if (mode == m) {
+      item.setSelected(true);
     }
   }
   modeMenu.addSeparator();
-  JMenuItem addLib=new JMenuItem("Add Mode...");
+  JMenuItem addLib=new JMenuItem(Language.text("toolbar.add_mode"));
   addLib.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       base.handleOpenModeManager();
@@ -26,5 +37,4 @@
   }
 );
   modeMenu.add(addLib);
-  Toolkit.setMenuMnemonics(modeMenu);
 }

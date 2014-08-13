@@ -5,14 +5,19 @@
   Pattern[] kdePreDefPats=new Pattern[kdePreDefStrs.length];
   for (int i=0; i < kdePreDefStrs.length; i++)   kdePreDefPats[i]=Pattern.compile(kdePreDefStrs[i].replace("&",""));
   final Pattern nonAAlpha=Pattern.compile("[^A-Za-z]");
-  final FontMetrics fm=menu[0].getFontMetrics(menu[0].getFont());
+  FontMetrics fmTmp=null;
+  for (  JMenuItem m : menu) {
+    if (m != null)     fmTmp=m.getFontMetrics(menu[0].getFont());
+  }
+  if (fmTmp == null)   return;
+  final FontMetrics fm=fmTmp;
   final Comparator<Character> charComparator=new Comparator<Character>(){
     char[] baddies="qypgjaeiouQYPGJAEIOU".toCharArray();
     public int compare(    Character ch1,    Character ch2){
       float w1=fm.charWidth(ch1), w2=fm.charWidth(ch2);
       for (      char bad : baddies) {
-        if (bad == ch1)         w1*=0.66;
-        if (bad == ch2)         w2*=0.66;
+        if (bad == ch1)         w1*=0.66f;
+        if (bad == ch2)         w2*=0.66f;
       }
       return (int)Math.signum(w2 - w1);
     }

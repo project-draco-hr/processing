@@ -91,6 +91,13 @@
   reqNumSamples=qualityToSamples(antialias);
   if (WINDOW_TOOLKIT == AWT) {
     canvasAWT=new GLCanvas(caps);
+    if (RETINA) {
+      canvasAWT.setSurfaceScale(new int[]{ScalableSurface.AUTOMAX_PIXELSCALE,ScalableSurface.AUTOMAX_PIXELSCALE});
+      retf=2;
+    }
+ else {
+      canvasAWT.setSurfaceScale(new int[]{ScalableSurface.IDENTITY_PIXELSCALE,ScalableSurface.IDENTITY_PIXELSCALE});
+    }
     canvasAWT.setBounds(0,0,pg.width,pg.height);
     canvasAWT.setBackground(new Color(pg.backgroundColor,true));
     canvasAWT.setFocusable(true);
@@ -109,9 +116,12 @@
     pg.parent.setLayout(new BorderLayout());
     pg.parent.add(canvasNEWT,BorderLayout.CENTER);
     canvasNEWT.requestFocusInWindow();
+    int[] reqSurfacePixelScale=new int[]{ScalableSurface.AUTOMAX_PIXELSCALE,ScalableSurface.AUTOMAX_PIXELSCALE};
+    windowNEWT.setSurfaceScale(reqSurfacePixelScale);
     canvas=canvasNEWT;
     canvasAWT=null;
   }
+  pg.parent.defaultSize=false;
   registerListeners();
   fboLayerCreated=false;
   fboLayerInUse=false;

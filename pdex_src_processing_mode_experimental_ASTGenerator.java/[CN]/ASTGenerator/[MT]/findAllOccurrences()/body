@@ -1,0 +1,47 @@
+{
+  log("Last clicked word:" + lastClickedWord);
+  String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
+  int line=editor.ta.getSelectionStartLine();
+  log(selText + "<- offsets " + (line)+ ", "+ (editor.ta.getSelectionStart() - editor.ta.getLineStartOffset(line))+ ", "+ (editor.ta.getSelectionStop() - editor.ta.getLineStartOffset(line)));
+  int offwhitespace=editor.ta.getLineStartNonWhiteSpaceOffset(line);
+  ASTNodeWrapper wnode;
+  if (lastClickedWord == null || lastClickedWordNode.getNode() == null) {
+    wnode=getASTNodeAt(line + errorCheckerService.mainClassOffset,selText,editor.ta.getSelectionStart() - offwhitespace,false);
+  }
+ else {
+    wnode=lastClickedWordNode;
+  }
+  if (wnode.getNode() == null) {
+    return null;
+  }
+  logE("Gonna find all occurrences of " + getNodeAsString(wnode.getNode()));
+  if (wnode.getNodeType() == ASTNode.METHOD_DECLARATION) {
+    MethodDeclaration md=(MethodDeclaration)wnode.getNode();
+    ASTNode node=md.getParent();
+    while (node != null) {
+      if (node instanceof TypeDeclaration) {
+        break;
+      }
+      node=node.getParent();
+    }
+    if (node != null && node instanceof TypeDeclaration) {
+      TypeDeclaration td=(TypeDeclaration)node;
+      if (td.getName().toString().equals(md.getName().toString())) {
+        logE("Renaming constructor of " + getNodeAsString(td));
+        wnode=new ASTNodeWrapper(td);
+      }
+    }
+  }
+  DefaultMutableTreeNode defCU=new DefaultMutableTreeNode(new ASTNodeWrapper(wnode.getNode(),selText));
+  dfsNameOnly(defCU,wnode.getNode(),selText);
+  Stack<Object> tempS=new Stack<Object>();
+  for (int i=0; i < defCU.getChildCount(); i++) {
+    tempS.push(defCU.getChildAt(i));
+  }
+  defCU.removeAllChildren();
+  while (!tempS.isEmpty()) {
+    defCU.add((MutableTreeNode)tempS.pop());
+  }
+  log(wnode);
+  return defCU;
+}

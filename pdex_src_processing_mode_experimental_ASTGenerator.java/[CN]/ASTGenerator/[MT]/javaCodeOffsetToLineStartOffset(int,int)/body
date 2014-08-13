@@ -1,0 +1,19 @@
+{
+  line=pdeLineNumToJavaLineNum(line);
+  log("Looking for line: " + line + ", jOff "+ jOffset);
+  Stack temp=new Stack<DefaultMutableTreeNode>();
+  temp.push(codeTree);
+  while (!temp.isEmpty()) {
+    DefaultMutableTreeNode cnode=(DefaultMutableTreeNode)temp.pop();
+    for (int i=0; i < cnode.getChildCount(); i++) {
+      temp.push(cnode.getChildAt(i));
+    }
+    if (!(cnode.getUserObject() instanceof ASTNodeWrapper))     continue;
+    ASTNodeWrapper awnode=(ASTNodeWrapper)cnode.getUserObject();
+    if (awnode.getLineNumber() == line) {
+      log("First element with this line no is: " + awnode + "LSO: "+ (jOffset - awnode.getNode().getStartPosition()));
+      return (jOffset - awnode.getNode().getStartPosition());
+    }
+  }
+  return -1;
+}

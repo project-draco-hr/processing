@@ -1,0 +1,30 @@
+{
+  BufferedReader reader=null;
+  try {
+    reader=new BufferedReader(new InputStreamReader(new FileInputStream(new File(path))));
+  }
+ catch (  FileNotFoundException e) {
+    e.printStackTrace();
+  }
+  try {
+    StringBuilder ret=new StringBuilder();
+    String line;
+    while ((line=reader.readLine()) != null) {
+      ret.append(line);
+      ret.append("\n");
+    }
+    return ret.toString();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+ finally {
+    try {
+      reader.close();
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+  }
+  return null;
+}

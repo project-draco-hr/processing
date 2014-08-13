@@ -2,6 +2,36 @@
   this.editor=editor;
   if (dialog == null) {
     dialog=new JFrame(title);
+    restartButton=new JButton("Restart Processing");
+    restartButton.setVisible(false);
+    restartButton.addActionListener(new ActionListener(){
+      @Override public void actionPerformed(      ActionEvent arg0){
+        Iterator<Editor> iter=editor.getBase().getEditors().iterator();
+        while (iter.hasNext()) {
+          Editor ed=iter.next();
+          if (ed.getSketch().isModified()) {
+            int option=Base.showYesNoQuestion(editor,title,"Unsaved changes have been found","Are you sure you want to restart Processing without saving first?");
+            if (option == JOptionPane.NO_OPTION)             return;
+ else             break;
+          }
+        }
+        StringBuilder cmd=new StringBuilder();
+        cmd.append(System.getProperty("java.home") + File.separator + "bin"+ File.separator+ "java ");
+        for (        String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
+          cmd.append(jvmArg + " ");
+        }
+        cmd.append("-cp ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
+        cmd.append(Base.class.getName());
+        try {
+          Runtime.getRuntime().exec(cmd.toString());
+          System.exit(0);
+        }
+ catch (        IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+);
     Toolkit.setIcon(dialog);
     createComponents();
     registerDisposeListeners();
@@ -24,7 +54,7 @@
             status.setErrorMessage("Connection timed out while " + "downloading the contribution list.");
           }
  else {
-            status.setErrorMessage("Could not download the list" + "of available contributions.");
+            status.setErrorMessage("Could not download the list " + "of available contributions.");
           }
           exception.printStackTrace();
         }

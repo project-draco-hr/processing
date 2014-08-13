@@ -1,7 +1,25 @@
 {
   new Sort(){
     @Override public int size(){
-      return count;
+      if (count == 0) {
+        return 0;
+      }
+      int right=count - 1;
+      while (data[right] != data[right]) {
+        right--;
+        if (right == -1) {
+          return 0;
+        }
+      }
+      for (int i=right; i >= 0; --i) {
+        float v=data[i];
+        if (v != v) {
+          data[i]=data[right];
+          data[right]=v;
+          --right;
+        }
+      }
+      return right + 1;
     }
     @Override public float compare(    int a,    int b){
       return data[b] - data[a];
