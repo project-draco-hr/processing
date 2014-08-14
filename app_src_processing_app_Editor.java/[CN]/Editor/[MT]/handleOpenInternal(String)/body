@@ -16,7 +16,7 @@
   }
  else {
     final String properParent=file.getName().substring(0,file.getName().lastIndexOf('.'));
-    Object[] options={"OK","Cancel"};
+    Object[] options={Language.text("prompt.ok"),Language.text("prompt.cancel")};
     String prompt="The file \"" + file.getName() + "\" needs to be inside\n"+ "a sketch folder named \""+ properParent+ "\".\n"+ "Create this folder, move the file, and continue?";
     int result=JOptionPane.showOptionDialog(this,prompt,"Moving",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
     if (result == JOptionPane.YES_OPTION) {
@@ -52,7 +52,9 @@
     Base.showWarning("Error","Could not create the sketch.",e);
     return false;
   }
-  initFileChangeListener();
+  if (Preferences.getBoolean("editor.watcher")) {
+    initFileChangeListener();
+  }
   header.rebuild();
   updateTitle();
   Preferences.save();

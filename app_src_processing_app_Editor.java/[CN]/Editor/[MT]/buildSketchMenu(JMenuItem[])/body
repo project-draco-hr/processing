@@ -1,12 +1,12 @@
 {
   JMenuItem item;
-  sketchMenu=new JMenu("Sketch");
+  sketchMenu=new JMenu(Language.text("menu.sketch"));
   for (  JMenuItem mi : runItems) {
     sketchMenu.add(mi);
   }
   sketchMenu.addSeparator();
   sketchMenu.add(mode.getImportMenu());
-  item=Toolkit.newJMenuItem("Show Sketch Folder",'K');
+  item=Toolkit.newJMenuItem(Language.text("menu.sketch.show_sketch_folder"),'K');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Base.openFolder(sketch.getFolder());
@@ -15,7 +15,7 @@
 );
   sketchMenu.add(item);
   item.setEnabled(Base.openFolderAvailable());
-  item=new JMenuItem("Add File...");
+  item=new JMenuItem(Language.text("menu.sketch.add_file"));
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       sketch.handleAddFile();
@@ -26,7 +26,6 @@
   sketchMenu.addSeparator();
   sketchMenu.addMenuListener(new MenuListener(){
     List<JMenuItem> menuList=new ArrayList<JMenuItem>();
-    JMenu windowMenu=new JMenu("Window");
     @Override public void menuSelected(    MenuEvent event){
       JMenuItem item;
       for (      final Editor editor : base.getEditors()) {
@@ -46,17 +45,15 @@
           }
         }
 );
-        windowMenu.add(item);
+        sketchMenu.add(item);
         menuList.add(item);
       }
-      sketchMenu.add(windowMenu);
     }
     @Override public void menuDeselected(    MenuEvent event){
       for (      JMenuItem item : menuList) {
-        windowMenu.remove(item);
+        sketchMenu.remove(item);
       }
       menuList.clear();
-      sketchMenu.remove(windowMenu);
     }
     @Override public void menuCanceled(    MenuEvent event){
       menuDeselected(event);

@@ -1,11 +1,12 @@
 {
   String newParentDir=null;
   String newName=null;
-  final String PROMPT="Save sketch folder as...";
+  final String oldName2=folder.getName();
+  final String PROMPT=Language.text("save");
   if (Preferences.getBoolean("chooser.files.native")) {
     FileDialog fd=new FileDialog(editor,PROMPT,FileDialog.SAVE);
     if (isReadOnly() || isUntitled()) {
-      fd.setDirectory(Preferences.get("sketchbook.path"));
+      fd.setDirectory(Preferences.getSketchbookPath());
     }
  else {
       fd.setDirectory(folder.getParent());
@@ -20,7 +21,7 @@
     JFileChooser fc=new JFileChooser();
     fc.setDialogTitle(PROMPT);
     if (isReadOnly() || isUntitled()) {
-      fc.setCurrentDirectory(new File(Preferences.get("sketchbook.path")));
+      fc.setCurrentDirectory(new File(Preferences.getSketchbookPath()));
     }
  else {
       fc.setCurrentDirectory(folder.getParentFile());
@@ -89,14 +90,15 @@
     }
   }
 );
-  for (  File copyable : copyItems) {
-    if (copyable.isDirectory()) {
-      Base.copyDir(copyable,new File(newFolder,copyable.getName()));
-    }
- else {
-      Base.copyFile(copyable,new File(newFolder,copyable.getName()));
+  final File newFolder2=newFolder;
+  final File[] copyItems2=copyItems;
+  final String newName2=newName;
+  javax.swing.SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      new ProgressFrame(copyItems2,newFolder2,oldName2,newName2,editor);
     }
   }
+);
   for (int i=1; i < codeCount; i++) {
     File newFile=new File(newFolder,code[i].getFileName());
     code[i].saveAs(newFile);

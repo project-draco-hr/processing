@@ -33,10 +33,14 @@ dumpHiddenAfter(ast);
 print(ast.getFirstChild());
 break;
 case CLASS_DEF:
+case ENUM_DEF:
 case INTERFACE_DEF:
 print(getChild(ast,MODIFIERS));
 if (ast.getType() == CLASS_DEF) {
 out.print("class");
+}
+ else if (ast.getType() == ENUM_DEF) {
+out.print("enum");
 }
  else {
 out.print("interface");
@@ -75,6 +79,7 @@ case PARAMETERS:
 case PARAMETER_DEF:
 case VARIABLE_PARAMETER_DEF:
 case VARIABLE_DEF:
+case ENUM_CONSTANT_DEF:
 case TYPE:
 case SLIST:
 case ELIST:
@@ -368,6 +373,7 @@ case ANNOTATION:
 out.print("@");
 printChildren(ast);
 break;
+case ANNOTATIONS:
 case ANNOTATION_ARRAY_INIT:
 printChildren(ast);
 break;

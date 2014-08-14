@@ -1,0 +1,361 @@
+{
+  this.base=base;
+  dialog=new JFrame(Language.text("preferences"));
+  dialog.setResizable(false);
+  Container pain=dialog.getContentPane();
+  pain.setLayout(null);
+  final int GUI_BETWEEN=Preferences.GUI_BETWEEN;
+  final int GUI_BIG=Preferences.GUI_BIG;
+  final int GUI_SMALL=Preferences.GUI_SMALL;
+  final int BUTTON_WIDTH=Preferences.BUTTON_WIDTH;
+  int top=GUI_BIG;
+  int left=GUI_BIG;
+  int right=0;
+  JLabel label;
+  JButton button;
+  Dimension d, d2;
+  int h, vmax;
+  label=new JLabel(Language.text("preferences.sketchbook_location") + ":");
+  pain.add(label);
+  d=label.getPreferredSize();
+  label.setBounds(left,top,d.width,d.height);
+  top+=d.height;
+  sketchbookLocationField=new JTextField(40);
+  pain.add(sketchbookLocationField);
+  d=sketchbookLocationField.getPreferredSize();
+  button=new JButton(Preferences.PROMPT_BROWSE);
+  button.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      File dflt=new File(sketchbookLocationField.getText());
+      PApplet.selectFolder(Language.text("preferences.sketchbook_location.popup"),"sketchbookCallback",dflt,PreferencesFrame.this,dialog);
+    }
+  }
+);
+  pain.add(button);
+  d2=button.getPreferredSize();
+  vmax=Math.max(d.height,d2.height);
+  sketchbookLocationField.setBounds(left,top + (vmax - d.height) / 2,d.width,d.height);
+  h=left + d.width + GUI_SMALL;
+  button.setBounds(h,top + (vmax - d2.height) / 2,d2.width,d2.height);
+  right=Math.max(right,h + d2.width + GUI_BIG);
+  top+=vmax + GUI_BETWEEN;
+  Container languageBox=Box.createHorizontalBox();
+  JLabel languageLabel=new JLabel(Language.text("preferences.language") + ": ");
+  languageBox.add(languageLabel);
+  languageSelectionBox=new JComboBox();
+  Map<String,String> languages=Language.getLanguages();
+  String[] languageSelection=new String[languages.size()];
+  languageSelection[0]=languages.get(Language.getLanguage());
+  int i=1;
+  for (  Map.Entry<String,String> lang : languages.entrySet()) {
+    if (!lang.getKey().equals(Language.getLanguage())) {
+      languageSelection[i++]=lang.getValue();
+    }
+  }
+  languageSelectionBox.setModel(new DefaultComboBoxModel(languageSelection));
+  languageBox.add(languageSelectionBox);
+  label=new JLabel(" (" + Language.text("preferences.requires_restart") + ")");
+  languageBox.add(label);
+  pain.add(languageBox);
+  d=languageBox.getPreferredSize();
+  languageBox.setBounds(left,top,d.width,d.height);
+  top+=d.height + GUI_BETWEEN;
+  Container fontBox=Box.createHorizontalBox();
+  JLabel fontLabel=new JLabel(Language.text("preferences.editor_and_console_font") + ": ");
+  final String fontTip="<html>" + Language.text("preferences.editor_and_console_font.tip");
+  fontLabel.setToolTipText(fontTip);
+  fontBox.add(fontLabel);
+  fontSelectionBox=new JComboBox(new Object[]{Toolkit.getMonoFontName()});
+  fontSelectionBox.setToolTipText(fontTip);
+  fontSelectionBox.setEnabled(false);
+  fontBox.add(fontSelectionBox);
+  pain.add(fontBox);
+  d=fontBox.getPreferredSize();
+  fontBox.setBounds(left,top,d.width + 150,d.height);
+  top+=d.height + GUI_BETWEEN;
+  Container box=Box.createHorizontalBox();
+  label=new JLabel(Language.text("preferences.editor_font_size") + ": ");
+  box.add(label);
+  fontSizeField=new JComboBox<Integer>(FONT_SIZES);
+  fontSizeField.setEditable(true);
+  box.add(fontSizeField);
+  box.add(Box.createHorizontalStrut(GUI_BETWEEN));
+  label=new JLabel(Language.text("preferences.console_font_size") + ": ");
+  box.add(label);
+  consoleSizeField=new JComboBox<Integer>(FONT_SIZES);
+  consoleSizeField.setEditable(true);
+  box.add(consoleSizeField);
+  pain.add(box);
+  d=box.getPreferredSize();
+  box.setBounds(left,top,d.width,d.height);
+  fontSizeField.setSelectedItem(Preferences.getFont("editor.font.size"));
+  top+=d.height + GUI_BETWEEN;
+  Container colorBox=Box.createHorizontalBox();
+  label=new JLabel(Language.text("preferences.background_color") + ": ");
+  colorBox.add(label);
+  final String colorTip="<html>" + Language.text("preferences.background_color.tip");
+  label.setToolTipText(colorTip);
+  presentColor=new JTextField("      ");
+  presentColor.setOpaque(true);
+  presentColor.setEnabled(false);
+  presentColor.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(1,1,0,0,new Color(195,195,195)),BorderFactory.createMatteBorder(0,0,1,1,new Color(54,54,54))));
+  presentColor.setBackground(Preferences.getColor("run.present.bgcolor"));
+  presentColorHex=new JTextField(6);
+  presentColorHex.setText(Preferences.get("run.present.bgcolor").substring(1));
+  presentColorHex.getDocument().addDocumentListener(new DocumentListener(){
+    @Override public void removeUpdate(    DocumentEvent e){
+      final String colorValue=presentColorHex.getText().toUpperCase();
+      if (colorValue.length() == 7 && (colorValue.startsWith("#")))       EventQueue.invokeLater(new Runnable(){
+        public void run(){
+          presentColorHex.setText(colorValue.substring(1));
+        }
+      }
+);
+      if (colorValue.length() == 6 && colorValue.matches("[0123456789ABCDEF]*")) {
+        presentColor.setBackground(new Color(Integer.parseInt(colorValue.substring(0,2),16),Integer.parseInt(colorValue.substring(2,4),16),Integer.parseInt(colorValue.substring(4,6),16)));
+        if (!colorValue.equals(presentColorHex.getText()))         EventQueue.invokeLater(new Runnable(){
+          public void run(){
+            presentColorHex.setText(colorValue);
+          }
+        }
+);
+      }
+    }
+    @Override public void insertUpdate(    DocumentEvent e){
+      final String colorValue=presentColorHex.getText().toUpperCase();
+      if (colorValue.length() == 7 && (colorValue.startsWith("#")))       EventQueue.invokeLater(new Runnable(){
+        public void run(){
+          presentColorHex.setText(colorValue.substring(1));
+        }
+      }
+);
+      if (colorValue.length() == 6 && colorValue.matches("[0123456789ABCDEF]*")) {
+        presentColor.setBackground(new Color(Integer.parseInt(colorValue.substring(0,2),16),Integer.parseInt(colorValue.substring(2,4),16),Integer.parseInt(colorValue.substring(4,6),16)));
+        if (!colorValue.equals(presentColorHex.getText()))         EventQueue.invokeLater(new Runnable(){
+          public void run(){
+            presentColorHex.setText(colorValue);
+          }
+        }
+);
+      }
+    }
+    @Override public void changedUpdate(    DocumentEvent e){
+    }
+  }
+);
+  selector=new ColorChooser(dialog,false,Preferences.getColor("run.present.bgcolor"),Language.text("prompt.ok"),new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      String colorValue=selector.getHexColor();
+      presentColorHex.setText(colorValue.substring(1));
+      presentColor.setBackground(new Color(Integer.parseInt(colorValue.substring(1,3),16),Integer.parseInt(colorValue.substring(3,5),16),Integer.parseInt(colorValue.substring(5,7),16)));
+      selector.hide();
+    }
+  }
+);
+  presentColor.addMouseListener(new MouseListener(){
+    @Override public void mouseReleased(    MouseEvent e){
+    }
+    @Override public void mousePressed(    MouseEvent e){
+    }
+    @Override public void mouseExited(    MouseEvent e){
+      dialog.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }
+    @Override public void mouseEntered(    MouseEvent e){
+      dialog.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+    @Override public void mouseClicked(    MouseEvent e){
+      selector.show();
+    }
+  }
+);
+  label=new JLabel("#");
+  colorBox.add(label);
+  colorBox.add(presentColorHex);
+  colorBox.add(Box.createHorizontalStrut(GUI_SMALL + 2 / 3 * GUI_SMALL));
+  colorBox.add(presentColor);
+  pain.add(colorBox);
+  d=colorBox.getPreferredSize();
+  colorBox.setBounds(left,top,d.width,d.height);
+  top+=d.height + GUI_BETWEEN;
+  editorAntialiasBox=new JCheckBox(Language.text("preferences.use_smooth_text"));
+  pain.add(editorAntialiasBox);
+  d=editorAntialiasBox.getPreferredSize();
+  editorAntialiasBox.setBounds(left,top,d.width + 10,d.height);
+  right=Math.max(right,left + d.width);
+  top+=d.height + GUI_BETWEEN;
+  inputMethodBox=new JCheckBox(Language.text("preferences.enable_complex_text_input") + " (" + Language.text("preferences.enable_complex_text_input_example")+ ", "+ Language.text("preferences.requires_restart")+ ")");
+  pain.add(inputMethodBox);
+  d=inputMethodBox.getPreferredSize();
+  inputMethodBox.setBounds(left,top,d.width + 10,d.height);
+  right=Math.max(right,left + d.width);
+  top+=d.height + GUI_BETWEEN;
+  errorCheckerBox=new JCheckBox(Language.text("preferences.continuously_check"));
+  pain.add(errorCheckerBox);
+  d=errorCheckerBox.getPreferredSize();
+  errorCheckerBox.setBounds(left,top,d.width + 10,d.height);
+  int warningLeft=left + d.width;
+  warningsCheckerBox=new JCheckBox(Language.text("preferences.show_warnings"));
+  pain.add(warningsCheckerBox);
+  d=warningsCheckerBox.getPreferredSize();
+  warningsCheckerBox.setBounds(warningLeft,top,d.width + 10,d.height);
+  right=Math.max(right,warningLeft + d.width);
+  top+=d.height + GUI_BETWEEN;
+  codeCompletionBox=new JCheckBox(Language.text("preferences.code_completion"));
+  pain.add(codeCompletionBox);
+  d=codeCompletionBox.getPreferredSize();
+  codeCompletionBox.setBounds(left,top,d.width + 10,d.height);
+  codeCompletionBox.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      codeCompletionTriggerBox.setEnabled(codeCompletionBox.isSelected());
+    }
+  }
+);
+  int toggleLeft=left + d.width;
+  codeCompletionTriggerBox=new JCheckBox(Language.text("preferences.trigger_with") + " Ctrl-" + Language.text("preferences.cmd_space"));
+  pain.add(codeCompletionTriggerBox);
+  d=codeCompletionTriggerBox.getPreferredSize();
+  codeCompletionTriggerBox.setBounds(toggleLeft,top,d.width + 10,d.height);
+  right=Math.max(right,toggleLeft + d.width);
+  top+=d.height + GUI_BETWEEN;
+  Container memoryBox=Box.createHorizontalBox();
+  memoryOverrideBox=new JCheckBox(Language.text("preferences.increase_max_memory") + ": ");
+  memoryBox.add(memoryOverrideBox);
+  memoryField=new JTextField(4);
+  memoryOverrideBox.addChangeListener(new ChangeListener(){
+    @Override public void stateChanged(    ChangeEvent e){
+      memoryField.setEnabled(memoryOverrideBox.isSelected());
+    }
+  }
+);
+  memoryBox.add(memoryField);
+  memoryBox.add(new JLabel(" MB"));
+  pain.add(memoryBox);
+  d=memoryBox.getPreferredSize();
+  memoryBox.setBounds(left,top,d.width,d.height);
+  top+=d.height + GUI_BETWEEN;
+  deletePreviousBox=new JCheckBox(Language.text("preferences.delete_previous_folder_on_export"));
+  pain.add(deletePreviousBox);
+  d=deletePreviousBox.getPreferredSize();
+  deletePreviousBox.setBounds(left,top,d.width + 10,d.height);
+  right=Math.max(right,left + d.width);
+  top+=d.height + GUI_BETWEEN;
+  whinyBox=new JCheckBox(Language.text("preferences.hide_toolbar_background_image") + " (" + Language.text("preferences.requires_restart")+ ")");
+  pain.add(whinyBox);
+  d=whinyBox.getPreferredSize();
+  whinyBox.setBounds(left,top,d.width + 10,d.height);
+  right=Math.max(right,left + d.width);
+  top+=d.height + GUI_BETWEEN;
+  checkUpdatesBox=new JCheckBox(Language.text("preferences.check_for_updates_on_startup"));
+  pain.add(checkUpdatesBox);
+  d=checkUpdatesBox.getPreferredSize();
+  checkUpdatesBox.setBounds(left,top,d.width + 10,d.height);
+  right=Math.max(right,left + d.width);
+  top+=d.height + GUI_BETWEEN;
+  Container displayBox=Box.createHorizontalBox();
+  JLabel displayLabel=new JLabel(Language.text("preferences.run_sketches_on_display") + ": ");
+  final String tip="<html>" + Language.text("preferences.run_sketches_on_display.tip");
+  displayLabel.setToolTipText(tip);
+  displayBox.add(displayLabel);
+  displaySelectionBox=new JComboBox();
+  updateDisplayList();
+  displayBox.add(displaySelectionBox);
+  pain.add(displayBox);
+  d=displayBox.getPreferredSize();
+  displayBox.setBounds(left,top,d.width,d.height);
+  top+=d.height + GUI_BETWEEN;
+  if (Base.isWindows()) {
+    autoAssociateBox=new JCheckBox(Language.text("preferences.automatically_associate_pde_files"));
+    pain.add(autoAssociateBox);
+    d=autoAssociateBox.getPreferredSize();
+    autoAssociateBox.setBounds(left,top,d.width + 10,d.height);
+    right=Math.max(right,left + d.width);
+    top+=d.height + GUI_BETWEEN;
+  }
+  label=new JLabel(Language.text("preferences.file") + ":");
+  pain.add(label);
+  d=label.getPreferredSize();
+  label.setForeground(Color.gray);
+  label.setBounds(left,top,d.width,d.height);
+  right=Math.max(right,left + d.width);
+  top+=d.height;
+  label=new JLabel(Preferences.getSketchbookPath());
+  final JLabel clickable=label;
+  label.addMouseListener(new MouseAdapter(){
+    public void mousePressed(    MouseEvent e){
+      Base.openFolder(Base.getSettingsFolder());
+    }
+    public void mouseEntered(    MouseEvent e){
+      clickable.setForeground(new Color(0,0,140));
+    }
+    public void mouseExited(    MouseEvent e){
+      clickable.setForeground(Color.BLACK);
+    }
+  }
+);
+  pain.add(label);
+  d=label.getPreferredSize();
+  label.setBounds(left,top,d.width,d.height);
+  right=Math.max(right,left + d.width);
+  top+=d.height;
+  label=new JLabel("(" + Language.text("preferences.file.hint") + ")");
+  pain.add(label);
+  d=label.getPreferredSize();
+  label.setForeground(Color.gray);
+  label.setBounds(left,top,d.width,d.height);
+  right=Math.max(right,left + d.width);
+  top+=d.height;
+  button=new JButton(Preferences.PROMPT_OK);
+  button.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      applyFrame();
+      disposeFrame();
+    }
+  }
+);
+  pain.add(button);
+  d2=button.getPreferredSize();
+  int BUTTON_HEIGHT=d2.height;
+  h=right - (BUTTON_WIDTH + GUI_SMALL + BUTTON_WIDTH);
+  button.setBounds(h,top,BUTTON_WIDTH,BUTTON_HEIGHT);
+  h+=BUTTON_WIDTH + GUI_SMALL;
+  button=new JButton(Preferences.PROMPT_CANCEL);
+  button.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      disposeFrame();
+    }
+  }
+);
+  pain.add(button);
+  button.setBounds(h,top,BUTTON_WIDTH,BUTTON_HEIGHT);
+  top+=BUTTON_HEIGHT + GUI_BETWEEN;
+  wide=right + GUI_BIG;
+  high=top + GUI_SMALL;
+  dialog.addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      disposeFrame();
+    }
+  }
+);
+  ActionListener disposer=new ActionListener(){
+    public void actionPerformed(    ActionEvent actionEvent){
+      disposeFrame();
+    }
+  }
+;
+  Toolkit.registerWindowCloseKeys(dialog.getRootPane(),disposer);
+  Toolkit.setIcon(dialog);
+  Dimension screen=Toolkit.getScreenSize();
+  dialog.setLocation((screen.width - wide) / 2,(screen.height - high) / 2);
+  dialog.pack();
+  Insets insets=dialog.getInsets();
+  dialog.setSize(wide + insets.left + insets.right,high + insets.top + insets.bottom);
+  pain.addKeyListener(new KeyAdapter(){
+    public void keyPressed(    KeyEvent e){
+      KeyStroke wc=Toolkit.WINDOW_CLOSE_KEYSTROKE;
+      if ((e.getKeyCode() == KeyEvent.VK_ESCAPE) || (KeyStroke.getKeyStrokeForEvent(e).equals(wc))) {
+        disposeFrame();
+      }
+    }
+  }
+);
+}

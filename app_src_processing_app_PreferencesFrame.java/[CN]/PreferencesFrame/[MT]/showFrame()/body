@@ -1,0 +1,35 @@
+{
+  editorAntialiasBox.setSelected(Preferences.getBoolean("editor.smooth"));
+  inputMethodBox.setSelected(Preferences.getBoolean("editor.input_method_support"));
+  errorCheckerBox.setSelected(Preferences.getBoolean("pdex.errorCheckEnabled"));
+  warningsCheckerBox.setSelected(Preferences.getBoolean("pdex.warningsEnabled"));
+  codeCompletionBox.setSelected(Preferences.getBoolean("pdex.ccEnabled"));
+  codeCompletionTriggerBox.setSelected(Preferences.getBoolean("pdex.ccTriggerEnabled"));
+  codeCompletionTriggerBox.setEnabled(codeCompletionBox.isSelected());
+  deletePreviousBox.setSelected(Preferences.getBoolean("export.delete_target_folder"));
+  sketchbookLocationField.setText(Preferences.getSketchbookPath());
+  checkUpdatesBox.setSelected(Preferences.getBoolean("update.check"));
+  whinyBox.setSelected(Preferences.getBoolean("header.hide.image") || Preferences.getBoolean("buttons.hide.image"));
+  updateDisplayList();
+  int displayNum=Preferences.getInteger("run.display");
+  if (displayNum >= 0 && displayNum < displayCount) {
+    displaySelectionBox.setSelectedIndex(displayNum);
+  }
+  new Thread(new Runnable(){
+    public void run(){
+      initFontList();
+    }
+  }
+).start();
+  fontSizeField.setSelectedItem(Preferences.getInteger("editor.font.size"));
+  consoleSizeField.setSelectedItem(Preferences.getInteger("console.font.size"));
+  presentColor.setBackground(Preferences.getColor("run.present.bgcolor"));
+  presentColorHex.setText(Preferences.get("run.present.bgcolor").substring(1));
+  memoryOverrideBox.setSelected(Preferences.getBoolean("run.options.memory"));
+  memoryField.setText(Preferences.get("run.options.memory.maximum"));
+  memoryField.setEnabled(memoryOverrideBox.isSelected());
+  if (autoAssociateBox != null) {
+    autoAssociateBox.setSelected(Preferences.getBoolean("platform.auto_file_type_associations"));
+  }
+  dialog.setVisible(true);
+}

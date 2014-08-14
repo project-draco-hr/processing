@@ -1,0 +1,31 @@
+{
+  BufferedReader reader=null;
+  System.out.println(fileName);
+  try {
+    reader=new BufferedReader(new InputStreamReader(new FileInputStream(new File("/media/quarkninja/Work/TestStuff/" + fileName + ".java"))));
+  }
+ catch (  FileNotFoundException e) {
+    e.printStackTrace();
+  }
+  try {
+    StringBuilder ret=new StringBuilder();
+    String line;
+    while ((line=reader.readLine()) != null) {
+      ret.append(line);
+      ret.append("\n");
+    }
+    return ("package " + fileName + ";\n"+ ret.toString());
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+ finally {
+    try {
+      reader.close();
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+  }
+  return null;
+}

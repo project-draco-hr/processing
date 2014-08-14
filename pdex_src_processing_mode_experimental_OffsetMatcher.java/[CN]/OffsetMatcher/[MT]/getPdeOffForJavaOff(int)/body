@@ -5,11 +5,13 @@
       continue;
     }
  else     if (offsetMatch.get(i).javaOffset == javaOff) {
-      while (offsetMatch.get(--i).javaOffset == javaOff) {
-        log("MP " + offsetMatch.get(i).javaOffset + " "+ offsetMatch.get(i).pdeOffset);
+      while (i > 0 && offsetMatch.get(--i).javaOffset == javaOff) {
       }
-      int pdeOff=offsetMatch.get(++i).pdeOffset;
-      while (i > 0 && offsetMatch.get(--i).pdeOffset == pdeOff)       ;
+      if (i + 1 < offsetMatch.size()) {
+        int pdeOff=offsetMatch.get(++i).pdeOffset;
+        while (i > 0 && offsetMatch.get(--i).pdeOffset == pdeOff) {
+        }
+      }
       int j=i + 1;
       if (j > -1 && j < offsetMatch.size())       return offsetMatch.get(j).pdeOffset;
     }

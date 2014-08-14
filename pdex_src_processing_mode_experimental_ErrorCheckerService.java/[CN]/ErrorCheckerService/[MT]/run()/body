@@ -1,6 +1,7 @@
 {
   stopThread.set(false);
   checkCode();
+  lastErrorCheckCall=System.currentTimeMillis();
   if (!hasSyntaxErrors())   editor.showProblemListView(XQConsoleToggle.CONSOLE);
   astGenerator.buildAST(cu);
   handleErrorCheckingToggle();
@@ -16,8 +17,11 @@
     updateSketchCodeListeners();
     if (pauseThread.get())     continue;
     if (textModified.get() == 0)     continue;
-    checkCode();
-    checkForMissingImports();
+    if (System.currentTimeMillis() - lastErrorCheckCall > errorCheckInterval) {
+      log("Interval passed, starting error check");
+      checkCode();
+      checkForMissingImports();
+    }
   }
   astGenerator.disposeAllWindows();
   compilationChecker=null;

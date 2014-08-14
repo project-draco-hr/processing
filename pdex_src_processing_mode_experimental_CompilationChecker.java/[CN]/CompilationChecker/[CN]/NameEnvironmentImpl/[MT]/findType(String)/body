@@ -1,0 +1,22 @@
+{
+  if (this.fullName.equals(fullName))   return new NameEnvironmentAnswer(unit,null);
+  try {
+    InputStream is=getClassLoader().getResourceAsStream(fullName.replace('.','/') + ".class");
+    if (is != null) {
+      byte[] buffer=new byte[8192];
+      int bytes=0;
+      ByteArrayOutputStream os=new ByteArrayOutputStream(buffer.length);
+      while ((bytes=is.read(buffer,0,buffer.length)) > 0)       os.write(buffer,0,bytes);
+      os.flush();
+      ClassFileReader classFileReader=new ClassFileReader(os.toByteArray(),fullName.toCharArray(),true);
+      return new NameEnvironmentAnswer(classFileReader,null);
+    }
+    return null;
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+catch (  ClassFormatException e) {
+    throw new RuntimeException(e);
+  }
+}

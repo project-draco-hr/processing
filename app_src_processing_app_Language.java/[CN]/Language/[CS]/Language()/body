@@ -1,0 +1,21 @@
+{
+  String systemLanguage=Locale.getDefault().getLanguage();
+  language=loadLanguage();
+  boolean writePrefs=false;
+  if (language == null) {
+    language=systemLanguage;
+    writePrefs=true;
+  }
+  languages=new HashMap<String,String>();
+  for (  String code : listSupported()) {
+    languages.put(code,Locale.forLanguageTag(code).getDisplayLanguage(Locale.forLanguageTag(code)));
+  }
+  if (!languages.containsKey(language)) {
+    language="en";
+    writePrefs=true;
+  }
+  if (writePrefs) {
+    saveLanguage(language);
+  }
+  bundle=ResourceBundle.getBundle(Language.FILE,new Locale(this.language),new UTF8Control());
+}
