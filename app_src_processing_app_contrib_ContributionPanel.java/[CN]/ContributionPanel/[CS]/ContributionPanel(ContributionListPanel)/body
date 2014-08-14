@@ -114,7 +114,8 @@
   setSelected(false);
   setExpandListener(this,new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
-      listPanel.setSelectedPanel(ContributionPanel.this);
+      if (contrib.isCompatible(Base.getRevision()))       listPanel.setSelectedPanel(ContributionPanel.this);
+ else       listPanel.contribManager.status.setErrorMessage(contrib.getName() + " is not compatible with this revision of Processing");
     }
   }
 );
