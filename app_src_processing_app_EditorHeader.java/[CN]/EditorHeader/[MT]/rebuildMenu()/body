@@ -13,6 +13,7 @@
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       editor.getSketch().handleNewCode();
+      editor.setWatcherSave();
     }
   }
 );
@@ -28,13 +29,13 @@
   item=new JMenuItem(Language.text("editor.header.delete"));
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      System.out.println("here high");
       Sketch sketch=editor.getSketch();
       if (!Base.isMacOS() && editor.base.editors.size() == 1 && sketch.getCurrentCodeIndex() == 0) {
         Base.showWarning(Language.text("editor.header.delete.warning.title"),Language.text("editor.header.delete.warning.text"),null);
       }
  else {
         editor.getSketch().handleDeleteCode();
+        editor.setWatcherSave();
       }
     }
   }

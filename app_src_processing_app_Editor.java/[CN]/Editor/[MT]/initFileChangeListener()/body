@@ -1,8 +1,7 @@
 {
   try {
     WatchService watchService=FileSystems.getDefault().newWatchService();
-    Path folderPath=sketch.getFolder().toPath();
-    watcherKey=folderPath.register(watchService,StandardWatchEventKinds.ENTRY_MODIFY);
+    watcherKey=sketch.getFolder().toPath().register(watchService,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_DELETE,StandardWatchEventKinds.ENTRY_MODIFY);
   }
  catch (  IOException e) {
     e.printStackTrace();
@@ -11,13 +10,18 @@
   if (finKey != null) {
     addWindowFocusListener(new WindowFocusListener(){
       @Override public void windowGainedFocus(      WindowEvent arg0){
+        if (watcherKey != finKey) {
+          return;
+        }
         if (finKey.isValid()) {
           List<WatchEvent<?>> events=finKey.pollEvents();
           processFileEvents(events);
         }
+        List<WatchEvent<?>> events=finKey.pollEvents();
+        if (!watcherSave)         processFileEvents(events);
       }
       @Override public void windowLostFocus(      WindowEvent arg0){
-        if (key != finKey) {
+        if (watcherKey != finKey) {
           return;
         }
         List<WatchEvent<?>> events=finKey.pollEvents();
