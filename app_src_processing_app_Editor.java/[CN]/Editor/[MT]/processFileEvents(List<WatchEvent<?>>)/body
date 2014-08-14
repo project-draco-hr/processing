@@ -1,34 +1,39 @@
 {
-  didReload=false;
   for (  WatchEvent<?> e : events) {
-    boolean openedFile=false;
-    if (((Path)e.context()).getFileName().toString().startsWith(".goutputstream")) {
-      openedFile=true;
-    }
-    if (!openedFile) {
-      for (      SketchCode sc : sketch.getCode()) {
-        if (sc.getFileName().equals(((Path)e.context()).getFileName().toString())) {
-          openedFile=true;
-          break;
-        }
+    boolean sketchFile=false;
+    Path file=((Path)e.context()).getFileName();
+    for (    String s : getMode().getExtensions()) {
+      if (file.toString().endsWith(s)) {
+        sketchFile=true;
+        break;
       }
     }
-    if (!openedFile) {
+    if (!sketchFile) {
       continue;
     }
-    if (didReload) {
-      break;
-    }
-    if (e.kind().equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
-      int response=Base.showYesNoQuestion(Editor.this,"File Modified","Your sketch has been modified externally","Would you like to reload the sketch?");
-      if (response == 0) {
+    int response=Base.showYesNoQuestion(Editor.this,"File Modified","Your sketch has been modified externally","Would you like to reload the sketch?");
+    if (response == 0) {
+      File sc=sketch.getMainFile();
+      try {
         sketch.reload();
         header.rebuild();
-        didReload=true;
       }
-    }
- else {
+ catch (      Exception f) {
+        if (sketch.getCodeCount() < 1) {
+          Base.showWarning("Canceling Reload","You cannot delete the last code file in a sketch!");
+          try {
+            sc.createNewFile();
+          }
+ catch (          IOException e1) {
+            Base.showError("Reload failed","The sketch contians no code files",e1);
+            break;
+          }
+          changed=true;
+          return;
+        }
+      }
+      break;
     }
   }
-  saved=false;
+  changed=false;
 }

@@ -4,7 +4,7 @@
   }
   try {
     WatchService watchService=FileSystems.getDefault().newWatchService();
-    key=sketch.getFolder().toPath().register(watchService,StandardWatchEventKinds.ENTRY_MODIFY);
+    key=sketch.getFolder().toPath().register(watchService,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_DELETE,StandardWatchEventKinds.ENTRY_MODIFY);
   }
  catch (  IOException e) {
   }
@@ -12,6 +12,9 @@
   if (finKey != null) {
     WindowFocusListener fl=new WindowFocusListener(){
       @Override public void windowGainedFocus(      WindowEvent arg0){
+        if (key != finKey) {
+          return;
+        }
         if (!reloadEnabled) {
           return;
         }
@@ -19,14 +22,17 @@
           return;
         }
         List<WatchEvent<?>> events=finKey.pollEvents();
-        processFileEvents(events);
+        if (!changed)         processFileEvents(events);
       }
       @Override public void windowLostFocus(      WindowEvent arg0){
+        if (key != finKey) {
+          return;
+        }
         List<WatchEvent<?>> events=finKey.pollEvents();
-        if (!saved) {
+        if (!changed) {
           processFileEvents(events);
         }
-        saved=false;
+        changed=false;
       }
     }
 ;

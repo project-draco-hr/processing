@@ -12,6 +12,7 @@
   item=Toolkit.newJMenuItemShift("New Tab",'N');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
+      editor.setChanged();
       editor.getSketch().handleNewCode();
     }
   }
@@ -28,12 +29,14 @@
   item=new JMenuItem("Delete");
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
+      System.out.println("here high");
       Sketch sketch=editor.getSketch();
       if (!Base.isMacOS() && editor.base.editors.size() == 1 && sketch.getCurrentCodeIndex() == 0) {
         Base.showWarning("Yeah, no.","You can't delete the last tab " + "of the last open sketch.",null);
       }
  else {
         editor.getSketch().handleDeleteCode();
+        editor.setChanged();
       }
     }
   }
