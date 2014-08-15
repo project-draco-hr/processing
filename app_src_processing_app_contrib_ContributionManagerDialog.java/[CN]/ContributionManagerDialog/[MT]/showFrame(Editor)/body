@@ -32,6 +32,14 @@
       }
     }
 );
+    retryConnectingButton=new JButton("Retry");
+    retryConnectingButton.setVisible(false);
+    retryConnectingButton.addActionListener(new ActionListener(){
+      @Override public void actionPerformed(      ActionEvent arg0){
+        downloadAndUpdateContributionListing();
+      }
+    }
+);
     Toolkit.setIcon(dialog);
     createComponents();
     registerDisposeListeners();
@@ -44,22 +52,6 @@
     updateContributionListing();
   }
  else {
-    contribListing.downloadAvailableList(new ProgressMonitor(){
-      public void finished(){
-        super.finished();
-        updateContributionListing();
-        updateCategoryChooser();
-        if (error) {
-          if (exception instanceof SocketTimeoutException) {
-            status.setErrorMessage(Language.text("contrib.errors.list_download.timeout"));
-          }
- else {
-            status.setErrorMessage(Language.text("contrib.errors.list_download"));
-          }
-          exception.printStackTrace();
-        }
-      }
-    }
-);
+    downloadAndUpdateContributionListing();
   }
 }

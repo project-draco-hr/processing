@@ -1,0 +1,27 @@
+{
+  status.setMessage("Downloading contribution list...");
+  retryConnectingButton.setEnabled(false);
+  contribListing.downloadAvailableList(new ProgressMonitor(){
+    public void finished(){
+      super.finished();
+      updateContributionListing();
+      updateCategoryChooser();
+      retryConnectingButton.setEnabled(true);
+      if (error) {
+        if (exception instanceof SocketTimeoutException) {
+          status.setErrorMessage(Language.text("contrib.errors.list_download.timeout"));
+        }
+ else {
+          status.setErrorMessage(Language.text("contrib.errors.list_download"));
+        }
+        exception.printStackTrace();
+        retryConnectingButton.setVisible(true);
+      }
+ else {
+        status.setMessage("Done.");
+        retryConnectingButton.setVisible(false);
+      }
+    }
+  }
+);
+}
