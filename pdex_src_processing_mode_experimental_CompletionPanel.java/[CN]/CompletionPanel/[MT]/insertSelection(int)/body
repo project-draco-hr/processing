@@ -11,8 +11,7 @@
         currentSubword="";
       }
       String completionString=((CompletionCandidate)completionList.getSelectedValue()).getCompletionString();
-      if (selectedSuggestion.equals(" )")) {
-        selectedSuggestion=")";
+      if (selectedSuggestion.endsWith(" )")) {
         if (completionString.endsWith(" )")) {
           completionString=completionString.substring(0,completionString.length() - 2) + ")";
         }
@@ -29,8 +28,17 @@
       textarea.getDocument().insertString(insertionPosition - currentSubwordLen,completionString,null);
       if (selectedSuggestion.endsWith(")") && !selectedSuggestion.endsWith("()")) {
         int x=selectedSuggestion.indexOf(',');
-        if (x == -1)         x=0;
-        textarea.setCaretPosition(insertionPosition + x);
+        if (x == -1) {
+          if (subWord.endsWith("(")) {
+            textarea.setCaretPosition(insertionPosition);
+          }
+ else {
+            textarea.setCaretPosition(textarea.getCaretPosition() - 1);
+          }
+        }
+ else {
+          textarea.setCaretPosition(insertionPosition + x);
+        }
       }
  else {
         textarea.setCaretPosition(insertionPosition + selectedSuggestion.length());
