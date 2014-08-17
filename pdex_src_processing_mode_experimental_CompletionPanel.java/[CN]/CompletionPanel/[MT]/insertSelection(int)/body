@@ -11,10 +11,14 @@
         currentSubword="";
       }
       String completionString=((CompletionCandidate)completionList.getSelectedValue()).getCompletionString();
-      if (selectedSuggestion.equals(" )")) {
-        selectedSuggestion=")";
+      if (selectedSuggestion.endsWith(" )")) {
         if (completionString.endsWith(" )")) {
           completionString=completionString.substring(0,completionString.length() - 2) + ")";
+        }
+      }
+      if (completionSource == MOUSE_COMPLETION) {
+        if (completionString.endsWith("(")) {
+          completionString=completionString.substring(0,completionString.length() - 1);
         }
       }
       logE(subWord + " <= subword, Inserting suggestion=> " + selectedSuggestion+ " Current sub: "+ currentSubword);
@@ -24,11 +28,12 @@
       textarea.getDocument().insertString(insertionPosition - currentSubwordLen,completionString,null);
       if (selectedSuggestion.endsWith(")") && !selectedSuggestion.endsWith("()")) {
         int x=selectedSuggestion.indexOf(',');
-        if (x == -1)         x=0;
-        textarea.setCaretPosition(insertionPosition + x);
-      }
+        if (x == -1) {
+          textarea.setCaretPosition(textarea.getCaretPosition() - 1);
+        }
  else {
-        textarea.setCaretPosition(insertionPosition + selectedSuggestion.length());
+          textarea.setCaretPosition(insertionPosition + x);
+        }
       }
       log("Suggestion inserted: " + System.currentTimeMillis());
       if (((CompletionCandidate)completionList.getSelectedValue()).getLabel().contains("...")) {
