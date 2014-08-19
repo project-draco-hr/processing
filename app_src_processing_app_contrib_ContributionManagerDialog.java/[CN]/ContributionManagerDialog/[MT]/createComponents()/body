@@ -19,7 +19,7 @@
       if (ContributionManagerDialog.ANY_CATEGORY.equals(category)) {
         category=null;
       }
-      filterLibraries(category,filterField.filters);
+      filterLibraries(category,filterField.filters,isCompatibilityFilter);
       contributionListPanel.updateColors();
     }
   }
@@ -27,6 +27,17 @@
   filterPanel.add(Box.createHorizontalStrut(5));
   filterField=new FilterField();
   filterPanel.add(filterField);
+  filterPanel.add(Box.createHorizontalStrut(5));
+  final JCheckBox compatibleContrib=new JCheckBox("Show Only Compatible " + compatibleContribType);
+  compatibleContrib.addItemListener(new ItemListener(){
+    @Override public void itemStateChanged(    ItemEvent arg0){
+      isCompatibilityFilter=compatibleContrib.isSelected();
+      filterLibraries(category,filterField.filters,isCompatibilityFilter);
+      contributionListPanel.updateColors();
+    }
+  }
+);
+  filterPanel.add(compatibleContrib);
   filterPanel.setBorder(new EmptyBorder(7,7,7,7));
   scrollPane=new JScrollPane();
   scrollPane.setPreferredSize(new Dimension(300,300));
