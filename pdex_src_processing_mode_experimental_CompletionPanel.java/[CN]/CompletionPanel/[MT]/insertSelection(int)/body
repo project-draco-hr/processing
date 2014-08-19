@@ -16,9 +16,10 @@
           completionString=completionString.substring(0,completionString.length() - 2) + ")";
         }
       }
+      boolean mouseClickOnOverloadedMethods=false;
       if (completionSource == MOUSE_COMPLETION) {
         if (completionString.endsWith("(")) {
-          completionString=completionString.substring(0,completionString.length() - 1);
+          mouseClickOnOverloadedMethods=true;
         }
       }
       logE(subWord + " <= subword, Inserting suggestion=> " + selectedSuggestion+ " Current sub: "+ currentSubword);
@@ -40,6 +41,16 @@
       }
  else {
         hide();
+      }
+      if (mouseClickOnOverloadedMethods) {
+        SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
+          protected Object doInBackground() throws Exception {
+            editor.ta.fetchPhrase(null);
+            return null;
+          }
+        }
+;
+        worker.execute();
       }
       return true;
     }
