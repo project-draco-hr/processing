@@ -1,0 +1,45 @@
+{
+  tree.setCellRenderer(new DefaultTreeCellRenderer(){
+    @Override public Component getTreeCellRendererComponent(    JTree tree,    Object value,    boolean sel,    boolean expanded,    boolean leaf,    int row,    boolean hasFocus){
+      JComponent c=(JComponent)super.getTreeCellRendererComponent(tree,value,sel,expanded,leaf,row,hasFocus);
+      if (!tree.isRowSelected(row)) {
+        if (row % 2 == 0) {
+          c.setBackground(new Color(255,255,255));
+          setBackgroundSelectionColor(new Color(0,0,255));
+          setTextSelectionColor(Color.WHITE);
+          setBorderSelectionColor(new Color(0,0,255));
+        }
+ else {
+          c.setBackground(new Color(240,240,240));
+          setBackgroundSelectionColor(new Color(0,0,255));
+          setTextSelectionColor(Color.WHITE);
+          setBorderSelectionColor(new Color(0,0,255));
+        }
+      }
+ else {
+        c.setBackground(new Color(127,127,255));
+      }
+      c.setOpaque(true);
+      return c;
+    }
+  }
+);
+  tree.setUI(new BasicTreeUI(){
+    @Override protected void paintRow(    Graphics g,    Rectangle clipBounds,    Insets insets,    Rectangle bounds,    TreePath path,    int row,    boolean isExpanded,    boolean hasBeenExpanded,    boolean isLeaf){
+      Graphics g2=g.create();
+      if (!tree.isRowSelected(row)) {
+        if (row % 2 == 0) {
+          g2.setColor(new Color(255,255,255,128));
+        }
+ else {
+          g2.setColor(new Color(226,226,226,128));
+        }
+      }
+ else       g2.setColor(new Color(0,0,255,128));
+      g2.fillRect(0,bounds.y,tree.getWidth(),bounds.height);
+      g2.dispose();
+      super.paintRow(g,clipBounds,insets,bounds,path,row,isExpanded,hasBeenExpanded,isLeaf);
+    }
+  }
+);
+}
