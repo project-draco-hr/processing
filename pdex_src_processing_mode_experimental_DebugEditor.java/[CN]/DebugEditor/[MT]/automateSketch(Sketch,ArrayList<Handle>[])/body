@@ -6,7 +6,18 @@
   if (setupStartPos < 0) {
     return false;
   }
-  int port=(int)(Math.random() * 0xf000) + 0xff0;
+  int port;
+  String portStr=Preferences.get(prefTweakPort);
+  if (portStr == null) {
+    Preferences.set(prefTweakPort,"auto");
+    portStr="auto";
+  }
+  if (portStr.equals("auto")) {
+    port=(int)(Math.random() * 0x3fff) + 0xc000;
+  }
+ else {
+    port=Preferences.getInteger(prefTweakPort);
+  }
   tweakClient=new UDPTweakClient(port);
   for (int tab=0; tab < code.length; tab++) {
     for (    Handle h : handles[tab]) {
@@ -55,10 +66,17 @@
   setupStartPos=SketchParser.getSetupStart(c);
   c=replaceString(c,setupStartPos,setupStartPos,addToSetup);
   code[0].setProgram(header + c);
-  System.out.println("\nModified code:\n");
-  for (int i=0; i < code.length; i++) {
-    System.out.println("file " + i + "\n=========");
-    System.out.println(code[i].getProgram());
+  String showModCode=Preferences.get(prefTweakShowCode);
+  if (showModCode == null) {
+    Preferences.setBoolean(prefTweakShowCode,false);
+  }
+  if (Preferences.getBoolean(prefTweakShowCode)) {
+    System.out.println("\nTweakMode modified code:\n");
+    for (int i=0; i < code.length; i++) {
+      System.out.println("tab " + i + "\n");
+      System.out.println("=======================================================\n");
+      System.out.println(code[i].getProgram());
+    }
   }
   return true;
 }
