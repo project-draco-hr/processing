@@ -7,7 +7,7 @@
   final Pattern nonAAlpha=Pattern.compile("[^A-Za-z]");
   FontMetrics fmTmp=null;
   for (  JMenuItem m : menu) {
-    if (m != null)     fmTmp=m.getFontMetrics(menu[0].getFont());
+    if (m != null)     fmTmp=m.getFontMetrics(m.getFont());
   }
   if (fmTmp == null)   return;
   final FontMetrics fm=fmTmp;
@@ -32,8 +32,8 @@
     if (jmi.getText() == null)     continue;
     jmi.setMnemonic(0);
     for (int i=0; i < kdePreDefStrs.length; i++) {
-      String cleanName=nonAAlpha.matcher(jmi.getText()).replaceAll("").toLowerCase();
-      if (kdePreDefPats[i].matcher(cleanName).matches()) {
+      String lASCIIName=nonAAlpha.matcher(jmi.getText()).replaceAll("").toLowerCase();
+      if (kdePreDefPats[i].matcher(lASCIIName).matches()) {
         char mnem=kdePreDefStrs[i].charAt(1 + kdePreDefStrs[i].indexOf("&"));
         jmi.setMnemonic(mnem);
         taken.add(mnem);
@@ -41,7 +41,7 @@
       }
     }
   }
-  algorithmicAssaignment:   for (  JMenuItem jmi : menu) {
+  algorithmicAssignment:   for (  JMenuItem jmi : menu) {
     if (jmi == null)     continue;
     if (jmi.getText() == null)     continue;
     if (jmi.getMnemonic() != 0)     continue;
@@ -63,7 +63,7 @@
       if ('A' <= firstChar && firstChar <= 'Z') {
         jmi.setMnemonic(firstChar);
         taken.add((char)(firstChar | 32));
-        continue algorithmicAssaignment;
+        continue algorithmicAssignment;
       }
     }
     for (    String wd : cleanString.split("[^\\p{IsAlphabetic}]")) {
@@ -74,19 +74,16 @@
       if ('a' <= firstChar && firstChar <= 'z') {
         jmi.setMnemonic(firstChar);
         taken.add(firstChar);
-        continue algorithmicAssaignment;
+        continue algorithmicAssignment;
       }
     }
     cleanString=nonAAlpha.matcher(jmi.getText()).replaceAll("");
     if (cleanString.length() >= 2) {
-      if (!taken.contains((char)(cleanString.charAt(1) | 32))) {
-        if (!banned.contains((char)(cleanString.charAt(1) | 32))) {
-          if (fm.charWidth('A') <= 2 * fm.charWidth(cleanString.charAt(1))) {
-            jmi.setMnemonic(cleanString.charAt(1));
-            taken.add((char)(cleanString.charAt(1) | 32));
-            continue algorithmicAssaignment;
-          }
-        }
+      char ascii2nd=cleanString.charAt(1);
+      if (!taken.contains((char)(ascii2nd | 32)) && !banned.contains((char)(ascii2nd | 32)) && fm.charWidth('A') <= 2 * fm.charWidth(ascii2nd)) {
+        jmi.setMnemonic(ascii2nd);
+        taken.add((char)(ascii2nd | 32));
+        continue algorithmicAssignment;
       }
     }
     cleanChars=cleanString.toCharArray();
@@ -100,14 +97,14 @@
       if (banned.contains(Character.toLowerCase(mnem)))       continue;
       jmi.setMnemonic(mnem);
       taken.add(Character.toLowerCase(mnem));
-      continue algorithmicAssaignment;
+      continue algorithmicAssignment;
     }
     for (    char digit : jmi.getText().replaceAll("[^0-9]","").toCharArray()) {
       if (taken.contains(digit))       continue;
       if (banned.contains(digit))       continue;
-      jmi.setMnemonic(KeyEvent.VK_0 + (digit - '0'));
+      jmi.setMnemonic(KeyEvent.VK_0 + digit - '0');
       taken.add(digit);
-      continue algorithmicAssaignment;
+      continue algorithmicAssignment;
     }
   }
   for (  JMenuItem jmi : menu) {
