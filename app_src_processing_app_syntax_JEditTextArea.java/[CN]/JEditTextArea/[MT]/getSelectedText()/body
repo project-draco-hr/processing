@@ -9,7 +9,7 @@
       end=start;
       start=tmp;
     }
-    StringBuffer buf=new StringBuffer();
+    StringBuilder sb=new StringBuilder();
     Segment seg=new Segment();
     for (int i=selectionStartLine; i <= selectionEndLine; i++) {
       Element lineElement=map.getElement(i);
@@ -19,10 +19,10 @@
       lineStart=Math.min(lineStart + start,lineEnd);
       lineLen=Math.min(end - start,lineEnd - lineStart);
       getText(lineStart,lineLen,seg);
-      buf.append(seg.array,seg.offset,seg.count);
-      if (i != selectionEndLine)       buf.append('\n');
+      sb.append(seg.array,seg.offset,seg.count);
+      if (i != selectionEndLine)       sb.append('\n');
     }
-    return buf.toString();
+    return sb.toString();
   }
  else {
     return getText(selectionStart,selectionEnd - selectionStart);
