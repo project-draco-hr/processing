@@ -1,0 +1,26 @@
+{
+  deleteTemp(Base.getSketchbookModesFolder());
+  deleteTemp(Base.getSketchbookToolsFolder());
+  deleteFlagged(Base.getSketchbookLibrariesFolder());
+  deleteFlagged(Base.getSketchbookModesFolder());
+  deleteFlagged(Base.getSketchbookToolsFolder());
+  installPreviouslyFailed(base,Base.getSketchbookModesFolder());
+  updateFlagged(base,Base.getSketchbookModesFolder());
+  updateFlagged(base,Base.getSketchbookToolsFolder());
+  SwingWorker s=new SwingWorker<Void,Void>(){
+    @Override protected Void doInBackground() throws Exception {
+      try {
+        Thread.sleep(1 * 1000);
+        installPreviouslyFailed(base,Base.getSketchbookToolsFolder());
+      }
+ catch (      InterruptedException e) {
+        e.printStackTrace();
+      }
+      return null;
+    }
+  }
+;
+  s.execute();
+  clearRestartFlags(Base.getSketchbookModesFolder());
+  clearRestartFlags(Base.getSketchbookToolsFolder());
+}

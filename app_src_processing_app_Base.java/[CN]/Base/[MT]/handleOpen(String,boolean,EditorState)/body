@@ -5,10 +5,12 @@
       return null;
     }
     for (    Editor editor : editors) {
-      if (editor.getSketch().getMainFile().equals(file)) {
-        editor.toFront();
-        handleRecent(editor);
-        return editor;
+      for (      SketchCode tab : editor.getSketch().getCode()) {
+        if (tab.getFile().equals(file)) {
+          editor.toFront();
+          handleRecent(editor);
+          return editor;
+        }
       }
     }
     if (!Sketch.isSanitaryName(file.getName())) {
@@ -31,10 +33,11 @@
         editor=coreModes[0].createEditor(this,path,state);
       }
     }
-    if (editor.getSketch() == null) {
+    Sketch sketch=editor.getSketch();
+    if (sketch == null) {
       return null;
     }
-    editor.getSketch().setUntitled(untitled);
+    sketch.setUntitled(untitled);
     editors.add(editor);
     handleRecent(editor);
     editor.setVisible(true);

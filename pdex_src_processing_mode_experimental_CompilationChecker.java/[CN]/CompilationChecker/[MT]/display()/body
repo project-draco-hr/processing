@@ -1,0 +1,36 @@
+{
+  boolean error=false;
+  int errorCount=0, warningCount=0, count=0;
+  for (int i=0; i < prob.length; i++) {
+    IProblem problem=prob[i];
+    if (problem == null)     continue;
+    StringBuffer buffer=new StringBuffer();
+    buffer.append(problem.getMessage());
+    buffer.append(" | line: ");
+    buffer.append(problem.getSourceLineNumber());
+    String msg=buffer.toString();
+    if (problem.isError()) {
+      error=true;
+      msg="Error: " + msg;
+      errorCount++;
+    }
+ else     if (problem.isWarning()) {
+      msg="Warning: " + msg;
+      warningCount++;
+    }
+    System.out.println(msg);
+    prob[count++]=problem;
+  }
+  if (!error) {
+    System.out.println("====================================");
+    System.out.println("    Compiled without any errors.    ");
+    System.out.println("====================================");
+  }
+ else {
+    System.out.println("====================================");
+    System.out.println(" Compilation failed. You erred man! ");
+    System.out.println("====================================");
+  }
+  System.out.print("Total warnings: " + warningCount);
+  System.out.println(", Total errors: " + errorCount);
+}

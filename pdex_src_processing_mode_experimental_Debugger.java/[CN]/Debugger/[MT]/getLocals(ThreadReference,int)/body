@@ -1,0 +1,23 @@
+{
+  List<VariableNode> vars=new ArrayList<VariableNode>();
+  try {
+    if (t.frameCount() > 0) {
+      StackFrame sf=t.frame(0);
+      for (      LocalVariable lv : sf.visibleVariables()) {
+        Value val=sf.getValue(lv);
+        VariableNode var=new LocalVariableNode(lv.name(),lv.typeName(),val,lv,sf);
+        if (depth > 0) {
+          var.addChildren(getFields(val,depth - 1,true));
+        }
+        vars.add(var);
+      }
+    }
+  }
+ catch (  IncompatibleThreadStateException ex) {
+    Logger.getLogger(Debugger.class.getName()).log(Level.SEVERE,null,ex);
+  }
+catch (  AbsentInformationException ex) {
+    Logger.getLogger(Debugger.class.getName()).log(Level.WARNING,"local variable information not available",ex);
+  }
+  return vars;
+}

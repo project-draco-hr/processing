@@ -1,0 +1,32 @@
+{
+  if (errorCheckerService.tempErrorLog.size() == 0)   return;
+  try {
+    System.out.println("Writing errors");
+    StringBuffer sbuff=new StringBuffer();
+    sbuff.append("Sketch: " + getSketch().getFolder() + ", "+ new java.sql.Timestamp(new java.util.Date().getTime())+ "\nComma in error msg is substituted with ^ symbol\nFor separating arguments in error args | symbol is used\n");
+    sbuff.append("ERROR TYPE, ERROR ARGS, ERROR MSG\n");
+    for (    String errMsg : errorCheckerService.tempErrorLog.keySet()) {
+      IProblem ip=errorCheckerService.tempErrorLog.get(errMsg);
+      if (ip != null) {
+        sbuff.append(ErrorMessageSimplifier.getIDName(ip.getID()));
+        sbuff.append(',');
+        sbuff.append("{");
+        for (int i=0; i < ip.getArguments().length; i++) {
+          sbuff.append(ip.getArguments()[i]);
+          if (i < ip.getArguments().length - 1)           sbuff.append("| ");
+        }
+        sbuff.append("}");
+        sbuff.append(',');
+        sbuff.append(ip.getMessage().replace(',','^'));
+        sbuff.append("\n");
+      }
+    }
+    System.out.println(sbuff);
+    File opFile=new File(getSketch().getFolder(),"ErrorLogs" + File.separator + "ErrorLog_"+ System.currentTimeMillis()+ ".csv");
+    PApplet.saveStream(opFile,new ByteArrayInputStream(sbuff.toString().getBytes(Charset.defaultCharset())));
+  }
+ catch (  Exception e) {
+    System.err.println("Failed to save log file for sketch " + getSketch().getName());
+    e.printStackTrace();
+  }
+}

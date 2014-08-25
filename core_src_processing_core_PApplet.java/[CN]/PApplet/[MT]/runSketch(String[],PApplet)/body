@@ -139,17 +139,18 @@
     }
   }
   if (present) {
-    if (platform == MACOSX) {
-      japplemenubar.JAppleMenuBar.hide();
-    }
     frame.setBounds(screenRect);
     applet.setBounds((screenRect.width - applet.width) / 2,(screenRect.height - applet.height) / 2,applet.width,applet.height);
+    if (platform == MACOSX) {
+      macosxFullScreenEnable(frame);
+      macosxFullScreenToggle(frame);
+    }
     if (!hideStop) {
       Label label=new Label("stop");
       label.setForeground(stopColor);
       label.addMouseListener(new MouseAdapter(){
         @Override public void mousePressed(        java.awt.event.MouseEvent e){
-          System.exit(0);
+          applet.exit();
         }
       }
 );

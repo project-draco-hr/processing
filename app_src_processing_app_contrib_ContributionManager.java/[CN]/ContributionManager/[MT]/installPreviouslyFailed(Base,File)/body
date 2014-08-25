@@ -1,0 +1,19 @@
+{
+  File[] installList=root.listFiles(new FileFilter(){
+    public boolean accept(    File folder){
+      return (folder.isFile());
+    }
+  }
+);
+  for (  File file : installList) {
+    Iterator<AvailableContribution> iter=contribListing.advertisedContributions.iterator();
+    while (iter.hasNext()) {
+      AvailableContribution availableContrib=iter.next();
+      if (file.getName().equals(availableContrib.getName())) {
+        file.delete();
+        installOnStartUp(base,availableContrib);
+        contribListing.replaceContribution(availableContrib,availableContrib);
+      }
+    }
+  }
+}

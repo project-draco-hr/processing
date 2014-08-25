@@ -1,6 +1,6 @@
 {
   if (examplesFrame == null) {
-    examplesFrame=new JFrame(getTitle() + " Examples");
+    examplesFrame=new JFrame(getTitle() + " " + Language.text("examples"));
     Toolkit.setIcon(examplesFrame);
     Toolkit.registerWindowCloseKeys(examplesFrame.getRootPane(),new ActionListener(){
       public void actionPerformed(      ActionEvent e){
@@ -8,7 +8,36 @@
       }
     }
 );
-    final JTree tree=buildExamplesTree();
+    JPanel examplesPanel=new JPanel();
+    examplesPanel.setLayout(new BorderLayout());
+    examplesPanel.setBackground(Color.WHITE);
+    final JPanel openExamplesManagerPanel=new JPanel(new FlowLayout(FlowLayout.LEFT));
+    JLabel openExamplesManagerLabel=new JLabel("Add Examples...");
+    openExamplesManagerPanel.add(openExamplesManagerLabel);
+    openExamplesManagerPanel.setOpaque(false);
+    Border lineBorder=BorderFactory.createMatteBorder(0,0,1,0,Color.BLACK);
+    Border paddingBorder=BorderFactory.createEmptyBorder(3,5,1,4);
+    openExamplesManagerPanel.setBorder(BorderFactory.createCompoundBorder(lineBorder,paddingBorder));
+    openExamplesManagerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+    openExamplesManagerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    openExamplesManagerPanel.addMouseListener(new MouseListener(){
+      @Override public void mouseReleased(      MouseEvent e){
+      }
+      @Override public void mousePressed(      MouseEvent e){
+      }
+      @Override public void mouseExited(      MouseEvent e){
+      }
+      @Override public void mouseEntered(      MouseEvent e){
+      }
+      @Override public void mouseClicked(      MouseEvent e){
+        base.handleOpenExampleManager();
+      }
+    }
+);
+    final JTree tree=new JTree(buildExamplesTree());
+    colourizeTreeRows(tree);
+    tree.setOpaque(true);
+    tree.setAlignmentX(Component.LEFT_ALIGNMENT);
     tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     tree.setShowsRootHandles(true);
     tree.expandRow(0);
@@ -52,7 +81,7 @@
       }
     }
 );
-    tree.setBorder(new EmptyBorder(5,5,5,5));
+    tree.setBorder(new EmptyBorder(0,5,5,5));
     if (Base.isMacOS()) {
       tree.setToggleClickCount(2);
     }
@@ -60,9 +89,14 @@
       tree.setToggleClickCount(1);
     }
     JScrollPane treePane=new JScrollPane(tree);
-    treePane.setPreferredSize(new Dimension(250,450));
-    treePane.setBorder(new EmptyBorder(0,0,0,0));
-    examplesFrame.getContentPane().add(treePane);
+    treePane.setPreferredSize(new Dimension(250,300));
+    treePane.setBorder(new EmptyBorder(2,0,0,0));
+    treePane.setOpaque(true);
+    treePane.setBackground(Color.WHITE);
+    treePane.setAlignmentX(Component.LEFT_ALIGNMENT);
+    examplesPanel.add(openExamplesManagerPanel,BorderLayout.PAGE_START);
+    examplesPanel.add(treePane,BorderLayout.CENTER);
+    examplesFrame.getContentPane().add(examplesPanel);
     examplesFrame.pack();
     restoreExpanded(tree);
   }

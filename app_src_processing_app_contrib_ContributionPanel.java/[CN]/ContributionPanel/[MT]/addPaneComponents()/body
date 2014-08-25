@@ -8,10 +8,14 @@
   descriptionBlock.setContentType("text/html");
   setTextStyle(descriptionBlock);
   descriptionBlock.setOpaque(false);
+  if (UIManager.getLookAndFeel().getID().equals("Nimbus")) {
+    descriptionBlock.setBackground(new Color(0,0,0,0));
+  }
   descriptionBlock.setBorder(new EmptyBorder(4,7,7,7));
   descriptionBlock.setHighlighter(null);
   add(descriptionBlock,BorderLayout.CENTER);
-  Box updateBox=Box.createHorizontalBox();
+  JPanel updateBox=new JPanel();
+  updateBox.setLayout(new BorderLayout());
   notificationBlock=new JLabel();
   notificationBlock.setInheritsPopupMenu(true);
   notificationBlock.setVisible(false);
@@ -27,16 +31,63 @@
   updateButton.setVisible(false);
   updateButton.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      updateButton.setEnabled(false);
-      AvailableContribution ad=contribListing.getAvailableContribution(contrib);
-      String url=ad.link;
-      installContribution(ad,url);
+      listPanel.contribManager.status.clear();
+      isUpdateInProgress=true;
+      if (contrib.getType().requiresRestart()) {
+        installRemoveButton.setEnabled(false);
+        installProgressBar.setVisible(true);
+        installProgressBar.setIndeterminate(true);
+        ((LocalContribution)contrib).removeContribution(listPanel.contribManager.editor,new JProgressMonitor(installProgressBar){
+          public void finishedAction(){
+            resetInstallProgressBarState();
+            updateButton.setEnabled(false);
+            AvailableContribution ad=contribListing.getAvailableContribution(contrib);
+            String url=ad.link;
+            installContribution(ad,url);
+          }
+          @Override public void cancel(){
+            super.cancel();
+            resetInstallProgressBarState();
+            listPanel.contribManager.status.setMessage("");
+            isUpdateInProgress=false;
+            installRemoveButton.setEnabled(true);
+            if (contrib.isDeletionFlagged()) {
+              ((LocalContribution)contrib).setUpdateFlag(true);
+              ((LocalContribution)contrib).setDeletionFlag(false);
+              contribListing.replaceContribution(contrib,contrib);
+            }
+            boolean isModeActive=false;
+            if (contrib.getType() == ContributionType.MODE) {
+              ModeContribution m=(ModeContribution)contrib;
+              Iterator<Editor> iter=listPanel.contribManager.editor.getBase().getEditors().iterator();
+              while (iter.hasNext()) {
+                Editor e=iter.next();
+                if (e.getMode().equals(m.getMode())) {
+                  isModeActive=true;
+                  break;
+                }
+              }
+            }
+            if (!isModeActive)             listPanel.contribManager.restartButton.setVisible(true);
+ else             updateButton.setEnabled(true);
+          }
+        }
+,listPanel.contribManager.status);
+      }
+ else {
+        updateButton.setEnabled(false);
+        installRemoveButton.setEnabled(false);
+        AvailableContribution ad=contribListing.getAvailableContribution(contrib);
+        String url=ad.link;
+        installContribution(ad,url);
+      }
     }
   }
 );
-  updateBox.add(updateButton);
-  updateBox.add(notificationBlock);
+  updateBox.add(updateButton,BorderLayout.EAST);
+  updateBox.add(notificationBlock,BorderLayout.WEST);
   updateBox.setBorder(new EmptyBorder(4,7,7,7));
+  updateBox.setOpaque(false);
   add(updateBox,BorderLayout.SOUTH);
   JPanel rightPane=new JPanel();
   rightPane.setInheritsPopupMenu(true);
@@ -44,6 +95,10 @@
   rightPane.setLayout(new BoxLayout(rightPane,BoxLayout.Y_AXIS));
   rightPane.setMinimumSize(new Dimension(ContributionPanel.BUTTON_WIDTH,1));
   add(rightPane,BorderLayout.EAST);
+  barButtonCardPane.setLayout(new CardLayout());
+  barButtonCardPane.setInheritsPopupMenu(true);
+  barButtonCardPane.setOpaque(false);
+  barButtonCardPane.setMinimumSize(new Dimension(ContributionPanel.BUTTON_WIDTH,1));
   installProgressBar=new JProgressBar();
   installProgressBar.setInheritsPopupMenu(true);
   installProgressBar.setStringPainted(true);
@@ -54,9 +109,7 @@
   installProgressBar.setMaximumSize(d);
   installProgressBar.setMinimumSize(d);
   installProgressBar.setOpaque(false);
-  rightPane.add(installProgressBar);
   installProgressBar.setAlignmentX(CENTER_ALIGNMENT);
-  rightPane.add(Box.createVerticalGlue());
   installRemoveButton=new JButton(" ");
   installRemoveButton.setInheritsPopupMenu(true);
   Dimension installButtonDimensions=installRemoveButton.getPreferredSize();
@@ -65,12 +118,21 @@
   installRemoveButton.setMaximumSize(installButtonDimensions);
   installRemoveButton.setMinimumSize(installButtonDimensions);
   installRemoveButton.setOpaque(false);
-  rightPane.add(installRemoveButton);
   installRemoveButton.setAlignmentX(CENTER_ALIGNMENT);
+  JPanel barPane=new JPanel();
+  barPane.setOpaque(false);
+  barPane.add(installProgressBar);
+  JPanel buttonPane=new JPanel();
+  buttonPane.setOpaque(false);
+  buttonPane.add(installRemoveButton);
+  barButtonCardPane.add(buttonPane,BUTTON_CONSTRAINT);
+  barButtonCardPane.add(barPane,PROGRESS_BAR_CONSTRAINT);
+  ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,BUTTON_CONSTRAINT);
+  rightPane.add(barButtonCardPane);
   d=installProgressBar.getPreferredSize();
   Dimension d2=installRemoveButton.getPreferredSize();
   d.width=ContributionPanel.BUTTON_WIDTH;
-  d.height=d.height + d2.height;
+  d.height=d2.height;
   rightPane.setMinimumSize(d);
   rightPane.setPreferredSize(d);
 }

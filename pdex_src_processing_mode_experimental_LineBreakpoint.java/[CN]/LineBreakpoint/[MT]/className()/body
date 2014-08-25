@@ -1,0 +1,13 @@
+{
+  if (line.fileName().endsWith(".pde")) {
+    ReferenceType mainClass=dbg.getMainClass();
+    if (mainClass == null) {
+      return null;
+    }
+    return dbg.getMainClass().name();
+  }
+  if (line.fileName().endsWith(".java")) {
+    return line.fileName().substring(0,line.fileName().lastIndexOf(".java"));
+  }
+  return null;
+}
