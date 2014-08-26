@@ -1,16 +1,16 @@
 {
-  Hashtable current=bindings;
+  Map current=bindings;
   StringTokenizer st=new StringTokenizer(keyBinding);
   while (st.hasMoreTokens()) {
     KeyStroke keyStroke=parseKeyStroke(st.nextToken());
     if (keyStroke == null)     return;
     if (st.hasMoreTokens()) {
       Object o=current.get(keyStroke);
-      if (o instanceof Hashtable)       current=(Hashtable)o;
+      if (o instanceof Map)       current=(Map)o;
  else {
-        o=new Hashtable();
+        o=new HashMap();
         current.put(keyStroke,o);
-        current=(Hashtable)o;
+        current=(Map)o;
       }
     }
  else     current.put(keyStroke,action);
