@@ -3,11 +3,15 @@
   this.build=build;
   if (listener instanceof Editor) {
     this.editor=(Editor)listener;
+    sketchErr=editor.getConsole().getErr();
+  }
+ else {
+    sketchErr=System.err;
   }
   int bits=Base.getNativeBits();
   for (  Library library : build.getImportedLibraries()) {
     if (!library.supportsArch(PApplet.platform,bits)) {
-      System.err.println(library.getName() + " does not run in " + bits+ "-bit mode.");
+      sketchErr.println(library.getName() + " does not run in " + bits+ "-bit mode.");
       int opposite=(bits == 32) ? 64 : 32;
       if (Base.isMacOS()) {
         throw new SketchException("To use " + library.getName() + ", "+ "switch to "+ opposite+ "-bit mode in Preferences.");
