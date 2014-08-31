@@ -33,10 +33,14 @@
         }
  catch (        Exception e) {
           status.setErrorMessage(Language.interpolate("contrib.errors.download_and_install",ad.getName()));
+          downloadProgress.cancel();
+          installProgress.cancel();
         }
       }
  catch (      IOException e) {
         status.setErrorMessage(Language.text("contrib.errors.temporary_directory"));
+        downloadProgress.cancel();
+        installProgress.cancel();
       }
     }
   }

@@ -33,10 +33,16 @@
     success=true;
   }
  catch (  SocketTimeoutException ste) {
-    if (progress != null)     progress.error(ste);
+    if (progress != null) {
+      progress.error(ste);
+      progress.cancel();
+    }
   }
 catch (  IOException ioe) {
-    if (progress != null)     progress.error(ioe);
+    if (progress != null) {
+      progress.error(ioe);
+      progress.cancel();
+    }
   }
   if (progress != null)   progress.finished();
   return success;

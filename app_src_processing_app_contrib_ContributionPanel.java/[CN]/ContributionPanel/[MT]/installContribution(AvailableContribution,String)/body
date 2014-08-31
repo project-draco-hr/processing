@@ -6,6 +6,15 @@
     JProgressMonitor downloadProgress=new JProgressMonitor(installProgressBar){
       public void finishedAction(){
       }
+      public void cancel(){
+        resetInstallProgressBarState();
+        installRemoveButton.setEnabled(!contrib.isUpdateFlagged());
+        ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,BUTTON_CONSTRAINT);
+        isInstallInProgress=false;
+        if (isUpdateInProgress)         isUpdateInProgress=!isUpdateInProgress;
+        updateButton.setVisible(contribListing.hasUpdates(contrib) && !contrib.isUpdateFlagged());
+        setSelected(true);
+      }
     }
 ;
     JProgressMonitor installProgress=new JProgressMonitor(installProgressBar){
@@ -20,6 +29,9 @@
         if (isUpdateInProgress)         isUpdateInProgress=!isUpdateInProgress;
         updateButton.setVisible(contribListing.hasUpdates(contrib) && !contrib.isUpdateFlagged());
         setSelected(true);
+      }
+      public void cancel(){
+        finishedAction();
       }
     }
 ;
