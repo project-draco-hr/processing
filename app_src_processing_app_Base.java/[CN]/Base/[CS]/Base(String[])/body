@@ -4,10 +4,10 @@
   rebuildContribModes();
   rebuildContribExamples();
   recent=new Recent(this);
-  String lastModeIdentifier=Preferences.get("last.sketch.mode");
+  String lastModeIdentifier=Preferences.get("mode.last");
   if (lastModeIdentifier == null) {
-    nextMode=coreModes[0];
-    log("Nothing set for last.sketch.mode, using coreMode[0].");
+    nextMode=getDefaultMode();
+    log("Nothing set for last.sketch.mode, using default.");
   }
  else {
     for (    Mode m : getModeList()) {
@@ -17,7 +17,7 @@
       }
     }
     if (nextMode == null) {
-      nextMode=coreModes[0];
+      nextMode=getDefaultMode();
       logf("Could not find mode %s, using default.",lastModeIdentifier);
     }
   }

@@ -1,7 +1,8 @@
 {
   try {
     WatchService watchService=FileSystems.getDefault().newWatchService();
-    watcherKey=sketch.getFolder().toPath().register(watchService,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_DELETE,StandardWatchEventKinds.ENTRY_MODIFY);
+    Path sp=sketch.getFolder().toPath();
+    watcherKey=sp.register(watchService,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_DELETE,StandardWatchEventKinds.ENTRY_MODIFY);
   }
  catch (  IOException e) {
     e.printStackTrace();
@@ -15,7 +16,9 @@
         }
         if (finKey.isValid()) {
           List<WatchEvent<?>> events=finKey.pollEvents();
-          processFileEvents(events);
+          if (!watcherSave) {
+            processFileEvents(events);
+          }
         }
         List<WatchEvent<?>> events=finKey.pollEvents();
         if (!watcherSave)         processFileEvents(events);
