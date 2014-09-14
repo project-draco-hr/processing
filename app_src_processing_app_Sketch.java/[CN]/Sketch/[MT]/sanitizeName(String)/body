@@ -1,29 +1,29 @@
 {
   char orig[]=origName.toCharArray();
-  StringBuffer buffer=new StringBuffer();
+  StringBuilder sb=new StringBuilder();
   if (!asciiLetter(orig[0])) {
-    buffer.append("sketch_");
+    sb.append("sketch_");
   }
   for (  char c : orig) {
     if (asciiLetter(c) || (c >= '0' && c <= '9')) {
-      buffer.append(c);
+      sb.append(c);
     }
  else {
-      buffer.append('_');
+      sb.append('_');
     }
   }
-  if (buffer.length() > 63) {
-    buffer.setLength(63);
+  if (sb.length() > 63) {
+    sb.setLength(63);
   }
   int underscore=0;
-  while (underscore < buffer.length() && buffer.charAt(underscore) == '_') {
+  while (underscore < sb.length() && sb.charAt(underscore) == '_') {
     underscore++;
   }
-  if (underscore == buffer.length()) {
+  if (underscore == sb.length()) {
     return "bad_sketch_name_please_fix";
   }
  else   if (underscore != 0) {
-    return buffer.substring(underscore);
+    return sb.substring(underscore);
   }
-  return buffer.toString();
+  return sb.toString();
 }
