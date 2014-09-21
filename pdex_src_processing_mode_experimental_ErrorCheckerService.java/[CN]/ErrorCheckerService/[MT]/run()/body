@@ -7,7 +7,13 @@
   handleErrorCheckingToggle();
   while (!stopThread.get()) {
     try {
-      Thread.sleep(sleepTime);
+      if (!noSleep) {
+        Thread.sleep(sleepTime);
+      }
+ else {
+        noSleep=false;
+        log("Didn't sleep!");
+      }
     }
  catch (    Exception e) {
       log("Oops! [ErrorCheckerThreaded]: " + e);
