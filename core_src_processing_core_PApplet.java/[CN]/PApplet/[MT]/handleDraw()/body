@@ -1,5 +1,4 @@
 {
-  debug("handleDraw() " + g + " "+ looping+ " "+ redraw+ " valid:"+ this.isValid()+ " visible:"+ this.isVisible());
   if (canDraw()) {
     if (!g.canDraw()) {
       debug("g.canDraw() is false");
@@ -12,13 +11,8 @@
     }
     long now=System.nanoTime();
     if (frameCount == 0) {
-      checkDisplaySize();
-      try {
-        setup();
-      }
- catch (      RendererChangeException e) {
-        return;
-      }
+      surface.checkDisplaySize();
+      setup();
       this.defaultSize=false;
     }
  else {
@@ -42,20 +36,7 @@
       recorder.endDraw();
     }
     insideDraw=false;
-    if (useActive) {
-      if (useStrategy) {
-        render();
-      }
- else {
-        Graphics screen=getGraphics();
-        if (screen != null) {
-          screen.drawImage(g.image,0,0,width,height,null);
-        }
-      }
-    }
- else {
-      repaint();
-    }
+    surface.blit();
     if (frameCount != 0) {
       handleMethods("post");
     }
