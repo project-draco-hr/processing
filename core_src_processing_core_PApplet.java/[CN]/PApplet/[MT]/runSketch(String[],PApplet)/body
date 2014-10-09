@@ -84,10 +84,15 @@
       throw new RuntimeException(e);
     }
   }
-  String renderer=applet.sketchRenderer();
-  Class<?> rendererClass=Thread.currentThread().getContextClassLoader().loadClass(renderer);
-  Method surfaceMethod=rendererClass.getMethod("createSurface");
-  PSurface surface=(PSurface)surfaceMethod.invoke(null,new Object[]{});
+  try {
+    String renderer=applet.sketchRenderer();
+    Class<?> rendererClass=Thread.currentThread().getContextClassLoader().loadClass(renderer);
+    Method surfaceMethod=rendererClass.getMethod("createSurface");
+    PSurface surface=(PSurface)surfaceMethod.invoke(null,new Object[]{});
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
   applet.sketchPath=folder;
   present|=applet.sketchFullScreen();
   applet.args=PApplet.subset(args,argIndex + 1);
@@ -111,7 +116,7 @@
     surface.placePresent(stopColor);
   }
  else {
-    surface.placeWindow();
+    surface.placeWindow(external,location,editorLocation);
   }
   if (external) {
     surface.setupExternalMessages();

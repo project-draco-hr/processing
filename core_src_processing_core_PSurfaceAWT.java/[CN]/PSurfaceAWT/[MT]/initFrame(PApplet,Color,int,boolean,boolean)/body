@@ -16,8 +16,14 @@
   screenRect=spanDisplays ? getDisplaySpan() : displayDevice.getDefaultConfiguration().getBounds();
   sketch.displayWidth=screenRect.width;
   sketch.displayHeight=screenRect.height;
-  if (screenRect.width == sketch.sketchWidth() && screenRect.height == sketch.sketchHeight()) {
+  int sketchWidth=sketch.sketchWidth();
+  int sketchHeight=sketch.sketchHeight();
+  if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
     fullScreen=true;
+  }
+  if (fullScreen || spanDisplays) {
+    sketchWidth=screenRect.width;
+    sketchHeight=screenRect.height;
   }
   frame=new JFrame(displayDevice.getDefaultConfiguration());
   ((JFrame)frame).getContentPane().setBackground(WINDOW_BGCOLOR);
@@ -32,7 +38,7 @@
     frame.setVisible(true);
   }
   frame.setLayout(null);
-  frame.add(applet);
+  sketch.makePrimaryGraphics(sketchWidth,sketchHeight);
   if (fullScreen) {
     frame.invalidate();
   }
