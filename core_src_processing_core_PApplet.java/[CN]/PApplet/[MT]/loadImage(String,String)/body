@@ -34,8 +34,9 @@
         return null;
       }
  else {
-        Image awtImage=Toolkit.getDefaultToolkit().createImage(bytes);
-        PImage image=loadImageMT(awtImage);
+        Image awtImage=new ImageIcon(bytes).getImage();
+        PImage image=new PImage(awtImage);
+        image.parent=this;
         if (image.width == -1) {
           System.err.println("The file " + filename + " contains bad image data, or may not be an image.");
         }

@@ -1,0 +1,42 @@
+{
+  System.out.println("render(), bounds are " + getBounds());
+  if (getBufferStrategy() == null) {
+    System.out.println("creating a strategy");
+    createBufferStrategy(2);
+  }
+  BufferStrategy strategy=getBufferStrategy();
+  if (strategy == null) {
+    return;
+  }
+  do {
+    do {
+      Graphics draw=strategy.getDrawGraphics();
+      Insets i=new Insets(0,0,0,0);
+      int w=getWidth() / 2;
+      int h=getHeight() / 2;
+      if (false) {
+        draw.setColor(Color.YELLOW);
+        draw.fillRect(i.left,i.top + h,w,getHeight() - h);
+        draw.fillRect(i.left + w,i.top,getWidth() - w,h);
+        draw.setColor(Color.BLACK);
+        draw.fillRect(i.left,i.top,w,h);
+        draw.fillRect(i.left + w,i.top + h,getWidth() - w,getHeight() - h);
+      }
+ else {
+        draw.setColor(Color.WHITE);
+        draw.fillRect(i.left,i.top,getWidth(),getHeight());
+        draw.setColor(Color.BLACK);
+        draw.setFont(new Font("SansSerif",Font.PLAIN,50));
+        draw.drawString("this is some text",50,100);
+      }
+      draw.dispose();
+      System.out.println("restored " + strategy.contentsRestored());
+    }
+ while (strategy.contentsRestored());
+    System.out.println("showing");
+    strategy.show();
+    System.out.println("lost " + strategy.contentsLost());
+    System.out.println();
+  }
+ while (strategy.contentsLost());
+}

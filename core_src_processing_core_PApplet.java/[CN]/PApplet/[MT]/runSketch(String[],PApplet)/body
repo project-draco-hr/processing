@@ -1,5 +1,6 @@
 {
   System.setProperty("sun.awt.noerasebackground","true");
+  Toolkit.getDefaultToolkit().setDynamicLayout(true);
   if (args.length < 1) {
     System.err.println("Usage: PApplet <appletname>");
     System.err.println("For additional options, see the Javadoc for PApplet");
@@ -91,8 +92,11 @@
   present|=applet.sketchFullScreen();
   applet.args=PApplet.subset(args,argIndex + 1);
   applet.external=external;
-  Frame frame=surface.initFrame(applet.sketchWidth(),applet.sketchHeight(),backgroundColor,displayIndex,present,spanDisplays);
+  Frame frame=surface.initFrame(applet,backgroundColor,displayIndex,present,spanDisplays);
+  applet.frame=frame;
+  frame.setTitle(name);
   applet.init();
+  surface.startThread();
   while (applet.defaultSize && !applet.finished) {
     try {
       Thread.sleep(5);
@@ -101,9 +105,15 @@
     }
   }
   if (present) {
-    surface.placeFullScreen();
+    if (hideStop) {
+      stopColor=null;
+    }
+    surface.placePresent(stopColor);
   }
  else {
     surface.placeWindow();
+  }
+  if (external) {
+    surface.setupExternalMessages();
   }
 }
