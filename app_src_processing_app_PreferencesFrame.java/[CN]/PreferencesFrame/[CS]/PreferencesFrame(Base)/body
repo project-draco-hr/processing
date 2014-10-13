@@ -42,7 +42,7 @@
   Container languageBox=Box.createHorizontalBox();
   JLabel languageLabel=new JLabel(Language.text("preferences.language") + ": ");
   languageBox.add(languageLabel);
-  languageSelectionBox=new JComboBox();
+  languageSelectionBox=new JComboBox<String>();
   Map<String,String> languages=Language.getLanguages();
   String[] languageSelection=new String[languages.size()];
   languageSelection[0]=languages.get(Language.getLanguage());
@@ -52,7 +52,7 @@
       languageSelection[i++]=lang.getValue();
     }
   }
-  languageSelectionBox.setModel(new DefaultComboBoxModel(languageSelection));
+  languageSelectionBox.setModel(new DefaultComboBoxModel<String>(languageSelection));
   languageBox.add(languageSelectionBox);
   label=new JLabel(" (" + Language.text("preferences.requires_restart") + ")");
   languageBox.add(label);
@@ -65,7 +65,7 @@
   final String fontTip="<html>" + Language.text("preferences.editor_and_console_font.tip");
   fontLabel.setToolTipText(fontTip);
   fontBox.add(fontLabel);
-  fontSelectionBox=new JComboBox(new Object[]{Toolkit.getMonoFontName()});
+  fontSelectionBox=new JComboBox<String>(new String[]{Toolkit.getMonoFontName()});
   fontSelectionBox.setToolTipText(fontTip);
   fontSelectionBox.setEnabled(false);
   fontBox.add(fontSelectionBox);
@@ -258,7 +258,7 @@
   final String tip="<html>" + Language.text("preferences.run_sketches_on_display.tip");
   displayLabel.setToolTipText(tip);
   displayBox.add(displayLabel);
-  displaySelectionBox=new JComboBox();
+  displaySelectionBox=new JComboBox<String>();
   updateDisplayList();
   displayBox.add(displaySelectionBox);
   pain.add(displayBox);
