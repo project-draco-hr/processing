@@ -1,27 +1,29 @@
 {
   StringBuilder sanitized=new StringBuilder();
-  char[] array=text.toCharArray();
-  for (  char c : array) {
-    if (c == '&') {
-      sanitized.append("&amp;");
-    }
- else     if (c == '\'') {
-      sanitized.append("&apos;");
-    }
- else     if (c == '"') {
-      sanitized.append("&quot;");
-    }
- else     if (c == '<') {
-      sanitized.append("&lt;");
-    }
- else     if (c == '>') {
-      sanitized.append("&rt;");
-    }
- else     if (c < 32 || c > 127) {
-      sanitized.append("&#" + ((int)c) + ";");
-    }
+  if (text != null) {
+    char[] array=text.toCharArray();
+    for (    char c : array) {
+      if (c == '&') {
+        sanitized.append("&amp;");
+      }
+ else       if (c == '\'') {
+        sanitized.append("&apos;");
+      }
+ else       if (c == '"') {
+        sanitized.append("&quot;");
+      }
+ else       if (c == '<') {
+        sanitized.append("&lt;");
+      }
+ else       if (c == '>') {
+        sanitized.append("&rt;");
+      }
+ else       if (c < 32 || c > 127) {
+        sanitized.append("&#" + ((int)c) + ";");
+      }
  else {
-      sanitized.append(c);
+        sanitized.append(c);
+      }
     }
   }
   writeUTF(output,"          <table:table-cell office:value-type=\"string\">","            <text:p>" + sanitized + "</text:p>","          </table:table-cell>");
