@@ -69,12 +69,18 @@
         }
       }
     }
-    if (rowNotNull && rowRepeat > 1) {
-      String[] rowStrings=getStringRow(rowIndex);
-      for (int r=1; r < rowRepeat; r++) {
-        addRow(rowStrings);
-      }
+    if (header) {
+      removeTitleRow();
+      header=false;
     }
-    rowIndex+=rowRepeat;
+ else {
+      if (rowNotNull && rowRepeat > 1) {
+        String[] rowStrings=getStringRow(rowIndex);
+        for (int r=1; r < rowRepeat; r++) {
+          addRow(rowStrings);
+        }
+      }
+      rowIndex+=rowRepeat;
+    }
   }
 }
