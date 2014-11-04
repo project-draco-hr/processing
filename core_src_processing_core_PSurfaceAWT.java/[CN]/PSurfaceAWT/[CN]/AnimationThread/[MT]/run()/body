@@ -4,26 +4,13 @@
   int noDelays=0;
   final int NO_DELAYS_PER_YIELD=15;
   start();
-  while ((Thread.currentThread() == this) && !sketch.finished) {
-    if (sketch.paused) {
-      PApplet.debug("PApplet.run() paused, calling object wait...");
-synchronized (pauseObject) {
-        try {
-          pauseObject.wait();
-          PApplet.debug("out of wait");
-        }
- catch (        InterruptedException e) {
-        }
-      }
+  while ((Thread.currentThread() == thread) && !sketch.finished) {
+    checkPause();
+    Dimension currentSize=getSize();
+    if (currentSize.width != g.width || currentSize.height != g.height) {
+      resizeRenderer(currentSize.width,currentSize.height);
     }
-    PApplet.debug("done with pause");
-    if (g != null) {
-      Dimension currentSize=getSize();
-      if (currentSize.width != g.width || currentSize.height != g.height) {
-        resizeRenderer(currentSize.width,currentSize.height);
-      }
-    }
-    if (g != null)     sketch.handleDraw();
+    sketch.handleDraw();
     if (sketch.frameCount == 1) {
       requestFocus();
     }

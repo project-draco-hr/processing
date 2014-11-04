@@ -5,9 +5,9 @@
     displayDevice=devices[deviceIndex];
   }
  else {
-    System.err.println("Display " + deviceIndex + " does not exist, "+ "using the default display instead.");
+    System.err.format("Display %d does not exist, " + "using the default display instead.",deviceIndex);
     for (int i=0; i < devices.length; i++) {
-      System.err.println("Display " + i + " is "+ devices[i]);
+      System.err.format("Display %d is %s\n",i,devices[i]);
     }
   }
   if (displayDevice == null) {
@@ -26,19 +26,19 @@
     sketchHeight=screenRect.height;
   }
   frame=new JFrame(displayDevice.getDefaultConfiguration());
-  ((JFrame)frame).getContentPane().setBackground(WINDOW_BGCOLOR);
+  if (backgroundColor == null) {
+    backgroundColor=WINDOW_BGCOLOR;
+  }
+  frame.getContentPane().setBackground(backgroundColor);
   setIconImage(frame);
   if (fullScreen) {
     PApplet.hideMenuBar();
     frame.setUndecorated(true);
-    if (backgroundColor != null) {
-      ((JFrame)frame).getContentPane().setBackground(backgroundColor);
-    }
     frame.setBounds(screenRect);
     frame.setVisible(true);
   }
   frame.setLayout(null);
-  sketch.makePrimaryGraphics(sketchWidth,sketchHeight);
+  sketch.makePrimaryGraphics();
   if (fullScreen) {
     frame.invalidate();
   }

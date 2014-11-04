@@ -1,0 +1,36 @@
+{
+  Dimension window=setFrameSize();
+  int contentW=Math.max(sketch.width,MIN_WINDOW_WIDTH);
+  int contentH=Math.max(sketch.height,MIN_WINDOW_HEIGHT);
+  if (location != null) {
+    frame.setLocation(location[0],location[1]);
+  }
+ else   if (editorLocation != null) {
+    int locationX=editorLocation[0] - 20;
+    int locationY=editorLocation[1];
+    if (locationX - window.width > 10) {
+      frame.setLocation(locationX - window.width,locationY);
+    }
+ else {
+      locationX=editorLocation[0] + 66;
+      locationY=editorLocation[1] + 66;
+      if ((locationX + window.width > sketch.displayWidth - 33) || (locationY + window.height > sketch.displayHeight - 33)) {
+        locationX=(sketch.displayWidth - window.width) / 2;
+        locationY=(sketch.displayHeight - window.height) / 2;
+      }
+      frame.setLocation(locationX,locationY);
+    }
+  }
+ else {
+    setFrameCentered();
+  }
+  Point frameLoc=frame.getLocation();
+  if (frameLoc.y < 0) {
+    frame.setLocation(frameLoc.x,30);
+  }
+  canvas.setBounds((contentW - sketch.width) / 2,(contentH - sketch.height) / 2,sketch.width,sketch.height);
+  setupFrameResizeListener();
+  if (sketch.getGraphics().displayable()) {
+    setVisible(true);
+  }
+}
