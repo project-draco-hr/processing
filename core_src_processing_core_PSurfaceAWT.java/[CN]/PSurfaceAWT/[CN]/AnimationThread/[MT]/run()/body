@@ -6,9 +6,9 @@
   start();
   while ((Thread.currentThread() == thread) && !sketch.finished) {
     checkPause();
-    Dimension currentSize=getSize();
-    if (currentSize.width != g.width || currentSize.height != g.height) {
-      resizeRenderer(currentSize.width,currentSize.height);
+    Dimension currentSize=canvas.getSize();
+    if (currentSize.width != pg.width || currentSize.height != pg.height) {
+      System.err.format("need to resize from %s to %d, %d",currentSize,pg.width,pg.height);
     }
     sketch.handleDraw();
     if (sketch.frameCount == 1) {
