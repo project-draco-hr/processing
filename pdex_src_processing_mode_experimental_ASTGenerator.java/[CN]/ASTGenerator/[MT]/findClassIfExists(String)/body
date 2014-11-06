@@ -2,9 +2,9 @@
   if (className == null) {
     return null;
   }
-  Class tehClass=null;
+  Class<?> tehClass=null;
   tehClass=loadClass(className);
-  if (tehClass instanceof Class) {
+  if (tehClass != null) {
     return tehClass;
   }
   log("Looking in the classloader for " + className);
@@ -21,7 +21,7 @@
       }
     }
     tehClass=loadClass(temp);
-    if (tehClass instanceof Class) {
+    if (tehClass != null) {
       log(tehClass.getName() + " located.");
       return tehClass;
     }
@@ -29,7 +29,7 @@
   PdePreprocessor p=new PdePreprocessor(null);
   for (  String impS : p.getCoreImports()) {
     tehClass=loadClass(impS.substring(0,impS.length() - 1) + className);
-    if (tehClass instanceof Class) {
+    if (tehClass != null) {
       log(tehClass.getName() + " located.");
       return tehClass;
     }
@@ -37,7 +37,7 @@
   for (  String impS : p.getDefaultImports()) {
     if (className.equals(impS) || impS.endsWith(className)) {
       tehClass=loadClass(impS);
-      if (tehClass instanceof Class) {
+      if (tehClass != null) {
         log(tehClass.getName() + " located.");
         return tehClass;
       }
@@ -45,7 +45,7 @@
   }
   String daddy="java.lang." + className;
   tehClass=loadClass(daddy);
-  if (tehClass instanceof Class) {
+  if (tehClass != null) {
     log(tehClass.getName() + " located.");
     return tehClass;
   }

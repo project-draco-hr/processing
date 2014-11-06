@@ -20,13 +20,15 @@
       int javaLineNumber=p.getSourceLineNumber() - ((compilationUnitState != 2) ? 1 : 2);
       Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber);
       if (lineElement == null) {
-        log("calcPDEOffsetsForProbList(): Couldn't fetch javalinenum " + javaLineNumber);
+        log("calcPDEOffsetsForProbList(): Couldn't fetch javalinenum " + javaLineNumber + "\nProblem: "+ p);
+        p.setPDEOffsets(-1,-1);
         continue;
       }
       String javaLine=javaSource.getText(lineElement.getStartOffset(),lineElement.getEndOffset() - lineElement.getStartOffset());
       Element pdeLineElement=pdeTabs[p.getTabIndex()].getDefaultRootElement().getElement(p.getLineNumber());
       if (pdeLineElement == null) {
-        log("calcPDEOffsetsForProbList(): Couldn't fetch pdelinenum " + javaLineNumber);
+        log("calcPDEOffsetsForProbList(): Couldn't fetch pdelinenum " + javaLineNumber + "\nProblem: "+ p);
+        p.setPDEOffsets(-1,-1);
         continue;
       }
       String pdeLine=pdeTabs[p.getTabIndex()].getText(pdeLineElement.getStartOffset(),pdeLineElement.getEndOffset() - pdeLineElement.getStartOffset());

@@ -6,7 +6,7 @@
   filterPanel.setLayout(new BoxLayout(filterPanel,BoxLayout.X_AXIS));
   pane.add(filterPanel,BorderLayout.NORTH);
   filterPanel.add(Box.createHorizontalStrut(6));
-  JLabel categoryLabel=new JLabel("Category:");
+  JLabel categoryLabel=new JLabel(Language.text("contrib.category"));
   filterPanel.add(categoryLabel);
   filterPanel.add(Box.createHorizontalStrut(5));
   categoryChooser=new JComboBox();
@@ -19,13 +19,25 @@
       if (ContributionManagerDialog.ANY_CATEGORY.equals(category)) {
         category=null;
       }
-      filterLibraries(category,filterField.filters);
+      filterLibraries(category,filterField.filters,isCompatibilityFilter);
+      contributionListPanel.updateColors();
     }
   }
 );
   filterPanel.add(Box.createHorizontalStrut(5));
   filterField=new FilterField();
   filterPanel.add(filterField);
+  filterPanel.add(Box.createHorizontalStrut(5));
+  final JCheckBox compatibleContrib=new JCheckBox(compatibleCheckboxLabel);
+  compatibleContrib.addItemListener(new ItemListener(){
+    @Override public void itemStateChanged(    ItemEvent arg0){
+      isCompatibilityFilter=compatibleContrib.isSelected();
+      filterLibraries(category,filterField.filters,isCompatibilityFilter);
+      contributionListPanel.updateColors();
+    }
+  }
+);
+  filterPanel.add(compatibleContrib);
   filterPanel.setBorder(new EmptyBorder(7,7,7,7));
   scrollPane=new JScrollPane();
   scrollPane.setPreferredSize(new Dimension(300,300));
@@ -36,7 +48,13 @@
   pane.add(Box.createHorizontalStrut(10),BorderLayout.WEST);
   pane.add(Box.createHorizontalStrut(10),BorderLayout.EAST);
   status=new StatusPanel();
-  status.setBorder(new EmptyBorder(7,7,7,7));
-  pane.add(status,BorderLayout.SOUTH);
+  JPanel statusRestartPane=new JPanel();
+  statusRestartPane.setLayout(new BorderLayout());
+  statusRestartPane.setBorder(new EmptyBorder(7,7,7,7));
+  statusRestartPane.setOpaque(false);
+  statusRestartPane.add(status,BorderLayout.WEST);
+  statusRestartPane.add(restartButton,BorderLayout.EAST);
+  statusRestartPane.add(retryConnectingButton,BorderLayout.EAST);
+  pane.add(statusRestartPane,BorderLayout.SOUTH);
   dialog.setMinimumSize(new Dimension(450,400));
 }

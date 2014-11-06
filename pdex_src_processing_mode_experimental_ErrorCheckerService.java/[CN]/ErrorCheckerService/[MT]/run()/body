@@ -1,12 +1,19 @@
 {
   stopThread.set(false);
   checkCode();
+  lastErrorCheckCall=System.currentTimeMillis();
   if (!hasSyntaxErrors())   editor.showProblemListView(XQConsoleToggle.CONSOLE);
   astGenerator.buildAST(cu);
   handleErrorCheckingToggle();
   while (!stopThread.get()) {
     try {
-      Thread.sleep(sleepTime);
+      if (!noSleep) {
+        Thread.sleep(sleepTime);
+      }
+ else {
+        noSleep=false;
+        log("Didn't sleep!");
+      }
     }
  catch (    Exception e) {
       log("Oops! [ErrorCheckerThreaded]: " + e);
@@ -16,8 +23,11 @@
     updateSketchCodeListeners();
     if (pauseThread.get())     continue;
     if (textModified.get() == 0)     continue;
-    checkCode();
-    checkForMissingImports();
+    if (System.currentTimeMillis() - lastErrorCheckCall > errorCheckInterval) {
+      log("Interval passed, starting error check");
+      checkCode();
+      checkForMissingImports();
+    }
   }
   astGenerator.disposeAllWindows();
   compilationChecker=null;

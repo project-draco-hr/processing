@@ -18,7 +18,7 @@
       File jdkFolder=new File(Base.getJavaHome(),"../../..");
       String jdkFolderName=jdkFolder.getCanonicalFile().getName();
       jvmRuntime="<key>JVMRuntime</key>\n    <string>" + jdkFolderName + "</string>";
-      jdkPath=new File(dotAppFolder,"Contents/PlugIns/" + jdkFolderName + ".jdk").getAbsolutePath();
+      jdkPath=new File(dotAppFolder,"Contents/PlugIns/" + jdkFolderName).getAbsolutePath();
     }
     File contentsFolder=new File(dotAppFolder,"Contents");
     contentsFolder.mkdirs();
@@ -99,7 +99,7 @@
   }
   String jarList[]=new String[jarListVector.size()];
   jarListVector.copyInto(jarList);
-  StringBuffer exportClassPath=new StringBuffer();
+  StringBuilder exportClassPath=new StringBuilder();
   if (exportPlatform == PConstants.MACOSX) {
     for (int i=0; i < jarList.length; i++) {
       if (i != 0)       exportClassPath.append(":");
@@ -124,6 +124,9 @@
     runOptions.add("-Xmx" + Preferences.get("run.options.memory.maximum") + "m");
   }
   runOptions.add("-Djna.nosys=true");
+  if (exportPlatform == PConstants.WINDOWS) {
+    runOptions.add("-Djava.library.path=\"%EXEDIR%\\lib\"");
+  }
   if (exportPlatform == PConstants.MACOSX) {
     StringBuilder runOptionsXML=new StringBuilder();
     for (    String opt : runOptions) {
@@ -142,7 +145,7 @@
     String lines[]=PApplet.loadStrings(plistTemplate);
     for (int i=0; i < lines.length; i++) {
       if (lines[i].indexOf("@@") != -1) {
-        StringBuffer sb=new StringBuffer(lines[i]);
+        StringBuilder sb=new StringBuilder(lines[i]);
         int index=0;
         while ((index=sb.indexOf("@@jvm_runtime@@")) != -1) {
           sb.replace(index,index + "@@jvm_runtime@@".length(),jvmRuntime);

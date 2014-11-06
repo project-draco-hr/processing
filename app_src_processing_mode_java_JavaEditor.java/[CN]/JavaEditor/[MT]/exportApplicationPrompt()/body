@@ -2,8 +2,8 @@
   JPanel panel=new JPanel();
   panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
   panel.add(Box.createVerticalStrut(6));
-  String line1="Export to Application creates double-clickable,";
-  String line2="standalone applications for the selected plaforms.";
+  String line1=Language.text("export.description.line1");
+  String line2=Language.text("export.description.line2");
   JLabel label1=new JLabel(line1,SwingConstants.CENTER);
   JLabel label2=new JLabel(line2,SwingConstants.CENTER);
   label1.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -19,6 +19,9 @@
     }
   }
 );
+  if (!Base.isMacOS()) {
+    Preferences.setBoolean("export.application.platform.macosx",false);
+  }
   final JCheckBox macosxButton=new JCheckBox("Mac OS X");
   macosxButton.setSelected(Preferences.getBoolean("export.application.platform.macosx"));
   macosxButton.addItemListener(new ItemListener(){
@@ -27,6 +30,10 @@
     }
   }
 );
+  if (!Base.isMacOS()) {
+    macosxButton.setEnabled(false);
+    macosxButton.setToolTipText("Mac OS X export is only available on Mac OS X");
+  }
   final JCheckBox linuxButton=new JCheckBox("Linux");
   linuxButton.setSelected(Preferences.getBoolean("export.application.platform.linux"));
   linuxButton.addItemListener(new ItemListener(){
@@ -41,12 +48,12 @@
   platformPanel.add(macosxButton);
   platformPanel.add(Box.createHorizontalStrut(6));
   platformPanel.add(linuxButton);
-  platformPanel.setBorder(new TitledBorder("Platforms"));
+  platformPanel.setBorder(new TitledBorder(Language.text("export.platforms")));
   platformPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
   panel.add(platformPanel);
   int divWidth=platformPanel.getPreferredSize().width;
   int indent=0;
-  final JCheckBox showStopButton=new JCheckBox("Show a Stop button");
+  final JCheckBox showStopButton=new JCheckBox(Language.text("export.options.show_stop_button"));
   showStopButton.setSelected(Preferences.getBoolean("export.application.stop"));
   showStopButton.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){
@@ -56,7 +63,7 @@
 );
   showStopButton.setEnabled(Preferences.getBoolean("export.application.fullscreen"));
   showStopButton.setBorder(new EmptyBorder(3,13 + indent,6,13));
-  final JCheckBox fullScreenButton=new JCheckBox("Full Screen (Present mode)");
+  final JCheckBox fullScreenButton=new JCheckBox(Language.text("export.options.fullscreen"));
   fullScreenButton.setSelected(Preferences.getBoolean("export.application.fullscreen"));
   fullScreenButton.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){
@@ -151,9 +158,9 @@
 );
     panel.add(signPanel);
   }
-  String[] options={"Export","Cancel"};
+  String[] options={Language.text("prompt.export"),Language.text("prompt.cancel")};
   final JOptionPane optionPane=new JOptionPane(panel,JOptionPane.PLAIN_MESSAGE,JOptionPane.YES_NO_OPTION,null,options,options[0]);
-  final JDialog dialog=new JDialog(this,"Export Application",true);
+  final JDialog dialog=new JDialog(this,Language.text("export"),true);
   dialog.setContentPane(optionPane);
   optionPane.addPropertyChangeListener(new PropertyChangeListener(){
     public void propertyChange(    PropertyChangeEvent e){
@@ -173,7 +180,7 @@
   if (value.equals(options[0])) {
     return jmode.handleExportApplication(sketch);
   }
- else   if (value.equals(options[1]) || value.equals(new Integer(-1))) {
+ else   if (value.equals(options[1]) || value.equals(Integer.valueOf(-1))) {
     statusNotice("Export to Application canceled.");
   }
   return false;

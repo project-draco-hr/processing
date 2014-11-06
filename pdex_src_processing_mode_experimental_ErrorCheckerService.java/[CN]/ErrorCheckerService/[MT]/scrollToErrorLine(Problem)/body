@@ -4,12 +4,19 @@
   }
   if (p == null)   return;
   try {
-    astGenerator.highlightPDECode(p.getTabIndex(),p.getLineNumber(),p.getPDELineStartOffset(),(p.getPDELineStopOffset() - p.getPDELineStartOffset() + 1));
-    editor.getTextArea().scrollTo(p.getLineNumber(),0);
+    if (p.getPDELineStartOffset() == -1 || p.getPDELineStopOffset() == -1) {
+      editor.toFront();
+      editor.getSketch().setCurrentCode(p.getTabIndex());
+    }
+ else {
+      astGenerator.highlightPDECode(p.getTabIndex(),p.getLineNumber(),p.getPDELineStartOffset(),(p.getPDELineStopOffset() - p.getPDELineStartOffset() + 1));
+    }
+    if (p.getLineNumber() < Base.countLines(editor.textArea().getDocument().getText(0,editor.textArea().getDocument().getLength())) && p.getLineNumber() >= 0) {
+      editor.getTextArea().scrollTo(p.getLineNumber(),0);
+    }
     editor.repaint();
   }
  catch (  Exception e) {
-    System.err.println(e + " : Error while selecting text in scrollToErrorLine()");
-    e.printStackTrace();
+    logE(e + " : Error while selecting text in scrollToErrorLine(), for problem: " + p);
   }
 }

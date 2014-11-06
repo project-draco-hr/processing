@@ -1,0 +1,42 @@
+{
+  int successful=0;
+  if (!canImport(support)) {
+    return false;
+  }
+  try {
+    Transferable transferable=support.getTransferable();
+    DataFlavor uriListFlavor=new DataFlavor("text/uri-list;class=java.lang.String");
+    if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+      java.util.List list=(java.util.List)transferable.getTransferData(DataFlavor.javaFileListFlavor);
+      for (int i=0; i < list.size(); i++) {
+        File file=(File)list.get(i);
+        if (sketch.addFile(file)) {
+          successful++;
+        }
+      }
+    }
+ else     if (transferable.isDataFlavorSupported(uriListFlavor)) {
+      String data=(String)transferable.getTransferData(uriListFlavor);
+      String[] pieces=PApplet.splitTokens(data,"\r\n");
+      for (int i=0; i < pieces.length; i++) {
+        if (pieces[i].startsWith("#"))         continue;
+        String path=null;
+        if (pieces[i].startsWith("file:///")) {
+          path=pieces[i].substring(7);
+        }
+ else         if (pieces[i].startsWith("file:/")) {
+          path=pieces[i].substring(5);
+        }
+        if (sketch.addFile(new File(path))) {
+          successful++;
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    Base.showWarning("Drag & Drop Problem","An error occurred while trying to add files to the sketch.",e);
+    return false;
+  }
+  statusNotice(Language.pluralize("editor.status.drag_and_drop.files_added",successful));
+  return true;
+}

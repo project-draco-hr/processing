@@ -49,7 +49,7 @@
   logE("Typed: " + word2 + "|"+ " temp Node type: "+ testnode.getClass().getSimpleName());
   if (testnode instanceof MethodInvocation) {
     MethodInvocation mi=(MethodInvocation)testnode;
-    System.out.println(mi.getName() + "," + mi.getExpression()+ ","+ mi.typeArguments().size());
+    log(mi.getName() + "," + mi.getExpression()+ ","+ mi.typeArguments().size());
   }
   nearestNode=findClosestNode(lineNumber,(ASTNode)errorCheckerService.getLastCorrectCU().types().get(0));
   if (nearestNode == null) {
@@ -120,7 +120,7 @@
     ASTNode childExpr=getChildExpression(testnode);
     log("Parent expression : " + getParentExpression(testnode));
     log("Child expression : " + childExpr);
-    if (childExpr instanceof ASTNode) {
+    if (childExpr != null) {
       if (!noCompare) {
         log("Original testnode " + getNodeAsString(testnode));
         testnode=getParentExpression(testnode);

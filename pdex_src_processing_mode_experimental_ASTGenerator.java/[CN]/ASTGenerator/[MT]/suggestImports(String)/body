@@ -1,4 +1,13 @@
 {
+  if (ignoredImportSuggestions == null) {
+    ignoredImportSuggestions=new TreeSet<String>();
+  }
+ else {
+    if (ignoredImportSuggestions.contains(className)) {
+      log("Ignoring import suggestions for " + className);
+      return;
+    }
+  }
   if (frmImportSuggest != null)   if (frmImportSuggest.isVisible())   return;
   log("Looking for class " + className);
   RegExpResourceFilter regf=new RegExpResourceFilter(Pattern.compile(".*"),Pattern.compile(className + ".class",Pattern.CASE_INSENSITIVE));
@@ -29,7 +38,7 @@
     resources[i]=candidates.get(i).replace('/','.').substring(0,candidates.get(i).length() - 6);
   }
   if (resources.length >= 1) {
-    final JList classList=new JList(resources);
+    final JList<String> classList=new JList<String>(resources);
     classList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     frmImportSuggest=new JFrame();
     frmImportSuggest.setSize(350,200);
@@ -84,12 +93,23 @@
     panelBottom.add(btnInsertImport);
     panelBottom.add(Box.createRigidArea(new Dimension(15,0)));
     panelBottom.add(btnCancel);
+    JButton btnIgnore=new JButton("Ignore \"" + className + "\"");
+    btnIgnore.addActionListener(new ActionListener(){
+      @Override public void actionPerformed(      ActionEvent e){
+        ignoredImportSuggestions.add(className);
+        frmImportSuggest.setVisible(false);
+      }
+    }
+);
+    panelBottom.add(Box.createRigidArea(new Dimension(15,0)));
+    panelBottom.add(btnIgnore);
     frmImportSuggest.add(panelTop);
     frmImportSuggest.add(panelBottom);
     frmImportSuggest.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     frmImportSuggest.setTitle("Import Suggestion");
     frmImportSuggest.setLocation(editor.getX() + (editor.getWidth() - frmImportSuggest.getWidth()) / 2,editor.getY() + (editor.getHeight() - frmImportSuggest.getHeight()) / 2);
     editor.ta.hideSuggestion();
+    classList.setSelectedIndex(0);
     frmImportSuggest.setVisible(true);
   }
 }
