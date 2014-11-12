@@ -1,21 +1,44 @@
 {
-  String systemLanguage=Locale.getDefault().getLanguage();
-  language=loadLanguage();
-  boolean writePrefs=false;
-  if (language == null) {
-    language=systemLanguage;
-    writePrefs=true;
-  }
+  language="en";
   languages=new HashMap<String,String>();
   for (  String code : listSupported()) {
     languages.put(code,Locale.forLanguageTag(code).getDisplayLanguage(Locale.forLanguageTag(code)));
   }
-  if (!languages.containsKey(language)) {
-    language="en";
-    writePrefs=true;
+  if (loadProps()) {
+    boolean updateProps=false;
+    boolean updateLangFiles=false;
+    if (props.containsKey("version") && langFiles.exists()) {
+      if (!props.getProperty("version").equals(version)) {
+        updateLangFiles=true;
+      }
+    }
+ else {
+      updateLangFiles=true;
+    }
+    if (updateLangFiles) {
+      if (updateLangFiles()) {
+        props.setProperty("version",version);
+        updateProps=true;
+      }
+    }
+    if (props.containsKey("language")) {
+      language=props.getProperty("language");
+    }
+ else {
+      if (!languages.containsKey(Locale.getDefault().getLanguage())) {
+        language=Locale.getDefault().getLanguage();
+      }
+      props.setProperty("language",language);
+      updateProps=true;
+    }
+    if (updateProps) {
+      updateProps();
+    }
   }
-  if (writePrefs) {
-    saveLanguage(language);
+  try {
+    URL[] paths={langFiles.toURI().toURL()};
+    bundle=ResourceBundle.getBundle(Language.LANG_BASE_NAME,new Locale(language),new URLClassLoader(paths),new UTF8Control());
   }
-  bundle=ResourceBundle.getBundle(Language.FILE,new Locale(this.language),new UTF8Control());
+ catch (  MalformedURLException e) {
+  }
 }

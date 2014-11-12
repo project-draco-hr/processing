@@ -1,0 +1,18 @@
+{
+  if (langFiles.exists()) {
+    File[] lang=langFiles.listFiles();
+    for (int i=0; i < lang.length; i++) {
+      lang[i].delete();
+    }
+    langFiles.delete();
+  }
+  String javaPath=new File(Base.class.getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile().getAbsolutePath();
+  try {
+    copyDirectory(new File(javaPath + "/lib/languages"),Base.getSettingsFile("languages"));
+    return true;
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+    return false;
+  }
+}
