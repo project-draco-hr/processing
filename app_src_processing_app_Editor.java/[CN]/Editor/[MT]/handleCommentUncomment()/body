@@ -11,29 +11,30 @@
       stopLine--;
     }
   }
-  int length=textarea.getDocumentLength();
   boolean commented=true;
   for (int i=startLine; commented && (i <= stopLine); i++) {
-    int pos=textarea.getLineStartOffset(i);
-    if (pos + prefixLen > length) {
-      commented=false;
-    }
- else {
-      String begin=textarea.getText(pos,prefixLen);
-      commented=begin.equals(prefix);
-    }
+    String lineText=textarea.getLineText(i).trim();
+    if (lineText.length() == 0)     continue;
+    commented=lineText.startsWith(prefix);
   }
+  int lso=Math.abs(textarea.getLineStartNonWhiteSpaceOffset(startLine) - textarea.getLineStartOffset(startLine));
   for (int line=startLine; line <= stopLine; line++) {
-    int location=textarea.getLineStartOffset(line);
+    int location=textarea.getLineStartNonWhiteSpaceOffset(line);
+    String lineText=textarea.getLineText(line);
+    if (lineText.trim().length() == 0)     continue;
     if (commented) {
-      textarea.select(location,location + prefixLen);
-      if (textarea.getSelectedText().equals(prefix)) {
-        textarea.setSelectedText("");
+      if (lineText.trim().startsWith(prefix + " ")) {
+        textarea.select(location,location + prefixLen + 1);
       }
+ else {
+        textarea.select(location,location + prefixLen);
+      }
+      textarea.setSelectedText("");
     }
  else {
+      location=textarea.getLineStartOffset(line) + lso;
       textarea.select(location,location);
-      textarea.setSelectedText(prefix);
+      textarea.setSelectedText(prefix + " ");
     }
   }
   textarea.select(textarea.getLineStartOffset(startLine),textarea.getLineStopOffset(stopLine) - 1);
