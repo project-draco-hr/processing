@@ -1,40 +1,5 @@
 {
-  if (primarySurface && !useOffscreen) {
-    GraphicsConfiguration gc=canvas.getGraphicsConfiguration();
-    if (false) {
-      if (image == null || ((VolatileImage)image).validate(gc) == VolatileImage.IMAGE_INCOMPATIBLE) {
-        image=gc.createCompatibleVolatileImage(width,height);
-        g2=(Graphics2D)image.getGraphics();
-        reapplySettings=true;
-      }
-    }
- else {
-      if (image == null) {
-        image=gc.createCompatibleImage(width,height);
-        PApplet.debug("created new image, type is " + image);
-        g2=(Graphics2D)image.getGraphics();
-        reapplySettings=true;
-      }
-    }
-  }
-  if (useCanvas && primarySurface) {
-    if (parent.frameCount == 0) {
-      canvas.createBufferStrategy(2);
-      strategy=canvas.getBufferStrategy();
-      PApplet.debug("PGraphicsJava2D.beginDraw() strategy is " + strategy);
-      BufferCapabilities caps=strategy.getCapabilities();
-      caps=strategy.getCapabilities();
-      PApplet.debug("PGraphicsJava2D.beginDraw() caps are " + " flipping: " + caps.isPageFlipping() + " front/back accel: "+ caps.getFrontBufferCapabilities().isAccelerated()+ " "+ "/"+ caps.getBackBufferCapabilities().isAccelerated());
-    }
-    GraphicsConfiguration gc=canvas.getGraphicsConfiguration();
-    if (bimage == null || bimage.getWidth() != width || bimage.getHeight() != height) {
-      PApplet.debug("PGraphicsJava2D creating new image");
-      bimage=gc.createCompatibleImage(width,height);
-      g2=bimage.createGraphics();
-      defaultComposite=g2.getComposite();
-      reapplySettings=true;
-    }
-  }
+  g2=(Graphics2D)image.getGraphics();
   checkSettings();
   resetMatrix();
   vertexCount=0;
