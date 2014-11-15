@@ -1,8 +1,15 @@
 {
   if (undo.canRedo()) {
     redoItem.setEnabled(true);
-    redoItem.setText(undo.getRedoPresentationName());
-    putValue(Action.NAME,undo.getRedoPresentationName());
+    String newRedoPresentationName=Language.text("menu.edit.redo");
+    if (undo.getRedoPresentationName().equals("Redo addition")) {
+      newRedoPresentationName+=" " + Language.text("menu.edit.action.addition");
+    }
+ else     if (undo.getRedoPresentationName().equals("Redo deletion")) {
+      newRedoPresentationName+=" " + Language.text("menu.edit.action.deletion");
+    }
+    redoItem.setText(newRedoPresentationName);
+    putValue(Action.NAME,newRedoPresentationName);
   }
  else {
     this.setEnabled(false);

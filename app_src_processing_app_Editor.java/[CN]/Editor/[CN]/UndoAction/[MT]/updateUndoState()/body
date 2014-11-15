@@ -2,8 +2,15 @@
   if (undo.canUndo() || compoundEdit != null && compoundEdit.isInProgress()) {
     this.setEnabled(true);
     undoItem.setEnabled(true);
-    undoItem.setText(undo.getUndoPresentationName());
-    putValue(Action.NAME,undo.getUndoPresentationName());
+    String newUndoPresentationName=Language.text("menu.edit.undo");
+    if (undo.getUndoPresentationName().equals("Undo addition")) {
+      newUndoPresentationName+=" " + Language.text("menu.edit.action.addition");
+    }
+ else     if (undo.getUndoPresentationName().equals("Undo deletion")) {
+      newUndoPresentationName+=" " + Language.text("menu.edit.action.deletion");
+    }
+    undoItem.setText(newUndoPresentationName);
+    putValue(Action.NAME,newUndoPresentationName);
   }
  else {
     this.setEnabled(false);
