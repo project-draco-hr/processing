@@ -32,7 +32,7 @@
 );
   if (!Base.isMacOS()) {
     macosxButton.setEnabled(false);
-    macosxButton.setToolTipText("Mac OS X export is only available on Mac OS X");
+    macosxButton.setToolTipText(Language.text("export.tooltip.macosx"));
   }
   final JCheckBox linuxButton=new JCheckBox("Linux");
   linuxButton.setSelected(Preferences.getBoolean("export.application.platform.linux"));
@@ -88,7 +88,7 @@
   showStopBox.add(Box.createHorizontalStrut(10));
   showStopBox.add(Box.createHorizontalGlue());
   presentPanel.add(showStopBox);
-  presentPanel.setBorder(new TitledBorder("Full Screen"));
+  presentPanel.setBorder(new TitledBorder(Language.text("export.full_screen")));
   presentPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
   panel.add(presentPanel);
   JPanel embedPanel=new JPanel();
@@ -114,7 +114,7 @@
   }
 );
   warningLabel.setBorder(new EmptyBorder(3,13 + indent,3,13));
-  final JCheckBox embedJavaButton=new JCheckBox("Embed Java for " + platformName);
+  final JCheckBox embedJavaButton=new JCheckBox(Language.text("export.embed_java.for") + " " + platformName);
   embedJavaButton.setSelected(embed);
   embedJavaButton.addItemListener(new ItemListener(){
     public void itemStateChanged(    ItemEvent e){
@@ -132,12 +132,12 @@
   embedJavaButton.setBorder(new EmptyBorder(3,13,3,13));
   embedPanel.add(embedJavaButton);
   embedPanel.add(warningLabel);
-  embedPanel.setBorder(new TitledBorder("Embed Java"));
+  embedPanel.setBorder(new TitledBorder(Language.text("export.embed_java")));
   panel.add(embedPanel);
   if (Base.isMacOS()) {
     JPanel signPanel=new JPanel();
     signPanel.setLayout(new BoxLayout(signPanel,BoxLayout.Y_AXIS));
-    signPanel.setBorder(new TitledBorder("Code Signing"));
+    signPanel.setBorder(new TitledBorder(Language.text("export.code_signing")));
     String thePain="In recent versions of OS X, Apple has introduced the \u201CGatekeeper\u201D system, " + "which makes it more difficult to run applications like those exported from Processing. ";
     if (new File("/usr/bin/codesign_allocate").exists()) {
       thePain+="This application will be \u201Cself-signed\u201D which means that Finder may report that the " + "application is from an \u201Cunidentified developer\u201D. If the application will not " + "run, try right-clicking the app and selecting Open from the pop-up menu. Or you can visit "+ "System Preferences \u2192 Security & Privacy and select Allow apps downloaded from: anywhere. ";
@@ -181,7 +181,7 @@
     return jmode.handleExportApplication(sketch);
   }
  else   if (value.equals(options[1]) || value.equals(Integer.valueOf(-1))) {
-    statusNotice("Export to Application canceled.");
+    statusNotice(Language.text("export.notice.exporting.cancel"));
   }
   return false;
 }
