@@ -6,10 +6,6 @@
   screen.addReference();
   int screenWidth=screen.getWidth();
   int screenHeight=screen.getHeight();
-  if (deviceIndex >= 0) {
-  }
-  System.out.println("deviceIndex: " + deviceIndex);
-  System.out.println("Screen res " + screenWidth + "x"+ screenHeight);
   ArrayList<MonitorDevice> monitors=new ArrayList<MonitorDevice>();
   for (int i=0; i < screen.getMonitorDevices().size(); i++) {
     MonitorDevice monitor=screen.getMonitorDevices().get(i);
@@ -20,6 +16,17 @@
     monitors.add(monitor);
   }
   System.out.println("*******************************");
+  if (deviceIndex >= 0) {
+    if (deviceIndex < monitors.size()) {
+      displayDevice=monitors.get(deviceIndex);
+    }
+ else {
+      System.err.format("Display %d does not exist, " + "using the default display instead.",deviceIndex);
+      for (int i=0; i < monitors.size(); i++) {
+        System.err.format("Display %d is %s\n",i,monitors.get(i));
+      }
+    }
+  }
   if (profile == null) {
     if (PJOGL.PROFILE == 2) {
       try {
@@ -62,11 +69,19 @@
   caps.setBackgroundOpaque(true);
   caps.setOnscreen(true);
   pgl.capabilities=caps;
+  window=GLWindow.create(screen,caps);
   sketchWidth=sketch.sketchWidth();
   sketchHeight=sketch.sketchHeight();
-  window=GLWindow.create(screen,caps);
-  window.setPosition(0,0);
+  if (displayDevice == null) {
+    displayDevice=window.getMainMonitor();
+  }
+  int sketchX=displayDevice.getViewportInWindowUnits().getX();
+  int sketchY=displayDevice.getViewportInWindowUnits().getY();
+  window.setPosition(sketchX,sketchY);
   window.setSize(sketchWidth,sketchHeight);
+  System.out.println("deviceIndex: " + deviceIndex);
+  System.out.println(displayDevice);
+  System.out.println("Screen res " + screenWidth + "x"+ screenHeight);
   window.setVisible(true);
   int[] reqSurfacePixelScale=new int[]{ScalableSurface.IDENTITY_PIXELSCALE,ScalableSurface.IDENTITY_PIXELSCALE};
   window.setSurfaceScale(reqSurfacePixelScale);
