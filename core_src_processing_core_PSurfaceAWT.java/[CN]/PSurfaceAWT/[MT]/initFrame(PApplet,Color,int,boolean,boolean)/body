@@ -1,13 +1,16 @@
 {
+  this.sketch=sketch;
   GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
-  GraphicsDevice[] devices=environment.getScreenDevices();
-  if ((deviceIndex >= 0) && (deviceIndex < devices.length)) {
-    displayDevice=devices[deviceIndex];
-  }
+  if (deviceIndex >= 0) {
+    GraphicsDevice[] devices=environment.getScreenDevices();
+    if (deviceIndex < devices.length) {
+      displayDevice=devices[deviceIndex];
+    }
  else {
-    System.err.format("Display %d does not exist, " + "using the default display instead.",deviceIndex);
-    for (int i=0; i < devices.length; i++) {
-      System.err.format("Display %d is %s\n",i,devices[i]);
+      System.err.format("Display %d does not exist, " + "using the default display instead.",deviceIndex);
+      for (int i=0; i < devices.length; i++) {
+        System.err.format("Display %d is %s\n",i,devices[i]);
+      }
     }
   }
   if (displayDevice == null) {
@@ -16,8 +19,8 @@
   screenRect=spanDisplays ? getDisplaySpan() : displayDevice.getDefaultConfiguration().getBounds();
   sketch.displayWidth=screenRect.width;
   sketch.displayHeight=screenRect.height;
-  int sketchWidth=sketch.sketchWidth();
-  int sketchHeight=sketch.sketchHeight();
+  sketchWidth=sketch.sketchWidth();
+  sketchHeight=sketch.sketchHeight();
   if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
     fullScreen=true;
   }
@@ -31,6 +34,8 @@
   }
   frame.getContentPane().setBackground(backgroundColor);
   setIconImage(frame);
+  frame.add(canvas);
+  setSize(sketchWidth,sketchHeight);
   if (fullScreen) {
     PApplet.hideMenuBar();
     frame.setUndecorated(true);

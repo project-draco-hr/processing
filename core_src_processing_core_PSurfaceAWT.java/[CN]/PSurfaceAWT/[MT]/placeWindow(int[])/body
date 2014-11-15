@@ -1,18 +1,18 @@
 {
-  calcFrameSize();
-  int contentW=Math.max(sketch.width,MIN_WINDOW_WIDTH);
-  int contentH=Math.max(sketch.height,MIN_WINDOW_HEIGHT);
+  calcFrameSize(sketchWidth,sketchHeight);
+  int contentW=Math.max(sketchWidth,MIN_WINDOW_WIDTH);
+  int contentH=Math.max(sketchHeight,MIN_WINDOW_HEIGHT);
   if (location != null) {
     frame.setLocation(location[0],location[1]);
   }
  else {
-    frame.setLocation(screenRect.x + (screenRect.width - sketch.width) / 2,screenRect.y + (screenRect.height - sketch.height) / 2);
+    frame.setLocation(screenRect.x + (screenRect.width - sketchWidth) / 2,screenRect.y + (screenRect.height - sketchHeight) / 2);
   }
   Point frameLoc=frame.getLocation();
   if (frameLoc.y < 0) {
     frame.setLocation(frameLoc.x,30);
   }
-  canvas.setBounds((contentW - sketch.width) / 2,(contentH - sketch.height) / 2,sketch.width,sketch.height);
+  canvas.setBounds((contentW - sketchWidth) / 2,(contentH - sketchHeight) / 2,sketchWidth,sketchHeight);
   frame.addWindowListener(new WindowAdapter(){
     @Override public void windowClosing(    WindowEvent e){
       System.exit(0);

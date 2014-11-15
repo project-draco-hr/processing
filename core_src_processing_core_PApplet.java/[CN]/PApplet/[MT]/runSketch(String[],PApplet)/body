@@ -10,12 +10,12 @@
   int[] location=null;
   int[] editorLocation=null;
   String name=null;
-  boolean present=false;
   Color backgroundColor=null;
   Color stopColor=Color.GRAY;
-  int displayIndex=-1;
-  boolean spanDisplays=false;
   boolean hideStop=false;
+  int displayIndex=-1;
+  boolean fullScreen=false;
+  boolean spanDisplays=false;
   String param=null, value=null;
   String folder=calcSketchPath();
   int argIndex=0;
@@ -51,7 +51,7 @@
     }
  else {
       if (args[argIndex].equals(ARGS_FULL_SCREEN)) {
-        present=true;
+        fullScreen=true;
       }
  else       if (args[argIndex].equals(ARGS_HIDE_STOP)) {
         hideStop=true;
@@ -85,11 +85,11 @@
     }
   }
   applet.sketchPath=folder;
-  present|=applet.sketchFullScreen();
+  fullScreen|=applet.sketchFullScreen();
   applet.args=PApplet.subset(args,argIndex + 1);
   applet.external=external;
-  PSurface surface=applet.initSurface(backgroundColor,displayIndex,present,spanDisplays);
-  if (present) {
+  PSurface surface=applet.initSurface(backgroundColor,displayIndex,fullScreen,spanDisplays);
+  if (fullScreen) {
     if (hideStop) {
       stopColor=null;
     }
