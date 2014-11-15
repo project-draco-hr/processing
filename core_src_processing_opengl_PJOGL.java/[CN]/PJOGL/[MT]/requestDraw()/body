@@ -1,31 +1,29 @@
 {
+  drawException=null;
   boolean canDraw=pg.parent.canDraw();
   if (pg.initialized && (canDraw || prevCanDraw)) {
-    try {
-      drawLatch=new CountDownLatch(1);
-      if (WINDOW_TOOLKIT == AWT) {
-        canvasAWT.display();
-      }
- else       if (WINDOW_TOOLKIT == NEWT) {
-        windowNEWT.display();
-      }
-      try {
-        drawLatch.await(DRAW_TIMEOUT_MILLIS,TimeUnit.MILLISECONDS);
-      }
- catch (      InterruptedException e) {
-        e.printStackTrace();
-      }
-      if (canDraw)       prevCanDraw=true;
- else       prevCanDraw=false;
+    drawLatch=new CountDownLatch(1);
+    if (WINDOW_TOOLKIT == AWT) {
+      canvasAWT.display();
     }
- catch (    GLException e) {
-      Throwable tr=e.getCause();
-      if (tr instanceof RuntimeException) {
-        throw (RuntimeException)tr;
-      }
+ else     if (WINDOW_TOOLKIT == NEWT) {
+      windowNEWT.display();
+    }
+    try {
+      drawLatch.await(DRAW_TIMEOUT_MILLIS,TimeUnit.MILLISECONDS);
+    }
+ catch (    InterruptedException e) {
+      e.printStackTrace();
+    }
+    if (canDraw)     prevCanDraw=true;
+ else     prevCanDraw=false;
+  }
+  if (drawException != null) {
+    if (drawException instanceof RuntimeException) {
+      throw (RuntimeException)drawException;
+    }
  else {
-        throw new RuntimeException(tr);
-      }
+      throw new RuntimeException(drawException);
     }
   }
 }

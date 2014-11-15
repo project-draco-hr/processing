@@ -1,9 +1,8 @@
 {
-  try {
-    Base.saveFile(language,prefFile);
+  if (loadProps()) {
+    props.setProperty("language",language);
+    if (updateProps()) {
+      Base.getPlatform().saveLanguage(language);
+    }
   }
- catch (  Exception e) {
-    e.printStackTrace();
-  }
-  Base.getPlatform().saveLanguage(language);
 }

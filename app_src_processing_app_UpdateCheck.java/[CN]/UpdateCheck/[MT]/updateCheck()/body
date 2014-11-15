@@ -9,7 +9,7 @@
     Preferences.set("update.id",String.valueOf(id));
   }
   String info=PApplet.urlEncode(id + "\t" + PApplet.nf(Base.getRevision(),4)+ "\t"+ System.getProperty("java.version")+ "\t"+ System.getProperty("java.vendor")+ "\t"+ System.getProperty("os.name")+ "\t"+ System.getProperty("os.version")+ "\t"+ System.getProperty("os.arch"));
-  int latest=readInt(downloadURL + "?" + info);
+  int latest=readInt(LATEST_URL + "?" + info);
   String lastString=Preferences.get("update.last");
   long now=System.currentTimeMillis();
   if (lastString != null) {
@@ -27,7 +27,7 @@
     }
     if (offerToUpdateContributions) {
       Thread.sleep(5 * 1000);
-      if ((!base.libraryManagerFrame.hasAlreadyBeenOpened() && base.libraryManagerFrame.hasUpdates(base)) || (!base.toolManagerFrame.hasAlreadyBeenOpened() && base.toolManagerFrame.hasUpdates(base)) || (!base.modeManagerFrame.hasAlreadyBeenOpened() && base.modeManagerFrame.hasUpdates(base))) {
+      if ((!base.libraryManagerFrame.hasAlreadyBeenOpened() && !base.toolManagerFrame.hasAlreadyBeenOpened() && !base.modeManagerFrame.hasAlreadyBeenOpened()&& !base.exampleManagerFrame.hasAlreadyBeenOpened()) && (base.libraryManagerFrame.hasUpdates(base) || base.toolManagerFrame.hasUpdates(base) || base.modeManagerFrame.hasUpdates(base)|| base.exampleManagerFrame.hasUpdates(base))) {
         promptToOpenContributionManager();
       }
     }

@@ -13,22 +13,12 @@
   redoItem.addActionListener(redoAction=new RedoAction());
   menu.add(redoItem);
   menu.addSeparator();
-  item=Toolkit.newJMenuItem(Language.text("menu.edit.cut"),'X');
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      handleCut();
-    }
-  }
-);
-  menu.add(item);
-  item=Toolkit.newJMenuItem(Language.text("menu.edit.copy"),'C');
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      textarea.copy();
-    }
-  }
-);
-  menu.add(item);
+  cutItems=Toolkit.newJMenuItem("Cut",'X');
+  cutItems.addActionListener(cutAction=new CutAction());
+  menu.add(cutItems);
+  copyItems=Toolkit.newJMenuItem("Copy",'C');
+  copyItems.addActionListener(copyAction=new CopyAction());
+  menu.add(copyItems);
   item=Toolkit.newJMenuItemShift(Language.text("menu.edit.copy_as_html"),'C');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -130,5 +120,16 @@
   }
 );
   menu.add(item);
+  menu.addMenuListener(new MenuListener(){
+    @Override public void menuCanceled(    MenuEvent e){
+    }
+    @Override public void menuDeselected(    MenuEvent e){
+    }
+    @Override public void menuSelected(    MenuEvent e){
+      copyAction.updateCopyState();
+      cutAction.updateCutState();
+    }
+  }
+);
   return menu;
 }
