@@ -6,6 +6,9 @@
   screen.addReference();
   int screenWidth=screen.getWidth();
   int screenHeight=screen.getHeight();
+  if (deviceIndex >= 0) {
+  }
+  System.out.println("deviceIndex: " + deviceIndex);
   System.out.println("Screen res " + screenWidth + "x"+ screenHeight);
   ArrayList<MonitorDevice> monitors=new ArrayList<MonitorDevice>();
   for (int i=0; i < screen.getMonitorDevices().size(); i++) {
@@ -54,6 +57,8 @@
   caps.setAlphaBits(PGL.REQUESTED_ALPHA_BITS);
   caps.setDepthBits(PGL.REQUESTED_DEPTH_BITS);
   caps.setStencilBits(PGL.REQUESTED_STENCIL_BITS);
+  caps.setSampleBuffers(true);
+  caps.setNumSamples(2);
   caps.setBackgroundOpaque(true);
   caps.setOnscreen(true);
   pgl.capabilities=caps;
@@ -63,10 +68,14 @@
   window.setPosition(0,0);
   window.setSize(sketchWidth,sketchHeight);
   window.setVisible(true);
+  int[] reqSurfacePixelScale=new int[]{ScalableSurface.IDENTITY_PIXELSCALE,ScalableSurface.IDENTITY_PIXELSCALE};
+  window.setSurfaceScale(reqSurfacePixelScale);
   NEWTMouseListener mouseListener=new NEWTMouseListener();
   window.addMouseListener(mouseListener);
   NEWTKeyListener keyListener=new NEWTKeyListener();
   window.addKeyListener(keyListener);
+  NEWTWindowListener winListener=new NEWTWindowListener();
+  window.addWindowListener(winListener);
   DrawListener drawlistener=new DrawListener();
   window.addGLEventListener(drawlistener);
   animator=new FPSAnimator(window,60);
