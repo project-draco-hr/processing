@@ -10,10 +10,12 @@
     float diff=(float)w / (float)width;
     h=(int)(height * diff);
   }
-  BufferedImage img=shrinkImage((BufferedImage)getNative(),w,h);
+  BufferedImage img=shrinkImage((BufferedImage)getNative(),w * pixelFactor,h * pixelFactor);
   PImage temp=new PImage(img);
-  this.width=temp.width;
-  this.height=temp.height;
+  this.pixelWidth=temp.width;
+  this.pixelHeight=temp.height;
   this.pixels=temp.pixels;
+  this.width=pixelWidth / pixelFactor;
+  this.height=pixelHeight / pixelFactor;
   updatePixels();
 }
