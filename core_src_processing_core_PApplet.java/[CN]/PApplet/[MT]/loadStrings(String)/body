@@ -1,6 +1,15 @@
 {
   InputStream is=createInput(filename);
-  if (is != null)   return loadStrings(is);
+  if (is != null) {
+    String[] strArr=loadStrings(is);
+    try {
+      is.close();
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+    }
+    return strArr;
+  }
   System.err.println("The file \"" + filename + "\" "+ "is missing or inaccessible, make sure "+ "the URL is valid or that the file has been "+ "added to your sketch and is readable.");
   return null;
 }
