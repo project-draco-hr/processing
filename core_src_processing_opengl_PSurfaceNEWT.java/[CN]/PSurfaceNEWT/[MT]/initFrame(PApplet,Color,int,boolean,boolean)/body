@@ -69,6 +69,7 @@
   caps.setBackgroundOpaque(true);
   caps.setOnscreen(true);
   pgl.capabilities=caps;
+  System.err.println("0. create window");
   window=GLWindow.create(screen,caps);
   sketchWidth=sketch.sketchWidth();
   sketchHeight=sketch.sketchHeight();
@@ -100,7 +101,6 @@
       window.setFullscreen(true);
     }
   }
-  window.setVisible(true);
   int[] reqSurfacePixelScale;
   if (graphics.is2X()) {
     reqSurfacePixelScale=new int[]{ScalableSurface.AUTOMAX_PIXELSCALE,ScalableSurface.AUTOMAX_PIXELSCALE};
@@ -119,6 +119,7 @@
   window.addWindowListener(winListener);
   DrawListener drawlistener=new DrawListener();
   window.addGLEventListener(drawlistener);
+  System.err.println("0. create animator");
   animator=new FPSAnimator(window,60);
   window.addWindowListener(new WindowAdapter(){
     @Override public void windowDestroyNotify(    final WindowEvent e){
@@ -126,6 +127,21 @@
     }
   }
 );
+  try {
+    EventQueue.invokeAndWait(new Runnable(){
+      public void run(){
+        window.setVisible(true);
+        System.err.println("1. set visible");
+      }
+    }
+);
+  }
+ catch (  InvocationTargetException e1) {
+    e1.printStackTrace();
+  }
+catch (  InterruptedException e1) {
+    e1.printStackTrace();
+  }
   frame=new DummyFrame();
   return frame;
 }
