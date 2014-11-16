@@ -4,17 +4,17 @@
   Box box=Box.createHorizontalBox();
   box.setBackground(Color.BLACK);
   selectorSlider=new ColorSelectorSlider();
-  selectorSlider.init();
   if (!colorBox.isBW) {
     selectorBox=new ColorSelectorBox();
-    selectorBox.init();
-    box.add(selectorBox);
+    box.add(selectorBox.getCanvas());
   }
   box.add(Box.createHorizontalGlue());
-  box.add(selectorSlider,BorderLayout.CENTER);
+  box.add(selectorSlider.getCanvas(),BorderLayout.CENTER);
   box.add(Box.createHorizontalGlue());
   frame.getContentPane().add(box,BorderLayout.CENTER);
   frame.pack();
   frame.setResizable(false);
   frame.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+  selectorBox.init();
+  selectorSlider.init();
 }
