@@ -4,18 +4,21 @@
   }
   int num=coloring.charAt(coloring.length() - 1) - '1';
   int id=0;
-  boolean paren=false;
 switch (coloring.charAt(0)) {
 case 'K':
     id=Token.KEYWORD1 + num;
-  break;
+  keywordColoring.add(keyword,(byte)id,false);
+if (id == Token.KEYWORD6) {
+  keywordColoring.add(keyword,(byte)id,true);
+}
+break;
 case 'L':
 id=Token.LITERAL1 + num;
+keywordColoring.add(keyword,(byte)id,false);
 break;
 case 'F':
 id=Token.FUNCTION1 + num;
-paren=true;
+keywordColoring.add(keyword,(byte)id,true);
 break;
 }
-keywordColoring.add(keyword,(byte)id,paren);
 }
