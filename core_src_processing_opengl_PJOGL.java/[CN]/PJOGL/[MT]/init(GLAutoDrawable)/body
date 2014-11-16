@@ -1,0 +1,13 @@
+{
+  capabilities=glDrawable.getChosenGLCapabilities();
+  if (!hasFBOs()) {
+    throw new RuntimeException(MISSING_FBO_ERROR);
+  }
+  if (!hasShaders()) {
+    throw new RuntimeException(MISSING_GLSL_ERROR);
+  }
+  if (USE_JOGL_FBOLAYER && capabilities.isFBO()) {
+    int maxs=maxSamples();
+    numSamples=PApplet.min(capabilities.getNumSamples(),maxs);
+  }
+}
