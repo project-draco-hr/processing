@@ -5,13 +5,40 @@
   }
   this.getTableHeader().setReorderingAllowed(false);
   this.addMouseListener(new MouseAdapter(){
-    @Override synchronized public void mouseReleased(    MouseEvent e){
+    @Override synchronized public void mouseClicked(    MouseEvent e){
       try {
         errorCheckerService.scrollToErrorLine(((XQErrorTable)e.getSource()).getSelectedRow());
       }
  catch (      Exception e1) {
         System.out.println("Exception XQErrorTable mouseReleased " + e);
       }
+    }
+  }
+);
+  final XQErrorTable thisTable=this;
+  this.addMouseMotionListener(new MouseMotionListener(){
+    @Override public void mouseMoved(    MouseEvent evt){
+      int rowIndex=rowAtPoint(evt.getPoint());
+      int colIndex=columnAtPoint(evt.getPoint());
+synchronized (errorCheckerService.problemsList) {
+        if (rowIndex < errorCheckerService.problemsList.size()) {
+          Problem p=errorCheckerService.problemsList.get(rowIndex);
+          if (p.getImportSuggestions() != null && p.getImportSuggestions().length > 0) {
+            String t=p.getMessage() + "(Import Suggestions available)";
+            int x1=thisTable.getFontMetrics(thisTable.getFont()).stringWidth(p.getMessage()), x2=thisTable.getFontMetrics(thisTable.getFont()).stringWidth(t);
+            if (evt.getX() < x1 || evt.getX() > x2)             return;
+            String[] list=p.getImportSuggestions();
+            String className=list[0].substring(list[0].lastIndexOf('.') + 1);
+            String[] temp=new String[list.length];
+            for (int i=0; i < list.length; i++) {
+              temp[i]="<html>Import '" + className + "' <font color=#777777>("+ list[i]+ ")</font></html>";
+            }
+            showImportSuggestion(temp,evt.getXOnScreen(),evt.getYOnScreen() - 3 * thisTable.getFont().getSize());
+          }
+        }
+      }
+    }
+    @Override public void mouseDragged(    MouseEvent e){
     }
   }
 );
@@ -27,4 +54,5 @@
     }
   }
 );
+  ToolTipManager.sharedInstance().registerComponent(this);
 }
