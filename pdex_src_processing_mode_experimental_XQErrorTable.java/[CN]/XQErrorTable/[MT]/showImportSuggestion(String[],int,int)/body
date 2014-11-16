@@ -1,0 +1,62 @@
+{
+  if (frmImportSuggest != null) {
+    return;
+  }
+  final JList<String> classList=new JList<String>(list);
+  classList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+  frmImportSuggest=new JFrame();
+  frmImportSuggest.setUndecorated(true);
+  frmImportSuggest.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+  JPanel panel=new JPanel();
+  panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+  panel.setBackground(Color.WHITE);
+  frmImportSuggest.setBackground(Color.WHITE);
+  panel.add(classList);
+  JLabel label=new JLabel("<html><div alight = \"left\"><font size = \"2\"><br>(Click to insert)</font></div></html>");
+  label.setBackground(Color.WHITE);
+  label.setHorizontalTextPosition(SwingConstants.LEFT);
+  panel.add(label);
+  panel.validate();
+  frmImportSuggest.getContentPane().add(panel);
+  frmImportSuggest.pack();
+  final DebugEditor editor=errorCheckerService.getEditor();
+  classList.addListSelectionListener(new ListSelectionListener(){
+    @Override public void valueChanged(    ListSelectionEvent e){
+      if (classList.getSelectedValue() != null) {
+        try {
+          String t=classList.getSelectedValue().trim();
+          log(t);
+          int x=t.indexOf('(');
+          String impString="import " + t.substring(x + 1,t.indexOf(')')) + ";\n";
+          int ct=editor.getSketch().getCurrentCodeIndex();
+          editor.getSketch().setCurrentCode(0);
+          editor.textArea().getDocument().insertString(0,impString,null);
+          editor.getSketch().setCurrentCode(ct);
+        }
+ catch (        BadLocationException ble) {
+          log("Failed to insert import");
+          ble.printStackTrace();
+        }
+      }
+      frmImportSuggest.setVisible(false);
+      frmImportSuggest.dispose();
+      frmImportSuggest=null;
+    }
+  }
+);
+  frmImportSuggest.addWindowFocusListener(new WindowFocusListener(){
+    @Override public void windowLostFocus(    WindowEvent e){
+      if (frmImportSuggest != null) {
+        frmImportSuggest.dispose();
+        frmImportSuggest=null;
+      }
+    }
+    @Override public void windowGainedFocus(    WindowEvent e){
+    }
+  }
+);
+  frmImportSuggest.setLocation(x,y);
+  frmImportSuggest.setBounds(x,y,250,100);
+  frmImportSuggest.pack();
+  frmImportSuggest.setVisible(true);
+}
