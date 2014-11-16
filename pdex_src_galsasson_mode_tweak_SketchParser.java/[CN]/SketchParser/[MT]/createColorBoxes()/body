@@ -1,7 +1,9 @@
 {
+  colorBoxes=new ArrayList<>();
   Pattern p=Pattern.compile("color\\(|color\\s\\(|fill[\\(\\s]|stroke[\\(\\s]|background[\\(\\s]|tint[\\(\\s]");
   for (int i=0; i < codeTabs.length; i++) {
-    colorBoxes[i]=new ArrayList<ColorControlBox>();
+    List<ColorControlBox> colorBox=new ArrayList<ColorControlBox>();
+    colorBoxes.add(colorBox);
     String tab=codeTabs[i];
     Matcher m=p.matcher(tab);
     while (m.find()) {
@@ -14,7 +16,7 @@
       if (isInComment(m.start(),tab)) {
         continue;
       }
-      for (      Handle handle : allHandles[i]) {
+      for (      Handle handle : allHandles.get(i)) {
         if (handle.startChar > openPar && handle.endChar <= closePar) {
           colorHandles.add(handle);
         }
@@ -36,11 +38,11 @@
           ColorControlBox newCCB=new ColorControlBox(context,cmode,colorHandles);
           if (cmode.unrecognizedMode) {
             if (newCCB.isHex) {
-              colorBoxes[i].add(newCCB);
+              colorBox.add(newCCB);
             }
           }
  else {
-            colorBoxes[i].add(newCCB);
+            colorBox.add(newCCB);
           }
         }
       }

@@ -5,14 +5,14 @@
   for (int tab=0; tab < code.length; tab++) {
     String tabCode=ta.editor.baseCode[tab];
     ta.setText(tabCode);
-    for (    Handle n : handles[tab]) {
+    for (    Handle n : handles.get(tab)) {
       int lineStartChar=ta.getLineStartOffset(n.line);
       int x=ta.offsetToX(n.line,n.newStartChar - lineStartChar);
       int end=ta.offsetToX(n.line,n.newEndChar - lineStartChar);
       int y=ta.lineToY(n.line) + fm.getHeight() + 1;
       n.initInterface(x,y,end - x,fm.getHeight());
     }
-    for (    ColorControlBox cBox : colorBoxes[tab]) {
+    for (    ColorControlBox cBox : colorBoxes.get(tab)) {
       int lineStartChar=ta.getLineStartOffset(cBox.getLine());
       int x=ta.offsetToX(cBox.getLine(),cBox.getCharIndex() - lineStartChar);
       int y=ta.lineToY(cBox.getLine()) + fm.getDescent();

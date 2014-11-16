@@ -1,7 +1,7 @@
 {
   SketchCode[] code=sketch.getCode();
   if (code.length < 1)   return false;
-  if (handles.length == 0)   return false;
+  if (handles.size() == 0)   return false;
   int setupStartPos=SketchParser.getSetupStart(baseCode[0]);
   if (setupStartPos < 0) {
     return false;
@@ -20,14 +20,14 @@
   }
   tweakClient=new UDPTweakClient(port);
   for (int tab=0; tab < code.length; tab++) {
-    for (    Handle h : handles[tab]) {
+    for (    Handle h : handles.get(tab)) {
       h.setTweakClient(tweakClient);
     }
   }
   for (int tab=0; tab < code.length; tab++) {
     int charInc=0;
     String c=baseCode[tab];
-    for (    Handle n : handles[tab]) {
+    for (    Handle n : handles.get(tab)) {
       c=replaceString(c,n.startChar + charInc,n.endChar + charInc,n.name);
       charInc+=n.name.length() - n.strValue.length();
     }
@@ -50,8 +50,8 @@
   header+=UDPTweakClient.getServerCode(port,numOfInts > 0,numOfFloats > 0);
   header+="TweakModeServer tweakmode_Server;\n";
   header+="void tweakmode_initAllVars() {\n";
-  for (int i=0; i < handles.length; i++) {
-    for (    Handle n : handles[i]) {
+  for (  List<Handle> list : handles) {
+    for (    Handle n : list) {
       header+="  " + n.name + " = "+ n.strValue+ ";\n";
     }
   }
