@@ -15,9 +15,13 @@
         if (candidates.get(i).getType() == CompletionCandidate.LOCAL_METHOD || candidates.get(i).getType() == CompletionCandidate.PREDEF_METHOD) {
           CompletionCandidate cc=candidates.get(i - 1);
           String label=cc.getLabel();
-          log(label);
           int x=label.lastIndexOf(')');
-          cc.setLabel((cc.getLabel().contains("<html>") ? "" : "") + cc.getElementName() + "(...)"+ label.substring(x + 1));
+          if (candidates.get(i).getType() == CompletionCandidate.PREDEF_METHOD) {
+            cc.setLabel((cc.getLabel().contains("<html>") ? "<html>" : "") + cc.getElementName() + "(...)"+ label.substring(x + 1));
+          }
+ else {
+            cc.setLabel(cc.getElementName() + "(...)" + label.substring(x + 1));
+          }
           cc.setCompletionString(cc.getElementName() + "(");
           ignoredSome=true;
           continue;
