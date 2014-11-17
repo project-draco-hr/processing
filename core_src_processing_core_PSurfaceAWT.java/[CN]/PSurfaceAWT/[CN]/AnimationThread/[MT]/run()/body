@@ -3,12 +3,15 @@
   long overSleepTime=0L;
   int noDelays=0;
   final int NO_DELAYS_PER_YIELD=15;
+  if (graphics.image == null) {
+    setSize(sketchWidth,sketchHeight);
+  }
   sketch.start();
   while ((Thread.currentThread() == thread) && !sketch.finished) {
     checkPause();
     Dimension currentSize=canvas.getSize();
     if (currentSize.width != sketchWidth || currentSize.height != sketchHeight) {
-      System.err.format("need to resize from %s to %d, %d",currentSize,sketchWidth,sketchHeight);
+      System.err.format("need to resize from %s to %d, %d%n",currentSize,sketchWidth,sketchHeight);
     }
     sketch.handleDraw();
     if (sketch.frameCount == 1) {
