@@ -121,6 +121,36 @@
   window.addGLEventListener(drawlistener);
   System.err.println("0. create animator");
   animator=new FPSAnimator(window,60);
+  drawException=null;
+  animator.setUncaughtExceptionHandler(new GLAnimatorControl.UncaughtExceptionHandler(){
+    @Override public void uncaughtException(    final GLAnimatorControl animator,    final GLAutoDrawable drawable,    final Throwable cause){
+synchronized (waitObject) {
+        drawException=cause;
+        waitObject.notify();
+      }
+    }
+  }
+);
+  (new Thread(new Runnable(){
+    public void run(){
+synchronized (waitObject) {
+        try {
+          if (drawException == null)           waitObject.wait();
+        }
+ catch (        InterruptedException e) {
+          e.printStackTrace();
+        }
+        System.err.println("Caught exception: " + drawException.getMessage());
+        if (drawException instanceof RuntimeException) {
+          throw (RuntimeException)drawException;
+        }
+ else {
+          throw new RuntimeException(drawException);
+        }
+      }
+    }
+  }
+)).start();
   window.addWindowListener(new WindowAdapter(){
     @Override public void windowDestroyNotify(    final WindowEvent e){
       animator.stop();
@@ -136,11 +166,7 @@
     }
 );
   }
- catch (  InvocationTargetException e1) {
-    e1.printStackTrace();
-  }
-catch (  InterruptedException e1) {
-    e1.printStackTrace();
+ catch (  Exception ex) {
   }
   frame=new DummyFrame();
   return frame;
