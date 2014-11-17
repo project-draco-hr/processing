@@ -3,14 +3,14 @@
     try {
       String currentSubword=fetchCurrentSubword();
       int currentSubwordLen=currentSubword == null ? 0 : currentSubword.length();
-      String selectedSuggestion=((CompletionCandidate)completionList.getSelectedValue()).getCompletionString();
+      String selectedSuggestion=completionList.getSelectedValue().getCompletionString();
       if (currentSubword != null) {
         selectedSuggestion=selectedSuggestion.substring(currentSubwordLen);
       }
  else {
         currentSubword="";
       }
-      String completionString=((CompletionCandidate)completionList.getSelectedValue()).getCompletionString();
+      String completionString=completionList.getSelectedValue().getCompletionString();
       if (selectedSuggestion.endsWith(" )")) {
         if (completionString.endsWith(" )")) {
           completionString=completionString.substring(0,completionString.length() - 2) + ")";
@@ -37,7 +37,7 @@
         }
       }
       log("Suggestion inserted: " + System.currentTimeMillis());
-      if (((CompletionCandidate)completionList.getSelectedValue()).getLabel().contains("...")) {
+      if (completionList.getSelectedValue().getLabel().contains("...")) {
       }
  else {
         hide();
