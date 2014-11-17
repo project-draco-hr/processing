@@ -62,8 +62,6 @@
   caps.setAlphaBits(PGL.REQUESTED_ALPHA_BITS);
   caps.setDepthBits(PGL.REQUESTED_DEPTH_BITS);
   caps.setStencilBits(PGL.REQUESTED_STENCIL_BITS);
-  caps.setPBuffer(false);
-  caps.setFBO(false);
   caps.setSampleBuffers(true);
   caps.setNumSamples(2);
   caps.setBackgroundOpaque(true);
@@ -140,12 +138,11 @@ synchronized (waitObject) {
  catch (        InterruptedException e) {
           e.printStackTrace();
         }
-        System.err.println("Caught exception: " + drawException.getMessage());
         if (drawException instanceof RuntimeException) {
-          throw (RuntimeException)drawException;
+          throw (RuntimeException)drawException.getCause();
         }
  else {
-          throw new RuntimeException(drawException);
+          throw new RuntimeException(drawException.getCause());
         }
       }
     }
