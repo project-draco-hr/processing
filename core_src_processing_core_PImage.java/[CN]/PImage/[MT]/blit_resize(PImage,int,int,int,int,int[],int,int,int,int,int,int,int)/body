@@ -1,8 +1,8 @@
 {
   if (srcX1 < 0)   srcX1=0;
   if (srcY1 < 0)   srcY1=0;
-  if (srcX2 > img.width)   srcX2=img.width;
-  if (srcY2 > img.height)   srcY2=img.height;
+  if (srcX2 > img.pixelWidth)   srcX2=img.pixelWidth;
+  if (srcY2 > img.pixelHeight)   srcY2=img.pixelHeight;
   int srcW=srcX2 - srcX1;
   int srcH=srcY2 - srcY1;
   int destW=destX2 - destX1;
@@ -12,7 +12,7 @@
     srcW++;
     srcH++;
   }
-  if (destW <= 0 || destH <= 0 || srcW <= 0 || srcH <= 0 || destX1 >= screenW || destY1 >= screenH || srcX1 >= img.width || srcY1 >= img.height) {
+  if (destW <= 0 || destH <= 0 || srcW <= 0 || srcH <= 0 || destX1 >= screenW || destY1 >= screenH || srcX1 >= img.pixelWidth || srcY1 >= img.pixelHeight) {
     return;
   }
   int dx=(int)(srcW / (float)destW * PRECISIONF);
@@ -32,9 +32,9 @@
   int destOffset=destY1 * screenW + destX1;
   srcBuffer=img.pixels;
   if (smooth) {
-    iw=img.width;
-    iw1=img.width - 1;
-    ih1=img.height - 1;
+    iw=img.pixelWidth;
+    iw1=img.pixelWidth - 1;
+    ih1=img.pixelHeight - 1;
 switch (mode) {
 case BLEND:
       for (int y=0; y < destH; y++) {
@@ -208,7 +208,7 @@ switch (mode) {
 case BLEND:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_blend(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -220,7 +220,7 @@ break;
 case ADD:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_add_pin(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -232,7 +232,7 @@ break;
 case SUBTRACT:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_sub_pin(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -244,7 +244,7 @@ break;
 case LIGHTEST:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_lightest(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -256,7 +256,7 @@ break;
 case DARKEST:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_darkest(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -268,7 +268,7 @@ break;
 case REPLACE:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=srcBuffer[sY + (sX >> PRECISIONB)];
 sX+=dx;
@@ -280,7 +280,7 @@ break;
 case DIFFERENCE:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_difference(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -292,7 +292,7 @@ break;
 case EXCLUSION:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_exclusion(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -304,7 +304,7 @@ break;
 case MULTIPLY:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_multiply(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -316,7 +316,7 @@ break;
 case SCREEN:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_screen(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -328,7 +328,7 @@ break;
 case OVERLAY:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_overlay(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -340,7 +340,7 @@ break;
 case HARD_LIGHT:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_hard_light(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -352,7 +352,7 @@ break;
 case SOFT_LIGHT:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_soft_light(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -364,7 +364,7 @@ break;
 case DODGE:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_dodge(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;
@@ -376,7 +376,7 @@ break;
 case BURN:
 for (int y=0; y < destH; y++) {
 sX=srcXOffset;
-sY=(srcYOffset >> PRECISIONB) * img.width;
+sY=(srcYOffset >> PRECISIONB) * img.pixelWidth;
 for (int x=0; x < destW; x++) {
 destPixels[destOffset + x]=blend_burn(destPixels[destOffset + x],srcBuffer[sY + (sX >> PRECISIONB)]);
 sX+=dx;

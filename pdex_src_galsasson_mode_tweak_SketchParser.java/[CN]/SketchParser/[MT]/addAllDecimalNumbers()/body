@@ -1,7 +1,9 @@
 {
+  allHandles=new ArrayList<>();
   Pattern p=Pattern.compile("[\\[\\{<>(),\\t\\s\\+\\-\\/\\*^%!|&=?:~]\\d+\\.?\\d*");
   for (int i=0; i < codeTabs.length; i++) {
-    allHandles[i]=new ArrayList<Handle>();
+    List<Handle> handles=new ArrayList<Handle>();
+    allHandles.add(handles);
     String c=codeTabs[i];
     Matcher m=p.matcher(c);
     while (m.find()) {
@@ -17,7 +19,7 @@
         }
       }
       boolean found=false;
-      for (      Range r : scientificNotations[i]) {
+      for (      Range r : scientificNotations.get(i)) {
         if (r.contains(start)) {
           found=true;
           break;
@@ -45,12 +47,12 @@
       if (value.contains(".") || forceFloat) {
         String name=varPrefix + "_float[" + floatVarCount+ "]";
         int decimalDigits=getNumDigitsAfterPoint(value);
-        allHandles[i].add(new Handle("float",name,floatVarCount,value,i,line,start,end,decimalDigits));
+        handles.add(new Handle("float",name,floatVarCount,value,i,line,start,end,decimalDigits));
         floatVarCount++;
       }
  else {
         String name=varPrefix + "_int[" + intVarCount+ "]";
-        allHandles[i].add(new Handle("int",name,intVarCount,value,i,line,start,end,0));
+        handles.add(new Handle("int",name,intVarCount,value,i,line,start,end,0));
         intVarCount++;
       }
     }

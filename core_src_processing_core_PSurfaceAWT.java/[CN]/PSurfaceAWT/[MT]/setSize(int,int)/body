@@ -1,0 +1,20 @@
+{
+  System.out.format("frame visible %b, setSize(%d, %d) %n",frame.isVisible(),wide,high);
+  new Exception().printStackTrace(System.out);
+  sketchWidth=wide;
+  sketchHeight=high;
+  setFrameSize();
+  setCanvasSize();
+  frame.setLocationRelativeTo(null);
+  GraphicsConfiguration gc=canvas.getGraphicsConfiguration();
+  if (gc == null) {
+    System.err.println("GraphicsConfiguration null in setSize()");
+    GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+    gc=ge.getDefaultScreenDevice().getDefaultConfiguration();
+  }
+  int factor=graphics.pixelFactor;
+  graphics.image=gc.createCompatibleImage(wide * factor,high * factor);
+  sketch.width=wide;
+  sketch.height=high;
+  graphics.setSize(wide,high);
+}
