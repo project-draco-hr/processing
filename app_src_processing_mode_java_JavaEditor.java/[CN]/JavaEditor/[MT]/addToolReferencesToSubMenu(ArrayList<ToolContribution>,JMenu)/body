@@ -1,0 +1,20 @@
+{
+  boolean isItemAdded=false;
+  Iterator<ToolContribution> iter=toolsList.iterator();
+  while (iter.hasNext()) {
+    final ToolContribution toolContrib=iter.next();
+    final File toolRef=new File(toolContrib.getFolder(),"reference/index.html");
+    if (toolRef.exists()) {
+      JMenuItem libRefItem=new JMenuItem(toolContrib.getName());
+      libRefItem.addActionListener(new ActionListener(){
+        @Override public void actionPerformed(        ActionEvent arg0){
+          showReferenceFile(toolRef);
+        }
+      }
+);
+      subMenu.add(libRefItem);
+      isItemAdded=true;
+    }
+  }
+  return isItemAdded;
+}

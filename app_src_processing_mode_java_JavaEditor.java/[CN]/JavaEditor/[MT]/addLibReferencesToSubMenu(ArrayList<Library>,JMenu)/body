@@ -1,0 +1,19 @@
+{
+  boolean isItemAdded=false;
+  Iterator<Library> iter=libsList.iterator();
+  while (iter.hasNext()) {
+    final Library libContrib=iter.next();
+    if (libContrib.hasReference()) {
+      JMenuItem libRefItem=new JMenuItem(libContrib.getName());
+      libRefItem.addActionListener(new ActionListener(){
+        @Override public void actionPerformed(        ActionEvent arg0){
+          showReferenceFile(libContrib.getReferenceIndexFile());
+        }
+      }
+);
+      subMenu.add(libRefItem);
+      isItemAdded=true;
+    }
+  }
+  return isItemAdded;
+}
