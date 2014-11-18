@@ -9,7 +9,7 @@
         try {
           download(url,contribZip,downloadProgress);
           if (!downloadProgress.isCanceled() && !downloadProgress.isError()) {
-            installProgress.startTask("Installing...",ProgressMonitor.UNKNOWN);
+            installProgress.startTask(Language.text("contrib.progress.installing"),ProgressMonitor.UNKNOWN);
             LocalContribution contribution=ad.install(editor.getBase(),contribZip,false,status);
             if (contribution != null) {
               contribListing.replaceContribution(ad,contribution);
@@ -21,15 +21,26 @@
             }
             installProgress.finished();
           }
+ else {
+            if (downloadProgress.exception instanceof SocketTimeoutException) {
+              status.setErrorMessage(Language.interpolate("contrib.errors.contrib_download.timeout",ad.getName()));
+            }
+ else {
+              status.setErrorMessage(Language.interpolate("contrib.errors.download_and_install",ad.getName()));
+            }
+          }
           contribZip.delete();
         }
  catch (        Exception e) {
-          e.printStackTrace();
-          status.setErrorMessage("Error during download and install.");
+          status.setErrorMessage(Language.interpolate("contrib.errors.download_and_install",ad.getName()));
+          downloadProgress.cancel();
+          installProgress.cancel();
         }
       }
  catch (      IOException e) {
-        status.setErrorMessage("Could not write to temporary directory.");
+        status.setErrorMessage(Language.text("contrib.errors.temporary_directory"));
+        downloadProgress.cancel();
+        installProgress.cancel();
       }
     }
   }

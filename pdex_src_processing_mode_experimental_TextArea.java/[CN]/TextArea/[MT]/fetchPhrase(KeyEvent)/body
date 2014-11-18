@@ -7,8 +7,23 @@
   String s=getLineText(line);
   log2("lin " + line);
   int x=getCaretPosition() - getLineStartOffset(line) - 1, x1=x - 1;
-  if (x >= s.length() || x < 0)   return null;
+  if (x >= s.length() || x < 0) {
+    hideSuggestion();
+    return null;
+  }
   log2(" x char: " + s.charAt(x));
+  if (!(Character.isLetterOrDigit(s.charAt(x)) || s.charAt(x) == '_' || s.charAt(x) == '(' || s.charAt(x) == '.')) {
+    hideSuggestion();
+    return null;
+  }
+ else   if (x > 0 && (s.charAt(x - 1) == ' ' || s.charAt(x - 1) == '(') && Character.isDigit(s.charAt(x))) {
+    hideSuggestion();
+    return null;
+  }
+ else   if (x == 0) {
+    hideSuggestion();
+    return null;
+  }
   String word=(x < s.length() ? s.charAt(x) : "") + "";
   if (s.trim().length() == 1) {
     word=word.trim();

@@ -9,7 +9,7 @@
     conn.connect();
     if (progress != null) {
       int fileSize=conn.getContentLength();
-      progress.startTask(Language.text("contributions.progress.downloading"),fileSize);
+      progress.startTask(Language.text("contrib.progress.downloading"),fileSize);
     }
     InputStream in=conn.getInputStream();
     FileOutputStream out=new FileOutputStream(dest);
@@ -33,11 +33,16 @@
     success=true;
   }
  catch (  SocketTimeoutException ste) {
-    if (progress != null)     progress.error(ste);
+    if (progress != null) {
+      progress.error(ste);
+      progress.cancel();
+    }
   }
 catch (  IOException ioe) {
-    if (progress != null)     progress.error(ioe);
-    ioe.printStackTrace();
+    if (progress != null) {
+      progress.error(ioe);
+      progress.cancel();
+    }
   }
   if (progress != null)   progress.finished();
   return success;

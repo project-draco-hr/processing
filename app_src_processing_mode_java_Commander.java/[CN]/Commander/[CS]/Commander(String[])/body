@@ -4,6 +4,7 @@
   String pdePath=null;
   String outputPath=null;
   File outputFolder=null;
+  boolean outputSet=false;
   boolean force=false;
   int platform=PApplet.platform;
   int platformBits=Base.getNativeBits();
@@ -56,6 +57,7 @@
       pdePath=pdeFile.getAbsolutePath();
     }
  else     if (arg.startsWith(outputArg)) {
+      outputSet=true;
       outputPath=arg.substring(outputArg.length());
     }
  else     if (arg.equals(forceArg)) {
@@ -69,34 +71,41 @@
     printCommandLine(systemOut);
     System.exit(0);
   }
-  if (outputPath == null) {
-    complainAndQuit("An output path must be specified.",true);
-  }
-  outputFolder=new File(outputPath);
-  if (outputFolder.exists()) {
-    if (force) {
-      Base.removeDir(outputFolder);
+  if (outputSet) {
+    if (outputPath == null) {
+      complainAndQuit("An output path must be specified.",true);
     }
+    outputFolder=new File(outputPath);
+    if (outputFolder.exists()) {
+      if (force) {
+        Base.removeDir(outputFolder);
+      }
  else {
-      complainAndQuit("The output folder already exists. " + "Use --force to remove it.",false);
+        complainAndQuit("The output folder already exists. " + "Use --force to remove it.",false);
+      }
     }
-  }
-  if (!outputFolder.mkdirs()) {
-    complainAndQuit("Could not create the output folder.",false);
+    if (!outputFolder.mkdirs()) {
+      complainAndQuit("Could not create the output folder.",false);
+    }
   }
   Preferences.init();
   Base.locateSketchbookFolder();
   if (sketchPath == null) {
     complainAndQuit("No sketch path specified.",true);
   }
- else   if (outputPath.equals(sketchPath)) {
-    complainAndQuit("The sketch path and output path cannot be identical.",false);
-  }
  else {
+    if (outputSet) {
+      if (outputPath.equals(sketchPath)) {
+        complainAndQuit("The sketch path and output path cannot be identical.",false);
+      }
+    }
     boolean success=false;
     JavaMode javaMode=(JavaMode)ModeContribution.load(null,Base.getContentFile("modes/java"),"processing.mode.java.JavaMode").getMode();
     try {
       sketch=new Sketch(pdePath,javaMode);
+      if (!outputSet) {
+        outputFolder=sketch.makeTempFolder();
+      }
       if (task == BUILD || task == RUN || task == PRESENT) {
         JavaBuild build=new JavaBuild(sketch);
         File srcFolder=new File(outputFolder,"source");

@@ -1,5 +1,12 @@
 {
   this.contrib=contrib;
+  if (contrib.isSpecial()) {
+    ImageIcon processingIcon=new ImageIcon(Toolkit.getLibImage("icons/pde-" + "48" + ".png"));
+    JLabel iconLabel=new JLabel(processingIcon);
+    iconLabel.setBorder(new EmptyBorder(4,7,7,7));
+    iconLabel.setVerticalAlignment(SwingConstants.TOP);
+    add(iconLabel,BorderLayout.WEST);
+  }
   StringBuilder description=new StringBuilder();
   description.append("<html><body><b>");
   if (contrib.getUrl() == null) {
@@ -27,7 +34,7 @@
  else {
     String sentence=contrib.getSentence();
     if (sentence == null || sentence.isEmpty()) {
-      sentence="<i>Description unavailable.</i>";
+      sentence=String.format("<i>%s</i>",Language.text("contrib.errors.description_unavailable"));
     }
  else {
       sentence=sanitizeHtmlTags(sentence);
@@ -79,18 +86,18 @@
   installRemoveButton.removeActionListener(undoActionListener);
   if (contrib.isDeletionFlagged()) {
     installRemoveButton.addActionListener(undoActionListener);
-    installRemoveButton.setText(Language.text("contributions.undo"));
+    installRemoveButton.setText(Language.text("contrib.undo"));
   }
  else   if (contrib.isInstalled()) {
     installRemoveButton.addActionListener(removeActionListener);
-    installRemoveButton.setText(Language.text("contributions.remove"));
+    installRemoveButton.setText(Language.text("contrib.remove"));
     installRemoveButton.setVisible(true);
     installRemoveButton.setEnabled(!contrib.isUpdateFlagged());
     reorganizePaneComponents();
   }
  else {
     installRemoveButton.addActionListener(installActionListener);
-    installRemoveButton.setText(Language.text("contributions.install"));
+    installRemoveButton.setText(Language.text("contrib.install"));
   }
   contextMenu.removeAll();
   if (contrib.isInstalled()) {
@@ -99,5 +106,8 @@
   }
  else {
     setComponentPopupMenu(null);
+  }
+  if (!contrib.isCompatible(Base.getRevision())) {
+    blurContributionPanel(this);
   }
 }

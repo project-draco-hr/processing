@@ -3,8 +3,10 @@
   inputMethodBox.setSelected(Preferences.getBoolean("editor.input_method_support"));
   errorCheckerBox.setSelected(Preferences.getBoolean("pdex.errorCheckEnabled"));
   warningsCheckerBox.setSelected(Preferences.getBoolean("pdex.warningsEnabled"));
-  codeCompletionBox.setSelected(Preferences.getBoolean("pdex.ccEnabled"));
-  codeCompletionTriggerBox.setSelected(Preferences.getBoolean("pdex.ccTriggerEnabled"));
+  codeCompletionBox.setSelected(Preferences.getBoolean("pdex.completion"));
+  codeCompletionTriggerBox.setSelected(Preferences.getBoolean("pdex.completion.trigger"));
+  codeCompletionTriggerBox.setEnabled(codeCompletionBox.isSelected());
+  importSuggestionsBox.setSelected(Preferences.getBoolean("pdex.importSuggestEnabled"));
   deletePreviousBox.setSelected(Preferences.getBoolean("export.delete_target_folder"));
   sketchbookLocationField.setText(Preferences.getSketchbookPath());
   checkUpdatesBox.setSelected(Preferences.getBoolean("update.check"));
@@ -14,12 +16,12 @@
   if (displayNum >= 0 && displayNum < displayCount) {
     displaySelectionBox.setSelectedIndex(displayNum);
   }
-  new Thread(new Runnable(){
+  EventQueue.invokeLater(new Runnable(){
     public void run(){
       initFontList();
     }
   }
-).start();
+);
   fontSizeField.setSelectedItem(Preferences.getInteger("editor.font.size"));
   consoleSizeField.setSelectedItem(Preferences.getInteger("console.font.size"));
   presentColor.setBackground(Preferences.getColor("run.present.bgcolor"));

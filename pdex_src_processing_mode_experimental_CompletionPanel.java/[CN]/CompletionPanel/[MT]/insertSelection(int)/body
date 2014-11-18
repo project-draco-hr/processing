@@ -1,0 +1,66 @@
+{
+  if (completionList.getSelectedValue() != null) {
+    try {
+      String currentSubword=fetchCurrentSubword();
+      int currentSubwordLen=currentSubword == null ? 0 : currentSubword.length();
+      String selectedSuggestion=((CompletionCandidate)completionList.getSelectedValue()).getCompletionString();
+      if (currentSubword != null) {
+        selectedSuggestion=selectedSuggestion.substring(currentSubwordLen);
+      }
+ else {
+        currentSubword="";
+      }
+      String completionString=((CompletionCandidate)completionList.getSelectedValue()).getCompletionString();
+      if (selectedSuggestion.endsWith(" )")) {
+        if (completionString.endsWith(" )")) {
+          completionString=completionString.substring(0,completionString.length() - 2) + ")";
+        }
+      }
+      boolean mouseClickOnOverloadedMethods=false;
+      if (completionSource == MOUSE_COMPLETION) {
+        if (completionString.endsWith("(")) {
+          mouseClickOnOverloadedMethods=true;
+        }
+      }
+      logE(subWord + " <= subword, Inserting suggestion=> " + selectedSuggestion+ " Current sub: "+ currentSubword);
+      if (currentSubword.length() > 0) {
+        textarea.getDocument().remove(insertionPosition - currentSubwordLen,currentSubwordLen);
+      }
+      textarea.getDocument().insertString(insertionPosition - currentSubwordLen,completionString,null);
+      if (selectedSuggestion.endsWith(")") && !selectedSuggestion.endsWith("()")) {
+        int x=selectedSuggestion.indexOf(',');
+        if (x == -1) {
+          textarea.setCaretPosition(textarea.getCaretPosition() - 1);
+        }
+ else {
+          textarea.setCaretPosition(insertionPosition + x);
+        }
+      }
+      log("Suggestion inserted: " + System.currentTimeMillis());
+      if (((CompletionCandidate)completionList.getSelectedValue()).getLabel().contains("...")) {
+      }
+ else {
+        hide();
+      }
+      if (mouseClickOnOverloadedMethods) {
+        SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
+          protected Object doInBackground() throws Exception {
+            editor.ta.fetchPhrase(null);
+            return null;
+          }
+        }
+;
+        worker.execute();
+      }
+      return true;
+    }
+ catch (    BadLocationException e1) {
+      e1.printStackTrace();
+    }
+catch (    Exception e) {
+      e.printStackTrace();
+    }
+    hide();
+  }
+  return false;
+}

@@ -3,13 +3,8 @@
     public void run(){
       try {
         factory=new ClassPathFactory();
-        StringBuffer tehPath=new StringBuffer(System.getProperty("java.class.path"));
-        if (Base.isMacOS()) {
-          tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + File.separator+ "bundle"+ File.separator+ "Classes"+ File.separator+ "classes.jar"+ File.pathSeparatorChar);
-        }
- else {
-          tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + File.separator+ "lib"+ File.separator+ "rt.jar"+ File.pathSeparatorChar);
-        }
+        StringBuilder tehPath=new StringBuilder(System.getProperty("java.class.path"));
+        tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + File.separator+ "lib"+ File.separator+ "rt.jar"+ File.pathSeparatorChar);
         if (errorCheckerService.classpathJars != null) {
 synchronized (errorCheckerService.classpathJars) {
             for (            URL jarPath : errorCheckerService.classpathJars) {

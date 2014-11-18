@@ -1,19 +1,6 @@
 {
-  if (currentConsole != null) {
-    currentConsole.message(new String(b,offset,length),err);
-  }
- else {
-    try {
-      if (err) {
-        systemErr.write(b);
-      }
- else {
-        systemOut.write(b);
-      }
-    }
- catch (    IOException e) {
-    }
-  }
+  if (console != null)   console.message(new String(b,offset,length),err);
+ else   if (currentConsole != null)   currentConsole.message(new String(b,offset,length),err);
   final OutputStream echo=err ? stderrFile : stdoutFile;
   if (echo != null) {
     try {

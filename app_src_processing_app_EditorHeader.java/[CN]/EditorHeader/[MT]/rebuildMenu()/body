@@ -9,44 +9,80 @@
     popup.setLightWeightPopupEnabled(true);
   }
   JMenuItem item;
-  item=Toolkit.newJMenuItemShift(Language.text("editor.header.new_tab"),'N');
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
+  InputMap mInputMap=editor.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+  ActionMap mActionMap=editor.getRootPane().getActionMap();
+  Action action;
+  String mapKey;
+  KeyStroke keyStroke;
+  item=Toolkit.newJMenuItemShift(Language.text("editor.header.new_tab"),KeyEvent.VK_N);
+  action=new AbstractAction(){
+    @Override public void actionPerformed(    ActionEvent e){
       editor.getSketch().handleNewCode();
+      editor.setWatcherSave();
     }
   }
-);
+;
+  mapKey="editor.header.new_tab";
+  keyStroke=KeyStroke.getKeyStroke(KeyEvent.VK_N,Toolkit.SHORTCUT_ALT_KEY_MASK);
+  mInputMap.put(keyStroke,mapKey);
+  mActionMap.put(mapKey,action);
+  item.addActionListener(action);
   menu.add(item);
   item=new JMenuItem(Language.text("editor.header.rename"));
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
+  action=new AbstractAction(){
+    @Override public void actionPerformed(    ActionEvent e){
       editor.getSketch().handleRenameCode();
     }
   }
-);
+;
+  item.addActionListener(action);
   menu.add(item);
-  item=new JMenuItem(Language.text("editor.header.delete"));
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
+  item=Toolkit.newJMenuItemShift(Language.text("editor.header.delete"),KeyEvent.VK_D);
+  action=new AbstractAction(){
+    @Override public void actionPerformed(    ActionEvent e){
       Sketch sketch=editor.getSketch();
       if (!Base.isMacOS() && editor.base.editors.size() == 1 && sketch.getCurrentCodeIndex() == 0) {
         Base.showWarning(Language.text("editor.header.delete.warning.title"),Language.text("editor.header.delete.warning.text"),null);
       }
  else {
         editor.getSketch().handleDeleteCode();
+        editor.setWatcherSave();
       }
     }
   }
-);
+;
+  mapKey="editor.header.delete";
+  keyStroke=KeyStroke.getKeyStroke(KeyEvent.VK_D,Toolkit.SHORTCUT_ALT_KEY_MASK);
+  mInputMap.put(keyStroke,mapKey);
+  mActionMap.put(mapKey,action);
+  item.addActionListener(action);
   menu.add(item);
   menu.addSeparator();
-  item=new JMenuItem(Language.text("editor.header.previous_tab"));
-  KeyStroke ctrlAltLeft=KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,Toolkit.SHORTCUT_ALT_KEY_MASK);
-  item.setAccelerator(ctrlAltLeft);
+  item=Toolkit.newJMenuItemAlt(Language.text("editor.header.previous_tab"),KeyEvent.VK_LEFT);
+  action=new AbstractAction(){
+    @Override public void actionPerformed(    ActionEvent e){
+      editor.getSketch().handlePrevCode();
+    }
+  }
+;
+  mapKey="editor.header.previous_tab";
+  keyStroke=KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,Toolkit.SHORTCUT_ALT_KEY_MASK);
+  mInputMap.put(keyStroke,mapKey);
+  mActionMap.put(mapKey,action);
+  item.addActionListener(action);
   menu.add(item);
-  item=new JMenuItem(Language.text("editor.header.next_tab"));
-  KeyStroke ctrlAltRight=KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,Toolkit.SHORTCUT_ALT_KEY_MASK);
-  item.setAccelerator(ctrlAltRight);
+  item=Toolkit.newJMenuItemAlt(Language.text("editor.header.next_tab"),KeyEvent.VK_RIGHT);
+  action=new AbstractAction(){
+    @Override public void actionPerformed(    ActionEvent e){
+      editor.getSketch().handleNextCode();
+    }
+  }
+;
+  mapKey="editor.header.next_tab";
+  keyStroke=KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,Toolkit.SHORTCUT_ALT_KEY_MASK);
+  mInputMap.put(keyStroke,mapKey);
+  mActionMap.put(mapKey,action);
+  item.addActionListener(action);
   menu.add(item);
   Sketch sketch=editor.getSketch();
   if (sketch != null) {

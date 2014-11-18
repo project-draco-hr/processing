@@ -1,24 +1,24 @@
 {
-  Hashtable table=new Hashtable();
+  Map<String,Object> map=new HashMap<String,Object>();
   String pieces[]=PApplet.split(path,File.pathSeparatorChar);
   for (int i=0; i < pieces.length; i++) {
     if (pieces[i].length() == 0)     continue;
     if (pieces[i].toLowerCase().endsWith(".jar") || pieces[i].toLowerCase().endsWith(".zip")) {
-      packageListFromZip(pieces[i],table);
+      packageListFromZip(pieces[i],map);
     }
  else {
       File dir=new File(pieces[i]);
       if (dir.exists() && dir.isDirectory()) {
-        packageListFromFolder(dir,null,table);
+        packageListFromFolder(dir,null,map);
       }
     }
   }
-  int tableCount=table.size();
-  String output[]=new String[tableCount];
+  int mapCount=map.size();
+  String output[]=new String[mapCount];
   int index=0;
-  Enumeration e=table.keys();
-  while (e.hasMoreElements()) {
-    output[index++]=((String)e.nextElement()).replace('/','.');
+  Set<String> set=map.keySet();
+  for (  String s : set) {
+    output[index++]=s.replace('/','.');
   }
   return output;
 }

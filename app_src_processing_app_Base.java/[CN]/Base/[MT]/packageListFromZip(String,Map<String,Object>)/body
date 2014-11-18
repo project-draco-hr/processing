@@ -1,0 +1,24 @@
+{
+  try {
+    ZipFile file=new ZipFile(filename);
+    Enumeration entries=file.entries();
+    while (entries.hasMoreElements()) {
+      ZipEntry entry=(ZipEntry)entries.nextElement();
+      if (!entry.isDirectory()) {
+        String name=entry.getName();
+        if (name.endsWith(".class")) {
+          int slash=name.lastIndexOf('/');
+          if (slash == -1)           continue;
+          String pname=name.substring(0,slash);
+          if (map.get(pname) == null) {
+            map.put(pname,new Object());
+          }
+        }
+      }
+    }
+    file.close();
+  }
+ catch (  IOException e) {
+    System.err.println("Ignoring " + filename + " ("+ e.getMessage()+ ")");
+  }
+}

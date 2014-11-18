@@ -27,10 +27,19 @@
  catch (    NumberFormatException e) {
       lastUpdated=0;
     }
+    String minRev=properties.get("minRevision");
+    if (minRev != null) {
+      minRevision=PApplet.parseInt(minRev,0);
+    }
+    String maxRev=properties.get("maxRevision");
+    if (maxRev != null) {
+      maxRevision=PApplet.parseInt(maxRev,0);
+    }
   }
  else {
     Base.log("No properties file at " + propertiesFile.getAbsolutePath());
     name=folder.getName();
     categories=defaultCategory();
   }
+  if (categories.contains(SPECIAL_CATEGORY_NAME))   validateSpecial();
 }

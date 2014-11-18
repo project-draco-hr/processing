@@ -2,8 +2,10 @@
   enableHyperlinks=alreadySelected;
   if (contrib != null) {
     updateButton.setVisible((contribListing.hasUpdates(contrib) && !contrib.isUpdateFlagged() && !contrib.isDeletionFlagged()) || isUpdateInProgress);
+    updateButton.setEnabled(!contribListing.hasListDownloadFailed());
   }
-  installRemoveButton.setVisible(isSelected() || installRemoveButton.getText().equals(Language.text("contributions.remove")) || isUpdateInProgress);
+  installRemoveButton.setVisible(isSelected() || installRemoveButton.getText().equals(Language.text("contrib.remove")) || isUpdateInProgress);
+  installRemoveButton.setEnabled(installRemoveButton.getText().equals(Language.text("contrib.remove")) || !contribListing.hasListDownloadFailed());
   reorganizePaneComponents();
 {
     JEditorPane editorPane=descriptionBlock;

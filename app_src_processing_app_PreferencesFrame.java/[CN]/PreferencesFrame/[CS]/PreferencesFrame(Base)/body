@@ -42,7 +42,7 @@
   Container languageBox=Box.createHorizontalBox();
   JLabel languageLabel=new JLabel(Language.text("preferences.language") + ": ");
   languageBox.add(languageLabel);
-  languageSelectionBox=new JComboBox();
+  languageSelectionBox=new JComboBox<String>();
   Map<String,String> languages=Language.getLanguages();
   String[] languageSelection=new String[languages.size()];
   languageSelection[0]=languages.get(Language.getLanguage());
@@ -52,7 +52,7 @@
       languageSelection[i++]=lang.getValue();
     }
   }
-  languageSelectionBox.setModel(new DefaultComboBoxModel(languageSelection));
+  languageSelectionBox.setModel(new DefaultComboBoxModel<String>(languageSelection));
   languageBox.add(languageSelectionBox);
   label=new JLabel(" (" + Language.text("preferences.requires_restart") + ")");
   languageBox.add(label);
@@ -65,7 +65,7 @@
   final String fontTip="<html>" + Language.text("preferences.editor_and_console_font.tip");
   fontLabel.setToolTipText(fontTip);
   fontBox.add(fontLabel);
-  fontSelectionBox=new JComboBox(new Object[]{Toolkit.getMonoFontName()});
+  fontSelectionBox=new JComboBox<String>(new String[]{Toolkit.getMonoFontName()});
   fontSelectionBox.setToolTipText(fontTip);
   fontSelectionBox.setEnabled(false);
   fontBox.add(fontSelectionBox);
@@ -152,11 +152,7 @@
     }
   }
 );
-  presentColor.addMouseListener(new MouseListener(){
-    @Override public void mouseReleased(    MouseEvent e){
-    }
-    @Override public void mousePressed(    MouseEvent e){
-    }
+  presentColor.addMouseListener(new MouseAdapter(){
     @Override public void mouseExited(    MouseEvent e){
       dialog.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
@@ -204,13 +200,24 @@
   pain.add(codeCompletionBox);
   d=codeCompletionBox.getPreferredSize();
   codeCompletionBox.setBounds(left,top,d.width + 10,d.height);
+  codeCompletionBox.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      codeCompletionTriggerBox.setEnabled(codeCompletionBox.isSelected());
+    }
+  }
+);
   int toggleLeft=left + d.width;
-  final String modifier=Base.isMacOS() ? "\u2318" : "Ctrl";
-  codeCompletionTriggerBox=new JCheckBox(Language.text("preferences.trigger_with") + " " + modifier+ "-"+ Language.text("preferences.cmd_space"));
+  codeCompletionTriggerBox=new JCheckBox(Language.text("preferences.trigger_with") + " Ctrl-" + Language.text("preferences.cmd_space"));
   pain.add(codeCompletionTriggerBox);
   d=codeCompletionTriggerBox.getPreferredSize();
   codeCompletionTriggerBox.setBounds(toggleLeft,top,d.width + 10,d.height);
   right=Math.max(right,toggleLeft + d.width);
+  top+=d.height + GUI_BETWEEN;
+  importSuggestionsBox=new JCheckBox(Language.text("preferences.suggest_imports"));
+  pain.add(importSuggestionsBox);
+  d=importSuggestionsBox.getPreferredSize();
+  importSuggestionsBox.setBounds(left,top,d.width + 10,d.height);
+  right=Math.max(right,left + d.width);
   top+=d.height + GUI_BETWEEN;
   Container memoryBox=Box.createHorizontalBox();
   memoryOverrideBox=new JCheckBox(Language.text("preferences.increase_max_memory") + ": ");
@@ -251,7 +258,7 @@
   final String tip="<html>" + Language.text("preferences.run_sketches_on_display.tip");
   displayLabel.setToolTipText(tip);
   displayBox.add(displayLabel);
-  displaySelectionBox=new JComboBox();
+  displaySelectionBox=new JComboBox<String>();
   updateDisplayList();
   displayBox.add(displaySelectionBox);
   pain.add(displayBox);
@@ -273,7 +280,7 @@
   label.setBounds(left,top,d.width,d.height);
   right=Math.max(right,left + d.width);
   top+=d.height;
-  label=new JLabel(Preferences.getSketchbookPath());
+  label=new JLabel(Preferences.getPreferencesPath());
   final JLabel clickable=label;
   label.addMouseListener(new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
