@@ -5,7 +5,8 @@
   int visibleLines=textArea.getVisibleLines();
   int line=textArea.getCaretLine();
   firstLine+=visibleLines;
-  if (firstLine + visibleLines >= lineCount - 1)   firstLine=lineCount - visibleLines;
+  if (firstLine >= lineCount)   firstLine-=visibleLines;
+ else   if (firstLine + visibleLines >= lineCount - 1)   firstLine=lineCount - visibleLines;
   textArea.setFirstLine(firstLine);
   int caret=textArea.getLineStartOffset(Math.min(textArea.getLineCount() - 1,line + visibleLines));
   if (select)   textArea.select(textArea.getMarkPosition(),caret);
