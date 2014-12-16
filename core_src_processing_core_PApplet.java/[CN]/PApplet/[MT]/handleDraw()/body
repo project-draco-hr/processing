@@ -4,6 +4,7 @@
       debug("g.canDraw() is false");
       return;
     }
+    int pquality=g.quality;
     insideDraw=true;
     g.beginDraw();
     if (recorder != null) {
@@ -31,6 +32,9 @@
       redraw=false;
     }
     g.endDraw();
+    if (pquality != g.quality) {
+      surface.setSmooth(g.quality);
+    }
     if (recorder != null) {
       recorder.endDraw();
     }
