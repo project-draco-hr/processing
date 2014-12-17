@@ -10,6 +10,7 @@
   File jarFolder=new File(destFolder,"lib");
   File dotAppFolder=null;
   String jvmRuntime="";
+  String jdkPath=null;
   if (exportPlatform == PConstants.MACOSX) {
     dotAppFolder=new File(destFolder,sketch.getName() + ".app");
     File contentsOrig=new File(Base.getJavaHome(),"../../../../..");
@@ -17,6 +18,7 @@
       File jdkFolder=new File(Base.getJavaHome(),"../../..");
       String jdkFolderName=jdkFolder.getCanonicalFile().getName();
       jvmRuntime="<key>JVMRuntime</key>\n    <string>" + jdkFolderName + "</string>";
+      jdkPath=new File(dotAppFolder,"Contents/PlugIns/" + jdkFolderName).getAbsolutePath();
     }
     File contentsFolder=new File(dotAppFolder,"Contents");
     contentsFolder.mkdirs();
@@ -47,19 +49,6 @@
     }
   }
   if (!jarFolder.exists())   jarFolder.mkdirs();
-  if (exportPlatform == PConstants.WINDOWS) {
-    if (exportBits == 64) {
-      File batFile=new File(destFolder,sketch.getName() + ".bat");
-      PrintWriter writer=PApplet.createWriter(batFile);
-      writer.println("@echo off");
-      writer.println("java -Djava.ext.dirs=lib -Djava.library.path=lib " + sketch.getName());
-      writer.flush();
-      writer.close();
-    }
- else {
-      Base.copyFile(mode.getContentFile("application/template.exe"),new File(destFolder,sketch.getName() + ".exe"));
-    }
-  }
   Vector<String> jarListVector=new Vector<String>();
   FileOutputStream zipOutputFile=new FileOutputStream(new File(jarFolder,sketch.getName() + ".jar"));
   ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
@@ -110,7 +99,7 @@
   }
   String jarList[]=new String[jarListVector.size()];
   jarListVector.copyInto(jarList);
-  StringBuffer exportClassPath=new StringBuffer();
+  StringBuilder exportClassPath=new StringBuilder();
   if (exportPlatform == PConstants.MACOSX) {
     for (int i=0; i < jarList.length; i++) {
       if (i != 0)       exportClassPath.append(":");
@@ -134,31 +123,35 @@
     runOptions.add("-Xms" + Preferences.get("run.options.memory.initial") + "m");
     runOptions.add("-Xmx" + Preferences.get("run.options.memory.maximum") + "m");
   }
-  StringBuilder jvmOptionsList=new StringBuilder();
-  for (  String opt : runOptions) {
-    jvmOptionsList.append("      <string>");
-    jvmOptionsList.append(opt);
-    jvmOptionsList.append("</string>");
-    jvmOptionsList.append('\n');
+  runOptions.add("-Djna.nosys=true");
+  if (exportPlatform == PConstants.WINDOWS) {
+    runOptions.add("-Djava.library.path=\"%EXEDIR%\\lib\"");
   }
   if (exportPlatform == PConstants.MACOSX) {
+    StringBuilder runOptionsXML=new StringBuilder();
+    for (    String opt : runOptions) {
+      runOptionsXML.append("      <string>");
+      runOptionsXML.append(opt);
+      runOptionsXML.append("</string>");
+      runOptionsXML.append('\n');
+    }
     String PLIST_TEMPLATE="Info.plist.tmpl";
     File plistTemplate=new File(sketch.getFolder(),PLIST_TEMPLATE);
     if (!plistTemplate.exists()) {
-      plistTemplate=mode.getContentFile("application/Info.plist.tmpl");
+      plistTemplate=mode.getContentFile("application/" + PLIST_TEMPLATE);
     }
     File plistFile=new File(dotAppFolder,"Contents/Info.plist");
     PrintWriter pw=PApplet.createWriter(plistFile);
     String lines[]=PApplet.loadStrings(plistTemplate);
     for (int i=0; i < lines.length; i++) {
       if (lines[i].indexOf("@@") != -1) {
-        StringBuffer sb=new StringBuffer(lines[i]);
+        StringBuilder sb=new StringBuilder(lines[i]);
         int index=0;
         while ((index=sb.indexOf("@@jvm_runtime@@")) != -1) {
           sb.replace(index,index + "@@jvm_runtime@@".length(),jvmRuntime);
         }
         while ((index=sb.indexOf("@@jvm_options_list@@")) != -1) {
-          sb.replace(index,index + "@@jvm_options_list@@".length(),jvmOptionsList.toString());
+          sb.replace(index,index + "@@jvm_options_list@@".length(),runOptionsXML.toString());
         }
         while ((index=sb.indexOf("@@sketch@@")) != -1) {
           sb.replace(index,index + "@@sketch@@".length(),sketch.getName());
@@ -172,22 +165,66 @@
     }
     pw.flush();
     pw.close();
+    if (Base.isMacOS() && new File("/usr/bin/codesign_allocate").exists()) {
+      if (embedJava) {
+        ProcessHelper.ffs("codesign","--force","--sign","-",jdkPath);
+      }
+      String appPath=dotAppFolder.getAbsolutePath();
+      ProcessHelper.ffs("codesign","--force","--sign","-",appPath);
+    }
   }
  else   if (exportPlatform == PConstants.WINDOWS) {
-    File argsFile=new File(destFolder + "/lib/args.txt");
-    PrintWriter pw=PApplet.createWriter(argsFile);
-    pw.print(runOptions + "\r\n");
-    pw.print(sketch.getName() + "\r\n");
-    pw.print(exportClassPath);
-    pw.flush();
-    pw.close();
+    File buildFile=new File(destFolder,"launch4j-build.xml");
+    File configFile=new File(destFolder,"launch4j-config.xml");
+    XML project=new XML("project");
+    XML target=project.addChild("target");
+    target.setString("name","windows");
+    XML taskdef=target.addChild("taskdef");
+    taskdef.setString("name","launch4j");
+    taskdef.setString("classname","net.sf.launch4j.ant.Launch4jTask");
+    String launchPath=mode.getContentFile("application/launch4j").getAbsolutePath();
+    taskdef.setString("classpath",launchPath + "/launch4j.jar:" + launchPath+ "/lib/xstream.jar");
+    XML launch4j=target.addChild("launch4j");
+    launch4j.setString("configFile",configFile.getAbsolutePath());
+    XML config=new XML("launch4jConfig");
+    config.addChild("headerType").setContent("gui");
+    config.addChild("dontWrapJar").setContent("true");
+    config.addChild("downloadUrl").setContent("http://java.com/download");
+    File exeFile=new File(destFolder,sketch.getName() + ".exe");
+    config.addChild("outfile").setContent(exeFile.getAbsolutePath());
+    File iconFile=mode.getContentFile("application/sketch.ico");
+    config.addChild("icon").setContent(iconFile.getAbsolutePath());
+    XML clazzPath=config.addChild("classPath");
+    clazzPath.addChild("mainClass").setContent(sketch.getName());
+    for (    String jarName : jarList) {
+      clazzPath.addChild("cp").setContent("lib/" + jarName);
+    }
+    XML jre=config.addChild("jre");
+    if (embedJava) {
+      jre.addChild("path").setContent("java");
+    }
+    jre.addChild("minVersion").setContent("1.7.0_40");
+    for (    String opt : runOptions) {
+      jre.addChild("opt").setContent(opt);
+    }
+    config.save(configFile);
+    project.save(buildFile);
+    if (!buildWindowsLauncher(buildFile,"windows")) {
+      return false;
+    }
+    configFile.delete();
+    buildFile.delete();
   }
  else {
     File shellScript=new File(destFolder,sketch.getName());
     PrintWriter pw=PApplet.createWriter(shellScript);
     pw.print("#!/bin/sh\n\n");
     pw.print("APPDIR=$(dirname \"$0\")\n");
-    pw.print("java " + Preferences.get("run.options") + " -Djava.library.path=\"$APPDIR:$APPDIR/lib\""+ " -cp \""+ exportClassPath+ "\""+ " "+ sketch.getName()+ " \"$@\"\n");
+    if (embedJava) {
+      pw.print("$APPDIR/java/bin/");
+    }
+    String runOptionsStr=PApplet.join(runOptions.toArray(new String[0])," ");
+    pw.print("java " + runOptionsStr + " -Djava.library.path=\"$APPDIR:$APPDIR/lib\""+ " -cp \""+ exportClassPath+ "\""+ " "+ sketch.getName()+ " \"$@\"\n");
     pw.flush();
     pw.close();
     String shellPath=shellScript.getAbsolutePath();

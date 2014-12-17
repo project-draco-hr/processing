@@ -5,7 +5,7 @@
   String[] sourceFiles=Base.listFiles(build.getSrcFolder(),false,".java");
   String[] command=PApplet.concat(baseCommand,sourceFiles);
   try {
-    final StringBuffer errorBuffer=new StringBuffer();
+    final StringBuilder errorBuffer=new StringBuilder();
     Writer internalWriter=new Writer(){
       public void write(      char[] buf,      int off,      int len){
         errorBuffer.append(buf,off,len);
@@ -20,9 +20,9 @@
     PrintWriter outWriter=new PrintWriter(System.out);
     ClassLoader loader=build.mode.getClassLoader();
     try {
-      Class batchClass=Class.forName("org.eclipse.jdt.core.compiler.batch.BatchCompiler",false,loader);
-      Class progressClass=Class.forName("org.eclipse.jdt.core.compiler.CompilationProgress",false,loader);
-      Class[] compileArgs=new Class[]{String[].class,PrintWriter.class,PrintWriter.class,progressClass};
+      Class<?> batchClass=Class.forName("org.eclipse.jdt.core.compiler.batch.BatchCompiler",false,loader);
+      Class<?> progressClass=Class.forName("org.eclipse.jdt.core.compiler.CompilationProgress",false,loader);
+      Class<?>[] compileArgs=new Class<?>[]{String[].class,PrintWriter.class,PrintWriter.class,progressClass};
       Method compileMethod=batchClass.getMethod("compile",compileArgs);
       success=(Boolean)compileMethod.invoke(null,new Object[]{command,outWriter,writer,null});
     }

@@ -1,5 +1,5 @@
 {
-  String sketchbookPath=Preferences.get("sketchbook.path");
+  String sketchbookPath=Preferences.getSketchbookPath();
   if (sketchbookPath != null) {
     sketchbookFolder=new File(sketchbookPath);
     if (!sketchbookFolder.exists()) {
@@ -9,7 +9,7 @@
   }
   if (sketchbookFolder == null) {
     sketchbookFolder=getDefaultSketchbookFolder();
-    Preferences.set("sketchbook.path",sketchbookFolder.getAbsolutePath());
+    Preferences.setSketchbookPath(sketchbookFolder.getAbsolutePath());
     if (!sketchbookFolder.exists()) {
       sketchbookFolder.mkdirs();
     }
@@ -17,4 +17,5 @@
   getSketchbookLibrariesFolder().mkdir();
   getSketchbookToolsFolder().mkdir();
   getSketchbookModesFolder().mkdir();
+  getSketchbookExamplesFolder().mkdir();
 }

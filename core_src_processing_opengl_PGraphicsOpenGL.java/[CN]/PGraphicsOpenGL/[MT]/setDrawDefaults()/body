@@ -32,7 +32,12 @@
   }
   pgl.disable(PGL.POLYGON_SMOOTH);
   if (sized) {
-    background(backgroundColor);
+    if (primarySurface) {
+      background(backgroundColor);
+    }
+ else {
+      background(0x00 << 24 | (backgroundColor & 0xFFFFFF));
+    }
     defaultPerspective();
     defaultCamera();
     sized=false;
@@ -50,7 +55,8 @@
   pgl.frontFace(PGL.CW);
   pgl.disable(PGL.CULL_FACE);
   pgl.activeTexture(PGL.TEXTURE0);
-  normalX=normalY=normalZ=0;
+  normalX=normalY=0;
+  normalZ=1;
   pgl.depthMask(true);
   pgl.clearDepth(1);
   pgl.clearStencil(0);
@@ -72,5 +78,5 @@
   clearColorBuffer0=clearColorBuffer;
   clearColorBuffer=false;
   modified=false;
-  setgetPixels=false;
+  arePixelsUpToDate=false;
 }

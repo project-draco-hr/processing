@@ -1,0 +1,21 @@
+{
+  List<VariableNode> vars=new ArrayList<VariableNode>();
+  if (depth <= maxDepth) {
+    if (value instanceof ArrayReference) {
+      return getArrayFields((ArrayReference)value);
+    }
+ else     if (value instanceof ObjectReference) {
+      ObjectReference obj=(ObjectReference)value;
+      List<Field> fields=includeInherited ? obj.referenceType().visibleFields() : obj.referenceType().fields();
+      for (      Field field : fields) {
+        Value val=obj.getValue(field);
+        VariableNode var=new FieldNode(field.name(),field.typeName(),val,field,obj);
+        if (val != null) {
+          var.addChildren(getFields(val,depth + 1,maxDepth,includeInherited));
+        }
+        vars.add(var);
+      }
+    }
+  }
+  return vars;
+}

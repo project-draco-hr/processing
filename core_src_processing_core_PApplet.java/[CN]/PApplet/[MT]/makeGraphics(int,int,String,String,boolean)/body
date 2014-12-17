@@ -1,5 +1,4 @@
 {
-  String openglError=external ? "Before using OpenGL, first select " + "Import Library > OpenGL from the Sketch menu." : "The Java classpath and native library path is not " + "properly set for using the OpenGL library.";
   if (!primary && !g.isGL()) {
     if (renderer.equals(P2D)) {
       throw new RuntimeException("createGraphics() with P2D requires size() to use P2D or P3D");
@@ -21,21 +20,23 @@
  catch (  InvocationTargetException ite) {
     String msg=ite.getTargetException().getMessage();
     if ((msg != null) && (msg.indexOf("no jogl in java.library.path") != -1)) {
-      throw new RuntimeException(openglError + " (The native library is missing.)");
+      throw new RuntimeException("The jogl library folder needs to be " + "specified with -Djava.library.path=/path/to/jogl");
     }
  else {
       ite.getTargetException().printStackTrace();
       Throwable target=ite.getTargetException();
-      if (platform == MACOSX)       target.printStackTrace(System.out);
+      if (platform == MACOSX) {
+        target.printStackTrace(System.out);
+      }
       throw new RuntimeException(target.getMessage());
     }
   }
 catch (  ClassNotFoundException cnfe) {
-    if (cnfe.getMessage().indexOf("processing.opengl.PGraphicsOpenGL") != -1) {
-      throw new RuntimeException(openglError + " (The library .jar file is missing.)");
+    if (external) {
+      throw new RuntimeException("You need to use \"Import Library\" " + "to add " + renderer + " to your sketch.");
     }
  else {
-      throw new RuntimeException("You need to use \"Import Library\" " + "to add " + renderer + " to your sketch.");
+      throw new RuntimeException("The " + renderer + " renderer is not in the class path.");
     }
   }
 catch (  Exception e) {
@@ -50,7 +51,9 @@ catch (  Exception e) {
       }
     }
  else {
-      if (platform == MACOSX)       e.printStackTrace(System.out);
+      if (platform == MACOSX) {
+        e.printStackTrace(System.out);
+      }
       throw new RuntimeException(e.getMessage());
     }
   }

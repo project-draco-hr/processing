@@ -3,7 +3,8 @@
     requestFocusInWindow();
     return;
   }
-  if (event.isPopupTrigger() && (popup != null)) {
+  boolean windowsRightClick=Base.isWindows() && (event.getButton() == MouseEvent.BUTTON3);
+  if ((event.isPopupTrigger() || windowsRightClick) && (popup != null)) {
     popup.show(painter,event.getX(),event.getY());
     return;
   }

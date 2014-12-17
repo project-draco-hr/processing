@@ -20,7 +20,7 @@
     }
   }
  catch (  IncompatibleThreadStateException e) {
-    e.printStackTrace();
+    e.printStackTrace(sketchErr);
   }
   try {
     Method method=((ClassType)or.referenceType()).concreteMethodByName("getStackTrace","()[Ljava/lang/StackTraceElement;");
@@ -29,7 +29,7 @@
       ObjectReference ref=(ObjectReference)val;
       method=((ClassType)ref.referenceType()).concreteMethodByName("getFileName","()Ljava/lang/String;");
       StringReference strref=(StringReference)ref.invokeMethod(thread,method,new ArrayList<Value>(),ObjectReference.INVOKE_SINGLE_THREADED);
-      String filename=strref.value();
+      String filename=strref == null ? "Unknown Source" : strref.value();
       method=((ClassType)ref.referenceType()).concreteMethodByName("getLineNumber","()I");
       IntegerValue intval=(IntegerValue)ref.invokeMethod(thread,method,new ArrayList<Value>(),ObjectReference.INVOKE_SINGLE_THREADED);
       int lineNumber=intval.intValue() - 1;
@@ -42,7 +42,7 @@
     or.invokeMethod(thread,method,new ArrayList<Value>(),ObjectReference.INVOKE_SINGLE_THREADED);
   }
  catch (  Exception e) {
-    e.printStackTrace();
+    e.printStackTrace(sketchErr);
   }
   SketchException rex=new SketchException(message);
   rex.hideStackTrace();

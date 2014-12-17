@@ -1,29 +1,31 @@
 {
+  newName=newName.trim();
+  if (newName.length() == 0) {
+    return;
+  }
   ensureExistence();
   if (newName.indexOf('.') == -1) {
-    newName+="." + mode.getDefaultExtension();
+    newName+="." + (renamingCode ? mode.getDefaultExtension() : mode.getModuleExtension());
   }
   if (renamingCode) {
     if (newName.equalsIgnoreCase(current.getFileName())) {
       return;
     }
   }
-  newName=newName.trim();
-  if (newName.equals(""))   return;
-  int dot=newName.indexOf('.');
-  if (dot == 0) {
-    Base.showWarning("Problem with rename","The name cannot start with a period.",null);
+  if (newName.startsWith(".")) {
+    Base.showWarning("Problem with rename","The name cannot start with a period.");
     return;
   }
+  int dot=newName.lastIndexOf('.');
   String newExtension=newName.substring(dot + 1).toLowerCase();
   if (!mode.validExtension(newExtension)) {
-    Base.showWarning("Problem with rename","\"." + newExtension + "\""+ "is not a valid extension.",null);
+    Base.showWarning("Problem with rename","\"." + newExtension + "\""+ "is not a valid extension.");
     return;
   }
   if (!mode.isDefaultExtension(newExtension)) {
     if (renamingCode) {
       if (current == code[0]) {
-        Base.showWarning("Problem with rename","The first tab cannot be a ." + newExtension + " file.\n"+ "(It may be time for your to graduate to a\n"+ "\"real\" programming environment, hotshot.)",null);
+        Base.showWarning("Problem with rename","The first tab cannot be a ." + newExtension + " file.\n"+ "(It may be time for you to graduate to a\n"+ "\"real\" programming environment, hotshot.)");
         return;
       }
     }
@@ -35,7 +37,7 @@
   }
   if (!(renamingCode && sanitaryName.equals(current.getPrettyName()))) {
     for (    SketchCode c : code) {
-      if (sanitaryName.equalsIgnoreCase(c.getPrettyName())) {
+      if (c != current && sanitaryName.equalsIgnoreCase(c.getPrettyName())) {
         Base.showMessage("Nope","A file named \"" + c.getFileName() + "\" already exists at\n"+ "\""+ folder.getAbsolutePath()+ "\"");
         return;
       }
@@ -47,18 +49,18 @@
       String folderName=newName.substring(0,newName.indexOf('.'));
       File newFolder=new File(folder.getParentFile(),folderName);
       if (newFolder.exists()) {
-        Base.showWarning("Cannot Rename","Sorry, a sketch (or folder) named " + "\"" + newName + "\" already exists.",null);
+        Base.showWarning("Cannot Rename","Sorry, a sketch (or folder) named " + "\"" + newName + "\" already exists.");
         return;
       }
       boolean success=folder.renameTo(newFolder);
       if (!success) {
-        Base.showWarning("Error","Could not rename the sketch folder.",null);
+        Base.showWarning("Error","Could not rename the sketch folder.");
         return;
       }
       current.setFolder(newFolder);
       newFile=new File(newFolder,newName);
       if (!current.renameTo(newFile,newExtension)) {
-        Base.showWarning("Error","Could not rename \"" + current.getFileName() + "\" to \""+ newFile.getName()+ "\"",null);
+        Base.showWarning("Error","Could not rename \"" + current.getFileName() + "\" to \""+ newFile.getName()+ "\"");
         return;
       }
       for (int i=1; i < codeCount; i++) {
@@ -68,7 +70,7 @@
     }
  else {
       if (!current.renameTo(newFile,newExtension)) {
-        Base.showWarning("Error","Could not rename \"" + current.getFileName() + "\" to \""+ newFile.getName()+ "\"",null);
+        Base.showWarning("Error","Could not rename \"" + current.getFileName() + "\" to \""+ newFile.getName()+ "\"");
         return;
       }
     }

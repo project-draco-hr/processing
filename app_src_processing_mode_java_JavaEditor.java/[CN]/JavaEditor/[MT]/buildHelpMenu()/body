@@ -1,8 +1,8 @@
 {
-  JMenu menu=new JMenu("Help ");
+  JMenu menu=new JMenu(Language.text("menu.help"));
   JMenuItem item;
   if (!Base.isMacOS()) {
-    item=new JMenuItem("About Processing");
+    item=new JMenuItem(Language.text("menu.help.about"));
     item.addActionListener(new ActionListener(){
       public void actionPerformed(      ActionEvent e){
         new About(JavaEditor.this);
@@ -11,7 +11,7 @@
 );
     menu.add(item);
   }
-  item=new JMenuItem("Environment");
+  item=new JMenuItem(Language.text("menu.help.environment"));
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       showReference("environment" + File.separator + "index.html");
@@ -19,7 +19,7 @@
   }
 );
   menu.add(item);
-  item=new JMenuItem("Reference");
+  item=new JMenuItem(Language.text("menu.help.reference"));
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       showReference("index.html");
@@ -27,7 +27,7 @@
   }
 );
   menu.add(item);
-  item=Toolkit.newJMenuItemShift("Find in Reference",'F');
+  item=Toolkit.newJMenuItemShift(Language.text("menu.help.find_in_reference"),'F');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       if (textarea.isSelectionActive()) {
@@ -38,45 +38,106 @@
 );
   menu.add(item);
   menu.addSeparator();
-  item=new JMenuItem("Online");
+  final JMenu libRefSubmenu=new JMenu(Language.text("menu.help.libraries_reference"));
+  libRefSubmenu.addMenuListener(new MenuListener(){
+    @Override public void menuSelected(    MenuEvent e){
+      boolean isCoreLibMenuItemAdded=false;
+      boolean isContribLibMenuItemAdded=false;
+      isCoreLibMenuItemAdded=addLibReferencesToSubMenu(mode.coreLibraries,libRefSubmenu);
+      if (isCoreLibMenuItemAdded && !mode.contribLibraries.isEmpty())       libRefSubmenu.addSeparator();
+      isContribLibMenuItemAdded=addLibReferencesToSubMenu(mode.contribLibraries,libRefSubmenu);
+      if (!isContribLibMenuItemAdded && !isCoreLibMenuItemAdded) {
+        JMenuItem emptyMenuItem=new JMenuItem(Language.text("menu.help.empty"));
+        emptyMenuItem.setEnabled(false);
+        emptyMenuItem.setFocusable(false);
+        emptyMenuItem.setFocusPainted(false);
+        libRefSubmenu.add(emptyMenuItem);
+      }
+ else       if (!isContribLibMenuItemAdded && !mode.coreLibraries.isEmpty()) {
+        libRefSubmenu.removeAll();
+        addLibReferencesToSubMenu(mode.coreLibraries,libRefSubmenu);
+      }
+    }
+    @Override public void menuDeselected(    MenuEvent e){
+      libRefSubmenu.removeAll();
+    }
+    @Override public void menuCanceled(    MenuEvent e){
+      menuDeselected(e);
+    }
+  }
+);
+  menu.add(libRefSubmenu);
+  final JMenu toolRefSubmenu=new JMenu(Language.text("menu.help.tools_reference"));
+  toolRefSubmenu.addMenuListener(new MenuListener(){
+    @Override public void menuSelected(    MenuEvent e){
+      boolean isCoreToolMenuItemAdded=false;
+      boolean isContribToolMenuItemAdded=false;
+      isCoreToolMenuItemAdded=addToolReferencesToSubMenu(getCoreTools(),toolRefSubmenu);
+      if (isCoreToolMenuItemAdded && !contribTools.isEmpty())       toolRefSubmenu.addSeparator();
+      isContribToolMenuItemAdded=addToolReferencesToSubMenu(contribTools,toolRefSubmenu);
+      if (!isContribToolMenuItemAdded && !isCoreToolMenuItemAdded) {
+        toolRefSubmenu.removeAll();
+        final JMenuItem emptyMenuItem=new JMenuItem(Language.text("menu.help.empty"));
+        emptyMenuItem.setEnabled(false);
+        emptyMenuItem.setBorderPainted(false);
+        emptyMenuItem.setFocusable(false);
+        emptyMenuItem.setFocusPainted(false);
+        toolRefSubmenu.add(emptyMenuItem);
+      }
+ else       if (!isContribToolMenuItemAdded && !contribTools.isEmpty()) {
+        toolRefSubmenu.removeAll();
+        addToolReferencesToSubMenu(getCoreTools(),toolRefSubmenu);
+      }
+    }
+    @Override public void menuDeselected(    MenuEvent e){
+      toolRefSubmenu.removeAll();
+    }
+    @Override public void menuCanceled(    MenuEvent e){
+      menuDeselected(e);
+    }
+  }
+);
+  menu.add(toolRefSubmenu);
+  menu.addSeparator();
+  item=new JMenuItem(Language.text("menu.help.online"));
   item.setEnabled(false);
   menu.add(item);
-  item=new JMenuItem("Getting Started");
+  item=new JMenuItem(Language.text("menu.help.getting_started"));
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Base.openURL("http://processing.org/learning/gettingstarted/");
+      Base.openURL(Language.text("menu.help.getting_started.url"));
     }
   }
 );
   menu.add(item);
-  item=new JMenuItem("Troubleshooting");
+  item=new JMenuItem(Language.text("menu.help.troubleshooting"));
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Base.openURL("http://wiki.processing.org/w/Troubleshooting");
+      Base.openURL(Language.text("menu.help.troubleshooting.url"));
     }
   }
 );
   menu.add(item);
-  item=new JMenuItem("Frequently Asked Questions");
+  item=new JMenuItem(Language.text("menu.help.faq"));
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Base.openURL("http://wiki.processing.org/w/FAQ");
+      Base.openURL(Language.text("menu.help.faq.url"));
     }
   }
 );
   menu.add(item);
-  item=new JMenuItem("The Processing Foundation");
+  item=new JMenuItem(Language.text("menu.help.foundation"));
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Base.openURL("http://processing.org/foundation/");
+      Base.openURL(Language.text("menu.help.foundation.url"));
     }
   }
 );
   menu.add(item);
-  item=new JMenuItem("Visit Processing.org");
+  item=new JMenuItem(Language.text("menu.help.visit"));
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Base.openURL("http://processing.org/");
+      Base.openURL(Language.text("menu.help.visit.url"));
     }
   }
 );

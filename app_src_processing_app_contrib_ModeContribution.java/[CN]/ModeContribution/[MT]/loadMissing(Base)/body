@@ -21,4 +21,12 @@ catch (        Throwable e) {
       }
     }
   }
+  final String useMode=System.getProperty("usemode");
+  if (useMode != null) {
+    final String[] modeInfo=useMode.split(":",2);
+    final String modeClass=modeInfo[0];
+    final String modeResourcePath=modeInfo[1];
+    System.out.println("Attempting to load " + modeClass + " with resources at "+ modeResourcePath);
+    contribModes.add(ModeContribution.load(base,new File(modeResourcePath),modeClass));
+  }
 }

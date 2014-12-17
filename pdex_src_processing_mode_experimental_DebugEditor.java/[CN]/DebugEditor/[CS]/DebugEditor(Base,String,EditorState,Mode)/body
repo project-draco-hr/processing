@@ -1,0 +1,38 @@
+{
+  super(base,path,state,mode);
+  dmode=(ExperimentalMode)mode;
+  dbg=new Debugger(this);
+  vi=new VariableInspector(this);
+  ta=(TextArea)textarea;
+  JMenuItem showUsageItem=new JMenuItem("Show Usage..");
+  showUsageItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleShowUsage();
+    }
+  }
+);
+  ta.getRightClickPopup().add(showUsageItem);
+  JMenuItem renameItem=new JMenuItem("Rename..");
+  renameItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleRefactor();
+    }
+  }
+);
+  ta.getRightClickPopup().add(renameItem);
+  Toolkit.setMenuMnemonics(ta.getRightClickPopup());
+  ExperimentalMode theme=dmode;
+  breakpointColor=theme.getThemeColor("breakpoint.bgcolor",breakpointColor);
+  breakpointMarkerColor=theme.getThemeColor("breakpoint.marker.color",breakpointMarkerColor);
+  currentLineColor=theme.getThemeColor("currentline.bgcolor",currentLineColor);
+  currentLineMarkerColor=theme.getThemeColor("currentline.marker.color",currentLineMarkerColor);
+  for (  LineID lineID : stripBreakpointComments()) {
+    dbg.setBreakpoint(lineID);
+  }
+  getSketch().setModified(false);
+  checkForJavaTabs();
+  initializeErrorChecker();
+  ta.setECSandThemeforTextArea(errorCheckerService,dmode);
+  addXQModeUI();
+  debugToolbarEnabled=new AtomicBoolean(false);
+}

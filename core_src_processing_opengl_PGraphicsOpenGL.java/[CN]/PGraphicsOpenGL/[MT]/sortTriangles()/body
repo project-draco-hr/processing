@@ -1,0 +1,48 @@
+{
+  if (sortedPolyTriangles == null) {
+    sortedPolyTriangles=new Triangle[512];
+  }
+  float[] vertices=tessGeo.polyVertices;
+  short[] indices=tessGeo.polyIndices;
+  float[] src0={0,0,0,0};
+  float[] src1={0,0,0,0};
+  float[] src2={0,0,0,0};
+  float[] pt0={0,0,0,0};
+  float[] pt1={0,0,0,0};
+  float[] pt2={0,0,0,0};
+  sortedTriangleCount=0;
+  for (int i=0; i < texCache.size; i++) {
+    PImage textureImage=texCache.getTextureImage(i);
+    int first=texCache.firstCache[i];
+    int last=texCache.lastCache[i];
+    IndexCache cache=tessGeo.polyIndexCache;
+    for (int n=first; n <= last; n++) {
+      int ioffset=n == first ? texCache.firstIndex[i] : cache.indexOffset[n];
+      int icount=n == last ? texCache.lastIndex[i] - ioffset + 1 : cache.indexOffset[n] + cache.indexCount[n] - ioffset;
+      int voffset=cache.vertexOffset[n];
+      for (int tr=ioffset / 3; tr < (ioffset + icount) / 3; tr++) {
+        if (sortedPolyTriangles.length == sortedTriangleCount) {
+          int newSize=sortedTriangleCount << 1;
+          Triangle[] temp=new Triangle[newSize];
+          PApplet.arrayCopy(sortedPolyTriangles,0,temp,0,newSize);
+          sortedPolyTriangles=temp;
+        }
+        int i0=voffset + indices[3 * tr + 0];
+        int i1=voffset + indices[3 * tr + 1];
+        int i2=voffset + indices[3 * tr + 2];
+        PApplet.arrayCopy(vertices,4 * i0,src0,0,4);
+        PApplet.arrayCopy(vertices,4 * i1,src1,0,4);
+        PApplet.arrayCopy(vertices,4 * i2,src2,0,4);
+        modelview.mult(src0,pt0);
+        modelview.mult(src1,pt1);
+        modelview.mult(src2,pt2);
+        float[] pos=new float[]{(pt0[X] + pt1[X] + pt2[X]) / 3,(pt0[Y] + pt1[Y] + pt2[Y]) / 3,(pt0[Z] + pt1[Z] + pt2[Z]) / 3};
+        float d=PApplet.dist(0f,0f,0f,pos[0],pos[1],pos[2]);
+        Triangle tri=new Triangle(i0,i1,i2,textureImage,d);
+        sortedPolyTriangles[sortedTriangleCount]=tri;
+        sortedTriangleCount++;
+      }
+    }
+  }
+  quickSortTris(0,sortedTriangleCount - 1);
+}

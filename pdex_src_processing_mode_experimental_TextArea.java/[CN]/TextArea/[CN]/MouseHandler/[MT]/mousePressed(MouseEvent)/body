@@ -1,0 +1,19 @@
+{
+  if (me.getX() < getGutterWidth()) {
+    if (me.getButton() == MouseEvent.BUTTON1 && me.getClickCount() == 2) {
+      int line=me.getY() / painter.getFontMetrics().getHeight() + firstLine;
+      if (line >= 0 && line <= getLineCount() - 1) {
+        editor.gutterDblClicked(line);
+      }
+    }
+    return;
+  }
+  if (me.getButton() == MouseEvent.BUTTON3) {
+    if (!editor.hasJavaTabs) {
+      fetchPhrase(me);
+    }
+  }
+  for (  MouseListener ml : mouseListeners) {
+    ml.mousePressed(me);
+  }
+}

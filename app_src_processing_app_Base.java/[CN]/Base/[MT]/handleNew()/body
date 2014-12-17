@@ -39,6 +39,9 @@
     if (!newbieFile.createNewFile()) {
       throw new IOException(newbieFile + " already exists.");
     }
+    if (!nextMode.equals(getDefaultMode())) {
+      saveModeSettings(new File(newbieDir,"sketch.properties"),nextMode);
+    }
     String path=newbieFile.getAbsolutePath();
     handleOpen(path,true);
   }

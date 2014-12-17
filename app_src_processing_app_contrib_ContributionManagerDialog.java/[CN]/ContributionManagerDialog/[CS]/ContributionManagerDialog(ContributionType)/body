@@ -1,10 +1,26 @@
 {
   if (type == null) {
-    title="Update Manager";
+    title=Language.text("contrib.manager_title.update");
     filter=ContributionType.createUpdateFilter();
+    compatibleCheckboxLabel=Language.text("contrib.show_only_compatible.update");
   }
  else {
-    title=type.getTitle() + " Manager";
+    if (type == ContributionType.MODE) {
+      title=Language.text("contrib.manager_title.mode");
+      compatibleCheckboxLabel=Language.text("contrib.show_only_compatible.mode");
+    }
+ else     if (type == ContributionType.TOOL) {
+      title=Language.text("contrib.manager_title.tool");
+      compatibleCheckboxLabel=Language.text("contrib.show_only_compatible.tool");
+    }
+ else     if (type == ContributionType.LIBRARY) {
+      title=Language.text("contrib.manager_title.library");
+      compatibleCheckboxLabel=Language.text("contrib.show_only_compatible.library");
+    }
+ else     if (type == ContributionType.EXAMPLES) {
+      title=Language.text("contrib.manager_title.examples");
+      compatibleCheckboxLabel=Language.text("contrib.show_only_compatible.examples");
+    }
     filter=type.createFilter();
   }
   contribListing=ContributionListing.getInstance();

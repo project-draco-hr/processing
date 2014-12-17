@@ -16,12 +16,12 @@
     cropped=true;
     y=0;
   }
-  if (x + w > width) {
-    w=width - x;
+  if (x + w > pixelWidth) {
+    w=pixelWidth - x;
     cropped=true;
   }
-  if (y + h > height) {
-    h=height - y;
+  if (y + h > pixelHeight) {
+    h=pixelHeight - y;
     cropped=true;
   }
   if (w < 0) {
@@ -34,7 +34,7 @@
   if (cropped && format == RGB) {
     targetFormat=ARGB;
   }
-  PImage target=new PImage(targetWidth,targetHeight,targetFormat);
+  PImage target=new PImage(targetWidth / pixelFactor,targetHeight / pixelFactor,targetFormat,pixelFactor);
   target.parent=parent;
   if (w > 0 && h > 0) {
     getImpl(x,y,w,h,target,targetX,targetY);

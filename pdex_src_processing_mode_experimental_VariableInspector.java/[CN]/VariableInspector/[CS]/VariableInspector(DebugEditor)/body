@@ -1,0 +1,25 @@
+{
+  this.editor=editor;
+  this.dbg=editor.dbg();
+  initComponents();
+  rootNode=new DefaultMutableTreeNode("root");
+  builtins=new DefaultMutableTreeNode("Processing");
+  treeModel=new DefaultTreeModel(rootNode);
+  model=DefaultOutlineModel.createOutlineModel(treeModel,new VariableRowModel(),true,"Name");
+  ExpansionHandler expansionHandler=new ExpansionHandler();
+  model.getTreePathSupport().addTreeWillExpandListener(expansionHandler);
+  model.getTreePathSupport().addTreeExpansionListener(expansionHandler);
+  tree.setModel(model);
+  tree.setRootVisible(false);
+  tree.setRenderDataProvider(new OutlineRenderer());
+  tree.setColumnHidingAllowed(false);
+  tree.setAutoscrolls(false);
+  TableColumn valueColumn=tree.getColumnModel().getColumn(1);
+  valueColumn.setCellRenderer(new ValueCellRenderer());
+  valueColumn.setCellEditor(new ValueCellEditor());
+  callStack=new ArrayList<DefaultMutableTreeNode>();
+  locals=new ArrayList<VariableNode>();
+  thisFields=new ArrayList<VariableNode>();
+  declaredThisFields=new ArrayList<VariableNode>();
+  this.setTitle(editor.getSketch().getName());
+}

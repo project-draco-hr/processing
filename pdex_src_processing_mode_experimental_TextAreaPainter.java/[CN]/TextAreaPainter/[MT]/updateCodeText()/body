@@ -1,0 +1,16 @@
+{
+  int charInc=0;
+  int currentTab=ta.editor.getSketch().getCurrentCodeIndex();
+  SketchCode sc=ta.editor.getSketch().getCode(currentTab);
+  String code=ta.editor.baseCode[currentTab];
+  for (  Handle n : handles.get(currentTab)) {
+    int s=n.startChar + charInc;
+    int e=n.endChar + charInc;
+    code=replaceString(code,s,e,n.strNewValue);
+    n.newStartChar=n.startChar + charInc;
+    charInc+=n.strNewValue.length() - n.strValue.length();
+    n.newEndChar=n.endChar + charInc;
+  }
+  replaceTextAreaCode(code);
+  sc.setProgram(code);
+}

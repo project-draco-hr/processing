@@ -1,28 +1,30 @@
 {
-  ContributionManager.cleanup();
+  ContributionManager.cleanup(this);
   buildCoreModes();
   rebuildContribModes();
+  rebuildContribExamples();
   recent=new Recent(this);
-  String lastModeIdentifier=Preferences.get("last.sketch.mode");
+  String lastModeIdentifier=Preferences.get("mode.last");
   if (lastModeIdentifier == null) {
-    nextMode=coreModes[0];
-    log("Nothing set for last.sketch.mode, using coreMode[0].");
+    nextMode=getDefaultMode();
+    log("Nothing set for last.sketch.mode, using default.");
   }
  else {
     for (    Mode m : getModeList()) {
       if (m.getIdentifier().equals(lastModeIdentifier)) {
-        logf("Setting next mode to {0}.",lastModeIdentifier);
+        logf("Setting next mode to %s.",lastModeIdentifier);
         nextMode=m;
       }
     }
     if (nextMode == null) {
-      nextMode=coreModes[0];
-      logf("Could not find mode {0}, using default.",lastModeIdentifier);
+      nextMode=getDefaultMode();
+      logf("Could not find mode %s, using default.",lastModeIdentifier);
     }
   }
   libraryManagerFrame=new ContributionManagerDialog(ContributionType.LIBRARY);
   toolManagerFrame=new ContributionManagerDialog(ContributionType.TOOL);
   modeManagerFrame=new ContributionManagerDialog(ContributionType.MODE);
+  exampleManagerFrame=new ContributionManagerDialog(ContributionType.EXAMPLES);
   updateManagerFrame=new ContributionManagerDialog(null);
   nextMode.rebuildLibraryList();
   platform.init(this);

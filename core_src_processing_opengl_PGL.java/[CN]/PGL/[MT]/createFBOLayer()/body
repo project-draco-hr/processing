@@ -33,11 +33,11 @@
   backTex=0;
   frontTex=1;
   genFramebuffers(1,glColorFbo);
-  bindFramebuffer(FRAMEBUFFER,glColorFbo.get(0));
+  bindFramebufferImpl(FRAMEBUFFER,glColorFbo.get(0));
   framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
   if (multisample) {
     genFramebuffers(1,glMultiFbo);
-    bindFramebuffer(FRAMEBUFFER,glMultiFbo.get(0));
+    bindFramebufferImpl(FRAMEBUFFER,glMultiFbo.get(0));
     genRenderbuffers(1,glColorBuf);
     bindRenderbuffer(RENDERBUFFER,glColorBuf.get(0));
     renderbufferStorageMultisample(RENDERBUFFER,numSamples,RGBA8,fboWidth,fboHeight);
@@ -109,6 +109,6 @@
   float b=((argb) & 0xff) / 255.0f;
   clearColor(r,g,b,a);
   clear(DEPTH_BUFFER_BIT | STENCIL_BUFFER_BIT | COLOR_BUFFER_BIT);
-  bindFramebuffer(FRAMEBUFFER,0);
+  bindFramebufferImpl(FRAMEBUFFER,0);
   fboLayerCreated=true;
 }

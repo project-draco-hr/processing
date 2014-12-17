@@ -1,0 +1,68 @@
+{
+  int nodeOffset=Node.getStartPosition(), nodeLength=Node.getLength();
+  log("0.nodeOffset " + nodeOffset);
+  ASTNode thisNode=Node;
+  while (thisNode.getParent() != null) {
+    if (getLineNumber(thisNode.getParent()) == lineNumber) {
+      thisNode=thisNode.getParent();
+    }
+ else {
+      break;
+    }
+  }
+  int altStartPos=thisNode.getStartPosition();
+  log("1.Altspos " + altStartPos);
+  thisNode=thisNode.getParent();
+  Javadoc jd=null;
+  if (thisNode instanceof TypeDeclaration) {
+    jd=((TypeDeclaration)thisNode).getJavadoc();
+    altStartPos=getJavadocOffset((TypeDeclaration)thisNode);
+    log("Has t jdoc " + ((TypeDeclaration)thisNode).getJavadoc());
+  }
+ else   if (thisNode instanceof MethodDeclaration) {
+    altStartPos=getJavadocOffset((MethodDeclaration)thisNode);
+    jd=((MethodDeclaration)thisNode).getJavadoc();
+    log("Has m jdoc " + jd);
+  }
+ else   if (thisNode instanceof FieldDeclaration) {
+    FieldDeclaration fd=((FieldDeclaration)thisNode);
+    jd=fd.getJavadoc();
+    log("Has f jdoc " + fd.getJavadoc());
+    altStartPos=getJavadocOffset(fd);
+  }
+  if (jd == null) {
+    log("Visiting children of node " + getNodeAsString(thisNode));
+    @SuppressWarnings("unchecked") Iterator<StructuralPropertyDescriptor> it=thisNode.structuralPropertiesForType().iterator();
+    boolean flag=true;
+    while (it.hasNext()) {
+      StructuralPropertyDescriptor prop=it.next();
+      if (prop.isChildListProperty()) {
+        List<ASTNode> nodelist=(List<ASTNode>)thisNode.getStructuralProperty(prop);
+        log("prop " + prop);
+        for (        ASTNode cnode : nodelist) {
+          log("Visiting node " + getNodeAsString(cnode));
+          if (getLineNumber(cnode) == lineNumber) {
+            if (flag) {
+              altStartPos=cnode.getStartPosition();
+              flag=false;
+            }
+ else {
+              if (cnode == Node) {
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    log("Altspos " + altStartPos);
+  }
+  int pdeoffsets[]=getPDECodeOffsets(ecs);
+  String pdeCode=ecs.getPDECodeAtLine(pdeoffsets[0],pdeoffsets[1] - 1).trim();
+  int vals[]=createOffsetMapping(ecs,pdeCode,nodeOffset - altStartPos,nodeLength);
+  if (vals != null)   return new int[]{lineNumber,nodeOffset + vals[0] - altStartPos,vals[1]};
+ else {
+    log("joff[1] = " + (nodeOffset - altStartPos));
+    return new int[]{lineNumber,nodeOffset - altStartPos,nodeLength};
+  }
+}

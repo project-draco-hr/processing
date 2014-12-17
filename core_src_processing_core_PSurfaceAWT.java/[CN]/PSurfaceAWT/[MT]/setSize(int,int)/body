@@ -1,0 +1,19 @@
+{
+  sketchWidth=wide;
+  sketchHeight=high;
+  if (frame != null) {
+    setFrameSize();
+  }
+  setCanvasSize();
+  GraphicsConfiguration gc=canvas.getGraphicsConfiguration();
+  if (gc == null) {
+    System.err.println("GraphicsConfiguration null in setSize()");
+    GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+    gc=ge.getDefaultScreenDevice().getDefaultConfiguration();
+  }
+  int factor=graphics.pixelFactor;
+  graphics.image=gc.createCompatibleImage(wide * factor,high * factor);
+  sketch.width=wide;
+  sketch.height=high;
+  graphics.setSize(wide,high);
+}

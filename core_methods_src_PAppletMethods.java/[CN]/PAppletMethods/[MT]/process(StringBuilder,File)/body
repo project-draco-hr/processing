@@ -1,0 +1,111 @@
+{
+  BufferedReader in=createReader(input);
+  int comments=0;
+  String line=null;
+  StringBuilder commentBuffer=new StringBuilder();
+  while ((line=in.readLine()) != null) {
+    String decl="";
+    if (line.indexOf("/*") != -1) {
+      comments++;
+    }
+    if (line.indexOf("*/") != -1) {
+      commentBuffer.append(line);
+      commentBuffer.append('\n');
+      comments--;
+      continue;
+    }
+    if (comments > 0) {
+      commentBuffer.append(line);
+      commentBuffer.append('\n');
+      continue;
+    }
+    boolean gotSomething=false;
+    boolean gotStatic=false;
+    Matcher result;
+    if ((result=Pattern.compile("^\\s*public ([\\w\\[\\]]+) [a-zA-z_]+\\(.*$").matcher(line)).matches()) {
+      gotSomething=true;
+    }
+ else     if ((result=Pattern.compile("^\\s*abstract public ([\\w\\[\\]]+) [a-zA-z_]+\\(.*$").matcher(line)).matches()) {
+      gotSomething=true;
+    }
+ else     if ((result=Pattern.compile("^\\s*public final ([\\w\\[\\]]+) [a-zA-z_]+\\(.*$").matcher(line)).matches()) {
+      gotSomething=true;
+    }
+ else     if ((result=Pattern.compile("^\\s*static public ([\\w\\[\\]]+) [a-zA-z_]+\\(.*$").matcher(line)).matches()) {
+      gotSomething=true;
+      gotStatic=true;
+    }
+    if (gotSomething && line.indexOf("// ignore") >= 0) {
+      gotSomething=false;
+    }
+    String returns="";
+    if (gotSomething) {
+      if (result.group(1).equals("void")) {
+        returns="";
+      }
+ else {
+        returns="return ";
+      }
+      line=line.replaceFirst(Pattern.quote("abstract")," ");
+      line=line.replaceAll(Pattern.quote(";")," {\n");
+      out.append('\n');
+      out.append('\n');
+      out.append(commentBuffer.toString());
+      commentBuffer.setLength(0);
+      out.append(line);
+      out.append('\n');
+      decl+=line;
+      while (line.indexOf(')') == -1) {
+        line=in.readLine();
+        decl+=line;
+        line=line.replaceAll("\\;\\s*$"," {\n");
+        out.append(line);
+        out.append('\n');
+      }
+      result=Pattern.compile(".*?\\s(\\S+)\\(.*?").matcher(decl);
+      result.matches();
+      String declName=result.group(1);
+      String gline="";
+      String rline="";
+      if (gotStatic) {
+        gline="    " + returns + "PGraphics."+ declName+ "(";
+      }
+ else {
+        rline="    if (recorder != null) recorder." + declName + "(";
+        gline="    " + returns + "g."+ declName+ "(";
+      }
+      decl=decl.replaceAll("\\s+"," ");
+      decl=decl.replaceFirst("^.*\\(","");
+      decl=decl.replaceFirst("\\).*$","");
+      int prev=0;
+      String parts[]=decl.split("\\, ");
+      for (      String part : parts) {
+        if (!part.trim().equals("")) {
+          String blargh[]=part.split(" ");
+          String theArg=blargh[1].replaceAll("[\\[\\]]","");
+          if (prev != 0) {
+            gline+=", ";
+            rline+=", ";
+          }
+          gline+=theArg;
+          rline+=theArg;
+          prev=1;
+        }
+      }
+      gline+=");";
+      rline+=");";
+      if (!gotStatic && returns.equals("") && includeRecorder) {
+        out.append(rline);
+        out.append('\n');
+      }
+      out.append(gline);
+      out.append('\n');
+      out.append("  }");
+      out.append('\n');
+    }
+ else {
+      commentBuffer.setLength(0);
+    }
+  }
+  in.close();
+}

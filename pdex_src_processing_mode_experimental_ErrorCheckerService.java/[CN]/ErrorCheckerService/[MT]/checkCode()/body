@@ -1,0 +1,40 @@
+{
+  lastTimeStamp=System.currentTimeMillis();
+  try {
+    sourceCode=preprocessCode(editor.getSketch().getMainProgram());
+    compilationUnitState=0;
+    syntaxCheck();
+    if (!hasSyntaxErrors()) {
+    }
+    if (problems.length == 0 && editor.compilationCheckEnabled) {
+      sourceCode=xqpreproc.doYourThing(sourceCode,programImports);
+      prepareCompilerClasspath();
+      compileCheck();
+    }
+    astGenerator.buildAST(cu);
+    if (!ExperimentalMode.errorCheckEnabled) {
+      problemsList.clear();
+      log("Error Check disabled, so not updating UI.");
+    }
+    calcPDEOffsetsForProbList();
+    updateErrorTable();
+    editor.updateErrorBar(problemsList);
+    updateEditorStatus();
+    editor.getTextArea().repaint();
+    updatePaintedThingys();
+    editor.updateErrorToggle();
+    int x=textModified.get();
+    if (x >= 2) {
+      textModified.set(2);
+      x=2;
+    }
+    if (x > 0)     textModified.set(x - 1);
+ else     textModified.set(0);
+    return true;
+  }
+ catch (  Exception e) {
+    log("Oops! [ErrorCheckerService.checkCode]: " + e);
+    e.printStackTrace();
+  }
+  return false;
+}

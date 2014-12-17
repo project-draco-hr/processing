@@ -1,0 +1,71 @@
+{
+  parser.setSource(sourceCode.toCharArray());
+  parser.setKind(ASTParser.K_COMPILATION_UNIT);
+  Map<String,String> options=JavaCore.getOptions();
+  JavaCore.setComplianceOptions(JavaCore.VERSION_1_6,options);
+  options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_6);
+  options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT,JavaCore.ENABLED);
+  parser.setCompilerOptions(options);
+  if (compileCheckCU == null)   compileCheckCU=(CompilationUnit)parser.createAST(null);
+ else {
+synchronized (compileCheckCU) {
+      compileCheckCU=(CompilationUnit)parser.createAST(null);
+    }
+  }
+  if (!hasSyntaxErrors())   lastCorrectCU=compileCheckCU;
+  cu=compileCheckCU;
+  compilationUnitState=2;
+  try {
+    if (loadCompClass) {
+      classpath=new URL[classpathJars.size()];
+      int ii=0;
+      for (; ii < classpathJars.size(); ii++) {
+        classpath[ii]=classpathJars.get(ii);
+      }
+      compilationChecker=null;
+      classLoader=null;
+      System.gc();
+      classLoader=new URLClassLoader(classpath);
+      compilationChecker=new CompilationChecker();
+      loadCompClass=false;
+    }
+    if (compilerSettings == null) {
+      prepareCompilerSetting();
+    }
+synchronized (problemsList) {
+      problems=compilationChecker.getErrors(className,sourceCode,compilerSettings,classLoader);
+      if (problems == null) {
+        return;
+      }
+      for (int i=0; i < problems.length; i++) {
+        IProblem problem=problems[i];
+        int a[]=calculateTabIndexAndLineNumber(problem.getSourceLineNumber() - 1);
+        Problem p=new Problem(problem,a[0],a[1]);
+        if (problem.isError()) {
+          p.setType(Problem.ERROR);
+          containsErrors.set(true);
+        }
+        if (problem.isWarning()) {
+          p.setType(Problem.WARNING);
+        }
+        if (p.isWarning() && !ExperimentalMode.warningsEnabled) {
+          continue;
+        }
+        problemsList.add(p);
+      }
+    }
+  }
+ catch (  Exception e) {
+    System.err.println("compileCheck() problem." + e);
+    e.printStackTrace();
+    pauseThread();
+  }
+catch (  NoClassDefFoundError e) {
+    System.err.println(e + " compileCheck() problem. Somebody tried to mess with Experimental Mode files.");
+    pauseThread();
+  }
+catch (  OutOfMemoryError e) {
+    System.err.println("Processing has used up its maximum alloted memory. Please close some Processing " + " windows and then reopen this sketch.");
+    pauseThread();
+  }
+}

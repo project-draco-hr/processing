@@ -2,16 +2,6 @@
   char c=event.getKeyChar();
   int code=event.getKeyCode();
   Sketch sketch=editor.getSketch();
-  if ((event.getModifiers() & CTRL_ALT) == CTRL_ALT) {
-    if (code == KeyEvent.VK_LEFT) {
-      sketch.handlePrevCode();
-      return true;
-    }
- else     if (code == KeyEvent.VK_RIGHT) {
-      sketch.handleNextCode();
-      return true;
-    }
-  }
   if ((event.getModifiers() & InputEvent.META_MASK) != 0) {
     return false;
   }
@@ -96,6 +86,10 @@ case 9:
       event.consume();
       return true;
     }
+ else     if (!Preferences.getBoolean("editor.tabs.expand")) {
+      textarea.setSelectedText("\t");
+      event.consume();
+    }
   break;
 case 10:
 case 13:
@@ -131,10 +125,12 @@ if (Preferences.getBoolean("editor.indent")) {
   if (spaceCount < 0) {
     textarea.setSelectionEnd(textarea.getSelectionStop() - spaceCount);
     textarea.setSelectedText("\n");
+    textarea.setCaretPosition(textarea.getCaretPosition() + extraCount + spaceCount);
   }
  else {
     String insertion="\n" + spaces(spaceCount);
     textarea.setSelectedText(insertion);
+    textarea.setCaretPosition(textarea.getCaretPosition() + extraCount);
   }
   if (braceCount > 0) {
     int sel=textarea.getSelectionStart();

@@ -1,6 +1,6 @@
 {
   if (folder == null)   return "";
-  StringBuffer abuffer=new StringBuffer();
+  StringBuilder sb=new StringBuilder();
   String sep=System.getProperty("path.separator");
   try {
     String path=folder.getCanonicalPath();
@@ -11,14 +11,14 @@
     for (int i=0; i < list.length; i++) {
       if (list[i].startsWith("."))       continue;
       if (list[i].toLowerCase().endsWith(".jar") || list[i].toLowerCase().endsWith(".zip")) {
-        abuffer.append(sep);
-        abuffer.append(path);
-        abuffer.append(list[i]);
+        sb.append(sep);
+        sb.append(path);
+        sb.append(list[i]);
       }
     }
   }
  catch (  IOException e) {
     e.printStackTrace();
   }
-  return abuffer.toString();
+  return sb.toString();
 }

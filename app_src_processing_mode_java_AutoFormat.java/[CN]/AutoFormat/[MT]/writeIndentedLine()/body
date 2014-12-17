@@ -1,7 +1,7 @@
 {
   if (buf.length() == 0) {
     if (s_flag) {
-      s_flag=a_flg=false;
+      s_flag=a_flg=elseFlag=false;
     }
     return;
   }
@@ -16,6 +16,13 @@
       tabs--;
     }
     a_flg=false;
+  }
+  if (elseFlag) {
+    if (lastNonSpaceChar() == '}') {
+      trimRight(result);
+      result.append(' ');
+    }
+    elseFlag=false;
   }
   result.append(buf);
   buf.setLength(0);

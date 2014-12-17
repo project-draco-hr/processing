@@ -1,21 +1,22 @@
 {
-  File file=new File(path);
-  File parentFile=new File(file.getParent());
-  String parentName=parentFile.getName();
-  String pdeName=parentName + ".pde";
-  File altFile=new File(file.getParent(),pdeName);
-  if (pdeName.equals(file.getName())) {
+  final File file=new File(path);
+  final File parentFile=new File(file.getParent());
+  final String parentName=parentFile.getName();
+  final String defaultName=parentName + "." + mode.getDefaultExtension();
+  final File altFile=new File(file.getParent(),defaultName);
+  if (defaultName.equals(file.getName())) {
   }
  else   if (altFile.exists()) {
     path=altFile.getAbsolutePath();
   }
- else   if (!path.endsWith(".pde")) {
-    Base.showWarning("Bad file selected","Processing can only open its own sketches\n" + "and other files ending in .pde",null);
+ else   if (!mode.canEdit(file)) {
+    final String modeName=(mode.getTitle().equals("Java")) ? "Processing" : mode.getTitle();
+    Base.showWarning("Bad file selected",modeName + " can only open its own sketches\nand other files ending in " + mode.getDefaultExtension(),null);
     return false;
   }
  else {
-    String properParent=file.getName().substring(0,file.getName().length() - 4);
-    Object[] options={"OK","Cancel"};
+    final String properParent=file.getName().substring(0,file.getName().lastIndexOf('.'));
+    Object[] options={Language.text("prompt.ok"),Language.text("prompt.cancel")};
     String prompt="The file \"" + file.getName() + "\" needs to be inside\n"+ "a sketch folder named \""+ properParent+ "\".\n"+ "Create this folder, move the file, and continue?";
     int result=JOptionPane.showOptionDialog(this,prompt,"Moving",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
     if (result == JOptionPane.YES_OPTION) {
@@ -50,6 +51,9 @@
  catch (  IOException e) {
     Base.showWarning("Error","Could not create the sketch.",e);
     return false;
+  }
+  if (false && Preferences.getBoolean("editor.watcher")) {
+    initFileChangeListener();
   }
   header.rebuild();
   updateTitle();

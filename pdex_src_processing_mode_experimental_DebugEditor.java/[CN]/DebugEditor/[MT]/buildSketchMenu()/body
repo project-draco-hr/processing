@@ -1,0 +1,33 @@
+{
+  JMenuItem runItem=Toolkit.newJMenuItem(DebugToolbar.getTitle(DebugToolbar.RUN,false),'R');
+  runItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleRun();
+    }
+  }
+);
+  JMenuItem presentItem=Toolkit.newJMenuItemShift(DebugToolbar.getTitle(DebugToolbar.RUN,true),'R');
+  presentItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handlePresent();
+    }
+  }
+);
+  JMenuItem stopItem=new JMenuItem(DebugToolbar.getTitle(DebugToolbar.STOP,false));
+  stopItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleStop();
+    }
+  }
+);
+  JMenuItem enableTweak=Toolkit.newJMenuItemShift(Language.text("menu.sketch.tweak"),'T');
+  enableTweak.setSelected(ExperimentalMode.enableTweak);
+  enableTweak.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      ExperimentalMode.enableTweak=true;
+      handleRun();
+    }
+  }
+);
+  return buildSketchMenu(new JMenuItem[]{runItem,presentItem,enableTweak,stopItem});
+}

@@ -1,0 +1,23 @@
+{
+  elementName=method.getName().toString();
+  type=LOCAL_METHOD;
+  List<ASTNode> params=(List<ASTNode>)method.getStructuralProperty(MethodDeclaration.PARAMETERS_PROPERTY);
+  StringBuilder label=new StringBuilder(elementName + "(");
+  StringBuilder cstr=new StringBuilder(method.getName() + "(");
+  for (int i=0; i < params.size(); i++) {
+    label.append(params.get(i).toString());
+    if (i < params.size() - 1) {
+      label.append(",");
+      cstr.append(",");
+    }
+  }
+  if (params.size() == 1) {
+    cstr.append(' ');
+  }
+  label.append(")");
+  if (method.getReturnType2() != null)   label.append(" : " + method.getReturnType2());
+  cstr.append(")");
+  this.label=label.toString();
+  this.completionString=cstr.toString();
+  wrappedObject=method;
+}

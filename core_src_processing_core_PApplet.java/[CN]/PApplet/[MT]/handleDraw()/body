@@ -1,10 +1,10 @@
 {
-  debug("handleDraw() " + g + " "+ looping+ " "+ redraw+ " valid:"+ this.isValid()+ " visible:"+ this.isVisible());
   if (canDraw()) {
     if (!g.canDraw()) {
       debug("g.canDraw() is false");
       return;
     }
+    int pquality=g.quality;
     insideDraw=true;
     g.beginDraw();
     if (recorder != null) {
@@ -12,20 +12,8 @@
     }
     long now=System.nanoTime();
     if (frameCount == 0) {
-      GraphicsConfiguration gc=getGraphicsConfiguration();
-      if (gc == null)       return;
-      GraphicsDevice displayDevice=getGraphicsConfiguration().getDevice();
-      if (displayDevice == null)       return;
-      Rectangle screenRect=displayDevice.getDefaultConfiguration().getBounds();
-      displayWidth=screenRect.width;
-      displayHeight=screenRect.height;
-      try {
-        setup();
-      }
- catch (      RendererChangeException e) {
-        return;
-      }
-      this.defaultSize=false;
+      setup();
+      defaultSize=false;
     }
  else {
       double rate=1000000.0 / ((now - frameRateLastNanos) / 1000000.0);
@@ -44,22 +32,14 @@
       redraw=false;
     }
     g.endDraw();
+    if (pquality != g.quality) {
+      surface.setSmooth(g.quality);
+    }
     if (recorder != null) {
       recorder.endDraw();
     }
     insideDraw=false;
-    if (useActive) {
-      if (useStrategy) {
-        render();
-      }
- else {
-        Graphics screen=getGraphics();
-        screen.drawImage(g.image,0,0,width,height,null);
-      }
-    }
- else {
-      repaint();
-    }
+    surface.blit();
     if (frameCount != 0) {
       handleMethods("post");
     }

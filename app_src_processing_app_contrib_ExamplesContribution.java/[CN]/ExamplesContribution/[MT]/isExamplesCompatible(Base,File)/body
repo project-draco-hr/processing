@@ -1,0 +1,12 @@
+{
+  File propertiesFile=new File(exampleLocationFolder,ContributionType.EXAMPLES.toString() + ".properties");
+  if (propertiesFile.exists()) {
+    ArrayList<String> compModesList=parseCompatibleModesList(Base.readSettings(propertiesFile).get("compatibleModesList"));
+    for (    String c : compModesList) {
+      if (c.equalsIgnoreCase(base.getActiveEditor().getMode().getIdentifier())) {
+        return true;
+      }
+    }
+  }
+  return false;
+}

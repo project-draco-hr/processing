@@ -1,0 +1,31 @@
+{
+  try {
+    String[][] errorData=new String[problemsList.size()][3];
+    for (int i=0; i < problemsList.size(); i++) {
+      errorData[i][0]=problemsList.get(i).getMessage();
+      errorData[i][1]=editor.getSketch().getCode(problemsList.get(i).getTabIndex()).getPrettyName();
+      errorData[i][2]=(problemsList.get(i).getLineNumber() + 1) + "";
+      if (tempErrorLog.size() < 200)       tempErrorLog.put(problemsList.get(i).getMessage(),problemsList.get(i).getIProblem());
+      if (!ExperimentalMode.importSuggestEnabled)       continue;
+      Problem p=problemsList.get(i);
+      if (p.getIProblem().getID() == IProblem.UndefinedType) {
+        String args[]=p.getIProblem().getArguments();
+        if (args.length > 0) {
+          String missingClass=args[0];
+          String[] si=astGenerator.getSuggestImports(missingClass);
+          if (si != null && si.length > 0) {
+            p.setImportSuggestions(si);
+            errorData[i][0]="<html>" + problemsList.get(i).getMessage() + " (<font color=#0000ff><u>Import Suggestions available</u></font>)</html>";
+          }
+        }
+      }
+    }
+    DefaultTableModel tm=new DefaultTableModel(errorData,XQErrorTable.columnNames);
+    editor.updateTable(tm);
+  }
+ catch (  Exception e) {
+    log("Exception at updateErrorTable() " + e);
+    e.printStackTrace();
+    pauseThread();
+  }
+}

@@ -1,0 +1,53 @@
+{
+  this.sketch=sketch;
+  GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
+  if (deviceIndex >= 0) {
+    GraphicsDevice[] devices=environment.getScreenDevices();
+    if (deviceIndex < devices.length) {
+      displayDevice=devices[deviceIndex];
+    }
+ else {
+      System.err.format("Display %d does not exist, " + "using the default display instead.",deviceIndex);
+      for (int i=0; i < devices.length; i++) {
+        System.err.format("Display %d is %s\n",i,devices[i]);
+      }
+    }
+  }
+  if (displayDevice == null) {
+    displayDevice=environment.getDefaultScreenDevice();
+  }
+  screenRect=spanDisplays ? getDisplaySpan() : displayDevice.getDefaultConfiguration().getBounds();
+  sketch.displayWidth=screenRect.width;
+  sketch.displayHeight=screenRect.height;
+  sketchWidth=sketch.sketchWidth();
+  sketchHeight=sketch.sketchHeight();
+  if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
+    fullScreen=true;
+  }
+  if (fullScreen || spanDisplays) {
+    sketchWidth=screenRect.width;
+    sketchHeight=screenRect.height;
+  }
+  frame=new JFrame(displayDevice.getDefaultConfiguration());
+  if (backgroundColor == null) {
+    backgroundColor=WINDOW_BGCOLOR;
+  }
+  frame.getContentPane().setBackground(backgroundColor);
+  setIconImage(frame);
+  frame.add(canvas);
+  setSize(sketchWidth,sketchHeight);
+  if (fullScreen) {
+    PApplet.hideMenuBar();
+    frame.setUndecorated(true);
+    frame.setBounds(screenRect);
+    frame.setVisible(true);
+  }
+  frame.setLayout(null);
+  if (fullScreen) {
+    frame.invalidate();
+  }
+ else {
+  }
+  frame.setResizable(false);
+  return frame;
+}

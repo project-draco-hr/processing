@@ -1,0 +1,15 @@
+{
+  if (title == null)   title=fatal ? "Error" : "Warning";
+  if (commandLine) {
+    System.err.println(title + ": " + message);
+    if (t != null) {
+      t.printStackTrace();
+    }
+  }
+ else {
+    StringWriter sw=new StringWriter();
+    t.printStackTrace(new PrintWriter(sw));
+    message="<html>" + message + "<br/><font size=2><br/>"+ sw.toString().replaceAll("\n","<br/>");
+    JOptionPane.showMessageDialog(new Frame(),message,title,fatal ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE);
+  }
+}

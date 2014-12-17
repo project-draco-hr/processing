@@ -31,6 +31,9 @@
  else {
     pgl.depthMask(true);
   }
-  currentFramebuffer.bind();
-  pgl.drawBuffer(currentFramebuffer.getDefaultDrawBuffer());
+  FrameBuffer fb=getCurrentFB();
+  if (fb != null) {
+    fb.bind();
+    pgl.drawBuffer(fb.getDefaultDrawBuffer());
+  }
 }

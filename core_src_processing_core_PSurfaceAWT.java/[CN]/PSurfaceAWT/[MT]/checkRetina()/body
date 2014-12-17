@@ -1,0 +1,32 @@
+{
+  if (PApplet.platform == PConstants.MACOSX) {
+    final String javaVendor=System.getProperty("java.vendor");
+    if (javaVendor.contains("Apple")) {
+      Float prop=(Float)canvas.getToolkit().getDesktopProperty("apple.awt.contentScaleFactor");
+      if (prop != null) {
+        return prop == 2;
+      }
+    }
+ else     if (javaVendor.contains("Oracle")) {
+      String version=System.getProperty("java.version");
+      String[] m=PApplet.match(version,"1.(\\d).*_(\\d+)");
+      if (m != null && PApplet.parseInt(m[1]) >= 7 && PApplet.parseInt(m[1]) >= 40) {
+        GraphicsEnvironment env=GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device=env.getDefaultScreenDevice();
+        try {
+          Field field=device.getClass().getDeclaredField("scale");
+          if (field != null) {
+            field.setAccessible(true);
+            Object scale=field.get(device);
+            if (scale instanceof Integer && ((Integer)scale).intValue() == 2) {
+              return true;
+            }
+          }
+        }
+ catch (        Exception ignore) {
+        }
+      }
+    }
+  }
+  return false;
+}

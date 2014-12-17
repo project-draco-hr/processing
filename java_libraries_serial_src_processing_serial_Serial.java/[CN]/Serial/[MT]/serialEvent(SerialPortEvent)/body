@@ -4,6 +4,9 @@
     try {
       while (0 < (toRead=port.getInputBufferBytesCount())) {
 synchronized (buffer) {
+          if (serialEventMethod != null) {
+            toRead=1;
+          }
           if (buffer.length < inBuffer + toRead) {
             byte temp[]=new byte[buffer.length << 1];
             System.arraycopy(buffer,0,temp,0,inBuffer);
@@ -12,20 +15,20 @@ synchronized (buffer) {
           byte[] read=port.readBytes(toRead);
           System.arraycopy(read,0,buffer,inBuffer,read.length);
           inBuffer+=read.length;
-          if (serialEventMethod != null) {
-            if ((0 < bufferUntilSize && bufferUntilSize <= inBuffer - readOffset) || (0 == bufferUntilSize && bufferUntilByte == buffer[inBuffer - 1])) {
-              try {
-                serialEventMethod.invoke(parent,new Object[]{this});
-              }
- catch (              Exception e) {
-                System.err.println("Error, disabling serialEvent() for " + port.getPortName());
-                System.err.println(e.getLocalizedMessage());
-                serialEventMethod=null;
-              }
+        }
+        if (serialEventMethod != null) {
+          if ((0 < bufferUntilSize && bufferUntilSize <= inBuffer - readOffset) || (0 == bufferUntilSize && bufferUntilByte == buffer[inBuffer - 1])) {
+            try {
+              serialEventMethod.invoke(parent,this);
+            }
+ catch (            Exception e) {
+              System.err.println("Error, disabling serialEvent() for " + port.getPortName());
+              System.err.println(e.getLocalizedMessage());
+              serialEventMethod=null;
             }
           }
-          invokeSerialAvailable=true;
         }
+        invokeSerialAvailable=true;
       }
     }
  catch (    SerialPortException e) {

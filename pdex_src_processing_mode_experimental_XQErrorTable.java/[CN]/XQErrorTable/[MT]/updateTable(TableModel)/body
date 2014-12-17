@@ -1,0 +1,34 @@
+{
+  if (!this.isVisible()) {
+    return false;
+  }
+  SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
+    protected Object doInBackground() throws Exception {
+      return null;
+    }
+    protected void done(){
+      try {
+        setModel(tableModel);
+        for (int i=0; i < getColumnModel().getColumnCount(); i++) {
+          getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
+        }
+        getTableHeader().setReorderingAllowed(false);
+        validate();
+        repaint();
+      }
+ catch (      Exception e) {
+        System.out.println("Exception at XQErrorTable.updateTable " + e);
+      }
+    }
+  }
+;
+  try {
+    if (!columnResizing) {
+      worker.execute();
+    }
+  }
+ catch (  Exception e) {
+    System.out.println("ErrorTable updateTable Worker's slacking." + e.getMessage());
+  }
+  return true;
+}

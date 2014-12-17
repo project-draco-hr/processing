@@ -1,0 +1,24 @@
+{
+  method.getDeclaringClass().getName();
+  elementName=method.getName();
+  StringBuilder label=new StringBuilder("<html>" + method.getName() + "(");
+  StringBuilder cstr=new StringBuilder(method.getName() + "(");
+  for (int i=0; i < method.getParameterTypes().length; i++) {
+    label.append(method.getParameterTypes()[i].getSimpleName());
+    if (i < method.getParameterTypes().length - 1) {
+      label.append(",");
+      cstr.append(",");
+    }
+  }
+  if (method.getParameterTypes().length == 1) {
+    cstr.append(' ');
+  }
+  label.append(")");
+  if (method.getReturnType() != null)   label.append(" : " + method.getReturnType().getSimpleName());
+  label.append(" - <font color=#777777>" + method.getDeclaringClass().getSimpleName() + "</font></html>");
+  cstr.append(")");
+  this.label=label.toString();
+  this.completionString=cstr.toString();
+  type=PREDEF_METHOD;
+  wrappedObject=method;
+}

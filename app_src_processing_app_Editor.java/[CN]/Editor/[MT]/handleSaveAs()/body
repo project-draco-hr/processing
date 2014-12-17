@@ -1,11 +1,13 @@
 {
-  statusNotice("Saving...");
+  statusNotice(Language.text("editor.status.saving"));
   try {
     if (sketch.saveAs()) {
-      statusNotice("Done Saving.");
+      if (false && Preferences.getBoolean("editor.watcher")) {
+        initFileChangeListener();
+      }
     }
  else {
-      statusNotice("Save Canceled.");
+      statusNotice(Language.text("editor.status.saving.canceled"));
       return false;
     }
   }

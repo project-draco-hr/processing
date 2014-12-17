@@ -1,0 +1,53 @@
+{
+  if (className == null) {
+    return null;
+  }
+  Class<?> tehClass=null;
+  tehClass=loadClass(className);
+  if (tehClass != null) {
+    return tehClass;
+  }
+  log("Looking in the classloader for " + className);
+  ArrayList<ImportStatement> imports=errorCheckerService.getProgramImports();
+  for (  ImportStatement impS : imports) {
+    String temp=impS.getPackageName();
+    if (temp.endsWith("*")) {
+      temp=temp.substring(0,temp.length() - 1) + className;
+    }
+ else {
+      int x=temp.lastIndexOf('.');
+      if (!temp.substring(x + 1).equals(className)) {
+        continue;
+      }
+    }
+    tehClass=loadClass(temp);
+    if (tehClass != null) {
+      log(tehClass.getName() + " located.");
+      return tehClass;
+    }
+  }
+  PdePreprocessor p=new PdePreprocessor(null);
+  for (  String impS : p.getCoreImports()) {
+    tehClass=loadClass(impS.substring(0,impS.length() - 1) + className);
+    if (tehClass != null) {
+      log(tehClass.getName() + " located.");
+      return tehClass;
+    }
+  }
+  for (  String impS : p.getDefaultImports()) {
+    if (className.equals(impS) || impS.endsWith(className)) {
+      tehClass=loadClass(impS);
+      if (tehClass != null) {
+        log(tehClass.getName() + " located.");
+        return tehClass;
+      }
+    }
+  }
+  String daddy="java.lang." + className;
+  tehClass=loadClass(daddy);
+  if (tehClass != null) {
+    log(tehClass.getName() + " located.");
+    return tehClass;
+  }
+  return tehClass;
+}

@@ -1,5 +1,4 @@
 {
-  PrintWriter writer=null;
   vm.allThreads();
   EventRequestManager mgr=vm.eventRequestManager();
   ExceptionRequest excReq=mgr.createExceptionRequest(null,false,true);
@@ -13,7 +12,10 @@
           EventQueue eventQueue=vm.eventQueue();
           EventSet eventSet=eventQueue.remove();
           for (          Event event : eventSet) {
-            if (event instanceof ExceptionEvent) {
+            if (event instanceof VMStartEvent) {
+              vm.resume();
+            }
+ else             if (event instanceof ExceptionEvent) {
               exceptionEvent((ExceptionEvent)event);
             }
  else             if (event instanceof VMDisconnectEvent) {
@@ -31,10 +33,9 @@
 ;
   eventThread.start();
   errThread=new MessageSiphon(process.getErrorStream(),this).getThread();
-  outThread=new StreamRedirectThread("JVM stdout Reader",process.getInputStream(),System.out);
+  outThread=new StreamRedirectThread("JVM stdout Reader",process.getInputStream(),sketchOut);
   errThread.start();
   outThread.start();
-  vm.resume();
   try {
     if (eventThread != null)     eventThread.join();
     errThread.join();
@@ -45,5 +46,4 @@
   }
  catch (  InterruptedException exc) {
   }
-  if (writer != null)   writer.close();
 }

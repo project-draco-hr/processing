@@ -1,0 +1,39 @@
+{
+  final DebugEditor editor=(DebugEditor)listener;
+  final boolean toPresent=present;
+  boolean launchInteractive=false;
+  if (isSketchModified(sketch)) {
+    editor.deactivateRun();
+    Base.showMessage("Save","Please save the sketch before running in Tweak Mode.");
+    return null;
+  }
+  JavaBuild build=new JavaBuild(sketch);
+  String appletClassName=build.build(false);
+  if (appletClassName == null) {
+    return null;
+  }
+  editor.initBaseCode();
+  boolean requiresTweak=SketchParser.containsTweakComment(editor.baseCode);
+  final SketchParser parser=new SketchParser(editor.baseCode,requiresTweak);
+  launchInteractive=editor.automateSketch(sketch,parser.allHandles);
+  build=new JavaBuild(sketch);
+  appletClassName=build.build(false);
+  if (appletClassName != null) {
+    final Runner runtime=new Runner(build,listener);
+    new Thread(new Runnable(){
+      public void run(){
+        runtime.launch(toPresent);
+        editor.initEditorCode(parser.allHandles,false);
+        editor.stopInteractiveMode(parser.allHandles);
+      }
+    }
+).start();
+    if (launchInteractive) {
+      editor.initEditorCode(parser.allHandles,false);
+      editor.updateInterface(parser.allHandles,parser.colorBoxes);
+      editor.startInteractiveMode();
+    }
+    return runtime;
+  }
+  return null;
+}

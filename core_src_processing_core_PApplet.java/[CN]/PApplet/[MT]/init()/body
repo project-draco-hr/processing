@@ -1,48 +1,8 @@
 {
-  if (checkRetina()) {
-    useActive=false;
-  }
-  setFocusTraversalKeysEnabled(false);
+  defaultSize=true;
   finished=false;
   looping=true;
   redraw=true;
   firstMouse=true;
-  try {
-    getAppletContext();
-    online=true;
-  }
- catch (  NullPointerException e) {
-    online=false;
-  }
-  try {
-    if (sketchPath == null) {
-      sketchPath=System.getProperty("user.dir");
-    }
-  }
- catch (  Exception e) {
-  }
-  Dimension size=getSize();
-  if ((size.width != 0) && (size.height != 0)) {
-    g=makeGraphics(size.width,size.height,sketchRenderer(),null,true);
-  }
- else {
-    this.defaultSize=true;
-    int w=sketchWidth();
-    int h=sketchHeight();
-    g=makeGraphics(w,h,sketchRenderer(),null,true);
-    setSize(w,h);
-    setPreferredSize(new Dimension(w,h));
-  }
-  width=g.width;
-  height=g.height;
-  addComponentListener(new ComponentAdapter(){
-    @Override public void componentResized(    ComponentEvent e){
-      if (!looping) {
-        redraw();
-      }
-    }
-  }
-);
-  thread=new Thread(this,"Animation Thread");
-  thread.start();
+  surface.startThread();
 }

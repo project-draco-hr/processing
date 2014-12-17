@@ -1,0 +1,17 @@
+{
+  JList<CompletionCandidate> list=new JList<CompletionCandidate>(items);
+  list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+  list.setSelectedIndex(0);
+  list.addMouseListener(new MouseAdapter(){
+    @Override public void mouseClicked(    MouseEvent e){
+      if (e.getClickCount() == 2) {
+        insertSelection(MOUSE_COMPLETION);
+        hide();
+      }
+    }
+  }
+);
+  list.setCellRenderer(new CustomListRenderer());
+  list.setFocusable(false);
+  return list;
+}
