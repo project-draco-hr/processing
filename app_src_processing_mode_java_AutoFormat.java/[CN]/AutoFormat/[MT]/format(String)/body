@@ -9,7 +9,6 @@
   conditionalLevel=parenLevel=curlyLvl=if_lev=level=0;
   tabs=0;
   jdoc_flag=inStatementFlag=overflowFlag=false;
-  char cc;
   pos=arrayLevel=-1;
   int[] s_level=new int[10];
   sp_flg=new int[20][10];
@@ -59,11 +58,15 @@ if (buf.charAt(buf.length() - 1) == '\n') {
 buf.setLength(buf.length() - 1);
 }
 }
+if (elseFlag) {
 writeIndentedLine();
 result.append("\n");
-if (elseFlag) {
 p_flg[level]++;
 tabs++;
+}
+ else {
+writeIndentedLine();
+result.append("\n");
 }
 startFlag=true;
 break;
@@ -158,7 +161,7 @@ case '"':
 case '\'':
 inStatementFlag=true;
 buf.append(c);
-cc=nextChar();
+char cc=nextChar();
 while (!EOF && cc != c) {
 buf.append(cc);
 if (cc == '\\') {
