@@ -1,4 +1,16 @@
 {
+  try {
+    Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
+    Display.create();
+  }
+ catch (  LWJGLException e) {
+    e.printStackTrace();
+    System.exit(0);
+  }
+  keyPoller=new KeyPoller(sketch);
+  keyPoller.start();
+  mousePoller=new MousePoller(sketch);
+  mousePoller.start();
   long beforeTime=System.nanoTime();
   long overSleepTime=0L;
   int noDelays=0;
@@ -8,6 +20,7 @@
   }
   sketch.start();
   while ((Thread.currentThread() == thread) && !sketch.finished) {
+    pgl.setThread(thread);
     checkPause();
     sketch.handleDraw();
     Display.update();
@@ -38,4 +51,7 @@
   }
   sketch.dispose();
   Display.destroy();
+  if (sketch.exitCalled()) {
+    sketch.exitActual();
+  }
 }
