@@ -1,0 +1,19 @@
+{
+  this.sketch=sketch;
+  sketchWidth=sketch.sketchWidth();
+  sketchHeight=sketch.sketchHeight();
+  try {
+    Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
+    Display.create();
+  }
+ catch (  LWJGLException e) {
+    e.printStackTrace();
+    System.exit(0);
+  }
+  keyPoller=new KeyPoller(sketch);
+  keyPoller.start();
+  mousePoller=new MousePoller(sketch);
+  mousePoller.start();
+  frame=new DummyFrame();
+  return frame;
+}
