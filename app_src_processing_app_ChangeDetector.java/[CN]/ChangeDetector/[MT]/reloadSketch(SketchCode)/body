@@ -1,0 +1,23 @@
+{
+  int response=Base.showYesNoQuestion(editor,"File Modified","Your sketch has been modified externally.<br>Would you like to reload the sketch?","If you reload the sketch, any unsaved changes will be lost!");
+  if (response == 0) {
+    sketch.reload();
+    editor.header.rebuild();
+  }
+ else {
+    if (changed != null) {
+      setSketchCodeModified(changed);
+    }
+ else {
+      for (      SketchCode sc : sketch.getCode()) {
+        if (!sc.getFile().exists()) {
+          setSketchCodeModified(sc);
+        }
+      }
+    }
+    editor.header.rebuild();
+    skip=true;
+    return;
+  }
+  return;
+}
