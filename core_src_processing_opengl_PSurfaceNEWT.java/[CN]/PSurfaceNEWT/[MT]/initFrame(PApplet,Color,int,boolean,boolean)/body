@@ -62,8 +62,9 @@
   caps.setAlphaBits(PGL.REQUESTED_ALPHA_BITS);
   caps.setDepthBits(PGL.REQUESTED_DEPTH_BITS);
   caps.setStencilBits(PGL.REQUESTED_STENCIL_BITS);
+  pgl.reqNumSamples=graphics.quality;
   caps.setSampleBuffers(true);
-  caps.setNumSamples(2);
+  caps.setNumSamples(pgl.reqNumSamples);
   caps.setBackgroundOpaque(true);
   caps.setOnscreen(true);
   pgl.capabilities=caps;
@@ -151,6 +152,8 @@ synchronized (waitObject) {
   window.addWindowListener(new WindowAdapter(){
     @Override public void windowDestroyNotify(    final WindowEvent e){
       animator.stop();
+      PSurfaceNEWT.this.sketch.exit();
+      window.destroy();
     }
   }
 );
