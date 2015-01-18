@@ -17,14 +17,17 @@
   if (fileCount != sketch.getCodeCount()) {
     reloadSketch(null);
     if (fileCount < 1) {
-      Base.showWarning("Canceling Reload","You cannot delete the last code file in a sketch.");
       try {
         sketch.getMainFile().createNewFile();
       }
  catch (      Exception e1) {
-        Base.showError("Reload failed","The sketch contains no code files",e1);
+        Base.showError("Reload failed","The sketch contains no code files.",e1);
         skip=true;
+        return;
       }
+      sketch.reload();
+      editor.header.rebuild();
+      Base.showWarning("Modified Reload","You cannot delete the last code file in a sketch.\n" + "A new blank sketch file has been generated for you.");
     }
     return;
   }
