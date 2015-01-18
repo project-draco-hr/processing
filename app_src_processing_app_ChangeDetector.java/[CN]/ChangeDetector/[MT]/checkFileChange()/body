@@ -3,23 +3,30 @@
     return;
   }
   File sketchFolder=sketch.getFolder();
-  if (sketchFolder.isDirectory()) {
-    int fileCount=sketchFolder.list(new FilenameFilter(){
-      @Override public boolean accept(      File dir,      String name){
-        for (        String s : editor.getMode().getExtensions()) {
-          if (name.endsWith(s)) {
-            return true;
-          }
+  int fileCount=sketchFolder.list(new FilenameFilter(){
+    @Override public boolean accept(    File dir,    String name){
+      for (      String s : editor.getMode().getExtensions()) {
+        if (name.endsWith(s)) {
+          return true;
         }
-        return false;
       }
+      return false;
     }
+  }
 ).length;
-    if (fileCount != sketch.getCodeCount()) {
-      if (reloadSketch()) {
-        return;
+  if (fileCount != sketch.getCodeCount()) {
+    reloadSketch(null);
+    if (fileCount < 1) {
+      Base.showWarning("Canceling Reload","You cannot delete the last code file in a sketch.");
+      try {
+        sketch.getMainFile().createNewFile();
+      }
+ catch (      Exception e1) {
+        Base.showError("Reload failed","The sketch contains no code files",e1);
+        skip=true;
       }
     }
+    return;
   }
   SketchCode[] codes=sketch.getCode();
   for (  SketchCode sc : codes) {
@@ -27,9 +34,8 @@
     String onDisk=null;
     File sketchFile=sc.getFile();
     if (!sketchFile.exists()) {
-      if (reloadSketch()) {
-        break;
-      }
+      reloadSketch(sc);
+      return;
     }
     try {
       onDisk=Base.loadFile(sketchFile);
@@ -42,9 +48,8 @@
     if (onDisk == null) {
     }
  else     if (!inMemory.equals(onDisk)) {
-      if (reloadSketch()) {
-        return;
-      }
+      reloadSketch(sc);
+      return;
     }
   }
 }
