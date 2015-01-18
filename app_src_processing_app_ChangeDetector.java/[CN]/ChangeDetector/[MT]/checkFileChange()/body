@@ -1,0 +1,51 @@
+{
+  if (sketch == null) {
+    return;
+  }
+  File sketchFolder=sketch.getFolder();
+  if (sketchFolder.isDirectory()) {
+    int fileCount=sketchFolder.list(new FilenameFilter(){
+      @Override public boolean accept(      File dir,      String name){
+        for (        String s : editor.getMode().getExtensions()) {
+          if (name.endsWith(s)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    }
+).length;
+    if (fileCount != sketch.getCodeCount()) {
+      System.out.println("filecount = " + fileCount + "\tsketchCount = "+ sketch.getCodeCount());
+      if (reloadSketch()) {
+        return;
+      }
+    }
+  }
+  SketchCode[] codes=sketch.getCode();
+  for (  SketchCode sc : codes) {
+    System.out.println("Checking " + sc.getFileName());
+    String inMemory=sc.getProgram();
+    String onDisk=null;
+    File f=sc.getFile();
+    if (!f.exists()) {
+      if (reloadSketch()) {
+        break;
+      }
+    }
+    try {
+      onDisk=Base.loadFile(f);
+    }
+ catch (    Exception e1) {
+      System.out.println("Loading file failed");
+      e1.printStackTrace();
+    }
+    if (onDisk == null) {
+    }
+ else     if (!inMemory.equals(onDisk)) {
+      if (reloadSketch()) {
+        break;
+      }
+    }
+  }
+}
