@@ -1,5 +1,9 @@
 {
   try {
+    DisplayMode[] modes=Display.getAvailableDisplayModes();
+    for (    DisplayMode mode : modes) {
+      System.err.println(mode.toString());
+    }
     Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
     Display.create();
   }
@@ -18,6 +22,9 @@
   setSize(sketchWidth,sketchHeight);
   sketch.start();
   while ((Thread.currentThread() == thread) && !sketch.finished) {
+    if (Display.wasResized()) {
+      setSize(Display.getWidth(),Display.getHeight());
+    }
     pgl.setThread(thread);
     checkPause();
     sketch.handleDraw();
@@ -46,7 +53,10 @@
       }
     }
     beforeTime=System.nanoTime();
+    if (Display.isCloseRequested())     break;
   }
+  keyPoller.requestStop();
+  mousePoller.requestStop();
   sketch.dispose();
   Display.destroy();
   if (sketch.exitCalled()) {
