@@ -3,7 +3,15 @@
   if (mode.isDefaultExtension(sketch.getCurrentCode())) {
     sketch.setCurrentCode(0);
   }
-  String[] list=Base.packageListFromClassPath(jarPath);
+  Library lib=mode.findLibraryByName(libraryName);
+  if (lib == null) {
+    statusError("Unable to locate library: " + libraryName);
+    return;
+  }
+  String[] list=lib.getSpecifiedImports();
+  if (list == null) {
+    list=Base.packageListFromClassPath(lib.getJarPath());
+  }
   StringBuilder sb=new StringBuilder();
   for (int i=0; i < list.length; i++) {
     sb.append("import ");
