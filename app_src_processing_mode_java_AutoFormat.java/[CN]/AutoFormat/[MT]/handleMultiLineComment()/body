@@ -1,13 +1,12 @@
 {
-  final boolean saved_s_flag=s_flag;
-  char ch;
-  buf.append(ch=nextChar());
-  while (true) {
-    buf.append(ch=nextChar());
-    while (ch != '/') {
+  final boolean savedStartFlag=startFlag;
+  buf.append(nextChar());
+  for (char ch=nextChar(); !EOF; ch=nextChar()) {
+    buf.append(ch);
+    while (ch != '/' && !EOF) {
       if (ch == '\n') {
         writeIndentedComment();
-        s_flag=true;
+        startFlag=true;
       }
       buf.append(ch=nextChar());
     }
@@ -17,7 +16,7 @@
     }
   }
   writeIndentedComment();
-  s_flag=saved_s_flag;
+  startFlag=savedStartFlag;
   jdoc_flag=false;
   return;
 }

@@ -1,6 +1,10 @@
 {
   try {
     Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
+    System.err.println(sketchWidth + " " + sketchHeight);
+    if (fullScreenRequested) {
+      Display.setFullscreen(true);
+    }
     Display.create();
   }
  catch (  LWJGLException e) {
@@ -11,6 +15,7 @@
   keyPoller.start();
   mousePoller=new MousePoller(sketch);
   mousePoller.start();
+  System.err.println(Mouse.getNativeCursor());
   long beforeTime=System.nanoTime();
   long overSleepTime=0L;
   int noDelays=0;
@@ -18,6 +23,9 @@
   setSize(sketchWidth,sketchHeight);
   sketch.start();
   while ((Thread.currentThread() == thread) && !sketch.finished) {
+    if (Display.wasResized()) {
+      setSize(Display.getWidth(),Display.getHeight());
+    }
     pgl.setThread(thread);
     checkPause();
     sketch.handleDraw();
@@ -46,7 +54,10 @@
       }
     }
     beforeTime=System.nanoTime();
+    if (Display.isCloseRequested())     break;
   }
+  keyPoller.requestStop();
+  mousePoller.requestStop();
   sketch.dispose();
   Display.destroy();
   if (sketch.exitCalled()) {
