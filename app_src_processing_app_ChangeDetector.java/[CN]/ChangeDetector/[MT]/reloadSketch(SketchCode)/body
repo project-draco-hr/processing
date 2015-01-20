@@ -1,8 +1,9 @@
 {
-  int response=Base.showYesNoQuestion(editor,"File Modified","Your sketch has been modified externally.<br>Would you like to reload the sketch?","If you reload the sketch, any unsaved changes will be lost!");
+  int response=showYesNoQuestionAsync(editor,"File Modified","Your sketch has been modified externally.<br>Would you like to reload the sketch?","If you reload the sketch, any unsaved changes will be lost!");
   if (response == 0) {
     sketch.reload();
-    editor.header.rebuild();
+    rebuildHeaderAsync();
+    return true;
   }
  else {
     if (changed != null) {
@@ -15,9 +16,8 @@
         }
       }
     }
-    editor.header.rebuild();
+    rebuildHeaderAsync();
     skip=true;
-    return;
+    return false;
   }
-  return;
 }
