@@ -1,0 +1,20 @@
+{
+  @SuppressWarnings("unchecked") List<ASTNode> list=fd.modifiers();
+  SimpleName sn=(SimpleName)getNode();
+  Type tp=fd.getType();
+  int lineNum=getLineNumber(sn);
+  log("SN " + sn + ", "+ lineNum);
+  for (  ASTNode astNode : list) {
+    if (getLineNumber(astNode) == lineNum) {
+      log("first node in that line " + astNode);
+      log("diff " + (sn.getStartPosition() - astNode.getStartPosition()));
+      return (astNode.getStartPosition());
+    }
+  }
+  if (getLineNumber(fd.getType()) == lineNum) {
+    log("first node in that line " + tp);
+    log("diff " + (sn.getStartPosition() - tp.getStartPosition()));
+    return (tp.getStartPosition());
+  }
+  return 0;
+}

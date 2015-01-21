@@ -1,0 +1,14 @@
+{
+  if (mainTree.isLeaf()) {
+    return mainTree.getUserObject().toString().toLowerCase().startsWith(prefix);
+  }
+  boolean found=false;
+  for (int i=0; i < mainTree.getChildCount(); i++) {
+    DefaultMutableTreeNode tNode=new DefaultMutableTreeNode(((DefaultMutableTreeNode)mainTree.getChildAt(i)).getUserObject());
+    if (filterTree(prefix,tNode,(DefaultMutableTreeNode)mainTree.getChildAt(i))) {
+      found=true;
+      tree.add(tNode);
+    }
+  }
+  return found;
+}

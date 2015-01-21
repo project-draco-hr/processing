@@ -1,0 +1,23 @@
+{
+  ASTParser parser=ASTParser.newParser(AST.JLS8);
+  try {
+    parser.setSource("".toCharArray());
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  Map<String,String> options=JavaCore.getOptions();
+  JavaCore.setComplianceOptions(JavaCore.VERSION_1_8,options);
+  parser.setCompilerOptions(options);
+  CompilationUnit unit=(CompilationUnit)parser.createAST(null);
+  unit.recordModifications();
+  AST ast=unit.getAST();
+  PackageDeclaration packageDeclaration=ast.newPackageDeclaration();
+  unit.setPackage(packageDeclaration);
+  packageDeclaration.setName(ast.newSimpleName(fileName));
+  TypeDeclaration classType=ast.newTypeDeclaration();
+  classType.setInterface(false);
+  classType.setName(ast.newSimpleName(fileName));
+  unit.types().add(classType);
+  return new CompilationUnitImpl(unit);
+}

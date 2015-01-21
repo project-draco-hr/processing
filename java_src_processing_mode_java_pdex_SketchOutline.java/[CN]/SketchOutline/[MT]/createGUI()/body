@@ -1,0 +1,37 @@
+{
+  frmOutlineView=new JFrame();
+  frmOutlineView.setAlwaysOnTop(true);
+  frmOutlineView.setUndecorated(true);
+  Point tp=errorCheckerService.getEditor().ta.getLocationOnScreen();
+  int minWidth=(int)(editor.getMinimumSize().width * 0.7f);
+  int maxWidth=(int)(editor.getMinimumSize().width * 0.9f);
+  frmOutlineView.setLayout(new BoxLayout(frmOutlineView.getContentPane(),BoxLayout.Y_AXIS));
+  JPanel panelTop=new JPanel(), panelBottom=new JPanel();
+  panelTop.setLayout(new BoxLayout(panelTop,BoxLayout.Y_AXIS));
+  panelBottom.setLayout(new BoxLayout(panelBottom,BoxLayout.Y_AXIS));
+  searchField=new JTextField();
+  searchField.setMinimumSize(new Dimension(minWidth,25));
+  panelTop.add(searchField);
+  jsp=new JScrollPane();
+  soTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+  soTree.setRootVisible(false);
+  soTree.setCellRenderer(new CustomCellRenderer());
+  for (int i=0; i < soTree.getRowCount(); i++) {
+    soTree.expandRow(i);
+  }
+  soTree.setSelectionRow(0);
+  jsp.setViewportView(soTree);
+  jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+  jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+  jsp.setMinimumSize(new Dimension(minWidth,editor.ta.getHeight() - 10));
+  jsp.setMaximumSize(new Dimension(maxWidth,editor.ta.getHeight() - 10));
+  panelBottom.add(jsp);
+  frmOutlineView.add(panelTop);
+  frmOutlineView.add(panelBottom);
+  frmOutlineView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+  frmOutlineView.pack();
+  frmOutlineView.setBounds(tp.x + errorCheckerService.getEditor().ta.getWidth() - minWidth,tp.y,minWidth,Math.min(editor.ta.getHeight(),frmOutlineView.getHeight()));
+  frmOutlineView.setMinimumSize(new Dimension(minWidth,Math.min(errorCheckerService.getEditor().ta.getHeight(),frmOutlineView.getHeight())));
+  frmOutlineView.setLocation(tp.x + errorCheckerService.getEditor().ta.getWidth() / 2 - frmOutlineView.getWidth() / 2,frmOutlineView.getY() + (editor.ta.getHeight() - frmOutlineView.getHeight()) / 2);
+  addListeners();
+}
