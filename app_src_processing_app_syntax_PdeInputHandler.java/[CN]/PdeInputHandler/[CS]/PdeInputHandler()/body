@@ -1,0 +1,89 @@
+{
+  String mod=Base.isMacOS() ? "A" : "C";
+  addKeyBinding("BACK_SPACE",InputHandler.BACKSPACE);
+  if (Preferences.getBoolean("editor.keys.shift_backspace_is_delete")) {
+    addKeyBinding("S+BACK_SPACE",InputHandler.DELETE);
+  }
+ else {
+    addKeyBinding("S+BACK_SPACE",InputHandler.BACKSPACE);
+  }
+  addKeyBinding("DELETE",InputHandler.DELETE);
+  addKeyBinding("S+DELETE",InputHandler.DELETE);
+  addKeyBinding(mod + "+BACK_SPACE",InputHandler.BACKSPACE_WORD);
+  addKeyBinding(mod + "S+BACK_SPACE",InputHandler.BACKSPACE_WORD);
+  addKeyBinding(mod + "+DELETE",InputHandler.DELETE_WORD);
+  addKeyBinding(mod + "S+DELETE",InputHandler.DELETE_WORD);
+  addKeyBinding("INSERT",InputHandler.OVERWRITE);
+  if (Preferences.getBoolean("editor.keys.alternative_cut_copy_paste")) {
+    addKeyBinding("C+INSERT",InputHandler.CLIPBOARD_COPY);
+    addKeyBinding("S+INSERT",InputHandler.CLIPBOARD_PASTE);
+    addKeyBinding("S+DELETE",InputHandler.CLIPBOARD_CUT);
+  }
+  if (Preferences.getBoolean("editor.keys.home_and_end_travel_far")) {
+    addKeyBinding("HOME",InputHandler.DOCUMENT_HOME);
+    addKeyBinding("END",InputHandler.DOCUMENT_END);
+    addKeyBinding("S+HOME",InputHandler.SELECT_DOC_HOME);
+    addKeyBinding("S+END",InputHandler.SELECT_DOC_END);
+  }
+ else {
+    addKeyBinding("HOME",InputHandler.HOME);
+    addKeyBinding("END",InputHandler.END);
+    addKeyBinding("S+HOME",InputHandler.SELECT_HOME);
+    addKeyBinding("S+END",InputHandler.SELECT_END);
+    addKeyBinding("C+HOME",InputHandler.DOCUMENT_HOME);
+    addKeyBinding("C+END",InputHandler.DOCUMENT_END);
+    addKeyBinding("CS+HOME",InputHandler.SELECT_DOC_HOME);
+    addKeyBinding("CS+END",InputHandler.SELECT_DOC_END);
+  }
+  if (Base.isMacOS()) {
+    addKeyBinding("C+A",InputHandler.HOME);
+    addKeyBinding("CS+A",InputHandler.SELECT_HOME);
+    addKeyBinding("C+E",InputHandler.END);
+    addKeyBinding("CS+E",InputHandler.SELECT_END);
+    addKeyBinding("C+D",InputHandler.DELETE);
+    addKeyBinding("C+B",InputHandler.PREV_CHAR);
+    addKeyBinding("CS+B",InputHandler.SELECT_PREV_CHAR);
+    addKeyBinding("C+F",InputHandler.NEXT_CHAR);
+    addKeyBinding("CS+F",InputHandler.SELECT_NEXT_CHAR);
+    addKeyBinding("C+H",InputHandler.BACKSPACE);
+    addKeyBinding("C+N",InputHandler.NEXT_LINE);
+    addKeyBinding("CS+N",InputHandler.SELECT_NEXT_LINE);
+    addKeyBinding("C+P",InputHandler.PREV_LINE);
+    addKeyBinding("CS+P",InputHandler.SELECT_PREV_LINE);
+  }
+  if (Base.isMacOS()) {
+    addKeyBinding("M+LEFT",InputHandler.HOME);
+    addKeyBinding("M+RIGHT",InputHandler.END);
+    addKeyBinding("MS+LEFT",InputHandler.SELECT_HOME);
+    addKeyBinding("MS+RIGHT",InputHandler.SELECT_END);
+  }
+ else {
+    addKeyBinding("C+LEFT",InputHandler.HOME);
+    addKeyBinding("C+RIGHT",InputHandler.END);
+    addKeyBinding("CS+HOME",InputHandler.SELECT_HOME);
+    addKeyBinding("CS+END",InputHandler.SELECT_END);
+  }
+  addKeyBinding("PAGE_UP",InputHandler.PREV_PAGE);
+  addKeyBinding("PAGE_DOWN",InputHandler.NEXT_PAGE);
+  addKeyBinding("S+PAGE_UP",InputHandler.SELECT_PREV_PAGE);
+  addKeyBinding("S+PAGE_DOWN",InputHandler.SELECT_NEXT_PAGE);
+  addKeyBinding("LEFT",InputHandler.PREV_CHAR);
+  addKeyBinding("S+LEFT",InputHandler.SELECT_PREV_CHAR);
+  addKeyBinding(mod + "+LEFT",InputHandler.PREV_WORD);
+  addKeyBinding(mod + "S+LEFT",InputHandler.SELECT_PREV_WORD);
+  addKeyBinding("RIGHT",InputHandler.NEXT_CHAR);
+  addKeyBinding("S+RIGHT",InputHandler.SELECT_NEXT_CHAR);
+  addKeyBinding(mod + "+RIGHT",InputHandler.NEXT_WORD);
+  addKeyBinding(mod + "S+RIGHT",InputHandler.SELECT_NEXT_WORD);
+  addKeyBinding("UP",InputHandler.PREV_LINE);
+  addKeyBinding(mod + "+UP",InputHandler.PREV_LINE);
+  addKeyBinding("S+UP",InputHandler.SELECT_PREV_LINE);
+  addKeyBinding("DOWN",InputHandler.NEXT_LINE);
+  addKeyBinding(mod + "+DOWN",InputHandler.NEXT_LINE);
+  addKeyBinding("S+DOWN",InputHandler.SELECT_NEXT_LINE);
+  addKeyBinding("MS+UP",InputHandler.SELECT_DOC_HOME);
+  addKeyBinding("CS+UP",InputHandler.SELECT_DOC_HOME);
+  addKeyBinding("MS+DOWN",InputHandler.SELECT_DOC_END);
+  addKeyBinding("CS+DOWN",InputHandler.SELECT_DOC_END);
+  addKeyBinding(mod + "+ENTER",InputHandler.REPEAT);
+}
