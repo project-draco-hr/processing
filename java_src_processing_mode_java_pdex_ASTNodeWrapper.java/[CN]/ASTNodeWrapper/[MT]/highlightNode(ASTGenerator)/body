@@ -10,24 +10,24 @@
     javaSource.insertString(0,astGenerator.errorCheckerService.sourceCode,null);
     Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber - 1);
     if (lineElement == null) {
-      log(lineNumber + " line element null while highlighting " + nodeName);
+      Base.log(lineNumber + " line element null while highlighting " + nodeName);
       return false;
     }
     String javaLine=javaSource.getText(lineElement.getStartOffset(),lineElement.getEndOffset() - lineElement.getStartOffset());
     astGenerator.editor.getSketch().setCurrentCode(pdeOffs[0]);
     String pdeLine=astGenerator.editor.getLineText(pdeOffs[1]);
     String lookingFor=nodeName.toString();
-    log(lookingFor + ", " + nodeName.getStartPosition());
-    log(javaLineNumber + " JL " + javaLine+ " LSO "+ lineElement.getStartOffset()+ ","+ lineElement.getEndOffset());
-    log(pdeOffs[1] + " PL " + pdeLine);
+    Base.log(lookingFor + ", " + nodeName.getStartPosition());
+    Base.log(javaLineNumber + " JL " + javaLine+ " LSO "+ lineElement.getStartOffset()+ ","+ lineElement.getEndOffset());
+    Base.log(pdeOffs[1] + " PL " + pdeLine);
     if (!javaLine.contains(lookingFor) || !pdeLine.contains(lookingFor)) {
-      logE("Logical error in highLightNode(). Please file a bug report.");
+      Base.loge("Logical error in highLightNode(). Please file a bug report.");
       return false;
     }
     OffsetMatcher ofm=new OffsetMatcher(pdeLine,javaLine);
     int highlightStart=ofm.getPdeOffForJavaOff(nodeName.getStartPosition() - lineElement.getStartOffset(),nodeName.getLength());
     if (highlightStart == -1) {
-      logE("Logical error in highLightNode() during offset matching. " + "Please file a bug report.");
+      Base.loge("Logical error in highLightNode() during offset matching. " + "Please file a bug report.");
       return false;
     }
     int lso=astGenerator.editor.ta.getLineStartOffset(pdeOffs[1]);
@@ -36,7 +36,7 @@
     return true;
   }
  catch (  BadLocationException e) {
-    logE("BLE in highLightNode() for " + nodeName);
+    Base.loge("BLE in highLightNode() for " + nodeName);
     e.printStackTrace();
   }
   return false;

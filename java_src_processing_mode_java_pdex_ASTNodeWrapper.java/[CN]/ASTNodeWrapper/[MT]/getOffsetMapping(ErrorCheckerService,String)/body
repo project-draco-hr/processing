@@ -1,5 +1,5 @@
 {
-  log("Src:" + source);
+  Base.log("Src:" + source);
   String sourceAlt=new String(source);
   String sourceJava=ecs.astGenerator.getJavaSourceCodeLine(lineNumber);
   TreeMap<Integer,Integer> offsetmap=new TreeMap<Integer,Integer>();
@@ -30,7 +30,7 @@
     sourceAlt=matcher.replaceAll("PApplet.parse" + Character.toUpperCase(dataType.charAt(0)) + dataType.substring(1)+ "(");
   }
   if (offsetmap.isEmpty()) {
-    log("No offset matching needed.");
+    Base.log("No offset matching needed.");
     return null;
   }
   webMatcher=webPattern.matcher(sourceAlt);
@@ -41,8 +41,8 @@
   }
   colorMatcher=colorPattern.matcher(sourceAlt);
   sourceAlt=colorMatcher.replaceAll("int");
-  log("From direct source: ");
-  log(sourceAlt);
+  Base.log("From direct source: ");
+  Base.log(sourceAlt);
   int javaCodeMap[]=new int[source.length() * 2];
   int pdeCodeMap[]=new int[source.length() * 2];
   int pi=1, pj=1;
@@ -54,7 +54,7 @@
     for (; pj < key; pj++) {
       pdeCodeMap[pj]=pdeCodeMap[pj - 1] + 1;
     }
-    log(key + ":" + offsetmap.get(key));
+    Base.log(key + ":" + offsetmap.get(key));
     int kval=offsetmap.get(key);
     if (kval > 0) {
       pi--;
@@ -88,15 +88,17 @@
     pdeCodeMap[pj]=pdeCodeMap[pj - 1] + 1;
     pj++;
   }
-  for (int i=0; i < pdeCodeMap.length; i++) {
-    if (pdeCodeMap[i] > 0 || javaCodeMap[i] > 0 || i == 0) {
-      if (i < source.length())       log2(source.charAt(i));
-      log2(pdeCodeMap[i] + " - " + javaCodeMap[i]);
-      if (i < sourceAlt.length())       log2(sourceAlt.charAt(i));
-      log2(" <-[" + i + "]");
-      log("");
+  if (Base.DEBUG) {
+    for (int i=0; i < pdeCodeMap.length; i++) {
+      if (pdeCodeMap[i] > 0 || javaCodeMap[i] > 0 || i == 0) {
+        if (i < source.length())         System.out.print(source.charAt(i));
+        System.out.print(pdeCodeMap[i] + " - " + javaCodeMap[i]);
+        if (i < sourceAlt.length())         System.out.print(sourceAlt.charAt(i));
+        System.out.print(" <-[" + i + "]");
+        System.out.println();
+      }
     }
+    System.out.println();
   }
-  log("");
   return new int[][]{javaCodeMap,pdeCodeMap};
 }

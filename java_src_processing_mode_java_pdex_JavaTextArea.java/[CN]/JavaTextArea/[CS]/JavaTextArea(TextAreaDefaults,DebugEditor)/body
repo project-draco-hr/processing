@@ -1,0 +1,21 @@
+{
+  super(defaults,new JavaInputHandler(editor));
+  this.editor=editor;
+  mouseListeners=painter.getMouseListeners();
+  MouseHandler mouseHandler=new MouseHandler();
+  painter.addMouseListener(mouseHandler);
+  painter.addMouseMotionListener(mouseHandler);
+  add(CENTER,painter);
+  Mode mode=editor.getMode();
+  gutterBgColor=mode.getColor("gutter.bgcolor");
+  gutterLineColor=mode.getColor("gutter.linecolor");
+  gutterPadding=mode.getInteger("gutter.padding");
+  breakpointMarker=mode.getString("breakpoint.marker");
+  currentLineMarker=mode.getString("currentline.marker");
+  prevCompListeners=painter.getComponentListeners();
+  prevMouseListeners=painter.getMouseListeners();
+  prevMMotionListeners=painter.getMouseMotionListeners();
+  prevKeyListeners=editor.getKeyListeners();
+  interactiveMode=false;
+  addPrevListeners();
+}

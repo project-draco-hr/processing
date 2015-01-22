@@ -1,0 +1,29 @@
+{
+  int currentTab=getCurrentCodeIndex();
+  for (  Handle n : handles.get(currentTab)) {
+    if (n.pick(e.getX(),e.getY())) {
+      cursorType=-1;
+      this.setCursor(blankCursor);
+      mouseHandle=n;
+      mouseHandle.setCenterX(e.getX());
+      repaint();
+      return;
+    }
+  }
+  for (  ColorControlBox box : colorBoxes.get(currentTab)) {
+    if (box.pick(e.getX(),e.getY())) {
+      if (colorSelector != null) {
+        colorSelector.frame.dispatchEvent(new WindowEvent(colorSelector.frame,WindowEvent.WINDOW_CLOSING));
+      }
+      colorSelector=new ColorSelector(box);
+      colorSelector.frame.addWindowListener(new WindowAdapter(){
+        public void windowClosing(        WindowEvent e){
+          colorSelector.frame.setVisible(false);
+          colorSelector=null;
+        }
+      }
+);
+      colorSelector.show(this.getLocationOnScreen().x + e.getX() + 30,this.getLocationOnScreen().y + e.getY() - 130);
+    }
+  }
+}

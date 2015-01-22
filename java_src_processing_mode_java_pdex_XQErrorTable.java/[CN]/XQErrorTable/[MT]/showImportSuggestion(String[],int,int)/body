@@ -21,11 +21,11 @@
   frmImportSuggest.pack();
   final DebugEditor editor=errorCheckerService.getEditor();
   classList.addListSelectionListener(new ListSelectionListener(){
-    @Override public void valueChanged(    ListSelectionEvent e){
+    public void valueChanged(    ListSelectionEvent e){
       if (classList.getSelectedValue() != null) {
         try {
           String t=classList.getSelectedValue().trim();
-          log(t);
+          Base.log(t);
           int x=t.indexOf('(');
           String impString="import " + t.substring(x + 1,t.indexOf(')')) + ";\n";
           int ct=editor.getSketch().getCurrentCodeIndex();
@@ -34,7 +34,7 @@
           editor.getSketch().setCurrentCode(ct);
         }
  catch (        BadLocationException ble) {
-          log("Failed to insert import");
+          Base.log("Failed to insert import");
           ble.printStackTrace();
         }
       }

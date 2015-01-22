@@ -1,0 +1,23 @@
+{
+  hideSuggestion();
+  if (listModel.size() == 0) {
+    Base.log("TextArea: No suggestions to show.");
+  }
+ else {
+    int position=getCaretPosition();
+    Point location=new Point();
+    try {
+      location.x=offsetToX(getCaretLine(),position - getLineStartOffset(getCaretLine()));
+      location.y=lineToY(getCaretLine()) + getPainter().getFontMetrics().getHeight() + getPainter().getFontMetrics().getDescent();
+    }
+ catch (    Exception e2) {
+      e2.printStackTrace();
+      return;
+    }
+    if (subWord.length() < 2) {
+      return;
+    }
+    suggestion=new CompletionPanel(this,position,subWord,listModel,location,editor);
+    requestFocusInWindow();
+  }
+}

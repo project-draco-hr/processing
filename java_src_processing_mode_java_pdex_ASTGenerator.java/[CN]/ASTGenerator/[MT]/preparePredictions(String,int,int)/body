@@ -46,7 +46,7 @@
   parser.setKind(ASTParser.K_EXPRESSION);
   parser.setSource(word2.toCharArray());
   ASTNode testnode=parser.createAST(null);
-  logE("Typed: " + word2 + "|"+ " temp Node type: "+ testnode.getClass().getSimpleName());
+  Base.loge("Typed: " + word2 + "|"+ " temp Node type: "+ testnode.getClass().getSimpleName());
   if (testnode instanceof MethodInvocation) {
     MethodInvocation mi=(MethodInvocation)testnode;
     log(mi.getName() + "," + mi.getExpression()+ ","+ mi.typeArguments().size());
@@ -55,11 +55,11 @@
   if (nearestNode == null) {
     nearestNode=(ASTNode)errorCheckerService.getLastCorrectCU().types().get(0);
   }
-  logE(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(nearestNode));
+  Base.loge(lineNumber + " Nearest ASTNode to PRED " + getNodeAsString(nearestNode));
   candidates=new ArrayList<CompletionCandidate>();
   lastPredictedWord=word2;
   if (testnode instanceof SimpleName && !noCompare) {
-    logE("One word expression " + getNodeAsString(testnode));
+    Base.loge("One word expression " + getNodeAsString(testnode));
     while (nearestNode != null) {
       if (nearestNode instanceof TypeDeclaration) {
         TypeDeclaration td=(TypeDeclaration)nearestNode;
@@ -115,7 +115,7 @@
     }
   }
  else {
-    logE("Complex expression " + getNodeAsString(testnode));
+    Base.loge("Complex expression " + getNodeAsString(testnode));
     log("candidates empty");
     ASTNode childExpr=getChildExpression(testnode);
     log("Parent expression : " + getParentExpression(testnode));
