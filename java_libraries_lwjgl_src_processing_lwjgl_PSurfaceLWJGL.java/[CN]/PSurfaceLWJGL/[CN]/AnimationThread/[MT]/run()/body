@@ -15,11 +15,6 @@
   keyPoller.start();
   mousePoller=new MousePoller(sketch);
   mousePoller.start();
-  System.err.println(Mouse.getNativeCursor());
-  long beforeTime=System.nanoTime();
-  long overSleepTime=0L;
-  int noDelays=0;
-  final int NO_DELAYS_PER_YIELD=15;
   setSize(sketchWidth,sketchHeight);
   sketch.start();
   while ((Thread.currentThread() == thread) && !sketch.finished) {
@@ -33,27 +28,7 @@
     if (sketch.frameCount == 1) {
       requestFocus();
     }
-    long afterTime=System.nanoTime();
-    long timeDiff=afterTime - beforeTime;
-    long sleepTime=(frameRatePeriod - timeDiff) - overSleepTime;
-    if (sleepTime > 0) {
-      try {
-        Thread.sleep(sleepTime / 1000000L,(int)(sleepTime % 1000000L));
-        noDelays=0;
-      }
- catch (      InterruptedException ex) {
-      }
-      overSleepTime=(System.nanoTime() - afterTime) - sleepTime;
-    }
- else {
-      overSleepTime=0L;
-      noDelays++;
-      if (noDelays > NO_DELAYS_PER_YIELD) {
-        Thread.yield();
-        noDelays=0;
-      }
-    }
-    beforeTime=System.nanoTime();
+    Display.sync((int)frameRateTarget);
     if (Display.isCloseRequested())     break;
   }
   keyPoller.requestStop();
