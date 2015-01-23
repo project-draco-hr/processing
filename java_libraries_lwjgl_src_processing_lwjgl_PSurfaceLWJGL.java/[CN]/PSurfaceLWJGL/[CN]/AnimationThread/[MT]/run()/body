@@ -1,17 +1,14 @@
 {
   try {
-    System.err.println("DISPLAY PARENT: " + Display.getParent());
-    Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
-    System.err.println(sketchWidth + " " + sketchHeight);
-    if (fullScreenRequested) {
-      Display.setFullscreen(true);
-    }
-    Display.create();
+    System.err.println("CREATE THE DISPLAY");
+    PixelFormat format=new PixelFormat(PGL.REQUESTED_ALPHA_BITS,PGL.REQUESTED_DEPTH_BITS,PGL.REQUESTED_STENCIL_BITS,pgl.reqNumSamples);
+    Display.create(format);
   }
  catch (  LWJGLException e) {
     e.printStackTrace();
     System.exit(0);
   }
+  boolean deinit=true;
   keyPoller=new KeyPoller(sketch);
   keyPoller.start();
   mousePoller=new MousePoller(sketch);
@@ -41,15 +38,22 @@
     x0=x;
     y0=y;
     if (Display.isCloseRequested())     break;
+    if (forceExit) {
+      System.err.println("QUIT");
+      deinit=false;
+      break;
+    }
   }
-  if (externalMessages) {
-    sketch.exit();
-  }
-  keyPoller.requestStop();
-  mousePoller.requestStop();
-  sketch.dispose();
-  Display.destroy();
-  if (sketch.exitCalled()) {
-    sketch.exitActual();
+  if (deinit) {
+    if (externalMessages) {
+      sketch.exit();
+    }
+    keyPoller.requestStop();
+    mousePoller.requestStop();
+    sketch.dispose();
+    Display.destroy();
+    if (sketch.exitCalled()) {
+      sketch.exitActual();
+    }
   }
 }

@@ -1,0 +1,31 @@
+{
+  while (true) {
+    if (changeRequested) {
+      forceExit=true;
+      thread.interrupt();
+      while (thread.isAlive()) {
+        Thread.yield();
+      }
+      thread=null;
+      keyPoller.requestStop();
+      keyPoller.interrupt();
+      while (keyPoller.isAlive()) {
+        Thread.yield();
+      }
+      mousePoller.requestStop();
+      mousePoller.interrupt();
+      while (mousePoller.isAlive()) {
+        Thread.yield();
+      }
+      startThread();
+      changeRequested=false;
+    }
+    try {
+      Thread.sleep(10);
+    }
+ catch (    InterruptedException e) {
+      Thread.currentThread().interrupt();
+      break;
+    }
+  }
+}

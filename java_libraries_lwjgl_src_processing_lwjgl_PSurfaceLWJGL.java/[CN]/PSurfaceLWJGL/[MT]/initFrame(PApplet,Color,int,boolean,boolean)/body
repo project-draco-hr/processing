@@ -49,6 +49,26 @@
   if (graphics.is2X()) {
     System.setProperty("org.lwjgl.opengl.Display.enableHighDPI","true");
   }
+  pgl.reqNumSamples=graphics.quality;
+  System.err.println("DISPLAY PARENT: " + Display.getParent());
+  System.err.println("DISPLAY SMOOTH: " + pgl.reqNumSamples);
+  try {
+    int argb=graphics.backgroundColor;
+    float r=((argb >> 16) & 0xff) / 255.0f;
+    float g=((argb >> 8) & 0xff) / 255.0f;
+    float b=((argb) & 0xff) / 255.0f;
+    Display.setInitialBackground(r,g,b);
+    Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
+    System.err.println(sketchWidth + " " + sketchHeight);
+    if (fullScreenRequested) {
+      Display.setFullscreen(true);
+    }
+  }
+ catch (  LWJGLException e) {
+    e.printStackTrace();
+  }
+  restarter=new DisplayResarter();
+  restarter.start();
   frame=new DummyFrame();
   return frame;
 }
