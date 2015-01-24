@@ -1,8 +1,8 @@
 {
-  if (!ExperimentalMode.autoSaveEnabled)   return;
+  if (!JavaMode.autoSaveEnabled)   return;
   try {
     if (sketch.isModified() && !sketch.isUntitled()) {
-      if (ExperimentalMode.autoSavePromptEnabled) {
+      if (JavaMode.autoSavePromptEnabled) {
         final JDialog autoSaveDialog=new JDialog(base.getActiveEditor(),this.getSketch().getName(),true);
         Container container=autoSaveDialog.getContentPane();
         JPanel panelMain=new JPanel();
@@ -20,8 +20,8 @@
           @Override public void actionPerformed(          ActionEvent e){
             handleSave(true);
             if (dontRedisplay.isSelected()) {
-              ExperimentalMode.autoSavePromptEnabled=!dontRedisplay.isSelected();
-              ExperimentalMode.defaultAutoSaveEnabled=true;
+              JavaMode.autoSavePromptEnabled=!dontRedisplay.isSelected();
+              JavaMode.defaultAutoSaveEnabled=true;
               dmode.savePreferences();
             }
             autoSaveDialog.dispose();
@@ -33,8 +33,8 @@
         btnRunNoSave.addActionListener(new ActionListener(){
           @Override public void actionPerformed(          ActionEvent e){
             if (dontRedisplay.isSelected()) {
-              ExperimentalMode.autoSavePromptEnabled=!dontRedisplay.isSelected();
-              ExperimentalMode.defaultAutoSaveEnabled=false;
+              JavaMode.autoSavePromptEnabled=!dontRedisplay.isSelected();
+              JavaMode.defaultAutoSaveEnabled=false;
               dmode.savePreferences();
             }
             autoSaveDialog.dispose();
@@ -53,7 +53,9 @@
         autoSaveDialog.setLocationRelativeTo(base.getActiveEditor());
         autoSaveDialog.setVisible(true);
       }
- else       if (ExperimentalMode.defaultAutoSaveEnabled)       handleSave(true);
+ else       if (JavaMode.defaultAutoSaveEnabled) {
+        handleSave(true);
+      }
     }
   }
  catch (  Exception e) {

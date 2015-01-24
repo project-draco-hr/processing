@@ -1,15 +1,11 @@
 {
-  JavaBuild build=new JavaBuild(sketch);
-  String appletClassName=build.build(false);
-  if (appletClassName != null) {
-    final Runner runtime=new Runner(build,listener);
-    new Thread(new Runnable(){
-      public void run(){
-        runtime.launch(true);
-      }
-    }
-).start();
-    return runtime;
+  final DebugEditor editor=(DebugEditor)listener;
+  editor.errorCheckerService.quickErrorCheck();
+  if (enableTweak) {
+    enableTweak=false;
+    return handleTweak(sketch,listener,true);
   }
-  return null;
+ else {
+    return handleLaunch(sketch,listener,true);
+  }
 }

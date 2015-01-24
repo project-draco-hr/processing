@@ -60,16 +60,16 @@ return;
 }
 final KeyEvent evt2=evt;
 if (keyChar == '.') {
-if (ExperimentalMode.codeCompletionsEnabled) {
+if (JavaMode.codeCompletionsEnabled) {
 Base.log("[KeyEvent]" + KeyEvent.getKeyText(evt2.getKeyCode()) + "  |Prediction started");
 Base.log("Typing: " + fetchPhrase(evt2));
 }
 }
  else if (keyChar == ' ') {
-if (!Base.isMacOS() && ExperimentalMode.codeCompletionsEnabled && (evt.isControlDown() || evt.isMetaDown())) {
+if (!Base.isMacOS() && JavaMode.codeCompletionsEnabled && (evt.isControlDown() || evt.isMetaDown())) {
 SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
 protected Object doInBackground() throws Exception {
-if (ExperimentalMode.codeCompletionsEnabled) {
+if (JavaMode.codeCompletionsEnabled) {
 getDocument().remove(getCaretPosition() - 1,1);
 Base.log("[KeyEvent]" + evt2.getKeyChar() + "  |Prediction started");
 Base.log("Typing: " + fetchPhrase(evt2));
@@ -85,7 +85,7 @@ hideSuggestion();
 }
 }
  else {
-if (ExperimentalMode.codeCompletionsEnabled) {
+if (JavaMode.codeCompletionsEnabled) {
 prepareSuggestions(evt2);
 }
 }
@@ -94,7 +94,7 @@ prepareSuggestions(evt2);
 final KeyEvent evt2=evt;
 SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
 protected Object doInBackground() throws Exception {
-if (ExperimentalMode.codeCompletionsEnabled) {
+if (JavaMode.codeCompletionsEnabled) {
 Base.log("[KeyEvent]" + KeyEvent.getKeyText(evt2.getKeyCode()) + "  |Prediction started");
 Base.log("Typing: " + fetchPhrase(evt2));
 }
