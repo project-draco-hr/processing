@@ -1,0 +1,23 @@
+{
+  currentThread=se.thread();
+  updateVariableInspector(currentThread);
+  final LineID newCurrentLine=locationToLineID(se.location());
+  javax.swing.SwingUtilities.invokeLater(new Runnable(){
+    @Override public void run(){
+      editor.setCurrentLine(newCurrentLine);
+      if (editor.toolbar() != null) {
+        editor.toolbar().deactivate(DebugToolbar.STEP);
+        editor.toolbar().deactivate(DebugToolbar.CONTINUE);
+      }
+    }
+  }
+);
+  EventRequestManager mgr=runtime.vm().eventRequestManager();
+  mgr.deleteEventRequest(se.request());
+  requestedStep=null;
+  paused=true;
+  editor.statusHalted();
+  if (!locationIsVisible(se.location())) {
+    stepOutIntoViewOrContinue();
+  }
+}

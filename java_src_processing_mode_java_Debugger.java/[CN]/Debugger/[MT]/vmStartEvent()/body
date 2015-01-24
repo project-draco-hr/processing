@@ -1,0 +1,15 @@
+{
+  log(Level.INFO,"requesting event on main class load: {0}",mainClassName);
+  ClassPrepareRequest mainClassPrepare=runtime.vm().eventRequestManager().createClassPrepareRequest();
+  mainClassPrepare.addClassFilter(mainClassName);
+  mainClassPrepare.enable();
+  for (  SketchCode tab : editor.getSketch().getCode()) {
+    if (tab.isExtension("java")) {
+      log(Level.INFO,"requesting event on class load: {0}",tab.getPrettyName());
+      ClassPrepareRequest customClassPrepare=runtime.vm().eventRequestManager().createClassPrepareRequest();
+      customClassPrepare.addClassFilter(tab.getPrettyName());
+      customClassPrepare.enable();
+    }
+  }
+  runtime.vm().resume();
+}

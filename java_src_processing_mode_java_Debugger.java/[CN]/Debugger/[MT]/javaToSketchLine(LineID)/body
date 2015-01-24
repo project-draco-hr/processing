@@ -10,7 +10,8 @@
   for (int i=sketch.getCodeCount() - 1; i >= 0; i--) {
     tab=sketch.getCode(i);
     if (tab.isExtension("pde") && tab.getPreprocOffset() <= javaLine.lineIdx()) {
-      return originalToRuntimeLine(new LineID(tab.getFileName(),javaLine.lineIdx() - tab.getPreprocOffset()));
+      final int index=javaLine.lineIdx() - tab.getPreprocOffset();
+      return originalToRuntimeLine(new LineID(tab.getFileName(),index));
     }
   }
   return null;

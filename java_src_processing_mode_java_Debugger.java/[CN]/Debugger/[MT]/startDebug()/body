@@ -6,22 +6,24 @@
   editor.clearConsole();
   editor.variableInspector().reset();
   editor.prepareRun();
-  if (editor.toolbar() != null)   editor.toolbar().activate(DebugToolbar.DEBUG);
+  if (editor.toolbar() != null) {
+    editor.toolbar().activate(DebugToolbar.DEBUG);
+  }
   try {
     Sketch sketch=editor.getSketch();
     JavaBuild build=new JavaBuild(sketch);
-    Logger.getLogger(Debugger.class.getName()).log(Level.INFO,"building sketch: {0}",sketch.getName());
+    log(Level.INFO,"building sketch: {0}",sketch.getName());
     mainClassName=build.build(false);
-    Logger.getLogger(Debugger.class.getName()).log(Level.INFO,"class: {0}",mainClassName);
+    log(Level.INFO,"class: {0}",mainClassName);
     srcPath=build.getSrcFolder().getPath();
-    Logger.getLogger(Debugger.class.getName()).log(Level.INFO,"build src: {0}",srcPath);
-    Logger.getLogger(Debugger.class.getName()).log(Level.INFO,"build bin: {0}",build.getBinFolder().getPath());
+    log(Level.INFO,"build src: {0}",srcPath);
+    log(Level.INFO,"build bin: {0}",build.getBinFolder().getPath());
     if (mainClassName != null) {
-      Logger.getLogger(Debugger.class.getName()).log(Level.INFO,"launching debuggee runtime");
+      log(Level.INFO,"launching debuggee runtime");
       runtime=new Runner(build,editor);
       VirtualMachine vm=runtime.launchDebug();
       if (vm == null) {
-        Logger.getLogger(Debugger.class.getName()).log(Level.SEVERE,"error 37: launch failed");
+        log(Level.SEVERE,"error 37: launch failed");
       }
       VMEventReader eventThread=new VMEventReader(vm.eventQueue(),this);
       eventThread.start();

@@ -1,0 +1,21 @@
+{
+  ReferenceType rt=ce.referenceType();
+  currentThread=ce.thread();
+  paused=true;
+  if (rt.name().equals(mainClassName)) {
+    mainClass=rt;
+    log(Level.INFO,"main class load: {0}",rt.name());
+    started=true;
+  }
+ else {
+    classes.add(rt);
+    log(Level.INFO,"class load: {0}",rt.name());
+  }
+  for (  ClassLoadListener listener : classLoadListeners) {
+    if (listener != null) {
+      listener.classLoaded(rt);
+    }
+  }
+  paused=false;
+  runtime.vm().resume();
+}
