@@ -1,0 +1,20 @@
+{
+  super.setCode(code);
+  if (ta != null) {
+    ta.clearLineBgColors();
+    ta.clearGutterText();
+    for (    LineHighlight hl : breakpointedLines) {
+      if (isInCurrentTab(hl.getLineID())) {
+        hl.paint();
+      }
+    }
+    if (currentLine != null) {
+      if (isInCurrentTab(currentLine.getLineID())) {
+        currentLine.paint();
+      }
+    }
+  }
+  if (dbg() != null && dbg().isStarted()) {
+    dbg().startTrackingLineChanges();
+  }
+}

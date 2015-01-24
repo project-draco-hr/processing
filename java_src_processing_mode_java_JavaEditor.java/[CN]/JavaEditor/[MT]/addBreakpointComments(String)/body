@@ -1,0 +1,21 @@
+{
+  SketchCode tab=getTab(tabFilename);
+  if (tab == null) {
+    Base.loge("Illegal tab name to addBreakpointComments() " + tabFilename);
+    return;
+  }
+  List<LineBreakpoint> bps=dbg.getBreakpoints(tab.getFileName());
+  File sourceFile=new File(sketch.getFolder(),tab.getFileName());
+  try {
+    String code=Base.loadFile(sourceFile);
+    String lines[]=code.split("\\r?\\n");
+    for (    LineBreakpoint bp : bps) {
+      lines[bp.lineID().lineIdx()]+=breakpointMarkerComment;
+    }
+    code=PApplet.join(lines,"\n");
+    Base.saveFile(code,sourceFile);
+  }
+ catch (  IOException ex) {
+    Logger.getLogger(JavaEditor.class.getName()).log(Level.SEVERE,null,ex);
+  }
+}

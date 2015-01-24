@@ -20,5 +20,14 @@
     }
   }
 );
-  return buildSketchMenu(new JMenuItem[]{runItem,presentItem,stopItem});
+  JMenuItem tweakItem=Toolkit.newJMenuItemShift(Language.text("menu.sketch.tweak"),'T');
+  tweakItem.setSelected(JavaMode.enableTweak);
+  tweakItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      JavaMode.enableTweak=true;
+      handleRun();
+    }
+  }
+);
+  return buildSketchMenu(new JMenuItem[]{runItem,presentItem,tweakItem,stopItem});
 }

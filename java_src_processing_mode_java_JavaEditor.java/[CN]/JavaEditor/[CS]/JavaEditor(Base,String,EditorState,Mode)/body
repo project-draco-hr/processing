@@ -1,4 +1,38 @@
 {
   super(base,path,state,mode);
   jmode=(JavaMode)mode;
+  dmode=(JavaMode)mode;
+  dbg=new Debugger(this);
+  vi=new VariableInspector(this);
+  ta=(JavaTextArea)textarea;
+  JMenuItem showUsageItem=new JMenuItem("Show Usage...");
+  showUsageItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleShowUsage();
+    }
+  }
+);
+  ta.getRightClickPopup().add(showUsageItem);
+  JMenuItem renameItem=new JMenuItem("Rename...");
+  renameItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      handleRefactor();
+    }
+  }
+);
+  ta.getRightClickPopup().add(renameItem);
+  Toolkit.setMenuMnemonics(ta.getRightClickPopup());
+  breakpointColor=mode.getColor("breakpoint.bgcolor");
+  breakpointMarkerColor=mode.getColor("breakpoint.marker.color");
+  currentLineColor=mode.getColor("currentline.bgcolor");
+  currentLineMarkerColor=mode.getColor("currentline.marker.color");
+  for (  LineID lineID : stripBreakpointComments()) {
+    dbg.setBreakpoint(lineID);
+  }
+  getSketch().setModified(false);
+  checkForJavaTabs();
+  initializeErrorChecker();
+  ta.setECSandThemeforTextArea(errorCheckerService,dmode);
+  addXQModeUI();
+  debugToolbarEnabled=new AtomicBoolean(false);
 }

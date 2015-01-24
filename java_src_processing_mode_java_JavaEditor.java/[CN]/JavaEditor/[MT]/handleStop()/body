@@ -1,15 +1,20 @@
 {
-  toolbar.activate(JavaToolbar.STOP);
-  try {
-    if (runtime != null) {
-      runtime.close();
-      runtime=null;
+  if (dbg.isStarted()) {
+    dbg.stopDebug();
+  }
+ else {
+    toolbar.activate(JavaToolbar.STOP);
+    try {
+      if (runtime != null) {
+        runtime.close();
+        runtime=null;
+      }
     }
+ catch (    Exception e) {
+      statusError(e);
+    }
+    toolbar.deactivate(JavaToolbar.RUN);
+    toolbar.deactivate(JavaToolbar.STOP);
+    toFront();
   }
- catch (  Exception e) {
-    statusError(e);
-  }
-  toolbar.deactivate(JavaToolbar.RUN);
-  toolbar.deactivate(JavaToolbar.STOP);
-  toFront();
 }
