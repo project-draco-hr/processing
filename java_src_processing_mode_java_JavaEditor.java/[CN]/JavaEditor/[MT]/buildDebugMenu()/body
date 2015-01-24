@@ -10,56 +10,152 @@
 );
   debugMenu.add(toggleDebugger);
   debugMenuItem=Toolkit.newJMenuItemAlt(Language.text("menu.debug.debug"),KeyEvent.VK_R);
-  debugMenuItem.addActionListener(this);
-  continueMenuItem=Toolkit.newJMenuItem(Language.text("menu.debug.continue"),KeyEvent.VK_U);
-  continueMenuItem.addActionListener(this);
-  stopMenuItem=new JMenuItem(Language.text("menu.debug.stop"));
-  stopMenuItem.addActionListener(this);
-  toggleBreakpointMenuItem=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_breakpoint"),KeyEvent.VK_B);
-  toggleBreakpointMenuItem.addActionListener(this);
-  listBreakpointsMenuItem=new JMenuItem(Language.text("menu.debug.list_breakpoints"));
-  listBreakpointsMenuItem.addActionListener(this);
-  stepOverMenuItem=Toolkit.newJMenuItem(Language.text("menu.debug.step"),KeyEvent.VK_J);
-  stepOverMenuItem.addActionListener(this);
-  stepIntoMenuItem=Toolkit.newJMenuItemShift(Language.text("menu.debug.step_into"),KeyEvent.VK_J);
-  stepIntoMenuItem.addActionListener(this);
-  stepOutMenuItem=Toolkit.newJMenuItemAlt(Language.text("menu.debug.step_out"),KeyEvent.VK_J);
-  stepOutMenuItem.addActionListener(this);
-  printStackTraceMenuItem=new JMenuItem(Language.text("menu.debug.print_stack_trace"));
-  printStackTraceMenuItem.addActionListener(this);
-  printLocalsMenuItem=new JMenuItem(Language.text("menu.debug.print_locals"));
-  printLocalsMenuItem.addActionListener(this);
-  printThisMenuItem=new JMenuItem(Language.text("menu.debug.print_fields"));
-  printThisMenuItem.addActionListener(this);
-  printSourceMenuItem=new JMenuItem(Language.text("menu.debug.print_source_location"));
-  printSourceMenuItem.addActionListener(this);
-  printThreads=new JMenuItem(Language.text("menu.debug.print_threads"));
-  printThreads.addActionListener(this);
-  toggleVariableInspectorMenuItem=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_variable_inspector"),KeyEvent.VK_I);
-  toggleVariableInspectorMenuItem.addActionListener(this);
+  debugMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Debug' menu item");
+      dbg.startDebug();
+    }
+  }
+);
   debugMenu.add(debugMenuItem);
+  continueMenuItem=Toolkit.newJMenuItem(Language.text("menu.debug.continue"),KeyEvent.VK_U);
+  continueMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Continue' menu item");
+      dbg.continueDebug();
+    }
+  }
+);
   debugMenu.add(continueMenuItem);
+  stopMenuItem=new JMenuItem(Language.text("menu.debug.stop"));
+  stopMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Stop' menu item");
+      dbg.stopDebug();
+    }
+  }
+);
   debugMenu.add(stopMenuItem);
   debugMenu.addSeparator();
+  toggleBreakpointMenuItem=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_breakpoint"),KeyEvent.VK_B);
+  toggleBreakpointMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Toggle Breakpoint' menu item");
+      dbg.toggleBreakpoint();
+    }
+  }
+);
   debugMenu.add(toggleBreakpointMenuItem);
+  listBreakpointsMenuItem=new JMenuItem(Language.text("menu.debug.list_breakpoints"));
+  listBreakpointsMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'List Breakpoints' menu item");
+      dbg.listBreakpoints();
+    }
+  }
+);
   debugMenu.add(listBreakpointsMenuItem);
   debugMenu.addSeparator();
+  stepOverMenuItem=Toolkit.newJMenuItem(Language.text("menu.debug.step"),KeyEvent.VK_J);
+  stepOverMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Step Over' menu item");
+      dbg.stepOver();
+    }
+  }
+);
   debugMenu.add(stepOverMenuItem);
+  stepIntoMenuItem=Toolkit.newJMenuItemShift(Language.text("menu.debug.step_into"),KeyEvent.VK_J);
+  stepIntoMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Step Into' menu item");
+      dbg.stepInto();
+    }
+  }
+);
   debugMenu.add(stepIntoMenuItem);
+  stepOutMenuItem=Toolkit.newJMenuItemAlt(Language.text("menu.debug.step_out"),KeyEvent.VK_J);
+  stepOutMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Step Out' menu item");
+      dbg.stepOut();
+    }
+  }
+);
   debugMenu.add(stepOutMenuItem);
   debugMenu.addSeparator();
+  printStackTraceMenuItem=new JMenuItem(Language.text("menu.debug.print_stack_trace"));
+  printStackTraceMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Stack Trace' menu item");
+      dbg.printStackTrace();
+    }
+  }
+);
   debugMenu.add(printStackTraceMenuItem);
+  printLocalsMenuItem=new JMenuItem(Language.text("menu.debug.print_locals"));
+  printLocalsMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Locals' menu item");
+      dbg.printLocals();
+    }
+  }
+);
   debugMenu.add(printLocalsMenuItem);
+  printThisMenuItem=new JMenuItem(Language.text("menu.debug.print_fields"));
+  printThisMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print This' menu item");
+      dbg.printThis();
+    }
+  }
+);
   debugMenu.add(printThisMenuItem);
+  printSourceMenuItem=new JMenuItem(Language.text("menu.debug.print_source_location"));
+  printSourceMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Source' menu item");
+      dbg.printSource();
+    }
+  }
+);
   debugMenu.add(printSourceMenuItem);
+  printThreads=new JMenuItem(Language.text("menu.debug.print_threads"));
+  printThreads.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Threads' menu item");
+      dbg.printThreads();
+    }
+  }
+);
   debugMenu.add(printThreads);
   debugMenu.addSeparator();
+  toggleVariableInspectorMenuItem=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_variable_inspector"),KeyEvent.VK_I);
+  toggleVariableInspectorMenuItem.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Toggle Variable Inspector' menu item");
+      toggleVariableInspector();
+    }
+  }
+);
   debugMenu.add(toggleVariableInspectorMenuItem);
   showOutline=Toolkit.newJMenuItem(Language.text("menu.debug.show_sketch_outline"),KeyEvent.VK_L);
-  showOutline.addActionListener(this);
+  showOutline.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.log("Show Sketch Outline:");
+      errorCheckerService.getASTGenerator().showSketchOutline();
+    }
+  }
+);
   debugMenu.add(showOutline);
   showTabOutline=Toolkit.newJMenuItem(Language.text("menu.debug.show_tabs_list"),KeyEvent.VK_Y);
-  showTabOutline.addActionListener(this);
+  showTabOutline.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Base.log("Show Tab Outline:");
+      errorCheckerService.getASTGenerator().showTabOutline();
+    }
+  }
+);
   debugMenu.add(showTabOutline);
   return debugMenu;
 }
