@@ -1,23 +1,8 @@
 {
   editor=je;
-  dbg=editor.dbg();
+  dbg=editor.getDebugger();
   setUndecorated(true);
-  editor.addComponentListener(new ComponentListener(){
-    @Override public void componentShown(    ComponentEvent e){
-    }
-    @Override public void componentResized(    ComponentEvent e){
-      updateBounds(e);
-    }
-    @Override public void componentMoved(    ComponentEvent e){
-      updateBounds(e);
-    }
-    @Override public void componentHidden(    ComponentEvent e){
-    }
-    private void updateBounds(    ComponentEvent e){
-      setBounds(editor.getX() + editor.getWidth(),editor.getY() + VERTICAL_OFFSET,getPreferredSize().width,editor.getHeight() - VERTICAL_OFFSET * 2);
-    }
-  }
-);
+  editor.addComponentListener(new EditorFollower());
   initComponents();
   rootNode=new DefaultMutableTreeNode("root");
   builtins=new DefaultMutableTreeNode("Processing");
