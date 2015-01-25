@@ -1,26 +1,18 @@
 {
   if (Base.isMacOS()) {
-    if (System.getProperty("java.vendor").contains("Apple")) {
-      Float prop=(Float)awtToolkit.getDesktopProperty("apple.awt.contentScaleFactor");
-      if (prop != null) {
-        return prop == 2;
-      }
-    }
- else     if (Base.isUsableOracleJava()) {
-      GraphicsEnvironment env=GraphicsEnvironment.getLocalGraphicsEnvironment();
-      GraphicsDevice device=env.getDefaultScreenDevice();
-      try {
-        Field field=device.getClass().getDeclaredField("scale");
-        if (field != null) {
-          field.setAccessible(true);
-          Object scale=field.get(device);
-          if (scale instanceof Integer && ((Integer)scale).intValue() == 2) {
-            return true;
-          }
+    GraphicsEnvironment env=GraphicsEnvironment.getLocalGraphicsEnvironment();
+    GraphicsDevice device=env.getDefaultScreenDevice();
+    try {
+      Field field=device.getClass().getDeclaredField("scale");
+      if (field != null) {
+        field.setAccessible(true);
+        Object scale=field.get(device);
+        if (scale instanceof Integer && ((Integer)scale).intValue() == 2) {
+          return true;
         }
       }
- catch (      Exception ignore) {
-      }
+    }
+ catch (    Exception ignore) {
     }
   }
   return false;

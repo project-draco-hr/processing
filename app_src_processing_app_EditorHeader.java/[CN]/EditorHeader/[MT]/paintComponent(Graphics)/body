@@ -29,16 +29,7 @@
   if (fontAscent == 0) {
     fontAscent=(int)Toolkit.getAscent(g);
   }
-  Graphics2D g2=(Graphics2D)g;
-  if (Toolkit.highResDisplay()) {
-    g2.scale(2,2);
-    if (Base.isUsableOracleJava()) {
-      g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    }
-  }
- else {
-    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-  }
+  Graphics2D g2=Toolkit.prepareGraphics(g);
   g.setColor(hiding ? hideColor : bgColor);
   g.fillRect(0,0,imageW,imageH);
   if (!hiding) {
