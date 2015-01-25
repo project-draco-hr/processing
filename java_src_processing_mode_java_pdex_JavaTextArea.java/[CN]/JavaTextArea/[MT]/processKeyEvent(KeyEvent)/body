@@ -48,60 +48,12 @@ break;
 }
 }
 super.processKeyEvent(evt);
-if (editor.hasJavaTabs) return;
+if (!editor.hasJavaTabs()) {
 if (evt.getID() == KeyEvent.KEY_TYPED) {
-char keyChar=evt.getKeyChar();
-if (keyChar == KeyEvent.VK_ENTER || keyChar == KeyEvent.VK_ESCAPE || keyChar == KeyEvent.VK_TAB || keyChar == KeyEvent.CHAR_UNDEFINED) {
-return;
+processCompletionKeys(evt);
 }
- else if (keyChar == ')') {
-hideSuggestion();
-return;
+ else if (Base.isMacOS() && evt.getID() == KeyEvent.KEY_RELEASED) {
+processControlSpace(evt);
 }
-final KeyEvent evt2=evt;
-if (keyChar == '.') {
-if (JavaMode.codeCompletionsEnabled) {
-Base.log("[KeyEvent]" + KeyEvent.getKeyText(evt2.getKeyCode()) + "  |Prediction started");
-Base.log("Typing: " + fetchPhrase(evt2));
-}
-}
- else if (keyChar == ' ') {
-if (!Base.isMacOS() && JavaMode.codeCompletionsEnabled && (evt.isControlDown() || evt.isMetaDown())) {
-SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
-protected Object doInBackground() throws Exception {
-if (JavaMode.codeCompletionsEnabled) {
-getDocument().remove(getCaretPosition() - 1,1);
-Base.log("[KeyEvent]" + evt2.getKeyChar() + "  |Prediction started");
-Base.log("Typing: " + fetchPhrase(evt2));
-}
-return null;
-}
-}
-;
-worker.execute();
-}
- else {
-hideSuggestion();
-}
-}
- else {
-if (JavaMode.codeCompletionsEnabled) {
-prepareSuggestions(evt2);
-}
-}
-}
- else if (Base.isMacOS() && evt.getID() == KeyEvent.KEY_RELEASED && evt.getKeyCode() == KeyEvent.VK_SPACE && evt.isControlDown()) {
-final KeyEvent evt2=evt;
-SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
-protected Object doInBackground() throws Exception {
-if (JavaMode.codeCompletionsEnabled) {
-Base.log("[KeyEvent]" + KeyEvent.getKeyText(evt2.getKeyCode()) + "  |Prediction started");
-Base.log("Typing: " + fetchPhrase(evt2));
-}
-return null;
-}
-}
-;
-worker.execute();
 }
 }

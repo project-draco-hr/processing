@@ -1,0 +1,15 @@
+{
+  if (event.getKeyCode() == KeyEvent.VK_SPACE && event.isControlDown()) {
+    SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
+      protected Object doInBackground() throws Exception {
+        if (JavaMode.codeCompletionsEnabled) {
+          Base.log("[KeyEvent]" + KeyEvent.getKeyText(event.getKeyCode()) + "  |Prediction started");
+          Base.log("Typing: " + fetchPhrase(event));
+        }
+        return null;
+      }
+    }
+;
+    worker.execute();
+  }
+}

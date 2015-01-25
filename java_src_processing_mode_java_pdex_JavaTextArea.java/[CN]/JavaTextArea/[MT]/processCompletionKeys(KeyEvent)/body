@@ -1,0 +1,40 @@
+{
+  char keyChar=event.getKeyChar();
+  if (keyChar == KeyEvent.VK_ENTER || keyChar == KeyEvent.VK_ESCAPE || keyChar == KeyEvent.VK_TAB || keyChar == KeyEvent.CHAR_UNDEFINED) {
+    return;
+  }
+ else   if (keyChar == ')') {
+    hideSuggestion();
+    return;
+  }
+  if (keyChar == '.') {
+    if (JavaMode.codeCompletionsEnabled) {
+      Base.log("[KeyEvent]" + KeyEvent.getKeyText(event.getKeyCode()) + "  |Prediction started");
+      Base.log("Typing: " + fetchPhrase(event));
+    }
+  }
+ else   if (keyChar == ' ') {
+    if (!Base.isMacOS() && JavaMode.codeCompletionsEnabled && (event.isControlDown() || event.isMetaDown())) {
+      SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
+        protected Object doInBackground() throws Exception {
+          if (JavaMode.codeCompletionsEnabled) {
+            getDocument().remove(getCaretPosition() - 1,1);
+            Base.log("[KeyEvent]" + event.getKeyChar() + "  |Prediction started");
+            Base.log("Typing: " + fetchPhrase(event));
+          }
+          return null;
+        }
+      }
+;
+      worker.execute();
+    }
+ else {
+      hideSuggestion();
+    }
+  }
+ else {
+    if (JavaMode.codeCompletionsEnabled) {
+      prepareSuggestions(event);
+    }
+  }
+}
