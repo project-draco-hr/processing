@@ -1,5 +1,6 @@
 {
   debugMenu=new JMenu(Language.text("menu.debug"));
+  JMenuItem item;
   JCheckBoxMenuItem toggleDebugger=new JCheckBoxMenuItem(Language.text("menu.debug.show_debug_toolbar"));
   toggleDebugger.setSelected(false);
   toggleDebugger.addActionListener(new ActionListener(){
@@ -9,20 +10,20 @@
   }
 );
   debugMenu.add(toggleDebugger);
-  debugMenuItem=Toolkit.newJMenuItemAlt(Language.text("menu.debug.debug"),KeyEvent.VK_R);
-  debugMenuItem.addActionListener(new ActionListener(){
+  item=Toolkit.newJMenuItemAlt(Language.text("menu.debug.debug"),KeyEvent.VK_R);
+  item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Debug' menu item");
-      dbg.startDebug();
+      debugger.startDebug();
     }
   }
 );
-  debugMenu.add(debugMenuItem);
+  debugMenu.add(item);
   continueMenuItem=Toolkit.newJMenuItem(Language.text("menu.debug.continue"),KeyEvent.VK_U);
   continueMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Continue' menu item");
-      dbg.continueDebug();
+      debugger.continueDebug();
     }
   }
 );
@@ -31,26 +32,26 @@
   stopMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Stop' menu item");
-      dbg.stopDebug();
+      debugger.stopDebug();
     }
   }
 );
   debugMenu.add(stopMenuItem);
   debugMenu.addSeparator();
-  toggleBreakpointMenuItem=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_breakpoint"),KeyEvent.VK_B);
-  toggleBreakpointMenuItem.addActionListener(new ActionListener(){
+  item=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_breakpoint"),KeyEvent.VK_B);
+  item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Toggle Breakpoint' menu item");
-      dbg.toggleBreakpoint();
+      debugger.toggleBreakpoint();
     }
   }
 );
-  debugMenu.add(toggleBreakpointMenuItem);
+  debugMenu.add(item);
   listBreakpointsMenuItem=new JMenuItem(Language.text("menu.debug.list_breakpoints"));
   listBreakpointsMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'List Breakpoints' menu item");
-      dbg.listBreakpoints();
+      debugger.listBreakpoints();
     }
   }
 );
@@ -60,7 +61,7 @@
   stepOverMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Step Over' menu item");
-      dbg.stepOver();
+      debugger.stepOver();
     }
   }
 );
@@ -69,7 +70,7 @@
   stepIntoMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Step Into' menu item");
-      dbg.stepInto();
+      debugger.stepInto();
     }
   }
 );
@@ -78,7 +79,7 @@
   stepOutMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Step Out' menu item");
-      dbg.stepOut();
+      debugger.stepOut();
     }
   }
 );
@@ -88,7 +89,7 @@
   printStackTraceMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Stack Trace' menu item");
-      dbg.printStackTrace();
+      debugger.printStackTrace();
     }
   }
 );
@@ -97,7 +98,7 @@
   printLocalsMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Locals' menu item");
-      dbg.printLocals();
+      debugger.printLocals();
     }
   }
 );
@@ -106,7 +107,7 @@
   printThisMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print This' menu item");
-      dbg.printThis();
+      debugger.printThis();
     }
   }
 );
@@ -115,7 +116,7 @@
   printSourceMenuItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Source' menu item");
-      dbg.printSource();
+      debugger.printSource();
     }
   }
 );
@@ -124,7 +125,7 @@
   printThreads.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Threads' menu item");
-      dbg.printThreads();
+      debugger.printThreads();
     }
   }
 );

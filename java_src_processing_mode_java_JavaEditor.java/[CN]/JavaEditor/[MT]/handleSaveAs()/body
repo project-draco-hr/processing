@@ -2,17 +2,17 @@
   String oldName=getSketch().getCode(0).getFileName();
   boolean saved=super.handleSaveAs();
   if (saved) {
-    List<LineBreakpoint> bps=dbg.getBreakpoints(oldName);
-    dbg.clearBreakpoints(oldName);
+    List<LineBreakpoint> bps=debugger.getBreakpoints(oldName);
+    debugger.clearBreakpoints(oldName);
     String newName=getSketch().getCode(0).getFileName();
     for (    LineBreakpoint bp : bps) {
       LineID line=new LineID(newName,bp.lineID().lineIdx());
-      dbg.setBreakpoint(line);
+      debugger.setBreakpoint(line);
     }
     for (int i=0; i < getSketch().getCodeCount(); i++) {
       addBreakpointComments(getSketch().getCode(i).getFileName());
     }
-    vi.setTitle(getSketch().getName());
+    tray.setTitle(getSketch().getName());
   }
   return saved;
 }

@@ -1,12 +1,13 @@
 {
+  final JEditTextArea ta=editor.getTextArea();
   log("Last clicked word:" + lastClickedWord);
-  String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
-  int line=editor.ta.getSelectionStartLine();
-  log(selText + "<- offsets " + (line)+ ", "+ (editor.ta.getSelectionStart() - editor.ta.getLineStartOffset(line))+ ", "+ (editor.ta.getSelectionStop() - editor.ta.getLineStartOffset(line)));
-  int offwhitespace=editor.ta.getLineStartNonWhiteSpaceOffset(line);
+  String selText=lastClickedWord == null ? ta.getSelectedText() : lastClickedWord;
+  int line=ta.getSelectionStartLine();
+  log(selText + "<- offsets " + (line)+ ", "+ (ta.getSelectionStart() - ta.getLineStartOffset(line))+ ", "+ (ta.getSelectionStop() - ta.getLineStartOffset(line)));
+  int offwhitespace=ta.getLineStartNonWhiteSpaceOffset(line);
   ASTNodeWrapper wnode;
   if (lastClickedWord == null || lastClickedWordNode.getNode() == null) {
-    wnode=getASTNodeAt(line + errorCheckerService.mainClassOffset,selText,editor.ta.getSelectionStart() - offwhitespace,false);
+    wnode=getASTNodeAt(line + errorCheckerService.mainClassOffset,selText,ta.getSelectionStart() - offwhitespace,false);
   }
  else {
     wnode=lastClickedWordNode;

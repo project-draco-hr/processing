@@ -1,6 +1,6 @@
 {
   String newName=txtRenameField.getText().trim();
-  String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
+  String selText=lastClickedWord == null ? getSelectedText() : lastClickedWord;
   DefaultMutableTreeNode defCU=findAllOccurrences();
   if (defCU == null) {
     editor.statusMessage("Can't locate definition of " + selText,JavaEditor.STATUS_ERR);
@@ -37,7 +37,7 @@
       lineOffsetDisplacement.put(awrap.getLineNumber(),lineOffsetDisplacementConst);
     }
     highlightPDECode(pdeOffsets[i][0],pdeOffsets[i][1],pdeOffsets[i][2] + off,awrap.getNode().toString().length());
-    editor.ta.setSelectedText(newName);
+    editor.getTextArea().setSelectedText(newName);
   }
   editor.stopCompoundEdit();
   errorCheckerService.resumeThread();

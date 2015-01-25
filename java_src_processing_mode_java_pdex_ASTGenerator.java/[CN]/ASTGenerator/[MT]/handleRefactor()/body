@@ -1,7 +1,7 @@
 {
   if (editor.hasJavaTabs)   return;
   log("Last clicked word:" + lastClickedWord);
-  if (lastClickedWord == null && editor.ta.getSelectedText() == null) {
+  if (lastClickedWord == null && getSelectedText() == null) {
     editor.statusMessage("Highlight the class/function/variable name first",JavaEditor.STATUS_INFO);
     return;
   }
@@ -10,7 +10,7 @@
     return;
   }
   DefaultMutableTreeNode defCU=findAllOccurrences();
-  String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
+  String selText=lastClickedWord == null ? getSelectedText() : lastClickedWord;
   if (defCU == null) {
     editor.statusMessage(selText + " isn't defined in this sketch, so it can't" + " be renamed",JavaEditor.STATUS_ERR);
     return;
@@ -20,7 +20,7 @@
     frmRename.setVisible(true);
     SwingUtilities.invokeLater(new Runnable(){
       @Override public void run(){
-        String selText=lastClickedWord == null ? editor.ta.getSelectedText() : lastClickedWord;
+        String selText=lastClickedWord == null ? getSelectedText() : lastClickedWord;
         frmOccurenceList.setTitle("All occurrences of " + selText);
         lblRefactorOldName.setText("Current name: " + selText);
         txtRenameField.setText("");

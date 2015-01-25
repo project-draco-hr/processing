@@ -11,12 +11,14 @@
  else {
       astGenerator.highlightPDECode(p.getTabIndex(),p.getLineNumber(),p.getPDELineStartOffset(),(p.getPDELineStopOffset() - p.getPDELineStartOffset() + 1));
     }
-    if (p.getLineNumber() < Base.countLines(editor.textArea().getDocument().getText(0,editor.textArea().getDocument().getLength())) && p.getLineNumber() >= 0) {
+    final Document doc=editor.getTextArea().getDocument();
+    final int lineCount=Base.countLines(doc.getText(0,doc.getLength()));
+    if (p.getLineNumber() < lineCount && p.getLineNumber() >= 0) {
       editor.getTextArea().scrollTo(p.getLineNumber(),0);
     }
     editor.repaint();
   }
  catch (  Exception e) {
-    Base.loge(e + " : Error while selecting text in scrollToErrorLine(), for problem: " + p);
+    Base.loge("Error while selecting text in scrollToErrorLine(), for problem: " + p,e);
   }
 }
