@@ -1,6 +1,23 @@
 {
-  this.editor=editor;
-  this.dbg=editor.dbg();
+  editor=je;
+  dbg=editor.dbg();
+  setUndecorated(true);
+  editor.addComponentListener(new ComponentListener(){
+    @Override public void componentShown(    ComponentEvent e){
+    }
+    @Override public void componentResized(    ComponentEvent e){
+      updateBounds(e);
+    }
+    @Override public void componentMoved(    ComponentEvent e){
+      updateBounds(e);
+    }
+    @Override public void componentHidden(    ComponentEvent e){
+    }
+    private void updateBounds(    ComponentEvent e){
+      setBounds(editor.getX() + editor.getWidth(),editor.getY() + VERTICAL_OFFSET,getPreferredSize().width,editor.getHeight() - VERTICAL_OFFSET * 2);
+    }
+  }
+);
   initComponents();
   rootNode=new DefaultMutableTreeNode("root");
   builtins=new DefaultMutableTreeNode("Processing");
@@ -21,5 +38,4 @@
   locals=new ArrayList<VariableNode>();
   thisFields=new ArrayList<VariableNode>();
   declaredThisFields=new ArrayList<VariableNode>();
-  this.setTitle(editor.getSketch().getName());
 }
