@@ -29,9 +29,18 @@
 );
   timer=new Timer();
   buildMenuBar();
-  Container contentPain=getContentPane();
+  backgroundGradient=Toolkit.getLibImage("vertical-gradient.png");
+  JPanel contentPain=new JPanel(){
+    @Override public void paintComponent(    Graphics g){
+      Dimension dim=getSize();
+      g.drawImage(backgroundGradient,0,0,dim.width,dim.height,this);
+    }
+  }
+;
+  setContentPane(contentPain);
   contentPain.setLayout(new BorderLayout());
   JPanel pain=new JPanel();
+  pain.setOpaque(false);
   pain.setLayout(new BorderLayout());
   contentPain.add(pain,BorderLayout.CENTER);
   Box box=Box.createVerticalBox();
@@ -59,10 +68,32 @@
   splitPane.setContinuousLayout(true);
   splitPane.setResizeWeight(1D);
   splitPane.setBorder(null);
-  int dividerSize=Preferences.getInteger("editor.divider.size");
-  if (dividerSize != 0) {
-    splitPane.setDividerSize(dividerSize);
+  splitPane.setOpaque(false);
+  splitPane.setUI(new BasicSplitPaneUI(){
+    public BasicSplitPaneDivider createDefaultDivider(){
+      return new BasicSplitPaneDivider(this){
+        final Color dividerColor=mode.getColor("divider.color");
+        final Color dotColor=mode.getColor("divider.dot.color");
+        int dotSize=mode.getInteger("divider.dot.diameter");
+        @Override public void paint(        Graphics g){
+          Graphics2D g2=(Graphics2D)g;
+          g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+          final int w=getSize().width;
+          final int h=getSize().height;
+          g.setColor(dividerColor);
+          g.fillRect(0,0,w,h);
+          g.setColor(dotColor);
+          int x=w / 2 - dotSize / 2;
+          int y=h / 2 - dotSize / 2;
+          g.fillOval(x,y,dotSize,dotSize);
+          super.paint(g);
+        }
+      }
+;
+    }
   }
+);
+  splitPane.setDividerSize(mode.getInteger("divider.height"));
   box.add(splitPane);
   pain.add(box);
   textarea.addKeyListener(toolbar);
