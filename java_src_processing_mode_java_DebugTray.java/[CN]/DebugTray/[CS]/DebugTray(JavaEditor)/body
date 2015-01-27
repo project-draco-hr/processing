@@ -1,32 +1,9 @@
 {
-  this.editor=editor;
   setUndecorated(true);
+  this.editor=editor;
   editor.addComponentListener(new EditorFollower());
-  scrollPane=new JScrollPane();
-  tree=new Outline();
-  scrollPane.setViewportView(tree);
-  GroupLayout layout=new GroupLayout(getContentPane());
-  getContentPane().setLayout(layout);
-  layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,400,Short.MAX_VALUE).addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(scrollPane,GroupLayout.DEFAULT_SIZE,400,Short.MAX_VALUE)));
-  layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,300,Short.MAX_VALUE).addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(scrollPane,GroupLayout.Alignment.TRAILING,GroupLayout.DEFAULT_SIZE,300,Short.MAX_VALUE)));
+  setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
+  add(createToolbar());
+  add(createScrollPane());
   pack();
-  rootNode=new DefaultMutableTreeNode("root");
-  builtins=new DefaultMutableTreeNode("Processing");
-  treeModel=new DefaultTreeModel(rootNode);
-  model=DefaultOutlineModel.createOutlineModel(treeModel,new VariableRowModel(),true,"Name");
-  ExpansionHandler expansionHandler=new ExpansionHandler();
-  model.getTreePathSupport().addTreeWillExpandListener(expansionHandler);
-  model.getTreePathSupport().addTreeExpansionListener(expansionHandler);
-  tree.setModel(model);
-  tree.setRootVisible(false);
-  tree.setRenderDataProvider(new OutlineRenderer());
-  tree.setColumnHidingAllowed(false);
-  tree.setAutoscrolls(false);
-  TableColumn valueColumn=tree.getColumnModel().getColumn(1);
-  valueColumn.setCellRenderer(new ValueCellRenderer());
-  valueColumn.setCellEditor(new ValueCellEditor());
-  callStack=new ArrayList<DefaultMutableTreeNode>();
-  locals=new ArrayList<VariableNode>();
-  thisFields=new ArrayList<VariableNode>();
-  declaredThisFields=new ArrayList<VariableNode>();
 }

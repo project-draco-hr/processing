@@ -3,7 +3,7 @@
   Box box=Box.createHorizontalBox();
   continueButton=new EditorButton(mode,"debug-continue",Language.text("toolbar.debug.continue")){
     @Override public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(DebugToolbar.class.getName()).log(Level.INFO,"Invoked 'Continue' toolbar button");
+      Logger.getLogger(DebugTray.class.getName()).log(Level.INFO,"Invoked 'Continue' toolbar button");
       editor.debugger.continueDebug();
     }
   }
@@ -13,11 +13,11 @@
   stepButton=new EditorButton(mode,"debug-step",Language.text("toolbar.debug.step"),Language.text("toolbar.debug.step_into")){
     @Override public void actionPerformed(    ActionEvent e){
       if (isShiftDown()) {
-        Logger.getLogger(DebugToolbar.class.getName()).log(Level.INFO,"Invoked 'Step Into' toolbar button");
+        Logger.getLogger(DebugTray.class.getName()).log(Level.INFO,"Invoked 'Step Into' toolbar button");
         editor.debugger.stepInto();
       }
  else {
-        Logger.getLogger(DebugToolbar.class.getName()).log(Level.INFO,"Invoked 'Step' toolbar button");
+        Logger.getLogger(DebugTray.class.getName()).log(Level.INFO,"Invoked 'Step' toolbar button");
         editor.debugger.stepOver();
       }
     }
@@ -27,7 +27,7 @@
   box.add(Box.createHorizontalStrut(GAP));
   breakpointButton=new EditorButton(mode,"debug-breakpoint",Language.text("toolbar.debug.toggle_breakpoints")){
     @Override public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(DebugToolbar.class.getName()).log(Level.INFO,"Invoked 'Toggle Breakpoint' toolbar button");
+      Logger.getLogger(DebugTray.class.getName()).log(Level.INFO,"Invoked 'Toggle Breakpoint' toolbar button");
       editor.debugger.toggleBreakpoint();
     }
   }
@@ -39,5 +39,5 @@
   continueButton.setRolloverLabel(label);
   stepButton.setRolloverLabel(label);
   breakpointButton.setRolloverLabel(label);
-  add(box);
+  return box;
 }
