@@ -1,23 +1,16 @@
 {
   debugMenu=new JMenu(Language.text("menu.debug"));
   JMenuItem item;
-  toggleDebugger=new JCheckBoxMenuItem("Use the Debugger");
-  toggleDebugger.setSelected(false);
-  toggleDebugger.addActionListener(new ActionListener(){
+  enableDebug=Toolkit.newJCheckBoxMenuItem("Enable Debugger",KeyEvent.VK_D);
+  enableDebug.setSelected(false);
+  enableDebug.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
+      updateDebugToggle();
     }
   }
 );
-  debugMenu.add(toggleDebugger);
-  item=Toolkit.newJMenuItemAlt(Language.text("menu.debug.debug"),KeyEvent.VK_R);
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Debug' menu item");
-      debugger.startDebug();
-    }
-  }
-);
-  debugMenu.add(item);
+  debugMenu.add(enableDebug);
+  debugMenu.addSeparator();
   item=Toolkit.newJMenuItem(Language.text("menu.debug.continue"),KeyEvent.VK_U);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -27,35 +20,6 @@
   }
 );
   debugMenu.add(item);
-  item=new JMenuItem(Language.text("menu.debug.stop"));
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Stop' menu item");
-      debugger.stopDebug();
-    }
-  }
-);
-  debugMenu.add(item);
-  debugMenu.addSeparator();
-  item=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_breakpoint"),KeyEvent.VK_B);
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Toggle Breakpoint' menu item");
-      debugger.toggleBreakpoint();
-    }
-  }
-);
-  debugMenu.add(item);
-  item=new JMenuItem(Language.text("menu.debug.list_breakpoints"));
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'List Breakpoints' menu item");
-      debugger.listBreakpoints();
-    }
-  }
-);
-  debugMenu.add(item);
-  debugMenu.addSeparator();
   item=Toolkit.newJMenuItem(Language.text("menu.debug.step"),KeyEvent.VK_J);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -79,6 +43,25 @@
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Step Out' menu item");
       debugger.stepOut();
+    }
+  }
+);
+  debugMenu.add(item);
+  debugMenu.addSeparator();
+  item=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_breakpoint"),KeyEvent.VK_B);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Toggle Breakpoint' menu item");
+      debugger.toggleBreakpoint();
+    }
+  }
+);
+  debugMenu.add(item);
+  item=new JMenuItem(Language.text("menu.debug.list_breakpoints"));
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'List Breakpoints' menu item");
+      debugger.listBreakpoints();
     }
   }
 );
@@ -130,15 +113,6 @@
 );
   debugMenu.add(item);
   debugMenu.addSeparator();
-  item=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_variable_inspector"),KeyEvent.VK_I);
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Toggle Variable Inspector' menu item");
-      toggleVariableInspector();
-    }
-  }
-);
-  debugMenu.add(item);
   item=Toolkit.newJMenuItem(Language.text("menu.debug.show_sketch_outline"),KeyEvent.VK_L);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){

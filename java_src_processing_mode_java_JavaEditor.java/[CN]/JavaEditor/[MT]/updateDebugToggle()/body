@@ -1,0 +1,16 @@
+{
+  final boolean enabled=enableDebug.isSelected();
+  if (enabled) {
+    tray.setFocusableWindowState(false);
+    tray.setVisible(true);
+    tray.setFocusableWindowState(true);
+  }
+ else {
+    tray.setVisible(false);
+  }
+  for (  Component item : debugMenu.getMenuComponents()) {
+    if (item instanceof JMenuItem && item != enableDebug) {
+      ((JMenuItem)item).setEnabled(enabled);
+    }
+  }
+}

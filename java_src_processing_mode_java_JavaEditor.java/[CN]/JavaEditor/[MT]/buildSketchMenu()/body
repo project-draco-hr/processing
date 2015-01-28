@@ -2,7 +2,13 @@
   JMenuItem runItem=Toolkit.newJMenuItem(JavaToolbar.getTitle(JavaToolbar.RUN,false),'R');
   runItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      handleRun();
+      if (isDebuggerEnabled()) {
+        Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Debug' menu item");
+        debugger.startDebug();
+      }
+ else {
+        handleRun();
+      }
     }
   }
 );
@@ -16,7 +22,13 @@
   JMenuItem stopItem=new JMenuItem(JavaToolbar.getTitle(JavaToolbar.STOP,false));
   stopItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      handleStop();
+      if (isDebuggerEnabled()) {
+        Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Stop' menu item");
+        debugger.stopDebug();
+      }
+ else {
+        handleStop();
+      }
     }
   }
 );
