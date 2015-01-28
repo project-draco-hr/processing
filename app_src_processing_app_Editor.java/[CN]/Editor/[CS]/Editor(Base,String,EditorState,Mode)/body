@@ -39,10 +39,6 @@
 ;
   setContentPane(contentPain);
   contentPain.setLayout(new BorderLayout());
-  JPanel pain=new JPanel();
-  pain.setOpaque(false);
-  pain.setLayout(new BorderLayout());
-  contentPain.add(pain,BorderLayout.CENTER);
   Box box=Box.createVerticalBox();
   Box upper=Box.createVerticalBox();
   initModeMenu();
@@ -95,7 +91,7 @@
 );
   splitPane.setDividerSize(mode.getInteger("divider.height"));
   box.add(splitPane);
-  pain.add(box);
+  contentPain.add(box);
   textarea.addKeyListener(toolbar);
   textarea.addCaretListener(new CaretListener(){
     String lastText=textarea.getText();
@@ -108,7 +104,7 @@
     }
   }
 );
-  pain.setTransferHandler(new FileDropHandler());
+  contentPain.setTransferHandler(new FileDropHandler());
   pack();
   state.apply(this);
   setMinimumSize(new Dimension(Preferences.getInteger("editor.window.width.min"),Preferences.getInteger("editor.window.height.min")));
