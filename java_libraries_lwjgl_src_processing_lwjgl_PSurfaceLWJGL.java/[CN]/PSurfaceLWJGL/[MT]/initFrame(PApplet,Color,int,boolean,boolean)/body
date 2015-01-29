@@ -58,7 +58,12 @@
     float g=((argb >> 8) & 0xff) / 255.0f;
     float b=((argb) & 0xff) / 255.0f;
     Display.setInitialBackground(r,g,b);
-    Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
+    if (fullScreen) {
+      Display.setDisplayMode(new DisplayMode(screenRect.width,screenRect.height));
+    }
+ else {
+      Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
+    }
     System.err.println(sketchWidth + " " + sketchHeight);
     if (fullScreenRequested) {
       Display.setFullscreen(true);

@@ -18,8 +18,8 @@
       if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
         modifiers|=Event.ALT;
       }
-      int x=Mouse.getX();
-      int y=sketchHeight - Mouse.getY();
+      int x=Mouse.getX() - (int)offsetX;
+      int y=sketchHeight - (Mouse.getY() - (int)offsetY);
       int button=0;
       if (Mouse.isButtonDown(0)) {
         button=PConstants.LEFT;
@@ -42,6 +42,12 @@
       }
  else       if (pressed) {
         action=MouseEvent.RELEASE;
+        if (presentMode) {
+          if (20 < Mouse.getX() && Mouse.getX() < 20 + 100 && 20 < Mouse.getY() && Mouse.getY() < 20 + 50) {
+            System.err.println("clicked on exit button");
+            sketch.exit();
+          }
+        }
         pressed=false;
       }
  else {

@@ -1,28 +1,9 @@
 {
   if (sketchWidth < screenRect.width || sketchHeight < screenRect.height) {
-    presentFrame=new JFrame(displayDevice.getDefaultConfiguration());
-    presentFrame.getContentPane().setBackground(WINDOW_BGCOLOR);
-    presentFrame.setUndecorated(true);
-    presentFrame.setBounds(screenRect);
-    presentFrame.setVisible(true);
-    presentFrame.setLayout(null);
-    presentFrame.invalidate();
-    presentFrame.setResizable(false);
-    presentFrame.setAlwaysOnTop(false);
-    if (stopColor != null) {
-      Label label=new Label("stop");
-      label.setForeground(stopColor);
-      label.addMouseListener(new MouseAdapter(){
-        @Override public void mousePressed(        java.awt.event.MouseEvent e){
-          sketch.exit();
-        }
-      }
-);
-      presentFrame.add(label);
-      Dimension labelSize=label.getPreferredSize();
-      labelSize=new Dimension(100,labelSize.height);
-      label.setSize(labelSize);
-      label.setLocation(20,screenRect.height - labelSize.height - 20);
-    }
+    System.err.println("WILL USE FBO");
+    presentMode=pgl.presentMode=true;
+    offsetX=pgl.offsetX=0.5f * (screenRect.width - sketchWidth);
+    offsetY=pgl.offsetY=0.5f * (screenRect.height - sketchHeight);
+    pgl.requestFBOLayer();
   }
 }
