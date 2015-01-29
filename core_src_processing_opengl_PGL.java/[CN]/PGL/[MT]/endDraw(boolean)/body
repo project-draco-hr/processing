@@ -19,12 +19,8 @@
         texParameteri(TEXTURE_2D,TEXTURE_WRAP_S,CLAMP_TO_EDGE);
         texParameteri(TEXTURE_2D,TEXTURE_WRAP_T,CLAMP_TO_EDGE);
         texImage2D(TEXTURE_2D,0,RGBA,100,50,0,RGBA,UNSIGNED_BYTE,null);
-        ByteBuffer bb=ByteBuffer.allocateDirect(labelPix.length * 4);
-        bb.order(ByteOrder.nativeOrder());
-        IntBuffer ib=bb.asIntBuffer();
-        ib.put(labelPix);
-        ib.position(0);
-        copyToTexture(TEXTURE_2D,RGBA,labelTex.get(0),0,0,100,50,ib);
+        IntBuffer buf=allocateIntBuffer(labelPix);
+        copyToTexture(TEXTURE_2D,RGBA,labelTex.get(0),0,0,100,50,buf);
         bindTexture(TEXTURE_2D,0);
       }
       drawTexture(TEXTURE_2D,labelTex.get(0),100,50,0,0,20 + 100,20 + 50,0,0,100,50,20,20,20 + 100,20 + 50);
