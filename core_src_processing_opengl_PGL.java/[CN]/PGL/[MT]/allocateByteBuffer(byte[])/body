@@ -1,6 +1,9 @@
 {
   if (USE_DIRECT_BUFFERS) {
-    return allocateDirectByteBuffer(arr.length);
+    ByteBuffer buf=allocateDirectByteBuffer(arr.length);
+    buf.put(arr);
+    buf.position(0);
+    return buf;
   }
  else {
     return ByteBuffer.wrap(arr);

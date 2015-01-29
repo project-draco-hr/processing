@@ -2,11 +2,42 @@
   if (fboLayerInUse) {
     syncBackTexture();
     bindFramebufferImpl(FRAMEBUFFER,0);
-    clearDepth(1);
-    clearColor(0,0,0,0);
-    clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
+    if (presentMode) {
+      float a=PSurface.WINDOW_BGCOLOR.getAlpha() / 255.0f;
+      float r=PSurface.WINDOW_BGCOLOR.getRed() / 255.0f;
+      float g=PSurface.WINDOW_BGCOLOR.getGreen() / 255.0f;
+      float b=PSurface.WINDOW_BGCOLOR.getBlue() / 255.0f;
+      clearDepth(1);
+      clearColor(r,g,b,a);
+      clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
+      if (labelTex == null) {
+        labelTex=allocateIntBuffer(1);
+        genTextures(1,labelTex);
+        bindTexture(TEXTURE_2D,labelTex.get(0));
+        texParameteri(TEXTURE_2D,TEXTURE_MIN_FILTER,NEAREST);
+        texParameteri(TEXTURE_2D,TEXTURE_MAG_FILTER,NEAREST);
+        texParameteri(TEXTURE_2D,TEXTURE_WRAP_S,CLAMP_TO_EDGE);
+        texParameteri(TEXTURE_2D,TEXTURE_WRAP_T,CLAMP_TO_EDGE);
+        texImage2D(TEXTURE_2D,0,RGBA,100,50,0,RGBA,UNSIGNED_BYTE,null);
+        IntBuffer buf=allocateIntBuffer(labelPix);
+        copyToTexture(TEXTURE_2D,RGBA,labelTex.get(0),0,0,100,50,buf);
+        bindTexture(TEXTURE_2D,0);
+      }
+      drawTexture(TEXTURE_2D,labelTex.get(0),100,50,0,0,20 + 100,20 + 50,0,50,100,0,20,20,20 + 100,20 + 50);
+    }
+ else {
+      clearDepth(1);
+      clearColor(0,0,0,0);
+      clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
+    }
     disable(BLEND);
-    drawTexture(TEXTURE_2D,glColorTex.get(backTex),fboWidth,fboHeight,pg.width,pg.height,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
+    int x=0;
+    int y=0;
+    if (presentMode) {
+      x=(int)offsetX;
+      y=(int)offsetY;
+    }
+    drawTexture(TEXTURE_2D,glColorTex.get(backTex),fboWidth,fboHeight,x,y,pg.width,pg.height,0,0,pg.width,pg.height,0,0,pg.width,pg.height);
     int temp=frontTex;
     frontTex=backTex;
     backTex=temp;
