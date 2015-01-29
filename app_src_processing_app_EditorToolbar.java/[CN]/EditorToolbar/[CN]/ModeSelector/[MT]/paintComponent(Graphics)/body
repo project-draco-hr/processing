@@ -1,0 +1,31 @@
+{
+  Dimension size=getSize();
+  width=0;
+  if (width != size.width || height != size.height) {
+    if (Toolkit.highResDisplay()) {
+      offscreen=createImage(size.width * 2,size.height * 2);
+    }
+ else {
+      offscreen=createImage(size.width,size.height);
+    }
+    width=size.width;
+    height=size.height;
+  }
+  Graphics g=offscreen.getGraphics();
+  Toolkit.prepareGraphics(g);
+  g.setFont(titleFont);
+  if (titleAscent == 0) {
+    titleAscent=(int)Toolkit.getAscent(g);
+  }
+  FontMetrics metrics=g.getFontMetrics();
+  titleWidth=metrics.stringWidth(title);
+  g.drawImage(reverseGradient,0,0,width,height,this);
+  g.setColor(titleColor);
+  g.drawString(title,MODE_GAP_WIDTH,(height + titleAscent) / 2);
+  int x=MODE_GAP_WIDTH + titleWidth + ARROW_GAP_WIDTH;
+  triangleX[0]=x;
+  triangleX[1]=x + ARROW_WIDTH;
+  triangleX[2]=x + ARROW_WIDTH / 2;
+  g.fillPolygon(triangleX,triangleY,3);
+  screen.drawImage(offscreen,0,0,width,height,this);
+}

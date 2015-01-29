@@ -29,14 +29,7 @@
 );
   timer=new Timer();
   buildMenuBar();
-  backgroundGradient=Toolkit.getLibImage("vertical-gradient.png");
-  JPanel contentPain=new JPanel(){
-    @Override public void paintComponent(    Graphics g){
-      Dimension dim=getSize();
-      g.drawImage(backgroundGradient,0,0,dim.width,dim.height,this);
-    }
-  }
-;
+  JPanel contentPain=new JPanel();
   setContentPane(contentPain);
   contentPain.setLayout(new BorderLayout());
   Box box=Box.createVerticalBox();
@@ -64,7 +57,7 @@
   splitPane.setContinuousLayout(true);
   splitPane.setResizeWeight(1D);
   splitPane.setBorder(null);
-  splitPane.setOpaque(false);
+  UIManager.getDefaults().put("SplitPane.border",BorderFactory.createEmptyBorder());
   splitPane.setUI(new BasicSplitPaneUI(){
     public BasicSplitPaneDivider createDefaultDivider(){
       return new BasicSplitPaneDivider(this){
@@ -82,7 +75,6 @@
           int x=w / 2 - dotSize / 2;
           int y=h / 2 - dotSize / 2;
           g.fillOval(x,y,dotSize,dotSize);
-          super.paint(g);
         }
       }
 ;

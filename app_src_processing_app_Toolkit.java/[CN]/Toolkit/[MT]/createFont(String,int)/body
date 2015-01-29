@@ -1,7 +1,13 @@
 {
   File fontFile=new File(System.getProperty("java.home"),"lib/fonts/" + filename);
   if (!fontFile.exists()) {
+    fontFile=new File(System.getProperty("user.dir"),"../build/shared/lib/fonts/" + filename);
+  }
+  if (!fontFile.exists()) {
     fontFile=new File(System.getProperty("user.dir"),"../../shared/lib/fonts/" + filename);
+  }
+  if (!fontFile.exists()) {
+    Base.showError("Font Sadness","Could not find required fonts",null);
   }
   BufferedInputStream input=new BufferedInputStream(new FileInputStream(fontFile));
   Font font=Font.createFont(Font.TRUETYPE_FONT,input);
