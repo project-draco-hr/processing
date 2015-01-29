@@ -2,4 +2,26 @@
   this.editor=editor;
   base=editor.getBase();
   mode=editor.getMode();
+  runButton=new EditorButton(mode,"/lib/toolbar/run",Language.text("toolbar.run"),Language.text("toolbar.present")){
+    @Override public void actionPerformed(    ActionEvent e){
+      handleRun();
+    }
+  }
+;
+  stopButton=new EditorButton(mode,"/lib/toolbar/stop",Language.text("toolbar.stop")){
+    @Override public void actionPerformed(    ActionEvent e){
+      handleStop();
+    }
+  }
+;
+  box=Box.createHorizontalBox();
+  box.add(runButton);
+  box.add(label=new JLabel());
+  box.add(Box.createHorizontalGlue());
+  Component items=createModeButtons();
+  if (items != null) {
+    box.add(items);
+  }
+  box.add(createModeSelector());
+  add(box);
 }
