@@ -31,8 +31,7 @@
     fontAscent=(int)Toolkit.getAscent(g);
   }
   Graphics2D g2=Toolkit.prepareGraphics(g);
-  g.setColor(new Color(0,0,0,0));
-  g.fillRect(0,0,imageW,imageH);
+  g.drawImage(gradient,0,0,imageW,imageH,this);
   if (tabs.length != sketch.getCodeCount()) {
     tabs=new Tab[sketch.getCodeCount()];
     for (int i=0; i < tabs.length; i++) {
@@ -40,7 +39,7 @@
     }
     visitOrder=new Tab[sketch.getCodeCount() - 1];
   }
-  int leftover=ARROW_GAP_WIDTH + ARROW_WIDTH + MARGIN_WIDTH;
+  int leftover=TAB_BETWEEN + ARROW_TAB_WIDTH;
   int tabMax=getWidth() - leftover;
   for (  Tab tab : tabs) {
     SketchCode code=sketch.getCode(tab.index);
@@ -64,9 +63,18 @@
     }
   }
   placeTabs(MARGIN_WIDTH,tabMax,g2);
-  menuLeft=tabs[tabs.length - 1].right + ARROW_GAP_WIDTH;
-  menuRight=menuLeft + ARROW_WIDTH;
-  int arrowY=(getHeight() - TAB_HEIGHT - TAB_STRETCH) + (TAB_HEIGHT - ARROW_HEIGHT) / 2;
-  g.drawImage(tabArrow,menuLeft,arrowY,ARROW_WIDTH,ARROW_HEIGHT,null);
+  menuLeft=tabs[tabs.length - 1].right + TAB_BETWEEN;
+  menuRight=menuLeft + ARROW_TAB_WIDTH;
+  g.setColor(tabColor[UNSELECTED]);
+  drawTab(g,menuLeft,menuRight);
+  g.setColor(arrowColor);
+  GeneralPath trianglePath=new GeneralPath();
+  float x1=menuLeft + (ARROW_TAB_WIDTH - ARROW_WIDTH) / 2f;
+  float x2=menuLeft + (ARROW_TAB_WIDTH + ARROW_WIDTH) / 2f;
+  trianglePath.moveTo(x1,ARROW_TOP);
+  trianglePath.lineTo(x2,ARROW_TOP);
+  trianglePath.lineTo((x1 + x2) / 2,ARROW_BOTTOM);
+  trianglePath.closePath();
+  g2.fill(trianglePath);
   screen.drawImage(offscreen,0,0,imageW,imageH,null);
 }

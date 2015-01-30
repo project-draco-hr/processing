@@ -1,32 +1,20 @@
 {
   Sketch sketch=editor.getSketch();
   int x=left;
-  final int bottom=getHeight() - TAB_STRETCH;
+  final int bottom=getHeight();
   final int top=bottom - TAB_HEIGHT;
-  GeneralPath path=null;
   for (int i=0; i < sketch.getCodeCount(); i++) {
     SketchCode code=sketch.getCode(i);
     Tab tab=tabs[i];
     int state=(code == sketch.getCurrentCode()) ? SELECTED : UNSELECTED;
-    if (g != null) {
-      path=new GeneralPath();
-      path.moveTo(x,bottom);
-      path.lineTo(x,top + NOTCH);
-      path.lineTo(x + NOTCH,top);
-    }
     tab.left=x;
     x+=TEXT_MARGIN;
     int drawWidth=tab.textVisible ? tab.textWidth : NO_TEXT_WIDTH;
     x+=drawWidth + TEXT_MARGIN;
     tab.right=x;
     if (g != null) {
-      path.lineTo(x - NOTCH,top);
-      path.lineTo(x,top + NOTCH);
-      path.lineTo(x,bottom);
-      path.closePath();
       g.setColor(tabColor[state]);
-      g.fill(path);
-      g.draw(path);
+      drawTab(g,tab.left,tab.right);
       if (tab.textVisible) {
         int textLeft=tab.left + ((tab.right - tab.left) - tab.textWidth) / 2;
         g.setColor(textColor[state]);
@@ -36,14 +24,10 @@
       }
       if (code.isModified()) {
         g.setColor(modifiedColor);
-        g.drawLine(tab.left + NOTCH,top,tab.right - NOTCH,top);
+        g.drawLine(tab.left,top,tab.right,top);
       }
     }
     x+=TAB_BETWEEN;
-  }
-  if (g != null) {
-    g.setColor(tabColor[SELECTED]);
-    g.fillRect(0,bottom,getWidth(),TAB_STRETCH);
   }
   return x <= right;
 }
