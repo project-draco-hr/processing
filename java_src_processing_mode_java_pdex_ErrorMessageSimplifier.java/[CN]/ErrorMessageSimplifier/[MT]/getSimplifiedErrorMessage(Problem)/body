@@ -2,6 +2,11 @@
   if (problem == null)   return null;
   IProblem iprob=problem.getIProblem();
   String args[]=iprob.getArguments();
+  Base.log("Simplifying message: " + problem.getMessage() + " ID: "+ getIDName(iprob.getID()));
+  Base.log("Arg count: " + args.length);
+  for (int i=0; i < args.length; i++) {
+    Base.log("Arg " + args[i]);
+  }
   String result=null;
 switch (iprob.getID()) {
 case IProblem.ParsingError:
@@ -22,6 +27,9 @@ result=getErrorMessageForBracket(args[0].charAt(0));
  else {
 if (args[0].equals("AssignmentOperator Expression")) {
   result="Consider adding a \"=\"";
+}
+ else if (args[0].equalsIgnoreCase(") Statement")) {
+  result=getErrorMessageForBracket(args[0].charAt(0));
 }
  else {
   result="Error on \"" + args[0] + "\"";
@@ -50,7 +58,12 @@ if (args[1].length() == 1) {
 result=getErrorMessageForBracket(args[1].charAt(0));
 }
  else {
+if (args[1].equalsIgnoreCase("Statement")) {
+result="Error on \"" + args[0] + "\", statement expected after this.";
+}
+ else {
 result="Error on \"" + args[0] + "\"Consider adding a \""+ args[1]+ "\"";
+}
 }
 }
 break;
