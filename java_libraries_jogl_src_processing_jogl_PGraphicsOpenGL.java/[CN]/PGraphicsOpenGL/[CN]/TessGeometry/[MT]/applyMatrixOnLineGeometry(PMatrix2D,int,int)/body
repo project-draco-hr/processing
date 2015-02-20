@@ -1,0 +1,21 @@
+{
+  if (first < last) {
+    int index;
+    for (int i=first; i <= last; i++) {
+      index=4 * i;
+      float x=lineVertices[index++];
+      float y=lineVertices[index];
+      index=4 * i;
+      float xa=lineDirections[index++];
+      float ya=lineDirections[index];
+      float dx=xa - x;
+      float dy=ya - y;
+      index=4 * i;
+      lineVertices[index++]=x * tr.m00 + y * tr.m01 + tr.m02;
+      lineVertices[index]=x * tr.m10 + y * tr.m11 + tr.m12;
+      index=4 * i;
+      lineDirections[index++]=dx * tr.m00 + dy * tr.m01;
+      lineDirections[index]=dx * tr.m10 + dy * tr.m11;
+    }
+  }
+}

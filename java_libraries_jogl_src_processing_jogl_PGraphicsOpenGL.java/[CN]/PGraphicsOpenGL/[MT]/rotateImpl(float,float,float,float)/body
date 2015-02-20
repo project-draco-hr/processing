@@ -1,0 +1,15 @@
+{
+  float norm2=v0 * v0 + v1 * v1 + v2 * v2;
+  if (zero(norm2)) {
+    return;
+  }
+  if (diff(norm2,1)) {
+    float norm=PApplet.sqrt(norm2);
+    v0/=norm;
+    v1/=norm;
+    v2/=norm;
+  }
+  modelview.rotate(angle,v0,v1,v2);
+  invRotate(modelviewInv,angle,v0,v1,v2);
+  updateProjmodelview();
+}

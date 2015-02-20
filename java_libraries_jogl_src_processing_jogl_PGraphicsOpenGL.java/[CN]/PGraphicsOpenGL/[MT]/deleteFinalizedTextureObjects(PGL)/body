@@ -1,0 +1,13 @@
+{
+  Set<GLResource> finalized=new HashSet<GLResource>();
+  for (  GLResource res : glTextureObjects.keySet()) {
+    if (glTextureObjects.get(res)) {
+      finalized.add(res);
+      intBuffer.put(0,res.id);
+      if (pgl.threadIsCurrent())       pgl.deleteTextures(1,intBuffer);
+    }
+  }
+  for (  GLResource res : finalized) {
+    glTextureObjects.remove(res);
+  }
+}

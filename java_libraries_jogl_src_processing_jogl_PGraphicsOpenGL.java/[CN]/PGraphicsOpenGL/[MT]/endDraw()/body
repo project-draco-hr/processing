@@ -1,0 +1,25 @@
+{
+  report("top endDraw()");
+  if (!drawing) {
+    return;
+  }
+  flush();
+  if (PGL.SAVE_SURFACE_TO_PIXELS_HACK && (!getPrimaryPG().initialized || parent.frameCount == 0)) {
+    saveSurfaceToPixels();
+    restoreSurface=true;
+  }
+  if (primarySurface) {
+    endOnscreenDraw();
+  }
+ else {
+    endOffscreenDraw();
+  }
+  if (primarySurface) {
+    setCurrentPG(null);
+  }
+ else {
+    getPrimaryPG().setCurrentPG(getPrimaryPG());
+  }
+  drawing=false;
+  report("bot endDraw()");
+}

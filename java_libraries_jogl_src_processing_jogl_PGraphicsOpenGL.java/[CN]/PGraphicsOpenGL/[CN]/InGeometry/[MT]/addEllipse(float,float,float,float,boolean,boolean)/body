@@ -1,0 +1,34 @@
+{
+  float radiusH=w / 2;
+  float radiusV=h / 2;
+  float centerX=x + radiusH;
+  float centerY=y + radiusV;
+  float sx1=pg.screenX(x,y);
+  float sy1=pg.screenY(x,y);
+  float sx2=pg.screenX(x + w,y + h);
+  float sy2=pg.screenY(x + w,y + h);
+  int accuracy=PApplet.min(MAX_POINT_ACCURACY,PApplet.max(MIN_POINT_ACCURACY,(int)(TWO_PI * PApplet.dist(sx1,sy1,sx2,sy2) / POINT_ACCURACY_FACTOR)));
+  float inc=(float)SINCOS_LENGTH / accuracy;
+  if (fill) {
+    addVertex(centerX,centerY,VERTEX,true);
+  }
+  int idx0, pidx, idx;
+  idx0=pidx=idx=0;
+  float val=0;
+  for (int i=0; i < accuracy; i++) {
+    idx=addVertex(centerX + cosLUT[(int)val] * radiusH,centerY + sinLUT[(int)val] * radiusV,VERTEX,i == 0 && !fill);
+    val=(val + inc) % SINCOS_LENGTH;
+    if (0 < i) {
+      if (stroke)       addEdge(pidx,idx,i == 1,false);
+    }
+ else {
+      idx0=idx;
+    }
+    pidx=idx;
+  }
+  addVertex(centerX + cosLUT[0] * radiusH,centerY + sinLUT[0] * radiusV,VERTEX,false);
+  if (stroke) {
+    addEdge(idx,idx0,false,false);
+    closeEdge(idx,idx0);
+  }
+}

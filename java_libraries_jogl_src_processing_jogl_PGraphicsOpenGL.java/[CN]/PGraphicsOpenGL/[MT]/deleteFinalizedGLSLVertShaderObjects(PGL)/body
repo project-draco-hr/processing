@@ -1,0 +1,12 @@
+{
+  Set<GLResource> finalized=new HashSet<GLResource>();
+  for (  GLResource res : glslVertexShaders.keySet()) {
+    if (glslVertexShaders.get(res)) {
+      finalized.add(res);
+      if (pgl.threadIsCurrent())       pgl.deleteShader(res.id);
+    }
+  }
+  for (  GLResource res : finalized) {
+    glslVertexShaders.remove(res);
+  }
+}

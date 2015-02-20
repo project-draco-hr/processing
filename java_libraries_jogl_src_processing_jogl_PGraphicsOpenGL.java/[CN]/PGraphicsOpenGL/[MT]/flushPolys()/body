@@ -1,0 +1,38 @@
+{
+  boolean customShader=polyShader != null;
+  boolean needNormals=customShader ? polyShader.accessNormals() : false;
+  boolean needTexCoords=customShader ? polyShader.accessTexCoords() : false;
+  updatePolyBuffers(lights,texCache.hasTextures,needNormals,needTexCoords);
+  for (int i=0; i < texCache.size; i++) {
+    Texture tex=texCache.getTexture(i);
+    PShader shader=getPolyShader(lights,tex != null);
+    shader.bind();
+    int first=texCache.firstCache[i];
+    int last=texCache.lastCache[i];
+    IndexCache cache=tessGeo.polyIndexCache;
+    for (int n=first; n <= last; n++) {
+      int ioffset=n == first ? texCache.firstIndex[i] : cache.indexOffset[n];
+      int icount=n == last ? texCache.lastIndex[i] - ioffset + 1 : cache.indexOffset[n] + cache.indexCount[n] - ioffset;
+      int voffset=cache.vertexOffset[n];
+      shader.setVertexAttribute(glPolyVertex,4,PGL.FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setColorAttribute(glPolyColor,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      if (lights) {
+        shader.setNormalAttribute(glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+        shader.setAmbientAttribute(glPolyAmbient,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+        shader.setSpecularAttribute(glPolySpecular,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+        shader.setEmissiveAttribute(glPolyEmissive,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+        shader.setShininessAttribute(glPolyShininess,1,PGL.FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
+      }
+      if (lights || needNormals) {
+        shader.setNormalAttribute(glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+      }
+      if (tex != null || needTexCoords) {
+        shader.setTexcoordAttribute(glPolyTexcoord,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
+        shader.setTexture(tex);
+      }
+      shader.draw(glPolyIndex,icount,ioffset);
+    }
+    shader.unbind();
+  }
+  unbindPolyBuffers();
+}

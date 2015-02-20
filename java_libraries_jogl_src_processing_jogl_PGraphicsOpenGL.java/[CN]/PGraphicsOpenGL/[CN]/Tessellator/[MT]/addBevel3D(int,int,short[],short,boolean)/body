@@ -1,0 +1,32 @@
+{
+  IndexCache cache=tess.lineIndexCache;
+  int count=cache.vertexCount[index];
+  boolean addBevel=lastInd != null && -1 < lastInd[0] && -1 < lastInd[1];
+  boolean newCache=false;
+  if (PGL.MAX_VERTEX_INDEX1 <= count + (addBevel ? 1 : 0)) {
+    index=cache.addNew();
+    count=0;
+    newCache=true;
+  }
+  int iidx=cache.indexOffset[index] + cache.indexCount[index];
+  int vidx=cache.vertexOffset[index] + cache.vertexCount[index];
+  int color0=constStroke ? strokeColor : strokeColors[i0];
+  if (lastInd != null) {
+    if (-1 < lastInd[0] && -1 < lastInd[1]) {
+      tess.setLineVertex(vidx,strokeVertices,i0,color0);
+      if (newCache) {
+        PGraphics.showWarning(TOO_LONG_STROKE_PATH_ERROR);
+      }
+ else {
+        tess.lineIndices[iidx++]=(short)(count + 0);
+        tess.lineIndices[iidx++]=lastInd[0];
+        tess.lineIndices[iidx++]=(short)(firstInd + 0);
+        tess.lineIndices[iidx++]=(short)(count + 0);
+        tess.lineIndices[iidx++]=lastInd[1];
+        tess.lineIndices[iidx]=(short)(firstInd + 1);
+      }
+      cache.incCounts(index,6,1);
+    }
+  }
+  return index;
+}

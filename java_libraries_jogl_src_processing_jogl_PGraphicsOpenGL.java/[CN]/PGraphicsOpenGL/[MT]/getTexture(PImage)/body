@@ -1,0 +1,15 @@
+{
+  Texture tex=(Texture)initCache(img);
+  if (tex == null)   return null;
+  if (img.isModified() || img.isLoaded()) {
+    if (img.width != tex.width || img.height != tex.height) {
+      tex.init(img.width,img.height);
+    }
+    updateTexture(img,tex);
+  }
+  if (tex.hasBuffers()) {
+    tex.bufferUpdate();
+  }
+  checkTexture(tex);
+  return tex;
+}

@@ -1,0 +1,30 @@
+{
+  OPENGL_VENDOR=pgl.getString(PGL.VENDOR);
+  OPENGL_RENDERER=pgl.getString(PGL.RENDERER);
+  OPENGL_VERSION=pgl.getString(PGL.VERSION);
+  OPENGL_EXTENSIONS=pgl.getString(PGL.EXTENSIONS);
+  GLSL_VERSION=pgl.getString(PGL.SHADING_LANGUAGE_VERSION);
+  npotTexSupported=pgl.hasNpotTexSupport();
+  autoMipmapGenSupported=pgl.hasAutoMipmapGenSupport();
+  fboMultisampleSupported=pgl.hasFboMultisampleSupport();
+  packedDepthStencilSupported=pgl.hasPackedDepthStencilSupport();
+  anisoSamplingSupported=pgl.hasAnisoSamplingSupport();
+  try {
+    pgl.blendEquation(PGL.FUNC_ADD);
+    blendEqSupported=true;
+  }
+ catch (  Exception e) {
+    blendEqSupported=false;
+  }
+  depthBits=pgl.getDepthBits();
+  stencilBits=pgl.getStencilBits();
+  pgl.getIntegerv(PGL.MAX_TEXTURE_SIZE,intBuffer);
+  maxTextureSize=intBuffer.get(0);
+  pgl.getIntegerv(PGL.MAX_SAMPLES,intBuffer);
+  maxSamples=intBuffer.get(0);
+  if (anisoSamplingSupported) {
+    pgl.getFloatv(PGL.MAX_TEXTURE_MAX_ANISOTROPY,floatBuffer);
+    maxAnisoAmount=floatBuffer.get(0);
+  }
+  glParamsRead=true;
+}

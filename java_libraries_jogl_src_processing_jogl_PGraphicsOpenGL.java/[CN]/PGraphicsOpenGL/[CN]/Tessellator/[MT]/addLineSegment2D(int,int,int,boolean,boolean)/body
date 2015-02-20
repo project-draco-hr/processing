@@ -1,0 +1,69 @@
+{
+  IndexCache cache=tess.polyIndexCache;
+  int count=cache.vertexCount[index];
+  if (PGL.MAX_VERTEX_INDEX1 <= count + 4) {
+    index=cache.addNew();
+    count=0;
+  }
+  int iidx=cache.indexOffset[index] + cache.indexCount[index];
+  int vidx=cache.vertexOffset[index] + cache.vertexCount[index];
+  int color=constStroke ? strokeColor : strokeColors[i0];
+  float weight=constStroke ? strokeWeight : strokeWeights[i0];
+  if (subPixelStroke(weight))   clamp=false;
+  float x0=strokeVertices[3 * i0 + 0];
+  float y0=strokeVertices[3 * i0 + 1];
+  float x1=strokeVertices[3 * i1 + 0];
+  float y1=strokeVertices[3 * i1 + 1];
+  float dirx=x1 - x0;
+  float diry=y1 - y0;
+  float llen=PApplet.sqrt(dirx * dirx + diry * diry);
+  float normx=0, normy=0;
+  float dirdx=0, dirdy=0;
+  if (nonZero(llen)) {
+    normx=-diry / llen;
+    normy=+dirx / llen;
+    dirdx=(dirx / llen) * PApplet.min(0.75f,weight / 2);
+    dirdy=(diry / llen) * PApplet.min(0.75f,weight / 2);
+  }
+  float normdx=normx * weight / 2;
+  float normdy=normy * weight / 2;
+  tess.setPolyVertex(vidx++,x0 + normdx - dirdx,y0 + normdy - dirdy,0,color,clamp);
+  tess.polyIndices[iidx++]=(short)(count + 0);
+  tess.setPolyVertex(vidx++,x0 - normdx - dirdx,y0 - normdy - dirdy,0,color,clamp);
+  tess.polyIndices[iidx++]=(short)(count + 1);
+  if (clamp) {
+    float xac=tess.polyVertices[4 * (vidx - 2) + 0];
+    float yac=tess.polyVertices[4 * (vidx - 2) + 1];
+    float xbc=tess.polyVertices[4 * (vidx - 1) + 0];
+    float ybc=tess.polyVertices[4 * (vidx - 1) + 1];
+    if (same(xac,xbc) && same(yac,ybc)) {
+      unclampLine2D(vidx - 2,x0 + normdx - dirdx,y0 + normdy - dirdy);
+      unclampLine2D(vidx - 1,x0 - normdx - dirdx,y0 - normdy - dirdy);
+    }
+  }
+  if (!constStroke) {
+    color=strokeColors[i1];
+    weight=strokeWeights[i1];
+    normdx=normx * weight / 2;
+    normdy=normy * weight / 2;
+    if (subPixelStroke(weight))     clamp=false;
+  }
+  tess.setPolyVertex(vidx++,x1 - normdx + dirdx,y1 - normdy + dirdy,0,color,clamp);
+  tess.polyIndices[iidx++]=(short)(count + 2);
+  tess.polyIndices[iidx++]=(short)(count + 2);
+  tess.polyIndices[iidx++]=(short)(count + 0);
+  tess.setPolyVertex(vidx++,x1 + normdx + dirdx,y1 + normdy + dirdy,0,color,clamp);
+  tess.polyIndices[iidx++]=(short)(count + 3);
+  if (clamp) {
+    float xac=tess.polyVertices[4 * (vidx - 2) + 0];
+    float yac=tess.polyVertices[4 * (vidx - 2) + 1];
+    float xbc=tess.polyVertices[4 * (vidx - 1) + 0];
+    float ybc=tess.polyVertices[4 * (vidx - 1) + 1];
+    if (same(xac,xbc) && same(yac,ybc)) {
+      unclampLine2D(vidx - 2,x1 - normdx + dirdx,y1 - normdy + dirdy);
+      unclampLine2D(vidx - 1,x1 + normdx + dirdx,y1 + normdy + dirdy);
+    }
+  }
+  cache.incCounts(index,6,4);
+  return index;
+}

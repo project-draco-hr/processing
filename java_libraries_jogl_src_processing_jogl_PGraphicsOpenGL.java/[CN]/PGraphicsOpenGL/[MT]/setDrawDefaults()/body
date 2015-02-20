@@ -1,0 +1,81 @@
+{
+  inGeo.clear();
+  tessGeo.clear();
+  texCache.clear();
+  super.noTexture();
+  blendModeImpl();
+  if (hints[DISABLE_DEPTH_TEST]) {
+    pgl.disable(PGL.DEPTH_TEST);
+  }
+ else {
+    pgl.enable(PGL.DEPTH_TEST);
+  }
+  pgl.depthFunc(PGL.LEQUAL);
+  if (hints[DISABLE_OPTIMIZED_STROKE]) {
+    flushMode=FLUSH_CONTINUOUSLY;
+  }
+ else {
+    flushMode=FLUSH_WHEN_FULL;
+  }
+  if (primarySurface) {
+    pgl.getIntegerv(PGL.SAMPLES,intBuffer);
+    int temp=intBuffer.get(0);
+    if (quality != temp && 1 < temp && 1 < quality) {
+    }
+  }
+  if (quality < 2) {
+    pgl.disable(PGL.MULTISAMPLE);
+  }
+ else {
+    pgl.enable(PGL.MULTISAMPLE);
+  }
+  pgl.disable(PGL.POLYGON_SMOOTH);
+  if (sized) {
+    if (primarySurface) {
+      background(backgroundColor);
+    }
+ else {
+      background(0x00 << 24 | (backgroundColor & 0xFFFFFF));
+    }
+    defaultPerspective();
+    defaultCamera();
+    sized=false;
+  }
+ else {
+    modelview.set(camera);
+    modelviewInv.set(cameraInv);
+    updateProjmodelview();
+  }
+  if (is3D()) {
+    noLights();
+    lightFalloff(1,0,0);
+    lightSpecular(0,0,0);
+  }
+  pgl.frontFace(PGL.CW);
+  pgl.disable(PGL.CULL_FACE);
+  pgl.activeTexture(PGL.TEXTURE0);
+  normalX=normalY=0;
+  normalZ=1;
+  pgl.depthMask(true);
+  pgl.clearDepth(1);
+  pgl.clearStencil(0);
+  pgl.clear(PGL.DEPTH_BUFFER_BIT | PGL.STENCIL_BUFFER_BIT);
+  if (!settingsInited) {
+    defaultSettings();
+  }
+  if (restoreSurface) {
+    restoreSurfaceFromPixels();
+    restoreSurface=false;
+  }
+  if (hints[DISABLE_DEPTH_MASK]) {
+    pgl.depthMask(false);
+  }
+ else {
+    pgl.depthMask(true);
+  }
+  pixelsOp=OP_NONE;
+  clearColorBuffer0=clearColorBuffer;
+  clearColorBuffer=false;
+  modified=false;
+  arePixelsUpToDate=false;
+}

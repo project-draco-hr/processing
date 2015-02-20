@@ -1,0 +1,173 @@
+{
+  this.sketch=sketch;
+  Display display=NewtFactory.createDisplay(null);
+  display.addReference();
+  Screen screen=NewtFactory.createScreen(display,0);
+  screen.addReference();
+  ArrayList<MonitorDevice> monitors=new ArrayList<MonitorDevice>();
+  for (int i=0; i < screen.getMonitorDevices().size(); i++) {
+    MonitorDevice monitor=screen.getMonitorDevices().get(i);
+    System.out.println("Monitor " + monitor.getId() + " ************");
+    System.out.println(monitor.toString());
+    System.out.println(monitor.getViewportInWindowUnits());
+    System.out.println(monitor.getViewport());
+    monitors.add(monitor);
+  }
+  System.out.println("*******************************");
+  if (deviceIndex >= 0) {
+    if (deviceIndex < monitors.size()) {
+      displayDevice=monitors.get(deviceIndex);
+    }
+ else {
+      System.err.format("Display %d does not exist, " + "using the default display instead.",deviceIndex);
+      for (int i=0; i < monitors.size(); i++) {
+        System.err.format("Display %d is %s\n",i,monitors.get(i));
+      }
+    }
+  }
+  if (profile == null) {
+    if (PJOGL.PROFILE == 2) {
+      try {
+        profile=GLProfile.getGL2ES1();
+      }
+ catch (      GLException ex) {
+        profile=GLProfile.getMaxFixedFunc(true);
+      }
+    }
+ else     if (PJOGL.PROFILE == 3) {
+      try {
+        profile=GLProfile.getGL2GL3();
+      }
+ catch (      GLException ex) {
+        profile=GLProfile.getMaxProgrammable(true);
+      }
+      if (!profile.isGL3()) {
+        PGraphics.showWarning("Requested profile GL3 but is not available, got: " + profile);
+      }
+    }
+ else     if (PJOGL.PROFILE == 4) {
+      try {
+        profile=GLProfile.getGL4ES3();
+      }
+ catch (      GLException ex) {
+        profile=GLProfile.getMaxProgrammable(true);
+      }
+      if (!profile.isGL4()) {
+        PGraphics.showWarning("Requested profile GL4 but is not available, got: " + profile);
+      }
+    }
+ else     throw new RuntimeException(PGL.UNSUPPORTED_GLPROF_ERROR);
+  }
+  GLCapabilities caps=new GLCapabilities(profile);
+  caps.setAlphaBits(PGL.REQUESTED_ALPHA_BITS);
+  caps.setDepthBits(PGL.REQUESTED_DEPTH_BITS);
+  caps.setStencilBits(PGL.REQUESTED_STENCIL_BITS);
+  pgl.reqNumSamples=graphics.quality;
+  caps.setSampleBuffers(true);
+  caps.setNumSamples(pgl.reqNumSamples);
+  caps.setBackgroundOpaque(true);
+  caps.setOnscreen(true);
+  pgl.capabilities=caps;
+  System.err.println("0. create window");
+  window=GLWindow.create(screen,caps);
+  sketchWidth=sketch.sketchWidth();
+  sketchHeight=sketch.sketchHeight();
+  if (displayDevice == null) {
+    displayDevice=window.getMainMonitor();
+  }
+  int sketchX=displayDevice.getViewportInWindowUnits().getX();
+  int sketchY=displayDevice.getViewportInWindowUnits().getY();
+  int screenWidth=screen.getWidth();
+  int screenHeight=screen.getHeight();
+  screenRect=spanDisplays ? new Rectangle(0,0,screen.getWidth(),screen.getHeight()) : new Rectangle(0,0,displayDevice.getViewportInWindowUnits().getWidth(),displayDevice.getViewportInWindowUnits().getHeight());
+  if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
+    fullScreen=true;
+  }
+  if (fullScreen || spanDisplays) {
+    sketchWidth=screenRect.width;
+    sketchHeight=screenRect.height;
+  }
+  window.setPosition(sketchX,sketchY);
+  window.setSize(sketchWidth,sketchHeight);
+  System.out.println("deviceIndex: " + deviceIndex);
+  System.out.println(displayDevice);
+  System.out.println("Screen res " + screenWidth + "x"+ screenHeight);
+  if (fullScreen) {
+    if (spanDisplays) {
+      window.setFullscreen(monitors);
+    }
+ else {
+      window.setFullscreen(true);
+    }
+  }
+  int[] reqSurfacePixelScale;
+  if (graphics.is2X()) {
+    reqSurfacePixelScale=new int[]{ScalableSurface.AUTOMAX_PIXELSCALE,ScalableSurface.AUTOMAX_PIXELSCALE};
+    pgl.pixel_scale=2;
+  }
+ else {
+    reqSurfacePixelScale=new int[]{ScalableSurface.IDENTITY_PIXELSCALE,ScalableSurface.IDENTITY_PIXELSCALE};
+    pgl.pixel_scale=1;
+  }
+  window.setSurfaceScale(reqSurfacePixelScale);
+  NEWTMouseListener mouseListener=new NEWTMouseListener();
+  window.addMouseListener(mouseListener);
+  NEWTKeyListener keyListener=new NEWTKeyListener();
+  window.addKeyListener(keyListener);
+  NEWTWindowListener winListener=new NEWTWindowListener();
+  window.addWindowListener(winListener);
+  DrawListener drawlistener=new DrawListener();
+  window.addGLEventListener(drawlistener);
+  System.err.println("0. create animator");
+  animator=new FPSAnimator(window,60);
+  drawException=null;
+  animator.setUncaughtExceptionHandler(new GLAnimatorControl.UncaughtExceptionHandler(){
+    @Override public void uncaughtException(    final GLAnimatorControl animator,    final GLAutoDrawable drawable,    final Throwable cause){
+synchronized (waitObject) {
+        drawException=cause;
+        waitObject.notify();
+      }
+    }
+  }
+);
+  (new Thread(new Runnable(){
+    public void run(){
+synchronized (waitObject) {
+        try {
+          if (drawException == null)           waitObject.wait();
+        }
+ catch (        InterruptedException e) {
+          e.printStackTrace();
+        }
+        if (drawException instanceof RuntimeException) {
+          throw (RuntimeException)drawException.getCause();
+        }
+ else {
+          throw new RuntimeException(drawException.getCause());
+        }
+      }
+    }
+  }
+)).start();
+  window.addWindowListener(new WindowAdapter(){
+    @Override public void windowDestroyNotify(    final WindowEvent e){
+      animator.stop();
+      PSurfaceNEWT.this.sketch.exit();
+      window.destroy();
+    }
+  }
+);
+  try {
+    EventQueue.invokeAndWait(new Runnable(){
+      public void run(){
+        window.setVisible(true);
+        System.err.println("1. set visible");
+      }
+    }
+);
+  }
+ catch (  Exception ex) {
+  }
+  frame=new DummyFrame();
+  return frame;
+}

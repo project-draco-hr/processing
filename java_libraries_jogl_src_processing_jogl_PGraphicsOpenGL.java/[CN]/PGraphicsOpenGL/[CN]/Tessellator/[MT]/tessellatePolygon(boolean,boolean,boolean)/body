@@ -1,0 +1,73 @@
+{
+  beginTex();
+  int nInVert=in.vertexCount;
+  if (3 <= nInVert) {
+    firstPolyIndexCache=-1;
+    initGluTess();
+    boolean clamp=clampPolygon();
+    callback.init(in.renderMode == RETAINED,false,calcNormals,clamp);
+    if (fill) {
+      gluTess.beginPolygon();
+      if (solid) {
+        gluTess.setWindingRule(PGL.TESS_WINDING_NONZERO);
+      }
+ else {
+        gluTess.setWindingRule(PGL.TESS_WINDING_ODD);
+      }
+      gluTess.beginContour();
+    }
+    if (stroke) {
+      beginPolygonStroke();
+      beginStrokePath();
+    }
+    int i=0;
+    int c=0;
+    while (i < in.vertexCount) {
+      int code=VERTEX;
+      boolean brk=false;
+      if (in.codes != null && c < in.codeCount) {
+        code=in.codes[c++];
+        if (code == BREAK && c < in.codeCount) {
+          brk=true;
+          code=in.codes[c++];
+        }
+      }
+      if (brk) {
+        if (stroke) {
+          endStrokePath(closed);
+          beginStrokePath();
+        }
+        if (fill) {
+          gluTess.endContour();
+          gluTess.beginContour();
+        }
+      }
+      if (code == BEZIER_VERTEX) {
+        addBezierVertex(i);
+        i+=3;
+      }
+ else       if (code == QUADRATIC_VERTEX) {
+        addQuadraticVertex(i);
+        i+=2;
+      }
+ else       if (code == CURVE_VERTEX) {
+        addCurveVertex(i);
+        i++;
+      }
+ else {
+        addVertex(i);
+        i++;
+      }
+    }
+    if (stroke) {
+      endStrokePath(closed);
+      endPolygonStroke();
+    }
+    if (fill) {
+      gluTess.endContour();
+      gluTess.endPolygon();
+    }
+  }
+  endTex();
+  if (stroke)   tessellateStrokePath();
+}

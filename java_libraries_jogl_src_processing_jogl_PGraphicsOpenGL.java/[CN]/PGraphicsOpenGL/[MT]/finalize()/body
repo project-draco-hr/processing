@@ -1,0 +1,21 @@
+{
+  try {
+    finalizePolyBuffers();
+    finalizeLineBuffers();
+    finalizePointBuffers();
+    deleteSurfaceTextures();
+    if (!primarySurface) {
+      if (offscreenFramebuffer != null) {
+        offscreenFramebuffer.dispose();
+        offscreenFramebuffer=null;
+      }
+      if (multisampleFramebuffer != null) {
+        multisampleFramebuffer.dispose();
+        multisampleFramebuffer=null;
+      }
+    }
+  }
+  finally {
+    super.finalize();
+  }
+}

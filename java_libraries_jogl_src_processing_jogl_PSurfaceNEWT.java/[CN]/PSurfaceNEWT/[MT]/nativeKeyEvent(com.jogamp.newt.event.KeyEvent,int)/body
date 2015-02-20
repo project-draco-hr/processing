@@ -1,0 +1,16 @@
+{
+  int peModifiers=nativeEvent.getModifiers() & (InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK| InputEvent.ALT_MASK);
+  short code=nativeEvent.getKeyCode();
+  char keyChar;
+  int keyCode;
+  if (isPCodedKey(code)) {
+    keyCode=mapToPConst(code);
+    keyChar=PConstants.CODED;
+  }
+ else {
+    keyCode=code;
+    keyChar=nativeEvent.getKeyChar();
+  }
+  KeyEvent ke=new KeyEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,keyChar,keyCode);
+  sketch.postEvent(ke);
+}

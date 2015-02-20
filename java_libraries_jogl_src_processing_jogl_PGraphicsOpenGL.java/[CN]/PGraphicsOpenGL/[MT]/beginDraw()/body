@@ -1,0 +1,35 @@
+{
+  if (primarySurface) {
+    if (!initialized) {
+      initPrimary();
+    }
+    setCurrentPG(this);
+  }
+ else {
+    pgl.getGL(getPrimaryPGL());
+    getPrimaryPG().setCurrentPG(this);
+  }
+  report("top beginDraw()");
+  if (!checkGLThread()) {
+    return;
+  }
+  if (drawing) {
+    return;
+  }
+  if (!primarySurface && getPrimaryPG().texCache.containsTexture(this)) {
+    getPrimaryPG().flush();
+  }
+  if (!glParamsRead) {
+    getGLParameters();
+  }
+  setViewport();
+  if (primarySurface) {
+    beginOnscreenDraw();
+  }
+ else {
+    beginOffscreenDraw();
+  }
+  setDrawDefaults();
+  drawing=true;
+  report("bot beginDraw()");
+}

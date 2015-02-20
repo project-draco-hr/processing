@@ -1,0 +1,34 @@
+{
+  boolean needEndDraw=false;
+  if (!drawing) {
+    beginDraw();
+    needEndDraw=true;
+  }
+  flush();
+  if (primarySurface) {
+    if (pgl.isFBOBacked()) {
+      pgl.syncBackTexture();
+    }
+ else {
+      loadTextureImpl(Texture.POINT,false);
+      if (nativePixels == null || nativePixels.length < width * height) {
+        nativePixels=new int[width * height];
+        nativePixelBuffer=PGL.allocateIntBuffer(nativePixels);
+      }
+      beginPixelsOp(OP_READ);
+      try {
+        pgl.readPixelsImpl(0,0,width,height,PGL.RGBA,PGL.UNSIGNED_BYTE,nativePixelBuffer);
+      }
+ catch (      IndexOutOfBoundsException e) {
+      }
+      endPixelsOp();
+      texture.setNative(nativePixelBuffer,0,0,width,height);
+    }
+  }
+ else   if (offscreenMultisample) {
+    multisampleFramebuffer.copyColor(offscreenFramebuffer);
+  }
+  if (needEndDraw) {
+    endDraw();
+  }
+}

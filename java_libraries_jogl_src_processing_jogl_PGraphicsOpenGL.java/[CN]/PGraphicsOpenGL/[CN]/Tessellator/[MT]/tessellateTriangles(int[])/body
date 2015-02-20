@@ -1,0 +1,13 @@
+{
+  beginTex();
+  int nInVert=in.vertexCount;
+  if (fill && 3 <= nInVert) {
+    int nInInd=indices.length;
+    setRawSize(nInInd);
+    PApplet.arrayCopy(indices,rawIndices,nInInd);
+    boolean clamp=clampTriangles(indices);
+    splitRawIndices(clamp);
+  }
+  endTex();
+  tessellateEdges();
+}

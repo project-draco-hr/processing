@@ -1,0 +1,39 @@
+{
+  if (textMode == MODEL) {
+    textTex=getFontTexture(textFont);
+    if (textTex == null || textTex.contextIsOutdated()) {
+      textTex=new FontTexture(this,textFont,is3D());
+      setFontTexture(textFont,textTex);
+    }
+    textTex.begin();
+    int savedTextureMode=textureMode;
+    boolean savedStroke=stroke;
+    float savedNormalX=normalX;
+    float savedNormalY=normalY;
+    float savedNormalZ=normalZ;
+    boolean savedTint=tint;
+    int savedTintColor=tintColor;
+    int savedBlendMode=blendMode;
+    textureMode=NORMAL;
+    stroke=false;
+    normalX=0;
+    normalY=0;
+    normalZ=1;
+    tint=true;
+    tintColor=fillColor;
+    blendMode(BLEND);
+    super.textLineImpl(buffer,start,stop,x,y);
+    textureMode=savedTextureMode;
+    stroke=savedStroke;
+    normalX=savedNormalX;
+    normalY=savedNormalY;
+    normalZ=savedNormalZ;
+    tint=savedTint;
+    tintColor=savedTintColor;
+    blendMode(savedBlendMode);
+    textTex.end();
+  }
+ else   if (textMode == SHAPE) {
+    super.textLineImpl(buffer,start,stop,x,y);
+  }
+}

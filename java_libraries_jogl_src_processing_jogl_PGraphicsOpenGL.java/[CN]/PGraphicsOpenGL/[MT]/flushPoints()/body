@@ -1,0 +1,17 @@
+{
+  updatePointBuffers();
+  PShader shader=getPointShader();
+  shader.bind();
+  IndexCache cache=tessGeo.pointIndexCache;
+  for (int n=0; n < cache.size; n++) {
+    int ioffset=cache.indexOffset[n];
+    int icount=cache.indexCount[n];
+    int voffset=cache.vertexOffset[n];
+    shader.setVertexAttribute(glPointVertex,4,PGL.FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
+    shader.setColorAttribute(glPointColor,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+    shader.setPointAttribute(glPointAttrib,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
+    shader.draw(glPointIndex,icount,ioffset);
+  }
+  shader.unbind();
+  unbindPointBuffers();
+}

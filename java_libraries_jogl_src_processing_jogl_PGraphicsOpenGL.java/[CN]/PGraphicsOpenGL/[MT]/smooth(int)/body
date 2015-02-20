@@ -1,0 +1,26 @@
+{
+  if (smoothDisabled || PGL.MAX_SAMPLES == -1)   return;
+  smooth=true;
+  if (maxSamples < level) {
+    if (0 < maxSamples) {
+      PGraphics.showWarning(UNSUPPORTED_SMOOTH_LEVEL_ERROR,level,maxSamples);
+    }
+ else {
+      PGraphics.showWarning(UNSUPPORTED_SMOOTH_ERROR);
+    }
+    level=maxSamples;
+  }
+  if (quality != level) {
+    smoothCallCount++;
+    if (parent.frameCount - lastSmoothCall < 30 && 5 < smoothCallCount) {
+      smoothDisabled=true;
+      PGraphics.showWarning(TOO_MANY_SMOOTH_CALLS_ERROR);
+    }
+    lastSmoothCall=parent.frameCount;
+    quality=level;
+    System.out.println(quality);
+    if (quality == 1) {
+      quality=0;
+    }
+  }
+}

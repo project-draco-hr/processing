@@ -1,0 +1,25 @@
+{
+  beginTex();
+  int quadCount=in.vertexCount / 2 - 1;
+  if (fill && 1 <= quadCount) {
+    int nInInd=6 * quadCount;
+    setRawSize(nInInd);
+    int idx=0;
+    boolean clamp=clampQuadStrip(quadCount);
+    for (int qd=1; qd < quadCount + 1; qd++) {
+      int i0=2 * (qd - 1);
+      int i1=2 * (qd - 1) + 1;
+      int i2=2 * qd + 1;
+      int i3=2 * qd;
+      rawIndices[idx++]=i0;
+      rawIndices[idx++]=i1;
+      rawIndices[idx++]=i3;
+      rawIndices[idx++]=i1;
+      rawIndices[idx++]=i2;
+      rawIndices[idx++]=i3;
+    }
+    splitRawIndices(clamp);
+  }
+  endTex();
+  tessellateEdges();
+}

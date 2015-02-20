@@ -1,0 +1,88 @@
+{
+  if (blendMode != lastBlendMode) {
+    flush();
+  }
+  pgl.enable(PGL.BLEND);
+  if (blendMode == REPLACE) {
+    if (blendEqSupported) {
+      pgl.blendEquation(PGL.FUNC_ADD);
+    }
+    pgl.blendFunc(PGL.ONE,PGL.ZERO);
+  }
+ else   if (blendMode == BLEND) {
+    if (blendEqSupported) {
+      pgl.blendEquationSeparate(PGL.FUNC_ADD,PGL.FUNC_ADD);
+    }
+    pgl.blendFuncSeparate(PGL.SRC_ALPHA,PGL.ONE_MINUS_SRC_ALPHA,PGL.ONE,PGL.ONE);
+  }
+ else   if (blendMode == ADD) {
+    if (blendEqSupported) {
+      pgl.blendEquationSeparate(PGL.FUNC_ADD,PGL.FUNC_ADD);
+    }
+    pgl.blendFuncSeparate(PGL.SRC_ALPHA,PGL.ONE,PGL.ONE,PGL.ONE);
+  }
+ else   if (blendMode == SUBTRACT) {
+    if (blendEqSupported) {
+      pgl.blendEquationSeparate(PGL.FUNC_REVERSE_SUBTRACT,PGL.FUNC_ADD);
+      pgl.blendFuncSeparate(PGL.SRC_ALPHA,PGL.ONE,PGL.ONE,PGL.ONE);
+    }
+ else {
+      PGraphics.showWarning(BLEND_DRIVER_ERROR,"SUBTRACT");
+    }
+  }
+ else   if (blendMode == LIGHTEST) {
+    if (blendEqSupported) {
+      pgl.blendEquationSeparate(PGL.FUNC_MAX,PGL.FUNC_ADD);
+      pgl.blendFuncSeparate(PGL.ONE,PGL.ONE,PGL.ONE,PGL.ONE);
+    }
+ else {
+      PGraphics.showWarning(BLEND_DRIVER_ERROR,"LIGHTEST");
+    }
+  }
+ else   if (blendMode == DARKEST) {
+    if (blendEqSupported) {
+      pgl.blendEquationSeparate(PGL.FUNC_MIN,PGL.FUNC_ADD);
+      pgl.blendFuncSeparate(PGL.ONE,PGL.ONE,PGL.ONE,PGL.ONE);
+    }
+ else {
+      PGraphics.showWarning(BLEND_DRIVER_ERROR,"DARKEST");
+    }
+  }
+ else   if (blendMode == EXCLUSION) {
+    if (blendEqSupported) {
+      pgl.blendEquationSeparate(PGL.FUNC_ADD,PGL.FUNC_ADD);
+    }
+    pgl.blendFuncSeparate(PGL.ONE_MINUS_DST_COLOR,PGL.ONE_MINUS_SRC_COLOR,PGL.ONE,PGL.ONE);
+  }
+ else   if (blendMode == MULTIPLY) {
+    if (blendEqSupported) {
+      pgl.blendEquationSeparate(PGL.FUNC_ADD,PGL.FUNC_ADD);
+    }
+    pgl.blendFuncSeparate(PGL.ZERO,PGL.SRC_COLOR,PGL.ONE,PGL.ONE);
+  }
+ else   if (blendMode == SCREEN) {
+    if (blendEqSupported) {
+      pgl.blendEquationSeparate(PGL.FUNC_ADD,PGL.FUNC_ADD);
+    }
+    pgl.blendFuncSeparate(PGL.ONE_MINUS_DST_COLOR,PGL.ONE,PGL.ONE,PGL.ONE);
+  }
+ else   if (blendMode == DIFFERENCE) {
+    PGraphics.showWarning(BLEND_RENDERER_ERROR,"DIFFERENCE");
+  }
+ else   if (blendMode == OVERLAY) {
+    PGraphics.showWarning(BLEND_RENDERER_ERROR,"OVERLAY");
+  }
+ else   if (blendMode == HARD_LIGHT) {
+    PGraphics.showWarning(BLEND_RENDERER_ERROR,"HARD_LIGHT");
+  }
+ else   if (blendMode == SOFT_LIGHT) {
+    PGraphics.showWarning(BLEND_RENDERER_ERROR,"SOFT_LIGHT");
+  }
+ else   if (blendMode == DODGE) {
+    PGraphics.showWarning(BLEND_RENDERER_ERROR,"DODGE");
+  }
+ else   if (blendMode == BURN) {
+    PGraphics.showWarning(BLEND_RENDERER_ERROR,"BURN");
+  }
+  lastBlendMode=blendMode;
+}

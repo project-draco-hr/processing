@@ -1,0 +1,18 @@
+{
+  float w=right - left;
+  float h=top - bottom;
+  float d=far - near;
+  left-=cameraEyeX;
+  right-=cameraEyeX;
+  bottom-=cameraEyeY;
+  top-=cameraEyeY;
+  flush();
+  float x=+2.0f / w;
+  float y=+2.0f / h;
+  float z=-2.0f / d;
+  float tx=-(right + left) / w;
+  float ty=-(top + bottom) / h;
+  float tz=-(far + near) / d;
+  projection.set(x,0,0,tx,0,-y,0,ty,0,0,z,tz,0,0,0,1);
+  updateProjmodelview();
+}
