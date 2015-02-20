@@ -1,0 +1,79 @@
+{
+  this.sketch=sketch;
+  GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
+  DisplayMode desktopMode=Display.getDesktopDisplayMode();
+  PApplet.println("DESKTOP MODES");
+  PApplet.println(desktopMode);
+  PApplet.println("ALL MODES");
+  try {
+    DisplayMode[] allModes=Display.getAvailableDisplayModes();
+    for (    DisplayMode mode : allModes) {
+      PApplet.println(mode);
+    }
+  }
+ catch (  LWJGLException e) {
+    e.printStackTrace();
+  }
+  if (deviceIndex >= 0) {
+    GraphicsDevice[] devices=environment.getScreenDevices();
+    if (deviceIndex < devices.length) {
+      displayDevice=devices[deviceIndex];
+    }
+ else {
+      System.err.format("Display %d does not exist, " + "using the default display instead.",deviceIndex);
+      for (int i=0; i < devices.length; i++) {
+        System.err.format("Display %d is %s\n",i,devices[i]);
+      }
+    }
+  }
+  if (displayDevice == null) {
+    displayDevice=environment.getDefaultScreenDevice();
+  }
+  screenRect=spanDisplays ? getDisplaySpan() : displayDevice.getDefaultConfiguration().getBounds();
+  sketch.displayWidth=screenRect.width;
+  sketch.displayHeight=screenRect.height;
+  sketchWidth=sketch.sketchWidth();
+  sketchHeight=sketch.sketchHeight();
+  if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
+    fullScreen=true;
+  }
+  if (spanDisplays) {
+    sketchWidth=screenRect.width;
+    sketchHeight=screenRect.height;
+  }
+  if (fullScreen) {
+    PApplet.hideMenuBar();
+    System.setProperty("org.lwjgl.opengl.Window.undecorated","true");
+    fullScreenRequested=true;
+  }
+  if (graphics.is2X()) {
+    System.setProperty("org.lwjgl.opengl.Display.enableHighDPI","true");
+  }
+  pgl.reqNumSamples=graphics.quality;
+  System.err.println("DISPLAY PARENT: " + Display.getParent());
+  System.err.println("DISPLAY SMOOTH: " + pgl.reqNumSamples);
+  try {
+    int argb=graphics.backgroundColor;
+    float r=((argb >> 16) & 0xff) / 255.0f;
+    float g=((argb >> 8) & 0xff) / 255.0f;
+    float b=((argb) & 0xff) / 255.0f;
+    Display.setInitialBackground(r,g,b);
+    if (fullScreen) {
+      Display.setDisplayMode(new DisplayMode(screenRect.width,screenRect.height));
+    }
+ else {
+      Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
+    }
+    System.err.println(sketchWidth + " " + sketchHeight);
+    if (fullScreenRequested) {
+      Display.setFullscreen(true);
+    }
+  }
+ catch (  LWJGLException e) {
+    e.printStackTrace();
+  }
+  restarter=new DisplayResarter();
+  restarter.start();
+  frame=new DummyFrame();
+  return frame;
+}

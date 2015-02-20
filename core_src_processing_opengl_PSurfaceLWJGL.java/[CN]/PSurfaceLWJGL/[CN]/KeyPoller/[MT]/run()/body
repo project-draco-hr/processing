@@ -1,0 +1,57 @@
+{
+  pressedKeys=new boolean[256];
+  charCheys=new char[256];
+  Keyboard.enableRepeatEvents(true);
+  while (true) {
+    if (stopRequested)     break;
+    Keyboard.poll();
+    while (Keyboard.next()) {
+      if (stopRequested)       break;
+      long millis=Keyboard.getEventNanoseconds() / 1000000L;
+      char keyChar=Keyboard.getEventCharacter();
+      int keyCode=Keyboard.getEventKey();
+      if (keyCode >= pressedKeys.length)       continue;
+      int modifiers=0;
+      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+        modifiers|=Event.SHIFT;
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
+        modifiers|=Event.CTRL;
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LMETA) || Keyboard.isKeyDown(Keyboard.KEY_RMETA)) {
+        modifiers|=Event.META;
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
+        modifiers|=Event.ALT;
+      }
+      int keyPCode=LWJGLtoAWTCode(keyCode);
+      if (keyChar == 0) {
+        keyChar=PConstants.CODED;
+      }
+      int action=0;
+      if (Keyboard.getEventKeyState()) {
+        action=KeyEvent.PRESS;
+        KeyEvent ke=new KeyEvent(null,millis,action,modifiers,keyChar,keyPCode);
+        parent.postEvent(ke);
+        pressedKeys[keyCode]=true;
+        charCheys[keyCode]=keyChar;
+        keyPCode=0;
+        action=KeyEvent.TYPE;
+      }
+ else       if (pressedKeys[keyCode]) {
+        keyChar=charCheys[keyCode];
+        pressedKeys[keyCode]=false;
+        action=KeyEvent.RELEASE;
+      }
+      KeyEvent ke=new KeyEvent(null,millis,action,modifiers,keyChar,keyPCode);
+      parent.postEvent(ke);
+    }
+    try {
+      Thread.sleep(10);
+    }
+ catch (    InterruptedException e) {
+      Thread.currentThread().interrupt();
+      break;
+    }
+  }
+}
