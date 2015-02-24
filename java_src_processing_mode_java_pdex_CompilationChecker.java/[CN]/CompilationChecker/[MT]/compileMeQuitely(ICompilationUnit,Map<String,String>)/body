@@ -13,10 +13,10 @@
   CompileRequestorImpl requestor=new CompileRequestorImpl();
   Compiler compiler=new Compiler(new NameEnvironmentImpl(unit),DefaultErrorHandlingPolicies.proceedWithAllProblems(),new CompilerOptions(settings),requestor,new DefaultProblemFactory(Locale.getDefault()));
   compiler.compile(new ICompilationUnit[]{unit});
-  List problems=requestor.getProblems();
+  List<IProblem> problems=requestor.getProblems();
   prob=new IProblem[problems.size()];
   int count=0;
-  for (Iterator it=problems.iterator(); it.hasNext(); ) {
+  for (Iterator<IProblem> it=problems.iterator(); it.hasNext(); ) {
     IProblem problem=(IProblem)it.next();
     prob[count++]=problem;
   }
