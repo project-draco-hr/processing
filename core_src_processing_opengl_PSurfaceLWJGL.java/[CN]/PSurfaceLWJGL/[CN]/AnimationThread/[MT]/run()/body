@@ -37,7 +37,10 @@
     }
     x0=x;
     y0=y;
-    if (Display.isCloseRequested())     break;
+    if (Display.isCloseRequested()) {
+      sketch.exit();
+      break;
+    }
     if (forceExit) {
       System.err.println("QUIT");
       deinit=false;
@@ -45,13 +48,12 @@
     }
   }
   if (deinit) {
-    if (externalMessages) {
-      sketch.exit();
-    }
+    System.err.println("DESTROY");
     keyPoller.requestStop();
     mousePoller.requestStop();
     sketch.dispose();
     Display.destroy();
+    frame.dispose();
     if (sketch.exitCalled()) {
       sketch.exitActual();
     }
