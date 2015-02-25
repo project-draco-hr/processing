@@ -1,0 +1,18 @@
+{
+  String importRegex=errorCheckerService.importRegexp;
+  String tabCode;
+  for (  SketchCode sc : sketch.getCode()) {
+    if (sc.isExtension("pde")) {
+      tabCode=sc.getProgram();
+      String[][] pieces=PApplet.matchAll(tabCode,importRegex);
+      if (pieces != null) {
+        ArrayList<String> importHeaders=new ArrayList<String>();
+        for (        String[] importStatement : pieces) {
+          importHeaders.add(importStatement[2]);
+        }
+        ArrayList<String> installLibsHeaders=getUninstalledAvailableLib(importHeaders);
+        for (        String s : installLibsHeaders)         System.out.println(s);
+      }
+    }
+  }
+}
