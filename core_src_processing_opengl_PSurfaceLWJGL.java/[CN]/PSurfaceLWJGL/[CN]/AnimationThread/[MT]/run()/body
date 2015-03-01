@@ -8,7 +8,6 @@
     e.printStackTrace();
     System.exit(0);
   }
-  boolean deinit=true;
   keyPoller=new KeyPoller(sketch);
   keyPoller.start();
   mousePoller=new MousePoller(sketch);
@@ -41,21 +40,14 @@
       sketch.exit();
       break;
     }
-    if (forceExit) {
-      System.err.println("QUIT");
-      deinit=false;
-      break;
-    }
   }
-  if (deinit) {
-    System.err.println("DESTROY");
-    keyPoller.requestStop();
-    mousePoller.requestStop();
-    sketch.dispose();
-    Display.destroy();
-    frame.dispose();
-    if (sketch.exitCalled()) {
-      sketch.exitActual();
-    }
+  System.err.println("DESTROY");
+  keyPoller.requestStop();
+  mousePoller.requestStop();
+  sketch.dispose();
+  Display.destroy();
+  frame.dispose();
+  if (sketch.exitCalled()) {
+    sketch.exitActual();
   }
 }

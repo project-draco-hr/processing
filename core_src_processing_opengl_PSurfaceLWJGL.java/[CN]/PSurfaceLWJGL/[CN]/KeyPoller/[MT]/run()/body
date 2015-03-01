@@ -25,23 +25,19 @@
         modifiers|=Event.ALT;
       }
       int keyPCode=LWJGLtoAWTCode(keyCode);
-      if (keyChar == 0) {
+      if ((short)(keyChar) <= 0) {
         keyChar=PConstants.CODED;
       }
       int action=0;
       if (Keyboard.getEventKeyState()) {
         action=KeyEvent.PRESS;
-        KeyEvent ke=new KeyEvent(null,millis,action,modifiers,keyChar,keyPCode);
-        parent.postEvent(ke);
         pressedKeys[keyCode]=true;
         charCheys[keyCode]=keyChar;
-        keyPCode=0;
-        action=KeyEvent.TYPE;
       }
  else       if (pressedKeys[keyCode]) {
-        keyChar=charCheys[keyCode];
-        pressedKeys[keyCode]=false;
         action=KeyEvent.RELEASE;
+        pressedKeys[keyCode]=false;
+        keyChar=charCheys[keyCode];
       }
       KeyEvent ke=new KeyEvent(null,millis,action,modifiers,keyChar,keyPCode);
       parent.postEvent(ke);
