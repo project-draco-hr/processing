@@ -1,11 +1,18 @@
 {
   if (columnTitles != null) {
-    for (int col=0; col < columns.length; col++) {
+    for (int col=0; col < getColumnCount(); col++) {
       if (col != 0) {
         writer.print(',');
       }
-      if (columnTitles[col] != null) {
-        writeEntryCSV(writer,columnTitles[col]);
+      try {
+        if (columnTitles[col] != null) {
+          writeEntryCSV(writer,columnTitles[col]);
+        }
+      }
+ catch (      ArrayIndexOutOfBoundsException e) {
+        PApplet.printArray(columnTitles);
+        PApplet.printArray(columns);
+        throw e;
       }
     }
     writer.println();
