@@ -1,5 +1,6 @@
 {
-  ArrayList<String> libList=new ArrayList<String>();
+  Map<String,Contribution> importMap=ContributionListing.getInstance().librariesByImportHeader;
+  ArrayList<Contribution> libList=new ArrayList<Contribution>();
   for (  String importHeaders : importHeadersList) {
     int dot=importHeaders.lastIndexOf('.');
     String entry=(dot == -1) ? importHeaders : importHeaders.substring(0,dot);
@@ -9,10 +10,14 @@
     Library library=null;
     try {
       library=this.getMode().getLibrary(entry);
-      if (library == null)       libList.add(importHeaders);
+      if (library == null) {
+        Contribution c=importMap.get(importHeaders);
+        if (c != null)         libList.add(c);
+      }
     }
  catch (    Exception e) {
-      libList.add(importHeaders);
+      Contribution c=importMap.get(importHeaders);
+      if (c != null)       libList.add(c);
     }
   }
   return libList;
