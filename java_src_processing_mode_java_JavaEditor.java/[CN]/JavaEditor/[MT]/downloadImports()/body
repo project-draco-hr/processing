@@ -10,8 +10,10 @@
         for (        String[] importStatement : pieces) {
           importHeaders.add(importStatement[2]);
         }
-        ArrayList<Contribution> installLibsHeaders=getNotInstalledAvailableLibs(importHeaders);
-        for (        Contribution c : installLibsHeaders)         System.out.println(c.getName());
+        ArrayList<AvailableContribution> installLibsHeaders=getNotInstalledAvailableLibs(importHeaders);
+        if (!installLibsHeaders.isEmpty()) {
+          ContributionManager.downloadAndInstallOnImport(base,installLibsHeaders);
+        }
       }
     }
   }

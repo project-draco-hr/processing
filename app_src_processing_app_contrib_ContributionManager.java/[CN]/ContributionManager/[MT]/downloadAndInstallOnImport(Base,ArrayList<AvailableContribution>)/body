@@ -1,0 +1,47 @@
+{
+  base.getActiveEditor().getTextArea().setEditable(false);
+  base.getActiveEditor().getConsole().clear();
+  ArrayList<String> installedLibList=new ArrayList<String>();
+  for (  AvailableContribution ad : aList) {
+    if (ad.getType() != ContributionType.LIBRARY)     continue;
+    try {
+      URL url=new URL(ad.link);
+      String filename=url.getFile();
+      filename=filename.substring(filename.lastIndexOf('/') + 1);
+      try {
+        File contribZip=File.createTempFile("download",filename);
+        contribZip.setWritable(true);
+        try {
+          String statusMsg=base.getActiveEditor().getStatusMessage();
+          if (statusMsg.contains("has been installed"))           base.getActiveEditor().statusNotice(statusMsg + " " + "Now downloading "+ ad.name);
+ else           base.getActiveEditor().statusNotice("Downloading " + ad.name + "...");
+          download(url,contribZip,null);
+          base.getActiveEditor().statusNotice("Installing " + ad.name + "...");
+          LocalContribution contribution=ad.install(base,contribZip,false,null);
+          if (contribution != null) {
+            contribListing.replaceContribution(ad,contribution);
+            if (base.getActiveEditor() != null)             refreshInstalled(base.getActiveEditor());
+          }
+          contribZip.delete();
+          installedLibList.add(ad.name);
+          base.getActiveEditor().statusNotice(ad.name + " has been installed.");
+        }
+ catch (        Exception e) {
+          System.out.println("Error during download and install of " + ad.getName());
+        }
+      }
+ catch (      IOException e) {
+        System.err.println("Could not write to temporary directory during download and install of " + ad.getName());
+      }
+    }
+ catch (    MalformedURLException e1) {
+      System.err.println("Error: The library " + ad.getName() + " has a weird looking download link.");
+    }
+  }
+  base.getActiveEditor().getTextArea().setEditable(true);
+  base.getActiveEditor().statusEmpty();
+  System.out.println("The following libraries have been installed:");
+  for (  String l : installedLibList) {
+    System.out.println(l);
+  }
+}
