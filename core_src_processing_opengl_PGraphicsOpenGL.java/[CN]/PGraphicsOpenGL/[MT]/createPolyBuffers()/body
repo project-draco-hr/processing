@@ -35,4 +35,13 @@
     pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,0);
     polyBuffersCreated=true;
   }
+  boolean created=false;
+  for (  String name : attribs.keySet()) {
+    VertexAttribute attrib=attribs.get(name);
+    if (!attrib.bufferCreated() || polyBuffersContextIsOutdated()) {
+      attrib.createBuffer(pgl);
+      created=true;
+    }
+  }
+  if (created)   pgl.bindBuffer(PGL.ARRAY_BUFFER,0);
 }

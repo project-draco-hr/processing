@@ -31,6 +31,13 @@
     PGraphicsOpenGL.finalizeVertexBufferObject(glPolyShininess,polyBuffersContext);
     glPolyShininess=0;
   }
+  for (  String name : attribs.keySet()) {
+    VertexAttribute attrib=attribs.get(name);
+    if (attrib.glName != 0) {
+      PGraphicsOpenGL.finalizeVertexBufferObject(attrib.glName,polyBuffersContext);
+      attrib.glName=0;
+    }
+  }
   if (glPolyIndex != 0) {
     PGraphicsOpenGL.finalizeVertexBufferObject(glPolyIndex,polyBuffersContext);
     glPolyIndex=0;
