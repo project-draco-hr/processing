@@ -32,6 +32,10 @@
       polyNormals[index++]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
       polyNormals[index]=nx * nm.m02 + ny * nm.m12 + nz * nm.m22;
     }
+    for (    String name : attribs.keySet()) {
+      VertexAttribute attrib=attribs.get(name);
+      if (attrib.isColor() || attrib.isOther())       continue;
+    }
   }
  else {
     if (nvert <= PGL.MIN_ARRAYCOPY_SIZE) {
@@ -56,6 +60,10 @@
         polyNormals[index++]=ny;
         polyNormals[index]=nz;
       }
+      for (      String name : attribs.keySet()) {
+        VertexAttribute attrib=attribs.get(name);
+        if (attrib.isColor() || attrib.isOther())         continue;
+      }
     }
  else {
       for (int i=0; i < nvert; i++) {
@@ -65,6 +73,10 @@
         polyVertices[4 * tessIdx + 3]=1;
       }
       PApplet.arrayCopy(in.normals,3 * i0,polyNormals,3 * firstPolyVertex,3 * nvert);
+      for (      String name : attribs.keySet()) {
+        VertexAttribute attrib=attribs.get(name);
+        if (attrib.isColor() || attrib.isOther())         continue;
+      }
     }
   }
   if (nvert <= PGL.MIN_ARRAYCOPY_SIZE) {
@@ -83,6 +95,10 @@
       polyEmissive[tessIdx]=in.emissive[inIdx];
       polyShininess[tessIdx]=in.shininess[inIdx];
     }
+    for (    String name : attribs.keySet()) {
+      VertexAttribute attrib=attribs.get(name);
+      if (attrib.isPosition() || attrib.isNormal())       continue;
+    }
   }
  else {
     PApplet.arrayCopy(in.colors,i0,polyColors,firstPolyVertex,nvert);
@@ -91,5 +107,9 @@
     PApplet.arrayCopy(in.specular,i0,polySpecular,firstPolyVertex,nvert);
     PApplet.arrayCopy(in.emissive,i0,polyEmissive,firstPolyVertex,nvert);
     PApplet.arrayCopy(in.shininess,i0,polyShininess,firstPolyVertex,nvert);
+    for (    String name : attribs.keySet()) {
+      VertexAttribute attrib=attribs.get(name);
+      if (attrib.isPosition() || attrib.isNormal())       continue;
+    }
   }
 }
