@@ -1,5 +1,4 @@
 {
-  InputStream stream=null;
   if (filename == null)   return null;
   if (filename.length() == 0) {
     return null;
@@ -7,8 +6,15 @@
   if (filename.contains(":")) {
     try {
       URL url=new URL(filename);
-      stream=url.openStream();
-      return stream;
+      URLConnection conn=url.openConnection();
+      HttpURLConnection httpConn=(HttpURLConnection)conn;
+      httpConn.setInstanceFollowRedirects(true);
+      int response=httpConn.getResponseCode();
+      if (response >= 300 && response < 400) {
+        String newLocation=httpConn.getHeaderField("Location");
+        return createInputRaw(newLocation);
+      }
+      return conn.getInputStream();
     }
  catch (    MalformedURLException mfue) {
     }
@@ -19,6 +25,7 @@ catch (    IOException e) {
       return null;
     }
   }
+  InputStream stream=null;
   try {
     File file=new File(dataPath(filename));
     if (!file.exists()) {
