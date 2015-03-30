@@ -9,23 +9,21 @@
       if (contribType == null) {
         System.err.println("Error in contribution listing file on line " + (start + 1));
         int end=++start;
-        while (end < lines.length && !lines[end].equals("")) {
+        while (end < lines.length && lines[end].trim().length() != 0) {
           end++;
         }
         start=end + 1;
-        continue;
       }
-      int end=++start;
-      while (end < lines.length && !lines[end].equals("")) {
-        end++;
+ else {
+        int end=++start;
+        while (end < lines.length && lines[end].trim().length() != 0) {
+          end++;
+        }
+        String[] contribLines=PApplet.subset(lines,start,end - start);
+        Map<String,String> contribParams=Base.readSettings(file.getName(),contribLines);
+        outgoing.add(new AvailableContribution(contribType,contribParams));
+        start=end + 1;
       }
-      int length=end - start;
-      String[] contribLines=new String[length];
-      System.arraycopy(lines,start,contribLines,0,length);
-      HashMap<String,String> contribParams=new HashMap<String,String>();
-      Base.readSettings(file.getName(),contribLines,contribParams);
-      outgoing.add(new AvailableContribution(contribType,contribParams));
-      start=end + 1;
     }
   }
   return outgoing;

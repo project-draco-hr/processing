@@ -1,8 +1,12 @@
 {
-  HashMap<String,String> outgoing=new HashMap<String,String>();
-  if (inputFile.exists()) {
-    String lines[]=PApplet.loadStrings(inputFile);
-    readSettings(inputFile.toString(),lines,outgoing);
+  if (!inputFile.exists()) {
+    System.err.println(inputFile + " does not exist.");
+    return null;
   }
-  return outgoing;
+  String lines[]=PApplet.loadStrings(inputFile);
+  if (lines == null) {
+    System.err.println("Could not read " + inputFile);
+    return null;
+  }
+  return readSettings(inputFile.toString(),lines);
 }
