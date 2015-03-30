@@ -1,0 +1,27 @@
+{
+  String importRegex=errorCheckerService.importRegexp;
+  String tabCode;
+  for (  SketchCode sc : sketch.getCode()) {
+    if (sc.isExtension("pde")) {
+      tabCode=sc.getProgram();
+      String[][] pieces=PApplet.matchAll(tabCode,importRegex);
+      if (pieces != null) {
+        ArrayList<String> importHeaders=new ArrayList<String>();
+        for (        String[] importStatement : pieces) {
+          importHeaders.add(importStatement[2]);
+        }
+        ArrayList<AvailableContribution> installLibsHeaders=getNotInstalledAvailableLibs(importHeaders);
+        if (!installLibsHeaders.isEmpty()) {
+          StringBuilder libList=new StringBuilder("Would you like to install them now?");
+          for (          AvailableContribution ac : installLibsHeaders) {
+            libList.append("\n  ??? " + ac.getName());
+          }
+          int option=Base.showYesNoQuestion(this,Language.text("contrib.import.dialog.title"),Language.text("contrib.import.dialog.primary_text"),libList.toString());
+          if (option == JOptionPane.YES_OPTION) {
+            ContributionManager.downloadAndInstallOnImport(base,installLibsHeaders);
+          }
+        }
+      }
+    }
+  }
+}

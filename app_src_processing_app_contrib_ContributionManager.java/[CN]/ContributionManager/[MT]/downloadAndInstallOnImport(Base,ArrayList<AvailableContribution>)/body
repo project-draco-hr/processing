@@ -1,0 +1,65 @@
+{
+  base.getActiveEditor().getTextArea().setEditable(false);
+  base.getActiveEditor().getConsole().clear();
+  ArrayList<String> installedLibList=new ArrayList<String>();
+  boolean isPrevDone=false;
+  for (  AvailableContribution ad : aList) {
+    if (ad.getType() != ContributionType.LIBRARY) {
+      continue;
+    }
+    try {
+      URL url=new URL(ad.link);
+      String filename=url.getFile();
+      filename=filename.substring(filename.lastIndexOf('/') + 1);
+      try {
+        File contribZip=File.createTempFile("download",filename);
+        contribZip.setWritable(true);
+        try {
+          String statusMsg=base.getActiveEditor().getStatusMessage();
+          if (isPrevDone) {
+            String status=statusMsg + " " + Language.interpolate("contrib.import.progress.download",ad.name);
+            base.getActiveEditor().statusNotice(status);
+          }
+ else {
+            String arg="contrib.import.progress.download";
+            String status=Language.interpolate(arg,ad.name);
+            base.getActiveEditor().statusNotice(status);
+          }
+          isPrevDone=false;
+          download(url,contribZip,null);
+          String arg="contrib.import.progress.install";
+          base.getActiveEditor().statusNotice(Language.interpolate(arg,ad.name));
+          LocalContribution contribution=ad.install(base,contribZip,false,null);
+          if (contribution != null) {
+            contribListing.replaceContribution(ad,contribution);
+            if (base.getActiveEditor() != null) {
+              refreshInstalled(base.getActiveEditor());
+            }
+          }
+          contribZip.delete();
+          installedLibList.add(ad.name);
+          isPrevDone=true;
+          arg="contrib.import.progress.done";
+          base.getActiveEditor().statusNotice(Language.interpolate(arg,ad.name));
+        }
+ catch (        Exception e) {
+          String arg="contrib.startup.errors.download_install";
+          System.err.println(Language.interpolate(arg,ad.getName()));
+        }
+      }
+ catch (      IOException e) {
+        String arg="contrib.startup.errors.temp_dir";
+        System.err.println(Language.interpolate(arg,ad.getName()));
+      }
+    }
+ catch (    MalformedURLException e1) {
+      System.err.println(Language.interpolate("contrib.import.errors.link",ad.getName()));
+    }
+  }
+  base.getActiveEditor().getTextArea().setEditable(true);
+  base.getActiveEditor().statusEmpty();
+  System.out.println(Language.text("contrib.import.progress.final_list"));
+  for (  String l : installedLibList) {
+    System.out.println("  * " + l);
+  }
+}
