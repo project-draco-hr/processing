@@ -17,17 +17,21 @@
                 contribModes.add((ModeContribution)contribution);
               }
             }
-            if (base.getActiveEditor() != null)             refreshInstalled(base.getActiveEditor());
+            if (base.getActiveEditor() != null) {
+              refreshInstalled(base.getActiveEditor());
+            }
           }
           contribZip.delete();
           handleUpdateFailedMarkers(ad,filename.substring(0,filename.lastIndexOf('.')));
         }
  catch (        Exception e) {
-          System.out.println("Error during download and install of " + ad.getName());
+          String arg="contrib.startup.errors.download_install";
+          System.err.println(Language.interpolate(arg,ad.getName()));
         }
       }
  catch (      IOException e) {
-        System.err.println("Could not write to temporary directory during download and install of " + ad.getName());
+        String arg="contrib.startup.errors.temp_dir";
+        System.err.println(Language.interpolate(arg,ad.getName()));
       }
     }
   }

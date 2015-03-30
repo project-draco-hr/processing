@@ -1,0 +1,28 @@
+{
+  Map<String,Contribution> importMap=ContributionListing.getInstance().librariesByImportHeader;
+  ArrayList<AvailableContribution> libList=new ArrayList<AvailableContribution>();
+  for (  String importHeaders : importHeadersList) {
+    int dot=importHeaders.lastIndexOf('.');
+    String entry=(dot == -1) ? importHeaders : importHeaders.substring(0,dot);
+    if (entry.startsWith("java.") || entry.startsWith("javax.") || entry.startsWith("processing.")) {
+      continue;
+    }
+    Library library=null;
+    try {
+      library=this.getMode().getLibrary(entry);
+      if (library == null) {
+        Contribution c=importMap.get(importHeaders);
+        if (c != null && c instanceof AvailableContribution) {
+          libList.add((AvailableContribution)c);
+        }
+      }
+    }
+ catch (    Exception e) {
+      Contribution c=importMap.get(importHeaders);
+      if (c != null && c instanceof AvailableContribution) {
+        libList.add((AvailableContribution)c);
+      }
+    }
+  }
+  return libList;
+}
