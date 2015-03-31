@@ -13,7 +13,7 @@
       url=location.get(0);
     }
  else {
-      throw new RuntimeException("Got " + location.size() + " locations.");
+      throw new BuildException("Got " + location.size() + " locations.");
     }
     List<String> cookies=headers.get("Set-Cookie");
     conn=(HttpURLConnection)new URL(url).openConnection();
@@ -27,6 +27,7 @@
     InputStream input=conn.getInputStream();
     BufferedInputStream bis=new BufferedInputStream(input);
     File outputFile=new File(path);
+    System.out.format("Downloading %s from %s%n",outputFile.getAbsolutePath(),url);
     File tempFile=File.createTempFile("download","",outputFile.getParentFile());
     BufferedOutputStream output=new BufferedOutputStream(new FileOutputStream(tempFile));
     int c=bis.read();
