@@ -49,12 +49,18 @@
       shader.setTexture(tex);
     }
     for (    VertexAttribute attrib : polyAttribs.values()) {
+      if (!attrib.active())       continue;
       attrib.updateLoc(shader);
       attrib.bind(pgl);
       shader.setAttributeVBO(attrib.glLoc,attrib.glName,attrib.tessSize,attrib.type,attrib.isColor(),0,attrib.sizeInBytes(voffset));
     }
     shader.draw(root.glPolyIndex,icount,ioffset);
   }
-  for (  VertexAttribute attrib : polyAttribs.values())   attrib.unbind(pgl);
-  if (shader != null && shader.bound())   shader.unbind();
+  for (  VertexAttribute attrib : polyAttribs.values()) {
+    if (!attrib.active())     continue;
+    attrib.unbind(pgl);
+  }
+  if (shader != null && shader.bound()) {
+    shader.unbind();
+  }
 }
