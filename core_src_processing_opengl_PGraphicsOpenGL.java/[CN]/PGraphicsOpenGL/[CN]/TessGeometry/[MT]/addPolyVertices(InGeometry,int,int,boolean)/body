@@ -34,7 +34,7 @@
       for (      String name : attribs.keySet()) {
         VertexAttribute attrib=attribs.get(name);
         if (attrib.isColor() || attrib.isOther())         continue;
-        float[] inValues=in.fattrValues.get(name);
+        float[] inValues=in.fattribs.get(name);
         index=3 * inIdx;
         x=inValues[index++];
         y=inValues[index++];
@@ -87,7 +87,7 @@
         for (        String name : attribs.keySet()) {
           VertexAttribute attrib=attribs.get(name);
           if (attrib.isColor() || attrib.isOther())           continue;
-          float[] inValues=in.fattrValues.get(name);
+          float[] inValues=in.fattribs.get(name);
           index=3 * inIdx;
           x=inValues[index++];
           y=inValues[index++];
@@ -118,7 +118,7 @@
         for (        String name : attribs.keySet()) {
           VertexAttribute attrib=attribs.get(name);
           if (!attrib.isPosition())           continue;
-          float[] inValues=in.fattrValues.get(name);
+          float[] inValues=in.fattribs.get(name);
           float[] tessValues=fattribs.get(name);
           PApplet.arrayCopy(inValues,3 * inIdx,tessValues,4 * tessIdx,3);
           tessValues[4 * tessIdx + 3]=1;
@@ -128,7 +128,7 @@
       for (      String name : attribs.keySet()) {
         VertexAttribute attrib=attribs.get(name);
         if (!attrib.isPosition())         continue;
-        float[] inValues=in.fattrValues.get(name);
+        float[] inValues=in.fattribs.get(name);
         float[] tessValues=fattribs.get(name);
         PApplet.arrayCopy(inValues,3 * i0,tessValues,3 * firstPolyVertex,3 * nvert);
       }
@@ -155,21 +155,21 @@
         int index0=attrib.size * inIdx;
         int index1=attrib.size * tessIdx;
         if (attrib.isFloat()) {
-          float[] inValues=in.fattrValues.get(name);
+          float[] inValues=in.fattribs.get(name);
           float[] tessValues=fattribs.get(name);
           for (int n=0; n < attrib.size; n++) {
             tessValues[index1++]=inValues[index0++];
           }
         }
  else         if (attrib.isInt()) {
-          int[] inValues=in.iattrValues.get(name);
+          int[] inValues=in.iattribs.get(name);
           int[] tessValues=iattribs.get(name);
           for (int n=0; n < attrib.size; n++) {
             tessValues[index1++]=inValues[index0++];
           }
         }
  else         if (attrib.isBool()) {
-          byte[] inValues=in.battrValues.get(name);
+          byte[] inValues=in.battribs.get(name);
           byte[] tessValues=battribs.get(name);
           for (int n=0; n < attrib.size; n++) {
             tessValues[index1++]=inValues[index0++];
@@ -191,15 +191,15 @@
       Object inValues=null;
       Object tessValues=null;
       if (attrib.isFloat()) {
-        inValues=in.fattrValues.get(name);
+        inValues=in.fattribs.get(name);
         tessValues=fattribs.get(name);
       }
  else       if (attrib.isInt()) {
-        inValues=in.iattrValues.get(name);
+        inValues=in.iattribs.get(name);
         tessValues=iattribs.get(name);
       }
  else       if (attrib.isBool()) {
-        inValues=in.battrValues.get(name);
+        inValues=in.battribs.get(name);
         tessValues=battribs.get(name);
         PApplet.arrayCopy(inValues,attrib.size * i0,tessValues,attrib.size * firstPolyVertex,attrib.size * nvert);
       }

@@ -4,10 +4,10 @@
   for (int i=0; i < attribs.size(); i++) {
     VertexAttribute attrib=attribs.get(i);
     String name=attrib.name;
-    int pos0=attrib.size * idx;
+    int aidx=attrib.size * idx;
     if (attrib.isColor()) {
-      int[] iarray=iattrValues.get(name);
-      int col=iarray[pos0];
+      int[] iarray=iattribs.get(name);
+      int col=iarray[aidx];
       vector[vidx++]=(col >> 24) & 0xFF;
       vector[vidx++]=(col >> 16) & 0xFF;
       vector[vidx++]=(col >> 8) & 0xFF;
@@ -15,21 +15,21 @@
     }
  else {
       if (attrib.isFloat()) {
-        float[] farray=fattrValues.get(name);
+        float[] farray=fattribs.get(name);
         for (int n=0; n < attrib.size; n++) {
-          vector[vidx++]=farray[pos0 + n];
+          vector[vidx++]=farray[aidx++];
         }
       }
  else       if (attrib.isInt()) {
-        int[] iarray=iattrValues.get(name);
+        int[] iarray=iattribs.get(name);
         for (int n=0; n < attrib.size; n++) {
-          vector[vidx++]=iarray[pos0 + n];
+          vector[vidx++]=iarray[aidx++];
         }
       }
  else       if (attrib.isBool()) {
-        byte[] barray=battrValues.get(name);
+        byte[] barray=battribs.get(name);
         for (int n=0; n < attrib.size; n++) {
-          vector[vidx++]=barray[pos0 + n];
+          vector[vidx++]=barray[aidx++];
         }
       }
     }
