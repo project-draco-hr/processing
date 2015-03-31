@@ -13,7 +13,7 @@
     for (int i=0; i < attribs.size(); i++) {
       VertexAttribute attrib=attribs.get(i);
       String name=attrib.name;
-      index=attrib.size * tessIdx;
+      index=attrib.tessSize * tessIdx;
       if (attrib.isColor()) {
         int color=(int)d[pos + 0] << 24 | (int)d[pos + 1] << 24 | ((int)d[pos + 2] << 8) | ((int)d[pos + 3]);
         int[] tessValues=iattribs.get(name);
@@ -22,9 +22,9 @@
       }
  else       if (attrib.isPosition()) {
         float[] farray=fattribs.get(name);
-        float x=(float)d[pos + 0];
-        float y=(float)d[pos + 1];
-        float z=(float)d[pos + 2];
+        float x=(float)d[pos++];
+        float y=(float)d[pos++];
+        float z=(float)d[pos++];
         if (renderMode == IMMEDIATE && pg.flushMode == FLUSH_WHEN_FULL) {
           if (clampXY) {
             farray[index++]=PApplet.ceil(x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03);
@@ -43,7 +43,6 @@
           farray[index++]=z;
           farray[index]=1;
         }
-        pos+=4;
       }
  else       if (attrib.isNormal()) {
         float[] farray=fattribs.get(name);

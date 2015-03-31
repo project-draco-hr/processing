@@ -14,10 +14,27 @@
       index=3 * i;
       polyNormals[index++]=nx * tr.m00 + ny * tr.m01;
       polyNormals[index]=nx * tr.m10 + ny * tr.m11;
+      for (      String name : attribs.keySet()) {
+        VertexAttribute attrib=attribs.get(name);
+        if (attrib.isColor() || attrib.isOther())         continue;
+        float[] values=fattribs.get(name);
+        if (attrib.isPosition()) {
+          index=4 * i;
+          x=values[index++];
+          y=values[index];
+          index=4 * i;
+          values[index++]=x * tr.m00 + y * tr.m01 + tr.m02;
+          values[index]=x * tr.m10 + y * tr.m11 + tr.m12;
+        }
+ else {
+          index=3 * i;
+          nx=values[index++];
+          ny=values[index];
+          index=3 * i;
+          values[index++]=nx * tr.m00 + ny * tr.m01;
+          values[index]=nx * tr.m10 + ny * tr.m11;
+        }
+      }
     }
-  }
-  for (  String name : attribs.keySet()) {
-    VertexAttribute attrib=attribs.get(name);
-    if (attrib.isColor() || attrib.isOther())     continue;
   }
 }
