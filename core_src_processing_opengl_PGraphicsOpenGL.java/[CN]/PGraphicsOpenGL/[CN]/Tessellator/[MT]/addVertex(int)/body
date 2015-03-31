@@ -37,6 +37,12 @@
     float v=in.texcoords[2 * i + 1];
     float sh=in.shininess[i];
     double[] vertex=new double[]{x,y,z,fa,fr,fg,fb,nx,ny,nz,u,v,aa,ar,ag,ab,sa,sr,sg,sb,ea,er,eg,eb,sh};
+    double[] avect=in.getAttribVector(i);
+    if (0 < avect.length) {
+      double temp[]=new double[vertex.length + avect.length];
+      PApplet.arrayCopy(vertex,0,temp,0,vertex.length);
+      PApplet.arrayCopy(avect,0,temp,vertex.length,avect.length);
+    }
     gluTess.addVertex(vertex);
   }
   if (stroke)   addStrokeVertex(x,y,z,strokeColor,strokeWeight);

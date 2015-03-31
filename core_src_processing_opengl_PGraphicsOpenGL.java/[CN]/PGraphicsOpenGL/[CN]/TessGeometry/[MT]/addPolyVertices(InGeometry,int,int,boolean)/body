@@ -31,10 +31,35 @@
       polyNormals[index++]=nx * nm.m00 + ny * nm.m10 + nz * nm.m20;
       polyNormals[index++]=nx * nm.m01 + ny * nm.m11 + nz * nm.m21;
       polyNormals[index]=nx * nm.m02 + ny * nm.m12 + nz * nm.m22;
-    }
-    for (    String name : attribs.keySet()) {
-      VertexAttribute attrib=attribs.get(name);
-      if (attrib.isColor() || attrib.isOther())       continue;
+      for (      String name : attribs.keySet()) {
+        VertexAttribute attrib=attribs.get(name);
+        if (attrib.isColor() || attrib.isOther())         continue;
+        float[] inValues=in.fattrValues.get(name);
+        index=3 * inIdx;
+        x=inValues[index++];
+        y=inValues[index++];
+        z=inValues[index];
+        float[] tessValues=fattribs.get(name);
+        if (attrib.isPosition()) {
+          index=4 * tessIdx;
+          if (clampXY) {
+            tessValues[index++]=PApplet.ceil(x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03);
+            tessValues[index++]=PApplet.ceil(x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13);
+          }
+ else {
+            tessValues[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
+            tessValues[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
+          }
+          tessValues[index++]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
+          tessValues[index]=x * mm.m30 + y * mm.m31 + z * mm.m32 + mm.m33;
+        }
+ else {
+          index=3 * tessIdx;
+          tessValues[index++]=x * nm.m00 + y * nm.m10 + z * nm.m20;
+          tessValues[index++]=x * nm.m01 + y * nm.m11 + z * nm.m21;
+          tessValues[index]=x * nm.m02 + y * nm.m12 + z * nm.m22;
+        }
+      }
     }
   }
  else {
@@ -59,10 +84,29 @@
         polyNormals[index++]=nx;
         polyNormals[index++]=ny;
         polyNormals[index]=nz;
-      }
-      for (      String name : attribs.keySet()) {
-        VertexAttribute attrib=attribs.get(name);
-        if (attrib.isColor() || attrib.isOther())         continue;
+        for (        String name : attribs.keySet()) {
+          VertexAttribute attrib=attribs.get(name);
+          if (attrib.isColor() || attrib.isOther())           continue;
+          float[] inValues=in.fattrValues.get(name);
+          index=3 * inIdx;
+          x=inValues[index++];
+          y=inValues[index++];
+          z=inValues[index];
+          float[] tessValues=fattribs.get(name);
+          if (attrib.isPosition()) {
+            index=4 * tessIdx;
+            tessValues[index++]=x;
+            tessValues[index++]=y;
+            tessValues[index++]=z;
+            tessValues[index]=1;
+          }
+ else {
+            index=3 * tessIdx;
+            tessValues[index++]=x;
+            tessValues[index++]=y;
+            tessValues[index]=z;
+          }
+        }
       }
     }
  else {
@@ -71,11 +115,22 @@
         int tessIdx=firstPolyVertex + i;
         PApplet.arrayCopy(in.vertices,3 * inIdx,polyVertices,4 * tessIdx,3);
         polyVertices[4 * tessIdx + 3]=1;
+        for (        String name : attribs.keySet()) {
+          VertexAttribute attrib=attribs.get(name);
+          if (!attrib.isPosition())           continue;
+          float[] inValues=in.fattrValues.get(name);
+          float[] tessValues=fattribs.get(name);
+          PApplet.arrayCopy(inValues,3 * inIdx,tessValues,4 * tessIdx,3);
+          tessValues[4 * tessIdx + 3]=1;
+        }
       }
       PApplet.arrayCopy(in.normals,3 * i0,polyNormals,3 * firstPolyVertex,3 * nvert);
       for (      String name : attribs.keySet()) {
         VertexAttribute attrib=attribs.get(name);
-        if (attrib.isColor() || attrib.isOther())         continue;
+        if (!attrib.isPosition())         continue;
+        float[] inValues=in.fattrValues.get(name);
+        float[] tessValues=fattribs.get(name);
+        PApplet.arrayCopy(inValues,3 * i0,tessValues,3 * firstPolyVertex,3 * nvert);
       }
     }
   }
@@ -94,10 +149,33 @@
       polySpecular[tessIdx]=in.specular[inIdx];
       polyEmissive[tessIdx]=in.emissive[inIdx];
       polyShininess[tessIdx]=in.shininess[inIdx];
-    }
-    for (    String name : attribs.keySet()) {
-      VertexAttribute attrib=attribs.get(name);
-      if (attrib.isPosition() || attrib.isNormal())       continue;
+      for (      String name : attribs.keySet()) {
+        VertexAttribute attrib=attribs.get(name);
+        if (attrib.isPosition() || attrib.isNormal())         continue;
+        int index0=attrib.size * inIdx;
+        int index1=attrib.size * tessIdx;
+        if (attrib.isFloat()) {
+          float[] inValues=in.fattrValues.get(name);
+          float[] tessValues=fattribs.get(name);
+          for (int n=0; n < attrib.size; n++) {
+            tessValues[index1++]=inValues[index0++];
+          }
+        }
+ else         if (attrib.isInt()) {
+          int[] inValues=in.iattrValues.get(name);
+          int[] tessValues=iattribs.get(name);
+          for (int n=0; n < attrib.size; n++) {
+            tessValues[index1++]=inValues[index0++];
+          }
+        }
+ else         if (attrib.isBool()) {
+          byte[] inValues=in.battrValues.get(name);
+          byte[] tessValues=battribs.get(name);
+          for (int n=0; n < attrib.size; n++) {
+            tessValues[index1++]=inValues[index0++];
+          }
+        }
+      }
     }
   }
  else {
@@ -110,6 +188,22 @@
     for (    String name : attribs.keySet()) {
       VertexAttribute attrib=attribs.get(name);
       if (attrib.isPosition() || attrib.isNormal())       continue;
+      Object inValues=null;
+      Object tessValues=null;
+      if (attrib.isFloat()) {
+        inValues=in.fattrValues.get(name);
+        tessValues=fattribs.get(name);
+      }
+ else       if (attrib.isInt()) {
+        inValues=in.iattrValues.get(name);
+        tessValues=iattribs.get(name);
+      }
+ else       if (attrib.isBool()) {
+        inValues=in.battrValues.get(name);
+        tessValues=battribs.get(name);
+        PApplet.arrayCopy(inValues,attrib.size * i0,tessValues,attrib.size * firstPolyVertex,attrib.size * nvert);
+      }
+      PApplet.arrayCopy(inValues,attrib.size * i0,tessValues,attrib.size * firstPolyVertex,attrib.size * nvert);
     }
   }
 }

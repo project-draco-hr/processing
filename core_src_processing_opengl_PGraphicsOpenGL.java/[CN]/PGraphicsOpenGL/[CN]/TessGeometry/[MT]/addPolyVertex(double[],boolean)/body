@@ -1,0 +1,88 @@
+{
+  int fcolor=((int)d[3] << 24) | ((int)d[4] << 16) | ((int)d[5] << 8)| (int)d[6];
+  int acolor=((int)d[12] << 24) | ((int)d[13] << 16) | ((int)d[14] << 8)| (int)d[15];
+  int scolor=((int)d[16] << 24) | ((int)d[17] << 16) | ((int)d[18] << 8)| (int)d[19];
+  int ecolor=((int)d[20] << 24) | ((int)d[21] << 16) | ((int)d[22] << 8)| (int)d[23];
+  addPolyVertex((float)d[0],(float)d[1],(float)d[2],fcolor,(float)d[7],(float)d[8],(float)d[9],(float)d[10],(float)d[11],acolor,scolor,ecolor,(float)d[24],clampXY);
+  if (25 <= d.length) {
+    PMatrix3D mm=pg.modelview;
+    PMatrix3D nm=pg.modelviewInv;
+    int tessIdx=polyVertexCount - 1;
+    int index;
+    int pos=25;
+    for (int i=0; i < attribs.size(); i++) {
+      VertexAttribute attrib=attribs.get(i);
+      String name=attrib.name;
+      index=attrib.size * tessIdx;
+      if (attrib.isColor()) {
+        int color=(int)d[pos + 0] << 24 | (int)d[pos + 1] << 24 | ((int)d[pos + 2] << 8) | ((int)d[pos + 3]);
+        int[] tessValues=iattribs.get(name);
+        tessValues[index]=color;
+        pos+=4;
+      }
+ else       if (attrib.isPosition()) {
+        float[] farray=fattribs.get(name);
+        float x=(float)d[pos + 0];
+        float y=(float)d[pos + 1];
+        float z=(float)d[pos + 1];
+        if (renderMode == IMMEDIATE && pg.flushMode == FLUSH_WHEN_FULL) {
+          if (clampXY) {
+            farray[index++]=PApplet.ceil(x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03);
+            farray[index++]=PApplet.ceil(x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13);
+          }
+ else {
+            farray[index++]=x * mm.m00 + y * mm.m01 + z * mm.m02 + mm.m03;
+            farray[index++]=x * mm.m10 + y * mm.m11 + z * mm.m12 + mm.m13;
+          }
+          farray[index++]=x * mm.m20 + y * mm.m21 + z * mm.m22 + mm.m23;
+          farray[index]=x * mm.m30 + y * mm.m31 + z * mm.m32 + mm.m33;
+        }
+ else {
+          farray[index++]=x;
+          farray[index++]=y;
+          farray[index++]=z;
+          farray[index]=1;
+        }
+        pos+=4;
+      }
+ else       if (attrib.isNormal()) {
+        float[] farray=fattribs.get(name);
+        float x=(float)d[pos + 0];
+        float y=(float)d[pos + 1];
+        float z=(float)d[pos + 1];
+        if (renderMode == IMMEDIATE && pg.flushMode == FLUSH_WHEN_FULL) {
+          farray[index++]=x * nm.m00 + y * nm.m10 + z * nm.m20;
+          farray[index++]=x * nm.m01 + y * nm.m11 + z * nm.m21;
+          farray[index]=x * nm.m02 + y * nm.m12 + z * nm.m22;
+        }
+ else {
+          farray[index++]=x;
+          farray[index++]=y;
+          farray[index]=z;
+        }
+        pos+=3;
+      }
+ else {
+        if (attrib.isFloat()) {
+          float[] farray=fattribs.get(name);
+          for (int n=0; n < attrib.size; n++) {
+            farray[index++]=(float)d[pos++];
+          }
+        }
+ else         if (attrib.isInt()) {
+          int[] iarray=iattribs.get(name);
+          for (int n=0; n < attrib.size; n++) {
+            iarray[index++]=(int)d[pos++];
+          }
+        }
+ else         if (attrib.isBool()) {
+          byte[] barray=battribs.get(name);
+          for (int n=0; n < attrib.size; n++) {
+            barray[index++]=(byte)d[pos++];
+          }
+        }
+        pos+=attrib.size;
+      }
+    }
+  }
+}

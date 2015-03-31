@@ -53,6 +53,12 @@
   float zplot3=draw.m30 * z1 + draw.m31 * z2 + draw.m32 * z3 + draw.m33 * z4;
   if (fill) {
     double[] vertex0=new double[]{x,y,z,fa,fr,fg,fb,nx,ny,nz,u,v,aa,ar,ag,ab,sa,sr,sg,sb,ea,er,eg,eb,sh};
+    double[] avect=in.getAttribVector(i);
+    if (0 < avect.length) {
+      double temp[]=new double[vertex0.length + avect.length];
+      PApplet.arrayCopy(vertex0,0,temp,0,vertex0.length);
+      PApplet.arrayCopy(avect,0,temp,vertex0.length,avect.length);
+    }
     gluTess.addVertex(vertex0);
   }
   if (stroke)   addStrokeVertex(x,y,z,strokeColor,strokeWeight);
@@ -68,6 +74,12 @@
     zplot2+=zplot3;
     if (fill) {
       double[] vertex1=new double[]{x,y,z,fa,fr,fg,fb,nx,ny,nz,u,v,aa,ar,ag,ab,sa,sr,sg,sb,ea,er,eg,eb,sh};
+      double[] avect=in.getAttribVector(i);
+      if (0 < avect.length) {
+        double temp[]=new double[vertex1.length + avect.length];
+        PApplet.arrayCopy(vertex1,0,temp,0,vertex1.length);
+        PApplet.arrayCopy(avect,0,temp,vertex1.length,avect.length);
+      }
       gluTess.addVertex(vertex1);
     }
     if (stroke)     addStrokeVertex(x,y,z,strokeColor,strokeWeight);
