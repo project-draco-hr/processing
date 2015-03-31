@@ -34,12 +34,12 @@
   if (glPolyShininess == 0)   glPolyShininess=PGraphicsOpenGL.createVertexBufferObject(context,pgl);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,glPolyShininess);
   pgl.bufferData(PGL.ARRAY_BUFFER,sizef,tessGeo.polyShininessBuffer,glUsage);
-  for (  String name : attribs.keySet()) {
-    VertexAttribute attrib=attribs.get(name);
+  for (  String name : polyAttribs.keySet()) {
+    VertexAttribute attrib=polyAttribs.get(name);
     tessGeo.updateAttribBuffer(attrib.name);
     if (!attrib.bufferCreated())     attrib.createBuffer(pgl);
     pgl.bindBuffer(PGL.ARRAY_BUFFER,attrib.glName);
-    pgl.bufferData(PGL.ARRAY_BUFFER,attrib.sizeInBytes(size),tessGeo.attribBuffers.get(name),PGL.STATIC_DRAW);
+    pgl.bufferData(PGL.ARRAY_BUFFER,attrib.sizeInBytes(size),tessGeo.polyAttribBuffers.get(name),PGL.STATIC_DRAW);
   }
   pgl.bindBuffer(PGL.ARRAY_BUFFER,0);
   tessGeo.updatePolyIndicesBuffer();

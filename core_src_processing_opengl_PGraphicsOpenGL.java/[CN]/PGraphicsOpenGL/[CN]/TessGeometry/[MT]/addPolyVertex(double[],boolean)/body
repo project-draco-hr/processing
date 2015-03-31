@@ -10,18 +10,18 @@
     int tessIdx=polyVertexCount - 1;
     int index;
     int pos=25;
-    for (int i=0; i < attribs.size(); i++) {
-      VertexAttribute attrib=attribs.get(i);
+    for (int i=0; i < polyAttribs.size(); i++) {
+      VertexAttribute attrib=polyAttribs.get(i);
       String name=attrib.name;
       index=attrib.tessSize * tessIdx;
       if (attrib.isColor()) {
         int color=(int)d[pos + 0] << 24 | (int)d[pos + 1] << 24 | ((int)d[pos + 2] << 8) | ((int)d[pos + 3]);
-        int[] tessValues=iattribs.get(name);
+        int[] tessValues=ipolyAttribs.get(name);
         tessValues[index]=color;
         pos+=4;
       }
  else       if (attrib.isPosition()) {
-        float[] farray=fattribs.get(name);
+        float[] farray=fpolyAttribs.get(name);
         float x=(float)d[pos++];
         float y=(float)d[pos++];
         float z=(float)d[pos++];
@@ -45,7 +45,7 @@
         }
       }
  else       if (attrib.isNormal()) {
-        float[] farray=fattribs.get(name);
+        float[] farray=fpolyAttribs.get(name);
         float x=(float)d[pos + 0];
         float y=(float)d[pos + 1];
         float z=(float)d[pos + 2];
@@ -63,19 +63,19 @@
       }
  else {
         if (attrib.isFloat()) {
-          float[] farray=fattribs.get(name);
+          float[] farray=fpolyAttribs.get(name);
           for (int n=0; n < attrib.size; n++) {
             farray[index++]=(float)d[pos++];
           }
         }
  else         if (attrib.isInt()) {
-          int[] iarray=iattribs.get(name);
+          int[] iarray=ipolyAttribs.get(name);
           for (int n=0; n < attrib.size; n++) {
             iarray[index++]=(int)d[pos++];
           }
         }
  else         if (attrib.isBool()) {
-          byte[] barray=battribs.get(name);
+          byte[] barray=bpolyAttribs.get(name);
           for (int n=0; n < attrib.size; n++) {
             barray[index++]=(byte)d[pos++];
           }
