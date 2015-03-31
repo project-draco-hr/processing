@@ -3,6 +3,11 @@
     tessGeo.applyMatrixOnPolyGeometry(matrix,firstPolyVertex,lastPolyVertex);
     root.setModifiedPolyVertices(firstPolyVertex,lastPolyVertex);
     root.setModifiedPolyNormals(firstPolyVertex,lastPolyVertex);
+    for (    VertexAttribute attrib : attribs.values()) {
+      if (attrib.isPosition() || attrib.isNormal()) {
+        root.setModifiedPolyAttrib(attrib,firstPolyVertex,lastPolyVertex);
+      }
+    }
   }
   if (is3D()) {
     if (hasLines) {

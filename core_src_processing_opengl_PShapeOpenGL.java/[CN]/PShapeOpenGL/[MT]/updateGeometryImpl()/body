@@ -63,6 +63,17 @@
     firstModifiedPolyShininess=PConstants.MAX_INT;
     lastModifiedPolyShininess=PConstants.MIN_INT;
   }
+  for (  String name : attribs.keySet()) {
+    VertexAttribute attrib=attribs.get(name);
+    if (attrib.modified) {
+      int offset=firstModifiedPolyVertex;
+      int size=lastModifiedPolyVertex - offset + 1;
+      copyPolyAttrib(attrib,offset,size);
+      attrib.modified=false;
+      attrib.firstModified=PConstants.MAX_INT;
+      attrib.lastModified=PConstants.MIN_INT;
+    }
+  }
   if (modifiedLineVertices) {
     int offset=firstModifiedLineVertex;
     int size=lastModifiedLineVertex - offset + 1;
