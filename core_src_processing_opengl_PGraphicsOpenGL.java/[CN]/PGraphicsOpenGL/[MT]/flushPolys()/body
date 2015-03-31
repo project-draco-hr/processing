@@ -30,12 +30,15 @@
         shader.setTexcoordAttribute(glPolyTexcoord,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
         shader.setTexture(tex);
       }
-      for (      String name : attribs.keySet()) {
-        VertexAttribute attrib=attribs.get(name);
-        attrib.updateLoc(shader);
-        shader.setAttributeVBO(attrib.glLoc,attrib.glName,attrib.size,attrib.type,attrib.isColor(),0,attrib.sizeInBytes(voffset));
+      for (      VertexAttribute attrib : polyAttribs.values()) {
+        if (!attrib.active(shader))         continue;
+        attrib.bind(pgl);
+        shader.setAttributeVBO(attrib.glLoc,attrib.glName,attrib.tessSize,attrib.type,attrib.isColor(),0,attrib.sizeInBytes(voffset));
       }
       shader.draw(glPolyIndex,icount,ioffset);
+    }
+    for (    VertexAttribute attrib : polyAttribs.values()) {
+      if (attrib.active(shader))       attrib.unbind(pgl);
     }
     shader.unbind();
   }

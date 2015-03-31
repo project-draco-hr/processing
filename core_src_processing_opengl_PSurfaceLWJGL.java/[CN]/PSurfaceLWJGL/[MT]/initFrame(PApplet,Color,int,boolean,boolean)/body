@@ -1,19 +1,6 @@
 {
   this.sketch=sketch;
   GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
-  DisplayMode desktopMode=Display.getDesktopDisplayMode();
-  PApplet.println("DESKTOP MODES");
-  PApplet.println(desktopMode);
-  PApplet.println("ALL MODES");
-  try {
-    DisplayMode[] allModes=Display.getAvailableDisplayModes();
-    for (    DisplayMode mode : allModes) {
-      PApplet.println(mode);
-    }
-  }
- catch (  LWJGLException e) {
-    e.printStackTrace();
-  }
   if (deviceIndex >= 0) {
     GraphicsDevice[] devices=environment.getScreenDevices();
     if (deviceIndex < devices.length) {
@@ -49,8 +36,6 @@
     System.setProperty("org.lwjgl.opengl.Display.enableHighDPI","true");
   }
   pgl.reqNumSamples=graphics.quality;
-  System.err.println("DISPLAY PARENT: " + Display.getParent());
-  System.err.println("DISPLAY SMOOTH: " + pgl.reqNumSamples);
   try {
     int argb=graphics.backgroundColor;
     float r=((argb >> 16) & 0xff) / 255.0f;
@@ -63,7 +48,6 @@
  else {
       Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
     }
-    System.err.println(sketchWidth + " " + sketchHeight);
     if (fullScreen) {
       Display.setFullscreen(true);
     }
