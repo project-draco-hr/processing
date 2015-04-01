@@ -3,6 +3,9 @@
     public void processKeyEvent(    KeyEvent evt){
       super.processKeyEvent(evt);
       if (inputHandler != null) {
+        if ((evt.getModifiers() & InputEvent.CTRL_MASK) != 0 && evt.getKeyChar() == ',') {
+          return;
+        }
 switch (evt.getID()) {
 case KeyEvent.KEY_TYPED:
           inputHandler.keyTyped(evt);
