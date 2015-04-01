@@ -1,10 +1,13 @@
 {
   if (scrollBarsInitialized) {
     if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
-      int amt=e.getUnitsToScroll();
-      boolean skip=Base.isMacOS() && e.isShiftDown();
-      if (!skip) {
-        vertical.setValue(vertical.getValue() + amt);
+      int scrollAmount=e.getUnitsToScroll();
+      boolean isHorizontal=Base.isMacOS() && e.isShiftDown();
+      if (isHorizontal) {
+        horizontal.setValue(horizontal.getValue() + scrollAmount);
+      }
+ else {
+        vertical.setValue(vertical.getValue() + scrollAmount);
       }
     }
   }
