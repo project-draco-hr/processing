@@ -1,0 +1,16 @@
+{
+  gfx.setColor(getTextArea().gutterBgColor);
+  int y=textArea.lineToY(line) + fm.getLeading() + fm.getMaxDescent();
+  gfx.fillRect(0,y,Editor.LEFT_GUTTER,fm.getHeight());
+  String text=getTextArea().getGutterText(line);
+  if (text == null) {
+    text=String.valueOf(line + 1);
+  }
+  char[] txt=text.toCharArray();
+  gfx.setFont(gutterTextFont);
+  FontMetrics gm=getFontMetrics();
+  int tx=Editor.LEFT_GUTTER - Editor.GUTTER_MARGIN - gm.charsWidth(txt,0,txt.length);
+  gfx.setColor(gutterTextColor);
+  int ty=textArea.lineToY(line) + fm.getHeight();
+  Utilities.drawTabbedText(new Segment(txt,0,text.length()),tx,ty,gfx,this,0);
+}
