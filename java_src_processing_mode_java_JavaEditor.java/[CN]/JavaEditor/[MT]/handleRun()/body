@@ -1,15 +1,20 @@
 {
-  new Thread(new Runnable(){
-    public void run(){
-      prepareRun();
-      try {
-        toolbar.activateRun();
-        runtime=jmode.handleRun(sketch,JavaEditor.this);
-      }
- catch (      Exception e) {
-        statusError(e);
+  if (isDebuggerEnabled()) {
+    debugger.continueDebug();
+  }
+ else {
+    new Thread(new Runnable(){
+      public void run(){
+        prepareRun();
+        try {
+          toolbar.activateRun();
+          runtime=jmode.handleRun(sketch,JavaEditor.this);
+        }
+ catch (        Exception e) {
+          statusError(e);
+        }
       }
     }
-  }
 ).start();
+  }
 }
