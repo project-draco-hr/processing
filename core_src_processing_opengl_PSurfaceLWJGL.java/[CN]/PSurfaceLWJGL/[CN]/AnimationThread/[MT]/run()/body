@@ -42,9 +42,16 @@
   }
   keyPoller.requestStop();
   mousePoller.requestStop();
-  sketch.dispose();
-  Display.destroy();
-  frame.dispose();
+  while (true) {
+    if (Display.isCloseRequested() || sketch.exitCalled()) {
+      sketch.dispose();
+      Display.destroy();
+      frame.dispose();
+      break;
+    }
+    Display.update();
+    Display.sync((int)frameRateTarget);
+  }
   if (sketch.exitCalled()) {
     sketch.exitActual();
   }
