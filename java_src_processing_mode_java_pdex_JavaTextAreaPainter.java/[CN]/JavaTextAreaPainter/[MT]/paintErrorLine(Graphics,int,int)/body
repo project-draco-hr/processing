@@ -8,6 +8,7 @@
   boolean notFound=true;
   boolean isWarning=false;
   Problem problem=null;
+  errorLineCoords.clear();
   for (  ErrorMarker emarker : errorCheckerService.getEditor().getErrorPoints()) {
     if (emarker.getProblem().getLineNumber() == line) {
       notFound=false;
@@ -41,6 +42,7 @@
     int x1=fm.stringWidth(goodCode) + (aw - rw), y1=y + fm.getHeight() - 2, x2=x1 + rw;
     x1+=Editor.LEFT_GUTTER;
     x2+=Editor.LEFT_GUTTER;
+    errorLineCoords.add(new ErrorLineCoord(x1,x2,y,y1,problem));
     gfx.setColor(errorColor);
     if (isWarning) {
       gfx.setColor(warningColor);
