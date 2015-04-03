@@ -71,7 +71,7 @@
     }
   }
 );
-  treeRename.addTreeSelectionListener(new TreeSelectionListener(){
+  refactorTree.addTreeSelectionListener(new TreeSelectionListener(){
     @Override public void valueChanged(    TreeSelectionEvent e){
       log(e);
       SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
@@ -79,10 +79,10 @@
           return null;
         }
         protected void done(){
-          if (treeRename.getLastSelectedPathComponent() == null) {
+          if (refactorTree.getLastSelectedPathComponent() == null) {
             return;
           }
-          DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)treeRename.getLastSelectedPathComponent();
+          DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)refactorTree.getLastSelectedPathComponent();
           if (tnode.getUserObject() instanceof ASTNodeWrapper) {
             ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
             awrap.highlightNode(thisASTGenerator);

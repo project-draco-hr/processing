@@ -1,10 +1,14 @@
 {
   jdocMap=new TreeMap<String,String>();
-  Thread t=new Thread(new Runnable(){
-    @Override public void run(){
-      JavadocHelper.loadJavaDoc(jdocMap,editor.getMode().getReferenceFolder());
+  new Thread(new Runnable(){
+    public void run(){
+      try {
+        loadJavaDoc(jdocMap,editor.getMode().getReferenceFolder());
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
     }
   }
-);
-  t.start();
+).start();
 }
