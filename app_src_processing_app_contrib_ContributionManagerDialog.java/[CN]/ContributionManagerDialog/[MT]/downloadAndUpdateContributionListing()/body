@@ -1,9 +1,9 @@
 {
   retryConnectingButton.setEnabled(false);
-  contribListing.downloadAvailableList(new ProgressMonitor(){
+  contribListing.downloadAvailableList(new ContribProgressMonitor(){
     @Override public void setProgress(    int value){
       super.setProgress(value);
-      int percent=(int)(value * 100.0f / this.max);
+      int percent=100 * value / this.max;
       status.setMessage(Language.text("contrib.status.downloading_list") + " (" + percent+ "%)");
     }
     @Override public void finished(){
