@@ -6,7 +6,7 @@
   while (index <= stop) {
     if ((buffer[index] == ' ') || (index == stop)) {
       float wordWidth=textWidthImpl(buffer,wordStart,index);
-      if (runningX + wordWidth > boxWidth) {
+      if (runningX + wordWidth >= boxWidth) {
         if (runningX != 0) {
           index=wordStart;
           textSentenceBreak(lineStart,index);
@@ -34,8 +34,8 @@
         index++;
       }
  else {
-        runningX+=wordWidth + spaceWidth;
-        wordStart=index + 1;
+        runningX+=wordWidth;
+        wordStart=index;
         index++;
       }
     }
