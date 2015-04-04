@@ -60,7 +60,7 @@
         installRemoveButton.setEnabled(false);
         installProgressBar.setVisible(true);
         installProgressBar.setIndeterminate(true);
-        ((LocalContribution)contrib).removeContribution(listPanel.contribManager.editor,new JProgressMonitor(installProgressBar){
+        JProgressMonitor monitor=new JProgressMonitor(installProgressBar){
           public void finishedAction(){
             resetInstallProgressBarState();
             isRemoveInProgress=false;
@@ -75,23 +75,29 @@
             installRemoveButton.setEnabled(true);
             reorganizePaneComponents();
             setSelected(true);
+            ContributionManagerDialog manager=listPanel.contribManager;
             boolean isModeActive=false;
             if (contrib.getType() == ContributionType.MODE) {
               ModeContribution m=(ModeContribution)contrib;
-              Iterator<Editor> iter=listPanel.contribManager.editor.getBase().getEditors().iterator();
-              while (iter.hasNext()) {
-                Editor e=iter.next();
+              for (              Editor e : manager.editor.getBase().getEditors()) {
                 if (e.getMode().equals(m.getMode())) {
                   isModeActive=true;
                   break;
                 }
               }
             }
-            if (!isModeActive)             listPanel.contribManager.restartButton.setVisible(true);
- else             updateButton.setEnabled(true);
+            if (isModeActive) {
+              updateButton.setEnabled(true);
+            }
+ else {
+              manager.restartButton.setVisible(true);
+            }
           }
         }
-,listPanel.contribManager.status);
+;
+        ContributionManagerDialog manager=listPanel.contribManager;
+        LocalContribution localContrib=(LocalContribution)contrib;
+        localContrib.removeContribution(manager.editor,monitor,manager.status);
       }
     }
   }

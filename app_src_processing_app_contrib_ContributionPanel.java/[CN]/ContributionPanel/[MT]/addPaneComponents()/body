@@ -37,7 +37,7 @@
         installRemoveButton.setEnabled(false);
         installProgressBar.setVisible(true);
         installProgressBar.setIndeterminate(true);
-        ((LocalContribution)contrib).removeContribution(listPanel.contribManager.editor,new JProgressMonitor(installProgressBar){
+        JProgressMonitor progress=new JProgressMonitor(installProgressBar){
           public void finishedAction(){
             resetInstallProgressBarState();
             updateButton.setEnabled(false);
@@ -59,20 +59,24 @@
             boolean isModeActive=false;
             if (contrib.getType() == ContributionType.MODE) {
               ModeContribution m=(ModeContribution)contrib;
-              Iterator<Editor> iter=listPanel.contribManager.editor.getBase().getEditors().iterator();
-              while (iter.hasNext()) {
-                Editor e=iter.next();
+              Base base=listPanel.contribManager.editor.getBase();
+              for (              Editor e : base.getEditors()) {
                 if (e.getMode().equals(m.getMode())) {
                   isModeActive=true;
                   break;
                 }
               }
             }
-            if (!isModeActive)             listPanel.contribManager.restartButton.setVisible(true);
- else             updateButton.setEnabled(true);
+            if (isModeActive) {
+              updateButton.setEnabled(true);
+            }
+ else {
+              listPanel.contribManager.restartButton.setVisible(true);
+            }
           }
         }
-,listPanel.contribManager.status);
+;
+        ((LocalContribution)contrib).removeContribution(listPanel.contribManager.editor,progress,listPanel.contribManager.status);
       }
  else {
         updateButton.setEnabled(false);
