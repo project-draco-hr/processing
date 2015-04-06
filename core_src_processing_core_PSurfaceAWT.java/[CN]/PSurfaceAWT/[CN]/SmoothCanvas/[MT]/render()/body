@@ -1,5 +1,14 @@
 {
+  if (!EventQueue.isDispatchThread()) {
+    System.err.println("render() called outside the EDT");
+  }
   if (!canvas.isDisplayable()) {
+    return;
+  }
+  if (graphics.image == null) {
+    if (PApplet.DEBUG) {
+      new Exception("image is null, returning").printStackTrace(System.out);
+    }
     return;
   }
   if (canvas.getBufferStrategy() == null) {
