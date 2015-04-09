@@ -1,4 +1,5 @@
 {
+  HashMap<String,String> platformSpecific=new HashMap<>();
   String[] lines=PApplet.loadStrings(input);
   for (  String line : lines) {
     if ((line.length() == 0) || (line.charAt(0) == '#'))     continue;
@@ -6,7 +7,12 @@
     if (equals != -1) {
       String key=line.substring(0,equals).trim();
       String value=line.substring(equals + 1).trim();
-      table.put(key,value);
+      if (!isPlatformSpecific(key,value,platformSpecific)) {
+        table.put(key,value);
+      }
     }
+  }
+  for (  String key : platformSpecific.keySet()) {
+    table.put(key,platformSpecific.get(key));
   }
 }
