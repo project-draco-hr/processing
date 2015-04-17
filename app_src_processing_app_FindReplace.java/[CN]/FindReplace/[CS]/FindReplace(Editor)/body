@@ -1,17 +1,12 @@
 {
   super(Language.text("find"));
-  setResizable(false);
+  setResizable(true);
   this.editor=editor;
   Container pain=getContentPane();
-  pain.setLayout(null);
   JLabel findLabel=new JLabel(Language.text("find.find"));
   JLabel replaceLabel=new JLabel(Language.text("find.replace_with"));
-  Dimension labelDimension=replaceLabel.getPreferredSize();
-  pain.add(findLabel);
-  pain.add(replaceLabel);
-  pain.add(findField=new JTextField());
-  pain.add(replaceField=new JTextField());
-  int fieldHeight=findField.getPreferredSize().height;
+  findField=new JTextField();
+  replaceField=new JTextField();
   if (findString != null)   findField.setText(findString);
   if (replaceString != null)   replaceField.setText(replaceString);
   ignoreCaseBox=new JCheckBox(Language.text("find.ignore_case"));
@@ -22,7 +17,6 @@
   }
 );
   ignoreCaseBox.setSelected(ignoreCase);
-  pain.add(ignoreCaseBox);
   allTabsBox=new JCheckBox(Language.text("find.all_tabs"));
   allTabsBox.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -32,7 +26,6 @@
 );
   allTabsBox.setSelected(allTabs);
   allTabsBox.setEnabled(true);
-  pain.add(allTabsBox);
   wrapAroundBox=new JCheckBox(Language.text("find.wrap_around"));
   wrapAroundBox.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -41,57 +34,33 @@
   }
 );
   wrapAroundBox.setSelected(wrapAround);
-  pain.add(wrapAroundBox);
-  JPanel buttons=new JPanel();
-  buttons.setLayout(new FlowLayout(FlowLayout.CENTER,BUTTON_GAP,0));
+  GroupLayout layout=new GroupLayout(pain);
+  pain.setLayout(layout);
+  layout.setAutoCreateGaps(true);
+  layout.setAutoCreateContainerGaps(true);
+  Group buttonsHorizontalGroup=layout.createSequentialGroup();
   replaceAllButton=new JButton(Language.text("find.btn.replace_all"));
   replaceButton=new JButton(Language.text("find.btn.replace"));
   replaceAndFindButton=new JButton(Language.text("find.btn.find_and_replace"));
   previousButton=new JButton(Language.text("find.btn.previous"));
   findButton=new JButton(Language.text("find.btn.find"));
   if (Base.isMacOS()) {
-    buttons.add(replaceAllButton);
-    buttons.add(replaceButton);
-    buttons.add(replaceAndFindButton);
-    buttons.add(previousButton);
-    buttons.add(findButton);
-    buttons.setBorder(null);
+    buttonsHorizontalGroup.addComponent(replaceAllButton).addComponent(replaceButton).addComponent(replaceAndFindButton).addComponent(previousButton).addComponent(findButton);
   }
  else {
-    buttons.add(findButton);
-    buttons.add(previousButton);
-    buttons.add(replaceAndFindButton);
-    buttons.add(replaceButton);
-    buttons.add(replaceAllButton);
+    buttonsHorizontalGroup.addComponent(findButton).addComponent(previousButton).addComponent(replaceAndFindButton).addComponent(replaceButton).addComponent(replaceAllButton);
   }
-  pain.add(buttons);
   setFound(false);
-  Dimension buttonsDimension=buttons.getPreferredSize();
-  int visibleButtonWidth=buttonsDimension.width - 2 * BUTTON_GAP;
-  int fieldWidth=visibleButtonWidth - (labelDimension.width + SMALL);
-  int yoff=(1 + fieldHeight - labelDimension.height) / 2;
-  int ypos=EDGE;
-  int labelWidth=findLabel.getPreferredSize().width;
-  findLabel.setBounds(EDGE + (labelDimension.width - labelWidth),ypos + yoff,labelWidth,labelDimension.height);
-  findField.setBounds(EDGE + labelDimension.width + SMALL,ypos,fieldWidth,fieldHeight);
-  ypos+=fieldHeight + SMALL;
-  labelWidth=replaceLabel.getPreferredSize().width;
-  replaceLabel.setBounds(EDGE + (labelDimension.width - labelWidth),ypos + yoff,labelWidth,labelDimension.height);
-  replaceField.setBounds(EDGE + labelDimension.width + SMALL,ypos,fieldWidth,fieldHeight);
-  ypos+=fieldHeight + SMALL;
-  final int third=(fieldWidth - SMALL * 2) / 3;
-  ignoreCaseBox.setBounds(EDGE + labelDimension.width + SMALL,ypos,third,fieldHeight);
-  allTabsBox.setBounds(EDGE + labelDimension.width + SMALL+ third+ SMALL,ypos,third,fieldHeight);
-  wrapAroundBox.setBounds(EDGE + labelDimension.width + SMALL+ third * 2 + SMALL * 2,ypos,third,fieldHeight);
-  ypos+=fieldHeight + SMALL;
-  buttons.setBounds(EDGE - BUTTON_GAP,ypos,buttonsDimension.width,buttonsDimension.height);
-  ypos+=buttonsDimension.height + EDGE;
-  int wide=visibleButtonWidth + EDGE * 2;
-  int high=ypos;
-  pack();
-  Insets insets=getInsets();
-  setSize(wide + insets.left + insets.right,high + insets.top + insets.bottom);
+  Group buttonsVerticalGroup=layout.createParallelGroup();
+  buttonsVerticalGroup.addComponent(findButton).addComponent(previousButton).addComponent(replaceAndFindButton).addComponent(replaceButton).addComponent(replaceAllButton);
+  layout.setHorizontalGroup(layout.createParallelGroup().addGroup(GroupLayout.Alignment.TRAILING,layout.createSequentialGroup().addComponent(findLabel).addComponent(findField)).addGroup(GroupLayout.Alignment.TRAILING,layout.createSequentialGroup().addComponent(replaceLabel).addComponent(replaceField)).addGroup(GroupLayout.Alignment.TRAILING,layout.createSequentialGroup().addComponent(ignoreCaseBox).addComponent(allTabsBox).addComponent(wrapAroundBox)).addGroup(buttonsHorizontalGroup));
+  layout.linkSize(SwingConstants.HORIZONTAL,findLabel,replaceLabel);
+  layout.setVerticalGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(findLabel).addComponent(findField)).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(replaceLabel).addComponent(replaceField)).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(ignoreCaseBox).addComponent(allTabsBox).addComponent(wrapAroundBox)).addGroup(buttonsVerticalGroup));
   setLocationRelativeTo(null);
+  Dimension size=layout.preferredLayoutSize(pain);
+  setSize(size.width,size.height);
+  Dimension screen=Toolkit.getScreenSize();
+  setLocation((screen.width - size.width) / 2,(screen.height - size.height) / 2);
   replaceButton.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       replace();
