@@ -85,6 +85,13 @@
   applet.args=PApplet.subset(args,argIndex + 1);
   applet.external=external;
   PSurface surface=applet.initSurface(backgroundColor,displayIndex,fullScreen,spanDisplays);
+  while (applet.defaultSize && !applet.finished) {
+    try {
+      Thread.sleep(5);
+    }
+ catch (    InterruptedException e) {
+    }
+  }
   if (fullScreen) {
     if (hideStop) {
       stopColor=null;

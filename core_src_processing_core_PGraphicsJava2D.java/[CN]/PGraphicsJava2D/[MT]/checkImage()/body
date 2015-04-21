@@ -1,0 +1,22 @@
+{
+  if (image == null || ((BufferedImage)image).getWidth() != width || ((BufferedImage)image).getHeight() != height) {
+    GraphicsConfiguration gc=null;
+    if (surface != null) {
+      Component comp=surface.getComponent();
+      if (comp == null) {
+        comp=parent.frame;
+      }
+      if (comp != null) {
+        gc=comp.getGraphicsConfiguration();
+      }
+    }
+    if (gc == null) {
+      GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+      gc=ge.getDefaultScreenDevice().getDefaultConfiguration();
+    }
+    int wide=width * pixelFactor;
+    int high=height * pixelFactor;
+    image=gc.createCompatibleImage(wide,high);
+  }
+  return (Graphics2D)image.getGraphics();
+}

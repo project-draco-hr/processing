@@ -1,15 +1,10 @@
 {
-  g=makePrimaryGraphics();
+  g=createPrimaryGraphics();
   surface=g.createSurface();
-  frame=surface.initFrame(this,backgroundColor,displayIndex,present,spanDisplays);
-  surface.setTitle(getClass().getName());
-  init();
-  while (defaultSize && !finished) {
-    try {
-      Thread.sleep(5);
-    }
- catch (    InterruptedException e) {
-    }
+  if (g.displayable()) {
+    frame=surface.initFrame(this,backgroundColor,displayIndex,present,spanDisplays);
+    frame.setTitle(getClass().getName());
   }
+  init();
   return surface;
 }
