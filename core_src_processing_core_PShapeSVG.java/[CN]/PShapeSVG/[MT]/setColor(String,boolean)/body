@@ -1,27 +1,14 @@
 {
+  colorText=colorText.trim();
   int opacityMask=fillColor & 0xFF000000;
   boolean visible=true;
   int color=0;
   String name="";
+  String lColorText=colorText.toLowerCase();
   Gradient gradient=null;
   Paint paint=null;
   if (colorText.equals("none")) {
     visible=false;
-  }
- else   if (colorText.equals("black")) {
-    color=opacityMask;
-  }
- else   if (colorText.equals("white")) {
-    color=opacityMask | 0xFFFFFF;
-  }
- else   if (colorText.startsWith("#")) {
-    if (colorText.length() == 4) {
-      colorText=colorText.replaceAll("^#(.)(.)(.)$","#$1$1$2$2$3$3");
-    }
-    color=opacityMask | (Integer.parseInt(colorText.substring(1),16)) & 0xFFFFFF;
-  }
- else   if (colorText.startsWith("rgb")) {
-    color=opacityMask | parseRGB(colorText);
   }
  else   if (colorText.startsWith("url(#")) {
     name=colorText.substring(5,colorText.length() - 1);
@@ -33,6 +20,9 @@
  else {
       System.err.println("url " + name + " refers to unexpected data: "+ object);
     }
+  }
+ else {
+    color=opacityMask | parseSimpleColor(colorText);
   }
   if (isFill) {
     fill=visible;

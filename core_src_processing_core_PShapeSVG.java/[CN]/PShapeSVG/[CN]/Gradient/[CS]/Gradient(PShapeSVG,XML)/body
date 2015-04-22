@@ -8,20 +8,21 @@
     String name=elem.getName();
     if (name.equals("stop")) {
       String offsetAttr=elem.getString("offset");
-      float div=1.0f;
-      if (offsetAttr.endsWith("%")) {
-        div=100.0f;
-        offsetAttr=offsetAttr.substring(0,offsetAttr.length() - 1);
-      }
-      offset[count]=PApplet.parseFloat(offsetAttr) / div;
+      offset[count]=parseFloatOrPercent(offsetAttr);
       String style=elem.getString("style");
       HashMap<String,String> styles=parseStyleAttributes(style);
       String colorStr=styles.get("stop-color");
-      if (colorStr == null)       colorStr="#000000";
+      if (colorStr == null) {
+        colorStr=elem.getString("stop-color");
+        if (colorStr == null)         colorStr="#000000";
+      }
       String opacityStr=styles.get("stop-opacity");
-      if (opacityStr == null)       opacityStr="1";
-      int tupacity=(int)(PApplet.parseFloat(opacityStr) * 255);
-      color[count]=(tupacity << 24) | Integer.parseInt(colorStr.substring(1),16);
+      if (opacityStr == null) {
+        opacityStr=elem.getString("stop-opacity");
+        if (opacityStr == null)         opacityStr="1";
+      }
+      int tupacity=PApplet.constrain((int)(PApplet.parseFloat(opacityStr) * 255),0,255);
+      color[count]=(tupacity << 24) | parseSimpleColor(colorStr);
       count++;
     }
   }

@@ -32,7 +32,38 @@
     fillGradient=parent.fillGradient;
     fillGradientPaint=parent.fillGradientPaint;
     fillName=parent.fillName;
+    svgWidth=parent.svgWidth;
+    svgHeight=parent.svgHeight;
+    svgXYSize=parent.svgXYSize;
     opacity=parent.opacity;
+  }
+  if (properties.getName().equals("svg")) {
+    String unitWidth=properties.getString("width");
+    String unitHeight=properties.getString("height");
+    if (unitWidth != null)     width=parseUnitSize(unitWidth,100);
+    if (unitHeight != null)     height=parseUnitSize(unitHeight,100);
+    String viewBoxStr=properties.getString("viewBox");
+    if (viewBoxStr != null) {
+      float[] viewBox=PApplet.parseFloat(PApplet.splitTokens(viewBoxStr));
+      if (unitWidth == null || unitHeight == null) {
+        width=viewBox[2];
+        height=viewBox[3];
+      }
+ else {
+        if (matrix == null)         matrix=new PMatrix2D();
+        matrix.scale(width / viewBox[2],height / viewBox[3]);
+        matrix.translate(-viewBox[0],-viewBox[1]);
+      }
+    }
+    if (width < 0 || height < 0)     throw new RuntimeException("<svg>: width (" + width + ") and height ("+ height+ ") must not be negative.");
+    if ((unitWidth == null || unitHeight == null) && viewBoxStr == null) {
+      PGraphics.showWarning("The width and/or height is not " + "readable in the <svg> tag of this file.");
+      width=1;
+      height=1;
+    }
+    svgWidth=width;
+    svgHeight=height;
+    svgXYSize=PApplet.sqrt((svgWidth * svgWidth + svgHeight * svgHeight) / 2.0f);
   }
   element=properties;
   name=properties.getString("id");
@@ -48,7 +79,12 @@
   visible=!displayStr.equals("none");
   String transformStr=properties.getString("transform");
   if (transformStr != null) {
-    matrix=parseTransform(transformStr);
+    if (matrix == null) {
+      matrix=parseTransform(transformStr);
+    }
+ else {
+      matrix.preApply(parseTransform(transformStr));
+    }
   }
   if (parseKids) {
     parseColors(properties);

@@ -46,11 +46,8 @@
  else   if (name.equals("font")) {
     return new Font(this,elem);
   }
- else   if (name.equals("metadata")) {
-    return null;
-  }
  else   if (name.equals("text")) {
-    PGraphics.showWarning("Text and fonts in SVG files " + "are not currently supported, " + "convert text to outlines instead.");
+    PGraphics.showWarning("Text and fonts in SVG files are " + "not currently supported, convert text to outlines instead.");
   }
  else   if (name.equals("filter")) {
     PGraphics.showWarning("Filters are not supported.");
@@ -65,7 +62,8 @@
   }
  else   if (name.equals("sodipodi:namedview")) {
   }
- else   if (name.equals("title")) {
+ else   if (name.equals("metadata") || name.equals("title") || name.equals("desc")) {
+    return null;
   }
  else   if (!name.startsWith("#")) {
     PGraphics.showWarning("Ignoring <" + name + "> tag.");
