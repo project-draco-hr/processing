@@ -1,0 +1,19 @@
+{
+  colorText=colorText.toLowerCase().trim();
+  if (colorNames.containsKey(colorText)) {
+    return colorNames.get(colorText);
+  }
+ else   if (colorText.startsWith("#")) {
+    if (colorText.length() == 4) {
+      colorText=colorText.replaceAll("^#(.)(.)(.)$","#$1$1$2$2$3$3");
+    }
+    return (Integer.parseInt(colorText.substring(1),16)) & 0xFFFFFF;
+  }
+ else   if (colorText.startsWith("rgb")) {
+    return parseRGB(colorText);
+  }
+ else {
+    System.err.println("Cannot parse \"" + colorText + "\".");
+    return 0;
+  }
+}
