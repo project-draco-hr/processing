@@ -1,11 +1,15 @@
 {
-  if (!enabled || !Preferences.getBoolean("editor.watcher")) {
-    editor.removeWindowFocusListener(this);
-    return;
+  if (enabled) {
+    if (skip) {
+      skip=false;
+    }
+ else {
+      new Thread(new Runnable(){
+        @Override public void run(){
+          checkFileChange();
+        }
+      }
+).start();
+    }
   }
-  if (skip) {
-    skip=false;
-    return;
-  }
-  checkFileChangeAsync();
 }

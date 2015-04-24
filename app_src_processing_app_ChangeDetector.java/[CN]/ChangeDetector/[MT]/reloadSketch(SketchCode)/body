@@ -1,23 +1,21 @@
 {
-  int response=showYesNoQuestionAsync(editor,"File Modified","Your sketch has been modified externally.<br>Would you like to reload the sketch?","If you reload the sketch, any unsaved changes will be lost!");
-  if (response == 0) {
+  int response=blockingYesNoPrompt(editor,"File Modified","Your sketch has been modified externally.<br>" + "Would you like to reload the sketch?","If you reload the sketch, any unsaved changes will be lost.");
+  if (response == JOptionPane.YES_OPTION) {
     sketch.reload();
-    rebuildHeaderAsync();
+    rebuildHeaderEDT();
     return true;
   }
+  if (changed != null) {
+    setSketchCodeModified(changed);
+  }
  else {
-    if (changed != null) {
-      setSketchCodeModified(changed);
-    }
- else {
-      for (      SketchCode sc : sketch.getCode()) {
-        if (!sc.getFile().exists()) {
-          setSketchCodeModified(sc);
-        }
+    for (    SketchCode sc : sketch.getCode()) {
+      if (!sc.getFile().exists()) {
+        setSketchCodeModified(sc);
       }
     }
-    rebuildHeaderAsync();
-    skip=true;
-    return false;
   }
+  rebuildHeaderEDT();
+  skip=true;
+  return false;
 }

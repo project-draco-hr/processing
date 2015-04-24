@@ -4,7 +4,7 @@
   }
   sketch.ensureExistence();
   File sketchFolder=sketch.getFolder();
-  int fileCount=sketchFolder.list(new FilenameFilter(){
+  File[] sketchFiles=sketchFolder.listFiles(new FilenameFilter(){
     @Override public boolean accept(    File dir,    String name){
       for (      String s : editor.getMode().getExtensions()) {
         if (name.toLowerCase().endsWith(s.toLowerCase())) {
@@ -14,30 +14,38 @@
       return false;
     }
   }
-).length;
+);
+  int fileCount=sketchFiles.length;
   if (fileCount != sketch.getCodeCount()) {
     if (reloadSketch(null) && fileCount < 1) {
       try {
         sketch.getMainFile().createNewFile();
       }
  catch (      Exception e1) {
-        showErrorAsync("Reload failed","The sketch contains no code files.",e1);
+        showErrorEDT("Reload failed","The sketch contains no code files.",e1);
         skip=true;
         return;
       }
       sketch.reload();
-      showWarningAsync("Modified Reload","You cannot delete the last code file in a sketch.\n" + "A new blank sketch file has been generated for you.");
+      showWarningEDT("Modified Reload","You cannot delete the last code file in a sketch.\n" + "A new blank sketch file has been generated for you.");
     }
     return;
   }
   SketchCode[] codes=sketch.getCode();
   for (  SketchCode sc : codes) {
     File sketchFile=sc.getFile();
-    if (!sketchFile.exists()) {
-      reloadSketch(sc);
-      return;
+    if (sketchFile.exists()) {
+      long diff=sketchFile.lastModified() - sc.lastModified();
+      if (diff != 0) {
+        if (Base.isMacOS() && diff == 1000L) {
+          continue;
+        }
+        System.out.println(sketchFile.getName() + " " + diff);
+        reloadSketch(sc);
+        return;
+      }
     }
-    if (sketchFile.lastModified() > sc.lastModified()) {
+ else {
       reloadSketch(sc);
       return;
     }
