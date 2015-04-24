@@ -1,8 +1,23 @@
 {
-  EventQueue.invokeLater(new Runnable(){
-    public void run(){
-      ((SmoothCanvas)canvas).render();
+  if (useStrategy) {
+    ((SmoothCanvas)canvas).render();
+  }
+ else {
+    if (graphics.image != null) {
+      BufferedImage graphicsImage=(BufferedImage)graphics.image;
+      if (offscreen == null || offscreen.getWidth() != graphicsImage.getWidth() || offscreen.getHeight() != graphicsImage.getHeight()) {
+        System.out.println("creating new image");
+        offscreen=(BufferedImage)canvas.createImage(graphicsImage.getWidth(),graphicsImage.getHeight());
+      }
+      Graphics2D off=(Graphics2D)offscreen.getGraphics();
+      off.drawImage(graphicsImage,0,0,null);
+      off.dispose();
+synchronized (offscreenLock) {
+        BufferedImage temp=onscreen;
+        onscreen=offscreen;
+        offscreen=temp;
+      }
+      canvas.repaint();
     }
   }
-);
 }

@@ -1,8 +1,19 @@
 {
   this.graphics=graphics;
   if (checkRetina()) {
-    useActive=false;
   }
-  createCanvas();
+  canvas=new SmoothCanvas();
+  if (useStrategy) {
+    canvas.setIgnoreRepaint(true);
+  }
+  canvas.setFocusTraversalKeysEnabled(false);
+  canvas.addComponentListener(new ComponentAdapter(){
+    @Override public void componentResized(    ComponentEvent e){
+      if (!sketch.looping) {
+        sketch.redraw();
+      }
+    }
+  }
+);
   addListeners();
 }

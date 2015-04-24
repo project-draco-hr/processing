@@ -1,7 +1,4 @@
 {
-  if (!EventQueue.isDispatchThread()) {
-    new Exception("render() called outside the EDT").printStackTrace();
-  }
   if (!canvas.isDisplayable()) {
     return;
   }
@@ -11,16 +8,17 @@
     }
     return;
   }
-  if (canvas.getBufferStrategy() == null) {
-    canvas.createBufferStrategy(2);
+  Canvas c=(Canvas)canvas;
+  if (c.getBufferStrategy() == null) {
+    c.createBufferStrategy(2);
   }
-  BufferStrategy strategy=canvas.getBufferStrategy();
+  BufferStrategy strategy=c.getBufferStrategy();
   if (strategy == null) {
     return;
   }
   do {
     do {
-      Graphics draw=strategy.getDrawGraphics();
+      Graphics2D draw=(Graphics2D)strategy.getDrawGraphics();
       draw.drawImage(graphics.image,0,0,sketchWidth,sketchHeight,null);
       draw.dispose();
     }
