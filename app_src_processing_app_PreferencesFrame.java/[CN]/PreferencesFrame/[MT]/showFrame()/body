@@ -13,12 +13,12 @@
   if (displayNum >= 0 && displayNum < displayCount) {
     displaySelectionBox.setSelectedIndex(displayNum);
   }
-  EventQueue.invokeLater(new Runnable(){
+  new Thread(new Runnable(){
     public void run(){
       initFontList();
     }
   }
-);
+).start();
   fontSizeField.setSelectedItem(Preferences.getInteger("editor.font.size"));
   consoleFontSizeField.setSelectedItem(Preferences.getInteger("console.font.size"));
   presentColor.setBackground(Preferences.getColor("run.present.bgcolor"));
