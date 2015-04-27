@@ -57,7 +57,7 @@
     description.append("Last Updated on " + dateFormatter.format(lastUpdatedDate));
   }
   description.append("</body></html>");
-  descriptionBlock.setText(description.toString());
+  descriptionPane.setText(description.toString());
   if (contribListing.hasUpdates(contrib)) {
     StringBuilder versionText=new StringBuilder();
     versionText.append("<html><body><i>");
@@ -66,16 +66,20 @@
     }
  else {
       String latestVersion=contribListing.getLatestVersion(contrib);
-      if (latestVersion != null)       versionText.append("New version (" + latestVersion + ") available!");
- else       versionText.append("New version available!");
+      if (latestVersion != null) {
+        versionText.append("New version (" + latestVersion + ") available.");
+      }
+ else {
+        versionText.append("New version available.");
+      }
     }
     versionText.append("</i></body></html>");
-    notificationBlock.setText(versionText.toString());
-    notificationBlock.setVisible(true);
+    notificationLabel.setText(versionText.toString());
+    notificationLabel.setVisible(true);
   }
  else {
-    notificationBlock.setText("");
-    notificationBlock.setVisible(false);
+    notificationLabel.setText("");
+    notificationLabel.setVisible(false);
   }
   updateButton.setEnabled(true);
   if (contrib != null) {

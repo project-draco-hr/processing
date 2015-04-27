@@ -120,8 +120,13 @@
   setSelected(false);
   setExpandListener(this,new MouseAdapter(){
     public void mousePressed(    MouseEvent e){
-      if (contrib.isCompatible(Base.getRevision()))       listPanel.setSelectedPanel(ContributionPanel.this);
- else       listPanel.contribManager.status.setErrorMessage(contrib.getName() + " is not compatible with this revision of Processing");
+      if (contrib.isCompatible(Base.getRevision())) {
+        listPanel.setSelectedPanel(ContributionPanel.this);
+      }
+ else {
+        final String msg=contrib.getName() + " is not compatible with this version of Processing";
+        listPanel.contribManager.status.setErrorMessage(msg);
+      }
     }
   }
 );
