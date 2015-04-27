@@ -7,19 +7,16 @@
   installRemoveButton.setVisible(isSelected() || installRemoveButton.getText().equals(Language.text("contrib.remove")) || isUpdateInProgress);
   installRemoveButton.setEnabled(installRemoveButton.getText().equals(Language.text("contrib.remove")) || !contribListing.hasListDownloadFailed());
   reorganizePaneComponents();
-{
-    JEditorPane editorPane=descriptionBlock;
-    editorPane.removeHyperlinkListener(ContributionListPanel.nullHyperlinkListener);
-    editorPane.removeHyperlinkListener(conditionalHyperlinkOpener);
-    if (isSelected()) {
-      editorPane.addHyperlinkListener(conditionalHyperlinkOpener);
-      editorPane.setEditable(false);
-    }
- else {
-      editorPane.addHyperlinkListener(ContributionListPanel.nullHyperlinkListener);
-      editorPane.setEditable(true);
-    }
-    setSelectionStyle(descriptionBlock,isSelected());
+  descriptionBlock.removeHyperlinkListener(ContributionListPanel.nullHyperlinkListener);
+  descriptionBlock.removeHyperlinkListener(conditionalHyperlinkOpener);
+  if (isSelected()) {
+    descriptionBlock.addHyperlinkListener(conditionalHyperlinkOpener);
+    descriptionBlock.setEditable(false);
   }
+ else {
+    descriptionBlock.addHyperlinkListener(ContributionListPanel.nullHyperlinkListener);
+    descriptionBlock.setEditable(true);
+  }
+  setSelectionStyle(descriptionBlock,isSelected());
   alreadySelected=isSelected();
 }
