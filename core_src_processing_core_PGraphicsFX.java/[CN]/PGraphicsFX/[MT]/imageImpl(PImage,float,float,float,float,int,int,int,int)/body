@@ -1,0 +1,26 @@
+{
+  if (who.width <= 0 || who.height <= 0)   return;
+  ImageCache cash=(ImageCache)getCache(who);
+  if (cash != null) {
+    if (who.width != cash.image.getWidth() || who.height != cash.image.getHeight()) {
+      cash=null;
+    }
+  }
+  if (cash == null) {
+    cash=new ImageCache();
+    setCache(who,cash);
+    who.updatePixels();
+    who.modified=true;
+  }
+  if ((tint && !cash.tinted) || (tint && (cash.tintedColor != tintColor)) || (!tint && cash.tinted)) {
+    who.updatePixels();
+  }
+  if (who.modified) {
+    if (who.pixels == null) {
+      who.pixels=new int[who.width * who.height];
+    }
+    cash.update(who,tint,tintColor);
+    who.modified=false;
+  }
+  context.drawImage(((ImageCache)getCache(who)).image,x1,y1,x2,y2,u1,v1,u2,v2);
+}
