@@ -1,19 +1,19 @@
 {
   PShapeOpenGL dest=null;
   if (src.getFamily() == GROUP) {
-    dest=PGraphics3D.createShapeImpl(pg,GROUP);
+    dest=(PShapeOpenGL)((PGraphics3D)pg).createShapeFamily(GROUP);
     copyGroup3D(pg,src,dest);
   }
  else   if (src.getFamily() == PRIMITIVE) {
-    dest=PGraphics3D.createShapeImpl(pg,src.getKind(),src.getParams());
+    dest=(PShapeOpenGL)((PGraphics3D)pg).createShapePrimitive(src.getKind(),src.getParams());
     PShape.copyPrimitive(src,dest);
   }
  else   if (src.getFamily() == GEOMETRY) {
-    dest=PGraphics3D.createShapeImpl(pg,PShape.GEOMETRY);
+    dest=(PShapeOpenGL)((PGraphics3D)pg).createShapeFamily(PShape.GEOMETRY);
     PShape.copyGeometry(src,dest);
   }
  else   if (src.getFamily() == PATH) {
-    dest=PGraphics3D.createShapeImpl(pg,PATH);
+    dest=(PShapeOpenGL)((PGraphics3D)pg).createShapeFamily(PShape.PATH);
     PShape.copyPath(src,dest);
   }
   dest.setName(src.getName());

@@ -6,16 +6,8 @@
   float[] uv=tessGeo.polyTexCoords;
   short[] indices=tessGeo.polyIndices;
   PShape tess;
-  if (is3D()) {
-    tess=PGraphics3D.createShapeImpl(pg,PShape.GEOMETRY);
-  }
- else   if (is2D()) {
-    tess=PGraphics2D.createShapeImpl(pg,PShape.GEOMETRY);
-  }
- else {
-    PGraphics.showWarning("This shape is not either 2D or 3D!");
-    return null;
-  }
+  tess=pg.createShapeFamily(PShape.GEOMETRY);
+  tess.set3D(is3D);
   tess.beginShape(TRIANGLES);
   tess.noStroke();
   IndexCache cache=tessGeo.polyIndexCache;
