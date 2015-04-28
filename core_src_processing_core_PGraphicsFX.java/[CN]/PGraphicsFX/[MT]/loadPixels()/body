@@ -1,0 +1,15 @@
+{
+  pixelFactor=2;
+  int wide=width * pixelFactor;
+  int high=height * pixelFactor;
+  if ((pixels == null) || (pixels.length != wide * high)) {
+    pixels=new int[wide * high];
+  }
+  SnapshotParameters sp=new SnapshotParameters();
+  if (pixelFactor == 2) {
+    sp.setTransform(Transform.scale(2,2));
+  }
+  WritableImage wi=((PSurfaceFX)surface).canvas.snapshot(sp,null);
+  PixelReader pr=wi.getPixelReader();
+  pr.getPixels(0,0,wide,high,argbFormat,pixels,0,wide);
+}
