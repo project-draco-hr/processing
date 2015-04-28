@@ -1,5 +1,4 @@
 {
-  allHandles=new ArrayList<>();
   Pattern p=Pattern.compile("[\\[\\{<>(),\\t\\s\\+\\-\\/\\*^%!|&=?:~]\\d+\\.?\\d*");
   for (int i=0; i < codeTabs.length; i++) {
     List<Handle> handles=new ArrayList<Handle>();
@@ -11,6 +10,9 @@
       int start=m.start() + 1;
       int end=m.end();
       if (isInComment(start,codeTabs[i])) {
+        continue;
+      }
+      if (setupFunction.contains(start)) {
         continue;
       }
       if (requiresComment) {

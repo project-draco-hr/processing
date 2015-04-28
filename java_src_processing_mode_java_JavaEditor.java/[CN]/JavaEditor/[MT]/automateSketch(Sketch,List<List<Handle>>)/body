@@ -6,8 +6,8 @@
   if (handles.size() == 0) {
     return false;
   }
-  int setupStartPos=SketchParser.getSetupStart(baseCode[0]);
-  if (setupStartPos < 0) {
+  int setupEndPos=SketchParser.getSetupEnd(baseCode[0]);
+  if (setupEndPos < 0) {
     return false;
   }
   int port;
@@ -67,8 +67,8 @@
   header+="}\n";
   header+="\n\n\n\n\n";
   String addToSetup="\n" + " tweakmode_initAllVars();\n" + " tweakmode_initCommunication();\n\n";
-  setupStartPos=SketchParser.getSetupStart(c);
-  c=replaceString(c,setupStartPos,setupStartPos,addToSetup);
+  setupEndPos=SketchParser.getSetupEnd(c);
+  c=replaceString(c,setupEndPos,setupEndPos,addToSetup);
   code[0].setProgram(header + c);
   String showModCode=Preferences.get(prefTweakShowCode);
   if (showModCode == null) {

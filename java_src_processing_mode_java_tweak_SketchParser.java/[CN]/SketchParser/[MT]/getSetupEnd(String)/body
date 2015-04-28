@@ -1,0 +1,25 @@
+{
+  int setupStart=getSetupStart(code);
+  if (setupStart == -1) {
+    return -1;
+  }
+  int bracketCount=1;
+  int pos=setupStart;
+  while (bracketCount > 0 && pos < code.length()) {
+    if (code.charAt(pos) == '{') {
+      if (!isInComment(pos,code)) {
+        bracketCount++;
+      }
+    }
+ else     if (code.charAt(pos) == '}') {
+      if (!isInComment(pos,code)) {
+        bracketCount--;
+      }
+    }
+    pos++;
+  }
+  if (bracketCount == 0) {
+    return pos - 1;
+  }
+  return -1;
+}
