@@ -1,20 +1,22 @@
 {
+  List<Range> comments=getCommentBlocks(code);
   int setupStart=getSetupStart(code);
   if (setupStart == -1) {
     return -1;
   }
+  System.out.println("setup start = " + setupStart);
   int bracketCount=1;
   int pos=setupStart;
   while (bracketCount > 0 && pos < code.length()) {
+    if (isInRangeList(pos,comments)) {
+      pos++;
+      continue;
+    }
     if (code.charAt(pos) == '{') {
-      if (!isInComment(pos,code)) {
-        bracketCount++;
-      }
+      bracketCount++;
     }
  else     if (code.charAt(pos) == '}') {
-      if (!isInComment(pos,code)) {
-        bracketCount--;
-      }
+      bracketCount--;
     }
     pos++;
   }

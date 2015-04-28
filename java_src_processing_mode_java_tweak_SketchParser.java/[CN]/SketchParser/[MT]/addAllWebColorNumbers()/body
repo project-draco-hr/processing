@@ -6,7 +6,7 @@
     while (m.find()) {
       int start=m.start();
       int end=m.end();
-      if (isInComment(start,codeTabs[i])) {
+      if (isInRangeList(start,commentBlocks.get(i))) {
         continue;
       }
       if (setupFunction.contains(start)) {
@@ -20,7 +20,7 @@
       if (isInsideString(start,c)) {
         continue;
       }
-      if (isGlobal(m.start(),c)) {
+      if (isGlobal(m.start(),i)) {
         continue;
       }
       int line=countLines(c.substring(0,start)) - 1;

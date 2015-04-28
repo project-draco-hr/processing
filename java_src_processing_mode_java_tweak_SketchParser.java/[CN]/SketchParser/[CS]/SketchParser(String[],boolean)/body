@@ -3,7 +3,15 @@
   this.requiresComment=requiresComment;
   intVarCount=0;
   floatVarCount=0;
+  commentBlocks=new ArrayList<>();
+  for (  String code : codeTabs) {
+    commentBlocks.add(getCommentBlocks(code));
+  }
   setupFunction=new Range(getSetupStart(codeTabs[0]),getSetupEnd(codeTabs[0]));
+  curlyScopes=new ArrayList<>();
+  for (  String code : codeTabs) {
+    curlyScopes.add(getCurlyScopes(code));
+  }
   scientificNotations=getAllScientificNotations();
   addAllNumbers();
   colorModes=findAllColorModes();

@@ -9,7 +9,7 @@
       boolean forceFloat=false;
       int start=m.start() + 1;
       int end=m.end();
-      if (isInComment(start,codeTabs[i])) {
+      if (isInRangeList(start,commentBlocks.get(i))) {
         continue;
       }
       if (setupFunction.contains(start)) {
@@ -43,7 +43,7 @@
         continue;
       }
       if (isInsideString(start,c))       continue;
-      if (isGlobal(m.start(),c))       continue;
+      if (isGlobal(m.start(),i))       continue;
       int line=countLines(c.substring(0,start)) - 1;
       String value=c.substring(start,end);
       if (value.contains(".") || forceFloat) {

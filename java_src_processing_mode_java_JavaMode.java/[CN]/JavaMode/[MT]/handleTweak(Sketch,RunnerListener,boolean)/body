@@ -1,6 +1,5 @@
 {
   final JavaEditor editor=(JavaEditor)listener;
-  boolean launchInteractive=false;
   if (isSketchModified(sketch)) {
     editor.deactivateRun();
     Base.showMessage(Language.text("menu.file.save"),Language.text("tweak_mode.save_before_tweak"));
@@ -14,7 +13,7 @@
   editor.initBaseCode();
   boolean requiresTweak=SketchParser.containsTweakComment(editor.baseCode);
   final SketchParser parser=new SketchParser(editor.baseCode,requiresTweak);
-  launchInteractive=editor.automateSketch(sketch,parser.allHandles);
+  final boolean launchInteractive=editor.automateSketch(sketch,parser);
   build=new JavaBuild(sketch);
   appletClassName=build.build(false);
   if (appletClassName != null) {
@@ -22,8 +21,10 @@
     new Thread(new Runnable(){
       public void run(){
         runtime.launch(present);
-        editor.initEditorCode(parser.allHandles,false);
-        editor.stopInteractiveMode(parser.allHandles);
+        if (launchInteractive) {
+          editor.initEditorCode(parser.allHandles,false);
+          editor.stopInteractiveMode(parser.allHandles);
+        }
       }
     }
 ).start();
