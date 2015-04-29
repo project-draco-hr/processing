@@ -1,0 +1,17 @@
+{
+  if (openContour) {
+    endContour();
+    PGraphics.showWarning("Missing endContour() before endShape()");
+  }
+  if (gpath != null) {
+    if (shape == POLYGON) {
+      if (mode == CLOSE) {
+        gpath.getElements().add(new ClosePath());
+      }
+      if (auxPath != null) {
+        gpath.getElements().addAll(auxPath.getElements());
+      }
+    }
+  }
+  shape=0;
+}

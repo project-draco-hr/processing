@@ -1,0 +1,14 @@
+{
+  if (!openContour) {
+    PGraphics.showWarning("Need to call beginContour() first");
+    return;
+  }
+  if (gpath != null) {
+    auxPath.getElements().addAll(gpath.getElements());
+    auxPath.getElements().add(new ClosePath());
+  }
+  Path temp=gpath;
+  gpath=auxPath;
+  auxPath=temp;
+  openContour=false;
+}
