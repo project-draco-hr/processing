@@ -1,0 +1,23 @@
+{
+  start=-start * RAD_TO_DEG;
+  stop=-stop * RAD_TO_DEG;
+  float sweep=stop - start;
+  ArcType fillMode=ArcType.ROUND;
+  ArcType strokeMode=ArcType.OPEN;
+  if (mode == OPEN) {
+    fillMode=ArcType.OPEN;
+  }
+ else   if (mode == PIE) {
+    strokeMode=ArcType.ROUND;
+  }
+ else   if (mode == CHORD) {
+    fillMode=ArcType.CHORD;
+    strokeMode=ArcType.CHORD;
+  }
+  if (fill) {
+    context.fillArc(x,y,w,h,start,sweep,fillMode);
+  }
+  if (stroke) {
+    context.strokeArc(x,y,w,h,start,sweep,strokeMode);
+  }
+}
