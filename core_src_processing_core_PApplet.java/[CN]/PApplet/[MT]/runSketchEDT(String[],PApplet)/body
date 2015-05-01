@@ -10,8 +10,8 @@
   int[] location=null;
   int[] editorLocation=null;
   String name=null;
-  Color backgroundColor=null;
-  Color stopColor=Color.GRAY;
+  int backgroundColor=0;
+  int stopColor=0xff808080;
   boolean hideStop=false;
   int displayIndex=-1;
   boolean fullScreen=false;
@@ -33,11 +33,11 @@
       }
  else       if (param.equals(ARGS_BGCOLOR)) {
         if (value.charAt(0) == '#')         value=value.substring(1);
-        backgroundColor=new Color(Integer.parseInt(value,16));
+        backgroundColor=0xff000000 | Integer.parseInt(value,16);
       }
  else       if (param.equals(ARGS_STOP_COLOR)) {
         if (value.charAt(0) == '#')         value=value.substring(1);
-        stopColor=new Color(Integer.parseInt(value,16));
+        stopColor=0xff000000 | Integer.parseInt(value,16);
       }
  else       if (param.equals(ARGS_SKETCH_FOLDER)) {
         folder=value;
@@ -94,7 +94,7 @@
   }
   if (fullScreen) {
     if (hideStop) {
-      stopColor=null;
+      stopColor=0;
     }
     surface.placePresent(stopColor);
   }
