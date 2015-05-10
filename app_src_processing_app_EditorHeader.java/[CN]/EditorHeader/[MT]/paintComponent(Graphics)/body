@@ -49,22 +49,14 @@
     tab.text=hide ? code.getPrettyName() : code.getFileName();
     tab.textWidth=(int)font.getStringBounds(tab.text,g2.getFontRenderContext()).getWidth();
   }
-  if (!placeTabs(MARGIN_WIDTH,tabMax,null)) {
-    int index=0;
-    for (int i=tabs.length - 1; i > 0; --i) {
-      visitOrder[index++]=tabs[i];
-    }
-    Arrays.sort(visitOrder);
-    for (int i=0; i < visitOrder.length; i++) {
-      tabs[visitOrder[i].index].textVisible=false;
-      if (placeTabs(MARGIN_WIDTH,tabMax,null)) {
-        break;
-      }
-    }
+  if (!placeTabs(MARGIN_WIDTH,tabMax - ARROW_TAB_WIDTH,g2)) {
+    menuRight=tabMax;
+    menuLeft=menuRight - ARROW_TAB_WIDTH;
   }
-  placeTabs(MARGIN_WIDTH,tabMax,g2);
-  menuLeft=tabs[tabs.length - 1].right + TAB_BETWEEN;
-  menuRight=menuLeft + ARROW_TAB_WIDTH;
+ else {
+    menuLeft=tabs[tabs.length - 1].right + TAB_BETWEEN;
+    menuRight=menuLeft + ARROW_TAB_WIDTH;
+  }
   g.setColor(tabColor[UNSELECTED]);
   drawTab(g,menuLeft,menuRight);
   g.setColor(arrowColor);
