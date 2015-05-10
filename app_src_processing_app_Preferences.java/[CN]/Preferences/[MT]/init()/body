@@ -21,16 +21,7 @@
   }
   PApplet.useNativeSelect=Preferences.getBoolean("chooser.files.native");
   System.setProperty("java.net.useSystemProxies","true");
-  String proxyHost=get("proxy.host");
-  String proxyPort=get("proxy.port");
-  if (proxyHost != null && proxyHost.length() != 0 && proxyPort != null && proxyPort.length() != 0) {
-    System.setProperty("http.proxyHost",proxyHost);
-    System.setProperty("http.proxyPort",proxyPort);
-  }
-  String socksProxyHost=get("socksProxy.host");
-  String socksProxyPort=get("socksProxy.port");
-  if (socksProxyHost != null && socksProxyHost.length() != 0 && socksProxyPort != null && socksProxyPort.length() != 0) {
-    System.setProperty("socksProxyHost",socksProxyHost);
-    System.setProperty("socksProxyPort",socksProxyPort);
-  }
+  handleProxy("http","http.proxyHost","http.proxyPort");
+  handleProxy("https","https.proxyHost","https.proxyPort");
+  handleProxy("socks","socksProxyHost","socksProxyPort");
 }
