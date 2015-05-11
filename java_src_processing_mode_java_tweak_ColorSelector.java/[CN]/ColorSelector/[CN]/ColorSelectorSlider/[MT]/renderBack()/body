@@ -1,19 +1,19 @@
 {
-  PGraphics buf=createGraphics(30,255);
-  buf.beginDraw();
-  buf.loadPixels();
+  int[] pixels=new int[WIDE * 256];
   int index=0;
-  for (int j=0; j < 255; j++) {
-    for (int i=0; i < 30; i++) {
-      if (colorBox.isBW) {
-        buf.pixels[index++]=color(255 - j);
-      }
+  int argb=0;
+  for (int j=0; j < 256; j++) {
+    if (colorBox.isBW) {
+      int gray=255 - j;
+      argb=0xff000000 | (gray << 16) | (gray << 8)| gray;
+    }
  else {
-        buf.pixels[index++]=color(255 - j,255,255);
-      }
+      argb=Color.HSBtoRGB((255 - j) / 255f,1,1);
+    }
+    for (int i=0; i < WIDE; i++) {
+      pixels[index++]=argb;
     }
   }
-  buf.updatePixels();
-  buf.endDraw();
-  backImg=buf.get();
+  backImg=new BufferedImage(WIDE,256,BufferedImage.TYPE_INT_RGB);
+  backImg.getRaster().setDataElements(0,0,WIDE,256,pixels);
 }

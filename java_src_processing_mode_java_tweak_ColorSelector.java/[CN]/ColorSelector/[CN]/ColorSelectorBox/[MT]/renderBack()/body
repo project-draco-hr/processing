@@ -1,15 +1,11 @@
 {
-  PGraphics buf=createGraphics(255,255);
-  buf.colorMode(HSB,255,255,255);
-  buf.beginDraw();
-  buf.loadPixels();
+  int[] pixels=new int[256 * 256];
   int index=0;
-  for (int j=0; j < 255; j++) {
-    for (int i=0; i < 255; i++) {
-      buf.pixels[index++]=color(hue,i,255 - j);
+  for (int j=0; j < 256; j++) {
+    for (int i=0; i < 256; i++) {
+      pixels[index++]=Color.HSBtoRGB(hue / 255f,(i / 255f),(255 - j));
     }
   }
-  buf.updatePixels();
-  buf.endDraw();
-  backImg=buf.get();
+  backImg=new BufferedImage(256,256,BufferedImage.TYPE_INT_RGB);
+  backImg.getRaster().setDataElements(0,0,256,256,pixels);
 }
