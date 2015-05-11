@@ -6,12 +6,12 @@
 switch (iprob.getID()) {
 case IProblem.ParsingError:
     if (args.length > 0) {
-      result=Language.text("editor.status.error_on") + qs(args[0]);
+      result=Language.interpolate("editor.status.error_on",args[0]);
     }
   break;
 case IProblem.ParsingErrorDeleteToken:
 if (args.length > 0) {
-  result=Language.text("editor.status.error_on") + qs(args[0]);
+  result=Language.interpolate("editor.status.error_on",args[0]);
 }
 break;
 case IProblem.ParsingErrorInsertToComplete:
@@ -21,13 +21,13 @@ result=getErrorMessageForBracket(args[0].charAt(0));
 }
  else {
 if (args[0].equals("AssignmentOperator Expression")) {
-  result=Language.text("editor.status.missing.add") + qs("=");
+  result=Language.interpolate("editor.status.missing.add","=");
 }
  else if (args[0].equalsIgnoreCase(") Statement")) {
   result=getErrorMessageForBracket(args[0].charAt(0));
 }
  else {
-  result=Language.text("editor.status.error_on") + qs(args[0]);
+  result=Language.interpolate("editor.status.error_on",args[0]);
 }
 }
 }
@@ -39,11 +39,11 @@ if (args[0].equals("int")) {
 result=Language.text("editor.status.reserved_words");
 }
  else {
-result=Language.text("editor.status.error_on") + qs(args[0]);
+result=Language.interpolate("editor.status.error_on",args[0]);
 }
 }
  else {
-result=Language.text("editor.status.error_on") + qs(args[0]);
+result=Language.interpolate("editor.status.error_on",args[0]);
 }
 }
 break;
@@ -54,10 +54,10 @@ result=getErrorMessageForBracket(args[1].charAt(0));
 }
  else {
 if (args[1].equalsIgnoreCase("Statement")) {
-result=Language.text("editor.status.error_on") + qs(args[0]);
+result=Language.interpolate("editor.status.error_on",args[0]);
 }
  else {
-result=Language.text("editor.status.error_on") + " \"" + args[0]+ Language.text("editor.status.missing.add")+ args[1]+ "\"";
+result=Language.interpolate("editor.status.error_on",args[0]) + " " + Language.interpolate("editor.status.missing.add",args[1]);
 }
 }
 }
@@ -65,73 +65,58 @@ break;
 case IProblem.UndefinedMethod:
 if (args.length > 2) {
 result=Language.text("editor.status.undefined_method");
-String methodDef="\"" + args[args.length - 2] + "("+ getSimpleName(args[args.length - 1])+ ")\"";
+String methodDef="\"" + args[args.length - 2] + "("+ removePackagePrefixes(args[args.length - 1])+ ")\"";
 result=result.replace("methoddef",methodDef);
 }
 break;
 case IProblem.ParameterMismatch:
 if (args.length > 3) {
 if (args[2].trim().length() == 0) {
-result=Language.text("editor.status.empty_param");
-String methodDef="\"" + args[1] + "()\"";
-result=result.replace("methoddef",methodDef);
+result=Language.interpolate("editor.status.empty_param",args[1]);
 }
  else {
-result=Language.text("editor.status.wrong_param");
-String method=q(args[1]);
-String methodDef=" \"" + args[1] + "("+ getSimpleName(args[2])+ ")\"";
-result=result.replace("method",method);
-result+=methodDef;
+result=Language.interpolate("editor.status.wrong_param",args[1],args[1],removePackagePrefixes(args[2]));
 }
 }
 break;
 case IProblem.UndefinedField:
 if (args.length > 0) {
-result=Language.text("editor.status.undef_global_var");
-result=result.replace("varname",q(args[0]));
+result=Language.interpolate("editor.status.undef_global_var",args[0]);
 }
 break;
 case IProblem.UndefinedType:
 if (args.length > 0) {
-result=Language.text("editor.status.undef_class");
-result=result.replace("classname",q(args[0]));
+result=Language.interpolate("editor.status.undef_class",args[0]);
 }
 break;
 case IProblem.UnresolvedVariable:
 if (args.length > 0) {
-result=Language.text("editor.status.undef_var");
-result=result.replace("varname",q(args[0]));
+result=Language.interpolate("editor.status.undef_var",args[0]);
 }
 break;
 case IProblem.UndefinedName:
 if (args.length > 0) {
-result=Language.text("editor.status.undef_name");
-result=result.replace("namefield",q(args[0]));
+result=Language.interpolate("editor.status.undef_name",args[0]);
 }
 break;
 case IProblem.TypeMismatch:
 if (args.length > 1) {
-result=Language.text("editor.status.type_mismatch");
-result=result.replace("typeA",q(args[0]));
-result=result.replace("typeB",q(args[1]));
+result=Language.interpolate("editor.status.type_mismatch",args[0],args[1]);
 }
 break;
 case IProblem.LocalVariableIsNeverUsed:
 if (args.length > 0) {
-result=Language.text("editor.status.unused_variable");
-result=result.replace("varname",q(args[0]));
+result=Language.interpolate("editor.status.unused_variable",args[0]);
 }
 break;
 case IProblem.UninitializedLocalVariable:
 if (args.length > 0) {
-result=Language.text("editor.status.uninitialized_variable");
-result=result.replace("varname",q(args[0]));
+result=Language.interpolate("editor.status.uninitialized_variable",args[0]);
 }
 break;
 case IProblem.AssignmentHasNoEffect:
 if (args.length > 0) {
-result=Language.text("editor.status.no_effect_assignment");
-result=result.replace("varname",q(args[0]));
+result=Language.interpolate("editor.status.no_effect_assignment",args[0]);
 }
 break;
 }
