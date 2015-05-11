@@ -36,20 +36,12 @@
     File sketchFile=sc.getFile();
     if (sketchFile.exists()) {
       long diff=sketchFile.lastModified() - sc.lastModified();
-      if (diff != 0) {
-        if (Base.isMacOS() && diff < 1000L + MODIFIED_TIME_BUFFER) {
-          continue;
-        }
- else         if (diff < MODIFIED_TIME_BUFFER) {
-          continue;
-        }
+      if (diff > MODIFIED_TIME_BUFFER) {
         reloadSketch(sc);
-        return;
       }
     }
  else {
       reloadSketch(sc);
-      return;
     }
   }
 }
