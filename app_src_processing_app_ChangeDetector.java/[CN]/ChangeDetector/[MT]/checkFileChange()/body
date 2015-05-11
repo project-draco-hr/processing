@@ -37,10 +37,12 @@
     if (sketchFile.exists()) {
       long diff=sketchFile.lastModified() - sc.lastModified();
       if (diff != 0) {
-        if (Base.isMacOS() && diff == 1000L) {
+        if (Base.isMacOS() && diff < 1000L + MODIFIED_TIME_BUFFER) {
           continue;
         }
-        System.out.println(sketchFile.getName() + " " + diff);
+ else         if (diff < MODIFIED_TIME_BUFFER) {
+          continue;
+        }
         reloadSketch(sc);
         return;
       }
