@@ -23,7 +23,7 @@
  else {
     port=Preferences.getInteger(prefTweakPort);
   }
-  tweakClient=new UDPTweakClient(port);
+  tweakClient=new TweakClient(port);
   for (int tab=0; tab < code.length; tab++) {
     for (    Handle h : handles.get(tab)) {
       h.setTweakClient(tweakClient);
@@ -52,7 +52,7 @@
   if (numOfFloats > 0) {
     header+="float[] tweakmode_float = new float[" + numOfFloats + "];\n\n";
   }
-  header+=UDPTweakClient.getServerCode(port,numOfInts > 0,numOfFloats > 0);
+  header+=TweakClient.getServerCode(port,numOfInts > 0,numOfFloats > 0);
   header+="TweakModeServer tweakmode_Server;\n";
   header+="void tweakmode_initAllVars() {\n";
   for (  List<Handle> list : handles) {
