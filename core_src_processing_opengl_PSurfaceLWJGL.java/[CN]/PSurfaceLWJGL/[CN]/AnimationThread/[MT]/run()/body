@@ -1,58 +1,56 @@
 {
-  try {
-    PixelFormat format=new PixelFormat(PGL.REQUESTED_ALPHA_BITS,PGL.REQUESTED_DEPTH_BITS,PGL.REQUESTED_STENCIL_BITS,pgl.reqNumSamples);
-    Display.create(format);
-  }
- catch (  LWJGLException e) {
-    e.printStackTrace();
-    System.exit(0);
-  }
-  keyPoller=new KeyPoller(sketch);
-  keyPoller.start();
-  mousePoller=new MousePoller(sketch);
-  mousePoller.start();
-  setSize(sketchWidth,sketchHeight);
-  sketch.start();
-  int x0=Display.getX();
-  int y0=Display.getY();
-  while ((Thread.currentThread() == thread) && !sketch.finished) {
-    if (Display.wasResized()) {
-      setSize(Display.getWidth(),Display.getHeight());
+  int WIDTH=sketchWidth;
+  int HEIGHT=sketchHeight;
+  window=glfwCreateWindow(WIDTH,HEIGHT,"Hello World!",NULL,NULL);
+  if (window == NULL)   throw new RuntimeException("Failed to create the GLFW window");
+  glfwSetKeyCallback(window,keyCallback=new GLFWKeyCallback(){
+    @Override public void invoke(    long window,    int key,    int scancode,    int action,    int mods){
+      System.out.println("Key pressed: " + key + ", "+ scancode+ " "+ action);
+      if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)       glfwSetWindowShouldClose(window,GL_TRUE);
     }
+  }
+);
+  glfwSetMouseButtonCallback(window,mouseCallback=new GLFWMouseButtonCallback(){
+    @Override public void invoke(    long window,    int button,    int action,    int mods){
+      System.out.println("mouse pressed: " + button + ", "+ action+ " "+ mods);
+    }
+  }
+);
+  glfwSetCursorPosCallback(window,posCallback=new GLFWCursorPosCallback(){
+    @Override public void invoke(    long window,    double xpos,    double ypos){
+      System.out.println("mouse moved: " + xpos + " "+ ypos);
+      long millis=System.currentTimeMillis();
+      int modifiers=0;
+      int x=(int)xpos;
+      int y=(int)ypos;
+      int button=0;
+      int action=0;
+      action=MouseEvent.MOVE;
+      int count=0;
+      MouseEvent me=new MouseEvent(null,millis,action,modifiers,x,y,button,count);
+      sketch.postEvent(me);
+    }
+  }
+);
+  glfwSetScrollCallback(window,scrollCallback=new GLFWScrollCallback(){
+    @Override public void invoke(    long window,    double xoffset,    double yoffset){
+      System.out.println("mouse scrolled: " + xoffset + " "+ yoffset);
+    }
+  }
+);
+  ByteBuffer vidmode=glfwGetVideoMode(glfwGetPrimaryMonitor());
+  glfwSetWindowPos(window,(GLFWvidmode.width(vidmode) - WIDTH) / 2,(GLFWvidmode.height(vidmode) - HEIGHT) / 2);
+  glfwMakeContextCurrent(window);
+  glfwSwapInterval(1);
+  glfwShowWindow(window);
+  GLContext.createFromCurrent();
+  glClearColor(1.0f,0.0f,0.0f,0.0f);
+  while (glfwWindowShouldClose(window) == GL_FALSE) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     pgl.setThread(thread);
     checkPause();
     sketch.handleDraw();
-    Display.update();
-    if (sketch.frameCount == 1) {
-      requestFocus();
-    }
-    Display.sync((int)frameRateTarget);
-    int x=Display.getX();
-    int y=Display.getY();
-    if (externalMessages && (x != x0 || y0 != y)) {
-      System.err.println(PApplet.EXTERNAL_MOVE + " " + x+ " "+ y);
-      System.err.flush();
-    }
-    x0=x;
-    y0=y;
-    if (Display.isCloseRequested()) {
-      sketch.exit();
-      break;
-    }
-  }
-  keyPoller.requestStop();
-  mousePoller.requestStop();
-  while (true) {
-    if (Display.isCloseRequested() || sketch.exitCalled()) {
-      sketch.dispose();
-      Display.destroy();
-      frame.dispose();
-      break;
-    }
-    Display.update();
-    Display.sync((int)frameRateTarget);
-  }
-  if (sketch.exitCalled()) {
-    sketch.exitActual();
+    glfwSwapBuffers(window);
+    glfwPollEvents();
   }
 }
