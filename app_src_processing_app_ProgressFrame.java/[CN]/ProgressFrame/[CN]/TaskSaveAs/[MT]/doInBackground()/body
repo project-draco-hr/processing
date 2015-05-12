@@ -1,19 +1,19 @@
 {
   long totalSize=0;
   for (  File copyable : copyItems) {
-    totalSize+=getFileLength(copyable);
+    totalSize+=calcSize(copyable);
   }
   long progress=0;
   setProgress(0);
   for (  File copyable : ProgressFrame.this.copyItems) {
     if (copyable.isDirectory()) {
-      copyDir(copyable,new File(ProgressFrame.this.newFolder,copyable.getName()),this,progress,totalSize);
-      progress+=getFileLength(copyable);
+      copyDir(copyable,new File(ProgressFrame.this.newFolder,copyable.getName()),progress,totalSize);
+      progress+=calcSize(copyable);
     }
  else {
-      copyFile(copyable,new File(ProgressFrame.this.newFolder,copyable.getName()),this,progress,totalSize);
-      if (getFileLength(copyable) < 524288) {
-        progress+=getFileLength(copyable);
+      copyFile(copyable,new File(ProgressFrame.this.newFolder,copyable.getName()),progress,totalSize);
+      if (calcSize(copyable) < 524288) {
+        progress+=calcSize(copyable);
         setProgress((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
       }
     }

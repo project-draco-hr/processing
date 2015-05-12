@@ -10,14 +10,14 @@
     File source=new File(sourceDir,files[i]);
     File target=new File(targetDir,files[i]);
     if (source.isDirectory()) {
-      progress=copyDir(source,target,progBar,progress,totalSize);
-      progBar.setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
+      progress=copyDir(source,target,progress,totalSize);
+      setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
       target.setLastModified(source.lastModified());
     }
  else {
-      copyFile(source,target,progBar,progress,totalSize);
+      copyFile(source,target,progress,totalSize);
       progress+=source.length();
-      progBar.setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
+      setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
     }
   }
   return progress;

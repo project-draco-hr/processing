@@ -7,15 +7,15 @@
   while ((bytesRead=from.read(buffer)) != -1) {
     to.write(buffer,0,bytesRead);
     totalRead+=bytesRead;
-    if (totalRead >= 524288) {
+    if (totalRead >= 512 * 1024) {
       progress+=totalRead;
-      progBar.setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
+      setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
       totalRead=0;
     }
   }
-  if (sourceFile.length() > 524288) {
+  if (sourceFile.length() > 512 * 1024) {
     progress+=totalRead;
-    progBar.setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
+    setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
   }
   from.close();
   from=null;

@@ -1,5 +1,5 @@
 {
-  double totalSize=sourceFile.length();
+  long totalSize=sourceFile.length();
   int progress=0;
   BufferedInputStream from=new BufferedInputStream(new FileInputStream(sourceFile));
   BufferedOutputStream to=new BufferedOutputStream(new FileOutputStream(targetFile));
@@ -11,13 +11,13 @@
     totalRead+=bytesRead;
     if (totalRead >= 1024) {
       progress+=totalRead;
-      progBar.setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
+      setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
       totalRead=0;
     }
   }
   if (sourceFile.length() > 1024) {
     progress+=totalRead;
-    progBar.setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
+    setProgressBarStatus((int)Math.min(Math.ceil(progress * 100.0 / totalSize),100));
   }
   from.close();
   from=null;
