@@ -1,58 +1,10 @@
 {
   this.sketch=sketch;
-  GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
-  if (deviceIndex >= 0) {
-    GraphicsDevice[] devices=environment.getScreenDevices();
-    if (deviceIndex < devices.length) {
-      displayDevice=devices[deviceIndex];
-    }
- else {
-      System.err.format("Display %d does not exist, " + "using the default display instead.",deviceIndex);
-      for (int i=0; i < devices.length; i++) {
-        System.err.format("Display %d is %s\n",i,devices[i]);
-      }
-    }
-  }
-  if (displayDevice == null) {
-    displayDevice=environment.getDefaultScreenDevice();
-  }
-  screenRect=spanDisplays ? getDisplaySpan() : displayDevice.getDefaultConfiguration().getBounds();
-  sketch.displayWidth=screenRect.width;
-  sketch.displayHeight=screenRect.height;
   sketchWidth=sketch.sketchWidth();
   sketchHeight=sketch.sketchHeight();
-  if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
-    fullScreen=true;
-  }
-  if (spanDisplays) {
-    sketchWidth=screenRect.width;
-    sketchHeight=screenRect.height;
-  }
-  if (fullScreen) {
-    PApplet.hideMenuBar();
-    System.setProperty("org.lwjgl.opengl.Window.undecorated","true");
-  }
-  if (graphics.is2X()) {
-    System.setProperty("org.lwjgl.opengl.Display.enableHighDPI","true");
-  }
-  pgl.reqNumSamples=graphics.quality;
-  try {
-    int argb=graphics.backgroundColor;
-    float r=((argb >> 16) & 0xff) / 255.0f;
-    float g=((argb >> 8) & 0xff) / 255.0f;
-    float b=((argb) & 0xff) / 255.0f;
-    Display.setInitialBackground(r,g,b);
-    if (fullScreen) {
-      Display.setDisplayMode(new DisplayMode(screenRect.width,screenRect.height));
-    }
- else {
-      Display.setDisplayMode(new DisplayMode(sketchWidth,sketchHeight));
-    }
-    if (fullScreen) {
-      Display.setFullscreen(true);
-    }
-  }
- catch (  LWJGLException e) {
-    e.printStackTrace();
-  }
+  glfwSetErrorCallback(errorCallback=errorCallbackPrint(System.err));
+  if (glfwInit() != GL11.GL_TRUE)   throw new IllegalStateException("Unable to initialize GLFW");
+  glfwDefaultWindowHints();
+  glfwWindowHint(GLFW_VISIBLE,GL_FALSE);
+  glfwWindowHint(GLFW_RESIZABLE,GL_TRUE);
 }
