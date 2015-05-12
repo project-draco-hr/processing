@@ -1,16 +1,14 @@
 {
-  if (!initialized) {
-    return false;
+  if (initialized) {
+    try {
+      byte[] buf=new byte[12];
+      ByteBuffer bb=ByteBuffer.wrap(buf);
+      bb.putInt(0,SHUTDOWN);
+      socket.send(new DatagramPacket(buf,buf.length,address,sketchPort));
+      return true;
+    }
+ catch (    Exception e) {
+    }
   }
-  try {
-    byte[] buf=new byte[12];
-    ByteBuffer bb=ByteBuffer.wrap(buf);
-    bb.putInt(0,SHUTDOWN);
-    DatagramPacket packet=new DatagramPacket(buf,buf.length,address,sketchPort);
-    socket.send(packet);
-  }
- catch (  Exception e) {
-    return false;
-  }
-  return true;
+  return false;
 }
