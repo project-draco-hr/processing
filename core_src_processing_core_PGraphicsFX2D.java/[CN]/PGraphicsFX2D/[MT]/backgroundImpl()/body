@@ -1,4 +1,9 @@
 {
-  context.setFill(new Color(backgroundR,backgroundG,backgroundB,backgroundA / 255));
+  Paint savedFill=context.getFill();
+  BlendMode savedBlend=context.getGlobalBlendMode();
+  context.setFill(new Color(backgroundR,backgroundG,backgroundB,backgroundA));
+  context.setGlobalBlendMode(BlendMode.SRC_OVER);
   context.fillRect(0,0,width,height);
+  context.setFill(savedFill);
+  context.setGlobalBlendMode(savedBlend);
 }
