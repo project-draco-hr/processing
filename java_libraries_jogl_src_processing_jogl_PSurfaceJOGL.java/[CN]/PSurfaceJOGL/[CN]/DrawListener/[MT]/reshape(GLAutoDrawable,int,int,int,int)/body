@@ -1,4 +1,14 @@
 {
+  final float[] valReqSurfacePixelScale=window.getRequestedSurfaceScale(new float[2]);
+  final float[] hasSurfacePixelScale=window.getCurrentSurfaceScale(new float[2]);
+  final float[] nativeSurfacePixelScale=window.getMaximumSurfaceScale(new float[2]);
+  System.err.println("[set PixelScale post]: " + valReqSurfacePixelScale[0] + "x"+ valReqSurfacePixelScale[1]+ " (val) -> "+ hasSurfacePixelScale[0]+ "x"+ hasSurfacePixelScale[1]+ " (has), "+ nativeSurfacePixelScale[0]+ "x"+ nativeSurfacePixelScale[1]+ " (native)");
+  System.out.println("reshape: " + w + ", "+ h);
   pgl.getGL(drawable);
-  setSize(w,h);
+  if (!graphics.is2X() && 1 < hasSurfacePixelScale[0]) {
+    setSize(w / 2,h / 2);
+  }
+ else {
+    setSize(w,h);
+  }
 }

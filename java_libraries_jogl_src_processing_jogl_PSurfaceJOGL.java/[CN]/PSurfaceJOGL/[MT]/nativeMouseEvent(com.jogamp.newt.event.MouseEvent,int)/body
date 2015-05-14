@@ -31,8 +31,13 @@
       window.destroy();
     }
   }
+  final float[] hasSurfacePixelScale=window.getCurrentSurfaceScale(new float[2]);
   int x=nativeEvent.getX() - (int)offsetX;
   int y=nativeEvent.getY() - (int)offsetY;
+  if (!graphics.is2X() && 1 < hasSurfacePixelScale[0]) {
+    x/=2;
+    y/=2;
+  }
   MouseEvent me=new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,x,y,peButton,peCount);
   sketch.postEvent(me);
 }

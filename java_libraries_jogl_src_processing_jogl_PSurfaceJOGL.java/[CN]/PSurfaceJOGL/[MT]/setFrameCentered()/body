@@ -1,3 +1,16 @@
 {
-  window.setPosition(screenRect.x + (screenRect.width - sketchWidth) / 2,screenRect.y + (screenRect.height - sketchHeight) / 2);
+  int sketchX=displayDevice.getViewportInWindowUnits().getX();
+  int sketchY=displayDevice.getViewportInWindowUnits().getY();
+  System.err.println("just center on the screen at " + sketchX + screenRect.x+ (screenRect.width - sketchWidth) / 2 + ", " + sketchY + screenRect.y + (screenRect.height - sketchHeight) / 2);
+  System.err.println("  Display starts at " + sketchX + ", "+ sketchY);
+  System.err.println("  Screen rect pos: " + screenRect.x + ", "+ screenRect.y);
+  System.err.println("  Screen rect w/h: " + screenRect.width + ", "+ screenRect.height);
+  System.err.println("  Sketch w/h: " + sketchWidth + ", "+ sketchHeight);
+  int w=sketchWidth;
+  int h=sketchHeight;
+  if (graphics.is2X()) {
+    w/=2;
+    h/=2;
+  }
+  window.setPosition(sketchX + screenRect.x + (screenRect.width - w) / 2,sketchY + screenRect.y + (screenRect.height - h) / 2);
 }
