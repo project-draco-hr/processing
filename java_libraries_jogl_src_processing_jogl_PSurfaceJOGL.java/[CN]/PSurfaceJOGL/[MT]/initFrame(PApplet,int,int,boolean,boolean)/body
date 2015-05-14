@@ -100,13 +100,13 @@
       window.setFullscreen(true);
     }
   }
-  int[] reqSurfacePixelScale;
+  float[] reqSurfacePixelScale;
   if (graphics.is2X()) {
-    reqSurfacePixelScale=new int[]{ScalableSurface.AUTOMAX_PIXELSCALE,ScalableSurface.AUTOMAX_PIXELSCALE};
+    reqSurfacePixelScale=new float[]{ScalableSurface.AUTOMAX_PIXELSCALE,ScalableSurface.AUTOMAX_PIXELSCALE};
     pgl.pixel_scale=2;
   }
  else {
-    reqSurfacePixelScale=new int[]{ScalableSurface.IDENTITY_PIXELSCALE,ScalableSurface.IDENTITY_PIXELSCALE};
+    reqSurfacePixelScale=new float[]{ScalableSurface.IDENTITY_PIXELSCALE,ScalableSurface.IDENTITY_PIXELSCALE};
     pgl.pixel_scale=1;
   }
   window.setSurfaceScale(reqSurfacePixelScale);
@@ -157,15 +157,6 @@ synchronized (waitObject) {
     }
   }
 );
-  try {
-    EventQueue.invokeAndWait(new Runnable(){
-      public void run(){
-        window.setVisible(true);
-        System.err.println("1. set visible");
-      }
-    }
-);
-  }
- catch (  Exception ex) {
-  }
+  window.setVisible(true);
+  System.err.println("1. set visible");
 }
