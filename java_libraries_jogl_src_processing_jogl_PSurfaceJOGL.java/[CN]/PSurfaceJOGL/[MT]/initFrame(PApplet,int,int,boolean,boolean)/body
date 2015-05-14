@@ -80,6 +80,8 @@
   int screenWidth=screen.getWidth();
   int screenHeight=screen.getHeight();
   screenRect=spanDisplays ? new Rectangle(0,0,screen.getWidth(),screen.getHeight()) : new Rectangle(0,0,displayDevice.getViewportInWindowUnits().getWidth(),displayDevice.getViewportInWindowUnits().getHeight());
+  sketch.displayWidth=screenRect.width;
+  sketch.displayHeight=screenRect.height;
   if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
     fullScreen=true;
   }
@@ -119,7 +121,7 @@
   window.addWindowListener(winListener);
   DrawListener drawlistener=new DrawListener();
   window.addGLEventListener(drawlistener);
-  System.err.println("0. create animator");
+  System.err.println("1. create animator");
   animator=new FPSAnimator(window,60);
   drawException=null;
   animator.setUncaughtExceptionHandler(new GLAnimatorControl.UncaughtExceptionHandler(){
@@ -159,5 +161,5 @@ synchronized (waitObject) {
   }
 );
   window.setVisible(true);
-  System.err.println("1. set visible");
+  System.err.println("4. set visible");
 }
