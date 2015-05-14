@@ -75,8 +75,8 @@
   if (displayDevice == null) {
     displayDevice=window.getMainMonitor();
   }
-  int sketchX=displayDevice.getViewportInWindowUnits().getX();
-  int sketchY=displayDevice.getViewportInWindowUnits().getY();
+  sketchX=displayDevice.getViewportInWindowUnits().getX();
+  sketchY=displayDevice.getViewportInWindowUnits().getY();
   int screenWidth=screen.getWidth();
   int screenHeight=screen.getHeight();
   screenRect=spanDisplays ? new Rectangle(0,0,screen.getWidth(),screen.getHeight()) : new Rectangle(0,0,displayDevice.getViewportInWindowUnits().getWidth(),displayDevice.getViewportInWindowUnits().getHeight());
@@ -89,7 +89,6 @@
     sketchWidth=screenRect.width;
     sketchHeight=screenRect.height;
   }
-  window.setPosition(sketchX,sketchY);
   window.setSize(sketchWidth,sketchHeight);
   System.out.println("deviceIndex: " + deviceIndex);
   System.out.println(displayDevice);
@@ -131,7 +130,7 @@ synchronized (waitObject) {
     }
   }
 );
-  (new Thread(new Runnable(){
+  new Thread(new Runnable(){
     public void run(){
 synchronized (waitObject) {
         try {
@@ -149,7 +148,7 @@ synchronized (waitObject) {
       }
     }
   }
-)).start();
+).start();
   window.addWindowListener(new WindowAdapter(){
     @Override public void windowDestroyNotify(    final WindowEvent e){
       animator.stop();
