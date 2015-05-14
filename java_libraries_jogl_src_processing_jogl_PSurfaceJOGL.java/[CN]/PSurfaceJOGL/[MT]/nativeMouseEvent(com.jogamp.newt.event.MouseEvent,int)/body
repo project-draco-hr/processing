@@ -23,6 +23,16 @@
  else {
     peCount=nativeEvent.getClickCount();
   }
-  MouseEvent me=new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,nativeEvent.getX(),nativeEvent.getY(),peButton,peCount);
+  if (presentMode) {
+    if (20 < nativeEvent.getX() && nativeEvent.getX() < 20 + 100 && screenRect.height - 70 < nativeEvent.getY() && nativeEvent.getY() < screenRect.height - 20) {
+      System.err.println("clicked on exit button");
+      animator.stop();
+      PSurfaceJOGL.this.sketch.exit();
+      window.destroy();
+    }
+  }
+  int x=nativeEvent.getX() - (int)offsetX;
+  int y=nativeEvent.getY() - (int)offsetY;
+  MouseEvent me=new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,x,y,peButton,peCount);
   sketch.postEvent(me);
 }
