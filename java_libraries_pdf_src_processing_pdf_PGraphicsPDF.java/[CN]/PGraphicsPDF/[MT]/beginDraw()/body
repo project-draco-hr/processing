@@ -1,20 +1,32 @@
 {
   if (document == null) {
     document=new Document(new Rectangle(width,height));
+    boolean missingPath=false;
     try {
       if (file != null) {
         output=new BufferedOutputStream(new FileOutputStream(file),16384);
       }
  else       if (output == null) {
+        missingPath=true;
         throw new RuntimeException("PGraphicsPDF requires a path " + "for the location of the output file.");
       }
       writer=PdfWriter.getInstance(document,output);
       document.open();
       content=writer.getDirectContent();
     }
- catch (    Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException("Problem saving the PDF file.");
+ catch (    RuntimeException re) {
+      if (missingPath) {
+        throw re;
+      }
+ else {
+        throw new RuntimeException("Problem saving the PDF file.",re);
+      }
+    }
+catch (    FileNotFoundException fnfe) {
+      throw new RuntimeException("Can't save the PDF file to " + path,fnfe);
+    }
+catch (    DocumentException de) {
+      throw new RuntimeException("Error inside the PDF library.",de);
     }
     g2=content.createGraphicsShapes(width,height);
   }

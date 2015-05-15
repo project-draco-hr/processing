@@ -1,16 +1,21 @@
 {
-  String[] matches=PApplet.match(scrubComments(code),SIZE_REGEX);
-  if (matches != null) {
+  String[] contents=PApplet.match(scrubComments(code),SIZE_CONTENTS_REGEX);
+  if (contents != null) {
+    StringList args=breakCommas(contents[1]);
+    String width=args.get(0);
+    String height=args.get(1);
+    String renderer=(args.size() >= 3) ? args.get(2) : null;
+    String path=(args.size() >= 4) ? args.get(3) : null;
     boolean badSize=false;
-    if (matches[1].equals("screenWidth") || matches[1].equals("screenHeight") || matches[2].equals("screenWidth")|| matches[2].equals("screenHeight")) {
+    if (width.equals("screenWidth") || width.equals("screenHeight") || height.equals("screenHeight")|| height.equals("screenWidth")) {
       final String message="The screenWidth and screenHeight variables\n" + "are named displayWidth and displayHeight\n" + "in this release of Processing.";
       Base.showWarning("Time for a quick update",message,null);
       return null;
     }
-    if (!matches[1].equals("displayWidth") && !matches[1].equals("displayHeight") && PApplet.parseInt(matches[1],-1) == -1) {
+    if (!width.equals("displayWidth") && !width.equals("displayHeight") && PApplet.parseInt(width,-1) == -1) {
       badSize=true;
     }
-    if (!matches[2].equals("displayWidth") && !matches[2].equals("displayHeight") && PApplet.parseInt(matches[2],-1) == -1) {
+    if (!height.equals("displayWidth") && !height.equals("displayHeight") && PApplet.parseInt(height,-1) == -1) {
       badSize=true;
     }
     if (badSize && fussy) {
@@ -18,11 +23,19 @@
       Base.showWarning("Could not find sketch size",message,null);
       return null;
     }
-    matches[3]=matches[3].trim();
-    if (matches[3].length() == 0) {
-      matches[3]=null;
+    if (renderer != null) {
+      renderer=renderer.trim();
+      if (renderer.length() == 0) {
+        renderer=null;
+      }
     }
-    return matches;
+    if (path != null) {
+      path=path.trim();
+      if (path.length() == 0) {
+        path=null;
+      }
+    }
+    return new String[]{contents[0],width,height,renderer,path};
   }
-  return new String[]{null,null,null,null};
+  return new String[]{null,null,null,null,null};
 }
