@@ -32,12 +32,8 @@
     }
   }
   final float[] hasSurfacePixelScale=window.getCurrentSurfaceScale(new float[2]);
-  int x=nativeEvent.getX() - (int)offsetX;
-  int y=nativeEvent.getY() - (int)offsetY;
-  if (!graphics.is2X() && 1 < hasSurfacePixelScale[0]) {
-    x/=2;
-    y/=2;
-  }
+  int x=(int)((nativeEvent.getX() - (int)offsetX) / hasSurfacePixelScale[0]);
+  int y=(int)((nativeEvent.getY() - (int)offsetY) / hasSurfacePixelScale[1]);
   MouseEvent me=new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,x,y,peButton,peCount);
   sketch.postEvent(me);
 }
