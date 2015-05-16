@@ -1,12 +1,12 @@
 {
   String ext=getString(EXTENSIONS);
   if (-1 < ext.indexOf("texture_non_power_of_two")) {
-    fboWidth=pg.width;
-    fboHeight=pg.height;
+    fboWidth=pixel_scale * pg.width;
+    fboHeight=pixel_scale * pg.height;
   }
  else {
-    fboWidth=nextPowerOfTwo(pg.width);
-    fboHeight=nextPowerOfTwo(pg.height);
+    fboWidth=nextPowerOfTwo(pixel_scale * pg.width);
+    fboHeight=nextPowerOfTwo(pixel_scale * pg.height);
   }
   int maxs=maxSamples();
   if (-1 < ext.indexOf("_framebuffer_multisample") && 1 < maxs) {

@@ -23,17 +23,18 @@
  else {
     peCount=nativeEvent.getClickCount();
   }
+  window.getCurrentSurfaceScale(hasSurfacePixelScale);
+  int sx=(int)(nativeEvent.getX() / hasSurfacePixelScale[0]);
+  int sy=(int)(nativeEvent.getY() / hasSurfacePixelScale[1]);
   if (presentMode) {
-    if (peAction == KeyEvent.RELEASE && 20 < nativeEvent.getX() && nativeEvent.getX() < 20 + 100 && screenRect.height - 70 < nativeEvent.getY() && nativeEvent.getY() < screenRect.height - 20) {
-      System.err.println("clicked on exit button");
+    if (peAction == KeyEvent.RELEASE && 20 < sx && sx < 20 + 100 && screenRect.height - 70 < sy && sy < screenRect.height - 20) {
       animator.stop();
       PSurfaceJOGL.this.sketch.exit();
       window.destroy();
     }
   }
-  final float[] hasSurfacePixelScale=window.getCurrentSurfaceScale(new float[2]);
-  int x=(int)((nativeEvent.getX() - (int)offsetX) / hasSurfacePixelScale[0]);
-  int y=(int)((nativeEvent.getY() - (int)offsetY) / hasSurfacePixelScale[1]);
-  MouseEvent me=new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,x,y,peButton,peCount);
+  int mx=sx - (int)offsetX;
+  int my=sy - (int)offsetY;
+  MouseEvent me=new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,mx,my,peButton,peCount);
   sketch.postEvent(me);
 }

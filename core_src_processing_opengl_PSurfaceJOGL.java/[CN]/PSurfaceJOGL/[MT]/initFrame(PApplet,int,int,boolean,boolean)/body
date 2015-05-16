@@ -7,13 +7,8 @@
   ArrayList<MonitorDevice> monitors=new ArrayList<MonitorDevice>();
   for (int i=0; i < screen.getMonitorDevices().size(); i++) {
     MonitorDevice monitor=screen.getMonitorDevices().get(i);
-    System.out.println("Monitor " + monitor.getId() + " ************");
-    System.out.println(monitor.toString());
-    System.out.println(monitor.getViewportInWindowUnits());
-    System.out.println(monitor.getViewport());
     monitors.add(monitor);
   }
-  System.out.println("*******************************");
   if (deviceIndex >= 0) {
     if (deviceIndex < monitors.size()) {
       displayDevice=monitors.get(deviceIndex);
@@ -68,7 +63,6 @@
   caps.setBackgroundOpaque(true);
   caps.setOnscreen(true);
   pgl.capabilities=caps;
-  System.err.println("0. create window");
   window=GLWindow.create(screen,caps);
   sketchWidth=sketch.sketchWidth();
   sketchHeight=sketch.sketchHeight();
@@ -77,8 +71,6 @@
   }
   sketchX=displayDevice.getViewportInWindowUnits().getX();
   sketchY=displayDevice.getViewportInWindowUnits().getY();
-  int screenWidth=screen.getWidth();
-  int screenHeight=screen.getHeight();
   screenRect=spanDisplays ? new Rectangle(0,0,screen.getWidth(),screen.getHeight()) : new Rectangle(0,0,displayDevice.getViewportInWindowUnits().getWidth(),displayDevice.getViewportInWindowUnits().getHeight());
   sketch.displayWidth=screenRect.width;
   sketch.displayHeight=screenRect.height;
@@ -96,9 +88,6 @@
   sketch.width=sketch.sketchWidth();
   sketch.height=sketch.sketchHeight();
   graphics.setSize(sketch.width,sketch.height);
-  System.out.println("deviceIndex: " + deviceIndex);
-  System.out.println(displayDevice);
-  System.out.println("Screen res " + screenWidth + "x"+ screenHeight);
   if (fullScreen) {
     window.setPosition(sketchX,sketchY);
     PApplet.hideMenuBar();
@@ -126,7 +115,6 @@
   window.addWindowListener(winListener);
   DrawListener drawlistener=new DrawListener();
   window.addGLEventListener(drawlistener);
-  System.err.println("1. create animator");
   animator=new FPSAnimator(window,60);
   drawException=null;
   animator.setUncaughtExceptionHandler(new GLAnimatorControl.UncaughtExceptionHandler(){
@@ -166,5 +154,4 @@ synchronized (waitObject) {
   }
 );
   window.setVisible(true);
-  System.err.println("4. set visible");
 }
