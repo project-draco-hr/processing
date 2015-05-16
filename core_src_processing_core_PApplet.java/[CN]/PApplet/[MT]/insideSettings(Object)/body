@@ -1,0 +1,15 @@
+{
+  if (insideSettings) {
+    return true;
+  }
+  final String url="https://processing.org/reference/size_.html";
+  if (!external) {
+    StringList argList=new StringList(args);
+    System.err.println("When not using the PDE, size() can only be used inside settings().");
+    System.err.println("Remove the size() method from setup(), and add the following:");
+    System.err.println("public void settings() {");
+    System.err.println("  size(" + argList.join(", ") + ");");
+    System.err.println("}");
+  }
+  throw new IllegalStateException("size() cannot be used here, see " + url);
+}

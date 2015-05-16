@@ -67,26 +67,27 @@
     }
     argIndex++;
   }
-  final PApplet applet;
-  if (constructedApplet != null) {
-    applet=constructedApplet;
+  final PApplet sketch;
+  if (constructedSketch != null) {
+    sketch=constructedSketch;
   }
  else {
     try {
       Class<?> c=Thread.currentThread().getContextClassLoader().loadClass(name);
-      applet=(PApplet)c.newInstance();
+      sketch=(PApplet)c.newInstance();
     }
  catch (    Exception e) {
       throw new RuntimeException(e);
     }
   }
-  applet.sketchPath=folder;
-  fullScreen|=applet.sketchFullScreen();
-  fullScreen|=applet.sketchSpanScreens();
-  applet.args=PApplet.subset(args,argIndex + 1);
-  applet.external=external;
-  PSurface surface=applet.initSurface(backgroundColor,displayIndex,fullScreen,spanDisplays);
-  while (applet.defaultSize && !applet.finished) {
+  sketch.handleSettings();
+  sketch.sketchPath=folder;
+  fullScreen|=sketch.sketchFullScreen();
+  fullScreen|=sketch.sketchSpanScreens();
+  sketch.args=PApplet.subset(args,argIndex + 1);
+  sketch.external=external;
+  PSurface surface=sketch.initSurface(backgroundColor,displayIndex,fullScreen,spanDisplays);
+  while (sketch.defaultSize && !sketch.finished) {
     try {
       Thread.sleep(5);
     }

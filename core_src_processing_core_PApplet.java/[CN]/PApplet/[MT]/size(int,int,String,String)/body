@@ -1,15 +1,8 @@
 {
-  if (!renderer.equals(sketchRenderer())) {
-    if (external) {
-      final String msg=String.format("Something bad happened when calling " + "size(%d, %d, %s, %s)",w,h,renderer,path);
-      throw new RuntimeException(msg);
-    }
- else {
-      System.err.println("Because you're not running from the PDE, add this to your code:");
-      System.err.println("public String sketchRenderer() {");
-      System.err.println("  return \"" + renderer + "\";");
-      System.err.println("}");
-      throw new RuntimeException("The sketchRenderer() method is not implemented.");
-    }
+  if (insideSettings(width,height,renderer,path)) {
+    this.width=width;
+    this.height=height;
+    this.renderer=renderer;
+    this.outputPath=path;
   }
 }
