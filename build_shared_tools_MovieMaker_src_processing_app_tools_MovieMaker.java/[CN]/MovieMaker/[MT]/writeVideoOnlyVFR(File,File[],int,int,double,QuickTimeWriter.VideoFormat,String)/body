@@ -1,6 +1,6 @@
 {
   File tmpFile=streaming.equals("none") ? movieFile : new File(movieFile.getPath() + ".tmp");
-  ProgressMonitor p=new ProgressMonitor(MovieMaker.this,"Creating " + movieFile.getName(),"Creating output file...",0,imgFiles.length);
+  ProgressMonitor p=new ProgressMonitor(MovieMaker.this,Language.interpolate("movie_maker.progress.creating_file_name",movieFile.getName()),Language.text("movie_maker.progress.creating_output_file"),0,imgFiles.length);
   Graphics2D g=null;
   BufferedImage img=null;
   BufferedImage prevImg=null;
@@ -24,7 +24,7 @@
     int prevImgDuration=0;
     for (int i=0; i < imgFiles.length && !p.isCanceled(); i++) {
       File f=imgFiles[i];
-      p.setNote("Processing " + f.getName());
+      p.setNote(Language.interpolate("movie_maker.progress.processing",f.getName()));
       p.setProgress(i);
       if (false) {
         qtOut.writeSample(0,f,duration);
