@@ -1,0 +1,35 @@
+{
+  popMatrix();
+  if (output == null) {
+    if (path == null) {
+      throw new RuntimeException("setOutput() or setPath() must be " + "used with the SVG renderer");
+    }
+ else {
+      File file=parent.saveFile(parent.insertFrame(path));
+      try {
+        output=new FileOutputStream(file);
+      }
+ catch (      FileNotFoundException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+  boolean useCSS=true;
+  Writer writer=PApplet.createWriter(output);
+  try {
+    ((SVGGraphics2D)g2).stream(writer,useCSS);
+  }
+ catch (  SVGGraphics2DIOException e) {
+    e.printStackTrace();
+  }
+  try {
+    writer.flush();
+    writer.close();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+ finally {
+    output=null;
+  }
+}
