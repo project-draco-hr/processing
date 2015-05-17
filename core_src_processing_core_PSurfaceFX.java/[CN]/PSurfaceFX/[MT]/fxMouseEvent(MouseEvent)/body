@@ -1,0 +1,34 @@
+{
+  int peCount=nativeEvent.getClickCount();
+  int peAction=mouseMap.get(nativeEvent.getEventType());
+  int peModifiers=0;
+  if (nativeEvent.isShiftDown()) {
+    peModifiers|=processing.event.Event.SHIFT;
+  }
+  if (nativeEvent.isControlDown()) {
+    peModifiers|=processing.event.Event.CTRL;
+  }
+  if (nativeEvent.isMetaDown()) {
+    peModifiers|=processing.event.Event.META;
+  }
+  if (nativeEvent.isAltDown()) {
+    peModifiers|=processing.event.Event.ALT;
+  }
+  int peButton=0;
+  if (nativeEvent.isPrimaryButtonDown()) {
+    peButton=PConstants.LEFT;
+  }
+ else   if (nativeEvent.isSecondaryButtonDown()) {
+    peButton=PConstants.RIGHT;
+  }
+ else   if (nativeEvent.isMiddleButtonDown()) {
+    peButton=PConstants.CENTER;
+  }
+  if (PApplet.platform == PConstants.MACOSX && nativeEvent.isControlDown() && peButton == PConstants.LEFT) {
+    peButton=PConstants.RIGHT;
+  }
+  long when=System.currentTimeMillis();
+  int x=(int)nativeEvent.getX();
+  int y=(int)nativeEvent.getY();
+  sketch.postEvent(new processing.event.MouseEvent(nativeEvent,when,peAction,peModifiers,x,y,peButton,peCount));
+}
