@@ -31,14 +31,27 @@
       }
  else       if (param.equals(ARGS_DISPLAY)) {
         displayIndex=parseInt(value,-1);
+        if (displayIndex == -1) {
+          System.err.println("Could not parse " + value + " for "+ ARGS_DISPLAY);
+        }
       }
  else       if (param.equals(ARGS_BGCOLOR)) {
-        if (value.charAt(0) == '#')         value=value.substring(1);
-        backgroundColor=0xff000000 | Integer.parseInt(value,16);
+        if (value.charAt(0) == '#' && value.length() == 7) {
+          value=value.substring(1);
+          backgroundColor=0xff000000 | Integer.parseInt(value,16);
+        }
+ else {
+          System.err.println(ARGS_BGCOLOR + " should be a # followed by six digits");
+        }
       }
  else       if (param.equals(ARGS_STOP_COLOR)) {
-        if (value.charAt(0) == '#')         value=value.substring(1);
-        stopColor=0xff000000 | Integer.parseInt(value,16);
+        if (value.charAt(0) == '#' && value.length() == 7) {
+          value=value.substring(1);
+          stopColor=0xff000000 | Integer.parseInt(value,16);
+        }
+ else {
+          System.err.println(ARGS_STOP_COLOR + " should be a # followed by six digits");
+        }
       }
  else       if (param.equals(ARGS_SKETCH_FOLDER)) {
         folder=value;
@@ -82,8 +95,9 @@
   }
   sketch.handleSettings();
   sketch.sketchPath=folder;
-  fullScreen|=sketch.sketchFullScreen();
-  fullScreen|=sketch.sketchSpanScreens();
+  sketch.spanDisplays=spanDisplays;
+  fullScreen|=spanDisplays;
+  sketch.fullScreen|=fullScreen;
   if (args.length != argIndex + 1) {
     sketch.args=PApplet.subset(args,argIndex + 1);
   }
