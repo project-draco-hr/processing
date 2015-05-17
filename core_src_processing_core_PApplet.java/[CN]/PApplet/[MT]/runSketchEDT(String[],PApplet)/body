@@ -84,7 +84,9 @@
   sketch.sketchPath=folder;
   fullScreen|=sketch.sketchFullScreen();
   fullScreen|=sketch.sketchSpanScreens();
-  sketch.args=PApplet.subset(args,argIndex + 1);
+  if (args.length != argIndex + 1) {
+    sketch.args=PApplet.subset(args,argIndex + 1);
+  }
   sketch.external=external;
   PSurface surface=sketch.initSurface(backgroundColor,displayIndex,fullScreen,spanDisplays);
   while (sketch.defaultSize && !sketch.finished) {
