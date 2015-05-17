@@ -1,0 +1,22 @@
+{
+  VariableNode var=toVariableNode(o);
+  if (var != null) {
+    return getIcon(var.getType(),tree.isEnabled() ? 0 : 1);
+  }
+  if (o instanceof TreeNode) {
+    UIDefaults defaults=UIManager.getDefaults();
+    boolean isLeaf=model.isLeaf(o);
+    Icon icon;
+    if (isLeaf) {
+      icon=defaults.getIcon("Tree.leafIcon");
+    }
+ else {
+      icon=defaults.getIcon("Tree.closedIcon");
+    }
+    if (!tree.isEnabled()) {
+      return toGray(icon);
+    }
+    return icon;
+  }
+  return null;
+}

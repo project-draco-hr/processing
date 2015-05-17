@@ -1,0 +1,11 @@
+{
+  Component c=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+  setForeground(tree.isEnabled() ? Color.BLACK : Color.GRAY);
+  if (value instanceof VariableNode) {
+    VariableNode var=(VariableNode)value;
+    setItalic(var.getValue() == null || var.getType() == VariableNode.TYPE_OBJECT);
+    value=var.getStringValue();
+  }
+  setValue(value);
+  return c;
+}
