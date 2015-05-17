@@ -17,15 +17,12 @@ synchronized (compileCheckCU) {
   compilationUnitState=2;
   try {
     if (loadCompClass) {
-      classpath=new URL[classpathJars.size()];
-      int ii=0;
-      for (; ii < classpathJars.size(); ii++) {
-        classpath[ii]=classpathJars.get(ii);
-      }
+      classPath=new URL[classpathJars.size()];
+      classpathJars.toArray(classPath);
       compilationChecker=null;
       classLoader=null;
       System.gc();
-      classLoader=new URLClassLoader(classpath);
+      classLoader=new URLClassLoader(classPath);
       compilationChecker=new CompilationChecker();
       loadCompClass=false;
     }
@@ -37,9 +34,8 @@ synchronized (problemsList) {
       if (problems == null) {
         return;
       }
-      for (int i=0; i < problems.length; i++) {
-        IProblem problem=problems[i];
-        int a[]=calculateTabIndexAndLineNumber(problem.getSourceLineNumber() - 1);
+      for (      IProblem problem : problems) {
+        int[] a=calculateTabIndexAndLineNumber(problem.getSourceLineNumber() - 1);
         Problem p=new Problem(problem,a[0],a[1]);
         if (problem.isError()) {
           p.setType(Problem.ERROR);
@@ -61,11 +57,12 @@ synchronized (problemsList) {
     pauseThread();
   }
 catch (  NoClassDefFoundError e) {
-    System.err.println(e + " compileCheck() problem. Somebody tried to mess with Experimental Mode files.");
+    e.printStackTrace();
     pauseThread();
   }
 catch (  OutOfMemoryError e) {
-    System.err.println("Processing has used up its maximum alloted memory. Please close some Processing " + " windows and then reopen this sketch.");
+    System.err.println("Out of memory while checking for errors.");
+    System.err.println("Close some sketches and then re-open this sketch.");
     pauseThread();
   }
 }
