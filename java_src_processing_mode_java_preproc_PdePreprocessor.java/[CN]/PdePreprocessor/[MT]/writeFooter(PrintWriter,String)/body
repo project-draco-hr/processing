@@ -5,21 +5,8 @@
     out.println();
   }
   if ((mode == Mode.STATIC) || (mode == Mode.ACTIVE)) {
-    if (sketchWidth != null && !hasMethod("sketchWidth")) {
-      if (PApplet.parseInt(sketchWidth,-1) != -1 || sketchWidth.equals("displayWidth")) {
-        out.println(indent + "public int sketchWidth() { return " + sketchWidth+ "; }");
-      }
-    }
-    if (sketchHeight != null && !hasMethod("sketchHeight")) {
-      if (PApplet.parseInt(sketchHeight,-1) != -1 || sketchHeight.equals("displayHeight")) {
-        out.println(indent + "public int sketchHeight() { return " + sketchHeight+ "; }");
-      }
-    }
-    if (sketchRenderer != null && !hasMethod("sketchRenderer")) {
-      out.println(indent + "public String sketchRenderer() { return " + sketchRenderer+ "; }");
-    }
-    if (sketchOutputPath != null && !hasMethod("sketchOutputPath")) {
-      out.println(indent + "public String sketchOutputPath() { return " + sketchOutputPath+ "; }");
+    if (!hasMethod("settings") && sizeStatement != null) {
+      out.println(indent + "public void settings() { " + sizeStatement+ " }");
     }
     if (!hasMethod("main")) {
       out.println(indent + "static public void main(String[] passedArgs) {");

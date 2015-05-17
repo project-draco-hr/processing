@@ -22,7 +22,14 @@
       bigCount+=sc.getLineCount();
     }
   }
-  preprocessor.initSketchSize(sketch.getMainProgram(),sizeWarning);
+  String[] sizeParts=preprocessor.initSketchSize(sketch.getMainProgram(),sizeWarning);
+  if (sizeParts != null) {
+    String sizeStatement=sizeParts[0];
+    if (sizeStatement != null) {
+      int index=bigCode.indexOf(sizeStatement);
+      bigCode.delete(index,index + sizeStatement.length());
+    }
+  }
   PreprocessorResult result;
   try {
     File outputFolder=(packageName == null) ? srcFolder : new File(srcFolder,packageName.replace('.','/'));
