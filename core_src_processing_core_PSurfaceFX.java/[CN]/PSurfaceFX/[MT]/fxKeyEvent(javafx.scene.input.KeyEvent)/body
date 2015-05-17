@@ -1,6 +1,6 @@
 {
   int action=0;
-  EventType<? extends KeyEvent> et=nativeEvent.getEventType();
+  EventType<? extends KeyEvent> et=fxEvent.getEventType();
   if (et == KeyEvent.KEY_PRESSED) {
     action=processing.event.KeyEvent.PRESS;
   }
@@ -11,21 +11,21 @@
     action=processing.event.KeyEvent.TYPE;
   }
   int modifiers=0;
-  if (nativeEvent.isShiftDown()) {
+  if (fxEvent.isShiftDown()) {
     modifiers|=processing.event.Event.SHIFT;
   }
-  if (nativeEvent.isControlDown()) {
+  if (fxEvent.isControlDown()) {
     modifiers|=processing.event.Event.CTRL;
   }
-  if (nativeEvent.isMetaDown()) {
+  if (fxEvent.isMetaDown()) {
     modifiers|=processing.event.Event.META;
   }
-  if (nativeEvent.isAltDown()) {
+  if (fxEvent.isAltDown()) {
     modifiers|=processing.event.Event.ALT;
   }
   long when=System.currentTimeMillis();
-  KeyCode kc=nativeEvent.getCode();
+  KeyCode kc=fxEvent.getCode();
   char key=kc.impl_getChar().charAt(0);
   int keyCode=kc.impl_getCode();
-  sketch.postEvent(new processing.event.KeyEvent(nativeEvent,when,action,modifiers,key,keyCode));
+  sketch.postEvent(new processing.event.KeyEvent(fxEvent,when,action,modifiers,key,keyCode));
 }

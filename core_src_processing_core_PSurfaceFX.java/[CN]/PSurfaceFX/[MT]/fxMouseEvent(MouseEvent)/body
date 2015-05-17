@@ -1,34 +1,34 @@
 {
-  int peCount=nativeEvent.getClickCount();
-  int peAction=mouseMap.get(nativeEvent.getEventType());
-  int peModifiers=0;
-  if (nativeEvent.isShiftDown()) {
-    peModifiers|=processing.event.Event.SHIFT;
+  int count=fxEvent.getClickCount();
+  int action=mouseMap.get(fxEvent.getEventType());
+  int modifiers=0;
+  if (fxEvent.isShiftDown()) {
+    modifiers|=processing.event.Event.SHIFT;
   }
-  if (nativeEvent.isControlDown()) {
-    peModifiers|=processing.event.Event.CTRL;
+  if (fxEvent.isControlDown()) {
+    modifiers|=processing.event.Event.CTRL;
   }
-  if (nativeEvent.isMetaDown()) {
-    peModifiers|=processing.event.Event.META;
+  if (fxEvent.isMetaDown()) {
+    modifiers|=processing.event.Event.META;
   }
-  if (nativeEvent.isAltDown()) {
-    peModifiers|=processing.event.Event.ALT;
+  if (fxEvent.isAltDown()) {
+    modifiers|=processing.event.Event.ALT;
   }
-  int peButton=0;
-  if (nativeEvent.isPrimaryButtonDown()) {
-    peButton=PConstants.LEFT;
+  int button=0;
+  if (fxEvent.isPrimaryButtonDown()) {
+    button=PConstants.LEFT;
   }
- else   if (nativeEvent.isSecondaryButtonDown()) {
-    peButton=PConstants.RIGHT;
+ else   if (fxEvent.isSecondaryButtonDown()) {
+    button=PConstants.RIGHT;
   }
- else   if (nativeEvent.isMiddleButtonDown()) {
-    peButton=PConstants.CENTER;
+ else   if (fxEvent.isMiddleButtonDown()) {
+    button=PConstants.CENTER;
   }
-  if (PApplet.platform == PConstants.MACOSX && nativeEvent.isControlDown() && peButton == PConstants.LEFT) {
-    peButton=PConstants.RIGHT;
+  if (PApplet.platform == PConstants.MACOSX && fxEvent.isControlDown() && button == PConstants.LEFT) {
+    button=PConstants.RIGHT;
   }
   long when=System.currentTimeMillis();
-  int x=(int)nativeEvent.getX();
-  int y=(int)nativeEvent.getY();
-  sketch.postEvent(new processing.event.MouseEvent(nativeEvent,when,peAction,peModifiers,x,y,peButton,peCount));
+  int x=(int)fxEvent.getX();
+  int y=(int)fxEvent.getY();
+  sketch.postEvent(new processing.event.MouseEvent(fxEvent,when,action,modifiers,x,y,button,count));
 }
