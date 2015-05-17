@@ -1,31 +1,31 @@
 {
-  int peAction=0;
+  int action=0;
   EventType<? extends KeyEvent> et=nativeEvent.getEventType();
   if (et == KeyEvent.KEY_PRESSED) {
-    peAction=processing.event.KeyEvent.PRESS;
+    action=processing.event.KeyEvent.PRESS;
   }
  else   if (et == KeyEvent.KEY_RELEASED) {
-    peAction=processing.event.KeyEvent.RELEASE;
+    action=processing.event.KeyEvent.RELEASE;
   }
  else   if (et == KeyEvent.KEY_TYPED) {
-    peAction=processing.event.KeyEvent.TYPE;
+    action=processing.event.KeyEvent.TYPE;
   }
-  int peModifiers=0;
+  int modifiers=0;
   if (nativeEvent.isShiftDown()) {
-    peModifiers|=processing.event.Event.SHIFT;
+    modifiers|=processing.event.Event.SHIFT;
   }
   if (nativeEvent.isControlDown()) {
-    peModifiers|=processing.event.Event.CTRL;
+    modifiers|=processing.event.Event.CTRL;
   }
   if (nativeEvent.isMetaDown()) {
-    peModifiers|=processing.event.Event.META;
+    modifiers|=processing.event.Event.META;
   }
   if (nativeEvent.isAltDown()) {
-    peModifiers|=processing.event.Event.ALT;
+    modifiers|=processing.event.Event.ALT;
   }
   long when=System.currentTimeMillis();
   KeyCode kc=nativeEvent.getCode();
   char key=kc.impl_getChar().charAt(0);
   int keyCode=kc.impl_getCode();
-  sketch.postEvent(new processing.event.KeyEvent(nativeEvent,when,peAction,peModifiers,key,keyCode));
+  sketch.postEvent(new processing.event.KeyEvent(nativeEvent,when,action,modifiers,key,keyCode));
 }
