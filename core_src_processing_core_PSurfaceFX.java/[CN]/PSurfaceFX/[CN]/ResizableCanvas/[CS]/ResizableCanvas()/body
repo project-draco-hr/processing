@@ -13,4 +13,46 @@
     }
   }
 );
+  EventHandler<MouseEvent> mouseHandler=new EventHandler<MouseEvent>(){
+    public void handle(    MouseEvent e){
+      fxMouseEvent(e);
+    }
+  }
+;
+  setOnMousePressed(mouseHandler);
+  setOnMouseReleased(mouseHandler);
+  setOnMouseClicked(mouseHandler);
+  setOnMouseEntered(mouseHandler);
+  setOnMouseExited(mouseHandler);
+  setOnMouseDragged(mouseHandler);
+  setOnMouseMoved(mouseHandler);
+  setOnScroll(new EventHandler<ScrollEvent>(){
+    public void handle(    ScrollEvent e){
+      fxScrollEvent(e);
+    }
+  }
+);
+  EventHandler<KeyEvent> keyHandler=new EventHandler<KeyEvent>(){
+    public void handle(    KeyEvent e){
+      fxKeyEvent(e);
+    }
+  }
+;
+  setOnKeyPressed(keyHandler);
+  setOnKeyReleased(keyHandler);
+  setOnKeyTyped(keyHandler);
+  setFocusTraversable(false);
+  focusedProperty().addListener(new ChangeListener<Boolean>(){
+    public void changed(    ObservableValue<? extends Boolean> value,    Boolean oldValue,    Boolean newValue){
+      if (newValue.booleanValue()) {
+        sketch.focused=true;
+        sketch.focusGained();
+      }
+ else {
+        sketch.focused=false;
+        sketch.focusLost();
+      }
+    }
+  }
+);
 }
