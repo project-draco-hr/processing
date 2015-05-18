@@ -134,11 +134,17 @@ synchronized (waitObject) {
  catch (        InterruptedException e) {
           e.printStackTrace();
         }
-        if (drawException instanceof RuntimeException) {
-          throw (RuntimeException)drawException.getCause();
-        }
+        if (drawException != null) {
+          Throwable cause=drawException.getCause();
+          if (cause instanceof ThreadDeath) {
+            System.out.println("caught ThreadDeath");
+          }
+ else           if (cause instanceof RuntimeException) {
+            throw (RuntimeException)cause;
+          }
  else {
-          throw new RuntimeException(drawException.getCause());
+            throw new RuntimeException(cause);
+          }
         }
       }
     }
