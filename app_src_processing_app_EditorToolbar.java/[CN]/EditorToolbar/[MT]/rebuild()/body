@@ -1,0 +1,23 @@
+{
+  removeAll();
+  List<EditorButton> buttons=createButtons();
+  box=Box.createHorizontalBox();
+  box.add(Box.createHorizontalStrut(Editor.LEFT_GUTTER));
+  for (  EditorButton button : buttons) {
+    box.add(button);
+    box.add(Box.createHorizontalStrut(GAP));
+  }
+  label=new JLabel();
+  label.setFont(mode.getFont("toolbar.rollover.font"));
+  label.setForeground(mode.getColor("toolbar.rollover.color"));
+  box.add(label);
+  runButton.setRolloverLabel(label);
+  stopButton.setRolloverLabel(label);
+  box.add(Box.createHorizontalGlue());
+  addModeButtons(box);
+  ModeSelector ms=new ModeSelector();
+  box.add(ms);
+  box.add(Box.createHorizontalStrut(Editor.RIGHT_GUTTER));
+  setLayout(new BorderLayout());
+  add(box,BorderLayout.CENTER);
+}

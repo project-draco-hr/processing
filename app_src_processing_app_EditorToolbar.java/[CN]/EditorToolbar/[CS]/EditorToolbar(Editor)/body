@@ -3,35 +3,5 @@
   base=editor.getBase();
   mode=editor.getMode();
   gradient=mode.getGradient("toolbar",400,HIGH);
-  runButton=new EditorButton(mode,"/lib/toolbar/run",Language.text("toolbar.run"),Language.text("toolbar.present")){
-    @Override public void actionPerformed(    ActionEvent e){
-      handleRun(e.getModifiers());
-    }
-  }
-;
-  stopButton=new EditorButton(mode,"/lib/toolbar/stop",Language.text("toolbar.stop")){
-    @Override public void actionPerformed(    ActionEvent e){
-      handleStop();
-    }
-  }
-;
-  box=Box.createHorizontalBox();
-  box.add(Box.createHorizontalStrut(Editor.LEFT_GUTTER));
-  box.add(runButton);
-  box.add(Box.createHorizontalStrut(GAP));
-  box.add(stopButton);
-  box.add(Box.createHorizontalStrut(LABEL_GAP));
-  label=new JLabel();
-  label.setFont(mode.getFont("toolbar.rollover.font"));
-  label.setForeground(mode.getColor("toolbar.rollover.color"));
-  box.add(label);
-  runButton.setRolloverLabel(label);
-  stopButton.setRolloverLabel(label);
-  box.add(Box.createHorizontalGlue());
-  addModeButtons(box);
-  ModeSelector ms=new ModeSelector();
-  box.add(ms);
-  box.add(Box.createHorizontalStrut(Editor.RIGHT_GUTTER));
-  setLayout(new BorderLayout());
-  add(box,BorderLayout.CENTER);
+  rebuild();
 }

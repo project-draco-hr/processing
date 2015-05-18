@@ -2,7 +2,6 @@
   debugMenu=new JMenu(Language.text("menu.debug"));
   JMenuItem item;
   enableDebug=Toolkit.newJCheckBoxMenuItem(Language.text("menu.debug.enable"),KeyEvent.VK_D);
-  enableDebug.setSelected(false);
   enableDebug.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       updateDebugToggle();
@@ -14,8 +13,7 @@
   item=Toolkit.newJMenuItem(Language.text("menu.debug.continue"),KeyEvent.VK_U);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Continue' menu item");
-      debugger.continueDebug();
+      handleContinue();
     }
   }
 );
@@ -23,8 +21,7 @@
   item=Toolkit.newJMenuItem(Language.text("menu.debug.step"),KeyEvent.VK_J);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Step Over' menu item");
-      debugger.stepOver();
+      handleStep(0);
     }
   }
 );
@@ -32,8 +29,7 @@
   item=Toolkit.newJMenuItemShift(Language.text("menu.debug.step_into"),KeyEvent.VK_J);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Step Into' menu item");
-      debugger.stepInto();
+      handleStep(KeyEvent.SHIFT_DOWN_MASK);
     }
   }
 );
@@ -41,8 +37,7 @@
   item=Toolkit.newJMenuItemAlt(Language.text("menu.debug.step_out"),KeyEvent.VK_J);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Step Out' menu item");
-      debugger.stepOut();
+      handleStep(KeyEvent.ALT_DOWN_MASK);
     }
   }
 );
