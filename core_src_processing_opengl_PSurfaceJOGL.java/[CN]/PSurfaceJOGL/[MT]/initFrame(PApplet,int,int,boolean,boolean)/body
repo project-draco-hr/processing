@@ -136,10 +136,13 @@ synchronized (waitObject) {
         }
         if (drawException != null) {
           Throwable cause=drawException.getCause();
-          if (cause instanceof RuntimeException) {
+          if (cause instanceof ThreadDeath) {
+            System.out.println("caught ThreadDeath");
+          }
+ else           if (cause instanceof RuntimeException) {
             throw (RuntimeException)cause;
           }
- else           if (!(cause instanceof java.lang.ThreadDeath)) {
+ else {
             throw new RuntimeException(cause);
           }
         }
