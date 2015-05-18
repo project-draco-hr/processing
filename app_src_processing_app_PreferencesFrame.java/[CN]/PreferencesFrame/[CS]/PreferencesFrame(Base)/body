@@ -1,7 +1,7 @@
 {
   this.base=base;
-  dialog=new JFrame(Language.text("preferences"));
-  Container pain=dialog.getContentPane();
+  frame=new JFrame(Language.text("preferences"));
+  Container pain=frame.getContentPane();
   layout=new GroupLayout(pain);
   layout.setAutoCreateGaps(true);
   layout.setAutoCreateContainerGaps(true);
@@ -16,7 +16,7 @@
   browseButton.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       File dflt=new File(sketchbookLocationField.getText());
-      PApplet.selectFolder(Language.text("preferences.sketchbook_location.popup"),"sketchbookCallback",dflt,PreferencesFrame.this,dialog);
+      PApplet.selectFolder(Language.text("preferences.sketchbook_location.popup"),"sketchbookCallback",dflt,PreferencesFrame.this,frame);
     }
   }
 );
@@ -96,7 +96,7 @@
     }
   }
 );
-  selector=new ColorChooser(dialog,false,Preferences.getColor("run.present.bgcolor"),Language.text("prompt.ok"),new ActionListener(){
+  selector=new ColorChooser(frame,false,Preferences.getColor("run.present.bgcolor"),Language.text("prompt.ok"),new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       String colorValue=selector.getHexColor();
       presentColorHex.setText(colorValue.substring(1));
@@ -107,10 +107,10 @@
 );
   presentColor.addMouseListener(new MouseAdapter(){
     @Override public void mouseExited(    MouseEvent e){
-      dialog.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+      frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
     @Override public void mouseEntered(    MouseEvent e){
-      dialog.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+      frame.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
     @Override public void mouseClicked(    MouseEvent e){
       selector.show();
@@ -180,7 +180,7 @@
   if (Base.isWindows()) {
     autoAssociateBox.setVisible(true);
   }
-  dialog.addWindowListener(new WindowAdapter(){
+  frame.addWindowListener(new WindowAdapter(){
     public void windowClosing(    WindowEvent e){
       disposeFrame();
     }
@@ -192,11 +192,11 @@
     }
   }
 ;
-  Toolkit.registerWindowCloseKeys(dialog.getRootPane(),disposer);
-  Toolkit.setIcon(dialog);
-  dialog.setResizable(false);
-  dialog.pack();
-  dialog.setLocationRelativeTo(null);
+  Toolkit.registerWindowCloseKeys(frame.getRootPane(),disposer);
+  Toolkit.setIcon(frame);
+  frame.setResizable(false);
+  frame.pack();
+  frame.setLocationRelativeTo(null);
   fontSizeField.setEditable(true);
   consoleFontSizeField.setEditable(true);
   pain.addKeyListener(new KeyAdapter(){
