@@ -1,14 +1,14 @@
 {
   debugMenu=new JMenu(Language.text("menu.debug"));
   JMenuItem item;
-  enableDebug=Toolkit.newJCheckBoxMenuItem(Language.text("menu.debug.enable"),KeyEvent.VK_D);
-  enableDebug.addActionListener(new ActionListener(){
+  debugItem=Toolkit.newJMenuItem(Language.text("menu.debug.enable"),'D');
+  debugItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      updateDebugToggle();
+      toggleDebug();
     }
   }
 );
-  debugMenu.add(enableDebug);
+  debugMenu.add(debugItem);
   debugMenu.addSeparator();
   item=Toolkit.newJMenuItem(Language.text("menu.debug.continue"),KeyEvent.VK_U);
   item.addActionListener(new ActionListener(){
@@ -57,14 +57,14 @@
 );
   debugMenu.add(item);
   item.setEnabled(false);
-  item=Toolkit.newJMenuItem(Language.text("menu.debug.variable_inspector"),'Y');
-  item.addActionListener(new ActionListener(){
+  inspectorItem=Toolkit.newJMenuItem(Language.text("menu.debug.show_variables"),'Y');
+  inspectorItem.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       toggleVariableInspector();
     }
   }
 );
-  debugMenu.add(item);
-  item.setEnabled(false);
+  debugMenu.add(inspectorItem);
+  inspectorItem.setEnabled(false);
   return debugMenu;
 }
