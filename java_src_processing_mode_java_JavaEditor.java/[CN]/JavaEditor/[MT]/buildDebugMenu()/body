@@ -18,6 +18,7 @@
   }
 );
   debugMenu.add(item);
+  item.setEnabled(false);
   item=Toolkit.newJMenuItem(Language.text("menu.debug.step"),KeyEvent.VK_J);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -26,6 +27,7 @@
   }
 );
   debugMenu.add(item);
+  item.setEnabled(false);
   item=Toolkit.newJMenuItemShift(Language.text("menu.debug.step_into"),KeyEvent.VK_J);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -34,6 +36,7 @@
   }
 );
   debugMenu.add(item);
+  item.setEnabled(false);
   item=Toolkit.newJMenuItemAlt(Language.text("menu.debug.step_out"),KeyEvent.VK_J);
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -42,8 +45,9 @@
   }
 );
   debugMenu.add(item);
+  item.setEnabled(false);
   debugMenu.addSeparator();
-  item=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_breakpoint"),KeyEvent.VK_B);
+  item=Toolkit.newJMenuItem(Language.text("menu.debug.toggle_breakpoint"),'B');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
       Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Toggle Breakpoint' menu item");
@@ -52,79 +56,15 @@
   }
 );
   debugMenu.add(item);
-  item=new JMenuItem(Language.text("menu.debug.list_breakpoints"));
+  item.setEnabled(false);
+  item=Toolkit.newJMenuItem(Language.text("menu.debug.variable_inspector"),'Y');
   item.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'List Breakpoints' menu item");
-      debugger.listBreakpoints();
+      toggleVariableInspector();
     }
   }
 );
   debugMenu.add(item);
-  debugMenu.addSeparator();
-  item=new JMenuItem(Language.text("menu.debug.print_stack_trace"));
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Stack Trace' menu item");
-      debugger.printStackTrace();
-    }
-  }
-);
-  debugMenu.add(item);
-  item=new JMenuItem(Language.text("menu.debug.print_locals"));
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Locals' menu item");
-      debugger.printLocals();
-    }
-  }
-);
-  debugMenu.add(item);
-  item=new JMenuItem(Language.text("menu.debug.print_fields"));
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print This' menu item");
-      debugger.printThis();
-    }
-  }
-);
-  debugMenu.add(item);
-  item=new JMenuItem(Language.text("menu.debug.print_source_location"));
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Source' menu item");
-      debugger.printSource();
-    }
-  }
-);
-  debugMenu.add(item);
-  item=new JMenuItem(Language.text("menu.debug.print_threads"));
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Logger.getLogger(JavaEditor.class.getName()).log(Level.INFO,"Invoked 'Print Threads' menu item");
-      debugger.printThreads();
-    }
-  }
-);
-  debugMenu.add(item);
-  debugMenu.addSeparator();
-  item=Toolkit.newJMenuItem(Language.text("menu.debug.show_sketch_outline"),KeyEvent.VK_L);
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Base.log("Show Sketch Outline:");
-      errorCheckerService.getASTGenerator().showSketchOutline();
-    }
-  }
-);
-  debugMenu.add(item);
-  item=Toolkit.newJMenuItem(Language.text("menu.debug.show_tabs_list"),KeyEvent.VK_Y);
-  item.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      Base.log("Show Tab Outline:");
-      errorCheckerService.getASTGenerator().showTabOutline();
-    }
-  }
-);
-  debugMenu.add(item);
+  item.setEnabled(false);
   return debugMenu;
 }

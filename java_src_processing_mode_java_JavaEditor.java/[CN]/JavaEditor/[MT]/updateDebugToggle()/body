@@ -1,6 +1,9 @@
 {
   final boolean enabled=isDebuggerEnabled();
   rebuildToolbar();
+  if (!enabled && inspector.isVisible()) {
+    toggleVariableInspector();
+  }
   for (  Component item : debugMenu.getMenuComponents()) {
     if (item instanceof JMenuItem && item != enableDebug) {
       ((JMenuItem)item).setEnabled(enabled);
