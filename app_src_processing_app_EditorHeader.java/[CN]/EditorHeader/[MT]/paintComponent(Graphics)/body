@@ -1,5 +1,4 @@
 {
-  setOpaque(false);
   if (screen == null)   return;
   Sketch sketch=editor.getSketch();
   if (sketch == null)   return;
@@ -49,7 +48,7 @@
     tab.text=hide ? code.getPrettyName() : code.getFileName();
     tab.textWidth=(int)font.getStringBounds(tab.text,g2.getFontRenderContext()).getWidth();
   }
-  if (!placeTabs(MARGIN_WIDTH,tabMax,null)) {
+  if (!placeTabs(Editor.LEFT_GUTTER,tabMax,null)) {
     int index=0;
     for (int i=tabs.length - 1; i > 0; --i) {
       visitOrder[index++]=tabs[i];
@@ -57,12 +56,12 @@
     Arrays.sort(visitOrder);
     for (int i=0; i < visitOrder.length; i++) {
       tabs[visitOrder[i].index].textVisible=false;
-      if (placeTabs(MARGIN_WIDTH,tabMax,null)) {
+      if (placeTabs(Editor.LEFT_GUTTER,tabMax,null)) {
         break;
       }
     }
   }
-  if (!placeTabs(MARGIN_WIDTH,tabMax - ARROW_TAB_WIDTH,g2)) {
+  if (!placeTabs(Editor.LEFT_GUTTER,tabMax - ARROW_TAB_WIDTH,g2)) {
     menuRight=tabMax;
     menuLeft=menuRight - ARROW_TAB_WIDTH;
   }
@@ -71,7 +70,9 @@
     menuRight=menuLeft + ARROW_TAB_WIDTH;
   }
   g.setColor(tabColor[UNSELECTED]);
-  drawTab(g,menuLeft,menuRight);
+  drawTab(g,menuLeft,menuRight,false,true);
+  g.setColor(tabColor[SELECTED]);
+  g.fillRect(Editor.LEFT_GUTTER,TAB_BOTTOM,editor.getWidth(),2);
   g.setColor(arrowColor);
   GeneralPath trianglePath=new GeneralPath();
   float x1=menuLeft + (ARROW_TAB_WIDTH - ARROW_WIDTH) / 2f;

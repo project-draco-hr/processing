@@ -1,8 +1,6 @@
 {
   Sketch sketch=editor.getSketch();
   int x=left;
-  final int bottom=getHeight();
-  final int top=bottom - TAB_HEIGHT;
   for (int i=0; i < sketch.getCodeCount(); i++) {
     SketchCode code=sketch.getCode(i);
     Tab tab=tabs[i];
@@ -14,17 +12,17 @@
     tab.right=x;
     if (g != null && tab.right < right) {
       g.setColor(tabColor[state]);
-      drawTab(g,tab.left,tab.right);
+      drawTab(g,tab.left,tab.right,i == 0,false);
       if (tab.textVisible) {
         int textLeft=tab.left + ((tab.right - tab.left) - tab.textWidth) / 2;
         g.setColor(textColor[state]);
-        int tabHeight=TAB_HEIGHT;
-        int baseline=top + (tabHeight + fontAscent) / 2;
+        int tabHeight=TAB_BOTTOM - TAB_TOP;
+        int baseline=TAB_TOP + (tabHeight + fontAscent) / 2;
         g.drawString(tab.text,textLeft,baseline);
       }
       if (code.isModified()) {
         g.setColor(modifiedColor);
-        g.drawLine(tab.left,top,tab.right,top);
+        g.drawLine(tab.left,TAB_TOP,tab.right,TAB_TOP);
       }
     }
     x+=TAB_BETWEEN;
