@@ -1,0 +1,21 @@
+{
+  errorTableScrollPane=new JScrollPane();
+  errorTable=new XQErrorTable(errorCheckerService);
+  errorTableScrollPane.setBorder(new EtchedBorder());
+  errorTableScrollPane.setViewportView(errorTable);
+  JPanel lineStatusPanel=new JPanel();
+  lineStatusPanel.setLayout(new BorderLayout());
+  btnShowConsole=new XQConsoleToggle(this,Language.text("editor.footer.console"),mode.getInteger("linestatus.height"));
+  btnShowErrors=new XQConsoleToggle(this,Language.text("editor.footer.errors"),mode.getInteger("linestatus.height"));
+  btnShowConsole.addMouseListener(btnShowConsole);
+  btnShowErrors.addMouseListener(btnShowErrors);
+  JPanel toggleButtonPanel=new JPanel(new BorderLayout());
+  toggleButtonPanel.add(btnShowConsole,BorderLayout.EAST);
+  toggleButtonPanel.add(btnShowErrors,BorderLayout.WEST);
+  lineStatusPanel.add(toggleButtonPanel,BorderLayout.EAST);
+  lineStatusPanel.repaint();
+  consoleProblemsPane=new JPanel(new CardLayout());
+  consoleProblemsPane.add(errorTableScrollPane,Language.text("editor.footer.errors"));
+  consoleProblemsPane.add(super.createConsolePanel(),Language.text("editor.footer.console"));
+  return consoleProblemsPane;
+}
