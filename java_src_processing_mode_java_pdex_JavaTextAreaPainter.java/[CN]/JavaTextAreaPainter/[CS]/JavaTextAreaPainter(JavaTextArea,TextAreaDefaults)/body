@@ -1,5 +1,6 @@
 {
   super(textArea,defaults);
+  new Exception().printStackTrace(System.out);
   addMouseListener(new MouseAdapter(){
     public void mouseClicked(    MouseEvent evt){
       if (!getEditor().hasJavaTabs()) {
@@ -8,6 +9,23 @@
             handleCtrlClick(evt);
           }
         }
+      }
+    }
+  }
+);
+  addMouseListener(new MouseAdapter(){
+    long lastTime;
+    public void mousePressed(    MouseEvent event){
+      long thisTime=event.getWhen();
+      if (thisTime - lastTime > 100) {
+        if (event.getX() < Editor.LEFT_GUTTER) {
+          int offset=getTextArea().xyToOffset(event.getX(),event.getY());
+          if (offset >= 0) {
+            int lineIndex=getTextArea().getLineOfOffset(offset);
+            getEditor().toggleBreakpoint(lineIndex);
+          }
+        }
+        lastTime=thisTime;
       }
     }
   }
