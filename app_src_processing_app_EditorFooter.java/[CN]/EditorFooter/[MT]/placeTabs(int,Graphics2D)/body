@@ -1,0 +1,20 @@
+{
+  int x=left;
+  for (  Tab tab : tabs) {
+    int state=tab.isCurrent() ? SELECTED : UNSELECTED;
+    tab.left=x;
+    x+=TEXT_MARGIN;
+    x+=tab.textWidth + TEXT_MARGIN;
+    tab.right=x;
+    if (g != null) {
+      g.setColor(tabColor[state]);
+      drawTab(g,tab.left,tab.right,tab.isFirst(),tab.isLast());
+      int textLeft=tab.left + ((tab.right - tab.left) - tab.textWidth) / 2;
+      g.setColor(textColor[state]);
+      int tabHeight=TAB_BOTTOM - TAB_TOP;
+      int baseline=TAB_TOP + (tabHeight + fontAscent) / 2;
+      g.drawString(tab.text,textLeft,baseline);
+    }
+    x+=TAB_BETWEEN;
+  }
+}

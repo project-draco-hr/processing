@@ -1,17 +1,9 @@
 {
+  super(BoxLayout.Y_AXIS);
   this.editor=eddie;
-  gradient=editor.getMode().getGradient("header",400,HIGH);
   updateMode();
-  addMouseListener(new MouseAdapter(){
-    public void mousePressed(    MouseEvent e){
-      int x=e.getX();
-      int y=e.getY();
-      for (      Tab tab : tabs) {
-        if (tab.contains(x)) {
-          editor.setFooterPanel(tab.index);
-        }
-      }
-    }
-  }
-);
+  cardLayout=new CardLayout();
+  cardPanel=new JPanel(cardLayout);
+  add(cardPanel);
+  add(new Controller());
 }

@@ -1,0 +1,41 @@
+{
+  if (screen == null)   return;
+  Sketch sketch=editor.getSketch();
+  if (sketch == null)   return;
+  Dimension size=getSize();
+  if ((size.width != sizeW) || (size.height != sizeH)) {
+    if ((size.width > imageW) || (size.height > imageH)) {
+      offscreen=null;
+    }
+ else {
+      sizeW=size.width;
+      sizeH=size.height;
+    }
+  }
+  if (offscreen == null) {
+    sizeW=size.width;
+    sizeH=size.height;
+    imageW=sizeW;
+    imageH=sizeH;
+    if (Toolkit.highResDisplay()) {
+      offscreen=createImage(imageW * 2,imageH * 2);
+    }
+ else {
+      offscreen=createImage(imageW,imageH);
+    }
+  }
+  Graphics g=offscreen.getGraphics();
+  g.setFont(font);
+  if (fontAscent == 0) {
+    fontAscent=(int)Toolkit.getAscent(g);
+  }
+  Graphics2D g2=Toolkit.prepareGraphics(g);
+  g.drawImage(gradient,0,0,imageW,imageH,this);
+  for (  Tab tab : tabs) {
+    tab.textWidth=(int)font.getStringBounds(tab.text,g2.getFontRenderContext()).getWidth();
+  }
+  placeTabs(Editor.LEFT_GUTTER,g2);
+  g.setColor(tabColor[SELECTED]);
+  g.fillRect(Editor.LEFT_GUTTER,TAB_BOTTOM,editor.getTextArea().getWidth() - Editor.LEFT_GUTTER,2);
+  screen.drawImage(offscreen,0,0,imageW,imageH,null);
+}
