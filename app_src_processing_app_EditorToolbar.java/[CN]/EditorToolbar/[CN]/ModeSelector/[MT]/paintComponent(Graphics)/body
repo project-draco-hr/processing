@@ -12,7 +12,7 @@
     height=size.height;
   }
   Graphics g=offscreen.getGraphics();
-  Toolkit.prepareGraphics(g);
+  Graphics2D g2=Toolkit.prepareGraphics(g);
   g.setFont(titleFont);
   if (titleAscent == 0) {
     titleAscent=(int)Toolkit.getAscent(g);
@@ -21,8 +21,10 @@
   titleWidth=metrics.stringWidth(title);
   g.setColor(backgroundColor);
   g.fillRect(0,0,width,height);
+  g.setColor(outlineColor);
+  g2.draw(Toolkit.createRoundRect(1,1,width - 1,height - 1,RADIUS,RADIUS,RADIUS,RADIUS));
   g.setColor(titleColor);
-  g.drawString(title.toUpperCase(),MODE_GAP_WIDTH,(height + titleAscent) / 2);
+  g.drawString(title,MODE_GAP_WIDTH,(height + titleAscent) / 2);
   int x=MODE_GAP_WIDTH + titleWidth + ARROW_GAP_WIDTH;
   triangleX[0]=x;
   triangleX[1]=x + ARROW_WIDTH;
