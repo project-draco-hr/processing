@@ -26,13 +26,16 @@
   window.getCurrentSurfaceScale(currentPixelScale);
   int sx=(int)(nativeEvent.getX() / currentPixelScale[0]);
   int sy=(int)(nativeEvent.getY() / currentPixelScale[1]);
+  int mx=sx - (int)offsetX;
+  int my=sy - (int)offsetY;
   if (presentMode) {
     if (peAction == KeyEvent.RELEASE && 20 < sx && sx < 20 + 100 && screenRect.height - 70 < sy && sy < screenRect.height - 20) {
       sketch.exit();
     }
+    if (mx < 0 || sketchWidth < mx || my < 0 || sketchHeight < my) {
+      return;
+    }
   }
-  int mx=sx - (int)offsetX;
-  int my=sy - (int)offsetY;
   MouseEvent me=new MouseEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,mx,my,peButton,peCount);
   sketch.postEvent(me);
 }
