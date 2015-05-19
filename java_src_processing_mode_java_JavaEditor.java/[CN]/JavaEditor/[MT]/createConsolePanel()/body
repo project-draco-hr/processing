@@ -1,4 +1,5 @@
 {
+  JPanel consolePanel=new JPanel();
   errorTableScrollPane=new JScrollPane();
   errorTable=new XQErrorTable(errorCheckerService);
   errorTableScrollPane.setBorder(new EtchedBorder());
@@ -13,9 +14,11 @@
   toggleButtonPanel.add(btnShowConsole,BorderLayout.EAST);
   toggleButtonPanel.add(btnShowErrors,BorderLayout.WEST);
   lineStatusPanel.add(toggleButtonPanel,BorderLayout.EAST);
+  consolePanel.add(lineStatusPanel,BorderLayout.SOUTH);
   lineStatusPanel.repaint();
   consoleProblemsPane=new JPanel(new CardLayout());
   consoleProblemsPane.add(errorTableScrollPane,Language.text("editor.footer.errors"));
   consoleProblemsPane.add(super.createConsolePanel(),Language.text("editor.footer.console"));
-  return consoleProblemsPane;
+  consolePanel.add(consoleProblemsPane,BorderLayout.CENTER);
+  return consolePanel;
 }
