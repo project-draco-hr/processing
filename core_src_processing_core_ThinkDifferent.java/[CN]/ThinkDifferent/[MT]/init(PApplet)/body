@@ -2,13 +2,16 @@
   if (application == null) {
     application=Application.getApplication();
   }
-  if (adapter == null) {
-    adapter=new ThinkDifferent();
-  }
   application.setQuitHandler(new QuitHandler(){
     public void handleQuitRequestWith(    QuitEvent event,    QuitResponse response){
       sketch.exit();
-      response.cancelQuit();
+      if (!attemptedQuit) {
+        response.cancelQuit();
+        attemptedQuit=true;
+      }
+ else {
+        response.performQuit();
+      }
     }
   }
 );
