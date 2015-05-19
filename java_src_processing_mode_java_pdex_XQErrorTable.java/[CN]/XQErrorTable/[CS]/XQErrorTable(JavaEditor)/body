@@ -1,5 +1,5 @@
 {
-  this.errorCheckerService=errorCheckerService;
+  this.editor=editor;
   for (int i=0; i < this.getColumnModel().getColumnCount(); i++) {
     getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
   }
@@ -8,7 +8,7 @@
     @Override synchronized public void mouseClicked(    MouseEvent e){
       try {
         int row=((XQErrorTable)e.getSource()).getSelectedRow();
-        errorCheckerService.scrollToErrorLine(row);
+        editor.getErrorChecker().scrollToErrorLine(row);
       }
  catch (      Exception e1) {
         Base.log("Exception XQErrorTable mouseReleased " + e);
@@ -16,16 +16,16 @@
     }
   }
 );
-  final XQErrorTable thisTable=this;
   this.addMouseMotionListener(new MouseMotionAdapter(){
     @Override public void mouseMoved(    MouseEvent evt){
       int rowIndex=rowAtPoint(evt.getPoint());
-synchronized (errorCheckerService.problemsList) {
-        if (rowIndex < errorCheckerService.problemsList.size()) {
-          Problem p=errorCheckerService.problemsList.get(rowIndex);
+      List<Problem> problemsList=editor.getErrorChecker().problemsList;
+synchronized (problemsList) {
+        if (rowIndex < problemsList.size()) {
+          Problem p=problemsList.get(rowIndex);
           if (p.getImportSuggestions() != null && p.getImportSuggestions().length > 0) {
             String t=p.getMessage() + "(Import Suggestions available)";
-            FontMetrics fm=thisTable.getFontMetrics(thisTable.getFont());
+            FontMetrics fm=getFontMetrics(getFont());
             int x1=fm.stringWidth(p.getMessage());
             int x2=fm.stringWidth(t);
             if (evt.getX() > x1 && evt.getX() < x2) {
@@ -35,7 +35,7 @@ synchronized (errorCheckerService.problemsList) {
               for (int i=0; i < list.length; i++) {
                 temp[i]="<html>Import '" + className + "' <font color=#777777>("+ list[i]+ ")</font></html>";
               }
-              showImportSuggestion(temp,evt.getXOnScreen(),evt.getYOnScreen() - 3 * thisTable.getFont().getSize());
+              showImportSuggestion(temp,evt.getXOnScreen(),evt.getYOnScreen() - 3 * getFont().getSize());
             }
           }
         }

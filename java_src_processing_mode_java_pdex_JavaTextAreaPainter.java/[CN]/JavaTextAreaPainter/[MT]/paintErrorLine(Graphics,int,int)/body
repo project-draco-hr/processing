@@ -1,15 +1,13 @@
 {
-  if (errorCheckerService == null) {
-    return;
-  }
-  if (errorCheckerService.problemsList == null) {
+  ErrorCheckerService ecs=getEditor().getErrorChecker();
+  if (ecs == null || ecs.problemsList == null) {
     return;
   }
   boolean notFound=true;
   boolean isWarning=false;
   Problem problem=null;
   errorLineCoords.clear();
-  for (  ErrorMarker emarker : errorCheckerService.getEditor().getErrorPoints()) {
+  for (  ErrorMarker emarker : getEditor().getErrorPoints()) {
     if (emarker.getProblem().getLineNumber() == line) {
       notFound=false;
       if (emarker.getType() == ErrorMarker.Warning) {
