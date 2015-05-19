@@ -2,7 +2,9 @@
   stopThread.set(false);
   checkCode();
   lastErrorCheckCall=System.currentTimeMillis();
-  if (!hasSyntaxErrors())   editor.showProblemListView(Language.text("editor.footer.console"));
+  if (!hasSyntaxErrors()) {
+    editor.showConsole();
+  }
   astGenerator.buildAST(cu);
   handleErrorCheckingToggle();
   while (!stopThread.get()) {
