@@ -1,24 +1,10 @@
 {
-  JPanel consolePanel=new JPanel();
+  JTabbedPane tabPane=new JTabbedPane(JTabbedPane.BOTTOM);
   errorTableScrollPane=new JScrollPane();
   errorTable=new XQErrorTable(errorCheckerService);
   errorTableScrollPane.setBorder(new EtchedBorder());
   errorTableScrollPane.setViewportView(errorTable);
-  JPanel lineStatusPanel=new JPanel();
-  lineStatusPanel.setLayout(new BorderLayout());
-  btnShowConsole=new XQConsoleToggle(this,Language.text("editor.footer.console"),mode.getInteger("linestatus.height"));
-  btnShowErrors=new XQConsoleToggle(this,Language.text("editor.footer.errors"),mode.getInteger("linestatus.height"));
-  btnShowConsole.addMouseListener(btnShowConsole);
-  btnShowErrors.addMouseListener(btnShowErrors);
-  JPanel toggleButtonPanel=new JPanel(new BorderLayout());
-  toggleButtonPanel.add(btnShowConsole,BorderLayout.EAST);
-  toggleButtonPanel.add(btnShowErrors,BorderLayout.WEST);
-  lineStatusPanel.add(toggleButtonPanel,BorderLayout.EAST);
-  consolePanel.add(lineStatusPanel,BorderLayout.SOUTH);
-  lineStatusPanel.repaint();
-  consoleProblemsPane=new JPanel(new CardLayout());
-  consoleProblemsPane.add(errorTableScrollPane,Language.text("editor.footer.errors"));
-  consoleProblemsPane.add(super.createConsolePanel(),Language.text("editor.footer.console"));
-  consolePanel.add(consoleProblemsPane,BorderLayout.CENTER);
-  return consolePanel;
+  tabPane.add(Language.text("editor.footer.errors"),errorTableScrollPane);
+  tabPane.add(Language.text("editor.footer.console"),super.createConsolePanel());
+  return tabPane;
 }
