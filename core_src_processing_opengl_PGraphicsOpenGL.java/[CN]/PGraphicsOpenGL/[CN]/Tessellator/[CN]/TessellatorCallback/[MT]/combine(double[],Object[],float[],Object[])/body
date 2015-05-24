@@ -1,9 +1,11 @@
 {
-  double[] vertex=new double[25 + attribs.numComp + 8];
+  int n=((double[])data[0]).length;
+  double[] vertex=new double[n];
   vertex[0]=coords[0];
   vertex[1]=coords[1];
   vertex[2]=coords[2];
-  for (int i=3; i < 25 + attribs.numComp; i++) {
+  System.out.println("combine: " + n);
+  for (int i=3; i < n; i++) {
     vertex[i]=0;
     for (int j=0; j < 4; j++) {
       double[] vertData=(double[])data[j];
@@ -12,10 +14,19 @@
       }
     }
   }
-  double sum=vertex[7] * vertex[7] + vertex[8] * vertex[8] + vertex[9] * vertex[9];
-  double len=Math.sqrt(sum);
-  vertex[7]/=len;
-  vertex[8]/=len;
-  vertex[9]/=len;
+  normalize(vertex,7);
+  if (25 < n) {
+    int pos=25;
+    for (int i=0; i < attribs.size(); i++) {
+      VertexAttribute attrib=attribs.get(i);
+      if (attrib.isNormal()) {
+        normalize(vertex,pos);
+        pos+=3;
+      }
+ else {
+        pos+=attrib.size;
+      }
+    }
+  }
   outData[0]=vertex;
 }
