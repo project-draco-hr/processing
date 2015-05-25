@@ -32,6 +32,12 @@
   if (hostLibrary.exists()) {
     nativeLibraryFolder=hostLibrary;
   }
+  if (hostPlatform.equals("linux") && System.getProperty("os.arch").equals("arm")) {
+    hostLibrary=new File(libraryFolder,"linux-armv6hf");
+    if (hostLibrary.exists()) {
+      nativeLibraryFolder=hostLibrary;
+    }
+  }
   nativeLibraryPath=nativeLibraryFolder.getAbsolutePath();
   for (int i=1; i < platformNames.length; i++) {
     String platformName=platformNames[i];
