@@ -17,17 +17,14 @@
     enabledTex=true;
   }
   pgl.bindTexture(glTarget,glName);
+  pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixBuf);
+  fillEdges(x,y,w,h);
   if (usingMipmaps) {
     if (PGraphicsOpenGL.autoMipmapGenSupported) {
-      pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixBuf);
       pgl.generateMipmap(glTarget);
     }
  else {
-      pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixBuf);
     }
-  }
- else {
-    pgl.texSubImage2D(glTarget,0,x,y,w,h,PGL.RGBA,PGL.UNSIGNED_BYTE,pixBuf);
   }
   pgl.bindTexture(glTarget,0);
   if (enabledTex) {
