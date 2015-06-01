@@ -1,13 +1,19 @@
 {
   retryConnectingButton.setEnabled(false);
-  contribListing.downloadAvailableList(new ContribProgressMonitor(){
+  status.setMessage(Language.text("contrib.status.downloading_list"));
+  contribListing.downloadAvailableList(new ContribProgressBar(progressBar){
+    @Override public void startTask(    String name,    int maxValue){
+      super.startTask(name,maxValue);
+      progressBar.setString(null);
+    }
     @Override public void setProgress(    int value){
       super.setProgress(value);
-      int percent=100 * value / this.max;
-      status.setMessage(Language.text("contrib.status.downloading_list") + " (" + percent+ "%)");
+      progressBar.setValue(value);
+      progressBar.setStringPainted(true);
+      status.setMessage(Language.text("contrib.status.downloading_list"));
     }
-    @Override public void finished(){
-      super.finished();
+    @Override public void finishedAction(){
+      progressBar.setVisible(false);
       updateContributionListing();
       updateCategoryChooser();
       retryConnectingButton.setEnabled(true);
