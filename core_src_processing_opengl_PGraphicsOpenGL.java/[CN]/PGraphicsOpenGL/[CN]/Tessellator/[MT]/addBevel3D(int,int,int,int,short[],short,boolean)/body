@@ -15,7 +15,18 @@
     if (-1 < lastInd[0] && -1 < lastInd[1]) {
       tess.setLineVertex(vidx,strokeVertices,i0,color0);
       if (newCache) {
-        PGraphics.showWarning(TOO_LONG_STROKE_PATH_ERROR);
+        if (-1 < pi0 && -1 <= pi1) {
+          int color1=constStroke ? strokeColor : strokeColors[pi1];
+          tess.setLineVertex(vidx,strokeVertices,pi0,color0);
+          tess.setLineVertex(vidx,strokeVertices,pi1,color1);
+          tess.lineIndices[iidx++]=(short)(count + 4);
+          tess.lineIndices[iidx++]=(short)(count + 5);
+          tess.lineIndices[iidx++]=(short)(count + 0);
+          tess.lineIndices[iidx++]=(short)(count + 4);
+          tess.lineIndices[iidx++]=(short)(count + 6);
+          tess.lineIndices[iidx]=(short)(count + 1);
+          cache.incCounts(index,6,3);
+        }
       }
  else {
         tess.lineIndices[iidx++]=(short)(count + 0);
@@ -24,8 +35,8 @@
         tess.lineIndices[iidx++]=(short)(count + 0);
         tess.lineIndices[iidx++]=lastInd[1];
         tess.lineIndices[iidx]=(short)(firstInd + 1);
+        cache.incCounts(index,6,1);
       }
-      cache.incCounts(index,6,1);
     }
   }
   return index;
