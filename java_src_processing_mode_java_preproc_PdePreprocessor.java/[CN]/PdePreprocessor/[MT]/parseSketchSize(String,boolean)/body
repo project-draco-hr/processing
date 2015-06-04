@@ -1,41 +1,53 @@
 {
-  String[] contents=PApplet.match(scrubComments(code),SIZE_CONTENTS_REGEX);
-  if (contents != null) {
-    StringList args=breakCommas(contents[1]);
-    String width=args.get(0).trim();
-    String height=args.get(1).trim();
-    String renderer=(args.size() >= 3) ? args.get(2) : null;
-    String path=(args.size() >= 4) ? args.get(3) : null;
-    boolean badSize=false;
-    if (width.equals("screenWidth") || width.equals("screenHeight") || height.equals("screenHeight")|| height.equals("screenWidth")) {
-      final String message="The screenWidth and screenHeight variables\n" + "are named displayWidth and displayHeight\n" + "in this release of Processing.";
-      Base.showWarning("Time for a quick update",message,null);
+  String searchArea=scrubComments(code);
+  String[] setupMatch=PApplet.match(searchArea,VOID_SETUP_REGEX);
+  if (setupMatch != null) {
+    String found=setupMatch[0];
+    int start=searchArea.indexOf(found) + found.length();
+    int openBrace=searchArea.indexOf("{",start);
+    char[] c=searchArea.toCharArray();
+    int depth=0;
+    int closeBrace=-1;
+    StringBuilder sb=new StringBuilder();
+    for (int i=openBrace; i < c.length; i++) {
+      if (c[i] == '{') {
+        depth++;
+      }
+ else       if (c[i] == '}') {
+        depth--;
+        if (depth == 0) {
+          closeBrace=++i;
+          break;
+        }
+      }
+ else {
+        sb.append(c[i]);
+      }
+    }
+    if (closeBrace == -1) {
       return null;
     }
-    if (!width.equals("displayWidth") && !width.equals("displayHeight") && PApplet.parseInt(width,-1) == -1) {
-      badSize=true;
+    searchArea=sb.toString();
+  }
+  String[] contents=PApplet.match(searchArea,SIZE_CONTENTS_REGEX);
+  if (contents != null) {
+    StringList args=breakCommas(contents[1]);
+    SizeInfo info=new SizeInfo();
+    info.statement=contents[0];
+    info.width=args.get(0).trim();
+    info.height=args.get(1).trim();
+    info.renderer=(args.size() >= 3) ? args.get(2).trim() : null;
+    info.path=(args.size() >= 4) ? args.get(3).trim() : null;
+    if (info.hasOldSyntax()) {
+      return null;
     }
-    if (!height.equals("displayWidth") && !height.equals("displayHeight") && PApplet.parseInt(height,-1) == -1) {
-      badSize=true;
-    }
-    if (badSize && fussy) {
+    if (info.hasBadSize() && fussy) {
       final String message="The size of this applet could not automatically\n" + "be determined from your code. Use only numeric\n" + "values (not variables) for the size() command.\n"+ "See the size() reference for an explanation.";
       Base.showWarning("Could not find sketch size",message,null);
       return null;
     }
-    if (renderer != null) {
-      renderer=renderer.trim();
-      if (renderer.length() == 0) {
-        renderer=null;
-      }
-    }
-    if (path != null) {
-      path=path.trim();
-      if (path.length() == 0) {
-        path=null;
-      }
-    }
-    return new String[]{contents[0],width,height,renderer,path};
+    info.checkEmpty();
+    return info;
   }
-  return new String[]{null,null,null,null,null};
+  return new SizeInfo();
 }
