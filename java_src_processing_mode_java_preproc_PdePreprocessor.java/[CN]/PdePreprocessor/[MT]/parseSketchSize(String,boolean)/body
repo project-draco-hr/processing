@@ -49,5 +49,17 @@
     info.checkEmpty();
     return info;
   }
+  contents=PApplet.match(searchArea,FULL_SCREEN_CONTENTS_REGEX);
+  if (contents != null) {
+    SizeInfo info=new SizeInfo();
+    info.statement=contents[0];
+    StringList args=breakCommas(contents[1]);
+    info.renderer=args.get(0).trim();
+    info.display=args.size() > 1 ? args.get(1).trim() : null;
+    info.width="displayWidth";
+    info.height="displayHeight";
+    info.checkEmpty();
+    return info;
+  }
   return new SizeInfo();
 }
