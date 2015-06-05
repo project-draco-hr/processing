@@ -25,7 +25,7 @@
       }
     }
     if (closeBrace == -1) {
-      return null;
+      throw new SketchException("Found a { that's missing a matching }",false);
     }
     searchArea=sb.toString();
   }
@@ -39,12 +39,12 @@
     info.renderer=(args.size() >= 3) ? args.get(2).trim() : null;
     info.path=(args.size() >= 4) ? args.get(3).trim() : null;
     if (info.hasOldSyntax()) {
-      return null;
+      throw new SketchException("Please update your code to continue.",false);
     }
     if (info.hasBadSize() && fussy) {
-      final String message="The size of this applet could not automatically\n" + "be determined from your code. Use only numeric\n" + "values (not variables) for the size() command.\n"+ "See the size() reference for an explanation.";
+      final String message="The size of this sketch could not be determined from your code.\n" + "Use only numbers (not variables) for the size() command.\n" + "Read the size() reference for more details.";
       Base.showWarning("Could not find sketch size",message,null);
-      return null;
+      throw new SketchException("Please fix the size() line to continue.",false);
     }
     info.checkEmpty();
     return info;
