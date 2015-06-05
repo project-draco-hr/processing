@@ -93,8 +93,19 @@
   caps.setOnscreen(true);
   pgl.capabilities=caps;
   window=GLWindow.create(screen,caps);
+  float[] reqSurfacePixelScale;
+  if (graphics.is2X()) {
+    reqSurfacePixelScale=new float[]{ScalableSurface.AUTOMAX_PIXELSCALE,ScalableSurface.AUTOMAX_PIXELSCALE};
+  }
+ else {
+    reqSurfacePixelScale=new float[]{ScalableSurface.IDENTITY_PIXELSCALE,ScalableSurface.IDENTITY_PIXELSCALE};
+  }
+  window.setSurfaceScale(reqSurfacePixelScale);
   sketchWidth=sketch.sketchWidth();
   sketchHeight=sketch.sketchHeight();
+  sketch.width=sketch.sketchWidth();
+  sketch.height=sketch.sketchHeight();
+  window.setSize(sketchWidth,sketchHeight);
   if (displayDevice == null) {
     displayDevice=window.getMainMonitor();
   }
@@ -113,10 +124,6 @@
     sketchWidth=screenRect.width;
     sketchHeight=screenRect.height;
   }
-  window.setSize(sketchWidth,sketchHeight);
-  sketch.width=sketch.sketchWidth();
-  sketch.height=sketch.sketchHeight();
-  graphics.setSize(sketch.width,sketch.height);
   if (fullScreen) {
     PApplet.hideMenuBar();
     window.setTopLevelPosition(sketchX,sketchY);
@@ -127,14 +134,6 @@
       window.setFullscreen(true);
     }
   }
-  float[] reqSurfacePixelScale;
-  if (graphics.is2X()) {
-    reqSurfacePixelScale=new float[]{ScalableSurface.AUTOMAX_PIXELSCALE,ScalableSurface.AUTOMAX_PIXELSCALE};
-  }
- else {
-    reqSurfacePixelScale=new float[]{ScalableSurface.IDENTITY_PIXELSCALE,ScalableSurface.IDENTITY_PIXELSCALE};
-  }
-  window.setSurfaceScale(reqSurfacePixelScale);
   NEWTMouseListener mouseListener=new NEWTMouseListener();
   window.addMouseListener(mouseListener);
   NEWTKeyListener keyListener=new NEWTKeyListener();
