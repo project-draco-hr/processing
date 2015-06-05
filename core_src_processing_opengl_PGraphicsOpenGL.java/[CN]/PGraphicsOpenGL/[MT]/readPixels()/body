@@ -1,14 +1,15 @@
 {
+  updatePixelSize();
   beginPixelsOp(OP_READ);
   try {
-    pgl.readPixelsImpl(0,0,width,height,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
+    pgl.readPixelsImpl(0,0,pixelWidth,pixelHeight,PGL.RGBA,PGL.UNSIGNED_BYTE,pixelBuffer);
   }
  catch (  IndexOutOfBoundsException e) {
   }
   endPixelsOp();
   try {
     PGL.getIntArray(pixelBuffer,pixels);
-    PGL.nativeToJavaARGB(pixels,width,height);
+    PGL.nativeToJavaARGB(pixels,pixelWidth,pixelHeight);
   }
  catch (  ArrayIndexOutOfBoundsException e) {
   }
