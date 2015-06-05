@@ -1,0 +1,13 @@
+{
+  pgl.getProgramiv(glProgram,PGL.LINK_STATUS,intBuffer);
+  boolean linked=intBuffer.get(0) == 0 ? false : true;
+  if (!linked) {
+    PGraphics.showException("Cannot link shader program:\n" + pgl.getProgramInfoLog(glProgram));
+  }
+  pgl.validateProgram(glProgram);
+  pgl.getProgramiv(glProgram,PGL.VALIDATE_STATUS,intBuffer);
+  boolean validated=intBuffer.get(0) == 0 ? false : true;
+  if (!validated) {
+    PGraphics.showException("Cannot validate shader program:\n" + pgl.getProgramInfoLog(glProgram));
+  }
+}
