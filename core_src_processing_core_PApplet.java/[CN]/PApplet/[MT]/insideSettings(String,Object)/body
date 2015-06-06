@@ -1,0 +1,15 @@
+{
+  if (insideSettings) {
+    return true;
+  }
+  final String url="https://processing.org/reference/" + method + "_.html";
+  if (!external) {
+    StringList argList=new StringList(args);
+    System.err.println("When not using the PDE, " + method + "() can only be used inside settings().");
+    System.err.println("Remove the " + method + "() method from setup(), and add the following:");
+    System.err.println("public void settings() {");
+    System.err.println("  " + method + "("+ argList.join(", ")+ ");");
+    System.err.println("}");
+  }
+  throw new IllegalStateException(method + "() cannot be used here, see " + url);
+}

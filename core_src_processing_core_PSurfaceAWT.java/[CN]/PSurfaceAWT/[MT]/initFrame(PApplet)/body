@@ -26,13 +26,15 @@
   boolean fullScreen=sketch.sketchFullScreen();
   if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
     fullScreen=true;
+    sketch.fullScreen=true;
   }
   if (fullScreen || spanDisplays) {
     sketchWidth=screenRect.width;
     sketchHeight=screenRect.height;
   }
   frame=new JFrame(displayDevice.getDefaultConfiguration());
-  frame.getContentPane().setBackground(new Color(sketch.sketchWindowColor(),false));
+  final Color windowColor=new Color(sketch.sketchWindowColor(),false);
+  frame.getContentPane().setBackground(windowColor);
   setIconImage(frame);
   frame.add(canvas);
   setSize(sketchWidth,sketchHeight);
