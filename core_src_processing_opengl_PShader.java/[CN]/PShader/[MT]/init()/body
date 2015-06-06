@@ -1,37 +1,12 @@
 {
   if (glProgram == 0 || contextIsOutdated()) {
-    context=pgl.getCurrentContext();
-    glProgram=PGraphicsOpenGL.createGLSLProgramObject(context,pgl);
-    boolean vertRes=true;
-    if (hasVertexShader()) {
-      vertRes=compileVertexShader();
-    }
- else {
-      PGraphics.showException("Doesn't have a vertex shader");
-    }
-    boolean fragRes=true;
-    if (hasFragmentShader()) {
-      fragRes=compileFragmentShader();
-    }
- else {
-      PGraphics.showException("Doesn't have a fragment shader");
-    }
-    if (vertRes && fragRes) {
+    create();
+    if (compile()) {
       pgl.attachShader(glProgram,glVertex);
       pgl.attachShader(glProgram,glFragment);
       setup();
       pgl.linkProgram(glProgram);
-      pgl.getProgramiv(glProgram,PGL.LINK_STATUS,intBuffer);
-      boolean linked=intBuffer.get(0) == 0 ? false : true;
-      if (!linked) {
-        PGraphics.showException("Cannot link shader program:\n" + pgl.getProgramInfoLog(glProgram));
-      }
-      pgl.validateProgram(glProgram);
-      pgl.getProgramiv(glProgram,PGL.VALIDATE_STATUS,intBuffer);
-      boolean validated=intBuffer.get(0) == 0 ? false : true;
-      if (!validated) {
-        PGraphics.showException("Cannot validate shader program:\n" + pgl.getProgramInfoLog(glProgram));
-      }
+      validate();
     }
   }
 }
