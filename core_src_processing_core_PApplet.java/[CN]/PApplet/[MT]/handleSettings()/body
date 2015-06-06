@@ -2,13 +2,15 @@
   insideSettings=true;
   GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
   GraphicsDevice device=ge.getDefaultScreenDevice();
-  GraphicsDevice[] devices=ge.getScreenDevices();
-  if (display > 0 && display <= devices.length) {
-    device=devices[display - 1];
+  displayDevices=ge.getScreenDevices();
+  if (display > 0 && display <= displayDevices.length) {
+    device=displayDevices[display - 1];
   }
-  DisplayMode displayMode=device.getDisplayMode();
-  displayWidth=displayMode.getWidth();
-  displayHeight=displayMode.getHeight();
+  if (display != SPAN) {
+    DisplayMode displayMode=device.getDisplayMode();
+    displayWidth=displayMode.getWidth();
+    displayHeight=displayMode.getHeight();
+  }
   settings();
   insideSettings=false;
 }
