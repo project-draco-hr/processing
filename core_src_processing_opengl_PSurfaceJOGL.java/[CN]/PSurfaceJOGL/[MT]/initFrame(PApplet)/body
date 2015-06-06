@@ -5,7 +5,7 @@
   display.addReference();
   Screen screen=NewtFactory.createScreen(display,0);
   screen.addReference();
-  ArrayList<MonitorDevice> monitors=new ArrayList<MonitorDevice>();
+  List<MonitorDevice> monitors=new ArrayList<MonitorDevice>();
   GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
   GraphicsDevice[] devices=environment.getScreenDevices();
   for (  GraphicsDevice device : devices) {
@@ -38,14 +38,15 @@
       monitors.add(monitor);
     }
   }
-  if (deviceIndex >= 0) {
-    if (deviceIndex < monitors.size()) {
-      displayDevice=monitors.get(deviceIndex);
+  int displayNum=sketch.sketchDisplay();
+  if (displayNum > 0) {
+    if (displayNum <= monitors.size()) {
+      displayDevice=monitors.get(displayNum - 1);
     }
  else {
-      System.err.format("Display %d does not exist, " + "using the default display instead.",deviceIndex);
+      System.err.format("Display %d does not exist, " + "using the default display instead.",displayNum);
       for (int i=0; i < monitors.size(); i++) {
-        System.err.format("Display %d is %s\n",i,monitors.get(i));
+        System.err.format("Display %d is %s\n",i + 1,monitors.get(i));
       }
     }
   }
@@ -111,9 +112,11 @@
   }
   sketchX=displayDevice.getViewportInWindowUnits().getX();
   sketchY=displayDevice.getViewportInWindowUnits().getY();
+  boolean spanDisplays=sketch.sketchDisplay() == PConstants.SPAN;
   screenRect=spanDisplays ? new Rectangle(0,0,screen.getWidth(),screen.getHeight()) : new Rectangle(0,0,displayDevice.getViewportInWindowUnits().getWidth(),displayDevice.getViewportInWindowUnits().getHeight());
   sketch.displayWidth=screenRect.width;
   sketch.displayHeight=screenRect.height;
+  boolean fullScreen=sketch.sketchFullScreen();
   if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
     fullScreen=true;
   }

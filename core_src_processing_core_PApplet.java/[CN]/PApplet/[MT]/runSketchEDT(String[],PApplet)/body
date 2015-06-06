@@ -11,11 +11,11 @@
   int[] location=null;
   int[] editorLocation=null;
   String name=null;
-  int backgroundColor=0;
+  int windowColor=0;
   int stopColor=0xff808080;
   boolean hideStop=false;
   int displayIndex=-1;
-  boolean fullScreen=false;
+  boolean present=false;
   boolean spanDisplays=false;
   String param=null, value=null;
   String folder=calcSketchPath();
@@ -35,13 +35,13 @@
           System.err.println("Could not parse " + value + " for "+ ARGS_DISPLAY);
         }
       }
- else       if (param.equals(ARGS_BGCOLOR)) {
+ else       if (param.equals(ARGS_WINDOW_COLOR)) {
         if (value.charAt(0) == '#' && value.length() == 7) {
           value=value.substring(1);
-          backgroundColor=0xff000000 | Integer.parseInt(value,16);
+          windowColor=0xff000000 | Integer.parseInt(value,16);
         }
  else {
-          System.err.println(ARGS_BGCOLOR + " should be a # followed by six digits");
+          System.err.println(ARGS_WINDOW_COLOR + " should be a # followed by six digits");
         }
       }
  else       if (param.equals(ARGS_STOP_COLOR)) {
@@ -61,10 +61,10 @@
       }
     }
  else {
-      if (args[argIndex].equals(ARGS_FULL_SCREEN)) {
-        fullScreen=true;
+      if (args[argIndex].equals(ARGS_PRESENT)) {
+        present=true;
       }
- else       if (args[argIndex].equals(ARGS_SPAN_SCREENS)) {
+ else       if (args[argIndex].equals(ARGS_SPAN_DISPLAYS)) {
         spanDisplays=true;
       }
  else       if (args[argIndex].equals(ARGS_HIDE_STOP)) {
@@ -106,14 +106,17 @@
   }
   sketch.handleSettings();
   sketch.sketchPath=folder;
-  sketch.spanDisplays=spanDisplays;
-  fullScreen|=spanDisplays;
-  sketch.fullScreen|=fullScreen;
+  if (spanDisplays) {
+    displayIndex=SPAN;
+  }
   if (args.length != argIndex + 1) {
     sketch.args=PApplet.subset(args,argIndex + 1);
   }
   sketch.external=external;
-  PSurface surface=sketch.initSurface(backgroundColor,displayIndex,fullScreen,spanDisplays);
+  if (windowColor != 0) {
+    sketch.windowColor=windowColor;
+  }
+  PSurface surface=sketch.initSurface();
   while (sketch.defaultSize && !sketch.finished) {
     try {
       Thread.sleep(5);
@@ -121,7 +124,7 @@
  catch (    InterruptedException e) {
     }
   }
-  if (fullScreen) {
+  if (present) {
     if (hideStop) {
       stopColor=0;
     }

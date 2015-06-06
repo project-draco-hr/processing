@@ -1,13 +1,14 @@
 {
   this.sketch=sketch;
   GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
-  if (deviceIndex >= 0) {
+  int displayNum=sketch.sketchDisplay();
+  if (displayNum > 0) {
     GraphicsDevice[] devices=environment.getScreenDevices();
-    if (deviceIndex < devices.length) {
-      displayDevice=devices[deviceIndex];
+    if (displayNum <= devices.length) {
+      displayDevice=devices[displayNum - 1];
     }
  else {
-      System.err.format("Display %d does not exist, " + "using the default display instead.",deviceIndex);
+      System.err.format("Display %d does not exist, " + "using the default display instead.",displayNum);
       for (int i=0; i < devices.length; i++) {
         System.err.format("Display %d is %s\n",i,devices[i]);
       }
@@ -16,11 +17,13 @@
   if (displayDevice == null) {
     displayDevice=environment.getDefaultScreenDevice();
   }
+  boolean spanDisplays=sketch.sketchDisplay() == PConstants.SPAN;
   screenRect=spanDisplays ? getDisplaySpan() : displayDevice.getDefaultConfiguration().getBounds();
   sketch.displayWidth=screenRect.width;
   sketch.displayHeight=screenRect.height;
   sketchWidth=sketch.sketchWidth();
   sketchHeight=sketch.sketchHeight();
+  boolean fullScreen=sketch.sketchFullScreen();
   if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
     fullScreen=true;
   }
@@ -29,10 +32,7 @@
     sketchHeight=screenRect.height;
   }
   frame=new JFrame(displayDevice.getDefaultConfiguration());
-  if (backgroundColor == 0) {
-    backgroundColor=WINDOW_BGCOLOR;
-  }
-  frame.getContentPane().setBackground(new Color(backgroundColor,false));
+  frame.getContentPane().setBackground(new Color(sketch.sketchWindowColor(),false));
   setIconImage(frame);
   frame.add(canvas);
   setSize(sketchWidth,sketchHeight);
