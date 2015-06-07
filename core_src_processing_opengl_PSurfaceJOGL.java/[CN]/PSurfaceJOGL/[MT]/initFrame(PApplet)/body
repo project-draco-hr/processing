@@ -1,64 +1,9 @@
 {
   this.sketch=sketch;
-  setIconImages();
+  initIcons();
   initScreen();
   initGL();
-  window=GLWindow.create(screen,pgl.capabilities);
-  if (displayDevice == null) {
-    displayDevice=window.getMainMonitor();
-  }
-  int displayNum=sketch.sketchDisplay();
-  if (displayNum > 0) {
-    if (displayNum <= monitors.size()) {
-      displayDevice=monitors.get(displayNum - 1);
-    }
- else {
-      System.err.format("Display %d does not exist, " + "using the default display instead.",displayNum);
-      for (int i=0; i < monitors.size(); i++) {
-        System.err.format("Display %d is %s\n",i + 1,monitors.get(i));
-      }
-    }
-  }
-  boolean spanDisplays=sketch.sketchDisplay() == PConstants.SPAN;
-  screenRect=spanDisplays ? new Rectangle(0,0,screen.getWidth(),screen.getHeight()) : new Rectangle(0,0,displayDevice.getViewportInWindowUnits().getWidth(),displayDevice.getViewportInWindowUnits().getHeight());
-  sketch.displayWidth=screenRect.width;
-  sketch.displayHeight=screenRect.height;
-  if (spanDisplays) {
-    sketchWidth=screenRect.width;
-    sketchHeight=screenRect.height;
-  }
-  boolean fullScreen=sketch.sketchFullScreen();
-  if (fullScreen) {
-    sketchWidth=sketch.sketchWidth();
-    sketchHeight=sketch.sketchHeight();
-  }
-  if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
-    fullScreen=true;
-  }
-  if (fullScreen) {
-    presentMode=sketchWidth < screenRect.width && sketchHeight < screenRect.height;
-  }
-  float[] reqSurfacePixelScale;
-  if (graphics.is2X()) {
-    reqSurfacePixelScale=new float[]{ScalableSurface.AUTOMAX_PIXELSCALE,ScalableSurface.AUTOMAX_PIXELSCALE};
-  }
- else {
-    reqSurfacePixelScale=new float[]{ScalableSurface.IDENTITY_PIXELSCALE,ScalableSurface.IDENTITY_PIXELSCALE};
-  }
-  window.setSurfaceScale(reqSurfacePixelScale);
-  window.setSize(sketchWidth,sketchHeight);
-  sketchX=displayDevice.getViewportInWindowUnits().getX();
-  sketchY=displayDevice.getViewportInWindowUnits().getY();
-  if (fullScreen) {
-    PApplet.hideMenuBar();
-    window.setTopLevelPosition(sketchX,sketchY);
-    if (spanDisplays) {
-      window.setFullscreen(monitors);
-    }
- else {
-      window.setFullscreen(true);
-    }
-  }
+  initWindow();
   initListeners();
   initAnimator();
   window.setVisible(true);
