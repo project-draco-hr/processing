@@ -1,0 +1,53 @@
+{
+  if (profile == null) {
+    if (PJOGL.PROFILE == 2) {
+      try {
+        profile=GLProfile.getGL2ES1();
+      }
+ catch (      GLException ex) {
+        profile=GLProfile.getMaxFixedFunc(true);
+      }
+    }
+ else     if (PJOGL.PROFILE == 3) {
+      try {
+        profile=GLProfile.getGL2GL3();
+      }
+ catch (      GLException ex) {
+        profile=GLProfile.getMaxProgrammable(true);
+      }
+      if (!profile.isGL3()) {
+        PGraphics.showWarning("Requested profile GL3 but is not available, got: " + profile);
+      }
+    }
+ else     if (PJOGL.PROFILE == 4) {
+      try {
+        profile=GLProfile.getGL4ES3();
+      }
+ catch (      GLException ex) {
+        profile=GLProfile.getMaxProgrammable(true);
+      }
+      if (!profile.isGL4()) {
+        PGraphics.showWarning("Requested profile GL4 but is not available, got: " + profile);
+      }
+    }
+ else     throw new RuntimeException(PGL.UNSUPPORTED_GLPROF_ERROR);
+  }
+  GLCapabilities caps=new GLCapabilities(profile);
+  caps.setAlphaBits(PGL.REQUESTED_ALPHA_BITS);
+  caps.setDepthBits(PGL.REQUESTED_DEPTH_BITS);
+  caps.setStencilBits(PGL.REQUESTED_STENCIL_BITS);
+  if (graphics.smooth == 0) {
+    pgl.reqNumSamples=1;
+  }
+ else   if (graphics.smooth == 1) {
+    pgl.reqNumSamples=2;
+  }
+ else {
+    pgl.reqNumSamples=4;
+  }
+  caps.setSampleBuffers(true);
+  caps.setNumSamples(pgl.reqNumSamples);
+  caps.setBackgroundOpaque(true);
+  caps.setOnscreen(true);
+  pgl.capabilities=caps;
+}

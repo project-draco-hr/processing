@@ -1,0 +1,37 @@
+{
+  animator=new FPSAnimator(window,60);
+  drawException=null;
+  animator.setUncaughtExceptionHandler(new GLAnimatorControl.UncaughtExceptionHandler(){
+    @Override public void uncaughtException(    final GLAnimatorControl animator,    final GLAutoDrawable drawable,    final Throwable cause){
+synchronized (waitObject) {
+        drawException=cause;
+        waitObject.notify();
+      }
+    }
+  }
+);
+  new Thread(new Runnable(){
+    public void run(){
+synchronized (waitObject) {
+        try {
+          if (drawException == null)           waitObject.wait();
+        }
+ catch (        InterruptedException e) {
+          e.printStackTrace();
+        }
+        if (drawException != null) {
+          Throwable cause=drawException.getCause();
+          if (cause instanceof ThreadDeath) {
+          }
+ else           if (cause instanceof RuntimeException) {
+            throw (RuntimeException)cause;
+          }
+ else {
+            throw new RuntimeException(cause);
+          }
+        }
+      }
+    }
+  }
+).start();
+}

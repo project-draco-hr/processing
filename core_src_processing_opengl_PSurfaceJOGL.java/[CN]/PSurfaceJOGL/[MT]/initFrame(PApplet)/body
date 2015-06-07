@@ -1,42 +1,11 @@
 {
   this.sketch=sketch;
   setIconImages();
-  Display display=NewtFactory.createDisplay(null);
-  display.addReference();
-  Screen screen=NewtFactory.createScreen(display,0);
-  screen.addReference();
-  List<MonitorDevice> monitors=new ArrayList<MonitorDevice>();
-  GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
-  GraphicsDevice[] devices=environment.getScreenDevices();
-  for (  GraphicsDevice device : devices) {
-    String did=device.getIDstring();
-    String[] parts=did.split("Display");
-    String id1="";
-    if (1 < parts.length) {
-      id1=parts[1].trim();
-    }
-    MonitorDevice monitor=null;
-    for (int i=0; i < screen.getMonitorDevices().size(); i++) {
-      MonitorDevice mon=screen.getMonitorDevices().get(i);
-      String mid=String.valueOf(mon.getId());
-      if (id1.equals(mid)) {
-        monitor=mon;
-        break;
-      }
-    }
-    if (monitor == null) {
-      for (int i=0; i < screen.getMonitorDevices().size(); i++) {
-        MonitorDevice mon=screen.getMonitorDevices().get(i);
-        String mid=String.valueOf(mon.getId());
-        if (-1 < did.indexOf(mid)) {
-          monitor=mon;
-          break;
-        }
-      }
-    }
-    if (monitor != null) {
-      monitors.add(monitor);
-    }
+  initScreen();
+  initGL();
+  window=GLWindow.create(screen,pgl.capabilities);
+  if (displayDevice == null) {
+    displayDevice=window.getMainMonitor();
   }
   int displayNum=sketch.sketchDisplay();
   if (displayNum > 0) {
@@ -50,50 +19,25 @@
       }
     }
   }
-  if (profile == null) {
-    if (PJOGL.PROFILE == 2) {
-      try {
-        profile=GLProfile.getGL2ES1();
-      }
- catch (      GLException ex) {
-        profile=GLProfile.getMaxFixedFunc(true);
-      }
-    }
- else     if (PJOGL.PROFILE == 3) {
-      try {
-        profile=GLProfile.getGL2GL3();
-      }
- catch (      GLException ex) {
-        profile=GLProfile.getMaxProgrammable(true);
-      }
-      if (!profile.isGL3()) {
-        PGraphics.showWarning("Requested profile GL3 but is not available, got: " + profile);
-      }
-    }
- else     if (PJOGL.PROFILE == 4) {
-      try {
-        profile=GLProfile.getGL4ES3();
-      }
- catch (      GLException ex) {
-        profile=GLProfile.getMaxProgrammable(true);
-      }
-      if (!profile.isGL4()) {
-        PGraphics.showWarning("Requested profile GL4 but is not available, got: " + profile);
-      }
-    }
- else     throw new RuntimeException(PGL.UNSUPPORTED_GLPROF_ERROR);
+  boolean spanDisplays=sketch.sketchDisplay() == PConstants.SPAN;
+  screenRect=spanDisplays ? new Rectangle(0,0,screen.getWidth(),screen.getHeight()) : new Rectangle(0,0,displayDevice.getViewportInWindowUnits().getWidth(),displayDevice.getViewportInWindowUnits().getHeight());
+  sketch.displayWidth=screenRect.width;
+  sketch.displayHeight=screenRect.height;
+  if (spanDisplays) {
+    sketchWidth=screenRect.width;
+    sketchHeight=screenRect.height;
   }
-  GLCapabilities caps=new GLCapabilities(profile);
-  caps.setAlphaBits(PGL.REQUESTED_ALPHA_BITS);
-  caps.setDepthBits(PGL.REQUESTED_DEPTH_BITS);
-  caps.setStencilBits(PGL.REQUESTED_STENCIL_BITS);
-  pgl.reqNumSamples=graphics.smooth;
-  caps.setSampleBuffers(true);
-  caps.setNumSamples(pgl.reqNumSamples);
-  caps.setBackgroundOpaque(true);
-  caps.setOnscreen(true);
-  pgl.capabilities=caps;
-  window=GLWindow.create(screen,caps);
+  boolean fullScreen=sketch.sketchFullScreen();
+  if (fullScreen) {
+    sketchWidth=sketch.sketchWidth();
+    sketchHeight=sketch.sketchHeight();
+  }
+  if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
+    fullScreen=true;
+  }
+  if (fullScreen) {
+    presentMode=sketchWidth < screenRect.width && sketchHeight < screenRect.height;
+  }
   float[] reqSurfacePixelScale;
   if (graphics.is2X()) {
     reqSurfacePixelScale=new float[]{ScalableSurface.AUTOMAX_PIXELSCALE,ScalableSurface.AUTOMAX_PIXELSCALE};
@@ -102,31 +46,9 @@
     reqSurfacePixelScale=new float[]{ScalableSurface.IDENTITY_PIXELSCALE,ScalableSurface.IDENTITY_PIXELSCALE};
   }
   window.setSurfaceScale(reqSurfacePixelScale);
-  sketchWidth=sketch.sketchWidth();
-  sketchHeight=sketch.sketchHeight();
-  sketch.width=sketch.sketchWidth();
-  sketch.height=sketch.sketchHeight();
   window.setSize(sketchWidth,sketchHeight);
-  if (displayDevice == null) {
-    displayDevice=window.getMainMonitor();
-  }
   sketchX=displayDevice.getViewportInWindowUnits().getX();
   sketchY=displayDevice.getViewportInWindowUnits().getY();
-  boolean spanDisplays=sketch.sketchDisplay() == PConstants.SPAN;
-  screenRect=spanDisplays ? new Rectangle(0,0,screen.getWidth(),screen.getHeight()) : new Rectangle(0,0,displayDevice.getViewportInWindowUnits().getWidth(),displayDevice.getViewportInWindowUnits().getHeight());
-  sketch.displayWidth=screenRect.width;
-  sketch.displayHeight=screenRect.height;
-  boolean fullScreen=sketch.sketchFullScreen();
-  if (screenRect.width == sketchWidth && screenRect.height == sketchHeight) {
-    fullScreen=true;
-  }
-  if (fullScreen) {
-    presentMode=sketchWidth < screenRect.width && sketchHeight < screenRect.height;
-  }
-  if (spanDisplays) {
-    sketchWidth=screenRect.width;
-    sketchHeight=screenRect.height;
-  }
   if (fullScreen) {
     PApplet.hideMenuBar();
     window.setTopLevelPosition(sketchX,sketchY);
@@ -137,48 +59,7 @@
       window.setFullscreen(true);
     }
   }
-  NEWTMouseListener mouseListener=new NEWTMouseListener();
-  window.addMouseListener(mouseListener);
-  NEWTKeyListener keyListener=new NEWTKeyListener();
-  window.addKeyListener(keyListener);
-  NEWTWindowListener winListener=new NEWTWindowListener();
-  window.addWindowListener(winListener);
-  DrawListener drawlistener=new DrawListener();
-  window.addGLEventListener(drawlistener);
-  animator=new FPSAnimator(window,60);
-  drawException=null;
-  animator.setUncaughtExceptionHandler(new GLAnimatorControl.UncaughtExceptionHandler(){
-    @Override public void uncaughtException(    final GLAnimatorControl animator,    final GLAutoDrawable drawable,    final Throwable cause){
-synchronized (waitObject) {
-        drawException=cause;
-        waitObject.notify();
-      }
-    }
-  }
-);
-  new Thread(new Runnable(){
-    public void run(){
-synchronized (waitObject) {
-        try {
-          if (drawException == null)           waitObject.wait();
-        }
- catch (        InterruptedException e) {
-          e.printStackTrace();
-        }
-        if (drawException != null) {
-          Throwable cause=drawException.getCause();
-          if (cause instanceof ThreadDeath) {
-          }
- else           if (cause instanceof RuntimeException) {
-            throw (RuntimeException)cause;
-          }
- else {
-            throw new RuntimeException(cause);
-          }
-        }
-      }
-    }
-  }
-).start();
+  initListeners();
+  initAnimator();
   window.setVisible(true);
 }
