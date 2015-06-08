@@ -44,6 +44,10 @@
     }
   }
   String[] sizeContents=matchMethod("size",searchArea);
+  String[] fullContents=matchMethod("fullScreen",searchArea);
+  if (sizeContents != null && fullContents != null) {
+    throw new SketchException("size() and fullScreen() cannot be used in the same sketch",false);
+  }
   if (sizeContents != null) {
     StringList args=breakCommas(sizeContents[1]);
     SurfaceInfo info=new SurfaceInfo();
@@ -66,7 +70,6 @@
     info.checkEmpty();
     return info;
   }
-  String[] fullContents=matchMethod("fullScreen",searchArea);
   if (fullContents != null) {
     SurfaceInfo info=new SurfaceInfo();
     info.statement=fullContents[0];
