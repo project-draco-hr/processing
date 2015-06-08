@@ -1,5 +1,5 @@
 {
-  if (image == null || ((BufferedImage)image).getWidth() != width * pixelFactor || ((BufferedImage)image).getHeight() != height * pixelFactor) {
+  if (image == null || ((BufferedImage)image).getWidth() != width * pixelDensity || ((BufferedImage)image).getHeight() != height * pixelDensity) {
     GraphicsConfiguration gc=null;
     if (surface != null) {
       Component comp=null;
@@ -14,8 +14,8 @@
       GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
       gc=ge.getDefaultScreenDevice().getDefaultConfiguration();
     }
-    int wide=width * pixelFactor;
-    int high=height * pixelFactor;
+    int wide=width * pixelDensity;
+    int high=height * pixelDensity;
     image=gc.createCompatibleImage(wide,high);
   }
   return (Graphics2D)image.getGraphics();
