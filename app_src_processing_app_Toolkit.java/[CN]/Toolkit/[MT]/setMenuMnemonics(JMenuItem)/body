@@ -1,18 +1,23 @@
 {
   if (Base.isMacOS())   return;
   if (menu.length == 0)   return;
-  final String[] kdePreDefStrs={"&file","&new","&open","open&recent","&save","save&as","saveacop&y","saveas&template","savea&ll","reloa&d","&print","printpre&view","&import","e&xport","&closefile","clos&eallfiles","&quit","&edit","&undo","re&do","cu&t&","&copy","&paste","&delete","select&all","dese&lect","&find","find&next","findpre&vious","&replace","&gotoline","&view","&newview","close&allviews","&splitview","&removeview","splitter&orientation","&horizontal","&vertical","view&mode","&fullscreenmode","&zoom","zoom&in","zoom&out","zoomtopage&width","zoomwhole&page","zoom&factor","&insert","&format","&go","&up","&back","&forward","&home","&go","&previouspage","&nextpage","&firstpage","&lastpage","read&updocument","read&downdocument","&back","&forward","&gotopage","&bookmarks","&addbookmark","bookmark&tabsasfolder","&editbookmarks","&newbookmarksfolder","&tools","&settings","&toolbars","configure&shortcuts","configuretool&bars","&configure*","&help",".+&handbook","&whatsthis","report&bug","&aboutprocessing","about&kde","&beenden"};
+  final String[] kdePreDefStrs={"&file","&new","&open","open&recent","&save","save&as","saveacop&y","saveas&template","savea&ll","reloa&d","&print","printpre&view","&import","e&xport","&closefile","clos&eallfiles","&quit","&edit","&undo","re&do","cu&t","&copy","&paste","&delete","select&all","dese&lect","&find","find&next","findpre&vious","&replace","&gotoline","&view","&newview","close&allviews","&splitview","&removeview","splitter&orientation","&horizontal","&vertical","view&mode","&fullscreenmode","&zoom","zoom&in","zoom&out","zoomtopage&width","zoomwhole&page","zoom&factor","&insert","&format","&go","&up","&back","&forward","&home","&go","&previouspage","&nextpage","&firstpage","&lastpage","read&updocument","read&downdocument","&back","&forward","&gotopage","&bookmarks","&addbookmark","bookmark&tabsasfolder","&editbookmarks","&newbookmarksfolder","&tools","&settings","&toolbars","configure&shortcuts","configuretool&bars","&configure.*","&help",".+&handbook","&whatsthis","report&bug","&aboutprocessing","about&kde","&beenden","&suchen","&preferncias","&sair","&rechercher"};
   Pattern[] kdePreDefPats=new Pattern[kdePreDefStrs.length];
-  for (int i=0; i < kdePreDefStrs.length; i++)   kdePreDefPats[i]=Pattern.compile(kdePreDefStrs[i].replace("&",""));
+  for (int i=0; i < kdePreDefStrs.length; i++) {
+    kdePreDefPats[i]=Pattern.compile(kdePreDefStrs[i].replace("&",""));
+  }
   final Pattern nonAAlpha=Pattern.compile("[^A-Za-z]");
   FontMetrics fmTmp=null;
   for (  JMenuItem m : menu) {
-    if (m != null)     fmTmp=m.getFontMetrics(m.getFont());
+    if (m != null) {
+      fmTmp=m.getFontMetrics(m.getFont());
+      break;
+    }
   }
   if (fmTmp == null)   return;
   final FontMetrics fm=fmTmp;
   final Comparator<Character> charComparator=new Comparator<Character>(){
-    char[] baddies="qypgjaeiouQYPGJAEIOU".toCharArray();
+    char[] baddies="qypgjaeiouQAEIOU".toCharArray();
     public int compare(    Character ch1,    Character ch2){
       float w1=fm.charWidth(ch1), w2=fm.charWidth(ch2);
       for (      char bad : baddies) {
@@ -31,12 +36,14 @@
     if (jmi == null)     continue;
     if (jmi.getText() == null)     continue;
     jmi.setMnemonic(0);
+    String asciiName=nonAAlpha.matcher(jmi.getText()).replaceAll("");
+    String lAsciiName=asciiName.toLowerCase();
     for (int i=0; i < kdePreDefStrs.length; i++) {
-      String lASCIIName=nonAAlpha.matcher(jmi.getText()).replaceAll("").toLowerCase();
-      if (kdePreDefPats[i].matcher(lASCIIName).matches()) {
-        char mnem=kdePreDefStrs[i].charAt(1 + kdePreDefStrs[i].indexOf("&"));
+      if (kdePreDefPats[i].matcher(lAsciiName).matches()) {
+        char mnem=asciiName.charAt(kdePreDefStrs[i].indexOf("&"));
         jmi.setMnemonic(mnem);
-        taken.add(mnem);
+        jmi.setDisplayedMnemonicIndex(jmi.getText().indexOf(mnem));
+        taken.add((char)(mnem | 32));
         break;
       }
     }
@@ -62,6 +69,7 @@
       if (banned.contains(Character.toLowerCase(firstChar)))       continue;
       if ('A' <= firstChar && firstChar <= 'Z') {
         jmi.setMnemonic(firstChar);
+        jmi.setDisplayedMnemonicIndex(jmi.getText().indexOf(firstChar));
         taken.add((char)(firstChar | 32));
         continue algorithmicAssignment;
       }
@@ -73,6 +81,7 @@
       if (banned.contains(Character.toLowerCase(firstChar)))       continue;
       if ('a' <= firstChar && firstChar <= 'z') {
         jmi.setMnemonic(firstChar);
+        jmi.setDisplayedMnemonicIndex(jmi.getText().indexOf(firstChar));
         taken.add(firstChar);
         continue algorithmicAssignment;
       }
@@ -82,6 +91,7 @@
       char ascii2nd=cleanString.charAt(1);
       if (!taken.contains((char)(ascii2nd | 32)) && !banned.contains((char)(ascii2nd | 32)) && fm.charWidth('A') <= 2 * fm.charWidth(ascii2nd)) {
         jmi.setMnemonic(ascii2nd);
+        jmi.setDisplayedMnemonicIndex(jmi.getText().indexOf(ascii2nd));
         taken.add((char)(ascii2nd | 32));
         continue algorithmicAssignment;
       }
@@ -96,6 +106,7 @@
       if (taken.contains(Character.toLowerCase(mnem)))       continue;
       if (banned.contains(Character.toLowerCase(mnem)))       continue;
       jmi.setMnemonic(mnem);
+      jmi.setDisplayedMnemonicIndex(jmi.getText().indexOf(mnem));
       taken.add(Character.toLowerCase(mnem));
       continue algorithmicAssignment;
     }
