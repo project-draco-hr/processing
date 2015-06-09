@@ -14,7 +14,7 @@
   int windowColor=0;
   int stopColor=0xff808080;
   boolean hideStop=false;
-  int displayIndex=-1;
+  int displayNum=-1;
   boolean present=false;
   String param=null, value=null;
   String folder=calcSketchPath();
@@ -29,8 +29,8 @@
         editorLocation=parseInt(split(value,','));
       }
  else       if (param.equals(ARGS_DISPLAY)) {
-        displayIndex=parseInt(value,-1);
-        if (displayIndex == -1) {
+        displayNum=parseInt(value,-1);
+        if (displayNum == -1) {
           System.err.println("Could not parse " + value + " for "+ ARGS_DISPLAY);
         }
       }
@@ -100,6 +100,7 @@
       e.printStackTrace();
     }
   }
+  sketch.display=displayNum;
   sketch.handleSettings();
   sketch.sketchPath=folder;
   if (args.length != argIndex + 1) {

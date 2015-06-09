@@ -8,11 +8,13 @@
   deletePreviousBox.setSelected(Preferences.getBoolean("export.delete_target_folder"));
   sketchbookLocationField.setText(Preferences.getSketchbookPath());
   checkUpdatesBox.setSelected(Preferences.getBoolean("update.check"));
-  updateDisplayList();
+  int defaultDisplayNum=updateDisplayList();
   int displayNum=Preferences.getInteger("run.display");
-  if (displayNum >= 0 && displayNum < displayCount) {
-    displaySelectionBox.setSelectedIndex(displayNum);
+  if (displayNum < 1 || displayNum > displayCount) {
+    displayNum=defaultDisplayNum;
+    Preferences.setInteger("run.display",displayNum);
   }
+  displaySelectionBox.setSelectedIndex(displayNum - 1);
   new Thread(new Runnable(){
     public void run(){
       initFontList();
