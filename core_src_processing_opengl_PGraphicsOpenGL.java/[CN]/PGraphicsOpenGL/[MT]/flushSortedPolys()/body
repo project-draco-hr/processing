@@ -1,0 +1,46 @@
+{
+  boolean customShader=polyShader != null;
+  boolean needNormals=customShader ? polyShader.accessNormals() : false;
+  boolean needTexCoords=customShader ? polyShader.accessTexCoords() : false;
+  updatePolyBuffers(lights,texCache.hasTextures,needNormals,needTexCoords);
+  sorter.sort(tessGeo);
+  int[] triangleIndices=sorter.triangleIndices;
+  int[] texCacheMap=sorter.texCacheMap;
+  int[] indexCacheMap=sorter.indexCacheMap;
+  for (int i=0; i < tessGeo.polyIndexCount / 3; i++) {
+    int ti=triangleIndices[i];
+    Texture tex=texCache.getTexture(texCacheMap[ti]);
+    int voffset=tessGeo.polyIndexCache.vertexOffset[indexCacheMap[ti]];
+    PShader shader=getPolyShader(lights,tex != null);
+    shader.bind();
+    int ioffset=3 * ti;
+    int icount=3;
+    shader.setVertexAttribute(glPolyVertex,4,PGL.FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
+    shader.setColorAttribute(glPolyColor,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+    if (lights) {
+      shader.setNormalAttribute(glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setAmbientAttribute(glPolyAmbient,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setSpecularAttribute(glPolySpecular,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setEmissiveAttribute(glPolyEmissive,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setShininessAttribute(glPolyShininess,1,PGL.FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
+    }
+    if (lights || needNormals) {
+      shader.setNormalAttribute(glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+    }
+    if (tex != null || needTexCoords) {
+      shader.setTexcoordAttribute(glPolyTexcoord,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setTexture(tex);
+    }
+    for (    VertexAttribute attrib : polyAttribs.values()) {
+      if (!attrib.active(shader))       continue;
+      attrib.bind(pgl);
+      shader.setAttributeVBO(attrib.glLoc,attrib.glName,attrib.tessSize,attrib.type,attrib.isColor(),0,attrib.sizeInBytes(voffset));
+    }
+    shader.draw(glPolyIndex,icount,ioffset);
+    for (    VertexAttribute attrib : polyAttribs.values()) {
+      if (attrib.active(shader))       attrib.unbind(pgl);
+    }
+    shader.unbind();
+  }
+  unbindPolyBuffers();
+}
