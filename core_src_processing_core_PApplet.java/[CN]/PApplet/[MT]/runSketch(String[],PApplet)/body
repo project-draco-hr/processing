@@ -1,6 +1,13 @@
 {
   System.setProperty("sun.awt.noerasebackground","true");
-  Toolkit.getDefaultToolkit().setDynamicLayout(true);
+  try {
+    Toolkit.getDefaultToolkit().setDynamicLayout(true);
+  }
+ catch (  HeadlessException e) {
+    System.err.println("Cannot run sketch without a display. Read this for possible solutions:");
+    System.err.println("https://github.com/processing/processing/wiki/Running-without-a-Display");
+    System.exit(1);
+  }
   System.setProperty("java.net.useSystemProxies","true");
   if (args.length < 1) {
     System.err.println("Usage: PApplet [options] <class name> [sketch args]");
