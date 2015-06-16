@@ -1,14 +1,14 @@
 {
   String apath=folder.getAbsolutePath();
-  Mode mode=editor.getMode();
-  if (apath.startsWith(mode.getExamplesFolder().getAbsolutePath()) || apath.startsWith(mode.getLibrariesFolder().getAbsolutePath())) {
-    return true;
+  List<Mode> modes=editor.getBase().getModeList();
+  for (  Mode mode : modes) {
+    if (apath.startsWith(mode.getExamplesFolder().getAbsolutePath()) || apath.startsWith(mode.getLibrariesFolder().getAbsolutePath())) {
+      return true;
+    }
   }
- else {
-    for (int i=0; i < codeCount; i++) {
-      if (code[i].isModified() && code[i].fileReadOnly() && code[i].fileExists()) {
-        return true;
-      }
+  for (int i=0; i < codeCount; i++) {
+    if (code[i].isModified() && code[i].fileReadOnly() && code[i].fileExists()) {
+      return true;
     }
   }
   return false;
