@@ -37,13 +37,13 @@
   String sanitaryName=Sketch.checkName(newName);
   File newFolder=new File(newParentDir,sanitaryName);
   if (!sanitaryName.equals(newName) && newFolder.exists()) {
-    Base.showMessage("Cannot Save","A sketch with the cleaned name\n" + "???" + sanitaryName + "??? already exists.");
+    Base.showMessage(Language.text("save_file.messages.sketch_exists"),Language.interpolate("save_file.messages.sketch_exists.description",sanitaryName));
     return false;
   }
   newName=sanitaryName;
   for (int i=1; i < codeCount; i++) {
     if (newName.equalsIgnoreCase(code[i].getPrettyName())) {
-      Base.showMessage("Nope","You can't save the sketch as \"" + newName + "\"\n"+ "because the sketch already has a tab with that name.");
+      Base.showMessage(Language.text("save_file.messages.tab_exists"),Language.interpolate("save_file.messages.tab_exists.description",newName));
       return false;
     }
   }
@@ -54,7 +54,7 @@
     String newPath=newFolder.getCanonicalPath() + File.separator;
     String oldPath=folder.getCanonicalPath() + File.separator;
     if (newPath.indexOf(oldPath) == 0) {
-      Base.showWarning("How very Borges of you","You cannot save the sketch into a folder\n" + "inside itself. This would go on forever.",null);
+      Base.showWarning(Language.text("save_file.messages.recursive_save"),Language.text("save_file.messages.recursive_save.description"),null);
       return false;
     }
   }
