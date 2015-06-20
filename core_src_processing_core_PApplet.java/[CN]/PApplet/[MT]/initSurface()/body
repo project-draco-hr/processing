@@ -1,7 +1,7 @@
 {
   g=createPrimaryGraphics();
   surface=g.createSurface();
-  if (g.displayable() && frame == null) {
+  if (g.displayable()) {
     frame=new Frame(){
       @Override public void setResizable(      boolean resizable){
         deprecationWarning("setResizable");
@@ -14,6 +14,17 @@
       @Override public void setTitle(      String title){
         deprecationWarning("setTitle");
         surface.setTitle(title);
+      }
+      @Override public void setUndecorated(      boolean ignored){
+        throw new RuntimeException("'frame' has been removed from Processing 3, " + "use fullScreen() to get an undecorated full screen frame");
+      }
+      @Override public void setLocation(      int x,      int y){
+        deprecationWarning("setLocation");
+        surface.setLocation(x,y);
+      }
+      @Override public void setSize(      int w,      int h){
+        deprecationWarning("setSize");
+        surface.setLocation(w,h);
       }
       private void deprecationWarning(      String method){
         PGraphics.showWarning("Use surface." + method + "() instead of "+ "frame."+ method+ " in Processing 3");
