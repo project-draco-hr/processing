@@ -8,9 +8,9 @@
       displayDevice=devices[displayNum - 1];
     }
  else {
-      System.err.format("Display %d does not exist, " + "using the default display instead.",displayNum);
+      System.err.format("Display %d does not exist, " + "using the default display instead.%n",displayNum);
       for (int i=0; i < devices.length; i++) {
-        System.err.format("Display %d is %s\n",i,devices[i]);
+        System.err.format("Display %d is %s%n",(i + 1),devices[i]);
       }
     }
   }
@@ -43,7 +43,6 @@
     frame.dispose();
     frame.setUndecorated(true);
     frame.setBounds(screenRect);
-    frame.setVisible(true);
   }
   frame.setLayout(null);
   if (fullScreen) {
@@ -52,5 +51,10 @@
  else {
   }
   frame.setResizable(false);
-  sketch.setFrame(frame);
+  frame.addWindowListener(new WindowAdapter(){
+    @Override public void windowClosing(    WindowEvent e){
+      sketch.exit();
+    }
+  }
+);
 }

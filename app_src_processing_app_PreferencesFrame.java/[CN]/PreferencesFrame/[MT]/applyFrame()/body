@@ -18,17 +18,19 @@
   if (!language.equals(Language.getLanguage()) && !language.equals("")) {
     Language.saveLanguage(language);
   }
-  int oldDisplayIndex=Preferences.getInteger("run.display");
-  int displayIndex=0;
-  for (int d=0; d < displaySelectionBox.getItemCount(); d++) {
-    if (displaySelectionBox.getSelectedIndex() == d) {
-      displayIndex=d;
+  if (displaySelectionBox.isEnabled()) {
+    int oldDisplayNum=Preferences.getInteger("run.display");
+    int displayNum=-1;
+    for (int d=0; d < displaySelectionBox.getItemCount(); d++) {
+      if (displaySelectionBox.getSelectedIndex() == d) {
+        displayNum=d + 1;
+      }
     }
-  }
-  if (oldDisplayIndex != displayIndex) {
-    Preferences.setInteger("run.display",displayIndex);
-    for (    Editor editor : base.getEditors()) {
-      editor.setSketchLocation(null);
+    if ((displayNum != -1) && (displayNum != oldDisplayNum)) {
+      Preferences.setInteger("run.display",displayNum);
+      for (      Editor editor : base.getEditors()) {
+        editor.setSketchLocation(null);
+      }
     }
   }
   Preferences.setBoolean("run.options.memory",memoryOverrideBox.isSelected());

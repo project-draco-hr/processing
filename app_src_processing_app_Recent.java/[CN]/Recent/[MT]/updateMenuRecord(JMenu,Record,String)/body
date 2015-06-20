@@ -41,7 +41,13 @@
       }
     }
     if (purtyPath == null) {
-      purtyPath=recPath;
+      String homePath=System.getProperty("user.home");
+      if (recPath.startsWith(homePath)) {
+        purtyPath="\u2302 \u2192 " + recPath.substring(homePath.length() + 1);
+      }
+ else {
+        purtyPath=recPath;
+      }
     }
     JMenuItem item=new JMenuItem(purtyPath);
     item.addActionListener(new ActionListener(){

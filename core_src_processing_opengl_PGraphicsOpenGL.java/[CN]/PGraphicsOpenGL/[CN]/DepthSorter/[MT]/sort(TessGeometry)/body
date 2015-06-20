@@ -1,0 +1,88 @@
+{
+  this.tessGeo=tessGeo;
+  int triangleCount=tessGeo.polyIndexCount / 3;
+{
+    float[] polyVertices=tessGeo.polyVertices;
+    int polyVertexCount=tessGeo.polyVertexCount;
+    if (screenVertices.length < 3 * polyVertexCount) {
+      screenVertices=new float[3 * polyVertexCount];
+    }
+    for (int i=0; i < polyVertexCount; i++) {
+      float x=polyVertices[4 * i + X];
+      float y=polyVertices[4 * i + Y];
+      float z=polyVertices[4 * i + Z];
+      float w=polyVertices[4 * i + W];
+      screenVertices[3 * i + X]=pg.screenXImpl(x,y,z,w);
+      screenVertices[3 * i + Y]=pg.screenYImpl(x,y,z,w);
+      screenVertices[3 * i + Z]=-pg.screenZImpl(x,y,z,w) * (pg.cameraFar - pg.cameraNear);
+    }
+  }
+{
+    for (int i=0; i < pg.texCache.size; i++) {
+      int first=pg.texCache.firstCache[i];
+      int last=pg.texCache.lastCache[i];
+      IndexCache cache=tessGeo.polyIndexCache;
+      for (int n=first; n <= last; n++) {
+        int ioffset=n == first ? pg.texCache.firstIndex[i] : cache.indexOffset[n];
+        int icount=n == last ? pg.texCache.lastIndex[i] - ioffset + 1 : cache.indexOffset[n] + cache.indexCount[n] - ioffset;
+        for (int tr=ioffset / 3; tr < (ioffset + icount) / 3; tr++) {
+          texCacheMap[tr]=i;
+          indexCacheMap[tr]=n;
+        }
+      }
+    }
+  }
+{
+    if (triangleIndices.length < triangleCount) {
+      triangleIndices=new int[triangleCount];
+    }
+    for (int i=0; i < triangleCount; i++) {
+      triangleIndices[i]=i;
+    }
+  }
+  sortByMinZ(0,triangleCount - 1);
+  int activeTid=0;
+  int markedCount=0;
+  while (activeTid < triangleCount) {
+    int testTid=activeTid + 1;
+    boolean draw=false;
+    int swappedCount=0;
+    while (!draw && testTid < triangleCount) {
+      int ati=triangleIndices[activeTid];
+      int bti=triangleIndices[testTid];
+      if (maxCoord(ati,Z) <= minCoord(bti,Z) && !contains(marked,markedCount,triangleIndices[testTid]) && !contains(marked,markedCount,triangleIndices[activeTid])) {
+        draw=true;
+      }
+ else       if (maxCoord(ati,X) <= minCoord(bti,X) || maxCoord(ati,Y) <= minCoord(bti,Y) || minCoord(ati,X) >= maxCoord(bti,X) || minCoord(ati,Y) >= maxCoord(bti,Y)) {
+        testTid++;
+      }
+ else       if (side(bti,ati,-1) > 0) {
+        testTid++;
+      }
+ else       if (side(ati,bti,1) > 0) {
+        testTid++;
+      }
+ else {
+        rotateRight(triangleIndices,activeTid,testTid);
+        marked=arrayCheck(marked,markedCount,1);
+        if (insert(marked,markedCount,triangleIndices[activeTid])) {
+          markedCount++;
+        }
+        swapped=arrayCheck(swapped,swappedCount,1);
+        if (insert(swapped,swappedCount,triangleIndices[activeTid])) {
+          swappedCount++;
+          testTid=activeTid + 1;
+        }
+ else {
+          draw=true;
+        }
+      }
+    }
+    if (remove(marked,markedCount,activeTid)) {
+      markedCount--;
+    }
+    if (draw || testTid >= triangleCount) {
+      activeTid++;
+    }
+  }
+}

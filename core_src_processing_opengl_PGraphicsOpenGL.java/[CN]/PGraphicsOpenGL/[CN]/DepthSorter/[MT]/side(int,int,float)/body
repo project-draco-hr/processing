@@ -1,0 +1,41 @@
+{
+  short[] is=tessGeo.polyIndices;
+  float[] vs=screenVertices;
+  int avoffset=tessGeo.polyIndexCache.vertexOffset[indexCacheMap[ti]];
+  int bvoffset=tessGeo.polyIndexCache.vertexOffset[indexCacheMap[testTi]];
+  int ia0=avoffset + is[3 * ti + 0];
+  int ia1=avoffset + is[3 * ti + 1];
+  int ia2=avoffset + is[3 * ti + 2];
+  int ib0=bvoffset + is[3 * testTi + 0];
+  int ib1=bvoffset + is[3 * testTi + 1];
+  int ib2=bvoffset + is[3 * testTi + 2];
+  float Dx, Dy, Dz, Dw;
+{
+    float ABx=vs[3 * ia1 + X] - vs[3 * ia0 + X], ACx=vs[3 * ia2 + X] - vs[3 * ia0 + X], ABy=vs[3 * ia1 + Y] - vs[3 * ia0 + Y], ACy=vs[3 * ia2 + Y] - vs[3 * ia0 + Y], ABz=vs[3 * ia1 + Z] - vs[3 * ia0 + Z], ACz=vs[3 * ia2 + Z] - vs[3 * ia0 + Z];
+    Dx=ABy * ACz - ABz * ACy;
+    Dy=ABz * ACx - ABx * ACz;
+    Dz=ABx * ACy - ABy * ACx;
+    float rMag=1.0f / (float)Math.sqrt(Dx * Dx + Dy * Dy + Dz * Dz);
+    Dx*=rMag;
+    Dy*=rMag;
+    Dz*=rMag;
+    Dw=-dot(Dx,Dy,Dz,vs[3 * ia0 + X],vs[3 * ia0 + Y],vs[3 * ia0 + Z]);
+  }
+  float distTest=dot(Dx,Dy,Dz,vs[3 * ia0 + X],vs[3 * ia0 + Y],vs[3 * ia0 + Z] + 100 * tz) + Dw;
+  float distA=dot(Dx,Dy,Dz,vs[3 * ib0 + X],vs[3 * ib0 + Y],vs[3 * ib0 + Z]) + Dw;
+  float distB=dot(Dx,Dy,Dz,vs[3 * ib1 + X],vs[3 * ib1 + Y],vs[3 * ib1 + Z]) + Dw;
+  float distC=dot(Dx,Dy,Dz,vs[3 * ib2 + X],vs[3 * ib2 + Y],vs[3 * ib2 + Z]) + Dw;
+{
+    float maxDist=Math.max(Math.abs(distA),Math.max(Math.abs(distB),Math.abs(distC)));
+    float eps=maxDist * 0.1f;
+    if (Math.abs(distA) < eps)     distA=0.0f;
+    if (Math.abs(distB) < eps)     distB=0.0f;
+    if (Math.abs(distC) < eps)     distC=0.0f;
+  }
+  float sideA=distA * distTest;
+  float sideB=distB * distTest;
+  float sideC=distC * distTest;
+  boolean sameSide=sideA >= 0 && sideB >= 0 && sideC >= 0;
+  boolean notSameSide=sideA <= 0 && sideB <= 0 && sideC <= 0;
+  return sameSide ? 1 : notSameSide ? -1 : 0;
+}

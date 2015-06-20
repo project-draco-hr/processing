@@ -15,7 +15,7 @@
       modelview=modelviewInv=identity;
       projmodelview.set(projection);
     }
-    if (hasPolys) {
+    if (hasPolys && !getHint(ENABLE_DEPTH_SORT)) {
       flushPolys();
       if (raw != null) {
         rawPolys();
@@ -33,6 +33,12 @@
         if (raw != null) {
           rawPoints();
         }
+      }
+    }
+    if (hasPolys && getHint(ENABLE_DEPTH_SORT)) {
+      flushSortedPolys();
+      if (raw != null) {
+        rawSortedPolys();
       }
     }
     if (flushMode == FLUSH_WHEN_FULL) {
