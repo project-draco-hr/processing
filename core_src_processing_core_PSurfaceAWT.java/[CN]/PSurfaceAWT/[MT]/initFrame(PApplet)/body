@@ -34,7 +34,12 @@
   }
   frame=new JFrame(displayDevice.getDefaultConfiguration());
   final Color windowColor=new Color(sketch.sketchWindowColor(),false);
-  frame.getContentPane().setBackground(windowColor);
+  if (frame instanceof JFrame) {
+    ((JFrame)frame).getContentPane().setBackground(windowColor);
+  }
+ else {
+    frame.setBackground(windowColor);
+  }
   setIconImage(frame);
   frame.add(canvas);
   setSize(sketchWidth,sketchHeight);
