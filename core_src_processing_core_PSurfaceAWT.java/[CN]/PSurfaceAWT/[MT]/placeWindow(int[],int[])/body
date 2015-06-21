@@ -2,6 +2,9 @@
   Dimension window=setFrameSize();
   int contentW=Math.max(sketchWidth,MIN_WINDOW_WIDTH);
   int contentH=Math.max(sketchHeight,MIN_WINDOW_HEIGHT);
+  if (sketch.sketchFullScreen()) {
+    setFullFrame();
+  }
   if (!sketch.sketchFullScreen()) {
     if (location != null) {
       frame.setLocation(location[0],location[1]);
@@ -33,9 +36,6 @@
   canvas.setBounds((contentW - sketchWidth) / 2,(contentH - sketchHeight) / 2,sketchWidth,sketchHeight);
   setupFrameResizeListener();
   if (sketch.getGraphics().displayable()) {
-    frame.setVisible(true);
-    if (canvas != null) {
-      canvas.requestFocus();
-    }
+    setVisible(true);
   }
 }
