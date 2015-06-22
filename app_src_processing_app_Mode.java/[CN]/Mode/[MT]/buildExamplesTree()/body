@@ -18,20 +18,24 @@
     if (foundationLibraries.getChildCount() > 0) {
       root.add(foundationLibraries);
     }
-    DefaultMutableTreeNode contributed=new DefaultMutableTreeNode(Language.text("examples.libraries"));
+    DefaultMutableTreeNode contributedLibExamples=new DefaultMutableTreeNode(Language.text("examples.libraries"));
     for (    Library lib : contribLibraries) {
       if (lib.hasExamples()) {
         DefaultMutableTreeNode libNode=new DefaultMutableTreeNode(lib.getName());
         base.addSketches(libNode,lib.getExamplesFolder());
-        contributed.add(libNode);
+        contributedLibExamples.add(libNode);
       }
     }
-    if (contributed.getChildCount() > 0) {
-      root.add(contributed);
+    if (contributedLibExamples.getChildCount() > 0) {
+      root.add(contributedLibExamples);
     }
   }
  catch (  IOException e) {
     e.printStackTrace();
+  }
+  DefaultMutableTreeNode contributedExamplesNode=buildContributedExamplesTrees();
+  if (contributedExamplesNode.getChildCount() > 0) {
+    root.add(contributedExamplesNode);
   }
   return root;
 }
