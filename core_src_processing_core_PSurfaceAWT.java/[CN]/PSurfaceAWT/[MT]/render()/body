@@ -1,29 +1,20 @@
 {
-  if (!canvas.isDisplayable()) {
-    return;
-  }
-  if (graphics.image == null) {
-    if (PApplet.DEBUG) {
-      new Exception("image is null, returning").printStackTrace(System.out);
+  if (canvas.isDisplayable() && graphics.image != null) {
+    if (canvas.getBufferStrategy() == null) {
+      canvas.createBufferStrategy(2);
     }
-    return;
-  }
-  Canvas c=canvas;
-  if (c.getBufferStrategy() == null) {
-    c.createBufferStrategy(2);
-  }
-  BufferStrategy strategy=c.getBufferStrategy();
-  if (strategy == null) {
-    return;
-  }
-  do {
-    do {
-      Graphics2D draw=(Graphics2D)strategy.getDrawGraphics();
-      draw.drawImage(graphics.image,0,0,sketchWidth,sketchHeight,null);
-      draw.dispose();
-    }
+    BufferStrategy strategy=canvas.getBufferStrategy();
+    if (strategy != null) {
+      do {
+        do {
+          Graphics2D draw=(Graphics2D)strategy.getDrawGraphics();
+          draw.drawImage(graphics.image,0,0,sketchWidth,sketchHeight,null);
+          draw.dispose();
+        }
  while (strategy.contentsRestored());
-    strategy.show();
-  }
+        strategy.show();
+      }
  while (strategy.contentsLost());
+    }
+  }
 }

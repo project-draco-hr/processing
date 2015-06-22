@@ -117,7 +117,7 @@
   if (windowColor != 0) {
     sketch.windowColor=windowColor;
   }
-  PSurface surface=sketch.initSurface();
+  final PSurface surface=sketch.initSurface();
   if (present) {
     if (hideStop) {
       stopColor=0;
@@ -130,7 +130,8 @@
   if (sketch.getGraphics().displayable()) {
     surface.setVisible(true);
   }
-  if (external) {
+  if (sketch.external) {
     surface.setupExternalMessages();
   }
+  surface.startThread();
 }
