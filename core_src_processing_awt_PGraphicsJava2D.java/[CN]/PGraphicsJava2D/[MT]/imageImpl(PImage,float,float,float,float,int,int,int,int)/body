@@ -10,17 +10,17 @@
     cash=new ImageCache();
     setCache(who,cash);
     who.updatePixels();
-    who.modified=true;
+    who.setModified();
   }
   if ((tint && !cash.tinted) || (tint && (cash.tintedColor != tintColor)) || (!tint && cash.tinted)) {
     who.updatePixels();
   }
-  if (who.modified) {
+  if (who.isModified()) {
     if (who.pixels == null) {
       who.pixels=new int[who.width * who.height];
     }
     cash.update(who,tint,tintColor);
-    who.modified=false;
+    who.setModified(false);
   }
   g2.drawImage(((ImageCache)getCache(who)).image,(int)x1,(int)y1,(int)x2,(int)y2,u1,v1,u2,v2,null);
 }
