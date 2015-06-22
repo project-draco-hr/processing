@@ -1,3 +1,12 @@
 {
-  return (g2 != null) ? g2.getFontMetrics(font) : super.getFontMetrics(font);
+  if (toolkit == null) {
+    try {
+      Canvas canvas=(Canvas)surface.getNative();
+      toolkit=canvas.getToolkit();
+    }
+ catch (    Exception e) {
+      toolkit=Toolkit.getDefaultToolkit();
+    }
+  }
+  return toolkit.getFontMetrics(font);
 }
