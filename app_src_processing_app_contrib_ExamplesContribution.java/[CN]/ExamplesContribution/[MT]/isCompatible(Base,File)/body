@@ -1,0 +1,16 @@
+{
+  String currentIdentifier=base.getActiveEditor().getMode().getIdentifier();
+  File propertiesFile=new File(exampleFolder,getPropertiesName());
+  if (propertiesFile.exists()) {
+    StringList compatibleList=parseModeList(Base.readSettings(propertiesFile));
+    if (compatibleList.size() == 0) {
+      return true;
+    }
+    for (    String c : compatibleList) {
+      if (c.equals(currentIdentifier)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}

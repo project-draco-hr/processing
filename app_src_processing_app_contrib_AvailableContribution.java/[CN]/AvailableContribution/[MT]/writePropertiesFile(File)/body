@@ -1,10 +1,10 @@
 {
   try {
-    Map<String,String> properties=Base.readSettings(propFile);
+    StringDict properties=Base.readSettings(propFile);
     String name=properties.get("name");
     if (name == null || name.isEmpty())     name=getName();
     String category;
-    List<String> categoryList=parseCategories(properties.get("category"));
+    StringList categoryList=parseCategories(properties);
     if (categoryList.size() == 1 && categoryList.get(0).equals("Unknown")) {
       category=getCategoryStr();
     }
@@ -17,23 +17,14 @@
       sb.deleteCharAt(sb.length() - 1);
       category=sb.toString();
     }
-    String specifiedImport="";
-    List<String> importsList=parseImports(properties.get("imports"));
-    if (importsList == null || importsList.isEmpty()) {
-      specifiedImport=getImportStr();
+    StringList importsList=parseImports(properties);
+    String importItem=importsList.join(",");
+    String authors=properties.get(AUTHORS_PROPERTY);
+    if (authors == null) {
+      authors=properties.get("authorList");
     }
- else {
-      StringBuilder sbImport=new StringBuilder();
-      for (      String it : imports) {
-        sbImport.append(it);
-        sbImport.append(',');
-      }
-      sbImport.deleteCharAt(sbImport.length() - 1);
-      specifiedImport=sbImport.toString();
-    }
-    String authorList=properties.get("authorList");
-    if (authorList == null || authorList.isEmpty()) {
-      authorList=getAuthorList();
+    if (authors == null || authors.isEmpty()) {
+      authors=getAuthorList();
     }
     String url=properties.get("url");
     if (url == null || url.isEmpty()) {
@@ -53,14 +44,14 @@
     }
  catch (    NumberFormatException e) {
       version=getVersion();
-      System.err.println("The version number for the ???" + name + "??? contribution is not set properly.");
+      System.err.println("The version number for ???" + name + "??? is not set properly.");
       System.err.println("Please contact the author to fix it according to the guidelines.");
     }
     String prettyVersion=properties.get("prettyVersion");
     if (prettyVersion == null || prettyVersion.isEmpty())     prettyVersion=getPrettyVersion();
     String compatibleContribsList=null;
     if (getType() == ContributionType.EXAMPLES) {
-      compatibleContribsList=properties.get("compatibleModesList");
+      compatibleContribsList=properties.get(MODES_PROPERTY);
     }
     long lastUpdated;
     try {
@@ -87,7 +78,7 @@
       PrintWriter writer=PApplet.createWriter(propFile);
       writer.println("name=" + name);
       writer.println("category=" + category);
-      writer.println("authorList=" + authorList);
+      writer.println(AUTHORS_PROPERTY + "=" + authors);
       writer.println("url=" + url);
       writer.println("sentence=" + sentence);
       writer.println("paragraph=" + paragraph);
@@ -97,10 +88,10 @@
       writer.println("minRevision=" + minRev);
       writer.println("maxRevision=" + maxRev);
       if (getType() == ContributionType.LIBRARY) {
-        writer.println("imports=" + specifiedImport);
+        writer.println("imports=" + importItem);
       }
       if (getType() == ContributionType.EXAMPLES) {
-        writer.println("compatibleModesList=" + compatibleContribsList);
+        writer.println(MODES_PROPERTY + "=" + compatibleContribsList);
       }
       writer.flush();
       writer.close();
