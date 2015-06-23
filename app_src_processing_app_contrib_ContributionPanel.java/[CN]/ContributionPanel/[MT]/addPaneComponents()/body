@@ -32,7 +32,7 @@
   updateButton.setVisible(false);
   updateButton.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      listPanel.contribManager.status.clear();
+      listPanel.contributionTab.status.clear();
       isUpdateInProgress=true;
       if (contrib.getType().requiresRestart()) {
         installRemoveButton.setEnabled(false);
@@ -49,7 +49,7 @@
           @Override public void cancel(){
             super.cancel();
             resetInstallProgressBarState();
-            listPanel.contribManager.status.setMessage("");
+            listPanel.contributionTab.status.setMessage("");
             isUpdateInProgress=false;
             installRemoveButton.setEnabled(true);
             if (contrib.isDeletionFlagged()) {
@@ -60,7 +60,7 @@
             boolean isModeActive=false;
             if (contrib.getType() == ContributionType.MODE) {
               ModeContribution m=(ModeContribution)contrib;
-              Base base=listPanel.contribManager.editor.getBase();
+              Base base=listPanel.contributionTab.editor.getBase();
               for (              Editor e : base.getEditors()) {
                 if (e.getMode().equals(m.getMode())) {
                   isModeActive=true;
@@ -72,12 +72,12 @@
               updateButton.setEnabled(true);
             }
  else {
-              listPanel.contribManager.restartButton.setVisible(true);
+              listPanel.contributionTab.restartButton.setVisible(true);
             }
           }
         }
 ;
-        ((LocalContribution)contrib).removeContribution(listPanel.contribManager.editor,progress,listPanel.contribManager.status);
+        ((LocalContribution)contrib).removeContribution(listPanel.contributionTab.editor,progress,listPanel.contributionTab.status);
       }
  else {
         updateButton.setEnabled(false);

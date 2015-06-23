@@ -1,39 +1,37 @@
 {
-  if (!UpdateCheck.isAllowed()) {
-    System.out.println("Cannot update contributions because " + "updates are disabled in preferences.");
-    return;
-  }
-  retryConnectingButton.setEnabled(false);
-  status.setMessage(Language.text("contrib.status.downloading_list"));
-  contribListing.downloadAvailableList(base,new ContribProgressBar(progressBar){
+  final ContributionTab activeTab=getActiveTab();
+  activeTab.retryConnectingButton.setEnabled(false);
+  activeTab.status.setMessage(Language.text("contrib.status.downloading_list"));
+  activeTab.contribListing.downloadAvailableList(base,new ContribProgressBar(activeTab.progressBar){
     @Override public void startTask(    String name,    int maxValue){
       super.startTask(name,maxValue);
+      progressBar.setVisible(true);
       progressBar.setString(null);
     }
     @Override public void setProgress(    int value){
       super.setProgress(value);
       progressBar.setValue(value);
       progressBar.setStringPainted(true);
-      status.setMessage(Language.text("contrib.status.downloading_list"));
+      activeTab.status.setMessage(Language.text("contrib.status.downloading_list"));
     }
     @Override public void finishedAction(){
       progressBar.setVisible(false);
-      updateContributionListing();
-      updateCategoryChooser();
-      retryConnectingButton.setEnabled(true);
+      activeTab.updateContributionListing();
+      activeTab.updateCategoryChooser();
+      activeTab.retryConnectingButton.setEnabled(true);
       if (error) {
         if (exception instanceof SocketTimeoutException) {
-          status.setErrorMessage(Language.text("contrib.errors.list_download.timeout"));
+          activeTab.status.setErrorMessage(Language.text("contrib.errors.list_download.timeout"));
         }
  else {
-          status.setErrorMessage(Language.text("contrib.errors.list_download"));
+          activeTab.status.setErrorMessage(Language.text("contrib.errors.list_download"));
         }
         exception.printStackTrace();
-        retryConnectingButton.setVisible(true);
+        activeTab.retryConnectingButton.setVisible(true);
       }
  else {
-        status.setMessage(Language.text("contrib.status.done"));
-        retryConnectingButton.setVisible(false);
+        activeTab.status.setMessage(Language.text("contrib.status.done"));
+        activeTab.retryConnectingButton.setVisible(false);
       }
     }
   }

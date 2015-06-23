@@ -17,7 +17,7 @@
 ;
   installActionListener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      listPanel.contribManager.status.clear();
+      listPanel.contributionTab.status.clear();
       isInstallInProgress=true;
       ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,PROGRESS_BAR_CONSTRAINT);
       if (contrib instanceof AvailableContribution) {
@@ -29,7 +29,7 @@
 ;
   undoActionListener=new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      listPanel.contribManager.status.clear();
+      listPanel.contributionTab.status.clear();
       if (contrib instanceof LocalContribution) {
         LocalContribution installed=(LocalContribution)contrib;
         installed.setDeletionFlag(false);
@@ -45,14 +45,14 @@
             }
           }
         }
-        listPanel.contribManager.restartButton.setVisible(toBeRestarted);
+        listPanel.contributionTab.restartButton.setVisible(toBeRestarted);
       }
     }
   }
 ;
   removeActionListener=new ActionListener(){
     public void actionPerformed(    ActionEvent arg){
-      listPanel.contribManager.status.clear();
+      listPanel.contributionTab.status.clear();
       if (contrib.isInstalled() && contrib instanceof LocalContribution) {
         isRemoveInProgress=true;
         ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,PROGRESS_BAR_CONSTRAINT);
@@ -75,11 +75,11 @@
             installRemoveButton.setEnabled(true);
             reorganizePaneComponents();
             setSelected(true);
-            ContributionManagerDialog manager=listPanel.contribManager;
+            ContributionTab contributionTab=listPanel.contributionTab;
             boolean isModeActive=false;
             if (contrib.getType() == ContributionType.MODE) {
               ModeContribution m=(ModeContribution)contrib;
-              for (              Editor e : manager.editor.getBase().getEditors()) {
+              for (              Editor e : contributionTab.editor.getBase().getEditors()) {
                 if (e.getMode().equals(m.getMode())) {
                   isModeActive=true;
                   break;
@@ -90,14 +90,14 @@
               updateButton.setEnabled(true);
             }
  else {
-              manager.restartButton.setVisible(true);
+              contributionTab.restartButton.setVisible(true);
             }
           }
         }
 ;
-        ContributionManagerDialog manager=listPanel.contribManager;
+        ContributionTab contributionTab=listPanel.contributionTab;
         LocalContribution localContrib=(LocalContribution)contrib;
-        localContrib.removeContribution(manager.editor,monitor,manager.status);
+        localContrib.removeContribution(contributionTab.editor,monitor,contributionTab.status);
       }
     }
   }
@@ -125,7 +125,7 @@
       }
  else {
         final String msg=contrib.getName() + " is not compatible with this version of Processing";
-        listPanel.contribManager.status.setErrorMessage(msg);
+        listPanel.contributionTab.status.setErrorMessage(msg);
       }
     }
   }
