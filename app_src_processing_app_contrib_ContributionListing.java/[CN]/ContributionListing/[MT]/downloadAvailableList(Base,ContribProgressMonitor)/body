@@ -1,0 +1,33 @@
+{
+  new Thread(new Runnable(){
+    public void run(){
+      downloadingListingLock.lock();
+      URL url=null;
+      try {
+        url=new URL(LISTING_URL);
+        File tempContribFile=Base.getSettingsFile("contribs.tmp");
+        tempContribFile.setWritable(true);
+        ContributionManager.download(url,base.getInstalledContribsInfo(),tempContribFile,progress);
+        if (!progress.isCanceled() && !progress.isError()) {
+          if (listingFile.exists()) {
+            listingFile.delete();
+          }
+          if (tempContribFile.renameTo(listingFile)) {
+            hasDownloadedLatestList=true;
+            hasListDownloadFailed=false;
+            setAdvertisedList(listingFile);
+          }
+ else {
+            hasListDownloadFailed=true;
+          }
+        }
+      }
+ catch (      MalformedURLException e) {
+        progress.error(e);
+        progress.finished();
+      }
+      downloadingListingLock.unlock();
+    }
+  }
+,"Contribution List Downloader").start();
+}

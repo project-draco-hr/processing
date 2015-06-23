@@ -1,0 +1,39 @@
+{
+  final ContributionTab activeTab=getActiveTab();
+  activeTab.retryConnectingButton.setEnabled(false);
+  activeTab.status.setMessage(Language.text("contrib.status.downloading_list"));
+  activeTab.contribListing.downloadAvailableList(base,new ContribProgressBar(activeTab.progressBar){
+    @Override public void startTask(    String name,    int maxValue){
+      super.startTask(name,maxValue);
+      progressBar.setVisible(true);
+      progressBar.setString(null);
+    }
+    @Override public void setProgress(    int value){
+      super.setProgress(value);
+      progressBar.setValue(value);
+      progressBar.setStringPainted(true);
+      activeTab.status.setMessage(Language.text("contrib.status.downloading_list"));
+    }
+    @Override public void finishedAction(){
+      progressBar.setVisible(false);
+      activeTab.updateContributionListing();
+      activeTab.updateCategoryChooser();
+      activeTab.retryConnectingButton.setEnabled(true);
+      if (error) {
+        if (exception instanceof SocketTimeoutException) {
+          activeTab.status.setErrorMessage(Language.text("contrib.errors.list_download.timeout"));
+        }
+ else {
+          activeTab.status.setErrorMessage(Language.text("contrib.errors.list_download"));
+        }
+        exception.printStackTrace();
+        activeTab.retryConnectingButton.setVisible(true);
+      }
+ else {
+        activeTab.status.setMessage(Language.text("contrib.status.done"));
+        activeTab.retryConnectingButton.setVisible(false);
+      }
+    }
+  }
+);
+}
