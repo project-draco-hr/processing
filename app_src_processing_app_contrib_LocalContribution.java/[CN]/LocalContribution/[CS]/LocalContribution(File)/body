@@ -5,12 +5,15 @@
     properties=Base.readSettings(propertiesFile);
     name=properties.get("name");
     id=properties.get("id");
-    categories=parseCategories(properties.get("category"));
-    specifiedImports=parseImports(properties.get("imports"));
+    categories=parseCategories(properties);
+    imports=parseImports(properties);
     if (name == null) {
       name=folder.getName();
     }
-    authorList=properties.get("authorList");
+    authors=properties.get(AUTHORS_PROPERTY);
+    if (authors == null) {
+      authors=properties.get("authorList");
+    }
     url=properties.get("url");
     sentence=properties.get("sentence");
     paragraph=properties.get("paragraph");
@@ -40,7 +43,9 @@
  else {
     Base.log("No properties file at " + propertiesFile.getAbsolutePath());
     name=folder.getName();
-    categories=defaultCategory();
+    categories=unknownCategory();
   }
-  if (categories.contains(SPECIAL_CATEGORY_NAME))   validateSpecial();
+  if (categories.hasValue(SPECIAL_CATEGORY)) {
+    validateSpecial();
+  }
 }

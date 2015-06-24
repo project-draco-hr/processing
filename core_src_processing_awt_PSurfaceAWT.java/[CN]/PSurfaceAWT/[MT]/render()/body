@@ -1,0 +1,20 @@
+{
+  if (canvas.isDisplayable() && graphics.image != null) {
+    if (canvas.getBufferStrategy() == null) {
+      canvas.createBufferStrategy(2);
+    }
+    BufferStrategy strategy=canvas.getBufferStrategy();
+    if (strategy != null) {
+      do {
+        do {
+          Graphics2D draw=(Graphics2D)strategy.getDrawGraphics();
+          draw.drawImage(graphics.image,0,0,sketchWidth,sketchHeight,null);
+          draw.dispose();
+        }
+ while (strategy.contentsRestored());
+        strategy.show();
+      }
+ while (strategy.contentsLost());
+    }
+  }
+}

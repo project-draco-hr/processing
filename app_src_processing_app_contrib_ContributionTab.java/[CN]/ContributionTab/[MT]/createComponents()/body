@@ -1,0 +1,60 @@
+{
+  Container pane=panel;
+  pane.setLayout(new BorderLayout());
+  JPanel filterPanel=new JPanel();
+  filterPanel.setLayout(new BoxLayout(filterPanel,BoxLayout.X_AXIS));
+  pane.add(filterPanel,BorderLayout.NORTH);
+  filterPanel.add(Box.createHorizontalStrut(6));
+  JLabel categoryLabel=new JLabel(Language.text("contrib.category"));
+  filterPanel.add(categoryLabel);
+  filterPanel.add(Box.createHorizontalStrut(5));
+  categoryChooser=new JComboBox<String>();
+  categoryChooser.setMaximumRowCount(20);
+  updateCategoryChooser();
+  filterPanel.add(categoryChooser);
+  categoryChooser.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent e){
+      category=(String)categoryChooser.getSelectedItem();
+      if (ContributionManagerDialog.ANY_CATEGORY.equals(category)) {
+        category=null;
+      }
+      filterLibraries(category,filterField.filters,isCompatibilityFilter);
+      contributionListPanel.updateColors();
+    }
+  }
+);
+  filterPanel.add(Box.createHorizontalStrut(5));
+  filterField=new FilterField();
+  filterPanel.add(filterField);
+  filterPanel.add(Box.createHorizontalStrut(5));
+  final JCheckBox compatibleContrib=new JCheckBox(compatibleCheckboxLabel);
+  compatibleContrib.addItemListener(new ItemListener(){
+    @Override public void itemStateChanged(    ItemEvent arg0){
+      isCompatibilityFilter=compatibleContrib.isSelected();
+      filterLibraries(category,filterField.filters,isCompatibilityFilter);
+      contributionListPanel.updateColors();
+    }
+  }
+);
+  filterPanel.add(compatibleContrib);
+  filterPanel.setBorder(new EmptyBorder(7,7,7,7));
+  scrollPane=new JScrollPane();
+  scrollPane.setPreferredSize(new Dimension(300,300));
+  scrollPane.setViewportView(contributionListPanel);
+  scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+  scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+  pane.add(scrollPane,BorderLayout.CENTER);
+  pane.add(Box.createHorizontalStrut(10),BorderLayout.WEST);
+  pane.add(Box.createHorizontalStrut(10),BorderLayout.EAST);
+  status=new StatusPanel();
+  JPanel statusRestartPane=new JPanel();
+  statusRestartPane.setLayout(new BorderLayout());
+  statusRestartPane.setBorder(new EmptyBorder(7,7,7,7));
+  statusRestartPane.setOpaque(false);
+  statusRestartPane.add(status,BorderLayout.WEST);
+  statusRestartPane.add(progressBar,BorderLayout.LINE_END);
+  statusRestartPane.add(restartButton,BorderLayout.EAST);
+  statusRestartPane.add(retryConnectingButton,BorderLayout.EAST);
+  pane.add(statusRestartPane,BorderLayout.SOUTH);
+  panel.setMinimumSize(new Dimension(450,400));
+}

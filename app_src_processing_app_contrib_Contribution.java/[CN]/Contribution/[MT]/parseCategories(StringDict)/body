@@ -1,0 +1,20 @@
+{
+  StringList outgoing=new StringList();
+  String categoryStr=properties.get(CATEGORIES_PROPERTY);
+  if (categoryStr == null) {
+    categoryStr=properties.get("category");
+  }
+  if (categoryStr != null) {
+    String[] listing=PApplet.trim(PApplet.split(categoryStr,','));
+    for (    String category : listing) {
+      if (validCategories.contains(category)) {
+        category=translateCategory(category);
+        outgoing.append(category);
+      }
+    }
+  }
+  if (outgoing.size() == 0) {
+    return unknownCategory();
+  }
+  return outgoing;
+}

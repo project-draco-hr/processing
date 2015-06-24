@@ -1,6 +1,11 @@
 {
   this(null,svg,true);
   if (!svg.getName().equals("svg")) {
-    throw new RuntimeException("The root node is not <svg>, it's <" + svg.getName() + ">."+ (svg.getName().toLowerCase().equals("html") ? " That means it's just a webpage. Did you download it right?" : ""));
+    if (svg.getName().toLowerCase().equals("html")) {
+      throw new RuntimeException("This appears to be a web page, not an SVG file.");
+    }
+ else {
+      throw new RuntimeException("The root node is not <svg>, it's <" + svg.getName() + ">");
+    }
   }
 }

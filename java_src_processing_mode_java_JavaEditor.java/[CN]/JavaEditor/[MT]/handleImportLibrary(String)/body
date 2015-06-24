@@ -8,14 +8,14 @@
     statusError("Unable to locate library: " + libraryName);
     return;
   }
-  String[] list=lib.getSpecifiedImports();
+  StringList list=lib.getImports();
   if (list == null) {
     list=Base.packageListFromClassPath(lib.getJarPath());
   }
   StringBuilder sb=new StringBuilder();
-  for (int i=0; i < list.length; i++) {
+  for (  String item : list) {
     sb.append("import ");
-    sb.append(list[i]);
+    sb.append(item);
     sb.append(".*;\n");
   }
   sb.append('\n');
