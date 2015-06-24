@@ -1,0 +1,13 @@
+{
+  ReferenceQueue<PShader> refQueue=GLResourceShader.referenceQueue();
+  int iterations=0;
+  while (iterations < MAX_DRAIN_GLRES_ITERATIONS) {
+    GLResourceShader res=(GLResourceShader)refQueue.poll();
+    if (res == null) {
+      break;
+    }
+    System.out.println("Disposing shader resource " + res.hashCode());
+    res.dispose();
+    ++iterations;
+  }
+}

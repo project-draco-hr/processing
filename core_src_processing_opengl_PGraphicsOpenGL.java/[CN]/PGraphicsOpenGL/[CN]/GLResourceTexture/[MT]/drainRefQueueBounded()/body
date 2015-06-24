@@ -1,0 +1,13 @@
+{
+  ReferenceQueue<Texture> refQueue=GLResourceTexture.referenceQueue();
+  int iterations=0;
+  while (iterations < MAX_DRAIN_GLRES_ITERATIONS) {
+    GLResourceTexture res=(GLResourceTexture)refQueue.poll();
+    if (res == null) {
+      break;
+    }
+    System.out.println("Disposing texture resource " + iterations + " "+ res.hashCode());
+    res.dispose();
+    ++iterations;
+  }
+}

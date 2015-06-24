@@ -22,7 +22,7 @@
   }
   if (destFile.exists()) {
     Object[] options={Language.text("prompt.ok"),Language.text("prompt.cancel")};
-    String prompt="Replace the existing version of " + filename + "?";
+    String prompt=Language.interpolate("add_file.messages.confirm_replace",filename);
     int result=JOptionPane.showOptionDialog(editor,prompt,"Replace",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
     if (result == JOptionPane.YES_OPTION) {
       replacement=true;
@@ -34,23 +34,22 @@
   if (replacement) {
     boolean muchSuccess=destFile.delete();
     if (!muchSuccess) {
-      Base.showWarning("Error adding file","Could not delete the existing '" + filename + "' file.",null);
+      Base.showWarning(Language.text("add_file.messages.error_adding"),Language.interpolate("add_file.messages.cannot_delete.description",filename),null);
       return false;
     }
   }
   if ((codeExtension == null) && sourceFile.equals(destFile)) {
-    Base.showWarning("You can't fool me","This file has already been copied to the\n" + "location from which where you're trying to add it.\n" + "I ain't not doin nuthin'.",null);
+    Base.showWarning(Language.text("add_file.messages.same_file"),Language.text("add_file.messages.same_file.description"),null);
     return false;
   }
   if (!sourceFile.equals(destFile)) {
-    final File sourceFile2=sourceFile;
-    final File destFile2=destFile;
-    javax.swing.SwingUtilities.invokeLater(new Runnable(){
-      public void run(){
-        new ProgressFrame(sourceFile2,destFile2,editor);
-      }
+    try {
+      Base.copyFile(sourceFile,destFile);
     }
-);
+ catch (    IOException e) {
+      Base.showWarning(Language.text("add_file.messages.error_adding"),Language.interpolate("add_file.messages.cannot_add.description",filename),e);
+      return false;
+    }
   }
   if (codeExtension != null) {
     SketchCode newCode=new SketchCode(destFile,codeExtension);

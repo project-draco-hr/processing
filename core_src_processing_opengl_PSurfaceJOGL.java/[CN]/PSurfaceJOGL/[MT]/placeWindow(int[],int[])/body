@@ -23,10 +23,14 @@
     }
   }
  else {
-    setFrameCentered();
+    int sketchX=displayDevice.getViewportInWindowUnits().getX();
+    int sketchY=displayDevice.getViewportInWindowUnits().getY();
+    window.setTopLevelPosition(sketchX + screenRect.x + (screenRect.width - sketchWidth) / 2,sketchY + screenRect.y + (screenRect.height - sketchHeight) / 2);
   }
   Point frameLoc=new Point(x,y);
   if (frameLoc.y < 0) {
     window.setTopLevelPosition(frameLoc.x,30);
   }
+  placedWindow=true;
+  if (requestedStart)   startThread();
 }

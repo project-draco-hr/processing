@@ -33,13 +33,13 @@
     }
   }
 );
-  setTitle("QuickTime Movie Maker");
-  aboutLabel=new JLabel("<html>" + "<b>This tool creates a QuickTime movie from a sequence of images.</b><br> " + "<br>"+ "To avoid artifacts caused by re-compressing images as video,<br> "+ "use TIFF, TGA (from Processing), or PNG images as the source.<br>"+ "<br>"+ "TIFF and TGA images will write more quickly, but require more disk:<br>"+ "<tt>saveFrame(\"frames/####.tif\");</tt><br>"+ "<tt>saveFrame(\"frames/####.tga\");</tt><br>"+ "<br>"+ "PNG images are smaller, but your sketch will run more slowly:<br>"+ "<tt>saveFrame(\"frames/####.png\");</tt><br>"+ "<br>"+ "<font color=#808080>This code is based on QuickTime Movie Maker 1.5.1 2011-01-17.<br>"+ "Copyright \u00A9 2010-2011 Werner Randelshofer. All rights reserved.<br>"+ "This software is licensed under Creative Commons Atribution 3.0.");
-  imageFolderHelpLabel.setText("Drag a folder with image files into the field below:");
-  chooseImageFolderButton.setText("Choose...");
+  setTitle(Language.text("movie_maker.title"));
+  aboutLabel=new JLabel(Language.text("movie_maker.blurb"));
+  imageFolderHelpLabel.setText(Language.text("movie_maker.image_folder_help_label"));
+  chooseImageFolderButton.setText(Language.text("movie_maker.choose_button"));
   chooseImageFolderButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      Chooser.selectFolder(MovieMaker.this,"Select image folder...",new File(imageFolderField.getText()),new Chooser.Callback(){
+      Chooser.selectFolder(MovieMaker.this,Language.text("movie_maker.select_image_folder"),new File(imageFolderField.getText()),new Chooser.Callback(){
         void select(        File file){
           if (file != null) {
             imageFolderField.setText(file.getAbsolutePath());
@@ -50,11 +50,11 @@
     }
   }
 );
-  soundFileHelpLabel.setText("Drag a sound file into the field below (.au, .aiff, .wav, .mp3):");
-  chooseSoundFileButton.setText("Choose...");
+  soundFileHelpLabel.setText(Language.text("movie_maker.sound_file_help_label"));
+  chooseSoundFileButton.setText(Language.text("movie_maker.choose_button"));
   chooseSoundFileButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      Chooser.selectInput(MovieMaker.this,"Select sound file...",new File(soundFileField.getText()),new Chooser.Callback(){
+      Chooser.selectInput(MovieMaker.this,Language.text("movie_maker.select_sound_file"),new File(soundFileField.getText()),new Chooser.Callback(){
         void select(        File file){
           if (file != null) {
             soundFileField.setText(file.getAbsolutePath());
@@ -65,12 +65,12 @@
     }
   }
 );
-  createMovieButton.setText("Create Movie...");
+  createMovieButton.setText(Language.text("movie_maker.create_movie_button"));
   createMovieButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       String lastPath=prefs.get("movie.outputFile",null);
       File lastFile=lastPath == null ? null : new File(lastPath);
-      Chooser.selectOutput(MovieMaker.this,"Save movie as...",lastFile,new Chooser.Callback(){
+      Chooser.selectOutput(MovieMaker.this,Language.text("movie_maker.save_dialog_prompt"),lastFile,new Chooser.Callback(){
         @Override void select(        File file){
           if (file != null) {
             String path=file.getAbsolutePath();
@@ -88,27 +88,27 @@
 );
   Font font=new Font("Dialog",Font.PLAIN,11);
   widthLabel.setFont(font);
-  widthLabel.setText("Width:");
+  widthLabel.setText(Language.text("movie_maker.width"));
   widthField.setColumns(4);
   widthField.setFont(font);
   widthField.setText("320");
   heightLabel.setFont(font);
-  heightLabel.setText("Height:");
+  heightLabel.setText(Language.text("movie_maker.height"));
   heightField.setColumns(4);
   heightField.setFont(font);
   heightField.setText("240");
   compressionLabel.setFont(font);
-  compressionLabel.setText("Compression:");
+  compressionLabel.setText(Language.text("movie_maker.compression"));
   compressionBox.setFont(font);
-  compressionBox.setModel(new DefaultComboBoxModel<String>(new String[]{"Animation","JPEG","PNG"}));
+  compressionBox.setModel(new DefaultComboBoxModel<String>(new String[]{Language.text("movie_maker.compression.animation"),Language.text("movie_maker.compression.jpeg"),Language.text("movie_maker.compression.png")}));
   fpsLabel.setFont(font);
-  fpsLabel.setText("Frame Rate:");
+  fpsLabel.setText(Language.text("movie_maker.framerate"));
   fpsField.setColumns(4);
   fpsField.setFont(font);
   fpsField.setText("30");
   originalSizeCheckBox.setFont(font);
-  originalSizeCheckBox.setText("Same size as originals");
-  originalSizeCheckBox.setToolTipText("Check this box if the folder contains already encoded video frames in the desired size.");
+  originalSizeCheckBox.setText(Language.text("movie_maker.orig_size_button"));
+  originalSizeCheckBox.setToolTipText(Language.text("movie_maker.orig_size_tooltip"));
   GroupLayout layout=new GroupLayout(getContentPane());
   getContentPane().setLayout(layout);
   layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGap(61,61,61).addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(widthLabel).addComponent(fpsLabel)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(fpsField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(compressionLabel).addGap(1,1,1).addComponent(compressionBox,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(originalSizeCheckBox)).addGroup(layout.createSequentialGroup().addComponent(widthField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(heightLabel).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(heightField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE))).addGap(41,41,41)).addGroup(layout.createSequentialGroup().addContainerGap().addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(aboutLabel,GroupLayout.DEFAULT_SIZE,484,Short.MAX_VALUE).addComponent(imageFolderHelpLabel).addComponent(soundFileHelpLabel).addGroup(layout.createSequentialGroup().addComponent(soundFileField,GroupLayout.DEFAULT_SIZE,372,Short.MAX_VALUE).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(chooseSoundFileButton)).addComponent(createMovieButton,GroupLayout.Alignment.TRAILING).addGroup(GroupLayout.Alignment.TRAILING,layout.createSequentialGroup().addComponent(imageFolderField,GroupLayout.DEFAULT_SIZE,372,Short.MAX_VALUE).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(chooseImageFolderButton)))).addGroup(layout.createSequentialGroup().addContainerGap()))));

@@ -7,7 +7,7 @@
         File contribZip=File.createTempFile("download",filename);
         contribZip.setWritable(true);
         try {
-          download(url,contribZip,downloadProgress);
+          download(url,null,contribZip,downloadProgress);
           if (!downloadProgress.isCanceled() && !downloadProgress.isError()) {
             installProgress.startTask(Language.text("contrib.progress.installing"),ContribProgressMonitor.UNKNOWN);
             LocalContribution contribution=ad.install(editor.getBase(),contribZip,false,status);
@@ -34,7 +34,20 @@
           contribZip.delete();
         }
  catch (        Exception e) {
-          status.setErrorMessage(Language.interpolate("contrib.errors.download_and_install",ad.getName()));
+          String msg=null;
+          if (e instanceof RuntimeException) {
+            Throwable cause=((RuntimeException)e).getCause();
+            if (cause instanceof NoClassDefFoundError || cause instanceof NoSuchMethodError) {
+              msg="This item is not compatible with this version of Processing";
+            }
+ else             if (cause instanceof UnsupportedClassVersionError) {
+              msg="This item needs to be recompiled for Java " + PApplet.javaPlatform;
+            }
+          }
+          if (msg == null) {
+            msg=Language.interpolate("contrib.errors.download_and_install",ad.getName());
+          }
+          status.setErrorMessage(msg);
           downloadProgress.cancel();
           installProgress.cancel();
         }

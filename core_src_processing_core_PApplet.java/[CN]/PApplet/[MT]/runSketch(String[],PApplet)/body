@@ -117,14 +117,7 @@
   if (windowColor != 0) {
     sketch.windowColor=windowColor;
   }
-  PSurface surface=sketch.initSurface();
-  while (sketch.defaultSize && !sketch.finished) {
-    try {
-      Thread.sleep(5);
-    }
- catch (    InterruptedException e) {
-    }
-  }
+  final PSurface surface=sketch.initSurface();
   if (present) {
     if (hideStop) {
       stopColor=0;
@@ -134,7 +127,11 @@
  else {
     surface.placeWindow(location,editorLocation);
   }
-  if (external) {
+  if (sketch.getGraphics().displayable()) {
+    surface.setVisible(true);
+  }
+  if (sketch.external) {
     surface.setupExternalMessages();
   }
+  surface.startThread();
 }

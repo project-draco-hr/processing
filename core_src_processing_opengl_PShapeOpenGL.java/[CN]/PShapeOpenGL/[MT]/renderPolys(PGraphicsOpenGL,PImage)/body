@@ -32,28 +32,28 @@
     int ioffset=cache.indexOffset[n];
     int icount=cache.indexCount[n];
     int voffset=cache.vertexOffset[n];
-    shader.setVertexAttribute(root.glPolyVertex,4,PGL.FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
-    shader.setColorAttribute(root.glPolyColor,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+    shader.setVertexAttribute(root.bufPolyVertex.glId,4,PGL.FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
+    shader.setColorAttribute(root.bufPolyColor.glId,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
     if (g.lights) {
-      shader.setNormalAttribute(root.glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
-      shader.setAmbientAttribute(root.glPolyAmbient,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-      shader.setSpecularAttribute(root.glPolySpecular,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-      shader.setEmissiveAttribute(root.glPolyEmissive,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
-      shader.setShininessAttribute(root.glPolyShininess,1,PGL.FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
+      shader.setNormalAttribute(root.bufPolyNormal.glId,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setAmbientAttribute(root.bufPolyAmbient.glId,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setSpecularAttribute(root.bufPolySpecular.glId,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setEmissiveAttribute(root.bufPolyEmissive.glId,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
+      shader.setShininessAttribute(root.bufPolyShininess.glId,1,PGL.FLOAT,0,voffset * PGL.SIZEOF_FLOAT);
     }
     if (g.lights || needNormals) {
-      shader.setNormalAttribute(root.glPolyNormal,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setNormalAttribute(root.bufPolyNormal.glId,3,PGL.FLOAT,0,3 * voffset * PGL.SIZEOF_FLOAT);
     }
     if (tex != null || needTexCoords) {
-      shader.setTexcoordAttribute(root.glPolyTexcoord,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
+      shader.setTexcoordAttribute(root.bufPolyTexcoord.glId,2,PGL.FLOAT,0,2 * voffset * PGL.SIZEOF_FLOAT);
       shader.setTexture(tex);
     }
     for (    VertexAttribute attrib : polyAttribs.values()) {
       if (!attrib.active(shader))       continue;
       attrib.bind(pgl);
-      shader.setAttributeVBO(attrib.glLoc,attrib.glName,attrib.tessSize,attrib.type,attrib.isColor(),0,attrib.sizeInBytes(voffset));
+      shader.setAttributeVBO(attrib.glLoc,attrib.buf.glId,attrib.tessSize,attrib.type,attrib.isColor(),0,attrib.sizeInBytes(voffset));
     }
-    shader.draw(root.glPolyIndex,icount,ioffset);
+    shader.draw(root.bufPolyIndex.glId,icount,ioffset);
   }
   for (  VertexAttribute attrib : polyAttribs.values()) {
     if (attrib.active(shader))     attrib.unbind(pgl);

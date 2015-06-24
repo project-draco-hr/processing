@@ -6,10 +6,7 @@
   sketch.start();
   while ((Thread.currentThread() == thread) && !sketch.finished) {
     checkPause();
-    render();
-    if (sketch.frameCount == 1) {
-      requestFocus();
-    }
+    callDraw();
     long afterTime=System.nanoTime();
     long timeDiff=afterTime - beforeTime;
     long sleepTime=(frameRatePeriod - timeDiff) - overSleepTime;

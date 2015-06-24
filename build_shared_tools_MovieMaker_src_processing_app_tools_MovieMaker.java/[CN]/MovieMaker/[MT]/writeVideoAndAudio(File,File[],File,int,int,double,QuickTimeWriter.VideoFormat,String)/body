@@ -1,6 +1,6 @@
 {
   File tmpFile=streaming.equals("none") ? movieFile : new File(movieFile.getPath() + ".tmp");
-  ProgressMonitor p=new ProgressMonitor(MovieMaker.this,"Creating " + movieFile.getName(),"Creating Output File...",0,imgFiles.length);
+  ProgressMonitor p=new ProgressMonitor(MovieMaker.this,Language.interpolate("movie_maker.progress.creating_file_name",movieFile.getName()),Language.text("movie_maker.progress.creating_output_file"),0,imgFiles.length);
   AudioInputStream audioIn=null;
   QuickTimeWriter qtOut=null;
   BufferedImage imgBuffer=null;
@@ -61,7 +61,7 @@
       }
       while (imgIndex < imgFiles.length && qtOut.getTrackDuration(1) < movieTime) {
         p.setProgress(imgIndex);
-        p.setNote("Processing " + imgFiles[imgIndex].getName());
+        p.setNote(Language.interpolate("movie_maker.progress.processing",imgFiles[imgIndex].getName()));
         if (false) {
           qtOut.writeSample(1,imgFiles[imgIndex],vsDuration);
         }

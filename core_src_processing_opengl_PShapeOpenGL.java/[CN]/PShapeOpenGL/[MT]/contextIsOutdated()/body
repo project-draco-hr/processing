@@ -1,44 +1,26 @@
 {
   boolean outdated=!pgl.contextIsCurrent(context);
   if (outdated) {
-    PGraphicsOpenGL.removeVertexBufferObject(glPolyVertex,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPolyColor,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPolyNormal,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPolyTexcoord,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPolyAmbient,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPolySpecular,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPolyEmissive,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPolyShininess,context);
+    bufPolyVertex.dispose();
+    bufPolyColor.dispose();
+    bufPolyNormal.dispose();
+    bufPolyTexcoord.dispose();
+    bufPolyAmbient.dispose();
+    bufPolySpecular.dispose();
+    bufPolyEmissive.dispose();
+    bufPolyShininess.dispose();
     for (    VertexAttribute attrib : polyAttribs.values()) {
-      PGraphicsOpenGL.removeVertexBufferObject(attrib.glName,context);
+      attrib.buf.dispose();
     }
-    PGraphicsOpenGL.removeVertexBufferObject(glPolyIndex,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glLineVertex,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glLineColor,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glLineAttrib,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glLineIndex,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPointVertex,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPointColor,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPointAttrib,context);
-    PGraphicsOpenGL.removeVertexBufferObject(glPointIndex,context);
-    glPolyVertex=0;
-    glPolyColor=0;
-    glPolyNormal=0;
-    glPolyTexcoord=0;
-    glPolyAmbient=0;
-    glPolySpecular=0;
-    glPolyEmissive=0;
-    glPolyShininess=0;
-    for (    VertexAttribute attrib : polyAttribs.values())     attrib.glName=0;
-    glPolyIndex=0;
-    glLineVertex=0;
-    glLineColor=0;
-    glLineAttrib=0;
-    glLineIndex=0;
-    glPointVertex=0;
-    glPointColor=0;
-    glPointAttrib=0;
-    glPointIndex=0;
+    bufPolyIndex.dispose();
+    bufLineVertex.dispose();
+    bufLineColor.dispose();
+    bufLineAttrib.dispose();
+    bufLineIndex.dispose();
+    bufPointVertex.dispose();
+    bufPointColor.dispose();
+    bufPointAttrib.dispose();
+    bufPointIndex.dispose();
   }
   return outdated;
 }
