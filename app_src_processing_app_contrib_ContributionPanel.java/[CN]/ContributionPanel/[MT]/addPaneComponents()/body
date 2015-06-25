@@ -32,60 +32,7 @@
   updateButton.setVisible(false);
   updateButton.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
-      listPanel.contributionTab.status.clear();
-      isUpdateInProgress=true;
-      if (contrib.getType().requiresRestart()) {
-        installRemoveButton.setEnabled(false);
-        installProgressBar.setVisible(true);
-        installProgressBar.setIndeterminate(true);
-        ContribProgressBar progress=new ContribProgressBar(installProgressBar){
-          public void finishedAction(){
-            resetInstallProgressBarState();
-            updateButton.setEnabled(false);
-            AvailableContribution ad=contribListing.getAvailableContribution(contrib);
-            String url=ad.link;
-            installContribution(ad,url);
-          }
-          @Override public void cancel(){
-            super.cancel();
-            resetInstallProgressBarState();
-            listPanel.contributionTab.status.setMessage("");
-            isUpdateInProgress=false;
-            installRemoveButton.setEnabled(true);
-            if (contrib.isDeletionFlagged()) {
-              ((LocalContribution)contrib).setUpdateFlag(true);
-              ((LocalContribution)contrib).setDeletionFlag(false);
-              contribListing.replaceContribution(contrib,contrib);
-            }
-            boolean isModeActive=false;
-            if (contrib.getType() == ContributionType.MODE) {
-              ModeContribution m=(ModeContribution)contrib;
-              Base base=listPanel.contributionTab.editor.getBase();
-              for (              Editor e : base.getEditors()) {
-                if (e.getMode().equals(m.getMode())) {
-                  isModeActive=true;
-                  break;
-                }
-              }
-            }
-            if (isModeActive) {
-              updateButton.setEnabled(true);
-            }
- else {
-              listPanel.contributionTab.restartButton.setVisible(true);
-            }
-          }
-        }
-;
-        ((LocalContribution)contrib).removeContribution(listPanel.contributionTab.editor,progress,listPanel.contributionTab.status);
-      }
- else {
-        updateButton.setEnabled(false);
-        installRemoveButton.setEnabled(false);
-        AvailableContribution ad=contribListing.getAvailableContribution(contrib);
-        String url=ad.link;
-        installContribution(ad,url);
-      }
+      update();
     }
   }
 );

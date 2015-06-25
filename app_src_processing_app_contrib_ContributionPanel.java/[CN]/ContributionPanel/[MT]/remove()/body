@@ -1,0 +1,49 @@
+{
+  listPanel.contributionTab.statusPanel.clear();
+  if (contrib.isInstalled() && contrib instanceof LocalContribution) {
+    isRemoveInProgress=true;
+    ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,PROGRESS_BAR_CONSTRAINT);
+    updateButton.setEnabled(false);
+    installRemoveButton.setEnabled(false);
+    installProgressBar.setVisible(true);
+    installProgressBar.setIndeterminate(true);
+    ContribProgressBar monitor=new ContribProgressBar(installProgressBar){
+      public void finishedAction(){
+        resetInstallProgressBarState();
+        isRemoveInProgress=false;
+        installRemoveButton.setEnabled(true);
+        reorganizePaneComponents();
+        setSelected(true);
+      }
+      public void cancel(){
+        super.cancel();
+        resetInstallProgressBarState();
+        isRemoveInProgress=false;
+        installRemoveButton.setEnabled(true);
+        reorganizePaneComponents();
+        setSelected(true);
+        ContributionTab contributionTab=listPanel.contributionTab;
+        boolean isModeActive=false;
+        if (contrib.getType() == ContributionType.MODE) {
+          ModeContribution m=(ModeContribution)contrib;
+          for (          Editor e : contributionTab.editor.getBase().getEditors()) {
+            if (e.getMode().equals(m.getMode())) {
+              isModeActive=true;
+              break;
+            }
+          }
+        }
+        if (isModeActive) {
+          updateButton.setEnabled(true);
+        }
+ else {
+          contributionTab.restartButton.setVisible(true);
+        }
+      }
+    }
+;
+    ContributionTab contributionTab=listPanel.contributionTab;
+    LocalContribution localContrib=(LocalContribution)contrib;
+    localContrib.removeContribution(contributionTab.editor,monitor,contributionTab.statusPanel);
+  }
+}
