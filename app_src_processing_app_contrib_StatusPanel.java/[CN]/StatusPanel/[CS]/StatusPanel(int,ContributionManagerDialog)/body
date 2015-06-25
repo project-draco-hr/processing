@@ -1,5 +1,5 @@
 {
-  final int BUTTON_WIDTH=20;
+  final int BUTTON_WIDTH=150;
   this.contributionManagerDialog=contributionManagerDialog;
   label=new JTextPane();
   label.setEditable(false);
@@ -23,7 +23,7 @@
   }
 );
   installProgressBar=new JProgressBar();
-  updateLabel=new JLabel("Update to Infinite 1.1");
+  updateLabel=new JLabel("  ");
   updateButton=new JButton("Update");
   updateButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
@@ -45,6 +45,11 @@
   layout.setAutoCreateGaps(true);
   layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(label,labelWidth,labelWidth,labelWidth).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(installButton,BUTTON_WIDTH,BUTTON_WIDTH,BUTTON_WIDTH).addComponent(installProgressBar).addComponent(updateLabel).addComponent(updateButton).addComponent(removeButton)));
   layout.setVerticalGroup(layout.createParallelGroup().addComponent(label).addGroup(layout.createSequentialGroup().addComponent(installButton).addGroup(layout.createParallelGroup().addComponent(installProgressBar).addComponent(updateLabel)).addComponent(updateButton).addComponent(removeButton)));
-  layout.linkSize(SwingConstants.HORIZONTAL,installButton,installProgressBar,updateLabel,updateButton,removeButton);
+  layout.linkSize(SwingConstants.HORIZONTAL,installButton,installProgressBar,updateButton,removeButton);
   installProgressBar.setVisible(false);
+  updateLabel.setVisible(false);
+  installButton.setEnabled(false);
+  updateButton.setEnabled(false);
+  removeButton.setEnabled(false);
+  layout.setHonorsVisibility(updateLabel,false);
 }
