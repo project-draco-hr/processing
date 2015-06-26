@@ -1,0 +1,33 @@
+{
+  label.setText(panel.description.toString());
+  updateButton.setEnabled(!contributionListing.hasListDownloadFailed() && (contributionListing.hasUpdates(panel.getContrib()) && !panel.getContrib().isUpdateFlagged()));
+  String latestVersion=contributionListing.getLatestVersion(panel.getContrib());
+  String currentVersion=panel.getContrib().getPrettyVersion();
+  if (latestVersion != null) {
+    latestVersion="Update to " + latestVersion;
+  }
+ else {
+    latestVersion="Update";
+  }
+  if (currentVersion != null) {
+    currentVersion="Version " + currentVersion;
+  }
+ else {
+    currentVersion="";
+  }
+  if (updateButton.isEnabled()) {
+    updateButton.setText(latestVersion);
+  }
+ else {
+    updateButton.setText("Update");
+  }
+  installButton.setEnabled(!panel.getContrib().isInstalled() && !contributionListing.hasListDownloadFailed());
+  if (installButton.isEnabled()) {
+    updateLabel.setText(currentVersion + " available");
+  }
+ else {
+    updateLabel.setText(currentVersion + " installed");
+  }
+  updateLabel.setVisible(true);
+  removeButton.setEnabled(panel.getContrib().isInstalled());
+}

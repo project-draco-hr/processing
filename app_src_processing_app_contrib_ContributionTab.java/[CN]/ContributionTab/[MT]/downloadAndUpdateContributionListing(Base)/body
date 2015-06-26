@@ -1,6 +1,6 @@
 {
   retryConnectingButton.setEnabled(false);
-  status.setMessage(Language.text("contrib.status.downloading_list"));
+  statusPanel.setMessage(Language.text("contrib.status.downloading_list"));
   contribListing.downloadAvailableList(base,new ContribProgressBar(progressBar){
     @Override public void startTask(    String name,    int maxValue){
       super.startTask(name,maxValue);
@@ -10,7 +10,7 @@
       super.setProgress(value);
       progressBar.setValue(value);
       progressBar.setStringPainted(true);
-      status.setMessage(Language.text("contrib.status.downloading_list"));
+      statusPanel.setMessage(Language.text("contrib.status.downloading_list"));
     }
     @Override public void finishedAction(){
       progressBar.setVisible(false);
@@ -19,16 +19,16 @@
       retryConnectingButton.setEnabled(true);
       if (error) {
         if (exception instanceof SocketTimeoutException) {
-          status.setErrorMessage(Language.text("contrib.errors.list_download.timeout"));
+          statusPanel.setErrorMessage(Language.text("contrib.errors.list_download.timeout"));
         }
  else {
-          status.setErrorMessage(Language.text("contrib.errors.list_download"));
+          statusPanel.setErrorMessage(Language.text("contrib.errors.list_download"));
         }
         exception.printStackTrace();
         retryConnectingButton.setVisible(true);
       }
  else {
-        status.setMessage(Language.text("contrib.status.done"));
+        statusPanel.setMessage(Language.text("contrib.status.done"));
         retryConnectingButton.setVisible(false);
       }
     }
