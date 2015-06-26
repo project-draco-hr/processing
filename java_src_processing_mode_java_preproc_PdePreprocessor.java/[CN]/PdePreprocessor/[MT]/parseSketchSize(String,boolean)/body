@@ -13,6 +13,16 @@
       if (c[i] == '{') {
         depth++;
       }
+ else       if (c[i] == '\'') {
+        String quoted=readSingleQuote(c,i);
+        sb.append(quoted);
+        i+=quoted.length() - 1;
+      }
+ else       if (c[i] == '\"') {
+        String quoted=readDoubleQuote(c,i);
+        sb.append(quoted);
+        i+=quoted.length() - 1;
+      }
  else       if (c[i] == '}') {
         depth--;
         if (depth == 0) {
