@@ -18,7 +18,6 @@
       category=sb.toString();
     }
     StringList importsList=parseImports(properties);
-    String importItem=importsList.join(",");
     String authors=properties.get(AUTHORS_PROPERTY);
     if (authors == null) {
       authors=properties.get("authorList");
@@ -87,8 +86,8 @@
       writer.println("lastUpdated=" + lastUpdated);
       writer.println("minRevision=" + minRev);
       writer.println("maxRevision=" + maxRev);
-      if (getType() == ContributionType.LIBRARY) {
-        writer.println("imports=" + importItem);
+      if (getType() == ContributionType.LIBRARY && importsList != null) {
+        writer.println("imports=" + importsList.join(","));
       }
       if (getType() == ContributionType.EXAMPLES) {
         writer.println(MODES_PROPERTY + "=" + compatibleContribsList);
