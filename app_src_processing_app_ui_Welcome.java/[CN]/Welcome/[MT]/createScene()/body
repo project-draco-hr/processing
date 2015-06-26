@@ -1,0 +1,67 @@
+{
+  Platform.runLater(new Runnable(){
+    @Override public void run(){
+      WebView view=new WebView();
+      engine=view.getEngine();
+      engine.titleProperty().addListener(new ChangeListener<String>(){
+        @Override public void changed(        ObservableValue<? extends String> observable,        String oldValue,        final String newValue){
+          SwingUtilities.invokeLater(new Runnable(){
+            @Override public void run(){
+              Welcome.this.setTitle(newValue);
+            }
+          }
+);
+        }
+      }
+);
+      engine.setOnStatusChanged(new EventHandler<WebEvent<String>>(){
+        @Override public void handle(        final WebEvent<String> event){
+          SwingUtilities.invokeLater(new Runnable(){
+            @Override public void run(){
+              lblStatus.setText(event.getData());
+            }
+          }
+);
+        }
+      }
+);
+      engine.locationProperty().addListener(new ChangeListener<String>(){
+        @Override public void changed(        ObservableValue<? extends String> ov,        String oldValue,        final String newValue){
+          SwingUtilities.invokeLater(new Runnable(){
+            @Override public void run(){
+              txtURL.setText(newValue);
+            }
+          }
+);
+        }
+      }
+);
+      engine.getLoadWorker().workDoneProperty().addListener(new ChangeListener<Number>(){
+        @Override public void changed(        ObservableValue<? extends Number> observableValue,        Number oldValue,        final Number newValue){
+          SwingUtilities.invokeLater(new Runnable(){
+            @Override public void run(){
+              progressBar.setValue(newValue.intValue());
+            }
+          }
+);
+        }
+      }
+);
+      engine.getLoadWorker().exceptionProperty().addListener(new ChangeListener<Throwable>(){
+        @Override public void changed(        ObservableValue<? extends Throwable> o,        Throwable old,        final Throwable value){
+          if (engine.getLoadWorker().getState() == FAILED) {
+            SwingUtilities.invokeLater(new Runnable(){
+              @Override public void run(){
+                JOptionPane.showMessageDialog(panel,(value != null) ? engine.getLocation() + "\n" + value.getMessage() : engine.getLocation() + "\nUnexpected error.","Loading error...",JOptionPane.ERROR_MESSAGE);
+              }
+            }
+);
+          }
+        }
+      }
+);
+      jfxPanel.setScene(new Scene(view));
+    }
+  }
+);
+}
