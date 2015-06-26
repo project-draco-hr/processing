@@ -60,6 +60,34 @@
         }
       }
 );
+      final String EVENT_TYPE_CLICK="click";
+      engine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>(){
+        @Override public void changed(        ObservableValue ov,        State oldState,        State newState){
+          if (newState == Worker.State.SUCCEEDED) {
+            EventListener listener=new EventListener(){
+              @Override public void handleEvent(              final Event ev){
+                String domEventType=ev.getType();
+                if (domEventType.equals(EVENT_TYPE_CLICK)) {
+                  EventQueue.invokeLater(new Runnable(){
+                    public void run(){
+                      String href=((Element)ev.getTarget()).getAttribute("href");
+                      Base.openURL(href);
+                    }
+                  }
+);
+                }
+              }
+            }
+;
+            Document doc=engine.getDocument();
+            NodeList nodeList=doc.getElementsByTagName("a");
+            for (int i=0; i < nodeList.getLength(); i++) {
+              ((EventTarget)nodeList.item(i)).addEventListener(EVENT_TYPE_CLICK,listener,false);
+            }
+          }
+        }
+      }
+);
       jfxPanel.setScene(new Scene(view));
     }
   }
