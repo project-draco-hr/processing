@@ -12,11 +12,21 @@
       textPane.setEditable(false);
       textPane.setPreferredSize(new Dimension(400,high));
       frame.getContentPane().add(textPane);
+      Toolkit.registerWindowCloseKeys(frame.getRootPane(),new ActionListener(){
+        @Override public void actionPerformed(        ActionEvent e){
+          System.exit(0);
+        }
+      }
+);
       frame.pack();
       frame.setLocationRelativeTo(null);
       frame.setVisible(true);
       HTMLEditorKit kit=(HTMLEditorKit)textPane.getEditorKit();
       kit.setAutoFormSubmission(false);
+      Object title=textPane.getDocument().getProperty("title");
+      if (title instanceof String) {
+        frame.setTitle((String)title);
+      }
       textPane.addHyperlinkListener(new HyperlinkListener(){
         @Override public void hyperlinkUpdate(        HyperlinkEvent e){
           if (e instanceof FormSubmitEvent) {
