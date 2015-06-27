@@ -4,16 +4,17 @@
   EventQueue.invokeLater(new Runnable(){
     public void run(){
       JFrame frame=new JFrame("Welcome to Processing 3");
-      frame.setSize(500,400);
+      frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+      String[] lines=PApplet.loadStrings(indexFile);
+      String content=PApplet.join(lines,"\n");
+      int high=getContentHeight(400,content);
+      JEditorPane textPane=new JEditorPane("text/html",content);
+      textPane.setEditable(false);
+      textPane.setPreferredSize(new Dimension(400,high));
+      frame.getContentPane().add(textPane);
+      frame.pack();
       frame.setLocationRelativeTo(null);
       frame.setVisible(true);
-      frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-      JTextPane textPane=new JTextPane();
-      textPane.setContentType("text/html");
-      textPane.setEditable(false);
-      String[] lines=PApplet.loadStrings(indexFile);
-      textPane.setText(PApplet.join(lines,"\n"));
-      frame.getContentPane().add(textPane);
       HTMLEditorKit kit=(HTMLEditorKit)textPane.getEditorKit();
       kit.setAutoFormSubmission(false);
       textPane.addHyperlinkListener(new HyperlinkListener(){
