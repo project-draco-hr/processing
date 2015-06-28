@@ -4,9 +4,8 @@
   }
   Font font=(Font)textFont.getNative();
   if (font != null) {
-    int length=stop - start;
-    FontMetrics metrics=getFontMetrics(font);
-    return metrics.charsWidth(buffer,start,length);
+    FontMetrics metrics=g2.getFontMetrics(font);
+    return (float)metrics.getStringBounds(buffer,start,stop,g2).getWidth();
   }
   return super.textWidthImpl(buffer,start,stop);
 }
