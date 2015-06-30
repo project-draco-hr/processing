@@ -1,14 +1,36 @@
 {
   super(folder);
+  System.err.println("OOOLALALA ");
   className=initLoader(className);
+  System.err.println("LALALA " + loader.toString());
   if (className != null) {
-    Class<?> modeClass=loader.loadClass(className);
-    Base.log("Got mode class " + modeClass);
-    Constructor con=modeClass.getConstructor(Base.class,File.class);
-    mode=(Mode)con.newInstance(base,folder);
-    mode.setClassLoader(loader);
-    if (base != null) {
-      mode.setupGUI();
+    try {
+      Class<?> modeClass=loader.loadClass(className);
+      Base.log("Got mode class " + modeClass);
+      Constructor con=modeClass.getConstructor(Base.class,File.class);
+      mode=(Mode)con.newInstance(base,folder);
+      mode.setClassLoader(loader);
+      if (base != null) {
+        mode.setupGUI();
+      }
+    }
+ catch (    NoClassDefFoundError ncdfe) {
+      System.err.println("OOPS " + ncdfe.getMessage() + " :"+ Base.getContentFile("modes/java/mode/JavaMode.jar").exists());
+      if (ncdfe.getMessage().equals("processing/mode/java/JavaMode")) {
+        System.err.println("OOPS2 " + ncdfe.getMessage());
+        className=initLoader(className,new URL[]{Base.getContentFile("modes/java/mode/JavaMode.jar").toURI().toURL()});
+        Class<?> modeClass=loader.loadClass(className);
+        System.err.println("Reloading mode class " + modeClass + " with JavaMode"+ Base.getContentFile("modes/java/mode/JavaMode.jar").toURI().toURL());
+        Constructor con=modeClass.getConstructor(Base.class,File.class);
+        mode=(Mode)con.newInstance(base,folder);
+        mode.setClassLoader(loader);
+        if (base != null) {
+          mode.setupGUI();
+        }
+      }
+ else {
+        throw new NoClassDefFoundError(ncdfe.getMessage() + " no class definition found.");
+      }
     }
   }
 }
