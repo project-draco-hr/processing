@@ -1,0 +1,22 @@
+{
+  EventQueue.invokeLater(new Runnable(){
+    public void run(){
+      File indexFile=new File("../build/shared/lib/welcome/index.html");
+      if (!indexFile.exists()) {
+        indexFile=Base.getContentFile("../../../../../shared/lib/welcome/index.html");
+      }
+      WebFrame frame=new WebFrame(indexFile,400){
+        public void handleSubmit(        StringDict dict){
+          dict.print();
+          handleClose();
+        }
+        public void handleClose(){
+          dispose();
+        }
+      }
+;
+      frame.setVisible(true);
+    }
+  }
+);
+}
