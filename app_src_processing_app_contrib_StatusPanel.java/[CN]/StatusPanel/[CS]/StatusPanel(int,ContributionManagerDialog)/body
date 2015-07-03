@@ -18,35 +18,43 @@
   installButton=new JButton("Install");
   installButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      StatusPanel.this.contributionManagerDialog.getActiveTab().contributionListPanel.getSelectedPanel().install();
+      ContributionPanel currentPanel=StatusPanel.this.contributionManagerDialog.getActiveTab().contributionListPanel.getSelectedPanel();
+      currentPanel.install();
+      StatusPanel.this.update(currentPanel);
     }
   }
 );
-  installProgressBar=new JProgressBar();
+  progressBarPanel=new JPanel();
+  progressBarPanel.setLayout(new BorderLayout());
+  ;
   updateLabel=new JLabel("  ");
   updateButton=new JButton("Update");
   updateButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      StatusPanel.this.contributionManagerDialog.getActiveTab().contributionListPanel.getSelectedPanel().update();
+      ContributionPanel currentPanel=StatusPanel.this.contributionManagerDialog.getActiveTab().contributionListPanel.getSelectedPanel();
+      currentPanel.update();
+      StatusPanel.this.update(currentPanel);
     }
   }
 );
   removeButton=new JButton("Remove");
   removeButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      StatusPanel.this.contributionManagerDialog.getActiveTab().contributionListPanel.getSelectedPanel().remove();
+      ContributionPanel currentPanel=StatusPanel.this.contributionManagerDialog.getActiveTab().contributionListPanel.getSelectedPanel();
+      currentPanel.remove();
+      StatusPanel.this.update(currentPanel);
     }
   }
 );
   int labelWidth=width != 0 ? width * 3 / 4 : GroupLayout.PREFERRED_SIZE;
-  GroupLayout layout=new GroupLayout(this);
+  layout=new GroupLayout(this);
   this.setLayout(layout);
   layout.setAutoCreateContainerGaps(true);
   layout.setAutoCreateGaps(true);
-  layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(label,labelWidth,labelWidth,labelWidth).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(installButton,BUTTON_WIDTH,BUTTON_WIDTH,BUTTON_WIDTH).addComponent(installProgressBar).addComponent(updateLabel).addComponent(updateButton).addComponent(removeButton)));
-  layout.setVerticalGroup(layout.createParallelGroup().addComponent(label).addGroup(layout.createSequentialGroup().addComponent(installButton).addGroup(layout.createParallelGroup().addComponent(installProgressBar).addComponent(updateLabel)).addComponent(updateButton).addComponent(removeButton)));
-  layout.linkSize(SwingConstants.HORIZONTAL,installButton,installProgressBar,updateButton,removeButton);
-  installProgressBar.setVisible(false);
+  layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(label,labelWidth,labelWidth,labelWidth).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(installButton,BUTTON_WIDTH,BUTTON_WIDTH,BUTTON_WIDTH).addComponent(progressBarPanel).addComponent(updateLabel).addComponent(updateButton).addComponent(removeButton)));
+  layout.setVerticalGroup(layout.createParallelGroup().addComponent(label).addGroup(layout.createSequentialGroup().addComponent(installButton).addGroup(layout.createParallelGroup().addComponent(progressBarPanel).addComponent(updateLabel)).addComponent(updateButton).addComponent(removeButton)));
+  layout.linkSize(SwingConstants.HORIZONTAL,installButton,progressBarPanel,updateButton,removeButton);
+  progressBarPanel.setVisible(false);
   updateLabel.setVisible(false);
   installButton.setEnabled(false);
   updateButton.setEnabled(false);

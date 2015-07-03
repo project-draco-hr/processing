@@ -1,6 +1,5 @@
 {
   final ContributionTab activeTab=getActiveTab();
-  activeTab.retryConnectingButton.setEnabled(false);
   activeTab.statusPanel.setMessage(Language.text("contrib.status.downloading_list"));
   activeTab.contribListing.downloadAvailableList(base,new ContribProgressBar(activeTab.progressBar){
     @Override public void startTask(    String name,    int maxValue){
@@ -18,7 +17,6 @@
       progressBar.setVisible(false);
       activeTab.updateContributionListing();
       activeTab.updateCategoryChooser();
-      activeTab.retryConnectingButton.setEnabled(true);
       if (error) {
         if (exception instanceof SocketTimeoutException) {
           activeTab.statusPanel.setErrorMessage(Language.text("contrib.errors.list_download.timeout"));
@@ -27,11 +25,10 @@
           activeTab.statusPanel.setErrorMessage(Language.text("contrib.errors.list_download"));
         }
         exception.printStackTrace();
-        activeTab.retryConnectingButton.setVisible(true);
+        setLayoutWithError();
       }
  else {
         activeTab.statusPanel.setMessage(Language.text("contrib.status.done"));
-        activeTab.retryConnectingButton.setVisible(false);
       }
     }
   }
