@@ -1,7 +1,7 @@
 {
   progressBarPanel.removeAll();
   label.setText(panel.description.toString());
-  updateButton.setEnabled(!contributionListing.hasListDownloadFailed() && (contributionListing.hasUpdates(panel.getContrib()) && !panel.getContrib().isUpdateFlagged()));
+  updateButton.setEnabled(contributionListing.hasDownloadedLatestList() && (contributionListing.hasUpdates(panel.getContrib()) && !panel.getContrib().isUpdateFlagged()));
   String latestVersion=contributionListing.getLatestVersion(panel.getContrib());
   String currentVersion=panel.getContrib().getPrettyVersion();
   if (latestVersion != null) {
@@ -22,7 +22,7 @@
  else {
     updateButton.setText("Update");
   }
-  installButton.setEnabled(!panel.getContrib().isInstalled() && !contributionListing.hasListDownloadFailed());
+  installButton.setEnabled(!panel.getContrib().isInstalled() && contributionListing.hasDownloadedLatestList());
   if (installButton.isEnabled()) {
     updateLabel.setText(currentVersion + " available");
   }
