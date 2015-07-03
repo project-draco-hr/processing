@@ -16,6 +16,12 @@
   updatesContributionTab.showFrame(editor);
   tabbedPane.addTab("Updates",null,updatesContributionTab.panel,"Updates");
   tabbedPane.setMnemonicAt(3,KeyEvent.VK_5);
+  tabbedPane.addChangeListener(new ChangeListener(){
+    @Override public void stateChanged(    ChangeEvent e){
+      getActiveTab().contributionListPanel.setSelectedPanel(getActiveTab().contributionListPanel.getSelectedPanel());
+    }
+  }
+);
   buildErrorPanel();
   setLayoutWithoutError();
   restartButton=new JButton(Language.text("contrib.restart"));
