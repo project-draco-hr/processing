@@ -5,8 +5,9 @@
   layout.setAutoCreateContainerGaps(true);
   errorPanel.setLayout(layout);
   errorMessage=new JTextPane();
+  errorMessage.setEditable(false);
   errorMessage.setText("Could not connect to the Processing server. " + "Contributions cannot be installed or updated without an Internet connection. " + "Please verify your network connection again, then try connecting again.");
-  errorMessage.setMaximumSize(new Dimension(450,20));
+  errorMessage.setMaximumSize(new Dimension(450,50));
   errorMessage.setOpaque(false);
   StyledDocument doc=errorMessage.getStyledDocument();
   SimpleAttributeSet center=new SimpleAttributeSet();
@@ -16,17 +17,20 @@
   closeButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       errorPanel.setVisible(false);
+      setLayoutWithoutError();
     }
   }
 );
   tryAgainButton=new JButton("Try Again");
   tryAgainButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
+      closeButton.doClick();
+      downloadAndUpdateContributionListing(editor.getBase());
     }
   }
 );
   layout.setHorizontalGroup(layout.createSequentialGroup().addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(errorMessage).addComponent(tryAgainButton)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addComponent(closeButton));
   layout.setVerticalGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup().addComponent(errorMessage).addComponent(closeButton)).addComponent(tryAgainButton));
-  errorPanel.setLocation(tabbedPane.getHeight() - errorPanel.getHeight(),0);
+  errorPanel.setBackground(Color.BLUE);
   errorPanel.setVisible(false);
 }
