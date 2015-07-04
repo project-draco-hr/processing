@@ -1,19 +1,11 @@
 {
 synchronized (panelByContribution) {
-    Set<Contribution> hiddenPanels=new TreeSet<Contribution>(contribListing.getComparator());
-    hiddenPanels.addAll(panelByContribution.keySet());
-    for (    Contribution info : filteredContributions) {
-      ContributionPanel panel=panelByContribution.get(info);
-      if (panel != null) {
-        panel.setVisible(true);
-        hiddenPanels.remove(info);
+    TreeSet<Contribution> panelInThisTab=new TreeSet<Contribution>(contribListing.getComparator());
+    for (    Contribution contribution : filteredContributions) {
+      if (contribution.getType() == this.contributionTab.contributionType) {
+        panelInThisTab.add(contribution);
       }
     }
-    for (    Contribution info : hiddenPanels) {
-      ContributionPanel panel=panelByContribution.get(info);
-      if (panel != null) {
-        panel.setVisible(false);
-      }
-    }
+    updatePanelOrdering(panelInThisTab);
   }
 }
