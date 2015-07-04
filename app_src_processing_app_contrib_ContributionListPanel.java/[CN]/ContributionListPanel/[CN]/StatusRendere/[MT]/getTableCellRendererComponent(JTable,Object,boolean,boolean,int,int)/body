@@ -1,0 +1,71 @@
+{
+  Contribution contribution=(Contribution)value;
+  JLabel label=new JLabel();
+  if (column == 0) {
+    Icon icon=null;
+    label.setBorder(BorderFactory.createEmptyBorder(0,17,0,0));
+    if (contribution.isInstalled()) {
+      icon=UIManager.getIcon("OptionPane.warningIcon");
+      if (contribListing.hasUpdates(contribution)) {
+        icon=Toolkit.getLibIcon("icons/pde-16.png");
+      }
+      if (!contribution.isCompatible(Base.getRevision())) {
+        icon=Toolkit.getLibIcon("icons/pde-16.png");
+      }
+    }
+    label.setIcon(icon);
+    if (isSelected) {
+      label.setBackground(Color.BLUE);
+    }
+    label.setOpaque(true);
+  }
+ else   if (column == 1) {
+    JTextPane name=new JTextPane();
+    name.setContentType("text/html");
+    name.setEditable(false);
+    name.setText("<html><body><b>" + contribution.getName() + "</b> - "+ contribution.getSentence()+ "</body></html>");
+    GroupLayout layout=new GroupLayout(label);
+    layout.setAutoCreateGaps(true);
+    layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(name));
+    layout.setVerticalGroup(layout.createParallelGroup().addComponent(name));
+    if (table.isRowSelected(row)) {
+      name.setBackground(Color.BLUE);
+      name.setOpaque(true);
+    }
+    label.setLayout(layout);
+  }
+ else {
+    JLabel icon=new JLabel(contribution.isSpecial() ? Toolkit.getLibIcon("icons/pde-16.png") : null);
+    JTextPane author=new JTextPane();
+    StringBuilder name=new StringBuilder("");
+    String authorList=contribution.getAuthorList();
+    if (authorList != null) {
+      for (int i=0; i < authorList.length(); i++) {
+        if (authorList.charAt(i) == '[' || authorList.charAt(i) == ']') {
+          continue;
+        }
+        if (authorList.charAt(i) == '(') {
+          i++;
+          while (authorList.charAt(i) != ')') {
+            i++;
+          }
+        }
+ else {
+          name.append(authorList.charAt(i));
+        }
+      }
+    }
+    author.setText(name.toString());
+    author.setEditable(false);
+    author.setOpaque(false);
+    if (table.isRowSelected(row)) {
+      label.setBackground(Color.BLUE);
+    }
+    GroupLayout layout=new GroupLayout(label);
+    layout.setHorizontalGroup(layout.createSequentialGroup().addContainerGap().addComponent(icon).addComponent(author));
+    layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(author).addComponent(icon));
+    label.setLayout(layout);
+    label.setOpaque(true);
+  }
+  return label;
+}
