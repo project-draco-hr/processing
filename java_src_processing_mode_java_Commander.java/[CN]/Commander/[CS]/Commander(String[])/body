@@ -39,7 +39,11 @@
       embedJava=false;
     }
  else     if (arg.startsWith(platformArg)) {
-      complainAndQuit("The --platform option has been removed from Processing 2.1.",false);
+      String platformStr=arg.substring(platformArg.length());
+      platform=Base.getPlatformIndex(platformStr);
+      if (platform == -1) {
+        complainAndQuit(platformStr + " should instead be " + "'windows', 'macosx', or 'linux'.",true);
+      }
     }
  else     if (arg.startsWith(bitsArg)) {
       complainAndQuit("The --bits option has been removed from Processing 2.1.",false);

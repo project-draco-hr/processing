@@ -16,10 +16,17 @@
   updatesContributionTab.showFrame(editor);
   tabbedPane.addTab("Updates",null,updatesContributionTab.panel,"Updates");
   tabbedPane.setMnemonicAt(3,KeyEvent.VK_5);
-  GroupLayout layout=new GroupLayout(dialog.getContentPane());
-  dialog.getContentPane().setLayout(layout);
-  layout.setHorizontalGroup(layout.createParallelGroup().addComponent(tabbedPane).addComponent(statusPanel));
-  layout.setVerticalGroup(layout.createSequentialGroup().addComponent(tabbedPane).addComponent(statusPanel));
+  tabbedPane.addChangeListener(new ChangeListener(){
+    @Override public void stateChanged(    ChangeEvent e){
+      ContributionPanel currentPanel=getActiveTab().contributionListPanel.getSelectedPanel();
+      if (currentPanel != null) {
+        getActiveTab().contributionListPanel.setSelectedPanel(currentPanel);
+      }
+    }
+  }
+);
+  buildErrorPanel();
+  setLayoutWithoutError();
   restartButton=new JButton(Language.text("contrib.restart"));
   restartButton.setVisible(false);
   restartButton.addActionListener(new ActionListener(){

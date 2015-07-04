@@ -1,0 +1,43 @@
+{
+  String[] lines=PApplet.loadStrings(file);
+  String content=PApplet.join(lines,"\n");
+  int high=getContentHeight(400,content);
+  JEditorPane textPane=new JEditorPane("text/html",content);
+  textPane.setEditable(false);
+  textPane.setPreferredSize(new Dimension(400,high));
+  getContentPane().add(textPane);
+  Toolkit.registerWindowCloseKeys(getRootPane(),new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      handleClose();
+    }
+  }
+);
+  HTMLEditorKit kit=(HTMLEditorKit)textPane.getEditorKit();
+  kit.setAutoFormSubmission(false);
+  Object title=textPane.getDocument().getProperty("title");
+  if (title instanceof String) {
+    setTitle((String)title);
+  }
+  textPane.addHyperlinkListener(new HyperlinkListener(){
+    @Override public void hyperlinkUpdate(    HyperlinkEvent e){
+      if (e instanceof FormSubmitEvent) {
+        String result=((FormSubmitEvent)e).getData();
+        StringDict dict=new StringDict();
+        String[] pairs=result.split("&");
+        for (        String pair : pairs) {
+          String[] pieces=pair.split("=");
+          String attr=PApplet.urlDecode(pieces[0]);
+          String valu=PApplet.urlDecode(pieces[1]);
+          dict.set(attr,valu);
+        }
+        handleSubmit(dict);
+      }
+ else       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        handleLink(e.getURL().toExternalForm());
+      }
+    }
+  }
+);
+  pack();
+  setLocationRelativeTo(null);
+}
