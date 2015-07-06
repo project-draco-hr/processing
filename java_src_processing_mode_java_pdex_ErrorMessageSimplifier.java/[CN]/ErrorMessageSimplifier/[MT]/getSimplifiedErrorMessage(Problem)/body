@@ -62,6 +62,17 @@ result=Language.interpolate("editor.status.error_on",args[0]) + " " + Language.i
 }
 }
 break;
+case IProblem.UndefinedConstructor:
+if (args.length == 2) {
+String constructorName=args[0];
+if (constructorName.contains(".")) {
+constructorName=constructorName.substring(constructorName.indexOf('.') + 1);
+constructorName=constructorName.substring(constructorName.indexOf('.') + 1);
+}
+String constructorArgs=removePackagePrefixes(args[args.length - 1]);
+result=Language.interpolate("editor.status.undefined_constructor",constructorName,constructorArgs);
+}
+break;
 case IProblem.UndefinedMethod:
 if (args.length > 2) {
 String methodName=args[args.length - 2];
