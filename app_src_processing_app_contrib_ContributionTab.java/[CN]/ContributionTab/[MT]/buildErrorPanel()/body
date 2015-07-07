@@ -13,11 +13,11 @@
   SimpleAttributeSet center=new SimpleAttributeSet();
   StyleConstants.setAlignment(center,StyleConstants.ALIGN_CENTER);
   doc.setParagraphAttributes(0,doc.getLength(),center,false);
-  closeButton=new JButton("");
+  closeButton=new JButton("X");
+  closeButton.setOpaque(false);
   closeButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      errorPanel.setVisible(false);
-      setLayoutWithoutError();
+      contributionManagerDialog.removeErrorPanel();
     }
   }
 );
@@ -25,7 +25,7 @@
   tryAgainButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       closeButton.doClick();
-      downloadAndUpdateContributionListing(editor.getBase());
+      contributionManagerDialog.downloadAndUpdateContributionListing(editor.getBase());
     }
   }
 );
