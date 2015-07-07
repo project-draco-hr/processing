@@ -15,18 +15,34 @@
         throw new IgnorableException("Could not find " + shortName + " class inside "+ mainJar.getAbsolutePath());
       }
     }
+    ArrayList<URL> extraUrls=new ArrayList<>();
+    if (imports != null && imports.size() > 0) {
+      HashMap<String,Mode> installedModes=new HashMap<>();
+      for (      Mode m : base.getModeList()) {
+        installedModes.put(m.getClass().getName(),m);
+      }
+      for (      String modeImport : imports) {
+        if (installedModes.containsKey(modeImport)) {
+          Base.log("Found mode dependency " + modeImport);
+          File[] archives=Base.listJarFiles(new File(installedModes.get(modeImport).getFolder().getAbsolutePath() + File.separator + "mode"));
+          if (archives != null && archives.length > 0) {
+            for (int i=0; i < archives.length; i++) {
+              extraUrls.add(archives[i].toURI().toURL());
+            }
+          }
+        }
+ else {
+          throw new IgnorableException("Dependency mode " + modeImport + " could not be"+ " found. Can't load "+ className);
+        }
+      }
+    }
     File[] archives=Base.listJarFiles(modeDirectory);
     if (archives != null && archives.length > 0) {
-      int arrLen=archives.length;
-      if (extraUrls != null) {
-        arrLen+=extraUrls.length;
-      }
+      int arrLen=archives.length + extraUrls.size();
       URL[] urlList=new URL[arrLen];
       int j=0;
-      if (extraUrls != null) {
-        for (; j < extraUrls.length; j++) {
-          urlList[j]=extraUrls[j];
-        }
+      for (; j < extraUrls.size(); j++) {
+        urlList[j]=extraUrls.get(j);
       }
       for (int k=0; k < archives.length; k++, j++) {
         Base.log("Found archive " + archives[k] + " for "+ getName());

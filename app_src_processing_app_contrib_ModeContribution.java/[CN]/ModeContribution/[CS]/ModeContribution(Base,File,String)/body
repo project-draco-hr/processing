@@ -1,32 +1,14 @@
 {
   super(folder);
-  className=initLoader(className);
+  className=initLoader(base,className);
   if (className != null) {
-    try {
-      Class<?> modeClass=loader.loadClass(className);
-      Base.log("Got mode class " + modeClass);
-      Constructor con=modeClass.getConstructor(Base.class,File.class);
-      mode=(Mode)con.newInstance(base,folder);
-      mode.setClassLoader(loader);
-      if (base != null) {
-        mode.setupGUI();
-      }
-    }
- catch (    NoClassDefFoundError ncdfe) {
-      if (ncdfe.getMessage().equals("processing/mode/java/JavaMode")) {
-        Base.log(folder.getAbsolutePath() + " extends JavaMode, reloading with javamode.");
-        className=initLoader(className,new URL[]{Base.getContentFile("modes/java/mode/JavaMode.jar").toURI().toURL()});
-        Class<?> modeClass=loader.loadClass(className);
-        Constructor con=modeClass.getConstructor(Base.class,File.class);
-        mode=(Mode)con.newInstance(base,folder);
-        mode.setClassLoader(loader);
-        if (base != null) {
-          mode.setupGUI();
-        }
-      }
- else {
-        throw new NoClassDefFoundError(ncdfe.getMessage() + " no class definition found.");
-      }
+    Class<?> modeClass=loader.loadClass(className);
+    Base.log("Got mode class " + modeClass);
+    Constructor con=modeClass.getConstructor(Base.class,File.class);
+    mode=(Mode)con.newInstance(base,folder);
+    mode.setClassLoader(loader);
+    if (base != null) {
+      mode.setupGUI();
     }
   }
 }
