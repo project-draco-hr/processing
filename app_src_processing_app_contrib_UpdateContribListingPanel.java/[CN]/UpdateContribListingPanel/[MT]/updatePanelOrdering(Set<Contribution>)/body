@@ -1,0 +1,31 @@
+{
+  contributionTab.contributionManagerDialog.numberLabel.setText(Integer.toString(panelByContribution.size()));
+  dtm.getDataVector().removeAllElements();
+  dtm.fireTableDataChanged();
+  ContributionType temp=null;
+  for (  Contribution entry : contributionsSet) {
+    if (entry.getType() != temp) {
+      temp=entry.getType();
+      dtm.addRow(new Object[]{null,"<html><i>" + temp.getTitle() + "</i></html>",null,null,null});
+    }
+    StringBuilder name=new StringBuilder("");
+    String authorList=entry.getAuthorList();
+    if (authorList != null) {
+      for (int i=0; i < authorList.length(); i++) {
+        if (authorList.charAt(i) == '[' || authorList.charAt(i) == ']') {
+          continue;
+        }
+        if (authorList.charAt(i) == '(') {
+          i++;
+          while (authorList.charAt(i) != ')') {
+            i++;
+          }
+        }
+ else {
+          name.append(authorList.charAt(i));
+        }
+      }
+    }
+    dtm.addRow(new Object[]{"","<html><b>" + entry.getName() + "</b></html>",name,entry.getPrettyVersion(),contributionTab.contribListing.getLatestVersion(entry)});
+  }
+}
