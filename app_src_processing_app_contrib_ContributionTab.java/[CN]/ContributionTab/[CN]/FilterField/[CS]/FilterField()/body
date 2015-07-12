@@ -1,6 +1,13 @@
 {
-  super(Language.text("contrib.filter_your_search"));
+  searchField=new JTextField(Language.text("contrib.filter_your_search"));
   filterHint=Language.text("contrib.filter_your_search");
+  searchButton=new JButton("S");
+  ComponentBorder cb=new ComponentBorder(searchButton,"LEFT");
+  cb.install(searchField);
+  GroupLayout layout=new GroupLayout(this);
+  setLayout(layout);
+  layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(searchField));
+  layout.setVerticalGroup(layout.createParallelGroup().addComponent(searchField));
   showingHint=true;
   filters=new ArrayList<String>();
   updateStyle();
@@ -20,7 +27,7 @@
     }
   }
 );
-  getDocument().addDocumentListener(new DocumentListener(){
+  searchField.getDocument().addDocumentListener(new DocumentListener(){
     public void removeUpdate(    DocumentEvent e){
       applyFilter();
     }
