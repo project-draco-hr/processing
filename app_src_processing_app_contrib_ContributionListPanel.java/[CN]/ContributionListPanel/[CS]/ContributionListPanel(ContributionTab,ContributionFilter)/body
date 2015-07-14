@@ -1,0 +1,55 @@
+{
+  super();
+  this.contributionTab=contributionTab;
+  this.filter=filter;
+  setLayout(new GridBagLayout());
+  setOpaque(true);
+  if (Base.isLinux()) {
+    setBackground(Color.white);
+  }
+ else {
+    setBackground(UIManager.getColor("List.background"));
+  }
+  panelByContribution=new TreeMap<Contribution,ContributionPanel>(contribListing.getComparator());
+  dtm=new MyTableModel();
+  table=new JTable(dtm){
+    @Override public Component prepareRenderer(    TableCellRenderer renderer,    int row,    int column){
+      Component c=super.prepareRenderer(renderer,row,column);
+      if (isRowSelected(row)) {
+        c.setBackground(Color.blue);
+      }
+ else {
+        c.setBackground(Color.white);
+      }
+      return c;
+    }
+  }
+;
+  String[] colName={"Status","Name","Author"};
+  dtm.setColumnIdentifiers(colName);
+  JScrollPane scrollPane=new JScrollPane(table);
+  table.setFillsViewportHeight(true);
+  table.setDefaultRenderer(Contribution.class,new StatusRendere());
+  table.setRowHeight(30);
+  table.setRowMargin(6);
+  table.getColumnModel().setColumnMargin(-1);
+  table.getColumnModel().getColumn(0).setMaxWidth(60);
+  table.setShowGrid(false);
+  table.setColumnSelectionAllowed(false);
+  table.setCellSelectionEnabled(false);
+  table.setAutoCreateColumnsFromModel(true);
+  table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+  table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+    public void valueChanged(    ListSelectionEvent event){
+      if (table.getSelectedRow() != -1) {
+        setSelectedPanel(panelByContribution.get(table.getValueAt(table.getSelectedRow(),0)));
+      }
+    }
+  }
+);
+  GroupLayout layout=new GroupLayout(this);
+  layout.setHorizontalGroup(layout.createParallelGroup().addComponent(scrollPane));
+  layout.setVerticalGroup(layout.createSequentialGroup().addComponent(scrollPane));
+  this.setLayout(layout);
+  table.setVisible(true);
+}

@@ -1,0 +1,35 @@
+{
+  errorPanel=new JPanel();
+  GroupLayout layout=new GroupLayout(errorPanel);
+  layout.setAutoCreateGaps(true);
+  layout.setAutoCreateContainerGaps(true);
+  errorPanel.setLayout(layout);
+  errorMessage=new JTextPane();
+  errorMessage.setEditable(false);
+  errorMessage.setText("Could not connect to the Processing server. " + "Contributions cannot be installed or updated without an Internet connection. " + "Please verify your network connection again, then try connecting again.");
+  errorMessage.setMaximumSize(new Dimension(450,50));
+  errorMessage.setOpaque(false);
+  StyledDocument doc=errorMessage.getStyledDocument();
+  SimpleAttributeSet center=new SimpleAttributeSet();
+  StyleConstants.setAlignment(center,StyleConstants.ALIGN_CENTER);
+  doc.setParagraphAttributes(0,doc.getLength(),center,false);
+  closeButton=new JButton("X");
+  closeButton.setOpaque(false);
+  closeButton.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      contributionManagerDialog.makeAndShowTab(false,false);
+    }
+  }
+);
+  tryAgainButton=new JButton("Try Again");
+  tryAgainButton.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      contributionManagerDialog.makeAndShowTab(false,true);
+      contributionManagerDialog.downloadAndUpdateContributionListing(editor.getBase());
+    }
+  }
+);
+  layout.setHorizontalGroup(layout.createSequentialGroup().addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(errorMessage).addComponent(tryAgainButton)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addComponent(closeButton));
+  layout.setVerticalGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup().addComponent(errorMessage).addComponent(closeButton)).addComponent(tryAgainButton));
+  errorPanel.setBackground(Color.BLUE);
+}

@@ -1,32 +1,34 @@
 {
   dialog=new JFrame(title);
   tabbedPane=new JTabbedPane();
-  toolsContributionTab.showFrame(editor);
+  makeAndShowTab(false,true);
   tabbedPane.addTab("Tools",null,toolsContributionTab.panel,"Tools");
   tabbedPane.setMnemonicAt(0,KeyEvent.VK_1);
-  librariesContributionTab.showFrame(editor);
   tabbedPane.addTab("Libraries",null,librariesContributionTab.panel,"Libraries");
   tabbedPane.setMnemonicAt(1,KeyEvent.VK_2);
-  modesContributionTab.showFrame(editor);
   tabbedPane.addTab("Modes",null,modesContributionTab.panel,"Modes");
   tabbedPane.setMnemonicAt(2,KeyEvent.VK_3);
-  examplesContributionTab.showFrame(editor);
   tabbedPane.addTab("Examples",null,examplesContributionTab.panel,"Examples");
   tabbedPane.setMnemonicAt(3,KeyEvent.VK_4);
-  updatesContributionTab.showFrame(editor);
   tabbedPane.addTab("Updates",null,updatesContributionTab.panel,"Updates");
   tabbedPane.setMnemonicAt(3,KeyEvent.VK_5);
+  tabbedPane.setUI(new SpacedTabbedPaneUI());
+  JPanel updateTabPanel=new JPanel(true);
+  numberLabel.setOpaque(true);
+  numberLabel.setBackground(Color.BLUE);
+  JLabel updateTabLabel=new JLabel("Update");
+  GroupLayout tabLayout=new GroupLayout(updateTabPanel);
+  tabLayout.setAutoCreateGaps(true);
+  updateTabPanel.setLayout(tabLayout);
+  tabLayout.setHorizontalGroup(tabLayout.createSequentialGroup().addComponent(numberLabel).addComponent(updateTabLabel));
+  tabLayout.setVerticalGroup(tabLayout.createParallelGroup().addComponent(numberLabel).addComponent(updateTabLabel));
+  tabbedPane.setTabComponentAt(4,updateTabPanel);
   tabbedPane.addChangeListener(new ChangeListener(){
     @Override public void stateChanged(    ChangeEvent e){
-      ContributionPanel currentPanel=getActiveTab().contributionListPanel.getSelectedPanel();
-      if (currentPanel != null) {
-        getActiveTab().contributionListPanel.setSelectedPanel(currentPanel);
-      }
     }
   }
 );
-  buildErrorPanel();
-  setLayoutWithoutError();
+  setLayout();
   restartButton=new JButton(Language.text("contrib.restart"));
   restartButton.setVisible(false);
   restartButton.addActionListener(new ActionListener(){
