@@ -1,4 +1,7 @@
 {
+  super();
+  setBackground(Color.WHITE);
+  setBorder(BorderFactory.createMatteBorder(2,0,0,0,Color.BLACK));
   this.contributionTab=contributionTab;
   label=new JTextPane();
   label.setEditable(false);
@@ -15,6 +18,8 @@
   }
 );
   installButton=new JButton("Install");
+  installButton.setContentAreaFilled(false);
+  installButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK,1),BorderFactory.createEmptyBorder(3,0,3,0)));
   installButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       ContributionPanel currentPanel=contributionTab.contributionListPanel.getSelectedPanel();
@@ -25,9 +30,11 @@
 );
   progressBarPanel=new JPanel();
   progressBarPanel.setLayout(new BorderLayout());
-  ;
-  updateLabel=new JLabel("  ");
+  progressBarPanel.setOpaque(false);
+  updateLabel=new JLabel(" ");
   updateButton=new JButton("Update");
+  updateButton.setContentAreaFilled(false);
+  updateButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK,1),BorderFactory.createEmptyBorder(3,0,3,0)));
   updateButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       ContributionPanel currentPanel=contributionTab.contributionListPanel.getSelectedPanel();
@@ -37,6 +44,8 @@
   }
 );
   removeButton=new JButton("Remove");
+  removeButton.setContentAreaFilled(false);
+  removeButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK,1),BorderFactory.createEmptyBorder(3,0,3,0)));
   removeButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       ContributionPanel currentPanel=contributionTab.contributionListPanel.getSelectedPanel();
@@ -59,4 +68,5 @@
   updateButton.setEnabled(false);
   removeButton.setEnabled(false);
   layout.setHonorsVisibility(updateLabel,false);
+  validate();
 }

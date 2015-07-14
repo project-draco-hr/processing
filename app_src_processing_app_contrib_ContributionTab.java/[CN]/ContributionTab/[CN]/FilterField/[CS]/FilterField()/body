@@ -1,33 +1,20 @@
 {
-  searchField=new JTextField(Language.text("contrib.filter_your_search"));
-  filterHint=Language.text("contrib.filter_your_search");
-  searchButton=new JButton("S");
-  ComponentBorder cb=new ComponentBorder(searchButton,"LEFT");
-  cb.install(searchField);
-  GroupLayout layout=new GroupLayout(this);
-  setLayout(layout);
-  layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(searchField));
-  layout.setVerticalGroup(layout.createParallelGroup().addComponent(searchField));
-  showingHint=true;
+  super("");
+  searchIcon=Toolkit.getLibIcon("icons/searchIcon.png");
+  setOpaque(false);
   filters=new ArrayList<String>();
-  updateStyle();
   addFocusListener(new FocusListener(){
     public void focusLost(    FocusEvent focusEvent){
-      if (filterField.getText().isEmpty()) {
-        showingHint=true;
+      if (getText().isEmpty()) {
+        setBorder(BorderFactory.createMatteBorder(0,33,0,0,searchIcon));
       }
-      updateStyle();
     }
     public void focusGained(    FocusEvent focusEvent){
-      if (showingHint) {
-        showingHint=false;
-        filterField.setText("");
-      }
-      updateStyle();
+      setBorder(BorderFactory.createEmptyBorder(0,3,0,0));
     }
   }
 );
-  searchField.getDocument().addDocumentListener(new DocumentListener(){
+  getDocument().addDocumentListener(new DocumentListener(){
     public void removeUpdate(    DocumentEvent e){
       applyFilter();
     }
