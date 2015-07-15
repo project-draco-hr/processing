@@ -14,7 +14,7 @@
   StyleConstants.setAlignment(center,StyleConstants.ALIGN_CENTER);
   doc.setParagraphAttributes(0,doc.getLength(),center,false);
   closeButton=new JButton("X");
-  closeButton.setOpaque(false);
+  closeButton.setContentAreaFilled(false);
   closeButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       contributionManagerDialog.makeAndShowTab(false,false);
@@ -22,6 +22,8 @@
   }
 );
   tryAgainButton=new JButton("Try Again");
+  tryAgainButton.setContentAreaFilled(false);
+  tryAgainButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK,1),BorderFactory.createEmptyBorder(3,0,3,0)));
   tryAgainButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       contributionManagerDialog.makeAndShowTab(false,true);
@@ -29,7 +31,8 @@
     }
   }
 );
-  layout.setHorizontalGroup(layout.createSequentialGroup().addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(errorMessage).addComponent(tryAgainButton)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addComponent(closeButton));
+  layout.setHorizontalGroup(layout.createSequentialGroup().addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(errorMessage).addComponent(tryAgainButton,statusPanel.BUTTON_WIDTH,statusPanel.BUTTON_WIDTH,statusPanel.BUTTON_WIDTH)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addComponent(closeButton));
   layout.setVerticalGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup().addComponent(errorMessage).addComponent(closeButton)).addComponent(tryAgainButton));
-  errorPanel.setBackground(Color.BLUE);
+  errorPanel.setBackground(Color.PINK);
+  errorPanel.validate();
 }

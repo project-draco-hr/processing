@@ -5,12 +5,12 @@
     Icon icon=null;
     label.setBorder(BorderFactory.createEmptyBorder(0,17,0,0));
     if (contribution.isInstalled()) {
-      icon=UIManager.getIcon("OptionPane.warningIcon");
+      icon=Toolkit.getLibIcon("icons/installedAndUptodate.png");
       if (contribListing.hasUpdates(contribution)) {
-        icon=Toolkit.getLibIcon("icons/pde-16.png");
+        icon=Toolkit.getLibIcon("icons/installedNeedsUpdate.png");
       }
       if (!contribution.isCompatible(Base.getRevision())) {
-        icon=Toolkit.getLibIcon("icons/pde-16.png");
+        icon=Toolkit.getLibIcon("icons/installedIncompatible.png");
       }
     }
     label.setIcon(icon);
@@ -23,6 +23,9 @@
     JTextPane name=new JTextPane();
     name.setContentType("text/html");
     name.setEditable(false);
+    if (!contribution.isCompatible(Base.getRevision())) {
+      name.setForeground(Color.LIGHT_GRAY);
+    }
     name.setText("<html><body><b>" + contribution.getName() + "</b> - "+ contribution.getSentence()+ "</body></html>");
     GroupLayout layout=new GroupLayout(label);
     layout.setAutoCreateGaps(true);
@@ -58,6 +61,9 @@
     author.setText(name.toString());
     author.setEditable(false);
     author.setOpaque(false);
+    if (!contribution.isCompatible(Base.getRevision())) {
+      author.setForeground(Color.LIGHT_GRAY);
+    }
     if (table.isRowSelected(row)) {
       label.setBackground(Color.BLUE);
     }
