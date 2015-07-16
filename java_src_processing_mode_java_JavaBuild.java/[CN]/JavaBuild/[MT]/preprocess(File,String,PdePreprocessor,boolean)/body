@@ -5,9 +5,9 @@
   if (sketch.hasCodeFolder()) {
     File codeFolder=sketch.getCodeFolder();
     javaLibraryPath=codeFolder.getAbsolutePath();
-    String codeFolderClassPath=Base.contentsToClassPath(codeFolder);
+    String codeFolderClassPath=Util.contentsToClassPath(codeFolder);
     classPath+=File.pathSeparator + codeFolderClassPath;
-    codeFolderPackages=Base.packageListFromClassPath(codeFolderClassPath);
+    codeFolderPackages=Util.packageListFromClassPath(codeFolderClassPath);
   }
  else {
     javaLibraryPath="";
@@ -169,7 +169,7 @@ catch (  Exception ex) {
           }
           File packageFolder=new File(srcFolder,packageMatch[0].replace('.','/'));
           packageFolder.mkdirs();
-          Base.saveFile(javaCode,new File(packageFolder,filename));
+          Util.saveFile(javaCode,new File(packageFolder,filename));
         }
       }
  catch (      IOException e) {

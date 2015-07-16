@@ -25,27 +25,27 @@
     jarFolder=new File(contentsFolder,"Java");
     File macosFolder=new File(contentsFolder,"MacOS");
     macosFolder.mkdirs();
-    Base.copyFile(new File(contentsOrig,"MacOS/Processing"),new File(contentsFolder,"MacOS/" + sketch.getName()));
+    Util.copyFile(new File(contentsOrig,"MacOS/Processing"),new File(contentsFolder,"MacOS/" + sketch.getName()));
     File pkgInfo=new File(contentsFolder,"PkgInfo");
     PrintWriter writer=PApplet.createWriter(pkgInfo);
     writer.println("APPL????");
     writer.flush();
     writer.close();
     if (embedJava) {
-      Base.copyDirNative(new File(contentsOrig,"PlugIns"),new File(contentsFolder,"PlugIns"));
+      Util.copyDirNative(new File(contentsOrig,"PlugIns"),new File(contentsFolder,"PlugIns"));
     }
     File resourcesFolder=new File(contentsFolder,"Resources");
-    Base.copyDir(new File(contentsOrig,"Resources/en.lproj"),new File(resourcesFolder,"en.lproj"));
-    Base.copyFile(mode.getContentFile("application/sketch.icns"),new File(resourcesFolder,"sketch.icns"));
+    Util.copyDir(new File(contentsOrig,"Resources/en.lproj"),new File(resourcesFolder,"en.lproj"));
+    Util.copyFile(mode.getContentFile("application/sketch.icns"),new File(resourcesFolder,"sketch.icns"));
   }
  else   if (exportPlatform == PConstants.LINUX) {
     if (embedJava) {
-      Base.copyDirNative(Base.getJavaHome(),new File(destFolder,"java"));
+      Util.copyDirNative(Base.getJavaHome(),new File(destFolder,"java"));
     }
   }
  else   if (exportPlatform == PConstants.WINDOWS) {
     if (embedJava) {
-      Base.copyDir(Base.getJavaHome(),new File(destFolder,"java"));
+      Util.copyDir(Base.getJavaHome(),new File(destFolder,"java"));
     }
   }
   if (!jarFolder.exists())   jarFolder.mkdirs();
@@ -56,20 +56,20 @@
   addClasses(zos,binFolder);
   if (sketch.hasDataFolder()) {
     if (exportPlatform == PConstants.MACOSX) {
-      Base.copyDir(sketch.getDataFolder(),new File(jarFolder,"data"));
+      Util.copyDir(sketch.getDataFolder(),new File(jarFolder,"data"));
     }
  else {
-      Base.copyDir(sketch.getDataFolder(),new File(destFolder,"data"));
+      Util.copyDir(sketch.getDataFolder(),new File(destFolder,"data"));
     }
   }
   if (sketch.hasCodeFolder()) {
-    String includes=Base.contentsToClassPath(sketch.getCodeFolder());
+    String includes=Util.contentsToClassPath(sketch.getCodeFolder());
     String[] codeList=PApplet.splitTokens(includes,File.pathSeparator);
     for (int i=0; i < codeList.length; i++) {
       if (codeList[i].toLowerCase().endsWith(".jar") || codeList[i].toLowerCase().endsWith(".zip")) {
         File exportFile=new File(codeList[i]);
         String exportFilename=exportFile.getName();
-        Base.copyFile(exportFile,new File(jarFolder,exportFilename));
+        Util.copyFile(exportFile,new File(jarFolder,exportFilename));
         jarListVector.add(exportFilename);
       }
  else {
@@ -86,14 +86,14 @@
         System.err.println(exportFile.getName() + " is mentioned in export.txt, but it's " + "a big fat lie and does not exist.");
       }
  else       if (exportFile.isDirectory()) {
-        Base.copyDir(exportFile,new File(jarFolder,exportName));
+        Util.copyDir(exportFile,new File(jarFolder,exportName));
       }
  else       if (exportName.toLowerCase().endsWith(".zip") || exportName.toLowerCase().endsWith(".jar")) {
-        Base.copyFile(exportFile,new File(jarFolder,exportName));
+        Util.copyFile(exportFile,new File(jarFolder,exportName));
         jarListVector.add(exportName);
       }
  else {
-        Base.copyFile(exportFile,new File(jarFolder,exportName));
+        Util.copyFile(exportFile,new File(jarFolder,exportName));
       }
     }
   }
@@ -245,7 +245,7 @@
   String preprocFilename=sketch.getName() + ".java";
   File preprocFile=new File(srcFolder,preprocFilename);
   if (preprocFile.exists()) {
-    Base.copyFile(preprocFile,new File(sourceFolder,preprocFilename));
+    Util.copyFile(preprocFile,new File(sourceFolder,preprocFilename));
   }
  else {
     System.err.println("Could not copy source file: " + preprocFile.getAbsolutePath());
