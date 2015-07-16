@@ -15,7 +15,6 @@
   JPopupMenu.setDefaultLightWeightPopupEnabled(false);
   Language.init();
   Preferences.init();
-  locateSketchbookFolder();
   if (!SingleInstance.alreadyRunning(args)) {
     try {
       platform.setLookAndFeel();
@@ -23,6 +22,22 @@
  catch (    Exception e) {
       loge("Could not set the Look & Feel",e);
     }
+    boolean sketchbookPrompt=false;
+    if (Preferences.getBoolean("welcome.show")) {
+      if (!Preferences.getBoolean("welcome.seen")) {
+        String oldPath=Preferences.getOldSketchbookPath();
+        if (oldPath != null) {
+          String newPath=Preferences.getSketchbookPath();
+          if (newPath == null) {
+            sketchbookPrompt=true;
+          }
+ else           if (oldPath.equals(newPath)) {
+            sketchbookPrompt=true;
+          }
+        }
+      }
+    }
+    locateSketchbookFolder();
     try {
       untitledFolder=Base.createTempFolder("untitled","sketches",null);
       untitledFolder.deleteOnExit();
@@ -32,8 +47,17 @@
     }
     log("about to create base...");
     try {
-      Base base=new Base(args);
+      final Base base=new Base(args);
       SingleInstance.startServer(base);
+      if (Preferences.getBoolean("welcome.show")) {
+        final boolean prompt=sketchbookPrompt;
+        EventQueue.invokeLater(new Runnable(){
+          public void run(){
+            new Welcome(base,prompt);
+          }
+        }
+);
+      }
     }
  catch (    Throwable t) {
       if (t.getCause() != null) {

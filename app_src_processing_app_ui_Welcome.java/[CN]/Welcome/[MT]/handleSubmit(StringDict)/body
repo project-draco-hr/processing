@@ -1,0 +1,11 @@
+{
+  String sketchbookAction=dict.get("sketchbook",null);
+  if ("create_new".equals(sketchbookAction)) {
+    File folder=new File(Preferences.getSketchbookPath()).getParentFile();
+    PApplet.selectFolder(Language.text("preferences.sketchbook_location.popup"),"sketchbookCallback",folder,this,this);
+  }
+  boolean keepShowing="on".equals(dict.get("show_each_time",null));
+  Preferences.setBoolean("welcome.show",keepShowing);
+  Preferences.save();
+  handleClose();
+}

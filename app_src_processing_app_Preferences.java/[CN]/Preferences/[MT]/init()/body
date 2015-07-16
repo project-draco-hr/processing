@@ -8,7 +8,8 @@
   defaults=new HashMap<String,String>(table);
   setColor("run.window.bgcolor",SystemColor.control);
   preferencesFile=Base.getSettingsFile(PREFS_FILE);
-  if (preferencesFile.exists()) {
+  boolean firstRun=!preferencesFile.exists();
+  if (!firstRun) {
     try {
       load(new FileInputStream(preferencesFile));
     }
@@ -16,7 +17,7 @@
       Base.showError("Error reading preferences","Error reading the preferences file. " + "Please delete (or move)\n" + preferencesFile.getAbsolutePath() + " and restart Processing.",ex);
     }
   }
-  if (checkSketchbookPref() || !preferencesFile.exists()) {
+  if (checkSketchbookPref() || firstRun) {
     save();
   }
   PApplet.useNativeSelect=Preferences.getBoolean("chooser.files.native");
