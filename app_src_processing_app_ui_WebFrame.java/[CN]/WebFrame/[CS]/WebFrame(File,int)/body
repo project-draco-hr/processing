@@ -1,24 +1,24 @@
 {
   String[] lines=PApplet.loadStrings(file);
   String content=PApplet.join(lines,"\n");
-  int high=getContentHeight(400,content);
-  JEditorPane textPane=new JEditorPane("text/html",content);
-  textPane.setEditable(false);
-  textPane.setPreferredSize(new Dimension(400,high));
-  getContentPane().add(textPane);
+  int high=getContentHeight(width,content);
+  editorPane=new JEditorPane("text/html",content);
+  editorPane.setEditable(false);
+  editorPane.setPreferredSize(new Dimension(width,high));
+  getContentPane().add(editorPane);
   Toolkit.registerWindowCloseKeys(getRootPane(),new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       handleClose();
     }
   }
 );
-  HTMLEditorKit kit=(HTMLEditorKit)textPane.getEditorKit();
-  kit.setAutoFormSubmission(false);
-  Object title=textPane.getDocument().getProperty("title");
+  editorKit=(HTMLEditorKit)editorPane.getEditorKit();
+  editorKit.setAutoFormSubmission(false);
+  Object title=editorPane.getDocument().getProperty("title");
   if (title instanceof String) {
     setTitle((String)title);
   }
-  textPane.addHyperlinkListener(new HyperlinkListener(){
+  editorPane.addHyperlinkListener(new HyperlinkListener(){
     @Override public void hyperlinkUpdate(    HyperlinkEvent e){
       if (e instanceof FormSubmitEvent) {
         String result=((FormSubmitEvent)e).getData();
