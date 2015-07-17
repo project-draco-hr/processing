@@ -1,27 +1,15 @@
 {
   int x=left;
   for (  Tab tab : tabs) {
-    int state=tab.isCurrent() ? SELECTED : UNSELECTED;
     tab.left=x;
-    x+=TEXT_MARGIN;
-    x+=tab.textWidth + TEXT_MARGIN;
+    x+=MARGIN;
+    if (tab.hasIcon()) {
+      x+=ICON_WIDTH + MARGIN;
+    }
+    x+=tab.textWidth + MARGIN;
     tab.right=x;
     if (g != null) {
-      g.setColor(tabColor[state]);
-      if (tab.notification) {
-        g.setColor(errorColor);
-      }
-      drawTab(g,tab.left,tab.right,tab.isFirst(),tab.isLast());
-      int textLeft=tab.left + ((tab.right - tab.left) - tab.textWidth) / 2;
-      if (tab.notification && state == UNSELECTED) {
-        g.setColor(Color.LIGHT_GRAY);
-      }
- else {
-        g.setColor(textColor[state]);
-      }
-      int tabHeight=TAB_BOTTOM - TAB_TOP;
-      int baseline=TAB_TOP + (tabHeight + fontAscent) / 2;
-      g.drawString(tab.name,textLeft,baseline);
+      tab.draw(g);
     }
     x+=TAB_BETWEEN;
   }
