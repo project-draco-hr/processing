@@ -1,0 +1,35 @@
+{
+  final int COORD_COUNT=3;
+  final int ATTRIB_COUNT=22;
+  double[] avect=in.getAttribVector(i);
+  double[] r=new double[COORD_COUNT + ATTRIB_COUNT + avect.length];
+  int j=COORD_COUNT;
+  int fcol=in.colors[i];
+  r[j++]=(fcol >> 24) & 0xFF;
+  r[j++]=(fcol >> 16) & 0xFF;
+  r[j++]=(fcol >> 8) & 0xFF;
+  r[j++]=(fcol >> 0) & 0xFF;
+  r[j++]=in.normals[3 * i + 0];
+  r[j++]=in.normals[3 * i + 1];
+  r[j++]=in.normals[3 * i + 2];
+  r[j++]=in.texcoords[2 * i + 0];
+  r[j++]=in.texcoords[2 * i + 1];
+  int acol=in.ambient[i];
+  r[j++]=(acol >> 24) & 0xFF;
+  r[j++]=(acol >> 16) & 0xFF;
+  r[j++]=(acol >> 8) & 0xFF;
+  r[j++]=(acol >> 0) & 0xFF;
+  int scol=in.specular[i];
+  r[j++]=(scol >> 24) & 0xFF;
+  r[j++]=(scol >> 16) & 0xFF;
+  r[j++]=(scol >> 8) & 0xFF;
+  r[j++]=(scol >> 0) & 0xFF;
+  int ecol=in.emissive[i];
+  r[j++]=(ecol >> 24) & 0xFF;
+  r[j++]=(ecol >> 16) & 0xFF;
+  r[j++]=(ecol >> 8) & 0xFF;
+  r[j++]=(ecol >> 0) & 0xFF;
+  r[j++]=in.shininess[i];
+  System.arraycopy(avect,0,r,j,avect.length);
+  return r;
+}
