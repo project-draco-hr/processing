@@ -13,39 +13,7 @@
     strokeColor=in.strokeColors[i];
     strokeWeight=in.strokeWeights[i];
   }
-  int fcol=0, fa=0, fr=0, fg=0, fb=0;
-  int acol=0, aa=0, ar=0, ag=0, ab=0;
-  int scol=0, sa=0, sr=0, sg=0, sb=0;
-  int ecol=0, ea=0, er=0, eg=0, eb=0;
-  float nx=0, ny=0, nz=0, u=0, v=0, sh=0;
-  if (fill) {
-    fcol=in.colors[i];
-    fa=(fcol >> 24) & 0xFF;
-    fr=(fcol >> 16) & 0xFF;
-    fg=(fcol >> 8) & 0xFF;
-    fb=(fcol >> 0) & 0xFF;
-    acol=in.ambient[i];
-    aa=(acol >> 24) & 0xFF;
-    ar=(acol >> 16) & 0xFF;
-    ag=(acol >> 8) & 0xFF;
-    ab=(acol >> 0) & 0xFF;
-    scol=in.specular[i];
-    sa=(scol >> 24) & 0xFF;
-    sr=(scol >> 16) & 0xFF;
-    sg=(scol >> 8) & 0xFF;
-    sb=(scol >> 0) & 0xFF;
-    ecol=in.emissive[i];
-    ea=(ecol >> 24) & 0xFF;
-    er=(ecol >> 16) & 0xFF;
-    eg=(ecol >> 8) & 0xFF;
-    eb=(ecol >> 0) & 0xFF;
-    nx=in.normals[3 * i + 0];
-    ny=in.normals[3 * i + 1];
-    nz=in.normals[3 * i + 2];
-    u=in.texcoords[2 * i + 0];
-    v=in.texcoords[2 * i + 1];
-    sh=in.shininess[i];
-  }
+  double[] vertexT=fill ? collectVertexAttributes(i) : null;
   float cx=in.vertices[3 * i + 0];
   float cy=in.vertices[3 * i + 1];
   float cz=in.vertices[3 * i + 2];
@@ -81,14 +49,10 @@
     zplot1+=zplot2;
     zplot2+=zplot3;
     if (fill) {
-      double[] vertex=new double[]{x1,y1,z1,fa,fr,fg,fb,nx,ny,nz,u,v,aa,ar,ag,ab,sa,sr,sg,sb,ea,er,eg,eb,sh};
-      double[] avect=in.getAttribVector(i);
-      if (0 < avect.length) {
-        double temp[]=new double[vertex.length + avect.length];
-        PApplet.arrayCopy(vertex,0,temp,0,vertex.length);
-        PApplet.arrayCopy(avect,0,temp,vertex.length,avect.length);
-        vertex=temp;
-      }
+      double[] vertex=Arrays.copyOf(vertexT,vertexT.length);
+      vertex[0]=x1;
+      vertex[1]=y1;
+      vertex[2]=z1;
       gluTess.addVertex(vertex);
     }
     if (stroke)     addStrokeVertex(x1,y1,z1,strokeColor,strokeWeight);
