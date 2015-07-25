@@ -1,0 +1,28 @@
+{
+  float Dx, Dy, Dz, Dw;
+{
+    float ABx=tri1[X1] - tri1[X0], ACx=tri1[X2] - tri1[X0], ABy=tri1[Y1] - tri1[Y0], ACy=tri1[Y2] - tri1[Y0], ABz=tri1[Z1] - tri1[Z0], ACz=tri1[Z2] - tri1[Z0];
+    Dx=ABy * ACz - ABz * ACy;
+    Dy=ABz * ACx - ABx * ACz;
+    Dz=ABx * ACy - ABy * ACx;
+    float rMag=1.0f / (float)Math.sqrt(Dx * Dx + Dy * Dy + Dz * Dz);
+    Dx*=rMag;
+    Dy*=rMag;
+    Dz*=rMag;
+    Dw=-dot(Dx,Dy,Dz,tri1[X0],tri1[Y0],tri1[Z0]);
+  }
+  float distTest=dot(Dx,Dy,Dz,tri1[X0],tri1[Y0],tri1[Z0] + 100 * tz) + Dw;
+  float distA=dot(Dx,Dy,Dz,tri2[X0],tri2[Y0],tri2[Z0]) + Dw;
+  float distB=dot(Dx,Dy,Dz,tri2[X1],tri2[Y1],tri2[Z1]) + Dw;
+  float distC=dot(Dx,Dy,Dz,tri2[X2],tri2[Y2],tri2[Z2]) + Dw;
+  float absA=PApplet.abs(distA);
+  float absB=PApplet.abs(distB);
+  float absC=PApplet.abs(distC);
+  float eps=PApplet.max(absA,absB,absC) * 0.1f;
+  float sideA=((absA < eps) ? 0.0f : distA) * distTest;
+  float sideB=((absB < eps) ? 0.0f : distB) * distTest;
+  float sideC=((absC < eps) ? 0.0f : distC) * distTest;
+  boolean sameSide=sideA >= 0 && sideB >= 0 && sideC >= 0;
+  boolean notSameSide=sideA <= 0 && sideB <= 0 && sideC <= 0;
+  return sameSide ? 1 : notSameSide ? -1 : 0;
+}

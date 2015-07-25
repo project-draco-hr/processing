@@ -2,7 +2,6 @@
   boolean customShader=polyShader != null;
   boolean needNormals=customShader ? polyShader.accessNormals() : false;
   boolean needTexCoords=customShader ? polyShader.accessTexCoords() : false;
-  updatePolyBuffers(lights,texCache.hasTextures,needNormals,needTexCoords);
   sorter.sort(tessGeo);
   int[] triangleIndices=sorter.triangleIndices;
   int[] texCacheMap=sorter.texCacheMap;
@@ -11,6 +10,7 @@
     int ti=triangleIndices[i];
     Texture tex=texCache.getTexture(texCacheMap[ti]);
     int voffset=tessGeo.polyIndexCache.vertexOffset[indexCacheMap[ti]];
+    updatePolyBuffers(lights,texCache.hasTextures,needNormals,needTexCoords);
     PShader shader=getPolyShader(lights,tex != null);
     shader.bind();
     int ioffset=3 * ti;

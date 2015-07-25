@@ -1,29 +1,23 @@
 {
-  this.tessGeo=tessGeo;
   int triangleCount=tessGeo.polyIndexCount / 3;
   checkIndexBuffers(triangleCount);
+  int[] triangleIndices=this.triangleIndices;
+  int[] texCacheMap=this.texCacheMap;
+  int[] indexCacheMap=this.indexCacheMap;
 {
-    float[] polyVertices=tessGeo.polyVertices;
-    int polyVertexCount=tessGeo.polyVertexCount;
-    checkVertexBuffer(polyVertexCount);
-    for (int i=0; i < polyVertexCount; i++) {
-      float x=polyVertices[4 * i + X];
-      float y=polyVertices[4 * i + Y];
-      float z=polyVertices[4 * i + Z];
-      float w=polyVertices[4 * i + W];
-      screenVertices[3 * i + X]=pg.screenXImpl(x,y,z,w);
-      screenVertices[3 * i + Y]=pg.screenYImpl(x,y,z,w);
-      screenVertices[3 * i + Z]=-pg.screenZImpl(x,y,z,w) * (pg.cameraFar - pg.cameraNear);
+    for (int i=0; i < triangleCount; i++) {
+      triangleIndices[i]=i;
     }
   }
 {
-    for (int i=0; i < pg.texCache.size; i++) {
-      int first=pg.texCache.firstCache[i];
-      int last=pg.texCache.lastCache[i];
-      IndexCache cache=tessGeo.polyIndexCache;
+    TexCache texCache=pg.texCache;
+    IndexCache indexCache=tessGeo.polyIndexCache;
+    for (int i=0; i < texCache.size; i++) {
+      int first=texCache.firstCache[i];
+      int last=texCache.lastCache[i];
       for (int n=first; n <= last; n++) {
-        int ioffset=n == first ? pg.texCache.firstIndex[i] : cache.indexOffset[n];
-        int icount=n == last ? pg.texCache.lastIndex[i] - ioffset + 1 : cache.indexOffset[n] + cache.indexCount[n] - ioffset;
+        int ioffset=n == first ? texCache.firstIndex[i] : indexCache.indexOffset[n];
+        int icount=n == last ? texCache.lastIndex[i] - ioffset + 1 : indexCache.indexOffset[n] + indexCache.indexCount[n] - ioffset;
         for (int tr=ioffset / 3; tr < (ioffset + icount) / 3; tr++) {
           texCacheMap[tr]=i;
           indexCacheMap[tr]=n;
@@ -32,56 +26,127 @@
     }
   }
 {
-    if (triangleIndices.length < triangleCount) {
-      triangleIndices=new int[triangleCount];
-    }
-    for (int i=0; i < triangleCount; i++) {
-      triangleIndices[i]=i;
+    int polyVertexCount=tessGeo.polyVertexCount;
+    checkVertexBuffer(polyVertexCount);
+    float[] screenVertices=this.screenVertices;
+    float[] polyVertices=tessGeo.polyVertices;
+    PMatrix3D projection=pg.projection;
+    for (int i=0; i < polyVertexCount; i++) {
+      float x=polyVertices[4 * i + X];
+      float y=polyVertices[4 * i + Y];
+      float z=polyVertices[4 * i + Z];
+      float w=polyVertices[4 * i + W];
+      float ox=projection.m00 * x + projection.m01 * y + projection.m02 * z + projection.m03 * w;
+      float oy=projection.m10 * x + projection.m11 * y + projection.m12 * z + projection.m13 * w;
+      float oz=projection.m20 * x + projection.m21 * y + projection.m22 * z + projection.m23 * w;
+      float ow=projection.m30 * x + projection.m31 * y + projection.m32 * z + projection.m33 * w;
+      if (nonZero(ow)) {
+        ox/=ow;
+        oy/=ow;
+        oz/=ow;
+      }
+      screenVertices[3 * i + X]=ox;
+      screenVertices[3 * i + Y]=oy;
+      screenVertices[3 * i + Z]=-oz;
     }
   }
-  sortByMinZ(0,triangleCount - 1);
+  float[] screenVertices=this.screenVertices;
+  int[] vertexOffset=tessGeo.polyIndexCache.vertexOffset;
+  short[] polyIndices=tessGeo.polyIndices;
+  float[] triA=this.triA;
+  float[] triB=this.triB;
+  for (int i=0; i < triangleCount; i++) {
+    fetchTriCoords(triA,i,vertexOffset,indexCacheMap,screenVertices,polyIndices);
+    minXBuffer[i]=PApplet.min(triA[X0],triA[X1],triA[X2]);
+    maxXBuffer[i]=PApplet.max(triA[X0],triA[X1],triA[X2]);
+    minYBuffer[i]=PApplet.min(triA[Y0],triA[Y1],triA[Y2]);
+    maxYBuffer[i]=PApplet.max(triA[Y0],triA[Y1],triA[Y2]);
+    minZBuffer[i]=PApplet.min(triA[Z0],triA[Z1],triA[Z2]);
+    maxZBuffer[i]=PApplet.max(triA[Z0],triA[Z1],triA[Z2]);
+  }
+  sortByMinZ(0,triangleCount - 1,triangleIndices,minZBuffer);
   int activeTid=0;
-  int markedCount=0;
+  BitSet marked=this.marked;
+  BitSet swapped=this.swapped;
+  marked.clear();
   while (activeTid < triangleCount) {
     int testTid=activeTid + 1;
     boolean draw=false;
-    int swappedCount=0;
+    swapped.clear();
+    int ati=triangleIndices[activeTid];
+    float minXA=minXBuffer[ati];
+    float maxXA=maxXBuffer[ati];
+    float minYA=minYBuffer[ati];
+    float maxYA=maxYBuffer[ati];
+    float maxZA=maxZBuffer[ati];
+    fetchTriCoords(triA,ati,vertexOffset,indexCacheMap,screenVertices,polyIndices);
     while (!draw && testTid < triangleCount) {
-      int ati=triangleIndices[activeTid];
-      int bti=triangleIndices[testTid];
-      if (maxCoord(ati,Z) <= minCoord(bti,Z) && !contains(marked,markedCount,triangleIndices[testTid]) && !contains(marked,markedCount,triangleIndices[activeTid])) {
+      int tti=triangleIndices[testTid];
+      if (maxZA <= minZBuffer[tti] && !marked.get(tti)) {
         draw=true;
       }
- else       if (maxCoord(ati,X) <= minCoord(bti,X) || maxCoord(ati,Y) <= minCoord(bti,Y) || minCoord(ati,X) >= maxCoord(bti,X) || minCoord(ati,Y) >= maxCoord(bti,Y)) {
-        testTid++;
-      }
- else       if (side(bti,ati,-1) > 0) {
-        testTid++;
-      }
- else       if (side(ati,bti,1) > 0) {
+ else       if (maxXA <= minXBuffer[tti] || maxYA <= minYBuffer[tti] || minXA >= maxXBuffer[tti] || minYA >= maxYBuffer[tti]) {
         testTid++;
       }
  else {
-        rotateRight(triangleIndices,activeTid,testTid);
-        marked=arrayCheck(marked,markedCount,1);
-        if (insert(marked,markedCount,triangleIndices[activeTid])) {
-          markedCount++;
+        fetchTriCoords(triB,tti,vertexOffset,indexCacheMap,screenVertices,polyIndices);
+        if (side(triB,triA,-1) > 0) {
+          testTid++;
         }
-        swapped=arrayCheck(swapped,swappedCount,1);
-        if (insert(swapped,swappedCount,triangleIndices[activeTid])) {
-          swappedCount++;
-          testTid=activeTid + 1;
+ else         if (side(triA,triB,1) > 0) {
+          testTid++;
         }
  else {
-          draw=true;
+          if (!swapped.get(tti)) {
+            swapped.set(ati);
+            marked.set(tti);
+            rotateRight(triangleIndices,activeTid,testTid);
+            ati=tti;
+            System.arraycopy(triB,0,triA,0,9);
+            minXA=minXBuffer[ati];
+            maxXA=maxXBuffer[ati];
+            minYA=minYBuffer[ati];
+            maxYA=maxYBuffer[ati];
+            maxZA=maxZBuffer[ati];
+            testTid=activeTid + 1;
+          }
+ else {
+            draw=true;
+          }
         }
       }
     }
-    if (remove(marked,markedCount,activeTid)) {
-      markedCount--;
-    }
-    if (draw || testTid >= triangleCount) {
-      activeTid++;
+    activeTid++;
+  }
+{
+    for (int id=0; id < triangleCount; id++) {
+      int mappedId=triangleIndices[id];
+      if (id != mappedId) {
+        short i0=polyIndices[3 * id + 0];
+        short i1=polyIndices[3 * id + 1];
+        short i2=polyIndices[3 * id + 2];
+        int texCache=texCacheMap[id];
+        int indexCache=indexCacheMap[id];
+        int currId=id;
+        int nextId=mappedId;
+        do {
+          triangleIndices[currId]=currId;
+          polyIndices[3 * currId + 0]=polyIndices[3 * nextId + 0];
+          polyIndices[3 * currId + 1]=polyIndices[3 * nextId + 1];
+          polyIndices[3 * currId + 2]=polyIndices[3 * nextId + 2];
+          texCacheMap[currId]=texCacheMap[nextId];
+          indexCacheMap[currId]=indexCacheMap[nextId];
+          currId=nextId;
+          nextId=triangleIndices[nextId];
+        }
+ while (nextId != id);
+        triangleIndices[currId]=currId;
+        polyIndices[3 * currId + 0]=i0;
+        polyIndices[3 * currId + 1]=i1;
+        polyIndices[3 * currId + 2]=i2;
+        texCacheMap[currId]=texCache;
+        indexCacheMap[currId]=indexCache;
+      }
     }
   }
 }
