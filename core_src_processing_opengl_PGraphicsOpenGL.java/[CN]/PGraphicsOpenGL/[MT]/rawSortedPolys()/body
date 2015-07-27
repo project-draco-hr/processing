@@ -8,12 +8,13 @@
   short[] indices=tessGeo.polyIndices;
   sorter.sort(tessGeo);
   int[] triangleIndices=sorter.triangleIndices;
-  int[] texCacheMap=sorter.texCacheMap;
-  int[] indexCacheMap=sorter.indexCacheMap;
+  int[] texMap=sorter.texMap;
+  int[] voffsetMap=sorter.voffsetMap;
+  int[] vertexOffset=tessGeo.polyIndexCache.vertexOffset;
   for (int i=0; i < tessGeo.polyIndexCount / 3; i++) {
     int ti=triangleIndices[i];
-    PImage tex=texCache.getTextureImage(texCacheMap[ti]);
-    int voffset=tessGeo.polyIndexCache.vertexOffset[indexCacheMap[ti]];
+    PImage tex=texCache.getTextureImage(texMap[ti]);
+    int voffset=vertexOffset[voffsetMap[ti]];
     int i0=voffset + indices[3 * ti + 0];
     int i1=voffset + indices[3 * ti + 1];
     int i2=voffset + indices[3 * ti + 2];

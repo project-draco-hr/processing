@@ -2,8 +2,8 @@
   int triangleCount=tessGeo.polyIndexCount / 3;
   checkIndexBuffers(triangleCount);
   int[] triangleIndices=this.triangleIndices;
-  int[] texCacheMap=this.texCacheMap;
-  int[] indexCacheMap=this.indexCacheMap;
+  int[] texMap=this.texMap;
+  int[] voffsetMap=this.voffsetMap;
 {
     for (int i=0; i < triangleCount; i++) {
       triangleIndices[i]=i;
@@ -19,8 +19,8 @@
         int ioffset=n == first ? texCache.firstIndex[i] : indexCache.indexOffset[n];
         int icount=n == last ? texCache.lastIndex[i] - ioffset + 1 : indexCache.indexOffset[n] + indexCache.indexCount[n] - ioffset;
         for (int tr=ioffset / 3; tr < (ioffset + icount) / 3; tr++) {
-          texCacheMap[tr]=i;
-          indexCacheMap[tr]=n;
+          texMap[tr]=i;
+          voffsetMap[tr]=n;
         }
       }
     }
@@ -56,7 +56,7 @@
   float[] triA=this.triA;
   float[] triB=this.triB;
   for (int i=0; i < triangleCount; i++) {
-    fetchTriCoords(triA,i,vertexOffset,indexCacheMap,screenVertices,polyIndices);
+    fetchTriCoords(triA,i,vertexOffset,voffsetMap,screenVertices,polyIndices);
     minXBuffer[i]=PApplet.min(triA[X0],triA[X1],triA[X2]);
     maxXBuffer[i]=PApplet.max(triA[X0],triA[X1],triA[X2]);
     minYBuffer[i]=PApplet.min(triA[Y0],triA[Y1],triA[Y2]);
@@ -79,7 +79,7 @@
     float minYA=minYBuffer[ati];
     float maxYA=maxYBuffer[ati];
     float maxZA=maxZBuffer[ati];
-    fetchTriCoords(triA,ati,vertexOffset,indexCacheMap,screenVertices,polyIndices);
+    fetchTriCoords(triA,ati,vertexOffset,voffsetMap,screenVertices,polyIndices);
     while (!draw && testTid < triangleCount) {
       int tti=triangleIndices[testTid];
       if (maxZA <= minZBuffer[tti] && !marked.get(tti)) {
@@ -89,7 +89,7 @@
         testTid++;
       }
  else {
-        fetchTriCoords(triB,tti,vertexOffset,indexCacheMap,screenVertices,polyIndices);
+        fetchTriCoords(triB,tti,vertexOffset,voffsetMap,screenVertices,polyIndices);
         if (side(triB,triA,-1) > 0) {
           testTid++;
         }
@@ -125,8 +125,8 @@
         short i0=polyIndices[3 * id + 0];
         short i1=polyIndices[3 * id + 1];
         short i2=polyIndices[3 * id + 2];
-        int texCache=texCacheMap[id];
-        int indexCache=indexCacheMap[id];
+        int texId=texMap[id];
+        int voffsetId=voffsetMap[id];
         int currId=id;
         int nextId=mappedId;
         do {
@@ -134,8 +134,8 @@
           polyIndices[3 * currId + 0]=polyIndices[3 * nextId + 0];
           polyIndices[3 * currId + 1]=polyIndices[3 * nextId + 1];
           polyIndices[3 * currId + 2]=polyIndices[3 * nextId + 2];
-          texCacheMap[currId]=texCacheMap[nextId];
-          indexCacheMap[currId]=indexCacheMap[nextId];
+          texMap[currId]=texMap[nextId];
+          voffsetMap[currId]=voffsetMap[nextId];
           currId=nextId;
           nextId=triangleIndices[nextId];
         }
@@ -144,8 +144,8 @@
         polyIndices[3 * currId + 0]=i0;
         polyIndices[3 * currId + 1]=i1;
         polyIndices[3 * currId + 2]=i2;
-        texCacheMap[currId]=texCache;
-        indexCacheMap[currId]=indexCache;
+        texMap[currId]=texId;
+        voffsetMap[currId]=voffsetId;
       }
     }
   }

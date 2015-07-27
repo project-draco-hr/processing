@@ -3,18 +3,27 @@
   boolean needNormals=customShader ? polyShader.accessNormals() : false;
   boolean needTexCoords=customShader ? polyShader.accessTexCoords() : false;
   sorter.sort(tessGeo);
-  int[] triangleIndices=sorter.triangleIndices;
-  int[] texCacheMap=sorter.texCacheMap;
-  int[] indexCacheMap=sorter.indexCacheMap;
-  for (int i=0; i < tessGeo.polyIndexCount / 3; i++) {
-    int ti=triangleIndices[i];
-    Texture tex=texCache.getTexture(texCacheMap[ti]);
-    int voffset=tessGeo.polyIndexCache.vertexOffset[indexCacheMap[ti]];
-    updatePolyBuffers(lights,texCache.hasTextures,needNormals,needTexCoords);
+  int triangleCount=tessGeo.polyIndexCount / 3;
+  int[] texMap=sorter.texMap;
+  int[] voffsetMap=sorter.voffsetMap;
+  int[] vertexOffset=tessGeo.polyIndexCache.vertexOffset;
+  updatePolyBuffers(lights,texCache.hasTextures,needNormals,needTexCoords);
+  int ti=0;
+  while (ti < triangleCount) {
+    int startTi=ti;
+    int texId=texMap[ti];
+    int voffsetId=voffsetMap[ti];
+    do {
+      ++ti;
+    }
+ while (ti < triangleCount && texId == texMap[ti] && voffsetId == voffsetMap[ti]);
+    int endTi=ti;
+    Texture tex=texCache.getTexture(texId);
+    int voffset=vertexOffset[voffsetId];
+    int ioffset=3 * startTi;
+    int icount=3 * (endTi - startTi);
     PShader shader=getPolyShader(lights,tex != null);
     shader.bind();
-    int ioffset=3 * ti;
-    int icount=3;
     shader.setVertexAttribute(bufPolyVertex.glId,4,PGL.FLOAT,0,4 * voffset * PGL.SIZEOF_FLOAT);
     shader.setColorAttribute(bufPolyColor.glId,4,PGL.UNSIGNED_BYTE,0,4 * voffset * PGL.SIZEOF_BYTE);
     if (lights) {
