@@ -1,0 +1,14 @@
+{
+  swap(triangleIndices,leftTid,((leftTid + rightTid) / 2));
+  int k=leftTid;
+  float leftMinZ=minZBuffer[triangleIndices[leftTid]];
+  for (int tid=leftTid + 1; tid <= rightTid; tid++) {
+    float minZ=minZBuffer[triangleIndices[tid]];
+    if (minZ < leftMinZ) {
+      swap(triangleIndices,++k,tid);
+    }
+  }
+  swap(triangleIndices,leftTid,k);
+  if (leftTid < k - 1)   sortByMinZ(leftTid,k - 1,triangleIndices,minZBuffer);
+  if (k + 1 < rightTid)   sortByMinZ(k + 1,rightTid,triangleIndices,minZBuffer);
+}
