@@ -7,14 +7,19 @@
     try {
       URL url=new URL(filename);
       URLConnection conn=url.openConnection();
-      HttpURLConnection httpConn=(HttpURLConnection)conn;
-      httpConn.setInstanceFollowRedirects(true);
-      int response=httpConn.getResponseCode();
-      if (response >= 300 && response < 400) {
-        String newLocation=httpConn.getHeaderField("Location");
-        return createInputRaw(newLocation);
+      if (conn instanceof HttpURLConnection) {
+        HttpURLConnection httpConn=(HttpURLConnection)conn;
+        httpConn.setInstanceFollowRedirects(true);
+        int response=httpConn.getResponseCode();
+        if (response >= 300 && response < 400) {
+          String newLocation=httpConn.getHeaderField("Location");
+          return createInputRaw(newLocation);
+        }
+        return conn.getInputStream();
       }
-      return conn.getInputStream();
+ else       if (conn instanceof JarURLConnection) {
+        return url.openStream();
+      }
     }
  catch (    MalformedURLException mfue) {
     }
