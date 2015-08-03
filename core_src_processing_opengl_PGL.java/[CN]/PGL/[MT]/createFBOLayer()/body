@@ -44,62 +44,7 @@
     renderbufferStorageMultisample(RENDERBUFFER,numSamples,RGBA8,fboWidth,fboHeight);
     framebufferRenderbuffer(FRAMEBUFFER,COLOR_ATTACHMENT0,RENDERBUFFER,glColorBuf.get(0));
   }
-  if (packed && depthBits == 24 && stencilBits == 8) {
-    genRenderbuffers(1,glDepthStencil);
-    bindRenderbuffer(RENDERBUFFER,glDepthStencil.get(0));
-    if (multisample) {
-      renderbufferStorageMultisample(RENDERBUFFER,numSamples,DEPTH24_STENCIL8,fboWidth,fboHeight);
-    }
- else {
-      renderbufferStorage(RENDERBUFFER,DEPTH24_STENCIL8,fboWidth,fboHeight);
-    }
-    framebufferRenderbuffer(FRAMEBUFFER,DEPTH_ATTACHMENT,RENDERBUFFER,glDepthStencil.get(0));
-    framebufferRenderbuffer(FRAMEBUFFER,STENCIL_ATTACHMENT,RENDERBUFFER,glDepthStencil.get(0));
-  }
- else {
-    if (0 < depthBits) {
-      int depthComponent=DEPTH_COMPONENT16;
-      if (depthBits == 32) {
-        depthComponent=DEPTH_COMPONENT32;
-      }
- else       if (depthBits == 24) {
-        depthComponent=DEPTH_COMPONENT24;
-      }
- else       if (depthBits == 16) {
-        depthComponent=DEPTH_COMPONENT16;
-      }
-      genRenderbuffers(1,glDepth);
-      bindRenderbuffer(RENDERBUFFER,glDepth.get(0));
-      if (multisample) {
-        renderbufferStorageMultisample(RENDERBUFFER,numSamples,depthComponent,fboWidth,fboHeight);
-      }
- else {
-        renderbufferStorage(RENDERBUFFER,depthComponent,fboWidth,fboHeight);
-      }
-      framebufferRenderbuffer(FRAMEBUFFER,DEPTH_ATTACHMENT,RENDERBUFFER,glDepth.get(0));
-    }
-    if (0 < stencilBits) {
-      int stencilIndex=STENCIL_INDEX1;
-      if (stencilBits == 8) {
-        stencilIndex=STENCIL_INDEX8;
-      }
- else       if (stencilBits == 4) {
-        stencilIndex=STENCIL_INDEX4;
-      }
- else       if (stencilBits == 1) {
-        stencilIndex=STENCIL_INDEX1;
-      }
-      genRenderbuffers(1,glStencil);
-      bindRenderbuffer(RENDERBUFFER,glStencil.get(0));
-      if (multisample) {
-        renderbufferStorageMultisample(RENDERBUFFER,numSamples,stencilIndex,fboWidth,fboHeight);
-      }
- else {
-        renderbufferStorage(RENDERBUFFER,stencilIndex,fboWidth,fboHeight);
-      }
-      framebufferRenderbuffer(FRAMEBUFFER,STENCIL_ATTACHMENT,RENDERBUFFER,glStencil.get(0));
-    }
-  }
+  createDepthAndStencilBuffer(multisample,depthBits,stencilBits,packed);
   validateFramebuffer();
   clearDepth(1);
   clearStencil(0);
