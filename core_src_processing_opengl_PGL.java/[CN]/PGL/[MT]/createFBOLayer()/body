@@ -36,6 +36,9 @@
   genFramebuffers(1,glColorFbo);
   bindFramebufferImpl(FRAMEBUFFER,glColorFbo.get(0));
   framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
+  if (!multisample || pg.getHint(PConstants.ENABLE_DEPTH_READING)) {
+    createDepthAndStencilBuffer(false,depthBits,stencilBits,packed);
+  }
   if (multisample) {
     genFramebuffers(1,glMultiFbo);
     bindFramebufferImpl(FRAMEBUFFER,glMultiFbo.get(0));
@@ -43,8 +46,8 @@
     bindRenderbuffer(RENDERBUFFER,glMultiColor.get(0));
     renderbufferStorageMultisample(RENDERBUFFER,numSamples,RGBA8,fboWidth,fboHeight);
     framebufferRenderbuffer(FRAMEBUFFER,COLOR_ATTACHMENT0,RENDERBUFFER,glMultiColor.get(0));
+    createDepthAndStencilBuffer(true,depthBits,stencilBits,packed);
   }
-  createDepthAndStencilBuffer(multisample,depthBits,stencilBits,packed);
   validateFramebuffer();
   clearDepth(1);
   clearStencil(0);

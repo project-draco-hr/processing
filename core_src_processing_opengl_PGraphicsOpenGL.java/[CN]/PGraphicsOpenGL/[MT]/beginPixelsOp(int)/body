@@ -17,7 +17,11 @@
  else {
     if (op == OP_READ) {
       if (offscreenMultisample) {
-        multisampleFramebuffer.copyColor(offscreenFramebuffer);
+        int mask=PGL.COLOR_BUFFER_BIT;
+        if (hints[ENABLE_DEPTH_READING]) {
+          mask|=PGL.DEPTH_BUFFER_BIT | PGL.STENCIL_BUFFER_BIT;
+        }
+        multisampleFramebuffer.copy(offscreenFramebuffer,mask);
       }
       pixfb=offscreenFramebuffer;
     }

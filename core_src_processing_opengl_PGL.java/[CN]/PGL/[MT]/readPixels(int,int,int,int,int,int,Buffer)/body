@@ -1,6 +1,12 @@
 {
-  boolean pgCall=format != STENCIL_INDEX && format != DEPTH_COMPONENT && format != DEPTH_STENCIL;
-  if (pgCall)   pg.beginReadPixels();
+  boolean multisampled=isMultisampled();
+  boolean depthReadingEnabled=pg.getHint(PConstants.ENABLE_DEPTH_READING);
+  boolean depthRequested=format == STENCIL_INDEX || format == DEPTH_COMPONENT || format == DEPTH_STENCIL;
+  if (multisampled && depthRequested && !depthReadingEnabled) {
+    PGraphics.showWarning(DEPTH_READING_NOT_ENABLED_ERROR);
+    return;
+  }
+  pg.beginReadPixels();
   readPixelsImpl(x,y,width,height,format,type,buffer);
-  if (pgCall)   pg.endReadPixels();
+  pg.endReadPixels();
 }
