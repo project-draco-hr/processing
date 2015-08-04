@@ -11,7 +11,12 @@
     multisampleFramebuffer=new FrameBuffer(this,texture.glWidth,texture.glHeight,PGL.smoothToSamples(smooth),0,depthBits,stencilBits,packed,false);
     multisampleFramebuffer.clear();
     offscreenMultisample=true;
-    offscreenFramebuffer=new FrameBuffer(this,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
+    if (hints[ENABLE_DEPTH_READING]) {
+      offscreenFramebuffer=new FrameBuffer(this,texture.glWidth,texture.glHeight,1,1,depthBits,stencilBits,packed,false);
+    }
+ else {
+      offscreenFramebuffer=new FrameBuffer(this,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
+    }
   }
  else {
     smooth=0;
