@@ -3,8 +3,19 @@
     PGraphics.showWarning(INSIDE_BEGIN_END_ERROR,"setVertex()");
     return;
   }
-  inGeo.vertices[3 * index + 0]=x;
-  inGeo.vertices[3 * index + 1]=y;
-  inGeo.vertices[3 * index + 2]=z;
+  if (vertexCodes[index] != VERTEX) {
+    PGraphics.showWarning(NOT_A_SIMPLE_VERTEX,"setVertex()");
+    return;
+  }
+  if (family == PATH) {
+    vertices[index][X]=x;
+    vertices[index][Y]=y;
+    if (is3D)     vertices[index][Z]=z;
+  }
+ else {
+    inGeo.vertices[3 * index + 0]=x;
+    inGeo.vertices[3 * index + 1]=y;
+    inGeo.vertices[3 * index + 2]=z;
+  }
   markForTessellation();
 }
