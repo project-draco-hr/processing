@@ -5,35 +5,61 @@
   screen.addReference();
   monitors=new ArrayList<MonitorDevice>();
   GraphicsEnvironment environment=GraphicsEnvironment.getLocalGraphicsEnvironment();
-  GraphicsDevice[] devices=environment.getScreenDevices();
-  for (  GraphicsDevice device : devices) {
-    String did=device.getIDstring();
-    String[] parts=did.split("Display");
-    String id1="";
-    if (1 < parts.length) {
-      id1=parts[1].trim();
-    }
-    MonitorDevice monitor=null;
-    for (int i=0; i < screen.getMonitorDevices().size(); i++) {
-      MonitorDevice mon=screen.getMonitorDevices().get(i);
-      String mid=String.valueOf(mon.getId());
-      if (id1.equals(mid)) {
-        monitor=mon;
-        break;
+  GraphicsDevice[] awtDevices=environment.getScreenDevices();
+  List<MonitorDevice> newtDevices=screen.getMonitorDevices();
+  if (PApplet.platform == PConstants.LINUX) {
+    for (    GraphicsDevice device : awtDevices) {
+      String did=device.getIDstring();
+      String[] parts=did.split(":");
+      String id1="";
+      if (1 < parts.length) {
+        id1=parts[1].trim();
       }
-    }
-    if (monitor == null) {
-      for (int i=0; i < screen.getMonitorDevices().size(); i++) {
-        MonitorDevice mon=screen.getMonitorDevices().get(i);
-        String mid=String.valueOf(mon.getId());
-        if (-1 < did.indexOf(mid)) {
+      MonitorDevice monitor=null;
+      int id0=newtDevices.size() > 0 ? newtDevices.get(0).getId() : 0;
+      for (int i=0; i < newtDevices.size(); i++) {
+        MonitorDevice mon=newtDevices.get(i);
+        String mid=String.valueOf(mon.getId() - id0);
+        if (id1.equals(mid)) {
           monitor=mon;
           break;
         }
       }
+      if (monitor != null) {
+        monitors.add(monitor);
+      }
     }
-    if (monitor != null) {
-      monitors.add(monitor);
+  }
+ else {
+    for (    GraphicsDevice device : awtDevices) {
+      String did=device.getIDstring();
+      String[] parts=did.split("Display");
+      String id1="";
+      if (1 < parts.length) {
+        id1=parts[1].trim();
+      }
+      MonitorDevice monitor=null;
+      for (int i=0; i < newtDevices.size(); i++) {
+        MonitorDevice mon=newtDevices.get(i);
+        String mid=String.valueOf(mon.getId());
+        if (id1.equals(mid)) {
+          monitor=mon;
+          break;
+        }
+      }
+      if (monitor == null) {
+        for (int i=0; i < newtDevices.size(); i++) {
+          MonitorDevice mon=newtDevices.get(i);
+          String mid=String.valueOf(mon.getId());
+          if (-1 < did.indexOf(mid)) {
+            monitor=mon;
+            break;
+          }
+        }
+      }
+      if (monitor != null) {
+        monitors.add(monitor);
+      }
     }
   }
 }
