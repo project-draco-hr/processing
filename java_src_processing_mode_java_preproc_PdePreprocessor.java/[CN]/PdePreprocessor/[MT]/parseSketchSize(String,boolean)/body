@@ -71,7 +71,7 @@
   if (sizeContents != null) {
     StringList args=breakCommas(sizeContents[1]);
     SurfaceInfo info=new SurfaceInfo();
-    info.statement=sizeContents[0];
+    info.addStatement(sizeContents[0]);
     info.width=args.get(0).trim();
     info.height=args.get(1).trim();
     info.renderer=(args.size() >= 3) ? args.get(2).trim() : null;
@@ -84,15 +84,13 @@
       Base.showWarning("Could not find sketch size",message,null);
       throw new SketchException("Please fix the size() line to continue.",false);
     }
-    if (extraStatements.size() != 0) {
-      info.statement+=extraStatements.join(" ");
-    }
+    info.addStatements(extraStatements);
     info.checkEmpty();
     return info;
   }
   if (fullContents != null) {
     SurfaceInfo info=new SurfaceInfo();
-    info.statement=fullContents[0];
+    info.addStatement(fullContents[0]);
     StringList args=breakCommas(fullContents[1]);
     if (args.size() > 0) {
       String args0=args.get(0).trim();
@@ -114,15 +112,13 @@
     }
     info.width="displayWidth";
     info.height="displayHeight";
-    if (extraStatements.size() != 0) {
-      info.statement+=extraStatements.join(" ");
-    }
+    info.addStatements(extraStatements);
     info.checkEmpty();
     return info;
   }
   if (extraStatements.size() != 0) {
     SurfaceInfo info=new SurfaceInfo();
-    info.statement=extraStatements.join(" ");
+    info.addStatements(extraStatements);
     return info;
   }
   return new SurfaceInfo();

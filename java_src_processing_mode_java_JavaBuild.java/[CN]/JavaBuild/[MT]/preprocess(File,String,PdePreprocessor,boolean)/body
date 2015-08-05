@@ -27,10 +27,14 @@
     return null;
   }
   if (sizeInfo != null) {
-    String sizeStatement=sizeInfo.getStatement();
-    if (sizeStatement != null) {
-      int index=bigCode.indexOf(sizeStatement);
-      bigCode.delete(index,index + sizeStatement.length());
+    for (    String stmt : sizeInfo.getStatements()) {
+      int index=bigCode.indexOf(stmt);
+      if (index != -1) {
+        bigCode.delete(index,index + stmt.length());
+      }
+ else {
+        System.err.format("Error removing '%s' from the code.",stmt);
+      }
     }
   }
   PreprocessorResult result;
