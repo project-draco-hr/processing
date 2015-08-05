@@ -20,16 +20,9 @@
   }
   Preferences.set("update.last",String.valueOf(now));
   if (base.activeEditor != null) {
-    boolean offerToUpdateContributions=true;
     if (latest > Base.getRevision()) {
       System.out.println("You are running Processing revision 0" + Base.getRevision() + ", the latest build is 0"+ latest+ ".");
-      offerToUpdateContributions=!promptToVisitDownloadPage();
-    }
-    if (offerToUpdateContributions) {
-      Thread.sleep(5 * 1000);
-      if ((!base.contributionManagerFrame.hasAlreadyBeenOpened() && (base.contributionManagerFrame.hasUpdates(base)))) {
-        promptToOpenContributionManager();
-      }
+      promptToVisitDownloadPage();
     }
   }
 }
