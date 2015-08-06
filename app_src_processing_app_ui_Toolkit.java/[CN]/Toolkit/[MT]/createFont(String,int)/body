@@ -1,5 +1,5 @@
 {
-  File fontFile=new File(Base.getJavaHome(),"lib/fonts/" + filename);
+  File fontFile=new File(System.getProperty("java.home"),"lib/fonts/" + filename);
   if (!fontFile.exists()) {
     fontFile=new File(System.getProperty("user.dir"),"../build/shared/lib/fonts/" + filename);
   }
@@ -7,7 +7,14 @@
     fontFile=new File(System.getProperty("user.dir"),"../../shared/lib/fonts/" + filename);
   }
   if (!fontFile.exists()) {
-    Base.showError("Font Sadness","Could not find required fonts",null);
+    String msg="Could not find required fonts. ";
+    if (hasNonAsciiChars(System.getProperty("java.home"))) {
+      msg+="Trying moving Processing to a location with only ASCII characters in the path.";
+    }
+ else {
+      msg+="Please reinstall Processing from the original location.";
+    }
+    Base.showError("Font Sadness",msg,null);
   }
   BufferedInputStream input=new BufferedInputStream(new FileInputStream(fontFile));
   Font font=Font.createFont(Font.TRUETYPE_FONT,input);
