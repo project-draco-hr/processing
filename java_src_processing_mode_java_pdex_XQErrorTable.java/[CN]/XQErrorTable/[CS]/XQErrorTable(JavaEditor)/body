@@ -1,9 +1,13 @@
 {
   this.editor=editor;
-  for (int i=0; i < this.getColumnModel().getColumnCount(); i++) {
-    getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
+  JTableHeader header=getTableHeader();
+  Font font=Toolkit.getSansFont(12,Font.PLAIN);
+  setFont(font);
+  header.setFont(font);
+  TableColumnModel columnModel=getColumnModel();
+  for (int i=0; i < columnModel.getColumnCount(); i++) {
+    columnModel.getColumn(i).setPreferredWidth(columnWidths[i]);
   }
-  getTableHeader().setReorderingAllowed(false);
   addMouseListener(new MouseAdapter(){
     @Override synchronized public void mouseClicked(    MouseEvent e){
       try {
@@ -16,7 +20,7 @@
     }
   }
 );
-  this.addMouseMotionListener(new MouseMotionAdapter(){
+  addMouseMotionListener(new MouseMotionAdapter(){
     @Override public void mouseMoved(    MouseEvent evt){
       int rowIndex=rowAtPoint(evt.getPoint());
       List<Problem> problemsList=editor.getErrorChecker().problemsList;
@@ -43,14 +47,16 @@ synchronized (problemsList) {
     }
   }
 );
-  this.getTableHeader().addMouseListener(new MouseAdapter(){
+  header.setReorderingAllowed(false);
+  header.addMouseListener(new MouseAdapter(){
     @Override public void mousePressed(    MouseEvent e){
       columnResizing=true;
     }
     @Override public void mouseReleased(    MouseEvent e){
       columnResizing=false;
-      for (int i=0; i < ((JTableHeader)e.getSource()).getColumnModel().getColumnCount(); i++) {
-        columnWidths[i]=((JTableHeader)e.getSource()).getColumnModel().getColumn(i).getWidth();
+      TableColumnModel columnModel=((JTableHeader)e.getSource()).getColumnModel();
+      for (int i=0; i < columnModel.getColumnCount(); i++) {
+        columnWidths[i]=columnModel.getColumn(i).getWidth();
       }
     }
   }
