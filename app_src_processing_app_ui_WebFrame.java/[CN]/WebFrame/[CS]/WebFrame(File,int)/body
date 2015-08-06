@@ -2,6 +2,15 @@
   URL fileUrl=file.toURI().toURL();
   requestContentHeight(width,fileUrl);
   editorPane=new JEditorPane();
+  editorPane.addPropertyChangeListener("page",new PropertyChangeListener(){
+    public void propertyChange(    PropertyChangeEvent evt){
+      Object title=editorPane.getDocument().getProperty("title");
+      if (title instanceof String) {
+        setTitle((String)title);
+      }
+    }
+  }
+);
   editorPane.setPage(fileUrl);
   editorPane.setEditable(false);
   editorPane.setPreferredSize(new Dimension(width,width));
@@ -14,10 +23,6 @@
 );
   editorKit=(HTMLEditorKit)editorPane.getEditorKit();
   editorKit.setAutoFormSubmission(false);
-  Object title=editorPane.getDocument().getProperty("title");
-  if (title instanceof String) {
-    setTitle((String)title);
-  }
   editorPane.addHyperlinkListener(new HyperlinkListener(){
     @Override public void hyperlinkUpdate(    HyperlinkEvent e){
       if (e instanceof FormSubmitEvent) {
