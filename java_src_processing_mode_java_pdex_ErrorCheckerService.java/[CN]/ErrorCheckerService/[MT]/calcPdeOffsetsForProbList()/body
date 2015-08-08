@@ -15,13 +15,18 @@
       pdeTabs.add(tab);
     }
     int pkgNameOffset=("package " + className + ";\n").length();
-    if (compilationUnitState != 2)     pkgNameOffset=0;
+    if (compilationUnitState != 2) {
+      pkgNameOffset=0;
+    }
     for (    Problem p : problemsList) {
       int prbStart=p.getIProblem().getSourceStart() - pkgNameOffset;
       int prbEnd=p.getIProblem().getSourceEnd() - pkgNameOffset;
       int javaLineNumber=p.getSourceLineNumber() - 1;
       if (compilationUnitState == 2) {
         javaLineNumber--;
+      }
+      if (javaLineNumber < 0) {
+        javaLineNumber=0;
       }
       Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber);
       if (lineElement == null) {
