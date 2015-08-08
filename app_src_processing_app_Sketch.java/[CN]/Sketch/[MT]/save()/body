@@ -5,8 +5,10 @@
     Base.showMessage(Language.text("save_file.messages.is_read_only"),Language.text("save_file.messages.is_read_only.description"));
     if (!saveAs())     return false;
   }
-  for (int i=0; i < codeCount; i++) {
-    if (code[i].isModified())     code[i].save();
+  for (  SketchCode sc : code) {
+    if (sc.isModified()) {
+      sc.save();
+    }
   }
   calcModified();
   return true;
