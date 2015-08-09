@@ -7,7 +7,10 @@
     gfx.setColor(getTextArea().gutterBgColor);
   }
   gfx.fillRect(0,y,Editor.LEFT_GUTTER,fm.getHeight());
-  String text=getTextArea().getGutterText(line);
+  String text=null;
+  if (getEditor().isDebuggerEnabled()) {
+    text=getTextArea().getGutterText(line);
+  }
   if (text == null) {
     text=String.valueOf(line + 1);
   }
