@@ -5,6 +5,9 @@
   if (folder.getName().equals("libraries")) {
     return false;
   }
+  if (!examples && folder.getName().equals("examples")) {
+    return false;
+  }
   String[] fileList=folder.list();
   if (fileList == null) {
     return false;
@@ -25,7 +28,7 @@
       }
  else {
         DefaultMutableTreeNode subnode=new DefaultMutableTreeNode(name);
-        boolean anything=addSketches(subnode,subfolder);
+        boolean anything=addSketches(subnode,subfolder,examples);
         if (anything) {
           node.add(subnode);
           found=true;

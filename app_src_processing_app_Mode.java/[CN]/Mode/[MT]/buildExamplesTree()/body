@@ -4,7 +4,7 @@
     File[] examples=getExampleCategoryFolders();
     for (    File subFolder : examples) {
       DefaultMutableTreeNode subNode=new DefaultMutableTreeNode(subFolder.getName());
-      if (base.addSketches(subNode,subFolder)) {
+      if (base.addSketches(subNode,subFolder,true)) {
         root.add(subNode);
       }
     }
@@ -12,7 +12,9 @@
     for (    Library lib : coreLibraries) {
       if (lib.hasExamples()) {
         DefaultMutableTreeNode libNode=new DefaultMutableTreeNode(lib.getName());
-        if (base.addSketches(libNode,lib.getExamplesFolder()))         foundationLibraries.add(libNode);
+        if (base.addSketches(libNode,lib.getExamplesFolder(),true)) {
+          foundationLibraries.add(libNode);
+        }
       }
     }
     if (foundationLibraries.getChildCount() > 0) {
@@ -22,7 +24,7 @@
     for (    Library lib : contribLibraries) {
       if (lib.hasExamples()) {
         DefaultMutableTreeNode libNode=new DefaultMutableTreeNode(lib.getName());
-        base.addSketches(libNode,lib.getExamplesFolder());
+        base.addSketches(libNode,lib.getExamplesFolder(),true);
         contributedLibExamples.add(libNode);
       }
     }
