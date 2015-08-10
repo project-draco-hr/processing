@@ -5,14 +5,20 @@
     core.addPackageList(importToLibraryTable);
   }
   coreLibraries=Library.list(librariesFolder);
+  File contribLibrariesFolder=Base.getSketchbookLibrariesFolder();
+  contribLibraries=Library.list(contribLibrariesFolder);
+  List<Library> foundationLibraries=new ArrayList<>();
+  for (  Library lib : contribLibraries) {
+    if (lib.isFoundation()) {
+      foundationLibraries.add(lib);
+    }
+  }
+  coreLibraries.addAll(foundationLibraries);
+  contribLibraries.removeAll(foundationLibraries);
   for (  Library lib : coreLibraries) {
     lib.addPackageList(importToLibraryTable);
   }
-  File contribLibrariesFolder=Base.getSketchbookLibrariesFolder();
-  if (contribLibrariesFolder != null) {
-    contribLibraries=Library.list(contribLibrariesFolder);
-    for (    Library lib : contribLibraries) {
-      lib.addPackageList(importToLibraryTable);
-    }
+  for (  Library lib : contribLibraries) {
+    lib.addPackageList(importToLibraryTable);
   }
 }
