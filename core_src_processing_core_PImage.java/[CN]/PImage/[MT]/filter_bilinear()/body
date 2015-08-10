@@ -1,10 +1,10 @@
 {
   fracU=sX & PREC_MAXVAL;
-  ifU=PREC_MAXVAL - fracU;
+  ifU=PREC_MAXVAL - fracU + 1;
   ul=(ifU * ifV) >> PRECISIONB;
-  ll=(ifU * fracV) >> PRECISIONB;
-  ur=(fracU * ifV) >> PRECISIONB;
-  lr=(fracU * fracV) >> PRECISIONB;
+  ll=ifU - ul;
+  ur=ifV - ul;
+  lr=PREC_MAXVAL + 1 - ul - ll - ur;
   u1=(sX >> PRECISIONB);
   u2=low(u1 + 1,iw1);
   cUL=srcBuffer[v1 + u1];
