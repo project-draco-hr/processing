@@ -9,8 +9,9 @@
     popup.setLightWeightPopupEnabled(true);
   }
   JMenuItem item;
-  InputMap inputMap=editor.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-  ActionMap actionMap=editor.getRootPane().getActionMap();
+  final JRootPane rootPane=editor.getRootPane();
+  InputMap inputMap=rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+  ActionMap actionMap=rootPane.getActionMap();
   Action action;
   String mapKey;
   KeyStroke keyStroke;
@@ -56,7 +57,13 @@
   item.addActionListener(action);
   menu.add(item);
   menu.addSeparator();
-  item=Toolkit.newJMenuItemAlt(Language.text("editor.header.previous_tab"),KeyEvent.VK_LEFT);
+  final String prevTab=Language.text("editor.header.previous_tab");
+  if (Base.isLinux()) {
+    item=Toolkit.newJMenuItem(prevTab,KeyEvent.VK_PAGE_UP);
+  }
+ else {
+    item=Toolkit.newJMenuItemAlt(prevTab,KeyEvent.VK_LEFT);
+  }
   action=new AbstractAction(){
     @Override public void actionPerformed(    ActionEvent e){
       editor.getSketch().handlePrevCode();
@@ -64,12 +71,23 @@
   }
 ;
   mapKey="editor.header.previous_tab";
-  keyStroke=KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,Toolkit.SHORTCUT_ALT_KEY_MASK);
+  if (Base.isLinux()) {
+    keyStroke=KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP,Toolkit.SHORTCUT_KEY_MASK);
+  }
+ else {
+    keyStroke=KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,Toolkit.SHORTCUT_ALT_KEY_MASK);
+  }
   inputMap.put(keyStroke,mapKey);
   actionMap.put(mapKey,action);
   item.addActionListener(action);
   menu.add(item);
-  item=Toolkit.newJMenuItemAlt(Language.text("editor.header.next_tab"),KeyEvent.VK_RIGHT);
+  final String nextTab=Language.text("editor.header.next_tab");
+  if (Base.isLinux()) {
+    item=Toolkit.newJMenuItem(nextTab,KeyEvent.VK_PAGE_DOWN);
+  }
+ else {
+    item=Toolkit.newJMenuItemAlt(nextTab,KeyEvent.VK_RIGHT);
+  }
   action=new AbstractAction(){
     @Override public void actionPerformed(    ActionEvent e){
       editor.getSketch().handleNextCode();
@@ -77,7 +95,12 @@
   }
 ;
   mapKey="editor.header.next_tab";
-  keyStroke=KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,Toolkit.SHORTCUT_ALT_KEY_MASK);
+  if (Base.isLinux()) {
+    keyStroke=KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN,Toolkit.SHORTCUT_KEY_MASK);
+  }
+ else {
+    keyStroke=KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,Toolkit.SHORTCUT_ALT_KEY_MASK);
+  }
   inputMap.put(keyStroke,mapKey);
   actionMap.put(mapKey,action);
   item.addActionListener(action);
