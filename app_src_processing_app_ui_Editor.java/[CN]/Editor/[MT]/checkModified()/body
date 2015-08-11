@@ -1,8 +1,8 @@
 {
   if (!sketch.isModified())   return true;
   toFront();
-  String prompt=Language.text("close.unsaved_changes") + " " + sketch.getName()+ "?  ";
   if (!Base.isMacOS()) {
+    String prompt=Language.interpolate("close.unsaved_changes",sketch.getName());
     int result=JOptionPane.showConfirmDialog(this,prompt,Language.text("menu.file.close"),JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
     if (result == JOptionPane.YES_OPTION) {
       return handleSave(true);
@@ -18,7 +18,7 @@
     }
   }
  else {
-    JOptionPane pane=new JOptionPane("<html> " + "<head> <style type=\"text/css\">" + "b { font: 13pt \"Lucida Grande\" }"+ "p { font: 11pt \"Lucida Grande\"; margin-top: 8px }"+ "</style> </head>"+ "<b>" + Language.text("save.title") + "</b>"+ "<p>"+ Language.text("save.hint")+ "</p>",JOptionPane.QUESTION_MESSAGE);
+    JOptionPane pane=new JOptionPane("<html> " + "<head> <style type=\"text/css\">" + "b { font: 13pt \"Lucida Grande\" }"+ "p { font: 11pt \"Lucida Grande\"; margin-top: 8px }"+ "</style> </head>"+ "<b>" + Language.interpolate("save.title",sketch.getName()) + "</b>"+ "<p>"+ Language.text("save.hint")+ "</p>",JOptionPane.QUESTION_MESSAGE);
     String[] options=new String[]{Language.text("save.btn.save"),Language.text("prompt.cancel"),Language.text("save.btn.dont_save")};
     pane.setOptions(options);
     pane.setInitialValue(options[0]);
