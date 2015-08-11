@@ -1,3 +1,8 @@
 {
-  return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+  float outgoing=start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+  if (!Float.isFinite(outgoing)) {
+    final String msg=String.format("map(%s, %s, %s, %s, %s) called, " + "which returns NaN or infinity",nf(value),nf(start1),nf(stop1),nf(start2),nf(stop2));
+    PGraphics.showWarning(msg);
+  }
+  return outgoing;
 }
