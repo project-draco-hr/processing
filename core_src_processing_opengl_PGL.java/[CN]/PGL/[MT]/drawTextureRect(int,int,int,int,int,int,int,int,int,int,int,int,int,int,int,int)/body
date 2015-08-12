@@ -10,24 +10,24 @@
     depthMask(false);
     viewBuffer.rewind();
     getIntegerv(VIEWPORT,viewBuffer);
-    viewport(viewX,viewY,scrW,scrH);
+    viewportImpl(viewF * viewX,viewF * viewY,viewF * viewW,viewF * viewH);
     useProgram(ppgl.texRectShaderProgram);
     enableVertexAttribArray(ppgl.texRectVertLoc);
     enableVertexAttribArray(ppgl.texRectTCoordLoc);
-    texCoords[0]=2 * (float)scrX0 / scrW - 1;
-    texCoords[1]=2 * (float)scrY0 / scrH - 1;
+    texCoords[0]=2 * (float)scrX0 / viewW - 1;
+    texCoords[1]=2 * (float)scrY0 / viewH - 1;
     texCoords[2]=texX0;
     texCoords[3]=texY0;
-    texCoords[4]=2 * (float)scrX1 / scrW - 1;
-    texCoords[5]=2 * (float)scrY0 / scrH - 1;
+    texCoords[4]=2 * (float)scrX1 / viewW - 1;
+    texCoords[5]=2 * (float)scrY0 / viewH - 1;
     texCoords[6]=texX1;
     texCoords[7]=texY0;
-    texCoords[8]=2 * (float)scrX0 / scrW - 1;
-    texCoords[9]=2 * (float)scrY1 / scrH - 1;
+    texCoords[8]=2 * (float)scrX0 / viewW - 1;
+    texCoords[9]=2 * (float)scrY1 / viewH - 1;
     texCoords[10]=texX0;
     texCoords[11]=texY1;
-    texCoords[12]=2 * (float)scrX1 / scrW - 1;
-    texCoords[13]=2 * (float)scrY1 / scrH - 1;
+    texCoords[12]=2 * (float)scrX1 / viewW - 1;
+    texCoords[13]=2 * (float)scrY1 / viewH - 1;
     texCoords[14]=texX1;
     texCoords[15]=texY1;
     texData.rewind();
@@ -61,6 +61,6 @@
       disable(DEPTH_TEST);
     }
     depthMask(depthMask);
-    viewport(viewBuffer.get(0),viewBuffer.get(1),viewBuffer.get(2),viewBuffer.get(3));
+    viewportImpl(viewBuffer.get(0),viewBuffer.get(1),viewBuffer.get(2),viewBuffer.get(3));
   }
 }
