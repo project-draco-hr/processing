@@ -15,14 +15,14 @@
     @Override public Component prepareRenderer(    TableCellRenderer renderer,    int row,    int column){
       Component c=super.prepareRenderer(renderer,row,column);
       String title=(String)getValueAt(row,1);
-      if (title.equals("<html><i>Library</i></html>") || title.equals("Tools") || title.equals("Modes")|| title.equals("Examples")) {
+      if (title.equals("<html><i>Library</i></html>") || title.equals("<html><i>Tools</i></html>") || title.equals("<html><i>Modes</i></html>")|| title.equals("<html><i>Examples</i></html>")) {
         ((JComponent)c).setBorder(BorderFactory.createMatteBorder(row == 0 ? 0 : 2,0,2,0,Color.BLACK));
       }
       return c;
     }
     @Override public void changeSelection(    int rowIndex,    int columnIndex,    boolean toggle,    boolean extend){
       String title=(String)getValueAt(rowIndex,1);
-      if (title.equals("<html><i>Library</i></html>")) {
+      if (title.equals(title.equals("<html><i>Library</i></html>") || title.equals("<html><i>Tools</i></html>") || title.equals("<html><i>Modes</i></html>")|| title.equals("<html><i>Examples</i></html>"))) {
         return;
       }
       super.changeSelection(rowIndex,columnIndex,toggle,extend);
@@ -48,8 +48,7 @@
         setForeground(tableHeader.getForeground());
       }
       setIcon(getIcon(table,column));
-      setBackground(Color.WHITE);
-      setBorder(BorderFactory.createMatteBorder(2,0,2,0,Color.BLACK));
+      setBackground(Color.LIGHT_GRAY);
       return this;
     }
   }
