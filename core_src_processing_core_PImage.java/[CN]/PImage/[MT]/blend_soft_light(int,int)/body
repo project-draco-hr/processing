@@ -14,5 +14,5 @@
   int r=(s_r1 * d_r >> 7) + 0xFF * d_r1 * (d_r1 + 1) - ((s_r1 * d_r1 * d_r1) << 1) & RED_MASK;
   int g=(s_g1 * d_g << 1) + 0xFF * d_g1 * (d_g1 + 1) - ((s_g1 * d_g1 * d_g1) << 1) >>> 8 & GREEN_MASK;
   int b=(s_b1 * d_b << 9) + 0xFF * d_b1 * (d_b1 + 1) - ((s_b1 * d_b1 * d_b1) << 1) >>> 16;
-  return low((dst >>> 24) + a,0xFF) << 24 | ((dst & RB_MASK) * d_a + (r | b) * s_a) >>> 8 & RB_MASK | ((dst & GN_MASK) * d_a + g * s_a) >>> 8 & GN_MASK;
+  return min((dst >>> 24) + a,0xFF) << 24 | ((dst & RB_MASK) * d_a + (r | b) * s_a) >>> 8 & RB_MASK | ((dst & GN_MASK) * d_a + g * s_a) >>> 8 & GN_MASK;
 }

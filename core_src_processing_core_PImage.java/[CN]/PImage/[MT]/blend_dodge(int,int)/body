@@ -7,5 +7,5 @@
   int b=((dst & BLUE_MASK) << 8) / (256 - (src & BLUE_MASK));
   int rb=(r > 0xFF00 ? 0xFF0000 : ((r << 8) & RED_MASK)) | (b > 0x00FF ? 0x0000FF : b);
   int gn=(g > 0xFF00 ? 0x00FF00 : (g & GREEN_MASK));
-  return low((dst >>> 24) + a,0xFF) << 24 | ((dst & RB_MASK) * d_a + rb * s_a) >>> 8 & RB_MASK | ((dst & GN_MASK) * d_a + gn * s_a) >>> 8 & GN_MASK;
+  return min((dst >>> 24) + a,0xFF) << 24 | ((dst & RB_MASK) * d_a + rb * s_a) >>> 8 & RB_MASK | ((dst & GN_MASK) * d_a + gn * s_a) >>> 8 & GN_MASK;
 }

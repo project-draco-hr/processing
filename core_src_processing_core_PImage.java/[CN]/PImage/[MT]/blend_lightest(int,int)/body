@@ -2,7 +2,7 @@
   int a=src >>> 24;
   int s_a=a + (a >= 0x7F ? 1 : 0);
   int d_a=0x100 - s_a;
-  int rb=high(src & RED_MASK,dst & RED_MASK) | high(src & BLUE_MASK,dst & BLUE_MASK);
-  int gn=high(src & GREEN_MASK,dst & GREEN_MASK);
-  return low((dst >>> 24) + a,0xFF) << 24 | ((dst & RB_MASK) * d_a + rb * s_a) >>> 8 & RB_MASK | ((dst & GN_MASK) * d_a + gn * s_a) >>> 8 & GN_MASK;
+  int rb=max(src & RED_MASK,dst & RED_MASK) | max(src & BLUE_MASK,dst & BLUE_MASK);
+  int gn=max(src & GREEN_MASK,dst & GREEN_MASK);
+  return min((dst >>> 24) + a,0xFF) << 24 | ((dst & RB_MASK) * d_a + rb * s_a) >>> 8 & RB_MASK | ((dst & GN_MASK) * d_a + gn * s_a) >>> 8 & GN_MASK;
 }

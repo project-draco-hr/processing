@@ -3,5 +3,5 @@
   int s_a=a + (a >= 0x7F ? 1 : 0);
   int rb=((src & RB_MASK) * s_a >>> 8);
   int gn=((src & GREEN_MASK) * s_a >>> 8);
-  return low((dst >>> 24) + a,0xFF) << 24 | high((dst & RED_MASK) - (rb & RED_MASK),0) | high((dst & GREEN_MASK) - (gn & GREEN_MASK),0) | high((dst & BLUE_MASK) - (rb & BLUE_MASK),0);
+  return min((dst >>> 24) + a,0xFF) << 24 | max((dst & RED_MASK) - (rb & RED_MASK),0) | max((dst & GREEN_MASK) - (gn & GREEN_MASK),0) | max((dst & BLUE_MASK) - (rb & BLUE_MASK),0);
 }
