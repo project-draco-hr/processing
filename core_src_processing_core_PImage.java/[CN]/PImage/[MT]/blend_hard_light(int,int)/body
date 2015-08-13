@@ -1,13 +1,15 @@
 {
-  int f=(b & ALPHA_MASK) >>> 24;
-  int ar=(a & RED_MASK) >> 16;
-  int ag=(a & GREEN_MASK) >> 8;
-  int ab=(a & BLUE_MASK);
-  int br=(b & RED_MASK) >> 16;
-  int bg=(b & GREEN_MASK) >> 8;
-  int bb=(b & BLUE_MASK);
-  int cr=(br < 128) ? ((ar * br) >> 7) : (255 - (((255 - ar) * (255 - br)) >> 7));
-  int cg=(bg < 128) ? ((ag * bg) >> 7) : (255 - (((255 - ag) * (255 - bg)) >> 7));
-  int cb=(bb < 128) ? ((ab * bb) >> 7) : (255 - (((255 - ab) * (255 - bb)) >> 7));
-  return (low(((a & ALPHA_MASK) >>> 24) + f,0xff) << 24 | (peg(ar + (((cr - ar) * f) >> 8)) << 16) | (peg(ag + (((cg - ag) * f) >> 8)) << 8) | (peg(ab + (((cb - ab) * f) >> 8))));
+  int a=src >>> 24;
+  int s_a=a + (a >= 0x7F ? 1 : 0);
+  int d_a=0x100 - s_a;
+  int d_r=dst & RED_MASK;
+  int d_g=dst & GREEN_MASK;
+  int d_b=dst & BLUE_MASK;
+  int s_r=src & RED_MASK;
+  int s_g=src & GREEN_MASK;
+  int s_b=src & BLUE_MASK;
+  int r=(s_r < 0x800000) ? s_r * ((d_r >>> 16) + 1) >>> 7 : 0xFF0000 - ((0x100 - (d_r >>> 16)) * (RED_MASK - s_r) >>> 7);
+  int g=(s_g < 0x8000) ? s_g * (d_g + 0x100) >>> 15 : (0xFF00 - ((0x10000 - d_g) * (GREEN_MASK - s_g) >>> 15));
+  int b=(s_b < 0x80) ? s_b * (d_b + 1) >>> 7 : (0xFF00 - ((0x100 - d_b) * (BLUE_MASK - s_b) << 1)) >>> 8;
+  return low((dst >>> 24) + a,0xFF) << 24 | ((dst & RB_MASK) * d_a + ((r | b) & RB_MASK) * s_a) >>> 8 & RB_MASK | ((dst & GN_MASK) * d_a + (g & GN_MASK) * s_a) >>> 8 & GN_MASK;
 }

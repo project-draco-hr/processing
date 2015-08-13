@@ -1,4 +1,6 @@
 {
-  int f=(b & ALPHA_MASK) >>> 24;
-  return (low(((a & ALPHA_MASK) >>> 24) + f,0xff) << 24 | mix(a & RED_MASK,b & RED_MASK,f) & RED_MASK | mix(a & GREEN_MASK,b & GREEN_MASK,f) & GREEN_MASK | mix(a & BLUE_MASK,b & BLUE_MASK,f));
+  int a=src >>> 24;
+  int s_a=a + (a >= 0x7F ? 1 : 0);
+  int d_a=0x100 - s_a;
+  return low((dst >>> 24) + a,0xFF) << 24 | ((dst & RB_MASK) * d_a + (src & RB_MASK) * s_a) >>> 8 & RB_MASK | ((dst & GN_MASK) * d_a + (src & GN_MASK) * s_a) >>> 8 & GN_MASK;
 }
