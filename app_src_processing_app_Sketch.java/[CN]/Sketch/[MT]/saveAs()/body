@@ -104,12 +104,12 @@
     code[i].saveAs(newFile);
   }
   if (!isUntitled()) {
-    editor.removeRecent();
+    Recent.remove(editor);
   }
   File newFile=new File(newFolder,newName + "." + mode.getDefaultExtension());
   code[0].saveAs(newFile);
   updateInternal(newName,newFolder);
   setUntitled(false);
-  editor.addRecent();
+  Recent.handle(editor);
   return true;
 }
