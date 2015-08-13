@@ -9,13 +9,13 @@
     File file=File.createTempFile("processing","commander");
     PrintWriter writer=PApplet.createWriter(file);
     writer.println("#!/bin/sh");
-    String javaRoot=Base.getContentFile(".").getCanonicalPath();
+    String javaRoot=Platform.getContentFile(".").getCanonicalPath();
     StringList jarList=new StringList();
     addJarList(jarList,new File(javaRoot));
     addJarList(jarList,new File(javaRoot,"core/library"));
     addJarList(jarList,new File(javaRoot,"modes/java/mode"));
     String classPath=jarList.join(":").replaceAll(javaRoot + "\\/?","");
-    writer.println("cd \"" + javaRoot + "\" && "+ Base.getJavaPath()+ " -Djna.nosys=true"+ " -cp \""+ classPath+ "\""+ " processing.mode.java.Commander \"$@\"");
+    writer.println("cd \"" + javaRoot + "\" && "+ Platform.getJavaPath()+ " -Djna.nosys=true"+ " -cp \""+ classPath+ "\""+ " processing.mode.java.Commander \"$@\"");
     writer.flush();
     writer.close();
     file.setExecutable(true);
