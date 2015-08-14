@@ -12,20 +12,20 @@
             Socket s=ss.accept();
             final BufferedReader reader=PApplet.createReader(s.getInputStream());
             String receivedKey=reader.readLine();
-            Base.log(this,"key is " + key + ", received is "+ receivedKey);
+            Messages.log(this,"key is " + key + ", received is "+ receivedKey);
             if (key.equals(receivedKey)) {
               SwingUtilities.invokeLater(new Runnable(){
                 public void run(){
                   try {
-                    Base.log(this,"about to read line");
+                    Messages.log(this,"about to read line");
                     String path=reader.readLine();
                     if (path == null) {
-                      Base.log(this,"opening new empty sketch");
+                      Messages.log(this,"opening new empty sketch");
                       base.handleNew();
                     }
  else {
                       do {
-                        Base.log(this,"calling open with " + path);
+                        Messages.log(this,"calling open with " + path);
                         base.handleOpen(path);
                         path=reader.readLine();
                       }
@@ -40,11 +40,11 @@
 );
             }
  else {
-              Base.log(this,"keys do not match");
+              Messages.log(this,"keys do not match");
             }
           }
  catch (          IOException e) {
-            Base.loge("SingleInstance error while listening",e);
+            Messages.loge("SingleInstance error while listening",e);
           }
         }
       }
@@ -52,6 +52,6 @@
 ,"SingleInstance Server").start();
   }
  catch (  IOException e) {
-    Base.loge("Could not create single instance server.",e);
+    Messages.loge("Could not create single instance server.",e);
   }
 }

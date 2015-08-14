@@ -13,19 +13,19 @@
     }
   }
   if (newName.startsWith(".")) {
-    Base.showWarning(Language.text("name.messages.problem_renaming"),Language.text("name.messages.starts_with_dot.description"));
+    Messages.showWarning(Language.text("name.messages.problem_renaming"),Language.text("name.messages.starts_with_dot.description"));
     return;
   }
   int dot=newName.lastIndexOf('.');
   String newExtension=newName.substring(dot + 1).toLowerCase();
   if (!mode.validExtension(newExtension)) {
-    Base.showWarning(Language.text("name.messages.problem_renaming"),Language.interpolate("name.messages.invalid_extension.description",newExtension));
+    Messages.showWarning(Language.text("name.messages.problem_renaming"),Language.interpolate("name.messages.invalid_extension.description",newExtension));
     return;
   }
   if (!mode.isDefaultExtension(newExtension)) {
     if (renamingCode) {
       if (current == code[0]) {
-        Base.showWarning(Language.text("name.messages.problem_renaming"),Language.interpolate("name.messages.main_java_extension.description",newExtension));
+        Messages.showWarning(Language.text("name.messages.problem_renaming"),Language.interpolate("name.messages.main_java_extension.description",newExtension));
         return;
       }
     }
@@ -38,7 +38,7 @@
   if (!(renamingCode && sanitaryName.equals(current.getPrettyName()))) {
     for (    SketchCode c : code) {
       if (c != current && sanitaryName.equalsIgnoreCase(c.getPrettyName())) {
-        Base.showMessage(Language.text("name.messages.new_sketch_exists"),Language.interpolate("name.messages.new_sketch_exists.description",c.getFileName(),folder.getAbsolutePath()));
+        Messages.showMessage(Language.text("name.messages.new_sketch_exists"),Language.interpolate("name.messages.new_sketch_exists.description",c.getFileName(),folder.getAbsolutePath()));
         return;
       }
     }
@@ -49,18 +49,18 @@
       String folderName=newName.substring(0,newName.indexOf('.'));
       File newFolder=new File(folder.getParentFile(),folderName);
       if (newFolder.exists()) {
-        Base.showWarning(Language.text("name.messages.new_folder_exists"),Language.interpolate("name.messages.new_folder_exists.description",newName));
+        Messages.showWarning(Language.text("name.messages.new_folder_exists"),Language.interpolate("name.messages.new_folder_exists.description",newName));
         return;
       }
       boolean success=folder.renameTo(newFolder);
       if (!success) {
-        Base.showWarning(Language.text("name.messages.error"),Language.text("name.messages.no_rename_folder.description"));
+        Messages.showWarning(Language.text("name.messages.error"),Language.text("name.messages.no_rename_folder.description"));
         return;
       }
       current.setFolder(newFolder);
       newFile=new File(newFolder,newName);
       if (!current.renameTo(newFile,newExtension)) {
-        Base.showWarning(Language.text("name.messages.error"),Language.interpolate("name.messages.no_rename_file.description",current.getFileName(),newFile.getName()));
+        Messages.showWarning(Language.text("name.messages.error"),Language.interpolate("name.messages.no_rename_file.description",current.getFileName(),newFile.getName()));
         return;
       }
       for (int i=1; i < codeCount; i++) {
@@ -70,7 +70,7 @@
     }
  else {
       if (!current.renameTo(newFile,newExtension)) {
-        Base.showWarning(Language.text("name.messages.error"),Language.interpolate("name.messages.no_rename_file.description",current.getFileName(),newFile.getName()));
+        Messages.showWarning(Language.text("name.messages.error"),Language.interpolate("name.messages.no_rename_file.description",current.getFileName(),newFile.getName()));
         return;
       }
     }
@@ -82,7 +82,7 @@
       }
     }
  catch (    IOException e) {
-      Base.showWarning(Language.text("name.messages.error"),Language.interpolate("name.messages.no_create_file.description",newFile,folder.getAbsolutePath()),e);
+      Messages.showWarning(Language.text("name.messages.error"),Language.interpolate("name.messages.no_create_file.description",newFile,folder.getAbsolutePath()),e);
       return;
     }
     SketchCode newCode=new SketchCode(newFile,newExtension);

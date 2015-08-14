@@ -20,7 +20,7 @@
       Platform.setLookAndFeel();
     }
  catch (    Exception e) {
-      loge("Could not set the Look & Feel",e);
+      Messages.loge("Could not set the Look & Feel",e);
     }
     boolean sketchbookPrompt=false;
     if (Preferences.getBoolean("welcome.show")) {
@@ -43,9 +43,9 @@
       untitledFolder.deleteOnExit();
     }
  catch (    IOException e) {
-      Base.showError("Trouble without a name","Could not create a place to store untitled sketches.\n" + "That's gonna prevent us from continuing.",e);
+      Messages.showError("Trouble without a name","Could not create a place to store untitled sketches.\n" + "That's gonna prevent us from continuing.",e);
     }
-    log("about to create base...");
+    Messages.log("about to create base...");
     try {
       final Base base=new Base(args);
       SingleInstance.startServer(base);
@@ -57,7 +57,7 @@
               new Welcome(base,prompt);
             }
  catch (            IOException e) {
-              Base.showBadnessTrace("Unwelcoming","Please report this error to\n" + "https://github.com/processing/processing/issues",e,false);
+              Messages.showBadnessTrace("Unwelcoming","Please report this error to\n" + "https://github.com/processing/processing/issues",e,false);
             }
           }
         }
@@ -68,8 +68,8 @@
       if (t.getCause() != null) {
         t=t.getCause();
       }
-      showBadnessTrace("We're off on the wrong foot","An error occurred during startup.",t,true);
+      Messages.showBadnessTrace("We're off on the wrong foot","An error occurred during startup.",t,true);
     }
-    log("done creating base...");
+    Messages.log("done creating base...");
   }
 }

@@ -14,7 +14,7 @@
       }
     }
     if (!Sketch.isSanitaryName(file.getName())) {
-      Base.showWarning("You're tricky, but not tricky enough",file.getName() + " is not a valid name for a sketch.\n" + "Better to stick to ASCII, no spaces, and make sure\n"+ "it doesn't start with a number.",null);
+      Messages.showWarning("You're tricky, but not tricky enough",file.getName() + " is not a valid name for a sketch.\n" + "Better to stick to ASCII, no spaces, and make sure\n"+ "it doesn't start with a number.",null);
       return null;
     }
     if (!nextMode.canEdit(file)) {
@@ -34,23 +34,23 @@
     }
  catch (    EditorException ee) {
       if (!ee.getMessage().equals("")) {
-        Base.showWarning("Error opening sketch",ee.getMessage(),ee);
+        Messages.showWarning("Error opening sketch",ee.getMessage(),ee);
       }
     }
 catch (    NoSuchMethodError nsme) {
-      Base.showWarning("Mode out of date",nextMode.getTitle() + " is not compatible with this version of Processing.\n" + "Try updating the Mode or contact its author for a new version.",nsme);
+      Messages.showWarning("Mode out of date",nextMode.getTitle() + " is not compatible with this version of Processing.\n" + "Try updating the Mode or contact its author for a new version.",nsme);
     }
 catch (    Throwable t) {
       if (nextMode.equals(getDefaultMode())) {
-        showBadnessTrace("Serious Problem","An unexpected, unknown, and unrecoverable error occurred\n" + "while opening a new editor window. Please report this.",t,true);
+        Messages.showBadnessTrace("Serious Problem","An unexpected, unknown, and unrecoverable error occurred\n" + "while opening a new editor window. Please report this.",t,true);
       }
  else {
-        showBadnessTrace("Mode Problems","A nasty error occurred while trying to use " + nextMode.getTitle() + ".\n"+ "It may not be compatible with this version of Processing.\n"+ "Try updating the Mode or contact its author for a new version.",t,false);
+        Messages.showBadnessTrace("Mode Problems","A nasty error occurred while trying to use " + nextMode.getTitle() + ".\n"+ "It may not be compatible with this version of Processing.\n"+ "Try updating the Mode or contact its author for a new version.",t,false);
       }
     }
   }
  catch (  Throwable t) {
-    showBadnessTrace("Terrible News","A serious error occurred while " + "trying to create a new editor window.",t,nextMode == getDefaultMode());
+    Messages.showBadnessTrace("Terrible News","A serious error occurred while " + "trying to create a new editor window.",t,nextMode == getDefaultMode());
     nextMode=getDefaultMode();
   }
   return null;

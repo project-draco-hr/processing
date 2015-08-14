@@ -1,7 +1,7 @@
 {
   File modeDirectory=new File(folder,getTypeName());
   if (modeDirectory.exists()) {
-    Base.log("checking mode folder regarding " + className);
+    Messages.log("checking mode folder regarding " + className);
     if (className == null) {
       String shortName=folder.getName();
       File mainJar=new File(modeDirectory,shortName + ".jar");
@@ -19,11 +19,11 @@
     if (archives != null && archives.length > 0) {
       URL[] urlList=new URL[archives.length];
       for (int j=0; j < urlList.length; j++) {
-        Base.log("Found archive " + archives[j] + " for "+ getName());
+        Messages.log("Found archive " + archives[j] + " for "+ getName());
         urlList[j]=archives[j].toURI().toURL();
       }
       loader=new URLClassLoader(urlList);
-      Base.log("loading above JARs with loader " + loader);
+      Messages.log("loading above JARs with loader " + loader);
     }
   }
   if (loader == null) {
