@@ -1,0 +1,47 @@
+{
+  String[] tabTitles={"Tools","Libraries","Modes","Examples","Updates"};
+  tabLabels=new JLabel[4];
+  for (int i=0; i < 4; i++) {
+    final int temp=i;
+    tabLabels[i]=new JLabel(tabTitles[i]){
+      @Override protected void paintComponent(      Graphics g){
+        g.setClip(Toolkit.createRoundRect(0,0,getWidth(),getHeight(),temp == 0 ? 6 : 0,temp == 3 ? 6 : 0,0,0));
+        super.paintComponent(g);
+      }
+    }
+;
+    tabLabels[i].setForeground(Color.WHITE);
+    tabLabels[i].setBackground(new Color(0x2d4251));
+    tabLabels[i].setOpaque(true);
+    tabLabels[i].setBorder(BorderFactory.createEmptyBorder(6,6,6,6));
+    tabLabels[i].setPreferredSize(new Dimension(TAB_WIDTH,TAB_HEIGHT));
+    tabLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
+    tabLabels[i].setFont(Toolkit.getSansFont(14,Font.BOLD));
+    tabbedPane.setTabComponentAt(i,tabLabels[i]);
+  }
+  updateTabPanel=new JPanel(){
+    @Override protected void paintComponent(    Graphics g){
+      g.setClip(Toolkit.createRoundRect(0,0,getWidth(),getHeight(),6,6,0,0));
+      super.paintComponent(g);
+    }
+  }
+;
+  ;
+  updateTabLabel=new JLabel("Updates");
+  updateTabLabel.setFont(Toolkit.getSansFont(14,Font.BOLD));
+  numberLabel.setVerticalTextPosition(SwingConstants.CENTER);
+  numberLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+  numberLabel.setFont(Toolkit.getSansFont(14,Font.BOLD));
+  numberLabel.setForeground(Color.WHITE);
+  updateTabPanel.setOpaque(true);
+  updateTabPanel.setBackground(new Color(0x2d4251));
+  updateTabLabel.setForeground(Color.WHITE);
+  updateTabPanel.setBorder(BorderFactory.createEmptyBorder(6,6,6,6));
+  updateTabPanel.setPreferredSize(new Dimension(TAB_WIDTH,TAB_HEIGHT));
+  tabbedPane.setTabComponentAt(4,updateTabPanel);
+  GroupLayout tabLayout=new GroupLayout(updateTabPanel);
+  tabLayout.setAutoCreateGaps(true);
+  updateTabPanel.setLayout(tabLayout);
+  tabLayout.setHorizontalGroup(tabLayout.createSequentialGroup().addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addComponent(updateTabLabel).addComponent(numberLabel).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE));
+  tabLayout.setVerticalGroup(tabLayout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(numberLabel).addComponent(updateTabLabel));
+}

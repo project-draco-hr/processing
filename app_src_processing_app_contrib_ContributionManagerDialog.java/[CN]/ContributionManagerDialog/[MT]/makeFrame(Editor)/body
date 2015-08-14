@@ -1,6 +1,5 @@
 {
   dialog=new JFrame(title);
-  String[] tabTitles={"Tools","Libraries","Modes","Examples","Updates"};
   tabbedPane=new JTabbedPane();
   makeAndShowTab(false,true);
   tabbedPane.addTab("Tools",null,toolsContributionTab.panel,"Tools");
@@ -14,29 +13,26 @@
   tabbedPane.addTab("Updates",null,updatesContributionTab.panel,"Updates");
   tabbedPane.setMnemonicAt(3,KeyEvent.VK_5);
   tabbedPane.setUI(new SpacedTabbedPaneUI());
-  tabbedPane.setBackground(Color.WHITE);
+  tabbedPane.setBackground(new Color(0x132638));
   tabbedPane.setOpaque(true);
-  tabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,2));
-  JPanel updateTabPanel=new JPanel(true);
-  JLabel updateTabLabel=new JLabel("Update");
-  numberLabel.setVerticalTextPosition(SwingConstants.CENTER);
-  numberLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-  updateTabPanel.setOpaque(false);
-  updateTabPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0,2,0,0,Color.BLACK),BorderFactory.createEmptyBorder(4,4,4,4)));
-  tabbedPane.setTabComponentAt(4,updateTabPanel);
-  JLabel tabLabels[]=new JLabel[4];
-  for (int i=0; i < tabLabels.length; i++) {
-    tabLabels[i]=new JLabel(tabTitles[i]);
-    tabLabels[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0,(i == 0 ? 0 : 2),0,(i == 3 ? 2 : 0),Color.BLACK),BorderFactory.createEmptyBorder(4,4,4,4)));
-    tabbedPane.setTabComponentAt(i,tabLabels[i]);
-  }
-  GroupLayout tabLayout=new GroupLayout(updateTabPanel);
-  tabLayout.setAutoCreateGaps(true);
-  updateTabPanel.setLayout(tabLayout);
-  tabLayout.setHorizontalGroup(tabLayout.createSequentialGroup().addComponent(numberLabel).addComponent(updateTabLabel));
-  tabLayout.setVerticalGroup(tabLayout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(numberLabel).addComponent(updateTabLabel));
+  makeAndSetTabComponents();
   tabbedPane.addChangeListener(new ChangeListener(){
     @Override public void stateChanged(    ChangeEvent e){
+      for (int i=0; i < 4; i++) {
+        tabLabels[i].setBackground(new Color(0x2d4251));
+        tabLabels[i].setForeground(Color.WHITE);
+      }
+      updateTabPanel.setBackground(new Color(0x2d4251));
+      updateTabLabel.setForeground(Color.WHITE);
+      int currentIndex=tabbedPane.getSelectedIndex();
+      if (currentIndex != 4) {
+        tabbedPane.getTabComponentAt(tabbedPane.getSelectedIndex()).setBackground(new Color(0xe0fffd));
+        tabbedPane.getTabComponentAt(tabbedPane.getSelectedIndex()).setForeground(Color.BLACK);
+      }
+ else {
+        updateTabPanel.setBackground(new Color(0xe0fffd));
+        updateTabLabel.setForeground(Color.BLACK);
+      }
     }
   }
 );

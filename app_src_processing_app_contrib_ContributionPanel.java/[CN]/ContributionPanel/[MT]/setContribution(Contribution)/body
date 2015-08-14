@@ -15,13 +15,19 @@
  else {
     description.append("<a href=\"" + contrib.getUrl() + "\">"+ contrib.getName()+ "</a>");
   }
-  description.append("</b>");
+  description.append("</b> ");
+  String version=contrib.getPrettyVersion();
+  if (version != null && !version.isEmpty()) {
+    if (version.toLowerCase().startsWith("build"))     description.append(version.substring(5,version.indexOf(',')).trim());
+ else     if (version.toLowerCase().startsWith("v"))     description.append(version);
+ else     description.append(version);
+  }
+  description.append(" <br/>");
   String authorList=contrib.getAuthorList();
   if (authorList != null && !authorList.isEmpty()) {
-    description.append(" by ");
     description.append(toHtmlLinks(contrib.getAuthorList()));
   }
-  description.append("<br/>");
+  description.append("<br/><br/>");
   if (contrib.isDeletionFlagged()) {
     description.append(REMOVE_RESTART_MESSAGE);
   }
@@ -41,13 +47,6 @@
       sentence=toHtmlLinks(sentence);
     }
     description.append(sentence);
-  }
-  String version=contrib.getPrettyVersion();
-  if (version != null && !version.isEmpty()) {
-    description.append("<br/>");
-    if (version.toLowerCase().startsWith("build"))     description.append("v" + version.substring(5,version.indexOf(',')).trim());
- else     if (version.toLowerCase().startsWith("v"))     description.append(version);
- else     description.append("v" + version);
   }
   long lastUpdatedUTC=contrib.getLastUpdated();
   if (lastUpdatedUTC != 0) {

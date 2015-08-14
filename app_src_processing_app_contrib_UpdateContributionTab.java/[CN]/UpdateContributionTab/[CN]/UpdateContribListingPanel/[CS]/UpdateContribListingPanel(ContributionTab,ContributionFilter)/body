@@ -2,27 +2,30 @@
   super.contributionTab=contributionTab;
   super.filter=filter;
   setOpaque(true);
-  if (Platform.isLinux()) {
-    setBackground(Color.white);
-  }
- else {
-    setBackground(UIManager.getColor("List.background"));
-  }
+  setBackground(Color.WHITE);
   String[] colName={"","Name","Author","Installed","Update To"};
-  dtm=new MyTableModel();
+  dtm=new MyTableModel(){
+    @Override public Class<?> getColumnClass(    int columnIndex){
+      if (columnIndex == 0) {
+        return Icon.class;
+      }
+      return String.class;
+    }
+  }
+;
   dtm.setColumnIdentifiers(colName);
   table=new JTable(dtm){
     @Override public Component prepareRenderer(    TableCellRenderer renderer,    int row,    int column){
       Component c=super.prepareRenderer(renderer,row,column);
       String title=(String)getValueAt(row,1);
-      if (title.equals("<html><i>Library</i></html>") || title.equals("Tools") || title.equals("Modes")|| title.equals("Examples")) {
+      if (title.equals("<html><i>Library</i></html>") || title.equals("<html><i>Tools</i></html>") || title.equals("<html><i>Modes</i></html>")|| title.equals("<html><i>Examples</i></html>")) {
         ((JComponent)c).setBorder(BorderFactory.createMatteBorder(row == 0 ? 0 : 2,0,2,0,Color.BLACK));
       }
       return c;
     }
     @Override public void changeSelection(    int rowIndex,    int columnIndex,    boolean toggle,    boolean extend){
       String title=(String)getValueAt(rowIndex,1);
-      if (title.equals("<html><i>Library</i></html>")) {
+      if (title.equals("<html><i>Library</i></html>") || title.equals("<html><i>Tools</i></html>") || title.equals("<html><i>Modes</i></html>")|| title.equals("<html><i>Examples</i></html>")) {
         return;
       }
       super.changeSelection(rowIndex,columnIndex,toggle,extend);
@@ -31,6 +34,9 @@
 ;
   JScrollPane scrollPane=new JScrollPane(table);
   table.setFillsViewportHeight(true);
+  table.setSelectionBackground(new Color(0xe0fffd));
+  table.setSelectionForeground(table.getForeground());
+  table.setFont(Toolkit.getSansFont(14,Font.PLAIN));
   table.setRowHeight(30);
   table.setRowMargin(6);
   table.getColumnModel().setColumnMargin(-1);
@@ -40,6 +46,7 @@
   table.setRowSelectionAllowed(true);
   table.setAutoCreateColumnsFromModel(true);
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+  table.setDefaultRenderer(String.class,new StatusRendere());
   table.getTableHeader().setDefaultRenderer(new MyColumnHeaderRenderer(){
     @Override public Component getTableCellRendererComponent(    JTable table,    Object value,    boolean isSelected,    boolean hasFocus,    int row,    int column){
       super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
@@ -48,8 +55,7 @@
         setForeground(tableHeader.getForeground());
       }
       setIcon(getIcon(table,column));
-      setBackground(Color.WHITE);
-      setBorder(BorderFactory.createMatteBorder(2,0,2,0,Color.BLACK));
+      setBackground(new Color(0xebebeb));
       return this;
     }
   }
