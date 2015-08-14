@@ -14,11 +14,11 @@
       }
  else {
         noSleep=false;
-        Base.log("Didn't sleep!");
+        Messages.log("Didn't sleep!");
       }
     }
  catch (    Exception e) {
-      Base.log("Oops! [ErrorCheckerThreaded]: " + e);
+      Messages.log("Oops! [ErrorCheckerThreaded]: " + e);
     }
     updatePaintedThingys();
     updateEditorStatus();
@@ -26,7 +26,7 @@
     if (pauseThread.get())     continue;
     if (textModified.get() == 0)     continue;
     if (System.currentTimeMillis() - lastErrorCheckCall > errorCheckInterval) {
-      Base.log("Interval passed, starting error check");
+      Messages.log("Interval passed, starting error check");
       checkCode();
       checkForMissingImports();
     }
@@ -36,6 +36,6 @@
   checkerClass=null;
   classLoader=null;
   System.gc();
-  Base.loge("Thread stopped: " + editor.getSketch().getName());
+  Messages.loge("Thread stopped: " + editor.getSketch().getName());
   System.gc();
 }

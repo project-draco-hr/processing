@@ -1,17 +1,17 @@
 {
   int off=getCaretPosition();
-  Base.log("off " + off);
+  Messages.log("off " + off);
   if (off < 0)   return null;
   int line=getCaretLine();
   if (line < 0)   return null;
   String s=getLineText(line);
-  Base.log("  line " + line);
+  Messages.log("  line " + line);
   int x=getCaretPosition() - getLineStartOffset(line) - 1, x1=x - 1;
   if (x >= s.length() || x < 0) {
     hideSuggestion();
     return null;
   }
-  Base.log("  x char: " + s.charAt(x));
+  Messages.log("  x char: " + s.charAt(x));
   if (!(Character.isLetterOrDigit(s.charAt(x)) || s.charAt(x) == '_' || s.charAt(x) == '(' || s.charAt(x) == '.')) {
     hideSuggestion();
     return null;

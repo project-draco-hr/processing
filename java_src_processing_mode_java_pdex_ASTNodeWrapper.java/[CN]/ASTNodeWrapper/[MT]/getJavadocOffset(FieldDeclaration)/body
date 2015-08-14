@@ -3,17 +3,17 @@
   SimpleName sn=(SimpleName)getNode();
   Type tp=fd.getType();
   int lineNum=getLineNumber(sn);
-  Base.log("SN " + sn + ", "+ lineNum);
+  Messages.log("SN " + sn + ", "+ lineNum);
   for (  ASTNode astNode : list) {
     if (getLineNumber(astNode) == lineNum) {
-      Base.log("first node in that line " + astNode);
-      Base.log("diff " + (sn.getStartPosition() - astNode.getStartPosition()));
+      Messages.log("first node in that line " + astNode);
+      Messages.log("diff " + (sn.getStartPosition() - astNode.getStartPosition()));
       return (astNode.getStartPosition());
     }
   }
   if (getLineNumber(fd.getType()) == lineNum) {
-    Base.log("first node in that line " + tp);
-    Base.log("diff " + (sn.getStartPosition() - tp.getStartPosition()));
+    Messages.log("first node in that line " + tp);
+    Messages.log("diff " + (sn.getStartPosition() - tp.getStartPosition()));
     return (tp.getStartPosition());
   }
   return 0;
