@@ -1,27 +1,25 @@
 {
-  ArrayList<String> params=new ArrayList<String>();
+  StringList params=new StringList();
   String options=Preferences.get("run.options");
   if (options.length() > 0) {
     String pieces[]=PApplet.split(options,' ');
     for (int i=0; i < pieces.length; i++) {
       String p=pieces[i].trim();
       if (p.length() > 0) {
-        params.add(p);
+        params.append(p);
       }
     }
   }
   if (Preferences.getBoolean("run.options.memory")) {
-    params.add("-Xms" + Preferences.get("run.options.memory.initial") + "m");
-    params.add("-Xmx" + Preferences.get("run.options.memory.maximum") + "m");
+    params.append("-Xms" + Preferences.get("run.options.memory.initial") + "m");
+    params.append("-Xmx" + Preferences.get("run.options.memory.maximum") + "m");
   }
   if (Platform.isMacOS()) {
-    params.add("-Xdock:name=" + build.getSketchClassName());
+    params.append("-Xdock:name=" + build.getSketchClassName());
   }
-  params.add("-Djava.library.path=" + build.getJavaLibraryPath() + File.pathSeparator+ System.getProperty("java.library.path"));
-  params.add("-cp");
-  params.add(build.getClassPath());
-  params.add("-ea");
-  String outgoing[]=new String[params.size()];
-  params.toArray(outgoing);
-  return outgoing;
+  params.append("-Djava.library.path=" + build.getJavaLibraryPath() + File.pathSeparator+ System.getProperty("java.library.path"));
+  params.append("-cp");
+  params.append(build.getClassPath());
+  params.append("-ea");
+  return params;
 }

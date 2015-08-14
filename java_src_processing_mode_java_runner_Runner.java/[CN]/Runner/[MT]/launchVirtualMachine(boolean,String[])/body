@@ -1,13 +1,15 @@
 {
-  String[] vmParams=getMachineParams();
-  String[] sketchParams=getSketchParams(presenting);
+  StringList vmParams=getMachineParams();
+  StringList sketchParams=getSketchParams(present,args);
   int port=8000 + (int)(Math.random() * 1000);
   String portStr=String.valueOf(port);
   String jdwpArg="-agentlib:jdwp=transport=dt_socket,address=" + portStr + ",server=y,suspend=y";
-  String[] commandArgs=new String[]{Platform.getJavaPath(),jdwpArg};
-  commandArgs=PApplet.concat(commandArgs,vmParams);
-  commandArgs=PApplet.concat(commandArgs,sketchParams);
-  launchJava(commandArgs);
+  StringList commandArgs=new StringList();
+  commandArgs.append(Platform.getJavaPath());
+  commandArgs.append(jdwpArg);
+  commandArgs.append(vmParams);
+  commandArgs.append(sketchParams);
+  launchJava(commandArgs.array());
   AttachingConnector connector=(AttachingConnector)findConnector("com.sun.jdi.SocketAttach");
   Map<String,Argument> arguments=connector.defaultArguments();
   Connector.Argument portArg=arguments.get("port");

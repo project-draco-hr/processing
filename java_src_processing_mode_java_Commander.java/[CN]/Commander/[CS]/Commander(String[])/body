@@ -17,22 +17,28 @@
     e.printStackTrace();
     System.exit(1);
   }
+  int argOffset=0;
   for (  String arg : args) {
+    argOffset++;
     if (arg.length() == 0) {
     }
  else     if (arg.equals(helpArg)) {
     }
  else     if (arg.equals(buildArg)) {
       task=BUILD;
+      break;
     }
  else     if (arg.equals(runArg)) {
       task=RUN;
+      break;
     }
  else     if (arg.equals(presentArg)) {
       task=PRESENT;
+      break;
     }
  else     if (arg.equals(exportApplicationArg)) {
       task=EXPORT;
+      break;
     }
  else     if (arg.equals(noJavaArg)) {
       embedJava=false;
@@ -70,6 +76,7 @@
       complainAndQuit("I don't know anything about " + arg + ".",true);
     }
   }
+  String[] sketchArgs=PApplet.subset(args,argOffset);
   if (task == HELP) {
     printCommandLine(systemOut);
     System.exit(0);
@@ -117,7 +124,12 @@
           success=true;
           if (task == RUN || task == PRESENT) {
             Runner runner=new Runner(build,this);
-            runner.launch(task == PRESENT);
+            if (task == PRESENT) {
+              runner.present(sketchArgs);
+            }
+ else {
+              runner.launch(sketchArgs);
+            }
           }
         }
  else {
