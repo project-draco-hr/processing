@@ -3,14 +3,15 @@
     return new ModeContribution(base,folder,searchName);
   }
  catch (  IgnorableException ig) {
-    Base.log(ig.getMessage());
+    Messages.log(ig.getMessage());
   }
 catch (  Throwable err) {
+    System.out.println("err is " + err);
     if (searchName == null) {
       throw new RuntimeException(err);
     }
  else {
-      Base.loge("ModeContribution.load() failed for " + searchName,err);
+      Messages.loge("ModeContribution.load() failed for " + searchName,err);
     }
   }
   return null;

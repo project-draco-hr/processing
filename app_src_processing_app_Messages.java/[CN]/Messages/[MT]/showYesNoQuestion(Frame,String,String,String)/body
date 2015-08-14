@@ -1,0 +1,23 @@
+{
+  if (!Platform.isMacOS()) {
+    return JOptionPane.showConfirmDialog(editor,"<html><body>" + "<b>" + primary + "</b>"+ "<br>"+ secondary,title,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+  }
+ else {
+    JOptionPane pane=new JOptionPane("<html> " + "<head> <style type=\"text/css\">" + "b { font: 13pt \"Lucida Grande\" }"+ "p { font: 11pt \"Lucida Grande\"; margin-top: 8px; width: 300px }"+ "</style> </head>"+ "<b>" + primary + "</b>"+ "<p>"+ secondary+ "</p>",JOptionPane.QUESTION_MESSAGE);
+    String[] options=new String[]{"Yes","No"};
+    pane.setOptions(options);
+    pane.setInitialValue(options[0]);
+    JDialog dialog=pane.createDialog(editor,null);
+    dialog.setVisible(true);
+    Object result=pane.getValue();
+    if (result == options[0]) {
+      return JOptionPane.YES_OPTION;
+    }
+ else     if (result == options[1]) {
+      return JOptionPane.NO_OPTION;
+    }
+ else {
+      return JOptionPane.CLOSED_OPTION;
+    }
+  }
+}

@@ -3,11 +3,11 @@
     PGraphics.showWarning(INSIDE_BEGIN_END_ERROR,"setVertex()");
     return;
   }
-  if (vertexCodes[index] != VERTEX) {
-    PGraphics.showWarning(NOT_A_SIMPLE_VERTEX,"setVertex()");
-    return;
-  }
   if (family == PATH) {
+    if (vertexCodes != null && vertexCodeCount > 0 && vertexCodes[index] != VERTEX) {
+      PGraphics.showWarning(NOT_A_SIMPLE_VERTEX,"setVertex()");
+      return;
+    }
     vertices[index][X]=x;
     vertices[index][Y]=y;
     if (is3D)     vertices[index][Z]=z;

@@ -2,18 +2,18 @@
   @SuppressWarnings("unchecked") List<ASTNode> list=td.modifiers();
   SimpleName sn=(SimpleName)getNode();
   int lineNum=getLineNumber(sn);
-  Base.log("SN " + sn + ", "+ lineNum);
+  Messages.log("SN " + sn + ", "+ lineNum);
   for (  ASTNode astNode : list) {
     if (getLineNumber(astNode) == lineNum) {
-      Base.log("first node in that line " + astNode);
-      Base.log("diff " + (sn.getStartPosition() - astNode.getStartPosition()));
+      Messages.log("first node in that line " + astNode);
+      Messages.log("diff " + (sn.getStartPosition() - astNode.getStartPosition()));
       return (astNode.getStartPosition());
     }
   }
   if (td.getJavadoc() != null) {
-    Base.log("diff " + (td.getJavadoc().getStartPosition() + td.getJavadoc().getLength() + 1));
+    Messages.log("diff " + (td.getJavadoc().getStartPosition() + td.getJavadoc().getLength() + 1));
     return (td.getJavadoc().getStartPosition() + td.getJavadoc().getLength() + 1);
   }
-  Base.log("getJavadocOffset(TypeDeclaration td) " + sn + ", found nothing. Meh.");
+  Messages.log("getJavadocOffset(TypeDeclaration td) " + sn + ", found nothing. Meh.");
   return 0;
 }

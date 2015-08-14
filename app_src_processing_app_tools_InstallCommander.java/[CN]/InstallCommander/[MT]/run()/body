@@ -9,13 +9,13 @@
     File file=File.createTempFile("processing","commander");
     PrintWriter writer=PApplet.createWriter(file);
     writer.println("#!/bin/sh");
-    String javaRoot=Base.getContentFile(".").getCanonicalPath();
+    String javaRoot=Platform.getContentFile(".").getCanonicalPath();
     StringList jarList=new StringList();
     addJarList(jarList,new File(javaRoot));
     addJarList(jarList,new File(javaRoot,"core/library"));
     addJarList(jarList,new File(javaRoot,"modes/java/mode"));
     String classPath=jarList.join(":").replaceAll(javaRoot + "\\/?","");
-    writer.println("cd \"" + javaRoot + "\" && "+ Base.getJavaPath()+ " -Djna.nosys=true"+ " -cp \""+ classPath+ "\""+ " processing.mode.java.Commander \"$@\"");
+    writer.println("cd \"" + javaRoot + "\" && "+ Platform.getJavaPath()+ " -Djna.nosys=true"+ " -cp \""+ classPath+ "\""+ " processing.mode.java.Commander \"$@\"");
     writer.flush();
     writer.close();
     file.setExecutable(true);
@@ -30,7 +30,7 @@
       File targetFile=new File(System.getProperty("user.home"),"processing-java");
       String targetPath=targetFile.getAbsolutePath();
       if (targetFile.exists()) {
-        Base.showWarning("File Already Exists","The processing-java program already exists at:\n" + targetPath + "\n"+ "Please remove it and try again.",null);
+        Messages.showWarning("File Already Exists","The processing-java program already exists at:\n" + targetPath + "\n"+ "Please remove it and try again.");
       }
  else {
         PApplet.exec(new String[]{"mv",sourcePath,targetPath});
@@ -39,6 +39,6 @@
     editor.statusNotice("Finished.");
   }
  catch (  IOException e) {
-    Base.showWarning("Error while installing","An error occurred and the tools were not installed.",e);
+    Messages.showWarning("Error while installing","An error occurred and the tools were not installed.",e);
   }
 }

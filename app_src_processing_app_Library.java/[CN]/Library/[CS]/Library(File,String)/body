@@ -23,12 +23,12 @@
     androidExportList=baseList;
   }
   File nativeLibraryFolder=libraryFolder;
-  String hostPlatform=Base.getPlatformName();
+  String hostPlatform=Platform.getName();
   File hostLibrary=new File(libraryFolder,hostPlatform);
   if (hostLibrary.exists()) {
     nativeLibraryFolder=hostLibrary;
   }
-  hostLibrary=new File(libraryFolder,hostPlatform + Base.getNativeBits());
+  hostLibrary=new File(libraryFolder,hostPlatform + Platform.getNativeBits());
   if (hostLibrary.exists()) {
     nativeLibraryFolder=hostLibrary;
   }
@@ -43,12 +43,15 @@
     String platformName=platformNames[i];
     String platformName32=platformName + "32";
     String platformName64=platformName + "64";
+    String platformNameArmv6hh=platformName + "-armv6hf";
     String platformAll=exportTable.get("application." + platformName);
     String[] platformList=platformAll == null ? null : PApplet.splitTokens(platformAll,", ");
     String platform32=exportTable.get("application." + platformName + "32");
     String[] platformList32=platform32 == null ? null : PApplet.splitTokens(platform32,", ");
     String platform64=exportTable.get("application." + platformName + "64");
     String[] platformList64=platform64 == null ? null : PApplet.splitTokens(platform64,", ");
+    String platformArmv6hf=exportTable.get("application." + platformName + "-armv6hf");
+    String[] platformListArmv6hf=platformArmv6hf == null ? null : PApplet.splitTokens(platformArmv6hf,", ");
     if (platformAll == null) {
       platformList=listPlatformEntries(libraryFolder,platformName,baseList);
     }
@@ -58,10 +61,13 @@
     if (platform64 == null) {
       platformList64=listPlatformEntries(libraryFolder,platformName64,baseList);
     }
-    if (platformList32 != null || platformList64 != null) {
+    if (platformListArmv6hf == null) {
+      platformListArmv6hf=listPlatformEntries(libraryFolder,platformNameArmv6hh,baseList);
+    }
+    if (platformList32 != null || platformList64 != null || platformListArmv6hf != null) {
       multipleArch[i]=true;
     }
-    if (platformList == null && platformList32 == null && platformList64 == null) {
+    if (platformList == null && platformList32 == null && platformList64 == null && platformListArmv6hf == null) {
       exportList.put(platformName,baseList);
     }
  else {
@@ -73,6 +79,9 @@
       }
       if (platformList64 != null) {
         exportList.put(platformName64,platformList64);
+      }
+      if (platformListArmv6hf != null) {
+        exportList.put(platformNameArmv6hh,platformListArmv6hf);
       }
     }
   }

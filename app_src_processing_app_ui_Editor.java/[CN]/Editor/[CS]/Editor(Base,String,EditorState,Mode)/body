@@ -14,14 +14,14 @@
   addWindowListener(new WindowAdapter(){
     public void windowActivated(    WindowEvent e){
       base.handleActivated(Editor.this);
-      fileMenu.insert(base.getRecentMenu(),2);
+      fileMenu.insert(Recent.getMenu(),2);
       Toolkit.setMenuMnemsInside(fileMenu);
       mode.insertImportMenu(sketchMenu);
       Toolkit.setMenuMnemsInside(sketchMenu);
       mode.insertToolbarRecentMenu();
     }
     public void windowDeactivated(    WindowEvent e){
-      fileMenu.remove(base.getRecentMenu());
+      fileMenu.remove(Recent.getMenu());
       mode.removeImportMenu(sketchMenu);
       mode.removeToolbarRecentMenu();
     }
@@ -82,9 +82,6 @@
     }
   }
 );
-  boolean loaded=handleOpenInternal(path);
-  if (!loaded) {
-    sketch=null;
-  }
+  handleOpenInternal(path);
   addWindowFocusListener(new ChangeDetector(this));
 }

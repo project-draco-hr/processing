@@ -5,6 +5,9 @@
   int index=start;
   while (index <= stop) {
     if ((buffer[index] == ' ') || (index == stop)) {
+      if (wordStart == index) {
+        return false;
+      }
       float wordWidth=textWidthImpl(buffer,wordStart,index);
       if (runningX + wordWidth >= boxWidth) {
         if (runningX != 0) {
@@ -15,14 +18,30 @@
           }
         }
  else {
-          do {
+          if (index - wordStart < 25) {
+            do {
+              index--;
+              if (index == wordStart) {
+                return false;
+              }
+              wordWidth=textWidthImpl(buffer,wordStart,index);
+            }
+ while (wordWidth > boxWidth);
+          }
+ else {
+            int lastIndex=index;
+            index=wordStart + 1;
+            while ((wordWidth=textWidthImpl(buffer,wordStart,index)) < boxWidth) {
+              index++;
+              if (index > lastIndex) {
+                break;
+              }
+            }
             index--;
             if (index == wordStart) {
               return false;
             }
-            wordWidth=textWidthImpl(buffer,wordStart,index);
           }
- while (wordWidth > boxWidth);
           textSentenceBreak(lineStart,index);
         }
         lineStart=index;

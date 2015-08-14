@@ -3,7 +3,7 @@
   JMenuItem item;
   undoItem=Toolkit.newJMenuItem(undoAction=new UndoAction(),'Z');
   menu.add(undoItem);
-  if (Base.isWindows()) {
+  if (Platform.isWindows()) {
     redoItem=Toolkit.newJMenuItem(redoAction=new RedoAction(),'Y');
   }
  else {
@@ -70,6 +70,10 @@
     public void actionPerformed(    ActionEvent e){
       if (find == null) {
         find=new FindReplace(Editor.this);
+      }
+      String selection=getSelectedText();
+      if (selection != null && selection.length() != 0 && !selection.contains("\n")) {
+        find.setFindText(selection);
       }
       find.setVisible(true);
     }

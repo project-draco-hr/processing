@@ -1,0 +1,38 @@
+{
+  StringList vmParams=getMachineParams();
+  StringList sketchParams=getSketchParams(present,args);
+  int port=8000 + (int)(Math.random() * 1000);
+  String portStr=String.valueOf(port);
+  String jdwpArg="-agentlib:jdwp=transport=dt_socket,address=" + portStr + ",server=y,suspend=y";
+  StringList commandArgs=new StringList();
+  commandArgs.append(Platform.getJavaPath());
+  commandArgs.append(jdwpArg);
+  commandArgs.append(vmParams);
+  commandArgs.append(sketchParams);
+  launchJava(commandArgs.array());
+  AttachingConnector connector=(AttachingConnector)findConnector("com.sun.jdi.SocketAttach");
+  Map<String,Argument> arguments=connector.defaultArguments();
+  Connector.Argument portArg=arguments.get("port");
+  portArg.setValue(portStr);
+  try {
+    while (true) {
+      try {
+        vm=connector.attach(arguments);
+        if (vm != null) {
+          return true;
+        }
+      }
+ catch (      IOException e) {
+        try {
+          Thread.sleep(100);
+        }
+ catch (        InterruptedException e1) {
+          e1.printStackTrace(sketchErr);
+        }
+      }
+    }
+  }
+ catch (  IllegalConnectorArgumentsException exc) {
+    throw new Error("Internal error: " + exc);
+  }
+}

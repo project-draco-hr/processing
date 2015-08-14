@@ -1,5 +1,5 @@
 {
-  Base.log("Src:" + source);
+  Messages.log("Src:" + source);
   String sourceAlt=new String(source);
   String sourceJava=ecs.astGenerator.getJavaSourceCodeLine(lineNumber);
   TreeMap<Integer,Integer> offsetmap=new TreeMap<Integer,Integer>();
@@ -30,7 +30,7 @@
     sourceAlt=matcher.replaceAll("PApplet.parse" + Character.toUpperCase(dataType.charAt(0)) + dataType.substring(1)+ "(");
   }
   if (offsetmap.isEmpty()) {
-    Base.log("No offset matching needed.");
+    Messages.log("No offset matching needed.");
     return null;
   }
   webMatcher=webPattern.matcher(sourceAlt);
@@ -41,8 +41,8 @@
   }
   colorMatcher=colorPattern.matcher(sourceAlt);
   sourceAlt=colorMatcher.replaceAll("int");
-  Base.log("From direct source: ");
-  Base.log(sourceAlt);
+  Messages.log("From direct source: ");
+  Messages.log(sourceAlt);
   int javaCodeMap[]=new int[source.length() * 2];
   int pdeCodeMap[]=new int[source.length() * 2];
   int pi=1, pj=1;
@@ -54,7 +54,7 @@
     for (; pj < key; pj++) {
       pdeCodeMap[pj]=pdeCodeMap[pj - 1] + 1;
     }
-    Base.log(key + ":" + offsetmap.get(key));
+    Messages.log(key + ":" + offsetmap.get(key));
     int kval=offsetmap.get(key);
     if (kval > 0) {
       pi--;

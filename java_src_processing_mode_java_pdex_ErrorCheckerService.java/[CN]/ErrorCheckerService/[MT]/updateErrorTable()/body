@@ -1,31 +1,31 @@
 {
   try {
     String[][] errorData=new String[problemsList.size()][3];
-    for (int i=0; i < problemsList.size(); i++) {
-      errorData[i][0]=problemsList.get(i).getMessage();
-      errorData[i][1]=editor.getSketch().getCode(problemsList.get(i).getTabIndex()).getPrettyName();
-      errorData[i][2]=(problemsList.get(i).getLineNumber() + 1) + "";
-      if (tempErrorLog.size() < 200)       tempErrorLog.put(problemsList.get(i).getMessage(),problemsList.get(i).getIProblem());
+    int index=0;
+    for (    Problem p : problemsList) {
+      errorData[index][0]=p.getMessage();
+      errorData[index][1]=editor.getSketch().getCode(p.getTabIndex()).getPrettyName();
+      errorData[index][2]=Integer.toString(p.getLineNumber() + 1);
       if (JavaMode.importSuggestEnabled) {
-        Problem p=problemsList.get(i);
         if (p.getIProblem().getID() == IProblem.UndefinedType) {
-          String args[]=p.getIProblem().getArguments();
+          String[] args=p.getIProblem().getArguments();
           if (args.length > 0) {
             String missingClass=args[0];
             String[] si=astGenerator.getSuggestImports(missingClass);
             if (si != null && si.length > 0) {
               p.setImportSuggestions(si);
-              errorData[i][0]="<html>" + problemsList.get(i).getMessage() + " (<font color=#0000ff><u>Import Suggestions available</u></font>)</html>";
+              errorData[index][0]="<html>" + p.getMessage() + " (<font color=#0000ff><u>Import Suggestions available</u></font>)</html>";
             }
           }
         }
       }
+      index++;
     }
     DefaultTableModel tm=new DefaultTableModel(errorData,XQErrorTable.columnNames);
     editor.updateTable(tm);
   }
  catch (  Exception e) {
-    Base.log("Exception at updateErrorTable() " + e);
+    Messages.loge("Exception at updateErrorTable()",e);
     e.printStackTrace();
     pauseThread();
   }

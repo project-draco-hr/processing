@@ -2,19 +2,19 @@
   @SuppressWarnings("unchecked") List<ASTNode> list=md.modifiers();
   SimpleName sn=(SimpleName)getNode();
   int lineNum=getLineNumber(sn);
-  Base.log("SN " + sn + ", "+ lineNum);
+  Messages.log("SN " + sn + ", "+ lineNum);
   for (  ASTNode astNode : list) {
     if (getLineNumber(astNode) == lineNum) {
-      Base.log("first node in that line " + astNode);
-      Base.log("diff " + (sn.getStartPosition() - astNode.getStartPosition()));
+      Messages.log("first node in that line " + astNode);
+      Messages.log("diff " + (sn.getStartPosition() - astNode.getStartPosition()));
       return (astNode.getStartPosition());
     }
   }
   if (!md.isConstructor()) {
     Type tp=md.getReturnType2();
     if (getLineNumber(tp) == lineNum) {
-      Base.log("first node in that line " + tp);
-      Base.log("diff " + (sn.getStartPosition() - tp.getStartPosition()));
+      Messages.log("first node in that line " + tp);
+      Messages.log("diff " + (sn.getStartPosition() - tp.getStartPosition()));
       return (tp.getStartPosition());
     }
   }

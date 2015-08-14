@@ -9,18 +9,18 @@
   }
   if (keyChar == '.') {
     if (JavaMode.codeCompletionsEnabled) {
-      Base.log("[KeyEvent]" + KeyEvent.getKeyText(event.getKeyCode()) + "  |Prediction started");
-      Base.log("Typing: " + fetchPhrase(event));
+      Messages.log("[KeyEvent]" + KeyEvent.getKeyText(event.getKeyCode()) + "  |Prediction started");
+      Messages.log("Typing: " + fetchPhrase(event));
     }
   }
  else   if (keyChar == ' ') {
-    if (!Base.isMacOS() && JavaMode.codeCompletionsEnabled && (event.isControlDown() || event.isMetaDown())) {
+    if (!Platform.isMacOS() && JavaMode.codeCompletionsEnabled && (event.isControlDown() || event.isMetaDown())) {
       SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
         protected Object doInBackground() throws Exception {
           if (JavaMode.codeCompletionsEnabled) {
             getDocument().remove(getCaretPosition() - 1,1);
-            Base.log("[KeyEvent]" + event.getKeyChar() + "  |Prediction started");
-            Base.log("Typing: " + fetchPhrase(event));
+            Messages.log("[KeyEvent]" + event.getKeyChar() + "  |Prediction started");
+            Messages.log("Typing: " + fetchPhrase(event));
           }
           return null;
         }

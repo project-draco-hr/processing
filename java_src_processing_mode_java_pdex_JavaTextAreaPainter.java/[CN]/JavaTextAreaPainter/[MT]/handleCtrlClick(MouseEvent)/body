@@ -1,5 +1,5 @@
 {
-  Base.log("--handleCtrlClick--");
+  Messages.log("--handleCtrlClick--");
   int off=textArea.xyToOffset(evt.getX(),evt.getY());
   if (off < 0)   return;
   int line=textArea.getLineOfOffset(off);
@@ -9,7 +9,7 @@
  else   if (s.length() == 0)   return;
  else {
     int x=textArea.xToOffset(line,evt.getX()), x2=x + 1, x1=x - 1;
-    Base.log("x=" + x);
+    Messages.log("x=" + x);
     int xLS=off - textArea.getLineStartNonWhiteSpaceOffset(line);
     if (x < 0 || x >= s.length())     return;
     String word=s.charAt(x) + "";
@@ -37,7 +37,7 @@
       }
     }
     if (Character.isDigit(word.charAt(0)))     return;
-    Base.log(getEditor().getErrorChecker().mainClassOffset + line + "|"+ line+ "| offset "+ xLS+ word+ " <= \n");
+    Messages.log(getEditor().getErrorChecker().mainClassOffset + line + "|"+ line+ "| offset "+ xLS+ word+ " <= \n");
     getEditor().getErrorChecker().getASTGenerator().scrollToDeclaration(line,word,xLS);
   }
 }

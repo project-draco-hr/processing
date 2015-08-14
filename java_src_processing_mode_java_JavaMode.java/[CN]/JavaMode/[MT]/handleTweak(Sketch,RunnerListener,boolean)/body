@@ -2,7 +2,7 @@
   final JavaEditor editor=(JavaEditor)listener;
   if (isSketchModified(sketch)) {
     editor.deactivateRun();
-    Base.showMessage(Language.text("menu.file.save"),Language.text("tweak_mode.save_before_tweak"));
+    Messages.showMessage(Language.text("menu.file.save"),Language.text("tweak_mode.save_before_tweak"));
     return null;
   }
   JavaBuild build=new JavaBuild(sketch);
@@ -20,10 +20,15 @@
     final Runner runtime=new Runner(build,listener);
     new Thread(new Runnable(){
       public void run(){
-        runtime.launch(present);
+        if (present) {
+          runtime.present(null);
+        }
+ else {
+          runtime.launch(null);
+        }
         if (launchInteractive) {
           editor.initEditorCode(parser.allHandles,false);
-          editor.stopInteractiveMode(parser.allHandles);
+          editor.stopTweakMode(parser.allHandles);
         }
       }
     }
@@ -31,7 +36,7 @@
     if (launchInteractive) {
       editor.initEditorCode(parser.allHandles,false);
       editor.updateInterface(parser.allHandles,parser.colorBoxes);
-      editor.startInteractiveMode();
+      editor.startTweakMode();
     }
     return runtime;
   }

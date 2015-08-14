@@ -23,9 +23,13 @@
     pgl.disable(PGL.MULTISAMPLE);
   }
  else {
-    pgl.enable(PGL.MULTISAMPLE);
+    if (false == OPENGL_RENDERER.equals("VideoCore IV HW")) {
+      pgl.enable(PGL.MULTISAMPLE);
+    }
   }
-  pgl.disable(PGL.POLYGON_SMOOTH);
+  if (false == OPENGL_RENDERER.equals("VideoCore IV HW")) {
+    pgl.disable(PGL.POLYGON_SMOOTH);
+  }
   if (sized) {
     if (primaryGraphics) {
       background(backgroundColor);

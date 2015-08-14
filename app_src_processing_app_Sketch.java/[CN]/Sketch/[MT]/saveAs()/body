@@ -37,13 +37,13 @@
   String sanitaryName=Sketch.checkName(newName);
   File newFolder=new File(newParentDir,sanitaryName);
   if (!sanitaryName.equals(newName) && newFolder.exists()) {
-    Base.showMessage(Language.text("save_file.messages.sketch_exists"),Language.interpolate("save_file.messages.sketch_exists.description",sanitaryName));
+    Messages.showMessage(Language.text("save_file.messages.sketch_exists"),Language.interpolate("save_file.messages.sketch_exists.description",sanitaryName));
     return false;
   }
   newName=sanitaryName;
   for (int i=1; i < codeCount; i++) {
     if (newName.equalsIgnoreCase(code[i].getPrettyName())) {
-      Base.showMessage(Language.text("save_file.messages.tab_exists"),Language.interpolate("save_file.messages.tab_exists.description",newName));
+      Messages.showMessage(Language.text("save_file.messages.tab_exists"),Language.interpolate("save_file.messages.tab_exists.description",newName));
       return false;
     }
   }
@@ -54,7 +54,7 @@
     String newPath=newFolder.getCanonicalPath() + File.separator;
     String oldPath=folder.getCanonicalPath() + File.separator;
     if (newPath.indexOf(oldPath) == 0) {
-      Base.showWarning(Language.text("save_file.messages.recursive_save"),Language.text("save_file.messages.recursive_save.description"),null);
+      Messages.showWarning(Language.text("save_file.messages.recursive_save"),Language.text("save_file.messages.recursive_save.description"));
       return false;
     }
   }
@@ -104,12 +104,12 @@
     code[i].saveAs(newFile);
   }
   if (!isUntitled()) {
-    editor.removeRecent();
+    Recent.remove(editor);
   }
   File newFile=new File(newFolder,newName + "." + mode.getDefaultExtension());
   code[0].saveAs(newFile);
   updateInternal(newName,newFolder);
   setUntitled(false);
-  editor.addRecent();
+  Recent.append(editor);
   return true;
 }

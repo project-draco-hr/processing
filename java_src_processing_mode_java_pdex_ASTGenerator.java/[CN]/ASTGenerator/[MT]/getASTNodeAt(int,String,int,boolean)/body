@@ -16,7 +16,7 @@
   String nodeLabel=null;
   String nameOfNode=null;
   if (lineNode != null) {
-    String pdeCodeLine=errorCheckerService.getPDECodeAtLine(editor.getSketch().getCurrentCodeIndex(),lineNumber);
+    String pdeCodeLine=errorCheckerService.getPdeCodeAtLine(editor.getSketch().getCurrentCodeIndex(),lineNumber);
     String javaCodeLine=getJavaSourceCodeLine(pdeLineNumber);
     OffsetMatcher ofm=new OffsetMatcher(pdeCodeLine,javaCodeLine);
     int javaOffset=ofm.getJavaOffForPdeOff(offset,name.length()) + lineNode.getStartPosition();
@@ -50,7 +50,7 @@ if (decl != null && scrollOnly) {
 ASTNode simpName2=getNodeName(decl,nameOfNode);
 ASTNodeWrapper declWrap=new ASTNodeWrapper(simpName2,nodeLabel);
 if (!declWrap.highlightNode(this)) {
-Base.loge("Highlighting failed.");
+Messages.loge("Highlighting failed.");
 }
 }
 return new ASTNodeWrapper(decl,nodeLabel);

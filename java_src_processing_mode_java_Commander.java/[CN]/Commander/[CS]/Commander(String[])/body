@@ -7,7 +7,6 @@
   boolean outputSet=false;
   boolean force=false;
   int platform=PApplet.platform;
-  int platformBits=Base.getNativeBits();
   int task=HELP;
   boolean embedJava=true;
   try {
@@ -18,35 +17,41 @@
     e.printStackTrace();
     System.exit(1);
   }
+  int argOffset=0;
   for (  String arg : args) {
+    argOffset++;
     if (arg.length() == 0) {
     }
  else     if (arg.equals(helpArg)) {
     }
  else     if (arg.equals(buildArg)) {
       task=BUILD;
+      break;
     }
  else     if (arg.equals(runArg)) {
       task=RUN;
+      break;
     }
  else     if (arg.equals(presentArg)) {
       task=PRESENT;
+      break;
     }
  else     if (arg.equals(exportApplicationArg)) {
       task=EXPORT;
+      break;
     }
  else     if (arg.equals(noJavaArg)) {
       embedJava=false;
     }
  else     if (arg.startsWith(platformArg)) {
       String platformStr=arg.substring(platformArg.length());
-      platform=Base.getPlatformIndex(platformStr);
+      platform=Platform.getIndex(platformStr);
       if (platform == -1) {
         complainAndQuit(platformStr + " should instead be " + "'windows', 'macosx', or 'linux'.",true);
       }
     }
  else     if (arg.startsWith(bitsArg)) {
-      complainAndQuit("The --bits option has been removed from Processing 2.1.",false);
+      complainAndQuit("The --bits option has been removed.",false);
     }
  else     if (arg.startsWith(sketchArg)) {
       sketchPath=arg.substring(sketchArg.length());
@@ -71,6 +76,7 @@
       complainAndQuit("I don't know anything about " + arg + ".",true);
     }
   }
+  String[] sketchArgs=PApplet.subset(args,argOffset);
   if (task == HELP) {
     printCommandLine(systemOut);
     System.exit(0);
@@ -104,7 +110,7 @@
       }
     }
     boolean success=false;
-    JavaMode javaMode=(JavaMode)ModeContribution.load(null,Base.getContentFile("modes/java"),"processing.mode.java.JavaMode").getMode();
+    JavaMode javaMode=(JavaMode)ModeContribution.load(null,Platform.getContentFile("modes/java"),"processing.mode.java.JavaMode").getMode();
     try {
       sketch=new Sketch(pdePath,javaMode);
       if (!outputSet) {
@@ -118,7 +124,12 @@
           success=true;
           if (task == RUN || task == PRESENT) {
             Runner runner=new Runner(build,this);
-            runner.launch(task == PRESENT);
+            if (task == PRESENT) {
+              runner.present(sketchArgs);
+            }
+ else {
+              runner.launch(sketchArgs);
+            }
           }
         }
  else {
@@ -133,7 +144,8 @@
           JavaBuild build=new JavaBuild(sketch);
           build.build(true);
           if (build != null) {
-            success=build.exportApplication(outputFolder,platform,platformBits,embedJava);
+            String variant=Platform.getVariant();
+            success=build.exportApplication(outputFolder,platform,variant,embedJava);
           }
         }
       }

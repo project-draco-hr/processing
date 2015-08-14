@@ -92,7 +92,10 @@
       Class<?> c=Thread.currentThread().getContextClassLoader().loadClass(name);
       sketch=(PApplet)c.newInstance();
     }
- catch (    Exception e) {
+ catch (    RuntimeException re) {
+      throw re;
+    }
+catch (    Exception e) {
       throw new RuntimeException(e);
     }
   }

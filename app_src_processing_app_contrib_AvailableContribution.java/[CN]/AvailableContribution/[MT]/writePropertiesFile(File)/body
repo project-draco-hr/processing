@@ -2,7 +2,9 @@
   try {
     StringDict properties=Util.readSettings(propFile);
     String name=properties.get("name");
-    if (name == null || name.isEmpty())     name=getName();
+    if (name == null || name.isEmpty()) {
+      name=getName();
+    }
     String category;
     StringList categoryList=parseCategories(properties);
     if (categoryList.size() == 1 && categoryList.get(0).equals(UNKNOWN_CATEGORY)) {
@@ -84,7 +86,9 @@
         writer.println("imports=" + importsList.join(","));
       }
       if (getType() == ContributionType.EXAMPLES) {
-        writer.println(MODES_PROPERTY + "=" + compatibleContribsList);
+        if (compatibleContribsList != null) {
+          writer.println(MODES_PROPERTY + "=" + compatibleContribsList);
+        }
       }
       writer.flush();
       writer.close();

@@ -10,12 +10,13 @@
     sketchErr=System.err;
     sketchOut=System.out;
   }
-  int bits=Base.getNativeBits();
+  int bits=Platform.getNativeBits();
+  String variant=Platform.getVariant();
   for (  Library library : build.getImportedLibraries()) {
-    if (!library.supportsArch(PApplet.platform,bits)) {
-      sketchErr.println(library.getName() + " does not run in " + bits+ "-bit mode.");
+    if (!library.supportsArch(PApplet.platform,variant)) {
+      sketchErr.println(library.getName() + " does not run on this architecture: " + variant);
       int opposite=(bits == 32) ? 64 : 32;
-      if (Base.isMacOS()) {
+      if (Platform.isMacOS()) {
         throw new SketchException("To use " + library.getName() + ", "+ "switch to "+ opposite+ "-bit mode in Preferences.");
       }
  else {

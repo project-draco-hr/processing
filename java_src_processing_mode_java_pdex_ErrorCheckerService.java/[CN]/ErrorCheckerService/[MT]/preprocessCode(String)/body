@@ -1,27 +1,29 @@
 {
   programImports=new ArrayList<ImportStatement>();
   StringBuilder rawCode=new StringBuilder();
+  final Sketch sketch=editor.getSketch();
   try {
-    for (    SketchCode sc : editor.getSketch().getCode()) {
+    for (    SketchCode sc : sketch.getCode()) {
       if (sc.isExtension("pde")) {
         try {
-          if (editor.getSketch().getCurrentCode().equals(sc)) {
-            rawCode.append(scrapImportStatements(sc.getDocument().getText(0,sc.getDocument().getLength()),editor.getSketch().getCodeIndex(sc)));
+          if (sketch.getCurrentCode().equals(sc)) {
+            Document d=sc.getDocument();
+            rawCode.append(scrapImportStatements(d.getText(0,d.getLength()),sketch.getCodeIndex(sc)));
           }
  else {
-            rawCode.append(scrapImportStatements(sc.getProgram(),editor.getSketch().getCodeIndex(sc)));
+            rawCode.append(scrapImportStatements(sc.getProgram(),sketch.getCodeIndex(sc)));
           }
           rawCode.append('\n');
         }
  catch (        Exception e) {
-          System.err.println("Exception in preprocessCode() - bigCode " + e.toString());
+          e.printStackTrace();
         }
         rawCode.append('\n');
       }
     }
   }
  catch (  Exception e) {
-    Base.log("Exception in preprocessCode()");
+    Messages.log("Exception in preprocessCode()");
   }
   String sourceAlt=rawCode.toString();
   String dataTypeFunc[]={"int","char","float","boolean","byte"};
@@ -46,14 +48,19 @@
   checkForChangedImports();
   className=(editor == null) ? "DefaultClass" : editor.getSketch().getName();
   Matcher matcher=FUNCTION_DECL.matcher(sourceAlt);
-  if (!matcher.find()) {
-    sourceAlt=xqpreproc.prepareImports(programImports) + "public class " + className+ " extends PApplet {\n"+ "public void setup() {\n"+ sourceAlt+ "\nnoLoop();\n}\n"+ "\n}\n";
-    staticMode=true;
+  staticMode=!matcher.find();
+  StringBuilder sb=new StringBuilder();
+  sb.append(xqpreproc.prepareImports(programImports));
+  sb.append("public class " + className + " extends PApplet {\n");
+  if (staticMode) {
+    sb.append("public void setup() {\n");
   }
- else {
-    sourceAlt=xqpreproc.prepareImports(programImports) + "public class " + className+ " extends PApplet {\n"+ sourceAlt+ "\n}";
-    staticMode=false;
+  sb.append(sourceAlt);
+  if (staticMode) {
+    sb.append("\nnoLoop();\n}");
   }
+  sb.append("\n}");
+  sourceAlt=sb.toString();
   int position=sourceAlt.indexOf("{") + 1;
   mainClassOffset=1;
   for (int i=0; i <= position; i++) {

@@ -7,8 +7,8 @@
   if (handles.size() == 0) {
     return false;
   }
-  int setupEndPos=SketchParser.getSetupEnd(baseCode[0]);
-  if (setupEndPos < 0) {
+  int afterSizePos=SketchParser.getAfterSizePos(baseCode[0]);
+  if (afterSizePos < 0) {
     return false;
   }
   int port;
@@ -66,9 +66,9 @@
   header+=" tweakmode_Server.start();\n";
   header+="}\n";
   header+="\n\n\n\n\n";
-  String addToSetup="\n" + " tweakmode_initAllVars();\n" + " tweakmode_initCommunication();\n\n";
-  setupEndPos=SketchParser.getSetupEnd(c);
-  c=replaceString(c,setupEndPos,setupEndPos,addToSetup);
+  String addToSetup="\n\n\n" + "  /* TWEAKMODE */\n" + "    tweakmode_initAllVars();\n"+ "    tweakmode_initCommunication();\n"+ "  /* TWEAKMODE */\n\n";
+  afterSizePos=SketchParser.getAfterSizePos(c);
+  c=replaceString(c,afterSizePos,afterSizePos,addToSetup);
   String serverCode=TweakClient.getServerCode(port,numOfInts > 0,numOfFloats > 0);
   code[0].setProgram(header + c + serverCode);
   String showModCode=Preferences.get(PREF_TWEAK_SHOW_CODE);
