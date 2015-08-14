@@ -39,7 +39,7 @@
     }
  else     if (arg.startsWith(platformArg)) {
       String platformStr=arg.substring(platformArg.length());
-      platform=Base.getPlatformIndex(platformStr);
+      platform=Platform.getIndex(platformStr);
       if (platform == -1) {
         complainAndQuit(platformStr + " should instead be " + "'windows', 'macosx', or 'linux'.",true);
       }
@@ -103,7 +103,7 @@
       }
     }
     boolean success=false;
-    JavaMode javaMode=(JavaMode)ModeContribution.load(null,Base.getContentFile("modes/java"),"processing.mode.java.JavaMode").getMode();
+    JavaMode javaMode=(JavaMode)ModeContribution.load(null,Platform.getContentFile("modes/java"),"processing.mode.java.JavaMode").getMode();
     try {
       sketch=new Sketch(pdePath,javaMode);
       if (!outputSet) {
@@ -132,7 +132,7 @@
           JavaBuild build=new JavaBuild(sketch);
           build.build(true);
           if (build != null) {
-            String variant=Base.getVariant();
+            String variant=Platform.getVariant();
             success=build.exportApplication(outputFolder,platform,variant,embedJava);
           }
         }

@@ -19,7 +19,7 @@
     }
   }
 );
-  if (!Base.isMacOS()) {
+  if (!Platform.isMacOS()) {
     Preferences.setBoolean(EXPORT_MACOSX,false);
   }
   macosxButton.setSelected(Preferences.getBoolean(EXPORT_MACOSX));
@@ -30,7 +30,7 @@
     }
   }
 );
-  if (!Base.isMacOS()) {
+  if (!Platform.isMacOS()) {
     macosxButton.setEnabled(false);
     macosxButton.setToolTipText(Language.text("export.tooltip.macosx"));
   }
@@ -95,14 +95,14 @@
   JPanel embedPanel=new JPanel();
   embedPanel.setLayout(new BoxLayout(embedPanel,BoxLayout.Y_AXIS));
   String platformName=null;
-  if (Base.isMacOS()) {
+  if (Platform.isMacOS()) {
     platformName="Mac OS X";
   }
- else   if (Base.isWindows()) {
-    platformName="Windows (" + Base.getNativeBits() + "-bit)";
+ else   if (Platform.isWindows()) {
+    platformName="Windows (" + Platform.getNativeBits() + "-bit)";
   }
- else   if (Base.isLinux()) {
-    platformName="Linux (" + Base.getNativeBits() + "-bit)";
+ else   if (Platform.isLinux()) {
+    platformName="Linux (" + Platform.getNativeBits() + "-bit)";
   }
   boolean embed=Preferences.getBoolean("export.application.embed_java");
   final String embedWarning="<html><div width=\"" + divWidth + "\"><font size=\"2\">"+ "Embedding Java will make the "+ platformName+ " application "+ "larger, but it will be far more likely to work. "+ "Users on other platforms will need to "+ "<a href=\"\">install Java "+ PApplet.javaPlatform+ "</a>.";
@@ -110,7 +110,7 @@
   final JLabel warningLabel=new JLabel(embed ? embedWarning : nopeWarning);
   warningLabel.addMouseListener(new MouseAdapter(){
     public void mousePressed(    MouseEvent event){
-      Base.openURL("http://java.com/download");
+      Platform.openURL("http://java.com/download");
     }
   }
 );
@@ -135,7 +135,7 @@
   embedPanel.add(warningLabel);
   embedPanel.setBorder(new TitledBorder(Language.text("export.embed_java")));
   panel.add(embedPanel);
-  if (Base.isMacOS()) {
+  if (Platform.isMacOS()) {
     JPanel signPanel=new JPanel();
     signPanel.setLayout(new BoxLayout(signPanel,BoxLayout.Y_AXIS));
     signPanel.setBorder(new TitledBorder(Language.text("export.code_signing")));
@@ -153,7 +153,7 @@
     signPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
     area.addMouseListener(new MouseAdapter(){
       public void mousePressed(      MouseEvent event){
-        Base.openURL("https://developer.apple.com/developer-id/");
+        Platform.openURL("https://developer.apple.com/developer-id/");
       }
     }
 );

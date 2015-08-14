@@ -13,9 +13,9 @@
   String jdkPath=null;
   if (exportPlatform == PConstants.MACOSX) {
     dotAppFolder=new File(destFolder,sketch.getName() + ".app");
-    File contentsOrig=new File(Base.getJavaHome(),"../../../../..");
+    File contentsOrig=new File(Platform.getJavaHome(),"../../../../..");
     if (embedJava) {
-      File jdkFolder=new File(Base.getJavaHome(),"../../..");
+      File jdkFolder=new File(Platform.getJavaHome(),"../../..");
       String jdkFolderName=jdkFolder.getCanonicalFile().getName();
       jvmRuntime="<key>JVMRuntime</key>\n    <string>" + jdkFolderName + "</string>";
       jdkPath=new File(dotAppFolder,"Contents/PlugIns/" + jdkFolderName).getAbsolutePath();
@@ -40,12 +40,12 @@
   }
  else   if (exportPlatform == PConstants.LINUX) {
     if (embedJava) {
-      Util.copyDirNative(Base.getJavaHome(),new File(destFolder,"java"));
+      Util.copyDirNative(Platform.getJavaHome(),new File(destFolder,"java"));
     }
   }
  else   if (exportPlatform == PConstants.WINDOWS) {
     if (embedJava) {
-      Util.copyDir(Base.getJavaHome(),new File(destFolder,"java"));
+      Util.copyDir(Platform.getJavaHome(),new File(destFolder,"java"));
     }
   }
   if (!jarFolder.exists())   jarFolder.mkdirs();
@@ -165,7 +165,7 @@
     }
     pw.flush();
     pw.close();
-    if (Base.isMacOS() && new File("/usr/bin/codesign_allocate").exists()) {
+    if (Platform.isMacOS() && new File("/usr/bin/codesign_allocate").exists()) {
       if (embedJava) {
         ProcessHelper.ffs("codesign","--force","--sign","-",jdkPath);
       }
@@ -228,7 +228,7 @@
     pw.flush();
     pw.close();
     String shellPath=shellScript.getAbsolutePath();
-    if (!Base.isWindows()) {
+    if (!Platform.isWindows()) {
       Runtime.getRuntime().exec(new String[]{"chmod","+x",shellPath});
     }
   }
