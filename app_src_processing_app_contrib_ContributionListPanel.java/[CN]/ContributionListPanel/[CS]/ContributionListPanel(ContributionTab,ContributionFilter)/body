@@ -4,19 +4,14 @@
   this.filter=filter;
   setLayout(new GridBagLayout());
   setOpaque(true);
-  if (Base.isLinux()) {
-    setBackground(Color.white);
-  }
- else {
-    setBackground(UIManager.getColor("List.background"));
-  }
+  setBackground(Color.WHITE);
   panelByContribution=new TreeMap<Contribution,ContributionPanel>(contribListing.getComparator());
   dtm=new MyTableModel();
   table=new JTable(dtm){
     @Override public Component prepareRenderer(    TableCellRenderer renderer,    int row,    int column){
       Component c=super.prepareRenderer(renderer,row,column);
       if (isRowSelected(row)) {
-        c.setBackground(Color.blue);
+        c.setBackground(new Color(0xe0fffd));
       }
  else {
         c.setBackground(Color.white);
@@ -25,14 +20,17 @@
     }
   }
 ;
+  myFont=Toolkit.getSansFont(14,Font.PLAIN);
+  GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(myFont);
   String[] colName={" Status","Name","Author"};
   dtm.setColumnIdentifiers(colName);
   JScrollPane scrollPane=new JScrollPane(table);
   table.setFillsViewportHeight(true);
   table.setDefaultRenderer(Contribution.class,new StatusRendere());
-  table.setRowHeight(30);
+  table.setFont(Toolkit.getSansFont(14,Font.PLAIN));
+  table.setRowHeight(28);
   table.setRowMargin(6);
-  table.getColumnModel().setColumnMargin(-1);
+  table.getColumnModel().setColumnMargin(0);
   table.getColumnModel().getColumn(0).setMaxWidth(60);
   table.getColumnModel().getColumn(2).setMinWidth(ContributionManagerDialog.AUTHOR_WIDTH);
   table.getColumnModel().getColumn(2).setMaxWidth(ContributionManagerDialog.AUTHOR_WIDTH);

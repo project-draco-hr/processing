@@ -1,16 +1,27 @@
 {
   super("");
+  filterLabel=new JLabel("Filter");
+  filterLabel.setFont(Toolkit.getSansFont(14,Font.PLAIN));
+  filterLabel.setOpaque(false);
+  setFont(Toolkit.getSansFont(14,Font.PLAIN));
   searchIcon=Toolkit.getLibIcon("manager/search.png");
   setOpaque(false);
+  setBorder(BorderFactory.createMatteBorder(0,33,0,0,searchIcon));
+  GroupLayout fl=new GroupLayout(this);
+  setLayout(fl);
+  fl.setHorizontalGroup(fl.createSequentialGroup().addComponent(filterLabel));
+  fl.setVerticalGroup(fl.createSequentialGroup().addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addComponent(filterLabel).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE));
   filters=new ArrayList<String>();
   addFocusListener(new FocusListener(){
     public void focusLost(    FocusEvent focusEvent){
       if (getText().isEmpty()) {
         setBorder(BorderFactory.createMatteBorder(0,33,0,0,searchIcon));
+        filterLabel.setVisible(true);
       }
     }
     public void focusGained(    FocusEvent focusEvent){
       setBorder(BorderFactory.createEmptyBorder(0,3,0,0));
+      filterLabel.setVisible(false);
     }
   }
 );
