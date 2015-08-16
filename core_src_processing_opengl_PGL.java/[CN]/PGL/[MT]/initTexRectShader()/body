@@ -1,8 +1,10 @@
 {
   PGL ppgl=primaryPGL ? this : pg.getPrimaryPGL();
   if (!ppgl.loadedTexRectShader || ppgl.texRectShaderContext != ppgl.glContext) {
-    String vertSource=PApplet.join(texVertShaderSource,"\n");
-    String fragSource=PApplet.join(texRectFragShaderSource,"\n");
+    String[] preprocVertSrc=preprocessVertexSource(texVertShaderSource,getGLSLVersion());
+    String vertSource=PApplet.join(preprocVertSrc,"\n");
+    String[] preprocFragSrc=preprocessFragmentSource(texRectFragShaderSource,getGLSLVersion());
+    String fragSource=PApplet.join(preprocFragSrc,"\n");
     ppgl.texRectVertShader=createShader(VERTEX_SHADER,vertSource);
     ppgl.texRectFragShader=createShader(FRAGMENT_SHADER,fragSource);
     if (0 < ppgl.texRectVertShader && 0 < ppgl.texRectFragShader) {
