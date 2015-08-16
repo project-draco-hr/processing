@@ -10,7 +10,7 @@
   label.setText(panel.description.toString());
   updateButton.setEnabled(contributionListing.hasDownloadedLatestList() && (contributionListing.hasUpdates(panel.getContrib()) && !panel.getContrib().isUpdateFlagged()));
   String latestVersion=contributionListing.getLatestVersion(panel.getContrib());
-  String currentVersion=panel.getContrib().getPrettyVersionShort();
+  String currentVersion=panel.getContrib().getPrettyVersion();
   if (latestVersion != null) {
     latestVersion="Update to " + latestVersion;
   }
@@ -18,7 +18,7 @@
     latestVersion="Update";
   }
   if (currentVersion != null) {
-    currentVersion="v" + currentVersion;
+    currentVersion="Version " + currentVersion;
   }
  else {
     currentVersion="";
@@ -38,10 +38,7 @@
   }
   removeButton.setEnabled(panel.getContrib().isInstalled());
   progressBarPanel.add(panel.installProgressBar);
-  updateLabel.setVisible(true);
-  progressBarPanel.setVisible(false);
-  if (panel.isUpdateInProgress || panel.isInstallInProgress || panel.isRemoveInProgress) {
-    System.out.println("wrong");
+  if (panel.installProgressBar.isEnabled()) {
     progressBarPanel.setVisible(true);
     updateLabel.setVisible(false);
     progressBarPanel.repaint();
