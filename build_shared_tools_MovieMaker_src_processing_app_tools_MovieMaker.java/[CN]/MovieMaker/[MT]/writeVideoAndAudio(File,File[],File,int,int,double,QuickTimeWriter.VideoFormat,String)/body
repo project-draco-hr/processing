@@ -59,22 +59,21 @@
           }
         }
       }
-      while (imgIndex < imgFiles.length && qtOut.getTrackDuration(1) < movieTime) {
+      for (; imgIndex < imgFiles.length && qtOut.getTrackDuration(1) < movieTime; ++imgIndex) {
         p.setProgress(imgIndex);
-        p.setNote(Language.interpolate("movie_maker.progress.processing",imgFiles[imgIndex].getName()));
+        File f=imgFiles[imgIndex];
+        if (f == null)         continue;
+        p.setNote(Language.interpolate("movie_maker.progress.processing",f.getName()));
         if (false) {
-          qtOut.writeSample(1,imgFiles[imgIndex],vsDuration);
+          qtOut.writeSample(1,f,vsDuration);
         }
  else {
-          BufferedImage fImg=readImage(imgFiles[imgIndex]);
-          if (fImg == null) {
-            continue;
-          }
+          BufferedImage fImg=readImage(f);
+          if (fImg == null)           continue;
           g.drawImage(fImg,0,0,width,height,null);
           fImg.flush();
           qtOut.writeFrame(1,imgBuffer,vsDuration);
         }
-        ++imgIndex;
       }
     }
     if (streaming.equals("fastStart")) {
