@@ -17,7 +17,11 @@
   }
   description.append("</b> ");
   String version=contrib.getPrettyVersion();
-  description.append(contrib.getPrettyVersionShort());
+  if (version != null && !version.isEmpty()) {
+    if (version.toLowerCase().startsWith("build"))     description.append(version.substring(5,version.indexOf(',')).trim());
+ else     if (version.toLowerCase().startsWith("v"))     description.append(version);
+ else     description.append(version);
+  }
   description.append(" <br/>");
   String authorList=contrib.getAuthorList();
   if (authorList != null && !authorList.isEmpty()) {

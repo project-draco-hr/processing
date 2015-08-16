@@ -1,0 +1,41 @@
+{
+  int count=0;
+synchronized (panelByContribution) {
+    for (    Entry<Contribution,ContributionPanel> entry : panelByContribution.entrySet()) {
+      ContributionPanel panel=entry.getValue();
+      if (panel.isVisible() && panel.isSelected()) {
+        panel.setBackground(UIManager.getColor("List.selectionBackground"));
+        panel.setForeground(UIManager.getColor("List.selectionForeground"));
+        panel.setBorder(UIManager.getBorder("List.focusCellHighlightBorder"));
+        count++;
+      }
+ else {
+        Border border=null;
+        if (panel.isVisible()) {
+          if (Platform.isMacOS()) {
+            if (count % 2 == 1) {
+              border=UIManager.getBorder("List.oddRowBackgroundPainter");
+            }
+ else {
+              border=UIManager.getBorder("List.evenRowBackgroundPainter");
+            }
+          }
+ else {
+            if (count % 2 == 1) {
+              panel.setBackground(new Color(219,224,229));
+            }
+ else {
+              panel.setBackground(new Color(241,241,241));
+            }
+          }
+          count++;
+        }
+        if (border == null) {
+          border=BorderFactory.createEmptyBorder(1,1,1,1);
+        }
+        panel.setBorder(border);
+        panel.setForeground(UIManager.getColor("List.foreground"));
+      }
+    }
+  }
+}
