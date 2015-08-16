@@ -24,6 +24,7 @@
     int prevImgDuration=0;
     for (int i=0; i < imgFiles.length && !p.isCanceled(); i++) {
       File f=imgFiles[i];
+      if (f == null)       continue;
       p.setNote(Language.interpolate("movie_maker.progress.processing",f.getName()));
       p.setProgress(i);
       if (false) {
@@ -31,6 +32,7 @@
       }
  else {
         BufferedImage fImg=readImage(f);
+        if (fImg == null)         continue;
         g.drawImage(fImg,0,0,width,height,null);
         if (i != 0 && Arrays.equals(data,prevData)) {
           prevImgDuration+=duration;
