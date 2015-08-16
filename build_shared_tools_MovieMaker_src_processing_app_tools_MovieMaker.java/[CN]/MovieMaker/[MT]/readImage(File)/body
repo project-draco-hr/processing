@@ -8,7 +8,7 @@
       image=ImageIO.read(file);
     }
  catch (    IOException e) {
-      System.err.println(Language.interpolate("movie_maker.error.cant_read",file.getAbsolutePath()));
+      System.err.println(Language.interpolate("movie_maker.error.cannot_read",file.getAbsolutePath()));
       return null;
     }
     current.setContextClassLoader(origLoader);
@@ -20,29 +20,30 @@
           return loadImageTGA(file);
         }
  catch (        IOException e) {
-          System.err.println(Language.interpolate("movie_maker.error.cant_read",file.getAbsolutePath()));
+          cannotRead(file);
           return null;
         }
       }
  else       if (pathLower.endsWith(".tif") || pathLower.endsWith(".tiff")) {
-        System.err.println(Language.interpolate("movie_maker.error.cant_read",file.getAbsolutePath()) + " " + Language.text("movie_maker.error.avoid_tiff"));
+        cannotRead(file);
+        System.err.println(Language.text("movie_maker.error.avoid_tiff"));
         return null;
       }
  else {
-        System.err.println(Language.interpolate("movie_maker.error.cant_read",file.getAbsolutePath()));
+        cannotRead(file);
         return null;
       }
     }
  else {
       if (image.getWidth() <= 0 || image.getHeight() <= 0) {
-        System.err.println(Language.interpolate("movie_maker.error.cant_read_maybe_bad",file.getAbsolutePath()));
+        System.err.println(Language.interpolate("movie_maker.error.cannot_read_maybe_bad",file.getAbsolutePath()));
         return null;
       }
     }
     return image;
   }
  catch (  RuntimeException e) {
-    System.err.println(Language.interpolate("movie_maker.error.cant_read",file.getAbsolutePath()));
+    cannotRead(file);
     return null;
   }
 }
