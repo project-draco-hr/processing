@@ -17,4 +17,10 @@
   }
   KeyEvent ke=new KeyEvent(nativeEvent,nativeEvent.getWhen(),peAction,peModifiers,keyChar,keyCode);
   sketch.postEvent(ke);
+  if (!isPCodedKey(code) && !isHackyKey(code)) {
+    if (peAction == KeyEvent.PRESS) {
+      KeyEvent tke=new KeyEvent(nativeEvent,nativeEvent.getWhen(),KeyEvent.TYPE,peModifiers,keyChar,0);
+      sketch.postEvent(tke);
+    }
+  }
 }
