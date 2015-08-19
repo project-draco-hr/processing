@@ -1,11 +1,18 @@
 {
-  if (version >= 130) {
+  String[] vertSrc;
+  if (version < 130) {
+    String[] search={};
+    String[] replace={};
+    int offset=1;
+    vertSrc=preprocessShaderSource(vertSrc0,search,replace,offset);
+    vertSrc[0]="#version " + version;
+  }
+ else {
     String[] search=new String[]{"varying","attribute","texture","texMap2D","texMap3D","texMap2DRect","texMapCube"};
     String[] replace=new String[]{"out","in","texMap","texture","texture","texture","texture"};
-    String[] vertSrc=preprocessShaderSource(vertSrc0,search,replace,1);
+    int offset=1;
+    vertSrc=preprocessShaderSource(vertSrc0,search,replace,offset);
     vertSrc[0]="#version " + version;
-    PApplet.printArray(vertSrc);
-    return vertSrc;
   }
-  return vertSrc0;
+  return vertSrc;
 }

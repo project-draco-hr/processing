@@ -8,6 +8,7 @@
     iconLabel.setIcon(null);
   }
   label.setText(panel.description.toString());
+  ((HTMLDocument)label.getDocument()).getStyleSheet().addRule(bodyRule);
   updateButton.setEnabled(contributionListing.hasDownloadedLatestList() && (contributionListing.hasUpdates(panel.getContrib()) && !panel.getContrib().isUpdateFlagged()));
   String latestVersion=contributionListing.getLatestVersion(panel.getContrib());
   String currentVersion=panel.getContrib().getPrettyVersion();
@@ -29,7 +30,7 @@
  else {
     updateButton.setText("Update");
   }
-  installButton.setEnabled(!panel.getContrib().isInstalled() && contributionListing.hasDownloadedLatestList());
+  installButton.setEnabled(!panel.getContrib().isInstalled() && contributionListing.hasDownloadedLatestList() && panel.getContrib().isCompatible(Base.getRevision()));
   if (installButton.isEnabled()) {
     updateLabel.setText(currentVersion + " available");
   }

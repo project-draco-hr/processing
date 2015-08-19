@@ -1,9 +1,12 @@
 {
-  surface.stage=stage;
   Canvas canvas=surface.canvas;
   StackPane stackPane=new StackPane();
   stackPane.getChildren().add(canvas);
   canvas.widthProperty().bind(stackPane.widthProperty());
   canvas.heightProperty().bind(stackPane.heightProperty());
-  stage.setScene(new Scene(stackPane));
+  PApplet sketch=surface.sketch;
+  int width=sketch.sketchWidth();
+  int height=sketch.sketchHeight();
+  stage.setScene(new Scene(stackPane,width,height));
+  surface.stage=stage;
 }
