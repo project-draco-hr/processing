@@ -60,15 +60,12 @@ return new RuntimeException(Language.text("movie_maker.error.no_images_found"));
 Arrays.sort(imgFiles);
 }
 if (originalSize) {
-BufferedImage temp=readImage(imgFiles[0]);
-if (temp == null) {
-return new RuntimeException(Language.interpolate("movie_maker.error.cant_read",imgFiles[0].getAbsolutePath()));
+Dimension d=findSize(imgFiles);
+if (d == null) {
+throw new RuntimeException(Language.text("movie_maker.error.no_images_found"));
 }
-width=temp.getWidth();
-height=temp.getHeight();
-if (width <= 0 || height <= 0) {
-return new RuntimeException(Language.interpolate("movie_maker.error.cant_read_maybe_bad",imgFiles[0].getName()));
-}
+width=d.width;
+height=d.height;
 }
 if (movieFile.exists()) {
 movieFile.delete();
@@ -87,6 +84,18 @@ return null;
  catch (Throwable t) {
 return t;
 }
+}
+Dimension findSize(File[] imgFiles){
+for (int i=0; i < imgFiles.length; i++) {
+BufferedImage temp=readImage(imgFiles[i]);
+if (temp != null) {
+return new Dimension(temp.getWidth(),temp.getHeight());
+}
+ else {
+imgFiles[i]=null;
+}
+}
+return null;
 }
 @Override protected void done(){
 Object o;

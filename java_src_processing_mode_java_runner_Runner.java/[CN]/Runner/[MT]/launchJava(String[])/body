@@ -1,6 +1,7 @@
 {
   new Thread(new Runnable(){
     public void run(){
+      vmReturnedError=false;
       process=PApplet.exec(args);
       try {
         int result=process.waitFor();
@@ -27,6 +28,7 @@
             sketchErr.println("For more information, read revisions.txt and Help \u2192 Troubleshooting.");
           }
           listener.statusError("Could not run the sketch.");
+          vmReturnedError=true;
         }
       }
  catch (      InterruptedException e) {

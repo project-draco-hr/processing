@@ -53,29 +53,13 @@
     if (table.isRowSelected(row)) {
       label.setBackground(new Color(0xe0fffd));
     }
-    label.setFont(myFont);
+    label.setFont(ContributionManagerDialog.myFont);
     label.setOpaque(true);
   }
  else {
     label=new JLabel(contribution.isSpecial() ? Toolkit.getLibIcon("icons/pde-16.png") : null);
-    StringBuilder name=new StringBuilder("");
     String authorList=contribution.getAuthorList();
-    if (authorList != null) {
-      for (int i=0; i < authorList.length(); i++) {
-        if (authorList.charAt(i) == '[' || authorList.charAt(i) == ']') {
-          continue;
-        }
-        if (authorList.charAt(i) == '(') {
-          i++;
-          while (authorList.charAt(i) != ')') {
-            i++;
-          }
-        }
- else {
-          name.append(authorList.charAt(i));
-        }
-      }
-    }
+    String name=getAuthorNameWithoutMarkup(authorList);
     label.setText(name.toString());
     label.setHorizontalAlignment(SwingConstants.LEFT);
     if (!contribution.isCompatible(Base.getRevision())) {

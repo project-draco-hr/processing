@@ -1,15 +1,18 @@
 {
   factory=new ClassPathFactory();
-  StringBuilder tehPath=new StringBuilder(System.getProperty("java.class.path"));
-  tehPath.append(File.pathSeparatorChar + System.getProperty("java.home") + File.separator+ "lib"+ File.separator+ "rt.jar"+ File.pathSeparatorChar);
+  StringBuilder path=new StringBuilder();
+  String modeClassPath=((JavaMode)editor.getMode()).getSearchPath();
+  if (modeClassPath != null) {
+    path.append(modeClassPath);
+  }
   if (errorCheckerService.classpathJars != null) {
 synchronized (errorCheckerService.classpathJars) {
       for (      URL jarPath : errorCheckerService.classpathJars) {
-        tehPath.append(jarPath.getPath() + File.pathSeparatorChar);
+        path.append(jarPath.getPath() + File.pathSeparatorChar);
       }
     }
   }
-  classPath=factory.createFromPath(tehPath.toString());
+  classPath=factory.createFromPath(path.toString());
   log("Classpath created " + (classPath != null));
   log("Sketch classpath jars loaded.");
   if (Platform.isMacOS()) {

@@ -1,18 +1,49 @@
 {
-  Thread current=Thread.currentThread();
-  ClassLoader origLoader=Thread.currentThread().getContextClassLoader();
-  current.setContextClassLoader(getClass().getClassLoader());
-  BufferedImage image=ImageIO.read(file);
-  current.setContextClassLoader(origLoader);
-  if (image == null) {
-    String path=file.getAbsolutePath();
-    String pathLower=path.toLowerCase();
-    if (pathLower.endsWith(".tga")) {
-      return loadImageTGA(file);
+  try {
+    Thread current=Thread.currentThread();
+    ClassLoader origLoader=Thread.currentThread().getContextClassLoader();
+    current.setContextClassLoader(getClass().getClassLoader());
+    BufferedImage image;
+    try {
+      image=ImageIO.read(file);
     }
- else     if (pathLower.endsWith(".tif") || pathLower.endsWith(".tiff")) {
-      throw new IOException(Language.text("movie_maker.error.avoid_tiff"));
+ catch (    IOException e) {
+      System.err.println(Language.interpolate("movie_maker.error.cannot_read",file.getAbsolutePath()));
+      return null;
     }
+    current.setContextClassLoader(origLoader);
+    if (image == null) {
+      String path=file.getAbsolutePath();
+      String pathLower=path.toLowerCase();
+      if (pathLower.endsWith(".tga")) {
+        try {
+          return loadImageTGA(file);
+        }
+ catch (        IOException e) {
+          cannotRead(file);
+          return null;
+        }
+      }
+ else       if (pathLower.endsWith(".tif") || pathLower.endsWith(".tiff")) {
+        cannotRead(file);
+        System.err.println(Language.text("movie_maker.error.avoid_tiff"));
+        return null;
+      }
+ else {
+        cannotRead(file);
+        return null;
+      }
+    }
+ else {
+      if (image.getWidth() <= 0 || image.getHeight() <= 0) {
+        System.err.println(Language.interpolate("movie_maker.error.cannot_read_maybe_bad",file.getAbsolutePath()));
+        return null;
+      }
+    }
+    return image;
   }
-  return image;
+ catch (  RuntimeException e) {
+    cannotRead(file);
+    return null;
+  }
 }
