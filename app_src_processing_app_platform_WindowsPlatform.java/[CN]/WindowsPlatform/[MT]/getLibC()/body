@@ -1,0 +1,32 @@
+{
+  if (clib == null) {
+    try {
+      clib=(WinLibC)Native.loadLibrary("msvcrt",WinLibC.class);
+    }
+ catch (    UnsatisfiedLinkError ule) {
+      File ctmp=new File("C:\\TEMP");
+      if (ctmp.exists() || ctmp.mkdirs()) {
+        try {
+          File jnaTmp=File.createTempFile("processing","jna",ctmp);
+          if (jnaTmp.mkdirs()) {
+            jnaTmp.deleteOnExit();
+            System.setProperty("jna.tmpdir",jnaTmp.getAbsolutePath());
+            try {
+              clib=(WinLibC)Native.loadLibrary("msvcrt",WinLibC.class);
+            }
+ catch (            UnsatisfiedLinkError ulf) {
+              Messages.showTrace("No luck with JNA","After several attempts, JNA could not be loaded. Please report:\n" + "http://github.com/processing/processing/issues/new",ulf,true);
+            }
+          }
+        }
+ catch (        IOException e) {
+          Messages.showTrace("Could not create temp directory","JNA could not be loaded properly. Please report:\n" + "http://github.com/processing/processing/issues/new",e,true);
+        }
+      }
+ else {
+        Messages.showError("Could not create temp directory","JNA could not be loaded into C:\\TEMP. Please report:\n" + "http://github.com/processing/processing/issues/new",null);
+      }
+    }
+  }
+  return clib;
+}
