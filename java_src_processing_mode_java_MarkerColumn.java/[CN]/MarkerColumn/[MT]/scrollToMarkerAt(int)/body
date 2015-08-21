@@ -1,0 +1,19 @@
+{
+  try {
+    new SwingWorker<Object,Object>(){
+      protected Object doInBackground() throws Exception {
+        for (        LineMarker m : errorPoints) {
+          if (Math.abs(y - m.getY()) < 3) {
+            errorCheckerService.scrollToErrorLine(m.getProblem());
+            return null;
+          }
+        }
+        return null;
+      }
+    }
+.execute();
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+  }
+}

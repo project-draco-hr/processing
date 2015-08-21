@@ -5,5 +5,16 @@
   errorColor=mode.getColor("editor.column.error.color");
   warningColor=mode.getColor("editor.column.warning.color");
   backgroundColor=mode.getColor("editor.gutter.bgcolor");
-  addListeners();
+  addMouseListener(new MouseAdapter(){
+    public void mouseClicked(    MouseEvent e){
+      scrollToMarkerAt(e.getY());
+    }
+  }
+);
+  addMouseMotionListener(new MouseMotionAdapter(){
+    public void mouseMoved(    final MouseEvent e){
+      showMarkerHover(e.getY());
+    }
+  }
+);
 }

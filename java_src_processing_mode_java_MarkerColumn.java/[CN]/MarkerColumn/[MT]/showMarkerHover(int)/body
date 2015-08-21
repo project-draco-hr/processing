@@ -1,0 +1,22 @@
+{
+  try {
+    new SwingWorker<Object,Object>(){
+      protected Object doInBackground() throws Exception {
+        for (        LineMarker m : errorPoints) {
+          if (Math.abs(y - m.getY()) < 3) {
+            Problem p=m.getProblem();
+            String msg=((p.isError() ? Language.text("editor.status.error") : Language.text("editor.status.warning")) + ": " + p.getMessage());
+            setToolTipText(msg);
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            break;
+          }
+        }
+        return null;
+      }
+    }
+.execute();
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+  }
+}
