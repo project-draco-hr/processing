@@ -1,7 +1,8 @@
 {
   if (!hasFocus()) {
-    requestFocusInWindow();
-    return;
+    if (!requestFocusInWindow()) {
+      return;
+    }
   }
   boolean windowsRightClick=Platform.isWindows() && (event.getButton() == MouseEvent.BUTTON3);
   if ((event.isPopupTrigger() || windowsRightClick) && (popup != null)) {
