@@ -3,8 +3,8 @@
     @Override public void mouseClicked(    final MouseEvent e){
       SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
         protected Object doInBackground() throws Exception {
-          for (          ErrorMarker eMarker : errorPoints) {
-            if (e.getY() >= eMarker.getY() - 2 && e.getY() <= eMarker.getY() + 2 + errorMarkerHeight) {
+          for (          LineMarker eMarker : errorPoints) {
+            if (e.getY() >= eMarker.getY() - 2 && e.getY() <= eMarker.getY() + 2) {
               errorCheckerService.scrollToErrorLine(eMarker.getProblem());
               return null;
             }
@@ -26,8 +26,8 @@
     public void mouseMoved(    final MouseEvent evt){
       SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
         protected Object doInBackground() throws Exception {
-          for (          ErrorMarker eMarker : errorPoints) {
-            if (evt.getY() >= eMarker.getY() - 2 && evt.getY() <= eMarker.getY() + 2 + errorMarkerHeight) {
+          for (          LineMarker eMarker : errorPoints) {
+            if (evt.getY() >= eMarker.getY() - 2 && evt.getY() <= eMarker.getY() + 2) {
               Problem p=eMarker.getProblem();
               String msg=((p.isError() ? Language.text("editor.status.error") : Language.text("editor.status.warning")) + ": " + p.getMessage());
               setToolTipText(msg);
