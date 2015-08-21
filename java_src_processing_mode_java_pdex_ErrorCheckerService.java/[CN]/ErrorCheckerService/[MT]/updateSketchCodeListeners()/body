@@ -1,15 +1,8 @@
 {
-  for (  final SketchCode sc : editor.getSketch().getCode()) {
-    boolean flag=false;
-    if (sc.getDocument() == null || ((SyntaxDocument)sc.getDocument()).getDocumentListeners() == null)     continue;
-    for (    DocumentListener dl : ((SyntaxDocument)sc.getDocument()).getDocumentListeners()) {
-      if (dl.equals(sketchChangedListener)) {
-        flag=true;
-        break;
-      }
-    }
-    if (!flag) {
-      sc.getDocument().addDocumentListener(sketchChangedListener);
+  for (  SketchCode sc : editor.getSketch().getCode()) {
+    SyntaxDocument doc=(SyntaxDocument)sc.getDocument();
+    if (!hasSketchChangedListener(doc)) {
+      doc.addDocumentListener(sketchChangedListener);
     }
   }
 }
