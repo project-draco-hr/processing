@@ -1,12 +1,10 @@
 {
   try {
-    new SwingWorker<Object,Object>(){
+    new SwingWorker(){
       protected Object doInBackground() throws Exception {
-        for (        LineMarker m : errorPoints) {
-          if (Math.abs(y - m.getY()) < 3) {
-            editor.getErrorChecker().scrollToErrorLine(m.getProblem());
-            return null;
-          }
+        LineMarker m=findClosestMarker(y);
+        if (m != null) {
+          editor.getErrorChecker().scrollToErrorLine(m.getProblem());
         }
         return null;
       }
