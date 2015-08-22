@@ -1,7 +1,7 @@
 {
   try {
-    XQErrorTable table=editor.getErrorTable();
-    table.clear();
+    ErrorTable table=editor.getErrorTable();
+    table.clearRows();
     Sketch sketch=editor.getSketch();
     for (    Problem p : problemsList) {
       String message=p.getMessage();
@@ -18,7 +18,7 @@
           }
         }
       }
-      table.append(p,message,sketch.getCode(p.getTabIndex()).getPrettyName(),Integer.toString(p.getLineNumber() + 1));
+      table.addRow(p,message,sketch.getCode(p.getTabIndex()).getPrettyName(),Integer.toString(p.getLineNumber() + 1));
     }
   }
  catch (  Exception e) {
