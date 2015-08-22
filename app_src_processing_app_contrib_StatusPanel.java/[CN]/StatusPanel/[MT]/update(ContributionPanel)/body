@@ -16,10 +16,7 @@
  else {
     latestVersion="Update";
   }
-  if (currentVersion != null) {
-    currentVersion="Version " + currentVersion;
-  }
- else {
+  if (currentVersion == null) {
     currentVersion="";
   }
   if (updateButton.isEnabled()) {
@@ -37,7 +34,9 @@
   }
   removeButton.setEnabled(panel.getContrib().isInstalled());
   progressBarPanel.add(panel.installProgressBar);
-  if (panel.installProgressBar.isEnabled()) {
+  progressBarPanel.setVisible(false);
+  updateLabel.setVisible(true);
+  if (panel.isUpdateInProgress || panel.isInstallInProgress || panel.isRemoveInProgress) {
     progressBarPanel.setVisible(true);
     updateLabel.setVisible(false);
     progressBarPanel.repaint();
