@@ -6,11 +6,17 @@
   header.setDefaultRenderer(new GradyHeaderRenderer(mode));
   setDefaultRenderer(Object.class,new GradyRowRenderer(mode));
   setIntercellSpacing(new Dimension(0,0));
+  TableColumn emptyColumn=columnModel.getColumn(0);
+  emptyColumn.setMaxWidth(Editor.LEFT_GUTTER);
+  emptyColumn.setMinWidth(Editor.LEFT_GUTTER);
+  columnModel.getColumn(PROBLEM_COLUMN).setPreferredWidth(400);
+  columnModel.getColumn(TAB_COLUMN).setPreferredWidth(100);
+  columnModel.getColumn(LINE_COLUMN).setPreferredWidth(50);
   addMouseListener(new MouseAdapter(){
     @Override synchronized public void mouseClicked(    MouseEvent e){
       try {
         int row=((ErrorTable)e.getSource()).getSelectedRow();
-        Object data=getModel().getValueAt(row,0);
+        Object data=getModel().getValueAt(row,DATA_COLUMN);
         int clickCount=e.getClickCount();
         if (clickCount == 1) {
           editor.errorTableClick(data);
@@ -26,18 +32,5 @@
   }
 );
   header.setReorderingAllowed(false);
-  header.addMouseListener(new MouseAdapter(){
-    @Override public void mousePressed(    MouseEvent e){
-      columnResizing=true;
-    }
-    @Override public void mouseReleased(    MouseEvent e){
-      columnResizing=false;
-      TableColumnModel columnModel=((JTableHeader)e.getSource()).getColumnModel();
-      for (int i=0; i < columnModel.getColumnCount(); i++) {
-        columnWidths[i]=columnModel.getColumn(i).getWidth();
-      }
-    }
-  }
-);
   ToolTipManager.sharedInstance().registerComponent(this);
 }
