@@ -1,11 +1,10 @@
 {
   try {
-    String[][] errorData=new String[problemsList.size()][3];
-    int index=0;
+    XQErrorTable table=editor.getErrorTable();
+    table.clear();
+    Sketch sketch=editor.getSketch();
     for (    Problem p : problemsList) {
-      errorData[index][0]=p.getMessage();
-      errorData[index][1]=editor.getSketch().getCode(p.getTabIndex()).getPrettyName();
-      errorData[index][2]=Integer.toString(p.getLineNumber() + 1);
+      String message=p.getMessage();
       if (JavaMode.importSuggestEnabled) {
         if (p.getIProblem().getID() == IProblem.UndefinedType) {
           String[] args=p.getIProblem().getArguments();
@@ -14,15 +13,13 @@
             String[] si=astGenerator.getSuggestImports(missingClass);
             if (si != null && si.length > 0) {
               p.setImportSuggestions(si);
-              errorData[index][0]="<html>" + p.getMessage() + " (<font color=#0000ff><u>Import Suggestions available</u></font>)</html>";
+              message+=" (click for suggested libraries)";
             }
           }
         }
       }
-      index++;
+      table.append(p,message,sketch.getCode(p.getTabIndex()).getPrettyName(),Integer.toString(p.getLineNumber() + 1));
     }
-    DefaultTableModel tm=new DefaultTableModel(errorData,XQErrorTable.columnNames);
-    editor.updateTable(tm);
   }
  catch (  Exception e) {
     Messages.loge("Exception at updateErrorTable()",e);
