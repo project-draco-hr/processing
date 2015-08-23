@@ -1,5 +1,5 @@
 {
-  if (!getEditor().hasJavaTabs()) {
+  if (!getJavaEditor().hasJavaTabs()) {
     int off=textArea.xyToOffset(event.getX(),event.getY());
     if (off < 0) {
       setToolTipText(null);
@@ -59,7 +59,8 @@
         setToolTipText(null);
         return super.getToolTipText(event);
       }
-      String tooltipText=getEditor().getErrorChecker().getASTGenerator().getLabelForASTNode(line,word,xLS);
+      ASTGenerator ast=getJavaEditor().getErrorChecker().getASTGenerator();
+      String tooltipText=ast.getLabelForASTNode(line,word,xLS);
       if (tooltipText != null) {
         return tooltipText;
       }

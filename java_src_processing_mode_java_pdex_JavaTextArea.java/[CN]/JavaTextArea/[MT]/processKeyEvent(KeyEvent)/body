@@ -10,13 +10,10 @@
     }
   }
  else   if (evt.getKeyCode() == KeyEvent.VK_ENTER && evt.getID() == KeyEvent.KEY_PRESSED) {
-    if (suggestion != null) {
+    if (suggestion != null && suggestion.isVisible() && suggestion.insertSelection(CompletionPanel.KEYBOARD_COMPLETION)) {
+      evt.consume();
       if (suggestion.isVisible()) {
-        if (suggestion.insertSelection(CompletionPanel.KEYBOARD_COMPLETION)) {
-          evt.consume();
-          if (suggestion.isVisible())           prepareSuggestions(evt);
-          return;
-        }
+        prepareSuggestions(evt);
       }
     }
   }
