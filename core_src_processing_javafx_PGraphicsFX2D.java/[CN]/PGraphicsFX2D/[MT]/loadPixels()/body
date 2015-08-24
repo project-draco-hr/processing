@@ -1,14 +1,14 @@
 {
-  int wide=width * pixelDensity;
-  int high=height * pixelDensity;
-  if ((pixels == null) || (pixels.length != wide * high)) {
-    pixels=new int[wide * high];
+  flush();
+  if ((pixels == null) || (pixels.length != pixelWidth * pixelHeight)) {
+    pixels=new int[pixelWidth * pixelHeight];
   }
+  checkSnapshotImage();
   SnapshotParameters sp=new SnapshotParameters();
   if (pixelDensity == 2) {
     sp.setTransform(Transform.scale(2,2));
   }
-  WritableImage wi=((PSurfaceFX)surface).canvas.snapshot(sp,null);
-  PixelReader pr=wi.getPixelReader();
-  pr.getPixels(0,0,wide,high,argbFormat,pixels,0,wide);
+  snapshotImage=((PSurfaceFX)surface).canvas.snapshot(sp,snapshotImage);
+  PixelReader pr=snapshotImage.getPixelReader();
+  pr.getPixels(0,0,pixelWidth,pixelHeight,argbFormat,pixels,0,pixelWidth);
 }
