@@ -3,15 +3,19 @@
     endContour();
     PGraphics.showWarning("Missing endContour() before endShape()");
   }
-  if (workPath != null) {
+  if (workPath.getNumCommands() > 0) {
     if (shape == POLYGON) {
       if (mode == CLOSE) {
-        workPath.getElements().add(new ClosePath());
+        workPath.closePath();
       }
-      if (auxPath != null) {
-        workPath.getElements().addAll(auxPath.getElements());
+      if (auxPath.getNumCommands() > 0) {
+        workPath.append(auxPath,false);
       }
+      drawShape(workPath);
     }
   }
   shape=0;
+  if (drawingThinLines()) {
+    popMatrix();
+  }
 }
