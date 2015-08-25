@@ -1,5 +1,4 @@
 {
-  curveVertexCount=0;
   if (vertexCount == vertices.length) {
     float temp[][]=new float[vertexCount << 1][VERTEX_FIELD_COUNT];
     System.arraycopy(vertices,0,temp,0,vertexCount);
@@ -44,15 +43,12 @@ quad(vertices[vertexCount - 4][X],vertices[vertexCount - 4][Y],vertices[vertexCo
 }
 break;
 case POLYGON:
-if (workPath == null) {
-context.moveTo(x,y);
-}
- else if (breakShape) {
-context.moveTo(x,y);
+if (workPath.getNumCommands() == 0 || breakShape) {
+workPath.moveTo(x,y);
 breakShape=false;
 }
  else {
-context.lineTo(x,y);
+workPath.lineTo(x,y);
 }
 break;
 }

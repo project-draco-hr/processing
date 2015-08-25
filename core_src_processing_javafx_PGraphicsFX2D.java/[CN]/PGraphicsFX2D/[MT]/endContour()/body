@@ -3,11 +3,8 @@
     PGraphics.showWarning("Need to call beginContour() first");
     return;
   }
-  if (workPath != null) {
-    auxPath.getElements().addAll(workPath.getElements());
-    auxPath.getElements().add(new ClosePath());
-  }
-  Path temp=workPath;
+  if (workPath.getNumCommands() > 0)   workPath.closePath();
+  Path2D temp=workPath;
   workPath=auxPath;
   auxPath=temp;
   openContour=false;
