@@ -3,14 +3,19 @@
   canvas=new ResizableCanvas();
   KeyFrame keyFrame=new KeyFrame(Duration.millis(1000),new EventHandler<ActionEvent>(){
     public void handle(    ActionEvent event){
+      long startNanoTime=System.nanoTime();
       sketch.handleDraw();
+      long drawNanos=System.nanoTime() - startNanoTime;
       if (sketch.exitCalled()) {
         Platform.exit();
+      }
+      if (sketch.frameCount > 5) {
+        animation.setRate(-PApplet.min(1e9f / drawNanos,frameRate));
       }
     }
   }
 );
   animation=new Timeline(keyFrame);
   animation.setCycleCount(Animation.INDEFINITE);
-  animation.setRate(-60);
+  animation.setRate(-frameRate);
 }
