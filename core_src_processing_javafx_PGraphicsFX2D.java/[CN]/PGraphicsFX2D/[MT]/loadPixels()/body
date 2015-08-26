@@ -1,14 +1,20 @@
 {
-  flush();
   if ((pixels == null) || (pixels.length != pixelWidth * pixelHeight)) {
     pixels=new int[pixelWidth * pixelHeight];
+    loaded=false;
   }
-  checkSnapshotImage();
-  SnapshotParameters sp=new SnapshotParameters();
-  if (pixelDensity == 2) {
-    sp.setTransform(Transform.scale(2,2));
+  if (!loaded) {
+    if (snapshotImage == null || snapshotImage.getWidth() != pixelWidth || snapshotImage.getHeight() != pixelHeight) {
+      snapshotImage=new WritableImage(pixelWidth,pixelHeight);
+    }
+    SnapshotParameters sp=new SnapshotParameters();
+    if (pixelDensity != 1) {
+      sp.setTransform(Transform.scale(pixelDensity,pixelDensity));
+    }
+    snapshotImage=((PSurfaceFX)surface).canvas.snapshot(sp,snapshotImage);
+    PixelReader pr=snapshotImage.getPixelReader();
+    pr.getPixels(0,0,pixelWidth,pixelHeight,argbFormat,pixels,0,pixelWidth);
+    loaded=true;
+    modified=false;
   }
-  snapshotImage=((PSurfaceFX)surface).canvas.snapshot(sp,snapshotImage);
-  PixelReader pr=snapshotImage.getPixelReader();
-  pr.getPixels(0,0,pixelWidth,pixelHeight,argbFormat,pixels,0,pixelWidth);
 }
