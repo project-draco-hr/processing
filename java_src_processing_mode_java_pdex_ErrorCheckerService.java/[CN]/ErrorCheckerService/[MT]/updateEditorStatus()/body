@@ -1,8 +1,9 @@
 {
   if (editor.getStatusMode() == EditorStatus.EDIT)   return;
   if (JavaMode.errorCheckEnabled) {
-synchronized (editor.getErrorPoints()) {
-      for (      LineMarker emarker : editor.getErrorPoints()) {
+    List<LineMarker> errorPoints=editor.getErrorPoints();
+synchronized (errorPoints) {
+      for (      LineMarker emarker : errorPoints) {
         if (emarker.getProblem().getLineNumber() == editor.getTextArea().getCaretLine()) {
           if (emarker.getType() == LineMarker.WARNING) {
             editor.statusMessage(emarker.getProblem().getMessage(),JavaEditor.STATUS_INFO);

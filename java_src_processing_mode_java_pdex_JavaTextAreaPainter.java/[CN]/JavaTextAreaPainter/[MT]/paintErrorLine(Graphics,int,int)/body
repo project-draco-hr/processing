@@ -7,14 +7,17 @@
   boolean isWarning=false;
   Problem problem=null;
   errorLineCoords.clear();
-  for (  LineMarker emarker : getJavaEditor().getErrorPoints()) {
-    if (emarker.getProblem().getLineNumber() == line) {
-      notFound=false;
-      if (emarker.getType() == LineMarker.WARNING) {
-        isWarning=true;
+  List<LineMarker> errorPoints=getJavaEditor().getErrorPoints();
+synchronized (errorPoints) {
+    for (    LineMarker emarker : errorPoints) {
+      if (emarker.getProblem().getLineNumber() == line) {
+        notFound=false;
+        if (emarker.getType() == LineMarker.WARNING) {
+          isWarning=true;
+        }
+        problem=emarker.getProblem();
+        break;
       }
-      problem=emarker.getProblem();
-      break;
     }
   }
   if (notFound) {
