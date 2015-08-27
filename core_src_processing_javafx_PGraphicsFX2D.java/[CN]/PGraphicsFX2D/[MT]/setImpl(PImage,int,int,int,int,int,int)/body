@@ -1,12 +1,14 @@
 {
-  loadPixels();
   sourceImage.loadPixels();
-  int sourceOffset=sourceY * sourceImage.pixelWidth + sourceX;
-  int targetOffset=targetY * pixelWidth + targetX;
-  for (int y=sourceY; y < sourceY + sourceHeight; y++) {
-    System.arraycopy(sourceImage.pixels,sourceOffset,pixels,targetOffset,sourceWidth);
-    sourceOffset+=sourceImage.pixelWidth;
-    targetOffset+=pixelWidth;
+  int sourceOffset=sourceX + sourceImage.pixelWidth * sourceY;
+  PixelWriter pw=context.getPixelWriter();
+  pw.setPixels(targetX,targetY,sourceWidth,sourceHeight,argbFormat,sourceImage.pixels,sourceOffset,sourceImage.pixelWidth);
+  if (loaded) {
+    int sourceStride=sourceImage.pixelWidth;
+    int targetStride=pixelWidth;
+    int targetOffset=targetX + targetY * targetStride;
+    for (int i=0; i < sourceHeight; i++) {
+      System.arraycopy(sourceImage.pixels,sourceOffset + i * sourceStride,pixels,targetOffset + i * targetStride,sourceWidth);
+    }
   }
-  copy(sourceImage,sourceX,sourceY,sourceWidth,sourceHeight,targetX,targetY,sourceWidth,sourceHeight);
 }
