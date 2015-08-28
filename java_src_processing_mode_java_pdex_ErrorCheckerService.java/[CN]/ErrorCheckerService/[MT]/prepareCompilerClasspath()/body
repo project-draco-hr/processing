@@ -53,6 +53,15 @@ synchronized (classpathJars) {
         }
       }
     }
+    String modeJars[]=((JavaMode)getEditor().getMode()).getSearchPath().split(File.pathSeparatorChar + "");
+    for (    String mj : modeJars) {
+      try {
+        classpathJars.add(new File(mj).toURI().toURL());
+      }
+ catch (      MalformedURLException e) {
+        e.printStackTrace();
+      }
+    }
   }
   new Thread(new Runnable(){
     public void run(){
