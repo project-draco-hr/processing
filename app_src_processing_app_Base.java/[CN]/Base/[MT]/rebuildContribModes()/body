@@ -2,5 +2,53 @@
   if (modeContribs == null) {
     modeContribs=new ArrayList<ModeContribution>();
   }
-  ModeContribution.loadMissing(this);
+  File modesFolder=getSketchbookModesFolder();
+  List<ModeContribution> contribModes=getModeContribs();
+  Map<File,ModeContribution> known=new HashMap<File,ModeContribution>();
+  for (  ModeContribution contrib : contribModes) {
+    known.put(contrib.getFolder(),contrib);
+  }
+  File[] potential=ContributionType.MODE.listCandidates(modesFolder);
+  if (potential != null) {
+    for (    File folder : potential) {
+      if (!known.containsKey(folder)) {
+        try {
+          contribModes.add(new ModeContribution(this,folder,null));
+        }
+ catch (        NoSuchMethodError nsme) {
+          System.err.println(folder.getName() + " is not compatible with this version of Processing");
+        }
+catch (        NoClassDefFoundError ncdfe) {
+          System.err.println(folder.getName() + " is not compatible with this version of Processing");
+        }
+catch (        InvocationTargetException ite) {
+          System.err.println(folder.getName() + " could not be loaded and may not compatible with this version of Processing");
+        }
+catch (        IgnorableException ig) {
+          Messages.log(ig.getMessage());
+        }
+catch (        Throwable e) {
+          e.printStackTrace();
+        }
+      }
+ else {
+        known.remove(folder);
+      }
+    }
+  }
+  final String useMode=System.getProperty("usemode");
+  if (useMode != null) {
+    final String[] modeInfo=useMode.split(":",2);
+    final String modeClass=modeInfo[0];
+    final String modeResourcePath=modeInfo[1];
+    System.out.println("Attempting to load " + modeClass + " with resources at "+ modeResourcePath);
+    ModeContribution mc=ModeContribution.load(this,new File(modeResourcePath),modeClass);
+    contribModes.add(mc);
+    known.remove(mc);
+  }
+  if (known.size() != 0) {
+    for (    ModeContribution mc : known.values()) {
+      System.out.println("Extraneous Mode entry: " + mc.getName());
+    }
+  }
 }

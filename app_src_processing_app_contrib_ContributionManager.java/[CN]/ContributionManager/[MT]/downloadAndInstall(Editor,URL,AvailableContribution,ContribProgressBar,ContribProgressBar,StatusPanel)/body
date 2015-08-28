@@ -13,13 +13,7 @@
             LocalContribution contribution=ad.install(editor.getBase(),contribZip,false,status);
             if (contribution != null) {
               listing.replaceContribution(ad,contribution);
-              if (contribution.getType() == ContributionType.MODE) {
-                List<ModeContribution> contribModes=editor.getBase().getModeContribs();
-                if (!contribModes.contains(contribution)) {
-                  contribModes.add((ModeContribution)contribution);
-                }
-              }
-              refreshInstalled(editor);
+              editor.getBase().refreshContribs(contribution.getType());
             }
             installProgress.finished();
           }

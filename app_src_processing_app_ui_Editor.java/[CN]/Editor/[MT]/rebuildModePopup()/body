@@ -1,5 +1,5 @@
 {
-  modeMenu=new JMenu();
+  modePopup=new JMenu();
   ButtonGroup modeGroup=new ButtonGroup();
   for (  final Mode m : base.getModeList()) {
     JRadioButtonMenuItem item=new JRadioButtonMenuItem(m.getTitle());
@@ -10,7 +10,7 @@
         }
  else {
           Messages.showWarning("Save","Please save the sketch before changing the mode.");
-          for (          Component c : modeMenu.getPopupMenu().getComponents()) {
+          for (          Component c : getModePopup().getComponents()) {
             if (c instanceof JRadioButtonMenuItem) {
               if (((JRadioButtonMenuItem)c).getText() == mode.getTitle()) {
                 ((JRadioButtonMenuItem)c).setSelected(true);
@@ -22,13 +22,13 @@
       }
     }
 );
-    modeMenu.add(item);
+    modePopup.add(item);
     modeGroup.add(item);
     if (mode == m) {
       item.setSelected(true);
     }
   }
-  modeMenu.addSeparator();
+  modePopup.addSeparator();
   JMenuItem addLib=new JMenuItem(Language.text("toolbar.add_mode"));
   addLib.addActionListener(new ActionListener(){
     public void actionPerformed(    ActionEvent e){
@@ -36,6 +36,6 @@
     }
   }
 );
-  modeMenu.add(addLib);
-  Toolkit.setMenuMnemsInside(modeMenu);
+  modePopup.add(addLib);
+  Toolkit.setMenuMnemsInside(modePopup);
 }
