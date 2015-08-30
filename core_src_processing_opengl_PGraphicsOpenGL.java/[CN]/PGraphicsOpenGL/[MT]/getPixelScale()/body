@@ -1,4 +1,12 @@
 {
-  if (surfaceJOGL == null)   return pixelDensity;
- else   return surfaceJOGL.getPixelScale();
+  PSurface surf=parent.getSurface();
+  if (surf == null) {
+    return pixelDensity;
+  }
+ else   if (surf instanceof PSurfaceJOGL) {
+    return ((PSurfaceJOGL)surf).getPixelScale();
+  }
+ else {
+    throw new RuntimeException("Renderer cannot find a JOGL surface");
+  }
 }
