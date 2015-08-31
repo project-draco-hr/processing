@@ -5,10 +5,10 @@
   int index=start;
   while (index <= stop) {
     if ((buffer[index] == ' ') || (index == stop)) {
-      if (start != stop && wordStart == index) {
-        return false;
+      float wordWidth=0;
+      if (index > wordStart) {
+        wordWidth=textWidthImpl(buffer,wordStart,index);
       }
-      float wordWidth=textWidthImpl(buffer,wordStart,index);
       if (runningX + wordWidth >= boxWidth) {
         if (runningX != 0) {
           index=wordStart;
