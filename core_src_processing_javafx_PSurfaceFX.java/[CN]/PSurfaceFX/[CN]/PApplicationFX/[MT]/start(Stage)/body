@@ -8,6 +8,8 @@
   PApplet sketch=surface.sketch;
   int width=sketch.sketchWidth();
   int height=sketch.sketchHeight();
-  stage.setScene(new Scene(stackPane,width,height));
+  int smooth=sketch.sketchSmooth();
+  SceneAntialiasing sceneAntialiasing=(smooth == 0) ? SceneAntialiasing.DISABLED : SceneAntialiasing.BALANCED;
+  stage.setScene(new Scene(stackPane,width,height,false,sceneAntialiasing));
   surface.stage=stage;
 }
