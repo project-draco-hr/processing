@@ -1,16 +1,6 @@
 {
   System.setProperty("sun.awt.noerasebackground","true");
   System.setProperty("javafx.animation.fullspeed","true");
-  if (platform == MACOSX) {
-    URL coreJarURL=PApplet.class.getProtectionDomain().getCodeSource().getLocation();
-    String coreJarPath=urlDecode(coreJarURL.getPath());
-    if (coreJarPath.endsWith("/Contents/Java/core.jar")) {
-      String javaPath=coreJarPath.substring(0,coreJarPath.length() - 9);
-      String libraryPath=System.getProperty("java.library.path");
-      libraryPath+=File.pathSeparator + javaPath;
-      System.setProperty("java.library.path",libraryPath);
-    }
-  }
   try {
     Toolkit.getDefaultToolkit().setDynamicLayout(true);
   }
