@@ -26,10 +26,12 @@
   window.getCurrentSurfaceScale(currentPixelScale);
   int sx=(int)(nativeEvent.getX() / currentPixelScale[0]);
   int sy=(int)(nativeEvent.getY() / currentPixelScale[1]);
-  int mx=sx - (int)offsetX;
-  int my=sy - (int)offsetY;
-  if (presentMode) {
-    if (peAction == KeyEvent.RELEASE && 20 < sx && sx < 20 + 100 && screenRect.height - 70 < sy && sy < screenRect.height - 20) {
+  int mx=sx;
+  int my=sy;
+  if (pgl.presentMode()) {
+    mx-=(int)pgl.presentX;
+    my-=(int)pgl.presentY;
+    if (peAction == KeyEvent.RELEASE && pgl.insideCloseButton(sx,sy - screenRect.height)) {
       sketch.exit();
     }
     if (mx < 0 || sketchWidth < mx || my < 0 || sketchHeight < my) {
