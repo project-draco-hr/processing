@@ -4,5 +4,10 @@
   textFontInfo=fontCache.get(which.getName(),size);
   context.setFont(textFontInfo.font);
   measuringText.setFont(textFontInfo.font);
-  textLeading=(textFontInfo.ascent + textFontInfo.descent) * 1.275f;
+  if (textFontInfo.isFallbackFont) {
+    textLeading=(textFont.ascent() + textFont.descent()) * 1.275f;
+  }
+ else {
+    textLeading=(textFontInfo.ascent + textFontInfo.descent) * 1.275f;
+  }
 }

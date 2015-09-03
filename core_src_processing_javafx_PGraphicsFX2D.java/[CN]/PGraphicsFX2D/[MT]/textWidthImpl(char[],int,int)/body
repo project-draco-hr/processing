@@ -1,4 +1,10 @@
 {
+  if (textFont == null) {
+    defaultFontOrDeath("textWidth");
+  }
+  if (textFontInfo.isFallbackFont) {
+    return super.textWidthImpl(buffer,start,stop);
+  }
   measuringText.setText(new String(buffer,start,stop - start));
   return (float)measuringText.getLayoutBounds().getWidth();
 }

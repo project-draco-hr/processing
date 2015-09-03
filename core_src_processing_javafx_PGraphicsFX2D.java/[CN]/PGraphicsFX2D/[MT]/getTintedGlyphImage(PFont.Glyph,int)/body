@@ -1,0 +1,22 @@
+{
+  if (textFontInfo.tintCache == null) {
+    textFontInfo.tintCache=new LinkedHashMap<Integer,PImage[]>(16,0.75f,true){
+      @Override protected boolean removeEldestEntry(      Map.Entry<Integer,PImage[]> eldest){
+        return size() > FontInfo.TINT_CACHE_SIZE;
+      }
+    }
+;
+  }
+  PImage[] tintedGlyphs=textFontInfo.tintCache.get(tintColor);
+  if (tintedGlyphs == null) {
+    tintedGlyphs=new PImage[textFont.getGlyphCount()];
+    textFontInfo.tintCache.put(tintColor,tintedGlyphs);
+  }
+  int index=glyph.index;
+  PImage tintedGlyph=tintedGlyphs[index];
+  if (tintedGlyph == null) {
+    tintedGlyph=glyph.image.copy();
+    tintedGlyphs[index]=tintedGlyph;
+  }
+  return tintedGlyph;
+}
