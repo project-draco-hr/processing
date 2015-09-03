@@ -1,0 +1,13 @@
+{
+  PFont font=super.createFont(name,size,smooth,charset);
+  if (font.isStream()) {
+    Font fxFont=Font.loadFont(parent.createInput(name),size);
+    if (fxFont != null) {
+      String fontName=font.getName();
+      fontCache.nameToFilename.put(fontName,name);
+      FontInfo fontInfo=fontCache.createFontInfo(fxFont,false);
+      fontCache.put(fontName,size,fontInfo);
+    }
+  }
+  return font;
+}

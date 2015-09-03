@@ -1,24 +1,5 @@
 {
   retrievingKey.name=name;
   retrievingKey.size=size;
-  FontInfo fontInfo=cache.get(retrievingKey);
-  if (fontInfo == null) {
-    fontInfo=new FontInfo();
-    fontInfo.font=new Font(name,size);
-    fontInfo.isFallbackFont=!name.equalsIgnoreCase(fontInfo.font.getName());
-{
-      measuringText.setFont(fontInfo.font);
-      measuringText.setText(" ");
-      float lineHeight=(float)measuringText.getLayoutBounds().getHeight();
-      fontInfo.ascent=(float)measuringText.getBaselineOffset();
-      fontInfo.descent=lineHeight - fontInfo.ascent;
-    }
-{
-      Key key=new Key();
-      key.name=name;
-      key.size=size;
-      cache.put(key,fontInfo);
-    }
-  }
-  return fontInfo;
+  return cache.get(retrievingKey);
 }
