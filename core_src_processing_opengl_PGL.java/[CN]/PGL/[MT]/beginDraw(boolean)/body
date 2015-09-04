@@ -1,5 +1,5 @@
 {
-  if (needFBOLayer(clear0)) {
+  if (requestedFBOLayer) {
     if (!fboLayerCreated)     createFBOLayer();
     bindFramebufferImpl(FRAMEBUFFER,glColorFbo.get(0));
     framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
@@ -15,7 +15,7 @@
       clearColor(r,g,b,a);
       clear(COLOR_BUFFER_BIT);
     }
- else     if (!clear0) {
+ else     if (!pclear) {
       int x=0;
       int y=0;
       if (presentMode) {

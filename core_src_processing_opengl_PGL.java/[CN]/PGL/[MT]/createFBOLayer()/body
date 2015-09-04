@@ -57,6 +57,16 @@
   float b=((argb) & 0xff) / 255.0f;
   clearColor(r,g,b,a);
   clear(DEPTH_BUFFER_BIT | STENCIL_BUFFER_BIT | COLOR_BUFFER_BIT);
+  if (0 < pg.parent.frameCount) {
+    bindFramebufferImpl(READ_FRAMEBUFFER,BACK);
+    bindFramebufferImpl(DRAW_FRAMEBUFFER,glColorFbo.get(0));
+    framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
+    blitFramebuffer(0,0,fboWidth,fboHeight,0,0,fboWidth,fboHeight,COLOR_BUFFER_BIT,NEAREST);
+    bindFramebufferImpl(READ_FRAMEBUFFER,FRONT);
+    bindFramebufferImpl(DRAW_FRAMEBUFFER,glColorFbo.get(0));
+    framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(frontTex),0);
+    blitFramebuffer(0,0,fboWidth,fboHeight,0,0,fboWidth,fboHeight,COLOR_BUFFER_BIT,NEAREST);
+  }
   bindFramebufferImpl(FRAMEBUFFER,0);
   fboLayerCreated=true;
 }
