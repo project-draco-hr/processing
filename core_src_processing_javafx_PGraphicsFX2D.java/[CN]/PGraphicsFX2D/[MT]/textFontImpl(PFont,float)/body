@@ -1,27 +1,4 @@
 {
-  textFont=which;
-  textSize=size;
-  String fontName=which.getName();
-  textFontInfo=fontCache.get(fontName,size);
-  if (textFontInfo == null) {
-    Font font;
-    String filename=fontCache.nameToFilename.get(fontName);
-    if (filename != null) {
-      font=Font.loadFont(parent.createInput(filename),size);
-    }
- else {
-      font=new Font(fontName,size);
-    }
-    boolean isFallbackFont=filename == null && !fontName.equalsIgnoreCase(font.getName());
-    textFontInfo=fontCache.createFontInfo(font,isFallbackFont);
-    fontCache.put(fontName,size,textFontInfo);
-  }
-  context.setFont(textFontInfo.font);
-  fontCache.measuringText.setFont(textFontInfo.font);
-  if (textFontInfo.isFallbackFont) {
-    textLeading=(textFont.ascent() + textFont.descent()) * 1.275f;
-  }
- else {
-    textLeading=(textFontInfo.ascent + textFontInfo.descent) * 1.275f;
-  }
+  setTextFont(which,size);
+  setTextSize(size);
 }
