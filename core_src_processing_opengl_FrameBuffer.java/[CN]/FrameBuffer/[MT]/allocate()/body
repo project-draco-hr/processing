@@ -1,23 +1,23 @@
 {
   dispose();
   context=pgl.getCurrentContext();
+  glres=new GLResourceFrameBuffer(this);
   if (screenFb) {
     glFbo=0;
   }
  else {
-    glFbo=PGraphicsOpenGL.createFrameBufferObject(context,pgl);
     if (multisample) {
-      createColorBufferMultisample();
+      initColorBufferMultisample();
     }
     if (packedDepthStencil) {
-      createPackedDepthStencilBuffer();
+      initPackedDepthStencilBuffer();
     }
  else {
       if (0 < depthBits) {
-        createDepthBuffer();
+        initDepthBuffer();
       }
       if (0 < stencilBits) {
-        createStencilBuffer();
+        initStencilBuffer();
       }
     }
   }
