@@ -11,9 +11,15 @@
  else {
       font=new Font(fontName,size);
     }
-    boolean isFallbackFont=filename == null && !fontName.equalsIgnoreCase(font.getName());
-    textFontInfo=fontCache.createFontInfo(font,isFallbackFont);
-    fontCache.put(fontName,size,textFontInfo);
+    boolean isNotFound=filename == null && !fontName.equalsIgnoreCase(font.getName());
+    if (isNotFound) {
+      fontCache.namesNotFound.add(fontName);
+      textFontInfo=FontInfo.NOT_FOUND;
+    }
+ else {
+      textFontInfo=fontCache.createFontInfo(font);
+      fontCache.put(fontName,size,textFontInfo);
+    }
   }
   context.setFont(textFontInfo.font);
 }
