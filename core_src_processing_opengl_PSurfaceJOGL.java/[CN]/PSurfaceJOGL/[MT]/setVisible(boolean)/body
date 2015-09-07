@@ -1,3 +1,29 @@
 {
-  window.setVisible(visible);
+  try {
+    window.setVisible(visible);
+  }
+ catch (  Exception ex) {
+    Throwable glex=ex.getCause();
+    if (glex instanceof GLException) {
+      Throwable cause=glex.getCause();
+      if (cause instanceof UnsatisfiedLinkError) {
+        throw new UnsatisfiedLinkError(cause.getMessage());
+      }
+ else {
+        try {
+          throw cause;
+        }
+ catch (        Throwable e) {
+          e.printStackTrace();
+        }
+      }
+      if (cause instanceof RuntimeException) {
+        throw (RuntimeException)cause;
+      }
+ else {
+        throw new RuntimeException(cause);
+      }
+    }
+    throw ex;
+  }
 }
