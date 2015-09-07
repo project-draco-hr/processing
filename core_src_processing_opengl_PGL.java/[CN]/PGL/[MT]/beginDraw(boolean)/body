@@ -1,5 +1,9 @@
 {
   if (requestedFBOLayer) {
+    if (requestedFBOLayerReset) {
+      destroyFBOLayer();
+      requestedFBOLayerReset=false;
+    }
     if (!fboLayerCreated)     createFBOLayer();
     bindFramebufferImpl(FRAMEBUFFER,glColorFbo.get(0));
     framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
@@ -30,7 +34,5 @@
  else {
     fboLayerInUse=false;
   }
-  if (firstFrame) {
-    firstFrame=false;
-  }
+  firstFrame=false;
 }
