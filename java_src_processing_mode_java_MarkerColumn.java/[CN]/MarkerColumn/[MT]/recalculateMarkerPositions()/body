@@ -1,0 +1,20 @@
+{
+  List<LineMarker> errorPoints=getErrorPoints();
+  if (errorPoints != null && errorPoints.size() > 0) {
+    Sketch sketch=editor.getSketch();
+    SketchCode code=sketch.getCurrentCode();
+    int totalLines;
+    try {
+      totalLines=Util.countLines(code.getDocumentText());
+    }
+ catch (    BadLocationException e) {
+      e.printStackTrace();
+      totalLines=1;
+    }
+    for (    LineMarker m : errorPoints) {
+      float y=(m.getLineNumber() + 1) / ((float)totalLines);
+      y*=getHeight() - 15;
+      m.setY((int)y);
+    }
+  }
+}
