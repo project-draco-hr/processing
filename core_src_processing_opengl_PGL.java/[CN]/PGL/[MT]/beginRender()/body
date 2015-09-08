@@ -1,19 +1,26 @@
 {
+  if (sketch == null) {
+    sketch=graphics.parent;
+  }
   pgeomCount=geomCount;
   geomCount=0;
+  pclearColor=clearColor;
+  clearColor=false;
   if (requestedFBOLayer) {
     if (requestedFBOLayerReset) {
       destroyFBOLayer();
       requestedFBOLayerReset=false;
     }
-    if (!fboLayerCreated)     createFBOLayer(pclearColor);
+    if (!fboLayerCreated) {
+      createFBOLayer();
+    }
     bindFramebufferImpl(FRAMEBUFFER,glColorFbo.get(0));
     framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
     if (1 < numSamples) {
       bindFramebufferImpl(FRAMEBUFFER,glMultiFbo.get(0));
     }
     if (firstFrame) {
-      int argb=pg.backgroundColor;
+      int argb=graphics.backgroundColor;
       float a=((argb >> 24) & 0xff) / 255.0f;
       float r=((argb >> 16) & 0xff) / 255.0f;
       float g=((argb >> 8) & 0xff) / 255.0f;
@@ -21,15 +28,15 @@
       clearColor(r,g,b,a);
       clear(COLOR_BUFFER_BIT);
     }
- else     if (!pclearColor) {
+ else     if (!pclearColor || !sketch.isLooping()) {
       int x=0;
       int y=0;
       if (presentMode) {
         x=(int)presentX;
         y=(int)presentY;
       }
-      float scale=pg.getPixelScale();
-      drawTexture(TEXTURE_2D,glColorTex.get(frontTex),fboWidth,fboHeight,x,y,pg.width,pg.height,0,0,(int)(scale * pg.width),(int)(scale * pg.height),0,0,pg.width,pg.height);
+      float scale=graphics.getPixelScale();
+      drawTexture(TEXTURE_2D,glColorTex.get(frontTex),fboWidth,fboHeight,x,y,graphics.width,graphics.height,0,0,(int)(scale * graphics.width),(int)(scale * graphics.height),0,0,graphics.width,graphics.height);
     }
     fboLayerInUse=true;
   }
