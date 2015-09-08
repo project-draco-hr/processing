@@ -11,14 +11,8 @@
   ArrayList<ImportStatement> imports=errorCheckerService.getProgramImports();
   for (  ImportStatement impS : imports) {
     String temp=impS.getPackageName();
-    if (temp.endsWith("*")) {
-      temp=temp.substring(0,temp.length() - 1) + className;
-    }
- else {
-      int x=temp.lastIndexOf('.');
-      if (!temp.substring(x + 1).equals(className)) {
-        continue;
-      }
+    if (impS.isStarredImport() && className.indexOf('.') == -1) {
+      temp=impS.getPackageName() + "." + className;
     }
     tehClass=loadClass(temp);
     if (tehClass != null) {
