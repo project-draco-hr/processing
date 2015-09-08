@@ -59,30 +59,22 @@
   clear(DEPTH_BUFFER_BIT | STENCIL_BUFFER_BIT | COLOR_BUFFER_BIT);
   bindFramebufferImpl(FRAMEBUFFER,0);
   if (0 < pg.parent.frameCount) {
-    if (pg.parent.isLooping()) {
-      bindFramebufferImpl(READ_FRAMEBUFFER,FRONT);
+    if (pclearColor || 0 < pgeomCount || !pg.parent.isLooping()) {
       readBuffer(FRONT);
     }
  else {
-      bindFramebufferImpl(READ_FRAMEBUFFER,BACK);
       readBuffer(BACK);
-    }
-    bindFramebufferImpl(DRAW_FRAMEBUFFER,glColorFbo.get(0));
-    framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
-    drawBuffer(COLOR_ATTACHMENT0);
-    blitFramebuffer(0,0,fboWidth,fboHeight,0,0,fboWidth,fboHeight,COLOR_BUFFER_BIT,NEAREST);
-    if (pg.parent.isLooping()) {
-      bindFramebufferImpl(READ_FRAMEBUFFER,BACK);
-      readBuffer(BACK);
-    }
- else {
-      bindFramebufferImpl(READ_FRAMEBUFFER,FRONT);
-      readBuffer(FRONT);
     }
     bindFramebufferImpl(DRAW_FRAMEBUFFER,glColorFbo.get(0));
     framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(frontTex),0);
     drawBuffer(COLOR_ATTACHMENT0);
     blitFramebuffer(0,0,fboWidth,fboHeight,0,0,fboWidth,fboHeight,COLOR_BUFFER_BIT,NEAREST);
+    readBuffer(BACK);
+    bindFramebufferImpl(DRAW_FRAMEBUFFER,glColorFbo.get(0));
+    framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
+    drawBuffer(COLOR_ATTACHMENT0);
+    blitFramebuffer(0,0,fboWidth,fboHeight,0,0,fboWidth,fboHeight,COLOR_BUFFER_BIT,NEAREST);
+    bindFramebufferImpl(FRAMEBUFFER,0);
   }
   fboLayerCreated=true;
 }
