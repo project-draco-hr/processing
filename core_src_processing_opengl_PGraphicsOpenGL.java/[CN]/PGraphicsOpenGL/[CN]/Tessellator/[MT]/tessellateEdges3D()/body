@@ -6,6 +6,7 @@
   tess.lineIndexCheck(nInInd);
   int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
   firstLineIndexCache=index;
+  int findex=0;
   short[] lastInd={-1,-1};
   short firstInd=-1;
   int pi0=-1;
@@ -16,12 +17,17 @@
     int i1=edge[1];
     if (bevel) {
       if (edge[2] == EDGE_CLOSE) {
-        index=addBevel3D(edge[1],pi0,pi1,index,lastInd,firstInd,false);
+        if (findex == index) {
+          index=addBevel3D(edge[1],pi0,pi1,index,lastInd,firstInd,false);
+        }
         lastInd[0]=lastInd[1]=-1;
       }
  else {
         index=addLineSegment3D(i0,i1,pi0,pi1,index,lastInd,false);
-        if (edge[2] == EDGE_START)         firstInd=(short)(lastInd[0] - 2);
+        if (edge[2] == EDGE_START) {
+          findex=index;
+          firstInd=(short)(lastInd[0] - 2);
+        }
         if (edge[2] == EDGE_STOP || edge[2] == EDGE_SINGLE) {
           lastInd[0]=lastInd[1]=-1;
         }
