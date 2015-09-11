@@ -26,6 +26,9 @@ synchronized (waitObject) {
  else           if (cause instanceof RuntimeException) {
             throw (RuntimeException)cause;
           }
+ else           if (cause instanceof UnsatisfiedLinkError) {
+            throw new UnsatisfiedLinkError(cause.getMessage());
+          }
  else {
             throw new RuntimeException(cause);
           }
