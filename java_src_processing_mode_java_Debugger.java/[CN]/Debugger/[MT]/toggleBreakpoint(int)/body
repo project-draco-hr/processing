@@ -1,9 +1,12 @@
 {
   LineID line=editor.getLineIDInCurrentTab(lineIdx);
+  int index=line.lineIdx();
   if (hasBreakpoint(line)) {
-    removeBreakpoint(line.lineIdx());
+    removeBreakpoint(index);
   }
  else {
-    setBreakpoint(line.lineIdx());
+    if (editor.getLineText(index).trim().length() != 0) {
+      setBreakpoint(index);
+    }
   }
 }
