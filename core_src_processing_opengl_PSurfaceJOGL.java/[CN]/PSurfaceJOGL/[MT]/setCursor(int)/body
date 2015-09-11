@@ -1,3 +1,31 @@
 {
-  PGraphics.showWarning("Cursor types not yet supported in OpenGL, provide your cursor image");
+  CursorInfo cursor=cursors.get(kind);
+  if (cursor == null) {
+    String name=cursorNames.get(kind);
+    if (name != null) {
+      URL url=getClass().getResource("cursors/" + name + ".png");
+      ImageIcon icon=new ImageIcon(url);
+      PImage img=new PImage(icon.getImage());
+      int x=img.width / 2;
+      int y=img.height / 2;
+      if (kind == PConstants.ARROW) {
+        x=10;
+        y=7;
+      }
+ else       if (kind == PConstants.HAND) {
+        x=12;
+        y=8;
+      }
+ else       if (kind == PConstants.TEXT) {
+        x=16;
+        y=22;
+      }
+      cursor=new CursorInfo(img,x,y);
+      cursors.put(kind,cursor);
+    }
+    cursor.set();
+  }
+ else {
+    PGraphics.showWarning("Unknown cursor type: " + kind);
+  }
 }
