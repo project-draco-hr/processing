@@ -8,6 +8,11 @@
   PixelFormat format=PixelFormat.ARGB8888;
   final Dimension size=new Dimension(bimg.getWidth(),bimg.getHeight());
   PixelRectangle pixelrect=new PixelRectangle.GenericPixelRect(format,size,0,false,pixels);
-  PointerIcon pi=disp.createPointerIcon(pixelrect,hotspotX,hotspotY);
-  window.setPointerIcon(pi);
+  final PointerIcon pi=disp.createPointerIcon(pixelrect,hotspotX,hotspotY);
+  display.getEDTUtil().invoke(false,new Runnable(){
+    @Override public void run(){
+      window.setPointerIcon(pi);
+    }
+  }
+);
 }
