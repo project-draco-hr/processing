@@ -2,15 +2,15 @@
   if (display.getEDTUtil().isCurrentThreadEDT()) {
     return;
   }
+  if (sketch.frameCount == 0) {
+    requestFocus();
+  }
   pgl.getGL(drawable);
   int pframeCount=sketch.frameCount;
   sketch.handleDraw();
   if (pframeCount == sketch.frameCount) {
     pgl.beginRender();
     pgl.endRender(sketch.sketchWindowColor());
-  }
-  if (sketch.frameCount == 1) {
-    requestFocus();
   }
   if (sketch.exitCalled()) {
     sketch.dispose();
