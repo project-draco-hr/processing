@@ -1,5 +1,5 @@
 {
-  if (fboLayerInUse) {
+  if (fboLayerEnabled) {
     syncBackTexture();
     bindFramebufferImpl(FRAMEBUFFER,0);
     if (presentMode) {
@@ -38,13 +38,20 @@
       x=(int)presentX;
       y=(int)presentY;
     }
-    float scale=graphics.getPixelScale();
+    float scale=getPixelScale();
     drawTexture(TEXTURE_2D,glColorTex.get(backTex),fboWidth,fboHeight,x,y,graphics.width,graphics.height,0,0,(int)(scale * graphics.width),(int)(scale * graphics.height),0,0,graphics.width,graphics.height);
     int temp=frontTex;
     frontTex=backTex;
     backTex=temp;
+    if (fboLayerDisableReq) {
+      fboLayerEnabled=false;
+      fboLayerDisableReq=false;
+    }
   }
  else   if (!clearColor && 0 < sketch.frameCount || !sketch.isLooping()) {
-    requestFBOLayer();
+    enableFBOLayer();
+  }
+  if (fboLayerEnabledReq && !fboLayerCreated && !DOUBLE_BUFFERED) {
+    createFBOLayer();
   }
 }
