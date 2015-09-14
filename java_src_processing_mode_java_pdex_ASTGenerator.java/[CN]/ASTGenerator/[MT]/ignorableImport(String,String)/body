@@ -4,6 +4,11 @@
       return false;
     }
   }
+  for (  ImportStatement impS : errorCheckerService.codeFolderImports) {
+    if (impName.toLowerCase().startsWith(impS.getPackageName().toLowerCase())) {
+      return false;
+    }
+  }
   if (JavaMode.suggestionsMap == null || JavaMode.suggestionsMap.keySet().size() == 0) {
     log("SuggestionsMap is null or empty, won't be able to trim class names");
     return true;

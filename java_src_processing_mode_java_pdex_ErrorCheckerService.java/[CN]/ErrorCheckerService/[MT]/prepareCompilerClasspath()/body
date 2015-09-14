@@ -23,27 +23,24 @@ synchronized (classpathJars) {
         }
       }
  catch (      Exception e) {
-        if (library == null && !codeFolderChecked) {
-          if (editor.getSketch().hasCodeFolder()) {
-            File codeFolder=editor.getSketch().getCodeFolder();
-            String codeFolderClassPath=Util.contentsToClassPath(codeFolder);
-            codeFolderChecked=true;
-            if (codeFolderClassPath.equalsIgnoreCase("")) {
-              String message=String.format("Cannot find \"%s\" library in code folder. Line %d in tab %s%n",entry,impstat.getLineNumber(),editor.getSketch().getCode(impstat.getTab()).getPrettyName());
-              Messages.log(message);
-            }
- else {
-              String codeFolderPath[]=PApplet.split(codeFolderClassPath.substring(1).trim(),File.pathSeparatorChar);
-              try {
-                for (                String pathItem : codeFolderPath) {
-                  classpathJars.add(new File(pathItem).toURI().toURL());
-                }
-              }
- catch (              Exception e2) {
-                e2.printStackTrace();
-              }
-            }
+        Messages.log("Encountered " + e + " while adding library to classpath");
+      }
+    }
+    if (editor.getSketch().hasCodeFolder()) {
+      File codeFolder=editor.getSketch().getCodeFolder();
+      String codeFolderClassPath=Util.contentsToClassPath(codeFolder);
+      codeFolderChecked=true;
+      if (!codeFolderClassPath.equalsIgnoreCase("")) {
+        Messages.log("Sketch has a code folder. Adding its jars");
+        String codeFolderPath[]=PApplet.split(codeFolderClassPath.substring(1).trim(),File.pathSeparatorChar);
+        try {
+          for (          String pathItem : codeFolderPath) {
+            classpathJars.add(new File(pathItem).toURI().toURL());
+            Messages.log("Addind cf jar: " + pathItem);
           }
+        }
+ catch (        Exception e2) {
+          e2.printStackTrace();
         }
       }
     }
