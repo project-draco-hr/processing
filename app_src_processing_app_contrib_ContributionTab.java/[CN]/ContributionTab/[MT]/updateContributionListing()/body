@@ -2,7 +2,12 @@
   if (editor != null) {
     List<Contribution> contributions=new ArrayList<Contribution>();
     List<Library> libraries=new ArrayList<Library>(editor.getMode().contribLibraries);
-    libraries.addAll(editor.getMode().coreLibraries);
+    final String sketchbookPath=Base.getSketchbookLibrariesFolder().getAbsolutePath();
+    for (    Library lib : editor.getMode().coreLibraries) {
+      if (lib.getLibraryPath().startsWith(sketchbookPath)) {
+        libraries.add(lib);
+      }
+    }
     contributions.addAll(libraries);
     Base base=editor.getBase();
     List<ToolContribution> tools=base.getToolContribs();
