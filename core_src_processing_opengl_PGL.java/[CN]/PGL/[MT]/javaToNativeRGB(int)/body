@@ -1,8 +1,9 @@
 {
   if (BIG_ENDIAN) {
-    return 0xFF | ((color << 8) & 0xFFFFFF00);
+    return 0xFF | (color << 8);
   }
  else {
-    return 0xFF000000 | ((color << 16) & 0xFF0000) | (color & 0xFF00)| ((color >> 16) & 0xFF);
+    int rb=color & 0x00FF00FF;
+    return 0xFF000000 | (rb << 16) | (color & 0x0000FF00)| (rb >> 16);
   }
 }
