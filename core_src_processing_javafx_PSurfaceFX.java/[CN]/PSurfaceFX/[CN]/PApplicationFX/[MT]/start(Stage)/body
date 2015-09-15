@@ -9,7 +9,11 @@
   int width=sketch.sketchWidth();
   int height=sketch.sketchHeight();
   int smooth=sketch.sketchSmooth();
-  SceneAntialiasing sceneAntialiasing=(smooth == 0) ? SceneAntialiasing.DISABLED : SceneAntialiasing.BALANCED;
-  stage.setScene(new Scene(stackPane,width,height,false,sceneAntialiasing));
+  if (smooth == 0) {
+    stage.setScene(new Scene(stackPane,width,height,false,SceneAntialiasing.DISABLED));
+  }
+ else {
+    stage.setScene(new Scene(stackPane,width,height,false));
+  }
   surface.stage=stage;
 }
