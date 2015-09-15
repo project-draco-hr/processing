@@ -1,0 +1,29 @@
+{
+  List<SketchCode> reloadList=new ArrayList<>();
+  for (  SketchCode code : sketch.getCode()) {
+    File sketchFile=code.getFile();
+    if (sketchFile.exists()) {
+      long diff=sketchFile.lastModified() - code.getLastModified();
+      if (diff > MODIFICATION_WINDOW_MILLIS) {
+        if (DEBUG)         System.out.println(sketchFile.getName() + " " + diff+ "ms");
+        reloadList.add(code);
+      }
+    }
+ else {
+      if (DEBUG)       System.out.println(sketchFile.getName() + " (file disappeared)");
+      reloadList.add(code);
+    }
+  }
+  if (reloadList.size() > 0) {
+    if (reloadPrompt()) {
+      reloadSketch();
+    }
+ else {
+      for (      SketchCode code : reloadList) {
+        setCodeModified(code);
+        code.setLastModified();
+      }
+      rebuildHeaderEDT();
+    }
+  }
+}

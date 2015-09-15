@@ -2,7 +2,13 @@
   if (Preferences.getBoolean("editor.watcher")) {
     new Thread(new Runnable(){
       @Override public void run(){
-        checkFileChange();
+        if (sketch != null) {
+          sketch.ensureExistence();
+          boolean alreadyPrompted=checkFileCount();
+          if (!alreadyPrompted) {
+            checkFileTimes();
+          }
+        }
       }
     }
 ).start();
