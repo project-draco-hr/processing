@@ -4,7 +4,7 @@
   setOpaque(true);
   setBackground(Color.WHITE);
   String[] colName={"","Name","Author","Installed","Update To"};
-  dtm=new MyTableModel(){
+  model=new MyTableModel(){
     @Override public Class<?> getColumnClass(    int columnIndex){
       if (columnIndex == 0) {
         return Icon.class;
@@ -13,8 +13,8 @@
     }
   }
 ;
-  dtm.setColumnIdentifiers(colName);
-  table=new JTable(dtm){
+  model.setColumnIdentifiers(colName);
+  table=new JTable(model){
     @Override public Component prepareRenderer(    TableCellRenderer renderer,    int row,    int column){
       Component c=super.prepareRenderer(renderer,row,column);
       String title=(String)getValueAt(row,1);

@@ -6,13 +6,15 @@
     contributionTab.contributionManagerDialog.numberLabel.setText(Integer.toString(panelByContribution.size()));
     contributionTab.contributionManagerDialog.numberLabel.setVisible(true);
   }
-  dtm.getDataVector().removeAllElements();
-  dtm.fireTableDataChanged();
+  model.getDataVector().removeAllElements();
+  model.fireTableDataChanged();
   ContributionType temp=null;
+  Font boldFont=Toolkit.getSansFont(table.getFont().getSize(),Font.BOLD);
+  String fontFace="<font face=\"" + boldFont.getName() + "\">";
   for (  Contribution entry : contributionsSet) {
     if (entry.getType() != temp) {
       temp=entry.getType();
-      dtm.addRow(new Object[]{null,"<html><i>" + temp.getTitle() + "</i></html>",null,null,null});
+      model.addRow(new Object[]{null,"<html><i>" + temp.getTitle() + "</i></html>",null,null,null});
     }
     StringBuilder name=new StringBuilder("");
     String authorList=entry.getAuthorList();
@@ -42,7 +44,7 @@
         icon=Toolkit.getLibIcon("manager/incompatible-" + ContributionManagerDialog.iconVer + "x.png");
       }
     }
-    dtm.addRow(new Object[]{icon,"<html><b>" + entry.getName() + "</b></html>",name,entry.getPrettyVersion(),contributionTab.contribListing.getLatestVersion(entry)});
+    model.addRow(new Object[]{icon,"<html>" + fontFace + entry.getName()+ "</font></html>",name,entry.getPrettyVersion(),contributionTab.contribListing.getLatestVersion(entry)});
   }
   ((UpdateStatusPanel)statusPanel).update();
 }

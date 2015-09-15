@@ -6,8 +6,8 @@
   setOpaque(true);
   setBackground(Color.WHITE);
   panelByContribution=new TreeMap<Contribution,ContributionPanel>(contribListing.getComparator());
-  dtm=new ContribTableModel();
-  table=new JTable(dtm){
+  model=new ContribTableModel();
+  table=new JTable(model){
     @Override public Component prepareRenderer(    TableCellRenderer renderer,    int row,    int column){
       Component c=super.prepareRenderer(renderer,row,column);
       if (isRowSelected(row)) {
@@ -21,7 +21,7 @@
   }
 ;
   String[] colName={" Status","Name","Author"};
-  dtm.setColumnIdentifiers(colName);
+  model.setColumnIdentifiers(colName);
   scrollPane=new JScrollPane(table);
   scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
   table.setFillsViewportHeight(true);

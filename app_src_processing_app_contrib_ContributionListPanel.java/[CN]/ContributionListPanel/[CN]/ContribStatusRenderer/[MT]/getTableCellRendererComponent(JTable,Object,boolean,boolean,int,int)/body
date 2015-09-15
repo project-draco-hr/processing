@@ -24,17 +24,19 @@
     label.setOpaque(true);
   }
  else   if (column == 1) {
-    FontMetrics fontMetrics=table.getFontMetrics(table.getFont());
+    Font boldFont=Toolkit.getSansFont(14,Font.BOLD);
+    String fontFace="<font face=\"" + boldFont.getName() + "\">";
+    FontMetrics fontMetrics=table.getFontMetrics(boldFont);
     int colSize=table.getColumnModel().getColumn(1).getWidth();
     String sentence=contribution.getSentence();
-    int currentWidth=table.getFontMetrics(table.getFont().deriveFont(Font.BOLD)).stringWidth(contribution.getName() + " | ");
+    int currentWidth=table.getFontMetrics(boldFont).stringWidth(contribution.getName() + " | ");
     int ellipsesWidth=fontMetrics.stringWidth("...");
-    String name="<html><body><b>" + contribution.getName();
+    String name="<html><body>" + fontFace + contribution.getName();
     if (sentence == null) {
-      label.setText(name + "</b></body></html>");
+      label.setText(name + "</font></body></html>");
     }
  else {
-      sentence=" | </b>" + sentence;
+      sentence=" | </font>" + sentence;
       currentWidth+=ellipsesWidth;
       int i=0;
       for (i=0; i < sentence.length(); i++) {
