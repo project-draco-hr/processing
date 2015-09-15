@@ -5,7 +5,6 @@
 synchronized (classpathJars) {
     classpathJars=new ArrayList<URL>();
     String entry="";
-    boolean codeFolderChecked=false;
     for (    ImportStatement impstat : programImports) {
       String item=impstat.getImportName();
       int dot=item.lastIndexOf('.');
@@ -29,7 +28,6 @@ synchronized (classpathJars) {
     if (editor.getSketch().hasCodeFolder()) {
       File codeFolder=editor.getSketch().getCodeFolder();
       String codeFolderClassPath=Util.contentsToClassPath(codeFolder);
-      codeFolderChecked=true;
       if (!codeFolderClassPath.equalsIgnoreCase("")) {
         Messages.log("Sketch has a code folder. Adding its jars");
         String codeFolderPath[]=PApplet.split(codeFolderClassPath.substring(1).trim(),File.pathSeparatorChar);
