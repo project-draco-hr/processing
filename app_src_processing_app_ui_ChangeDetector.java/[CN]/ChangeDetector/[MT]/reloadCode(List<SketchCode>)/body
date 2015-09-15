@@ -5,17 +5,21 @@
     rebuildHeaderEDT();
     return true;
   }
-  if (changed != null) {
-    setSketchCodeModified(changed);
-  }
  else {
-    for (    SketchCode sc : sketch.getCode()) {
-      if (!sc.getFile().exists()) {
-        setSketchCodeModified(sc);
+    if (changed != null) {
+      for (      SketchCode code : changed) {
+        setSketchCodeModified(code);
+        code.setLastModified();
       }
     }
+ else {
+      for (      SketchCode code : sketch.getCode()) {
+        if (!code.getFile().exists()) {
+          setSketchCodeModified(code);
+        }
+      }
+    }
+    rebuildHeaderEDT();
+    return false;
   }
-  rebuildHeaderEDT();
-  skip=true;
-  return false;
 }

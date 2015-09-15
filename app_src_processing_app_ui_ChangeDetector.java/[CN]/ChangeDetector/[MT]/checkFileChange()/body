@@ -17,13 +17,12 @@
 );
   int fileCount=sketchFiles.length;
   if (fileCount != sketch.getCodeCount()) {
-    if (reloadSketch(null) && fileCount < 1) {
+    if (reloadCode(null) && fileCount < 1) {
       try {
         sketch.getMainFile().createNewFile();
       }
  catch (      Exception e1) {
         showErrorEDT("Reload failed","The sketch contains no code files.",e1);
-        skip=true;
         return;
       }
       sketch.reload();
@@ -31,17 +30,22 @@
     }
     return;
   }
-  SketchCode[] codes=sketch.getCode();
-  for (  SketchCode sc : codes) {
-    File sketchFile=sc.getFile();
+  List<SketchCode> reloadList=new ArrayList<>();
+  for (  SketchCode code : sketch.getCode()) {
+    File sketchFile=code.getFile();
     if (sketchFile.exists()) {
-      long diff=sketchFile.lastModified() - sc.lastModified();
-      if (diff > MODIFIED_TIME_BUFFER) {
-        reloadSketch(sc);
+      long diff=sketchFile.lastModified() - code.getLastModified();
+      if (diff > MODIFICATION_WINDOW_MILLIS) {
+        if (DEBUG)         System.out.println(sketchFile.getName() + " " + diff+ "ms");
+        reloadList.add(code);
       }
     }
  else {
-      reloadSketch(sc);
+      if (DEBUG)       System.out.println(sketchFile.getName() + " (file disappeared)");
+      reloadList.add(code);
     }
+  }
+  if (reloadList.size() > 0) {
+    reloadCode(reloadList);
   }
 }
