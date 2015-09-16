@@ -35,10 +35,12 @@
   if (errorCheckerService != null) {
     editor=errorCheckerService.getEditor();
     int codeIndex=editor.getSketch().getCodeIndex(editor.getCurrentTab());
-    if (codeIndex > 0)     for (int i=0; i < codeIndex; i++) {
-      SketchCode sc=editor.getSketch().getCode(i);
-      int len=Util.countLines(sc.getProgram()) + 1;
-      lineNumber+=len;
+    if (codeIndex > 0) {
+      for (int i=0; i < codeIndex; i++) {
+        SketchCode sc=editor.getSketch().getCode(i);
+        int len=Util.countLines(sc.getProgram()) + 1;
+        lineNumber+=len;
+      }
     }
   }
   ASTNode nearestNode=null;
@@ -102,18 +104,17 @@
     }
     log("Empty can. " + word2);
     if (classPath != null) {
-      RegExpResourceFilter regExpResourceFilter;
-      regExpResourceFilter=new RegExpResourceFilter(Pattern.compile(".*"),Pattern.compile(word2 + "[a-zA-Z_0-9]*.class",Pattern.CASE_INSENSITIVE));
+      RegExpResourceFilter regExpResourceFilter=new RegExpResourceFilter(Pattern.compile(".*"),Pattern.compile(word2 + "[a-zA-Z_0-9]*.class",Pattern.CASE_INSENSITIVE));
       String[] resources=classPath.findResources("",regExpResourceFilter);
       for (      String matchedClass2 : resources) {
         matchedClass2=matchedClass2.replace('/','.');
         String matchedClass=matchedClass2.substring(0,matchedClass2.length() - 6);
         int d=matchedClass.lastIndexOf('.');
-        if (ignorableImport(matchedClass,matchedClass.substring(d + 1))) {
-          continue;
+        if (!ignorableImport(matchedClass,matchedClass.substring(d + 1))) {
+          matchedClass=matchedClass.substring(d + 1);
+          String html="<html>" + matchedClass + " : <font color=#777777>"+ matchedClass2.substring(0,d)+ "</font></html>";
+          candidates.add(new CompletionCandidate(matchedClass,html,matchedClass,CompletionCandidate.PREDEF_CLASS));
         }
-        matchedClass=matchedClass.substring(d + 1);
-        candidates.add(new CompletionCandidate(matchedClass,"<html>" + matchedClass + " : <font color=#777777>"+ matchedClass2.substring(0,d)+ "</font></html>",matchedClass,CompletionCandidate.PREDEF_CLASS));
       }
     }
   }
