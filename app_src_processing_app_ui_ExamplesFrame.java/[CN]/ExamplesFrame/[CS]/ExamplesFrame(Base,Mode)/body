@@ -10,5 +10,86 @@
     }
   }
 );
-  setTree();
+  JPanel examplesPanel=new JPanel();
+  examplesPanel.setLayout(new BorderLayout());
+  examplesPanel.setBackground(Color.WHITE);
+  final JPanel openExamplesManagerPanel=new JPanel(new FlowLayout(FlowLayout.CENTER));
+  JButton addExamplesButton=new JButton(Language.text("examples.add_examples"));
+  openExamplesManagerPanel.add(addExamplesButton);
+  openExamplesManagerPanel.setOpaque(false);
+  Border lineBorder=BorderFactory.createMatteBorder(0,0,1,0,Color.LIGHT_GRAY);
+  Border paddingBorder=BorderFactory.createEmptyBorder(3,5,1,4);
+  openExamplesManagerPanel.setBorder(BorderFactory.createCompoundBorder(lineBorder,paddingBorder));
+  openExamplesManagerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+  openExamplesManagerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+  addExamplesButton.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      ContributionManager.openExampleManager(base.getActiveEditor());
+    }
+  }
+);
+  final JTree tree=new JTree(buildTree());
+  tree.setOpaque(true);
+  tree.setAlignmentX(Component.LEFT_ALIGNMENT);
+  tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+  tree.setShowsRootHandles(true);
+  tree.expandRow(0);
+  tree.setRootVisible(false);
+  tree.addMouseListener(new MouseAdapter(){
+    public void mouseClicked(    MouseEvent e){
+      if (e.getClickCount() == 2) {
+        DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+        int selRow=tree.getRowForLocation(e.getX(),e.getY());
+        if (node != null && node.isLeaf() && selRow != -1) {
+          SketchReference sketch=(SketchReference)node.getUserObject();
+          base.handleOpen(sketch.getPath());
+        }
+      }
+    }
+  }
+);
+  tree.addKeyListener(new KeyAdapter(){
+    public void keyPressed(    KeyEvent e){
+      if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        setVisible(false);
+      }
+    }
+    public void keyTyped(    KeyEvent e){
+      if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+        DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+        if (node != null && node.isLeaf()) {
+          SketchReference sketch=(SketchReference)node.getUserObject();
+          base.handleOpen(sketch.getPath());
+        }
+      }
+    }
+  }
+);
+  tree.addTreeExpansionListener(new TreeExpansionListener(){
+    @Override public void treeExpanded(    TreeExpansionEvent event){
+      updateExpanded(tree);
+    }
+    @Override public void treeCollapsed(    TreeExpansionEvent event){
+      updateExpanded(tree);
+    }
+  }
+);
+  tree.setBorder(new EmptyBorder(0,5,5,5));
+  if (Platform.isMacOS()) {
+    tree.setToggleClickCount(2);
+  }
+ else {
+    tree.setToggleClickCount(1);
+  }
+  JScrollPane treePane=new JScrollPane(tree);
+  treePane.setPreferredSize(new Dimension(250,300));
+  treePane.setBorder(new EmptyBorder(2,0,0,0));
+  treePane.setOpaque(true);
+  treePane.setBackground(Color.WHITE);
+  treePane.setAlignmentX(Component.LEFT_ALIGNMENT);
+  examplesPanel.add(openExamplesManagerPanel,BorderLayout.PAGE_START);
+  examplesPanel.add(treePane,BorderLayout.CENTER);
+  getContentPane().add(examplesPanel);
+  pack();
+  restoreExpanded(tree);
 }
