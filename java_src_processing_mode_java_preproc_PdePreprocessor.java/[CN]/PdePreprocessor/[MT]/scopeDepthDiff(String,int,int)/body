@@ -1,0 +1,35 @@
+{
+  boolean insideString=false;
+  boolean insideChar=false;
+  boolean escapedChar=false;
+  int depth=0;
+  for (int i=start; i < stop; i++) {
+    if (!escapedChar) {
+      char ch=code.charAt(i);
+switch (ch) {
+case '\\':
+        escapedChar=true;
+      break;
+case '{':
+    if (!insideChar && !insideString)     depth++;
+  break;
+case '}':
+if (!insideChar && !insideString) depth--;
+break;
+case '\"':
+if (!insideChar) insideString=!insideString;
+break;
+case '\'':
+if (!insideString) insideChar=!insideChar;
+break;
+}
+}
+ else {
+escapedChar=false;
+}
+}
+if (insideChar || insideString || escapedChar) {
+return Integer.MAX_VALUE;
+}
+return depth;
+}

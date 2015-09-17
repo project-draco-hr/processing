@@ -1,7 +1,9 @@
 {
   String uncomment=scrubComments(program);
   PdeRecognizer parser=createParser(program);
-  if (PUBLIC_CLASS.matcher(uncomment).find()) {
+  Mode mode=parseMode(uncomment);
+switch (mode) {
+case JAVA:
     try {
       final PrintStream saved=System.err;
       try {
@@ -17,42 +19,43 @@
       parser=createParser(program);
       parser.pdeProgram();
     }
-  }
- else   if (SETUP_OR_DRAW_FUNCTION_DECL.matcher(uncomment).find()) {
-    setMode(Mode.ACTIVE);
-    parser.activeProgram();
-  }
+  break;
+case ACTIVE:
+setMode(Mode.ACTIVE);
+parser.activeProgram();
+break;
+case STATIC:
+parser.pdeProgram();
+break;
+}
+ASTFactory factory=new ASTFactory();
+AST parserAST=parser.getAST();
+AST rootNode=factory.create(ROOT_ID,"AST ROOT");
+rootNode.setFirstChild(parserAST);
+makeSimpleMethodsPublic(rootNode);
+BaseAST.setVerboseStringConversion(true,parser.getTokenNames());
+final String className;
+if (mode == Mode.JAVA) {
+className=getFirstClassName(parserAST);
+}
  else {
-    parser.pdeProgram();
-  }
-  ASTFactory factory=new ASTFactory();
-  AST parserAST=parser.getAST();
-  AST rootNode=factory.create(ROOT_ID,"AST ROOT");
-  rootNode.setFirstChild(parserAST);
-  makeSimpleMethodsPublic(rootNode);
-  BaseAST.setVerboseStringConversion(true,parser.getTokenNames());
-  final String className;
-  if (mode == Mode.JAVA) {
-    className=getFirstClassName(parserAST);
-  }
- else {
-    className=this.name;
-  }
-  if (className == null)   return null;
-  if (false) {
-    final StringWriter buf=new StringWriter();
-    final PrintWriter bufout=new PrintWriter(buf);
-    writeDeclaration(bufout,className);
-    new PdeEmitter(this,bufout).print(rootNode);
-    writeFooter(bufout,className);
-    debugAST(rootNode,true);
-    System.err.println(buf.toString());
-  }
-  writeDeclaration(stream,className);
-  new PdeEmitter(this,stream).print(rootNode);
-  writeFooter(stream,className);
-  if (Preferences.getBoolean("preproc.output_parse_tree")) {
-    writeParseTree("parseTree.xml",parserAST);
-  }
-  return className;
+className=this.name;
+}
+if (className == null) return null;
+if (false) {
+final StringWriter buf=new StringWriter();
+final PrintWriter bufout=new PrintWriter(buf);
+writeDeclaration(bufout,className);
+new PdeEmitter(this,bufout).print(rootNode);
+writeFooter(bufout,className);
+debugAST(rootNode,true);
+System.err.println(buf.toString());
+}
+writeDeclaration(stream,className);
+new PdeEmitter(this,stream).print(rootNode);
+writeFooter(stream,className);
+if (Preferences.getBoolean("preproc.output_parse_tree")) {
+writeParseTree("parseTree.xml",parserAST);
+}
+return className;
 }

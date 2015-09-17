@@ -1,0 +1,25 @@
+{
+  if (minTargetScopeDepth > maxTargetScopeDepth) {
+    int temp=minTargetScopeDepth;
+    minTargetScopeDepth=maxTargetScopeDepth;
+    maxTargetScopeDepth=temp;
+  }
+  Matcher m=pattern.matcher(code);
+  m.region(start,stop);
+  int depth=0;
+  int position=start;
+  int minScopeDepth=PApplet.min(depth,minTargetScopeDepth);
+  while (m.find()) {
+    int newPosition=m.end();
+    int depthDiff=scopeDepthDiff(code,position,newPosition);
+    if (depthDiff != Integer.MAX_VALUE) {
+      depth+=depthDiff;
+      if (depth < minScopeDepth)       break;
+      if (depth >= minTargetScopeDepth && depth <= maxTargetScopeDepth) {
+        return m.toMatchResult();
+      }
+      position=newPosition;
+    }
+  }
+  return null;
+}
