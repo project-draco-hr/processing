@@ -46,31 +46,29 @@
   sourceAlt=colorMatcher.replaceAll("int");
   checkForChangedImports();
   className=(editor == null) ? "DefaultClass" : editor.getSketch().getName();
-  Matcher matcher=SETUP_OR_DRAW_FUNCTION_DECL.matcher(sourceAlt);
-  staticMode=!matcher.find();
+  String uncommented=PdePreprocessor.scrubComments(sourceAlt);
+  mode=PdePreprocessor.parseMode(uncommented);
   StringBuilder sb=new StringBuilder();
   sb.append(xqpreproc.prepareImports(programImports));
-  sb.append("public class " + className + " extends PApplet {\n");
-  if (staticMode) {
-    sb.append("public void setup() {\n");
+  if (mode != PdePreprocessor.Mode.JAVA) {
+    sb.append("public class " + className + " extends PApplet {\n");
+    if (mode == PdePreprocessor.Mode.STATIC) {
+      sb.append("public void setup() {\n");
+    }
   }
-  sb.append(sourceAlt);
-  if (staticMode) {
-    sb.append("\nnoLoop();\n}");
-  }
-  sb.append("\n}");
-  sourceAlt=sb.toString();
-  int position=sourceAlt.indexOf("{") + 1;
   mainClassOffset=1;
-  for (int i=0; i <= position; i++) {
-    if (sourceAlt.charAt(i) == '\n') {
+  for (int i=0; i < sb.length(); i++) {
+    if (sb.charAt(i) == '\n') {
       mainClassOffset++;
     }
   }
-  if (staticMode) {
-    mainClassOffset++;
+  sb.append(sourceAlt);
+  if (mode != PdePreprocessor.Mode.JAVA) {
+    if (mode == PdePreprocessor.Mode.STATIC) {
+      sb.append("\nnoLoop();\n}");
+    }
+    sb.append("\n}");
   }
-  sourceAlt=substituteUnicode(sourceAlt);
-  sourceCode=sourceAlt;
-  return sourceAlt;
+  sourceCode=substituteUnicode(sb.toString());
+  return sourceCode;
 }
