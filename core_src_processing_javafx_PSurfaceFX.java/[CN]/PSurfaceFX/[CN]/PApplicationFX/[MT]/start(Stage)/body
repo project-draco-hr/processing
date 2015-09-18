@@ -9,11 +9,12 @@
   int width=sketch.sketchWidth();
   int height=sketch.sketchHeight();
   int smooth=sketch.sketchSmooth();
-  if (smooth == 0) {
-    stage.setScene(new Scene(stackPane,width,height,false,SceneAntialiasing.DISABLED));
+  if ((PApplet.platform == PConstants.MACOSX || PApplet.platform == PConstants.LINUX) && PApplet.javaVersionName.equals("1.8.0_60")) {
+    System.err.println("smooth() disabled for JavaFX with this Java version due to Oracle bug");
+    System.err.println("https://github.com/processing/processing/issues/3795");
+    smooth=0;
   }
- else {
-    stage.setScene(new Scene(stackPane,width,height,false));
-  }
+  SceneAntialiasing sceneAntialiasing=(smooth == 0) ? SceneAntialiasing.DISABLED : SceneAntialiasing.BALANCED;
+  stage.setScene(new Scene(stackPane,width,height,false,sceneAntialiasing));
   surface.stage=stage;
 }
