@@ -19,6 +19,17 @@
   screenRect=spanDisplays ? new Rectangle(0,0,screen.getWidth(),screen.getHeight()) : new Rectangle(0,0,displayDevice.getViewportInWindowUnits().getWidth(),displayDevice.getViewportInWindowUnits().getHeight());
   sketch.displayWidth=screenRect.width;
   sketch.displayHeight=screenRect.height;
+  if (sketch.displayWidth < sketch.width || sketch.displayHeight < sketch.height) {
+    int w=sketch.width;
+    int h=sketch.height;
+    if (sketch.displayWidth < w) {
+      w=sketch.displayWidth;
+    }
+    if (sketch.displayHeight < h) {
+      h=sketch.displayHeight;
+    }
+    System.err.println("setting width/height to " + w + " "+ h);
+  }
   sketchWidth=sketch.sketchWidth();
   sketchHeight=sketch.sketchHeight();
   boolean fullScreen=sketch.sketchFullScreen();
