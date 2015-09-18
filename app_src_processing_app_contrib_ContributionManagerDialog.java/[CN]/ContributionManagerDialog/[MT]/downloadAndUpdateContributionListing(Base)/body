@@ -1,6 +1,6 @@
 {
   final ContributionTab activeTab=getActiveTab();
-  activeTab.contribListing.downloadAvailableList(base,new ContribProgressBar(activeTab.progressBar){
+  ContribProgressMonitor progress=new ContribProgressBar(activeTab.progressBar){
     @Override public void startTask(    String name,    int maxValue){
       super.startTask(name,maxValue);
       progressBar.setVisible(true);
@@ -23,5 +23,6 @@
       }
     }
   }
-);
+;
+  activeTab.contribListing.downloadAvailableList(base,progress);
 }
