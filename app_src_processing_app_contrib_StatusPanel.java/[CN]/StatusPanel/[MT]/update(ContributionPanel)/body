@@ -7,7 +7,7 @@
   iconLabel.setIcon(icon);
   label.setText(panel.description.toString());
   ((HTMLDocument)label.getDocument()).getStyleSheet().addRule(bodyRule);
-  updateButton.setEnabled(contributionListing.hasDownloadedLatestList() && (contributionListing.hasUpdates(panel.getContrib()) && !panel.getContrib().isUpdateFlagged()));
+  updateButton.setEnabled(contributionListing.hasDownloadedLatestList() && (contributionListing.hasUpdates(panel.getContrib()) && !panel.getContrib().isUpdateFlagged()) && !panel.isUpdateInProgress);
   String latestVersion=contributionListing.getLatestVersion(panel.getContrib());
   String currentVersion=panel.getContrib().getPrettyVersion();
   if (latestVersion != null) {
@@ -25,14 +25,14 @@
  else {
     updateButton.setText("Update");
   }
-  installButton.setEnabled(!panel.getContrib().isInstalled() && contributionListing.hasDownloadedLatestList() && panel.getContrib().isCompatible(Base.getRevision()));
+  installButton.setEnabled(!panel.getContrib().isInstalled() && contributionListing.hasDownloadedLatestList() && panel.getContrib().isCompatible(Base.getRevision())&& !panel.isInstallInProgress);
   if (installButton.isEnabled()) {
     updateLabel.setText(currentVersion + " available");
   }
  else {
     updateLabel.setText(currentVersion + " installed");
   }
-  removeButton.setEnabled(panel.getContrib().isInstalled());
+  removeButton.setEnabled(panel.getContrib().isInstalled() && !panel.isRemoveInProgress);
   progressBarPanel.add(panel.installProgressBar);
   progressBarPanel.setVisible(false);
   updateLabel.setVisible(true);
