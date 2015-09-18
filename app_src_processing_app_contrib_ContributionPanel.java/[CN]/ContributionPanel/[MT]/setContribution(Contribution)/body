@@ -6,20 +6,20 @@
     iconLabel.setVerticalAlignment(SwingConstants.TOP);
     add(iconLabel,BorderLayout.WEST);
   }
+  Font boldFont=Toolkit.getSansFont(12,Font.BOLD);
+  String fontFace="<font face=\"" + boldFont.getName() + "\">";
   description=new StringBuilder();
-  description.append("<html><body><b>");
+  description.append("<html><body>" + fontFace);
   if (contrib.getUrl() == null) {
     description.append(contrib.getName());
   }
  else {
     description.append("<a href=\"" + contrib.getUrl() + "\">"+ contrib.getName()+ "</a>");
   }
-  description.append("</b> ");
+  description.append("</font> ");
   String version=contrib.getPrettyVersion();
-  if (version != null && !version.isEmpty()) {
-    if (version.toLowerCase().startsWith("build"))     description.append(version.substring(5,version.indexOf(',')).trim());
- else     if (version.toLowerCase().startsWith("v"))     description.append(version);
- else     description.append(version);
+  if (version != null) {
+    description.append(version);
   }
   description.append(" <br/>");
   String authorList=contrib.getAuthorList();
