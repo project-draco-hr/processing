@@ -27,7 +27,11 @@
     }
   }
  else   if (offscreenMultisample) {
-    multisampleFramebuffer.copyColor(offscreenFramebuffer);
+    FrameBuffer ofb=offscreenFramebuffer.get();
+    FrameBuffer mfb=multisampleFramebuffer.get();
+    if (ofb != null && mfb != null) {
+      mfb.copyColor(ofb);
+    }
   }
   if (needEndDraw) {
     endDraw();

@@ -3,8 +3,10 @@
     initOffscreen();
   }
  else {
-    boolean outdated=offscreenFramebuffer != null && offscreenFramebuffer.contextIsOutdated();
-    boolean outdatedMulti=multisampleFramebuffer != null && multisampleFramebuffer.contextIsOutdated();
+    FrameBuffer ofb=offscreenFramebuffer.get();
+    FrameBuffer mfb=multisampleFramebuffer.get();
+    boolean outdated=ofb != null && ofb.contextIsOutdated();
+    boolean outdatedMulti=mfb != null && mfb.contextIsOutdated();
     if (outdated || outdatedMulti) {
       restartPGL();
       initOffscreen();
@@ -15,10 +17,16 @@
   }
   pushFramebuffer();
   if (offscreenMultisample) {
-    setFramebuffer(multisampleFramebuffer);
+    FrameBuffer mfb=multisampleFramebuffer.get();
+    if (mfb != null) {
+      setFramebuffer(mfb);
+    }
   }
  else {
-    setFramebuffer(offscreenFramebuffer);
+    FrameBuffer ofb=offscreenFramebuffer.get();
+    if (ofb != null) {
+      setFramebuffer(ofb);
+    }
   }
   drawPTexture();
   if (clip) {

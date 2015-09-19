@@ -8,11 +8,13 @@
     deleteDefaultShaders();
   }
  else {
-    if (offscreenFramebuffer != null) {
-      offscreenFramebuffer.dispose();
+    FrameBuffer ofb=offscreenFramebuffer.get();
+    FrameBuffer mfb=multisampleFramebuffer.get();
+    if (ofb != null) {
+      ofb.dispose();
     }
-    if (multisampleFramebuffer != null) {
-      multisampleFramebuffer.dispose();
+    if (mfb != null) {
+      mfb.dispose();
     }
   }
   if (primaryGraphics) {
