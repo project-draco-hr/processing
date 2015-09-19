@@ -2,6 +2,8 @@
   EventQueue.invokeLater(new Runnable(){
     public void run(){
       File selectedFile=null;
+      boolean hide=sketch != null && sketch.g instanceof PGraphicsOpenGL && platform == WINDOWS;
+      if (hide)       sketch.surface.setVisible(false);
       if (useNativeSelect) {
         FileDialog dialog=new FileDialog(parentFrame,prompt,mode);
         if (defaultSelection != null) {
@@ -32,6 +34,7 @@
           selectedFile=chooser.getSelectedFile();
         }
       }
+      if (hide)       sketch.surface.setVisible(true);
       selectCallback(selectedFile,callbackMethod,callbackObject);
     }
   }
