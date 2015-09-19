@@ -23,7 +23,10 @@
  catch (      IndexOutOfBoundsException e) {
       }
       endPixelsOp();
-      texture.setNative(nativePixelBuffer,0,0,pixelWidth,pixelHeight);
+      Texture tex=texture.get();
+      if (tex != null) {
+        tex.setNative(nativePixelBuffer,0,0,pixelWidth,pixelHeight);
+      }
     }
   }
  else   if (offscreenMultisample) {

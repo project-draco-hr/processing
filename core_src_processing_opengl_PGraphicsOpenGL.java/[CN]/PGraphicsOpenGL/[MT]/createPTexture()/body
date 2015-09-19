@@ -1,6 +1,10 @@
 {
   updatePixelSize();
-  ptexture=new Texture(this,pixelWidth,pixelHeight,texture.getParameters());
-  ptexture.invertedY(true);
-  ptexture.colorBuffer(true);
+  Texture tex=texture.get();
+  if (tex != null) {
+    Texture ptex=new Texture(this,pixelWidth,pixelHeight,tex.getParameters());
+    ptex.invertedY(true);
+    ptex.colorBuffer(true);
+    ptexture=new WeakReference<Texture>(ptex);
+  }
 }

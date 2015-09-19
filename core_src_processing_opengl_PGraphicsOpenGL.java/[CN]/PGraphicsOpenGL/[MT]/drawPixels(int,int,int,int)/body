@@ -27,15 +27,17 @@
     loadTextureImpl(POINT,false);
   }
   boolean needToDrawTex=primaryGraphics && (!pgl.isFBOBacked() || (pgl.isFBOBacked() && pgl.isMultisampled())) || offscreenMultisample;
+  Texture tex=texture.get();
+  if (tex == null)   return;
   if (needToDrawTex) {
-    int tw=PApplet.min(texture.glWidth - f * x,f * w);
-    int th=PApplet.min(texture.glHeight - f * y,f * h);
-    pgl.copyToTexture(texture.glTarget,texture.glFormat,texture.glName,f * x,f * y,tw,th,nativePixelBuffer);
+    int tw=PApplet.min(tex.glWidth - f * x,f * w);
+    int th=PApplet.min(tex.glHeight - f * y,f * h);
+    pgl.copyToTexture(tex.glTarget,tex.glFormat,tex.glName,f * x,f * y,tw,th,nativePixelBuffer);
     beginPixelsOp(OP_WRITE);
     drawTexture(x,y,w,h);
     endPixelsOp();
   }
  else {
-    pgl.copyToTexture(texture.glTarget,texture.glFormat,texture.glName,f * x,f * (height - (y + h)),f * w,f * h,nativePixelBuffer);
+    pgl.copyToTexture(tex.glTarget,tex.glFormat,tex.glName,f * x,f * (height - (y + h)),f * w,f * h,nativePixelBuffer);
   }
 }

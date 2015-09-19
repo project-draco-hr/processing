@@ -1,11 +1,13 @@
 {
   updatePixelSize();
   if (pixelWidth == 0 || pixelHeight == 0)   return;
-  if (texture == null || texture.contextIsOutdated()) {
+  Texture tex=texture.get();
+  if (tex == null || tex.contextIsOutdated()) {
     Texture.Parameters params=new Texture.Parameters(ARGB,sampling,mipmap);
-    texture=new Texture(this,pixelWidth,pixelHeight,params);
-    texture.invertedY(true);
-    texture.colorBuffer(true);
-    setCache(this,texture);
+    tex=new Texture(this,pixelWidth,pixelHeight,params);
+    tex.invertedY(true);
+    tex.colorBuffer(true);
+    setCache(this,tex);
+    texture=new WeakReference<Texture>(tex);
   }
 }

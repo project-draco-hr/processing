@@ -3,7 +3,11 @@
     pgl.bindFrontTexture();
   }
  else {
-    if (ptexture == null)     createPTexture();
-    ptexture.bind();
+    Texture ptex=ptexture.get();
+    if (ptex == null) {
+      createPTexture();
+      ptex=ptexture.get();
+    }
+    ptex.bind();
   }
 }

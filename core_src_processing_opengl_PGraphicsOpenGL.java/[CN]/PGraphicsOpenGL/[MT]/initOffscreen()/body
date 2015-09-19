@@ -1,5 +1,6 @@
 {
   loadTextureImpl(textureSampling,false);
+  Texture tex=texture.get();
   FrameBuffer ofb=offscreenFramebuffer.get();
   FrameBuffer mfb=multisampleFramebuffer.get();
   if (ofb != null) {
@@ -12,23 +13,23 @@
   }
   boolean packed=depthBits == 24 && stencilBits == 8 && packedDepthStencilSupported;
   if (PGraphicsOpenGL.fboMultisampleSupported && 1 < PGL.smoothToSamples(smooth)) {
-    mfb=new FrameBuffer(this,texture.glWidth,texture.glHeight,PGL.smoothToSamples(smooth),0,depthBits,stencilBits,packed,false);
+    mfb=new FrameBuffer(this,tex.glWidth,tex.glHeight,PGL.smoothToSamples(smooth),0,depthBits,stencilBits,packed,false);
     mfb.clear();
     multisampleFramebuffer=new WeakReference<FrameBuffer>(mfb);
     offscreenMultisample=true;
     if (hints[ENABLE_BUFFER_READING]) {
-      ofb=new FrameBuffer(this,texture.glWidth,texture.glHeight,1,1,depthBits,stencilBits,packed,false);
+      ofb=new FrameBuffer(this,tex.glWidth,tex.glHeight,1,1,depthBits,stencilBits,packed,false);
     }
  else {
-      ofb=new FrameBuffer(this,texture.glWidth,texture.glHeight,1,1,0,0,false,false);
+      ofb=new FrameBuffer(this,tex.glWidth,tex.glHeight,1,1,0,0,false,false);
     }
   }
  else {
     smooth=0;
-    ofb=new FrameBuffer(this,texture.glWidth,texture.glHeight,1,1,depthBits,stencilBits,packed,false);
+    ofb=new FrameBuffer(this,tex.glWidth,tex.glHeight,1,1,depthBits,stencilBits,packed,false);
     offscreenMultisample=false;
   }
-  ofb.setColorBuffer(texture);
+  ofb.setColorBuffer(tex);
   ofb.clear();
   offscreenFramebuffer=new WeakReference<FrameBuffer>(ofb);
   initialized=true;
