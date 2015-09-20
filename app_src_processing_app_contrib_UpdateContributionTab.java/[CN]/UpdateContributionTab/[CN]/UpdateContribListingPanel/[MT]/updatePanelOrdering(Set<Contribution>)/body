@@ -1,10 +1,11 @@
 {
+  JLabel label=contributionTab.contributionManagerDialog.numberLabel;
   if (getNoOfRows() == 0) {
-    contributionTab.contributionManagerDialog.numberLabel.setVisible(false);
+    label.setVisible(false);
   }
  else {
-    contributionTab.contributionManagerDialog.numberLabel.setText(Integer.toString(panelByContribution.size()));
-    contributionTab.contributionManagerDialog.numberLabel.setVisible(true);
+    label.setVisible(true);
+    label.setText(Integer.toString(panelByContribution.size()));
   }
   model.getDataVector().removeAllElements();
   model.fireTableDataChanged();
@@ -36,12 +37,12 @@
     }
     Icon icon=null;
     if (entry.isInstalled()) {
-      icon=Toolkit.getLibIcon("manager/up-to-date-" + ContributionManagerDialog.iconVer + "x.png");
+      icon=upToDateIcon;
       if (contribListing.hasUpdates(entry)) {
-        icon=Toolkit.getLibIcon("manager/update-available-" + ContributionManagerDialog.iconVer + "x.png");
+        icon=updateAvailableIcon;
       }
       if (!entry.isCompatible(Base.getRevision())) {
-        icon=Toolkit.getLibIcon("manager/incompatible-" + ContributionManagerDialog.iconVer + "x.png");
+        icon=incompatibleIcon;
       }
     }
     model.addRow(new Object[]{icon,"<html>" + fontFace + entry.getName()+ "</font></html>",name,entry.getPrettyVersion(),contributionTab.contribListing.getLatestVersion(entry)});

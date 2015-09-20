@@ -1,19 +1,18 @@
 {
-  super.contributionTab=contributionTab;
-  super.filter=filter;
+  this.contributionTab=contributionTab;
+  this.filter=filter;
   setOpaque(true);
   setBackground(Color.WHITE);
-  String[] colName={"","Name","Author","Installed","Update To"};
-  model=new MyTableModel(){
+  model=new DefaultTableModel(){
+    @Override public boolean isCellEditable(    int row,    int column){
+      return false;
+    }
     @Override public Class<?> getColumnClass(    int columnIndex){
-      if (columnIndex == 0) {
-        return Icon.class;
-      }
-      return String.class;
+      return (columnIndex == 0) ? Icon.class : String.class;
     }
   }
 ;
-  model.setColumnIdentifiers(colName);
+  model.setColumnIdentifiers(new String[]{"","Name","Author","Installed","Update To"});
   table=new JTable(model){
     @Override public Component prepareRenderer(    TableCellRenderer renderer,    int row,    int column){
       Component c=super.prepareRenderer(renderer,row,column);
@@ -46,7 +45,12 @@
   table.setRowSelectionAllowed(true);
   table.setAutoCreateColumnsFromModel(true);
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-  table.setDefaultRenderer(String.class,new StatusRendere());
+  table.setDefaultRenderer(String.class,new DefaultTableCellRenderer(){
+    @Override public Component getTableCellRendererComponent(    JTable table,    Object value,    boolean isSelected,    boolean hasFocus,    int row,    int column){
+      return super.getTableCellRendererComponent(table,value,isSelected,false,row,column);
+    }
+  }
+);
   table.getTableHeader().setDefaultRenderer(new ContribHeaderRenderer(){
     @Override public Component getTableCellRendererComponent(    JTable table,    Object value,    boolean isSelected,    boolean hasFocus,    int row,    int column){
       super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
