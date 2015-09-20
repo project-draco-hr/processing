@@ -3,60 +3,39 @@
   if (ecs == null || ecs.problemsList == null) {
     return;
   }
-  boolean notFound=true;
-  boolean isWarning=false;
-  Problem problem=null;
   errorLineCoords.clear();
-  List<LineMarker> errorPoints=getJavaEditor().getErrorPoints();
-synchronized (errorPoints) {
-    for (    LineMarker emarker : errorPoints) {
-      if (emarker.getProblem().getLineNumber() == line) {
-        notFound=false;
-        if (emarker.getType() == LineMarker.WARNING) {
-          isWarning=true;
-        }
-        problem=emarker.getProblem();
-        break;
-      }
-    }
-  }
-  if (notFound) {
-    return;
-  }
-  int y=textArea.lineToY(line);
-  y+=fm.getLeading() + fm.getMaxDescent();
-  int start=textArea.getLineStartOffset(line) + problem.getPDELineStartOffset();
-  int pLength=problem.getPDELineStopOffset() + 1 - problem.getPDELineStartOffset();
-  try {
-    String badCode=null;
-    String goodCode=null;
+  LineMarker marker=findError(line);
+  if (marker != null) {
+    Problem problem=marker.getProblem();
+    int y=textArea.lineToY(line) + fm.getLeading() + fm.getMaxDescent();
+    int start=textArea.getLineStartOffset(line) + problem.getPDELineStartOffset();
+    int length=1 + problem.getPDELineStopOffset() - problem.getPDELineStartOffset();
     try {
-      SyntaxDocument doc=textArea.getDocument();
-      badCode=doc.getText(start,pLength);
-      goodCode=doc.getText(textArea.getLineStartOffset(line),problem.getPDELineStartOffset());
+      String badCode=null;
+      String goodCode=null;
+      try {
+        SyntaxDocument doc=textArea.getDocument();
+        badCode=doc.getText(start,length);
+        goodCode=doc.getText(textArea.getLineStartOffset(line),problem.getPDELineStartOffset());
+      }
+ catch (      BadLocationException bl) {
+        return;
+      }
+      int aw=fm.stringWidth(trimRight(badCode)) + textArea.getHorizontalOffset();
+      int rw=fm.stringWidth(badCode.trim());
+      int x1=fm.stringWidth(goodCode) + (aw - rw);
+      int y1=y + fm.getHeight() - 2, x2=x1 + rw;
+      x1+=Editor.LEFT_GUTTER;
+      x2+=Editor.LEFT_GUTTER;
+      errorLineCoords.add(new ErrorLineCoord(x1,x2,y,y1,problem));
+      gfx.setColor(errorUnderlineColor);
+      if (marker.getType() == LineMarker.WARNING) {
+        gfx.setColor(warningUnderlineColor);
+      }
+      paintSquiggle(gfx,y1,x1,x2);
     }
- catch (    BadLocationException bl) {
-      return;
+ catch (    Exception e) {
+      e.printStackTrace();
     }
-    int aw=fm.stringWidth(trimRight(badCode)) + textArea.getHorizontalOffset();
-    int rw=fm.stringWidth(badCode.trim());
-    int x1=fm.stringWidth(goodCode) + (aw - rw), y1=y + fm.getHeight() - 2, x2=x1 + rw;
-    x1+=Editor.LEFT_GUTTER;
-    x2+=Editor.LEFT_GUTTER;
-    errorLineCoords.add(new ErrorLineCoord(x1,x2,y,y1,problem));
-    gfx.setColor(errorUnderlineColor);
-    if (isWarning) {
-      gfx.setColor(warningUnderlineColor);
-    }
-    int xx=x1;
-    while (xx < x2) {
-      gfx.drawLine(xx,y1,xx + 2,y1 + 1);
-      xx+=2;
-      gfx.drawLine(xx,y1 + 1,xx + 2,y1);
-      xx+=2;
-    }
-  }
- catch (  Exception e) {
-    System.out.println("Looks like I messed up! XQTextAreaPainter.paintLine() : " + e);
   }
 }
