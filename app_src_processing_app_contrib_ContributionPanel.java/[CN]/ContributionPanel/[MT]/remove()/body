@@ -1,7 +1,7 @@
 {
   listPanel.contributionTab.statusPanel.clear();
   if (contrib.isInstalled() && contrib instanceof LocalContribution) {
-    isRemoveInProgress=true;
+    removeInProgress=true;
     ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,PROGRESS_BAR_CONSTRAINT);
     updateButton.setEnabled(false);
     installRemoveButton.setEnabled(false);
@@ -10,7 +10,7 @@
     ContribProgressBar monitor=new ContribProgressBar(installProgressBar){
       public void finishedAction(){
         resetInstallProgressBarState();
-        isRemoveInProgress=false;
+        removeInProgress=false;
         installRemoveButton.setEnabled(true);
         reorganizePaneComponents();
         setSelected(true);
@@ -18,7 +18,7 @@
       public void cancel(){
         super.cancel();
         resetInstallProgressBarState();
-        isRemoveInProgress=false;
+        removeInProgress=false;
         installRemoveButton.setEnabled(true);
         reorganizePaneComponents();
         setSelected(true);
