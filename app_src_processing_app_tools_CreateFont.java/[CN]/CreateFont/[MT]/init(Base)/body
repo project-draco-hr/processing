@@ -1,5 +1,5 @@
 {
-  base=editor.getBase();
+  this.base=base;
   Container paine=getContentPane();
   paine.setLayout(new BorderLayout());
   JPanel pain=new JPanel();
@@ -16,40 +16,12 @@
   pain.add(textarea);
   GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
   Font[] fonts=ge.getAllFonts();
-  if (false) {
-    ArrayList<Font> fontList=new ArrayList<Font>();
-    File folderList=new File("/Users/fry/coconut/sys/fonts/web");
-    for (    File folder : folderList.listFiles()) {
-      if (folder.isDirectory()) {
-        File[] items=folder.listFiles(new FilenameFilter(){
-          public boolean accept(          File dir,          String name){
-            if (name.charAt(0) == '.')             return false;
-            return (name.toLowerCase().endsWith(".ttf") || name.toLowerCase().endsWith(".otf"));
-          }
-        }
-);
-        for (        File fontFile : items) {
-          try {
-            FileInputStream fis=new FileInputStream(fontFile);
-            BufferedInputStream input=new BufferedInputStream(fis);
-            Font font=Font.createFont(Font.TRUETYPE_FONT,input);
-            input.close();
-            fontList.add(font);
-          }
- catch (          Exception e) {
-            System.out.println("Ignoring " + fontFile.getName());
-          }
-        }
-      }
-    }
-    fonts=fontList.toArray(new Font[fontList.size()]);
-  }
-  String flist[]=new String[fonts.length];
+  String[] fontList=new String[fonts.length];
   table=new HashMap<String,Font>();
   int index=0;
   for (int i=0; i < fonts.length; i++) {
     try {
-      flist[index++]=fonts[i].getPSName();
+      fontList[index++]=fonts[i].getPSName();
       table.put(fonts[i].getPSName(),fonts[i]);
     }
  catch (    Exception e) {
@@ -57,7 +29,7 @@
     }
   }
   list=new String[index];
-  System.arraycopy(flist,0,list,0,index);
+  System.arraycopy(fontList,0,list,0,index);
   fontSelector=new JList<String>(list);
   fontSelector.addListSelectionListener(new ListSelectionListener(){
     public void valueChanged(    ListSelectionEvent e){
