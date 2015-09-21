@@ -1,0 +1,150 @@
+{
+  boolean overloading=false;
+{
+    String trimmedLineText=lineText.trim();
+    if (trimmedLineText.length() == 0)     return null;
+    int lastCodePoint=trimmedLineText.codePointAt(trimmedLineText.length() - 1);
+    if (lastCodePoint == '.') {
+      trimmedLineText=trimmedLineText.substring(0,trimmedLineText.length() - 1).trim();
+      if (trimmedLineText.length() == 0)       return null;
+      lastCodePoint=trimmedLineText.codePointAt(trimmedLineText.length() - 1);
+switch (lastCodePoint) {
+case ')':
+case ']':
+case '"':
+        break;
+default :
+      if (!Character.isJavaIdentifierPart(lastCodePoint)) {
+        return null;
+      }
+    break;
+}
+}
+ else if (lastCodePoint == '(') {
+overloading=true;
+}
+ else if (!Character.isJavaIdentifierPart(lastCodePoint)) {
+return null;
+}
+}
+final int currentCharIndex=caretLinePosition - 1;
+{
+int commentStart=lineText.indexOf("//",0);
+if (commentStart >= 0 && currentCharIndex > commentStart) {
+return null;
+}
+}
+BitSet isInLiteral=new BitSet(lineText.length());
+BitSet isInBrackets=new BitSet(lineText.length());
+{
+boolean inString=false;
+boolean inChar=false;
+boolean inEscaped=false;
+for (int i=0; i < lineText.length(); i++) {
+if (!inEscaped) {
+switch (lineText.codePointAt(i)) {
+case '\"':
+    if (!inChar)     inString=!inString;
+  break;
+case '\'':
+if (!inString) inChar=!inChar;
+break;
+case '\\':
+if (inString || inChar) {
+inEscaped=true;
+}
+break;
+}
+}
+ else {
+inEscaped=false;
+}
+isInLiteral.set(i,inString || inChar);
+}
+}
+if (isInLiteral.get(currentCharIndex)) return null;
+{
+int depth=overloading ? 1 : 0;
+int bracketStart=overloading ? lineText.length() : 0;
+int squareDepth=0;
+int squareBracketStart=0;
+bracketLoop: for (int i=lineText.length() - 1; i >= 0; i--) {
+if (!isInLiteral.get(i)) {
+switch (lineText.codePointAt(i)) {
+case ')':
+if (depth == 0) bracketStart=i;
+depth++;
+break;
+case '(':
+depth--;
+if (depth == 0) {
+isInBrackets.set(i,bracketStart);
+}
+ else if (depth < 0) {
+break bracketLoop;
+}
+break;
+case ']':
+if (squareDepth == 0) squareBracketStart=i;
+squareDepth++;
+break;
+case '[':
+squareDepth--;
+if (squareDepth == 0) {
+isInBrackets.set(i,squareBracketStart);
+}
+ else if (squareDepth < 0) {
+break bracketLoop;
+}
+break;
+}
+}
+}
+if (depth > 0) isInBrackets.set(0,bracketStart);
+if (squareDepth > 0) isInBrackets.set(0,squareBracketStart);
+}
+int position=currentCharIndex;
+parseLoop: while (position >= 0) {
+int codePoint=lineText.codePointAt(position);
+switch (codePoint) {
+case '.':
+position--;
+break;
+case '[':
+break parseLoop;
+case ']':
+position=isInBrackets.previousClearBit(position - 1);
+break;
+case '(':
+if (isInBrackets.get(position)) {
+position--;
+break;
+}
+break parseLoop;
+case ')':
+position=isInBrackets.previousClearBit(position - 1);
+break;
+case '"':
+position=isInLiteral.previousClearBit(position - 1);
+break parseLoop;
+default :
+if (Character.isJavaIdentifierPart(codePoint)) {
+position--;
+}
+ else if (Character.isWhitespace(codePoint)) {
+position--;
+}
+ else {
+break parseLoop;
+}
+break;
+}
+}
+position++;
+String phrase=lineText.substring(position,caretLinePosition).trim();
+Messages.log(phrase);
+if (phrase.length() == 0 || Character.isDigit(phrase.codePointAt(0))) {
+return null;
+}
+return phrase;
+}
