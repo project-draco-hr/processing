@@ -1,7 +1,7 @@
 {
   String newParentDir=null;
   String newName=null;
-  final String oldName2=folder.getName();
+  String oldName=folder.getName();
   final String PROMPT=Language.text("save");
   if (Preferences.getBoolean("chooser.files.native")) {
     FileDialog fd=new FileDialog(editor,PROMPT,FileDialog.SAVE);
@@ -11,8 +11,8 @@
  else {
       fd.setDirectory(folder.getParent());
     }
-    String oldName=folder.getName();
-    fd.setFile(oldName);
+    String oldFolderName=folder.getName();
+    fd.setFile(oldFolderName);
     fd.setVisible(true);
     newParentDir=fd.getDirectory();
     newName=fd.getFile();
@@ -90,15 +90,7 @@
     }
   }
 );
-  final File newFolder2=newFolder;
-  final File[] copyItems2=copyItems;
-  final String newName2=newName;
-  javax.swing.SwingUtilities.invokeLater(new Runnable(){
-    public void run(){
-      new ProgressFrame(copyItems2,newFolder2,oldName2,newName2,editor);
-    }
-  }
-);
+  startSaveAsThread(oldName,newName,newFolder,copyItems);
   for (int i=1; i < codeCount; i++) {
     File newFile=new File(newFolder,code[i].getFileName());
     code[i].saveAs(newFile);
