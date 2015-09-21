@@ -1,24 +1,11 @@
 {
   window=GLWindow.create(screen,pgl.getCaps());
-  if (displayDevice == null) {
-    displayDevice=window.getMainMonitor();
-  }
-  int displayNum=sketch.sketchDisplay();
-  if (displayNum > 0) {
-    if (displayNum <= monitors.size()) {
-      displayDevice=monitors.get(displayNum - 1);
-    }
- else {
-      System.err.format("Display %d does not exist, " + "using the default display instead.%n",displayNum);
-      for (int i=0; i < monitors.size(); i++) {
-        System.err.format("Display %d is %s%n",i + 1,monitors.get(i));
-      }
-    }
-  }
   boolean spanDisplays=sketch.sketchDisplay() == PConstants.SPAN;
   screenRect=spanDisplays ? new Rectangle(0,0,screen.getWidth(),screen.getHeight()) : new Rectangle(0,0,displayDevice.getViewportInWindowUnits().getWidth(),displayDevice.getViewportInWindowUnits().getHeight());
   sketch.displayWidth=screenRect.width;
   sketch.displayHeight=screenRect.height;
+  sketchWidth0=sketch.sketchWidth();
+  sketchHeight0=sketch.sketchHeight();
   sketchWidth=sketch.sketchWidth();
   sketchHeight=sketch.sketchHeight();
   boolean fullScreen=sketch.sketchFullScreen();
