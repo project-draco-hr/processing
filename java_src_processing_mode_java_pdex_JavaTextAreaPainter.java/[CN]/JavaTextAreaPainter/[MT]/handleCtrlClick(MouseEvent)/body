@@ -38,6 +38,9 @@
     }
     if (Character.isDigit(word.charAt(0)))     return;
     Messages.log(getJavaEditor().getErrorChecker().mainClassOffset + line + "|"+ line+ "| offset "+ xLS+ word+ " <= \n");
-    getJavaEditor().getErrorChecker().getASTGenerator().scrollToDeclaration(line,word,xLS);
+    ASTGenerator astGenerator=getJavaEditor().getErrorChecker().getASTGenerator();
+synchronized (astGenerator) {
+      astGenerator.scrollToDeclaration(line,word,xLS);
+    }
   }
 }

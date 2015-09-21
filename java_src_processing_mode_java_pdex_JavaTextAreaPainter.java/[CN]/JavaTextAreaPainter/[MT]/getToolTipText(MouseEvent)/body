@@ -60,9 +60,11 @@
         return super.getToolTipText(event);
       }
       ASTGenerator ast=getJavaEditor().getErrorChecker().getASTGenerator();
-      String tooltipText=ast.getLabelForASTNode(line,word,xLS);
-      if (tooltipText != null) {
-        return tooltipText;
+synchronized (ast) {
+        String tooltipText=ast.getLabelForASTNode(line,word,xLS);
+        if (tooltipText != null) {
+          return tooltipText;
+        }
       }
     }
   }

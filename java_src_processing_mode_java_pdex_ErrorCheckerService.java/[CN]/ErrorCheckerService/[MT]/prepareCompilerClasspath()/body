@@ -54,7 +54,9 @@ synchronized (classpathJars) {
   }
   new Thread(new Runnable(){
     public void run(){
-      astGenerator.loadJars();
+synchronized (astGenerator) {
+        astGenerator.loadJars();
+      }
     }
   }
 ).start();

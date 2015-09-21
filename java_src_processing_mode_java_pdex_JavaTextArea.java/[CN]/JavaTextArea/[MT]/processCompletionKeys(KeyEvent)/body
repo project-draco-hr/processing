@@ -1,6 +1,7 @@
 {
   char keyChar=event.getKeyChar();
-  if (keyChar == KeyEvent.VK_ENTER || keyChar == KeyEvent.VK_ESCAPE || keyChar == KeyEvent.VK_TAB || keyChar == KeyEvent.CHAR_UNDEFINED) {
+  int keyCode=event.getKeyCode();
+  if (keyChar == KeyEvent.VK_ENTER || keyChar == KeyEvent.VK_ESCAPE || keyChar == KeyEvent.VK_TAB || (event.getID() == KeyEvent.KEY_RELEASED && keyCode != KeyEvent.VK_LEFT && keyCode != KeyEvent.VK_RIGHT)) {
   }
  else   if (keyChar == ')') {
     hideSuggestion();
@@ -8,23 +9,21 @@
  else   if (keyChar == '.') {
     if (JavaMode.codeCompletionsEnabled) {
       Messages.log("[KeyEvent]" + KeyEvent.getKeyText(event.getKeyCode()) + "  |Prediction started");
-      Messages.log("Typing: " + fetchPhrase(event));
+      fetchPhrase();
     }
   }
  else   if (keyChar == ' ') {
     if (!Platform.isMacOS() && JavaMode.codeCompletionsEnabled && (event.isControlDown() || event.isMetaDown())) {
-      SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
-        protected Object doInBackground() throws Exception {
-          if (JavaMode.codeCompletionsEnabled) {
-            getDocument().remove(getCaretPosition() - 1,1);
-            Messages.log("[KeyEvent]" + event.getKeyChar() + "  |Prediction started");
-            Messages.log("Typing: " + fetchPhrase(event));
-          }
-          return null;
+      if (JavaMode.codeCompletionsEnabled) {
+        try {
+          getDocument().remove(getCaretPosition() - 1,1);
+          Messages.log("[KeyEvent]" + event.getKeyChar() + "  |Prediction started");
+          fetchPhrase();
+        }
+ catch (        BadLocationException e) {
+          e.printStackTrace();
         }
       }
-;
-      worker.execute();
     }
  else {
       hideSuggestion();

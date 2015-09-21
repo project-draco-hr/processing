@@ -5,7 +5,9 @@
   if (!hasSyntaxErrors()) {
     editor.showConsole();
   }
-  astGenerator.buildAST(cu);
+synchronized (astGenerator) {
+    astGenerator.buildAST(cu);
+  }
   handleErrorCheckingToggle();
   while (!stopThread.get()) {
     try {
@@ -31,7 +33,9 @@
       checkForMissingImports();
     }
   }
-  astGenerator.disposeAllWindows();
+synchronized (astGenerator) {
+    astGenerator.disposeAllWindows();
+  }
   compilationChecker=null;
   checkerClass=null;
   classLoader=null;

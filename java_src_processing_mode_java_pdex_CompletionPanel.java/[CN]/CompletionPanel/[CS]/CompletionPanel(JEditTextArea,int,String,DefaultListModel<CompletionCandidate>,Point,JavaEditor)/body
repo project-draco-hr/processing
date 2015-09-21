@@ -2,7 +2,7 @@
   this.textarea=(JavaTextArea)textarea;
   this.editor=editor;
   this.insertionPosition=position;
-  if (subWord.indexOf('.') != -1) {
+  if (subWord.indexOf('.') != -1 && subWord.indexOf('.') != subWord.length() - 1) {
     this.subWord=subWord.substring(subWord.lastIndexOf('.') + 1);
   }
  else {
@@ -18,7 +18,10 @@
   scrollPane.setViewportView(completionList=createSuggestionList(position,items));
   popupMenu.add(scrollPane,BorderLayout.CENTER);
   popupMenu.setPopupSize(calcWidth(),calcHeight(items.getSize()));
-  editor.getErrorChecker().getASTGenerator().updateJavaDoc(completionList.getSelectedValue());
-  textarea.requestFocusInWindow();
+  popupMenu.setFocusable(false);
+  ASTGenerator astGenerator=editor.getErrorChecker().getASTGenerator();
+synchronized (astGenerator) {
+    astGenerator.updateJavaDoc(completionList.getSelectedValue());
+  }
   popupMenu.show(textarea,location.x,textarea.getBaseline(0,0) + location.y);
 }
