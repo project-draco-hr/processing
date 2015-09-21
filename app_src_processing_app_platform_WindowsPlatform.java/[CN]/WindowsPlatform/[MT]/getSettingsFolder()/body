@@ -1,7 +1,20 @@
 {
-  String appData=getAppDataPath();
-  if (appData != null) {
-    return new File(appData,APP_NAME);
+  String appDataRoaming=getAppDataPath();
+  if (appDataRoaming != null) {
+    File settingsFolder=new File(appDataRoaming,APP_NAME);
+    if (settingsFolder.exists() || settingsFolder.mkdirs()) {
+      return settingsFolder;
+    }
   }
-  throw new IOException("Could not get the Application Data folder");
+  String appDataLocal=getLocalAppDataPath();
+  if (appDataLocal != null) {
+    File settingsFolder=new File(appDataLocal,APP_NAME);
+    if (settingsFolder.exists() || settingsFolder.mkdirs()) {
+      return settingsFolder;
+    }
+  }
+  if (appDataRoaming == null && appDataLocal == null) {
+    throw new IOException("Could not get the AppData folder");
+  }
+  throw new IOException("Please fix permissions for either " + appDataRoaming + " or "+ appDataLocal);
 }
