@@ -42,13 +42,16 @@ synchronized (classpathJars) {
         }
       }
     }
-    String modeJars[]=((JavaMode)getEditor().getMode()).getSearchPath().split(File.pathSeparatorChar + "");
-    for (    String mj : modeJars) {
-      try {
-        classpathJars.add(new File(mj).toURI().toURL());
-      }
- catch (      MalformedURLException e) {
-        e.printStackTrace();
+    String searchPath=((JavaMode)getEditor().getMode()).getSearchPath();
+    if (searchPath != null) {
+      String[] modeJars=PApplet.split(searchPath,File.pathSeparatorChar);
+      for (      String mj : modeJars) {
+        try {
+          classpathJars.add(new File(mj).toURI().toURL());
+        }
+ catch (        MalformedURLException e) {
+          e.printStackTrace();
+        }
       }
     }
   }
