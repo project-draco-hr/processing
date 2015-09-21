@@ -1,17 +1,14 @@
 {
-  for (  ImportStatement impS : errorCheckerService.getProgramImports()) {
-    if (impName.toLowerCase().startsWith(impS.getPackageName().toLowerCase())) {
+  String impNameLc=impName.toLowerCase();
+  for (  ImportStatement impS : programImports) {
+    if (impNameLc.startsWith(impS.getPackageName().toLowerCase())) {
       return false;
     }
   }
-  for (  ImportStatement impS : errorCheckerService.codeFolderImports) {
-    if (impName.toLowerCase().startsWith(impS.getPackageName().toLowerCase())) {
+  for (  ImportStatement impS : codeFolderImports) {
+    if (impNameLc.startsWith(impS.getPackageName().toLowerCase())) {
       return false;
     }
-  }
-  if (JavaMode.suggestionsMap == null || JavaMode.suggestionsMap.keySet().size() == 0) {
-    log("SuggestionsMap is null or empty, won't be able to trim class names");
-    return true;
   }
   final String include="include";
   final String exclude="exclude";
