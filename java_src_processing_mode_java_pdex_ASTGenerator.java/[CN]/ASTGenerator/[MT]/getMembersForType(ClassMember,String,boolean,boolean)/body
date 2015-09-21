@@ -1,26 +1,38 @@
 {
   String child=childToLookFor.toLowerCase();
-  ArrayList<CompletionCandidate> candidates=new ArrayList<CompletionCandidate>();
+  ArrayList<CompletionCandidate> candidates=new ArrayList<>();
   log("getMemFoType-> Looking for match " + child.toString() + " inside "+ tehClass+ " noCompare "+ noCompare+ " staticOnly "+ staticOnly);
   if (tehClass == null) {
     return candidates;
   }
   if (tehClass.getDeclaringNode() instanceof TypeDeclaration) {
     TypeDeclaration td=(TypeDeclaration)tehClass.getDeclaringNode();
-    for (int i=0; i < td.getFields().length; i++) {
-      List<VariableDeclarationFragment> vdfs=td.getFields()[i].fragments();
-      for (      VariableDeclarationFragment vdf : vdfs) {
-        if (noCompare) {
-          candidates.add(new CompletionCandidate(vdf));
+{
+      FieldDeclaration[] fields=td.getFields();
+      for (int i=0; i < fields.length; i++) {
+        if (staticOnly && !isStatic(fields[i].modifiers())) {
+          continue;
         }
- else         if (vdf.getName().toString().toLowerCase().startsWith(child))         candidates.add(new CompletionCandidate(vdf));
+        List<VariableDeclarationFragment> vdfs=fields[i].fragments();
+        for (        VariableDeclarationFragment vdf : vdfs) {
+          if (noCompare) {
+            candidates.add(new CompletionCandidate(vdf));
+          }
+ else           if (vdf.getName().toString().toLowerCase().startsWith(child))           candidates.add(new CompletionCandidate(vdf));
+        }
       }
     }
-    for (int i=0; i < td.getMethods().length; i++) {
-      if (noCompare) {
-        candidates.add(new CompletionCandidate(td.getMethods()[i]));
+{
+      MethodDeclaration[] methods=td.getMethods();
+      for (int i=0; i < methods.length; i++) {
+        if (staticOnly && !isStatic(methods[i].modifiers())) {
+          continue;
+        }
+        if (noCompare) {
+          candidates.add(new CompletionCandidate(methods[i]));
+        }
+ else         if (methods[i].getName().toString().toLowerCase().startsWith(child))         candidates.add(new CompletionCandidate(methods[i]));
       }
- else       if (td.getMethods()[i].getName().toString().toLowerCase().startsWith(child))       candidates.add(new CompletionCandidate(td.getMethods()[i]));
     }
     ArrayList<CompletionCandidate> superClassCandidates=new ArrayList<CompletionCandidate>();
     if (td.getSuperclassType() != null) {
@@ -73,6 +85,17 @@
     }
  else     if (field.getName().toLowerCase().startsWith(child)) {
       candidates.add(new CompletionCandidate(field));
+    }
+  }
+  if (probableClass.isArray() && !staticOnly) {
+    String className=probableClass.getSimpleName();
+    if (noCompare || "clone()".startsWith(child)) {
+      String methodLabel="<html>clone() : " + className + " - <font color=#777777>"+ className+ "</font></html>";
+      candidates.add(new CompletionCandidate("clone()",methodLabel,"clone()",CompletionCandidate.PREDEF_METHOD));
+    }
+    if ("length".startsWith(child)) {
+      String fieldLabel="<html>length : int - <font color=#777777>" + className + "</font></html>";
+      candidates.add(new CompletionCandidate("length",fieldLabel,"length",CompletionCandidate.PREDEF_FIELD));
     }
   }
   return candidates;

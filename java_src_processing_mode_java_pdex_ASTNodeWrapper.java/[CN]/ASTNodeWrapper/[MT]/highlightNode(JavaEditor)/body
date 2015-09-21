@@ -1,21 +1,21 @@
 {
-  if (!(Node instanceof SimpleName)) {
+  if (!(node instanceof SimpleName)) {
     return false;
   }
-  SimpleName nodeName=(SimpleName)Node;
+  SimpleName nodeName=(SimpleName)node;
   try {
     int javaLineNumber=getLineNumber(nodeName);
-    int pdeOffs[]=astGenerator.errorCheckerService.calculateTabIndexAndLineNumber(javaLineNumber);
+    int pdeOffs[]=editor.getErrorChecker().calculateTabIndexAndLineNumber(javaLineNumber);
     PlainDocument javaSource=new PlainDocument();
-    javaSource.insertString(0,astGenerator.errorCheckerService.sourceCode,null);
+    javaSource.insertString(0,editor.getErrorChecker().sourceCode,null);
     Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber - 1);
     if (lineElement == null) {
       Messages.log(lineNumber + " line element null while highlighting " + nodeName);
       return false;
     }
     String javaLine=javaSource.getText(lineElement.getStartOffset(),lineElement.getEndOffset() - lineElement.getStartOffset());
-    astGenerator.editor.getSketch().setCurrentCode(pdeOffs[0]);
-    String pdeLine=astGenerator.editor.getLineText(pdeOffs[1]);
+    editor.getSketch().setCurrentCode(pdeOffs[0]);
+    String pdeLine=editor.getLineText(pdeOffs[1]);
     String lookingFor=nodeName.toString();
     Messages.log(lookingFor + ", " + nodeName.getStartPosition());
     Messages.log(javaLineNumber + " JL " + javaLine+ " LSO "+ lineElement.getStartOffset()+ ","+ lineElement.getEndOffset());
@@ -30,9 +30,9 @@
       Messages.loge("Logical error in highLightNode() during offset matching. " + "Please file a bug report.");
       return false;
     }
-    int lso=astGenerator.editor.getTextArea().getLineStartOffset(pdeOffs[1]);
+    int lso=editor.getTextArea().getLineStartOffset(pdeOffs[1]);
     highlightStart+=lso;
-    astGenerator.editor.setSelection(highlightStart,highlightStart + nodeName.getLength());
+    editor.setSelection(highlightStart,highlightStart + nodeName.getLength());
     return true;
   }
  catch (  BadLocationException e) {

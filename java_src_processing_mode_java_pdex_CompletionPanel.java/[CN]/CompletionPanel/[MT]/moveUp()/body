@@ -8,6 +8,9 @@
     selectIndex(index);
     int step=scrollPane.getVerticalScrollBar().getMaximum() / completionList.getModel().getSize();
     scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getValue() - step);
-    editor.getErrorChecker().getASTGenerator().updateJavaDoc(completionList.getSelectedValue());
+    ASTGenerator astGenerator=editor.getErrorChecker().getASTGenerator();
+synchronized (astGenerator) {
+      astGenerator.updateJavaDoc(completionList.getSelectedValue());
+    }
   }
 }

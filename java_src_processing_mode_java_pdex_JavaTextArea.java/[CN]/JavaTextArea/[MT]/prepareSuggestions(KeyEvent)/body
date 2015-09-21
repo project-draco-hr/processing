@@ -1,12 +1,6 @@
 {
-  new SwingWorker<Object,Object>(){
-    protected Object doInBackground() throws Exception {
-      if (JavaMode.codeCompletionsEnabled && (JavaMode.ccTriggerEnabled || suggestion.isVisible())) {
-        Messages.log("[KeyEvent]" + evt.getKeyChar() + "  |Prediction started");
-        Messages.log("Typing: " + fetchPhrase(evt));
-      }
-      return null;
-    }
+  if (JavaMode.codeCompletionsEnabled && (JavaMode.ccTriggerEnabled || (suggestion != null && suggestion.isVisible()))) {
+    Messages.log("[KeyEvent]" + evt.getKeyChar() + "  |Prediction started");
+    fetchPhrase();
   }
-.execute();
 }

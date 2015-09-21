@@ -1,4 +1,7 @@
 {
   Messages.log("Caret at:" + textarea.getLineText(textarea.getCaretLine()));
-  errorCheckerService.getASTGenerator().handleShowUsage();
+  ASTGenerator astGenerator=errorCheckerService.getASTGenerator();
+synchronized (astGenerator) {
+    astGenerator.handleShowUsage();
+  }
 }

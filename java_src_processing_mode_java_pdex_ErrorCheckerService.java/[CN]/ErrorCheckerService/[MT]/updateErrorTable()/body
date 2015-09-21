@@ -10,7 +10,10 @@
           String[] args=p.getIProblem().getArguments();
           if (args.length > 0) {
             String missingClass=args[0];
-            String[] si=astGenerator.getSuggestImports(missingClass);
+            String[] si;
+synchronized (astGenerator) {
+              si=astGenerator.getSuggestImports(missingClass);
+            }
             if (si != null && si.length > 0) {
               p.setImportSuggestions(si);
               message+=" (double-click for suggestions)";
