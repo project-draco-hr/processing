@@ -17,21 +17,24 @@
     @Override public Component prepareRenderer(    TableCellRenderer renderer,    int row,    int column){
       Component c=super.prepareRenderer(renderer,row,column);
       String title=(String)getValueAt(row,1);
-      if (title.equals("<html><i>Library</i></html>") || title.equals("<html><i>Tools</i></html>") || title.equals("<html><i>Modes</i></html>")|| title.equals("<html><i>Examples</i></html>")) {
-        ((JComponent)c).setBorder(BorderFactory.createMatteBorder(row == 0 ? 0 : 2,0,2,0,Color.BLACK));
+      if (title.equals("Libraries") || title.equals("Modes") || title.equals("Tools")|| title.equals("Examples")) {
+        c.setBackground(new Color(0xFFf0f0f0));
+      }
+ else {
+        c.setBackground(Color.WHITE);
       }
       return c;
     }
     @Override public void changeSelection(    int rowIndex,    int columnIndex,    boolean toggle,    boolean extend){
       String title=(String)getValueAt(rowIndex,1);
-      if (title.equals("<html><i>Library</i></html>") || title.equals("<html><i>Tools</i></html>") || title.equals("<html><i>Modes</i></html>")|| title.equals("<html><i>Examples</i></html>")) {
-        return;
+      if (!title.equals("Libraries") && !title.equals("Modes") && !title.equals("Tools")&& !title.equals("Examples")) {
+        super.changeSelection(rowIndex,columnIndex,toggle,extend);
       }
-      super.changeSelection(rowIndex,columnIndex,toggle,extend);
     }
   }
 ;
   scrollPane=new JScrollPane(table);
+  scrollPane.setBorder(BorderFactory.createEmptyBorder());
   table.setFillsViewportHeight(true);
   table.setSelectionBackground(new Color(0xe0fffd));
   table.setSelectionForeground(table.getForeground());

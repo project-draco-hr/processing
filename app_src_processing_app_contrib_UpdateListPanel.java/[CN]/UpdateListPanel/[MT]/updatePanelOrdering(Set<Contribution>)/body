@@ -1,13 +1,13 @@
 {
   model.getDataVector().removeAllElements();
   model.fireTableDataChanged();
-  ContributionType temp=null;
+  ContributionType currentType=null;
   Font boldFont=Toolkit.getSansFont(table.getFont().getSize(),Font.BOLD);
   String fontFace="<font face=\"" + boldFont.getName() + "\">";
   for (  Contribution entry : contributionsSet) {
-    if (entry.getType() != temp) {
-      temp=entry.getType();
-      model.addRow(new Object[]{null,"<html><i>" + temp.getTitle() + "</i></html>",null,null,null});
+    if (entry.getType() != currentType) {
+      currentType=entry.getType();
+      model.addRow(new Object[]{null,currentType.getTitle(),null,null,null});
     }
     StringBuilder name=new StringBuilder("");
     String authorList=entry.getAuthorList();
