@@ -1,28 +1,21 @@
 {
-  if (panel == null) {
+  if (progressBar == null) {
     progressBar=new JProgressBar();
     progressBar.setVisible(false);
     createComponents();
-    panel=new JPanel(false){
-      @Override protected void paintComponent(      Graphics g){
-        super.paintComponent(g);
-        g.setColor(new Color(0xe0fffd));
-        g.fillRect(getX(),panel.getY() - ContributionManagerDialog.TAB_HEIGHT - 2,panel.getWidth(),2);
-      }
-    }
-;
+    buildErrorPanel();
     loaderLabel=new JLabel(Toolkit.getLibIcon("manager/loader.gif"));
     loaderLabel.setOpaque(false);
     loaderLabel.setBackground(Color.WHITE);
   }
   int scrollBarWidth=contributionListPanel.scrollPane.getVerticalScrollBar().getPreferredSize().width;
-  GroupLayout layout=new GroupLayout(panel);
-  panel.setLayout(layout);
+  GroupLayout layout=new GroupLayout(this);
+  setLayout(layout);
   layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addGroup(layout.createSequentialGroup().addGap(ContributionManagerDialog.STATUS_WIDTH).addComponent(filterField,ContributionManagerDialog.FILTER_WIDTH,ContributionManagerDialog.FILTER_WIDTH,ContributionManagerDialog.FILTER_WIDTH).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.PREFERRED_SIZE,Short.MAX_VALUE).addComponent(categoryChooser,ContributionManagerDialog.AUTHOR_WIDTH,ContributionManagerDialog.AUTHOR_WIDTH,ContributionManagerDialog.AUTHOR_WIDTH).addGap(scrollBarWidth)).addComponent(loaderLabel).addComponent(contributionListPanel).addComponent(errorPanel).addComponent(statusPanel));
   layout.setVerticalGroup(layout.createSequentialGroup().addContainerGap().addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(categoryChooser).addComponent(filterField)).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(loaderLabel).addComponent(contributionListPanel)).addComponent(errorPanel).addComponent(statusPanel,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE));
   layout.linkSize(SwingConstants.VERTICAL,categoryChooser,filterField);
   layout.setHonorsVisibility(contributionListPanel,false);
   layout.setHonorsVisibility(categoryChooser,false);
-  panel.setBackground(Color.WHITE);
-  panel.setBorder(null);
+  setBackground(Color.WHITE);
+  setBorder(null);
 }
