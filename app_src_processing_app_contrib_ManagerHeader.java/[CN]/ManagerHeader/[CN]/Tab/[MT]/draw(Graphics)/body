@@ -1,0 +1,20 @@
+{
+  int state=isCurrent() ? SELECTED : UNSELECTED;
+  g.setColor(tabColor[state]);
+  Graphics2D g2=(Graphics2D)g;
+  g2.fill(Toolkit.createRoundRect(left,TAB_TOP,right,TAB_BOTTOM,0,0,isLast() ? CURVE_RADIUS : 0,isFirst() ? CURVE_RADIUS : 0));
+  if (hasIcon()) {
+    Image icon=(isCurrent() || notification) ? selectedIcon : enabledIcon;
+    g.drawImage(icon,left + MARGIN,ICON_TOP,ICON_WIDTH,ICON_HEIGHT,null);
+  }
+  int textLeft=getTextLeft();
+  if (notification && state == UNSELECTED) {
+    g.setColor(textColor[SELECTED]);
+  }
+ else {
+    g.setColor(textColor[state]);
+  }
+  int tabHeight=TAB_BOTTOM - TAB_TOP;
+  int baseline=TAB_TOP + (tabHeight + fontAscent) / 2;
+  g.drawString(name,textLeft,baseline);
+}
