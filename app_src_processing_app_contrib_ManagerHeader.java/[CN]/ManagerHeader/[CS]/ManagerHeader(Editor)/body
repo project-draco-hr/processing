@@ -1,10 +1,16 @@
 {
   super(BoxLayout.Y_AXIS);
   this.editor=eddie;
-  updateMode();
+  Mode mode=editor.getBase().getDefaultMode();
+  textColor[SELECTED]=mode.getColor("manager.tab.text.selected.color");
+  textColor[UNSELECTED]=mode.getColor("manager.tab.text.unselected.color");
+  font=mode.getFont("manager.tab.text.font");
+  tabColor[SELECTED]=mode.getColor("manager.tab.selected.color");
+  tabColor[UNSELECTED]=mode.getColor("manager.tab.unselected.color");
+  gradient=mode.makeGradient("manager.tab",400,HIGH);
+  controller=new Controller();
+  add(controller);
   cardLayout=new CardLayout();
   cardPanel=new JPanel(cardLayout);
   add(cardPanel);
-  controller=new Controller();
-  add(controller);
 }
