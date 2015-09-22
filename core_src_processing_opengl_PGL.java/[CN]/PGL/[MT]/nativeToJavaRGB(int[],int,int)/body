@@ -10,8 +10,10 @@
         pixels[yindex]=(pixi >>> 8) | 0xFF000000;
       }
  else {
-        pixels[index]=((pixy & 0xFF) << 16) | ((pixy & 0xFF0000) >> 16) | (pixy & 0xFF00FF00)| 0xFF000000;
-        pixels[yindex]=((pixi & 0xFF) << 16) | ((pixi & 0xFF0000) >> 16) | (pixi & 0xFF00FF00)| 0xFF000000;
+        int rbi=pixi & 0x00FF00FF;
+        int rby=pixy & 0x00FF00FF;
+        pixels[index]=0xFF000000 | (rby << 16) | (pixy & 0x0000FF00)| (rby >> 16);
+        pixels[yindex]=0xFF000000 | (rbi << 16) | (pixi & 0x0000FF00)| (rbi >> 16);
       }
       index++;
       yindex++;
@@ -26,7 +28,8 @@
         pixels[index]=(pixi >>> 8) | 0xFF000000;
       }
  else {
-        pixels[index]=((pixi & 0xFF) << 16) | ((pixi & 0xFF0000) >> 16) | (pixi & 0xFF00FF00)| 0xFF000000;
+        int rbi=pixi & 0x00FF00FF;
+        pixels[index]=0xFF000000 | (rbi << 16) | (pixi & 0x000FF00)| (rbi >> 16);
       }
       index++;
     }
