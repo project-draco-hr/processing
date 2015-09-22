@@ -22,20 +22,21 @@
   notificationLabel.setVisible(false);
   notificationLabel.setOpaque(false);
   notificationLabel.setFont(Toolkit.getSansFont(12,Font.PLAIN));
-  updateButton=new JButton("Update");
-  updateButton.setInheritsPopupMenu(true);
-  Dimension dim=updateButton.getPreferredSize();
-  dim.width=BUTTON_WIDTH;
-  updateButton.setMinimumSize(dim);
-  updateButton.setPreferredSize(dim);
-  updateButton.setOpaque(false);
-  updateButton.setVisible(false);
-  updateButton.addActionListener(new ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      update();
+{
+    updateButton=new JButton("Update");
+    updateButton.setInheritsPopupMenu(true);
+    Dimension dim=new Dimension(BUTTON_WIDTH,updateButton.getPreferredSize().height);
+    updateButton.setMinimumSize(dim);
+    updateButton.setPreferredSize(dim);
+    updateButton.setOpaque(false);
+    updateButton.setVisible(false);
+    updateButton.addActionListener(new ActionListener(){
+      public void actionPerformed(      ActionEvent e){
+        update();
+      }
     }
-  }
 );
+  }
   updateBox.add(updateButton,BorderLayout.EAST);
   updateBox.add(notificationLabel,BorderLayout.WEST);
   updateBox.setBorder(new EmptyBorder(4,7,7,7));
@@ -51,17 +52,18 @@
   barButtonCardPane.setInheritsPopupMenu(true);
   barButtonCardPane.setOpaque(false);
   barButtonCardPane.setMinimumSize(new Dimension(ContributionPanel.BUTTON_WIDTH,1));
-  installProgressBar=new JProgressBar();
-  installProgressBar.setInheritsPopupMenu(true);
-  installProgressBar.setStringPainted(true);
-  resetInstallProgressBarState();
-  Dimension d=installProgressBar.getPreferredSize();
-  d.width=ContributionPanel.BUTTON_WIDTH;
-  installProgressBar.setPreferredSize(d);
-  installProgressBar.setMaximumSize(d);
-  installProgressBar.setMinimumSize(d);
-  installProgressBar.setOpaque(false);
-  installProgressBar.setAlignmentX(CENTER_ALIGNMENT);
+{
+    installProgressBar=new JProgressBar();
+    installProgressBar.setInheritsPopupMenu(true);
+    installProgressBar.setStringPainted(true);
+    resetInstallProgressBarState();
+    Dimension dim=new Dimension(ContributionPanel.BUTTON_WIDTH,installProgressBar.getPreferredSize().height);
+    installProgressBar.setPreferredSize(dim);
+    installProgressBar.setMaximumSize(dim);
+    installProgressBar.setMinimumSize(dim);
+    installProgressBar.setOpaque(false);
+    installProgressBar.setAlignmentX(CENTER_ALIGNMENT);
+  }
   installRemoveButton=new JButton(" ");
   installRemoveButton.setInheritsPopupMenu(true);
   Dimension installButtonDimensions=installRemoveButton.getPreferredSize();
@@ -80,10 +82,7 @@
   barButtonCardPane.add(barPane,PROGRESS_BAR_CONSTRAINT);
   ((CardLayout)barButtonCardPane.getLayout()).show(barButtonCardPane,BUTTON_CONSTRAINT);
   rightPane.add(barButtonCardPane);
-  d=installProgressBar.getPreferredSize();
-  Dimension d2=installRemoveButton.getPreferredSize();
-  d.width=ContributionPanel.BUTTON_WIDTH;
-  d.height=d2.height;
-  rightPane.setMinimumSize(d);
-  rightPane.setPreferredSize(d);
+  Dimension dim=new Dimension(ContributionPanel.BUTTON_WIDTH,installRemoveButton.getPreferredSize().height);
+  rightPane.setMinimumSize(dim);
+  rightPane.setPreferredSize(dim);
 }
