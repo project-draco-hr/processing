@@ -1,0 +1,13 @@
+{
+  List<Contribution> filteredList=new ArrayList<Contribution>(contribs);
+  if (filter) {
+    Iterator<Contribution> it=filteredList.iterator();
+    while (it.hasNext()) {
+      Contribution libInfo=it.next();
+      if (!libInfo.isCompatible(Base.getRevision())) {
+        it.remove();
+      }
+    }
+  }
+  return filteredList;
+}
