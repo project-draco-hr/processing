@@ -1,0 +1,52 @@
+{
+  JLabel label=contributionTab.contributionManagerDialog.numberLabel;
+  if (getNoOfRows() == 0) {
+    label.setVisible(false);
+  }
+ else {
+    label.setVisible(true);
+    label.setText(Integer.toString(panelByContribution.size()));
+  }
+  model.getDataVector().removeAllElements();
+  model.fireTableDataChanged();
+  ContributionType temp=null;
+  Font boldFont=Toolkit.getSansFont(table.getFont().getSize(),Font.BOLD);
+  String fontFace="<font face=\"" + boldFont.getName() + "\">";
+  for (  Contribution entry : contributionsSet) {
+    if (entry.getType() != temp) {
+      temp=entry.getType();
+      model.addRow(new Object[]{null,"<html><i>" + temp.getTitle() + "</i></html>",null,null,null});
+    }
+    StringBuilder name=new StringBuilder("");
+    String authorList=entry.getAuthorList();
+    if (authorList != null) {
+      for (int i=0; i < authorList.length(); i++) {
+        if (authorList.charAt(i) == '[' || authorList.charAt(i) == ']') {
+          continue;
+        }
+        if (authorList.charAt(i) == '(') {
+          i++;
+          while (authorList.charAt(i) != ')') {
+            i++;
+          }
+        }
+ else {
+          name.append(authorList.charAt(i));
+        }
+      }
+    }
+    Icon icon=null;
+    if (entry.isInstalled()) {
+      icon=upToDateIcon;
+      if (contribListing.hasUpdates(entry)) {
+        icon=updateAvailableIcon;
+      }
+      if (!entry.isCompatible(Base.getRevision())) {
+        icon=incompatibleIcon;
+      }
+    }
+    model.addRow(new Object[]{icon,"<html>" + fontFace + entry.getName()+ "</font></html>",name,entry.getPrettyVersion(),contributionTab.contribListing.getLatestVersion(entry)});
+  }
+  UpdateContributionTab tab=(UpdateContributionTab)contributionTab;
+  ((UpdateStatusPanel)tab.statusPanel).update();
+}
