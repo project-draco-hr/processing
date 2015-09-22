@@ -1,18 +1,18 @@
 {
-  int colon=filter.indexOf(":");
+  int colon=typed.indexOf(":");
   if (colon != -1) {
-    String isText=filter.substring(0,colon);
-    String property=filter.substring(colon + 1);
+    String isText=typed.substring(0,colon);
+    String property=typed.substring(colon + 1);
     if (!isProperty(property)) {
       return true;
     }
     if ("is".equals(isText) || "has".equals(isText)) {
-      return hasProperty(contrib,filter.substring(colon + 1));
+      return hasProperty(contrib,typed.substring(colon + 1));
     }
  else     if ("not".equals(isText)) {
-      return !hasProperty(contrib,filter.substring(colon + 1));
+      return !hasProperty(contrib,typed.substring(colon + 1));
     }
   }
-  filter=".*" + filter.toLowerCase() + ".*";
-  return contrib.getAuthorList() != null && deAccent(contrib.getAuthorList().toLowerCase()).matches(filter) || contrib.getSentence() != null && deAccent(contrib.getSentence().toLowerCase()).matches(filter) || contrib.getParagraph() != null && deAccent(contrib.getParagraph().toLowerCase()).matches(filter) || contrib.hasCategory(filter) || contrib.getName() != null && deAccent(contrib.getName().toLowerCase()).matches(filter);
+  typed=".*" + typed.toLowerCase() + ".*";
+  return (matchField(contrib.getName(),typed) || matchField(contrib.getAuthorList(),typed) || matchField(contrib.getSentence(),typed)|| matchField(contrib.getParagraph(),typed)|| contrib.hasCategory(typed));
 }
