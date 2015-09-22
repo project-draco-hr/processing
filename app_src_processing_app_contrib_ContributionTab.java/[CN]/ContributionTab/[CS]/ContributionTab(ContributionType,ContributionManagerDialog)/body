@@ -1,7 +1,12 @@
 {
   this.contributionType=type;
   this.contributionManagerDialog=contributionManagerDialog;
-  filter=type.createFilter();
+  filter=new Contribution.Filter(){
+    public boolean matches(    Contribution contrib){
+      return contrib.getType() == contributionType;
+    }
+  }
+;
   contribListing=ContributionListing.getInstance();
   statusPanel=new StatusPanel(650,this);
   contributionListPanel=new ContributionListPanel(this,filter);
