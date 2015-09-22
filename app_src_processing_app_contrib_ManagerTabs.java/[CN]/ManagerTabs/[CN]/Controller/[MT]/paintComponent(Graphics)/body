@@ -28,12 +28,13 @@
     fontAscent=(int)Toolkit.getAscent(g);
   }
   Graphics2D g2=Toolkit.prepareGraphics(g);
+  g.drawImage(gradient,0,0,imageW,imageH,this);
   g.setColor(tabColor[SELECTED]);
-  g.fillRect(0,0,imageW,2);
-  g.drawImage(gradient,0,2,imageW,imageH,this);
+  g.fillRect(0,TAB_BOTTOM,imageW,2);
   for (  Tab tab : tabList) {
     tab.textWidth=(int)font.getStringBounds(tab.name,g2.getFontRenderContext()).getWidth();
   }
-  placeTabs(Editor.LEFT_GUTTER,g2);
+  placeTabs(0);
+  drawTabs(g2);
   screen.drawImage(offscreen,0,0,imageW,imageH,null);
 }
