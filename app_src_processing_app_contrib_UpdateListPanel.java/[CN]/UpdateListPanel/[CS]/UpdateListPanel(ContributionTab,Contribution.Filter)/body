@@ -17,8 +17,8 @@
     @Override public Component prepareRenderer(    TableCellRenderer renderer,    int row,    int column){
       Component c=super.prepareRenderer(renderer,row,column);
       String title=(String)getValueAt(row,1);
-      if (title.equals("Libraries") || title.equals("Modes") || title.equals("Tools")|| title.equals("Examples")) {
-        c.setBackground(new Color(0xFFf0f0f0));
+      if (sectionNames.contains(title)) {
+        c.setBackground(SECTION_COLOR);
       }
  else {
         c.setBackground(Color.WHITE);
@@ -27,7 +27,7 @@
     }
     @Override public void changeSelection(    int rowIndex,    int columnIndex,    boolean toggle,    boolean extend){
       String title=(String)getValueAt(rowIndex,1);
-      if (!title.equals("Libraries") && !title.equals("Modes") && !title.equals("Tools")&& !title.equals("Examples")) {
+      if (!sectionNames.contains(title)) {
         super.changeSelection(rowIndex,columnIndex,toggle,extend);
       }
     }
