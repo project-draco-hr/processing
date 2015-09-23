@@ -1,42 +1,93 @@
 {
-  lastTimeStamp=System.currentTimeMillis();
-  try {
-    sourceCode=preprocessCode(editor.getSketch().getMainProgram());
-    compilationUnitState=0;
-    syntaxCheck();
-    if (!hasSyntaxErrors()) {
+  CodeCheckResult result=new CodeCheckResult();
+  result.sourceCode=preprocessCode();
+  result.sourceCodeOffset=0;
+  char[] sourceCodeArray=result.sourceCode.toCharArray();
+  IProblem[] problems;
+{
+{
+      result.syntaxErrors=true;
+      result.containsErrors=true;
+      parser.setSource(sourceCodeArray);
+      parser.setKind(ASTParser.K_COMPILATION_UNIT);
+      Map<String,String> options=JavaCore.getOptions();
+      JavaCore.setComplianceOptions(JavaCore.VERSION_1_8,options);
+      options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_8);
+      options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT,JavaCore.ENABLED);
+      parser.setCompilerOptions(options);
+      parser.setStatementsRecovery(true);
+      result.compilationUnit=(CompilationUnit)parser.createAST(null);
+      problems=result.compilationUnit.getProblems();
+      if (problems.length == 0) {
+        result.syntaxErrors=false;
+        result.containsErrors=false;
+      }
+ else {
+        result.syntaxErrors=true;
+        result.containsErrors=true;
+      }
     }
-    if (problems.length == 0 && !editor.hasJavaTabs()) {
-      sourceCode=xqpreproc.handle(sourceCode,programImports);
-      prepareCompilerClasspath();
-      compileCheck();
+  }
+  if (problems.length == 0 && !editor.hasJavaTabs()) {
+    String sourceCode=xqpreproc.handle(result.sourceCode,programImports);
+    prepareCompilerClasspath();
+{
+{
+        parser.setSource(sourceCodeArray);
+        parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        Map<String,String> options=JavaCore.getOptions();
+        JavaCore.setComplianceOptions(JavaCore.VERSION_1_8,options);
+        options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_8);
+        options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT,JavaCore.ENABLED);
+        parser.setCompilerOptions(options);
+        parser.setStatementsRecovery(true);
+        result.compilationUnit=(CompilationUnit)parser.createAST(null);
+        result.sourceCode=sourceCode;
+        result.sourceCodeOffset=1;
+        try {
+          if (loadCompClass) {
+            classPath=new URL[classpathJars.size()];
+            classpathJars.toArray(classPath);
+            compilationChecker=null;
+            classLoader=null;
+            System.gc();
+            classLoader=new URLClassLoader(classPath);
+            compilationChecker=new CompilationChecker();
+            loadCompClass=false;
+          }
+          if (compilerSettings == null) {
+            prepareCompilerSetting();
+          }
+          problems=compilationChecker.getErrors(className,sourceCode,compilerSettings,classLoader);
+        }
+ catch (        Exception e) {
+          System.err.println("compileCheck() problem." + e);
+          e.printStackTrace();
+          cancel();
+        }
+catch (        NoClassDefFoundError e) {
+          e.printStackTrace();
+          cancel();
+        }
+      }
     }
+  }
+  if (problems != null) {
+    for (    IProblem problem : problems) {
+      int sourceLine=problem.getSourceLineNumber() - result.sourceCodeOffset;
+      int[] a=calculateTabIndexAndLineNumber(sourceLine);
+      Problem p=new Problem(problem,a[0],a[1]);
+      if (p.isError()) {
+        result.containsErrors=true;
+      }
+ else       if (p.isWarning() && !JavaMode.warningsEnabled) {
+        continue;
+      }
+      result.problems.add(p);
+    }
+  }
 synchronized (astGenerator) {
-      astGenerator.buildAST(cu);
-    }
-    if (!JavaMode.errorCheckEnabled) {
-      problemsList.clear();
-      Messages.log("Error Check disabled, so not updating UI.");
-    }
-    calcPdeOffsetsForProbList();
-    updateErrorTable();
-    editor.updateErrorBar(problemsList);
-    updateEditorStatus();
-    editor.getTextArea().repaint();
-    updatePaintedThingys();
-    editor.updateErrorToggle();
-    int x=textModified.get();
-    if (x >= 2) {
-      textModified.set(2);
-      x=2;
-    }
-    if (x > 0)     textModified.set(x - 1);
- else     textModified.set(0);
-    return true;
+    astGenerator.buildAST(result.sourceCode,result.compilationUnit);
   }
- catch (  Exception e) {
-    Messages.log("Oops! [ErrorCheckerService.checkCode]: " + e);
-    e.printStackTrace();
-  }
-  return false;
+  return result;
 }

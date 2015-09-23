@@ -1,17 +1,28 @@
 {
   this.editor=debugEditor;
-  stopThread=new AtomicBoolean(false);
   pauseThread=new AtomicBoolean(false);
-  problemsList=new ArrayList<Problem>();
-  classpathJars=new ArrayList<URL>();
-  initParser();
+  classpathJars=new ArrayList<>();
+{
+    try {
+      parser=ASTParser.newParser(AST.JLS8);
+    }
+ catch (    Exception e) {
+      System.err.println("Experimental Mode initialization failed. " + "Are you running the right version of Processing? ");
+      cancel();
+    }
+catch (    Error e) {
+      System.err.println("Experimental Mode initialization failed. ");
+      e.printStackTrace();
+      cancel();
+    }
+  }
   xqpreproc=new XQPreprocessor(this);
   PdePreprocessor pdePrepoc=new PdePreprocessor(null);
   defaultImportsOffset=pdePrepoc.getCoreImports().length + pdePrepoc.getDefaultImports().length + 1;
   astGenerator=new ASTGenerator(this);
-  syntaxErrors=new AtomicBoolean(true);
-  containsErrors=new AtomicBoolean(true);
+  lastCodeCheckResult.syntaxErrors=false;
+  lastCodeCheckResult.containsErrors=false;
   errorMsgSimplifier=new ErrorMessageSimplifier();
-  tempErrorLog=new TreeMap<String,IProblem>();
+  tempErrorLog=new TreeMap<>();
   sketchChangedListener=new SketchChangedListener();
 }

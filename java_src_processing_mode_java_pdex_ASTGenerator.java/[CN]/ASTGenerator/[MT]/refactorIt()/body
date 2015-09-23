@@ -10,7 +10,7 @@
     JOptionPane.showConfirmDialog(new JFrame(),newName + " isn't a valid name.","Uh oh..",JOptionPane.PLAIN_MESSAGE);
     return;
   }
-  errorCheckerService.pauseThread();
+  errorCheckerService.cancel();
   if (refactorTree.isVisible()) {
     refactorTree.setModel(new DefaultTreeModel(defCU));
     ((DefaultTreeModel)refactorTree.getModel()).reload();
@@ -40,9 +40,9 @@
     editor.getTextArea().setSelectedText(newName);
   }
   editor.stopCompoundEdit();
-  errorCheckerService.resumeThread();
+  errorCheckerService.request();
   editor.getSketch().setModified(true);
-  errorCheckerService.runManualErrorCheck();
+  errorCheckerService.request();
   frmRename.setVisible(false);
   lastClickedWord=null;
   lastClickedWordNode=null;
