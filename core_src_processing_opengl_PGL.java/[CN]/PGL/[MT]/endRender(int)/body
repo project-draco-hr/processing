@@ -1,15 +1,16 @@
 {
+  PGraphicsOpenGL g=graphics.get();
+  if (g == null)   return;
   if (fboLayerEnabled) {
     syncBackTexture();
     bindFramebufferImpl(FRAMEBUFFER,0);
     if (presentMode) {
-      int argb=windowColor;
-      float a=((argb >> 24) & 0xff) / 255.0f;
-      float r=((argb >> 16) & 0xff) / 255.0f;
-      float g=((argb >> 8) & 0xff) / 255.0f;
-      float b=(argb & 0xff) / 255.0f;
+      float wa=((windowColor >> 24) & 0xff) / 255.0f;
+      float wr=((windowColor >> 16) & 0xff) / 255.0f;
+      float wg=((windowColor >> 8) & 0xff) / 255.0f;
+      float wb=(windowColor & 0xff) / 255.0f;
       clearDepth(1);
-      clearColor(r,g,b,a);
+      clearColor(wr,wg,wb,wa);
       clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
       if (closeBtnTex == null) {
         closeBtnTex=allocateIntBuffer(1);
@@ -39,7 +40,7 @@
       y=(int)presentY;
     }
     float scale=getPixelScale();
-    drawTexture(TEXTURE_2D,glColorTex.get(backTex),fboWidth,fboHeight,x,y,graphics.width,graphics.height,0,0,(int)(scale * graphics.width),(int)(scale * graphics.height),0,0,graphics.width,graphics.height);
+    drawTexture(TEXTURE_2D,glColorTex.get(backTex),fboWidth,fboHeight,x,y,g.width,g.height,0,0,(int)(scale * g.width),(int)(scale * g.height),0,0,g.width,g.height);
     int temp=frontTex;
     frontTex=backTex;
     backTex=temp;

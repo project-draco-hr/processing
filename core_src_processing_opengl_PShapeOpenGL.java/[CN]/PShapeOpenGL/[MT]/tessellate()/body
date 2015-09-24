@@ -1,11 +1,13 @@
 {
+  PGraphicsOpenGL g=pg.get();
+  if (g == null)   return;
   if (root == this && parent == null) {
     if (polyAttribs == null) {
       polyAttribs=PGraphicsOpenGL.newAttributeMap();
       collectPolyAttribs();
     }
     if (tessGeo == null) {
-      tessGeo=PGraphicsOpenGL.newTessGeometry(pg,polyAttribs,PGraphicsOpenGL.RETAINED);
+      tessGeo=PGraphicsOpenGL.newTessGeometry(g,polyAttribs,PGraphicsOpenGL.RETAINED);
     }
     tessGeo.clear();
     for (int i=0; i < polyAttribs.size(); i++) {

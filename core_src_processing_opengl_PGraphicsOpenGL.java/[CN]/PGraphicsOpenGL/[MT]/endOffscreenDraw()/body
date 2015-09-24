@@ -1,7 +1,7 @@
 {
   if (offscreenMultisample) {
-    FrameBuffer ofb=offscreenFramebuffer.get();
-    FrameBuffer mfb=multisampleFramebuffer.get();
+    FrameBuffer ofb=offscreenFramebuffer;
+    FrameBuffer mfb=multisampleFramebuffer;
     if (ofb != null && mfb != null) {
       mfb.copyColor(ofb);
     }
@@ -13,9 +13,8 @@
     pgl.clear(PGL.COLOR_BUFFER_BIT);
     pgl.colorMask(true,true,true,true);
   }
-  Texture tex=texture.get();
-  if (tex != null) {
-    tex.updateTexels();
+  if (texture != null) {
+    texture.updateTexels();
   }
   getPrimaryPG().restoreGL();
 }

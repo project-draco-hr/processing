@@ -23,15 +23,14 @@
  catch (      IndexOutOfBoundsException e) {
       }
       endPixelsOp();
-      Texture tex=texture.get();
-      if (tex != null) {
-        tex.setNative(nativePixelBuffer,0,0,pixelWidth,pixelHeight);
+      if (texture != null) {
+        texture.setNative(nativePixelBuffer,0,0,pixelWidth,pixelHeight);
       }
     }
   }
  else   if (offscreenMultisample) {
-    FrameBuffer ofb=offscreenFramebuffer.get();
-    FrameBuffer mfb=multisampleFramebuffer.get();
+    FrameBuffer ofb=offscreenFramebuffer;
+    FrameBuffer mfb=multisampleFramebuffer;
     if (ofb != null && mfb != null) {
       mfb.copyColor(ofb);
     }

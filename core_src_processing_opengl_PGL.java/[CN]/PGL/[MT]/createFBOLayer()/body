@@ -1,12 +1,14 @@
 {
+  PGraphicsOpenGL g=graphics.get();
+  if (g == null)   return;
   float scale=getPixelScale();
   if (hasNpotTexSupport()) {
-    fboWidth=(int)(scale * graphics.width);
-    fboHeight=(int)(scale * graphics.height);
+    fboWidth=(int)(scale * g.width);
+    fboHeight=(int)(scale * g.height);
   }
  else {
-    fboWidth=nextPowerOfTwo((int)(scale * graphics.width));
-    fboHeight=nextPowerOfTwo((int)(scale * graphics.height));
+    fboWidth=nextPowerOfTwo((int)(scale * g.width));
+    fboHeight=nextPowerOfTwo((int)(scale * g.height));
   }
   int maxs=maxSamples();
   if (hasFboMultisampleSupport() && 1 < maxs) {
@@ -27,7 +29,7 @@
     texParameteri(TEXTURE_2D,TEXTURE_WRAP_S,CLAMP_TO_EDGE);
     texParameteri(TEXTURE_2D,TEXTURE_WRAP_T,CLAMP_TO_EDGE);
     texImage2D(TEXTURE_2D,0,RGBA,fboWidth,fboHeight,0,RGBA,UNSIGNED_BYTE,null);
-    initTexture(TEXTURE_2D,RGBA,fboWidth,fboHeight,graphics.backgroundColor);
+    initTexture(TEXTURE_2D,RGBA,fboWidth,fboHeight,g.backgroundColor);
   }
   bindTexture(TEXTURE_2D,0);
   backTex=0;
@@ -35,7 +37,7 @@
   genFramebuffers(1,glColorFbo);
   bindFramebufferImpl(FRAMEBUFFER,glColorFbo.get(0));
   framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
-  if (!multisample || graphics.getHint(PConstants.ENABLE_BUFFER_READING)) {
+  if (!multisample || g.getHint(PConstants.ENABLE_BUFFER_READING)) {
     createDepthAndStencilBuffer(false,depthBits,stencilBits,packed);
   }
   if (multisample) {
@@ -50,12 +52,11 @@
   validateFramebuffer();
   clearDepth(1);
   clearStencil(0);
-  int argb=graphics.backgroundColor;
-  float a=((argb >> 24) & 0xff) / 255.0f;
-  float r=((argb >> 16) & 0xff) / 255.0f;
-  float g=((argb >> 8) & 0xff) / 255.0f;
-  float b=((argb) & 0xff) / 255.0f;
-  clearColor(r,g,b,a);
+  float ba=((g.backgroundColor >> 24) & 0xff) / 255.0f;
+  float br=((g.backgroundColor >> 16) & 0xff) / 255.0f;
+  float bg=((g.backgroundColor >> 8) & 0xff) / 255.0f;
+  float bb=((g.backgroundColor) & 0xff) / 255.0f;
+  clearColor(br,bg,bb,ba);
   clear(DEPTH_BUFFER_BIT | STENCIL_BUFFER_BIT | COLOR_BUFFER_BIT);
   bindFramebufferImpl(FRAMEBUFFER,0);
   initFBOLayer();

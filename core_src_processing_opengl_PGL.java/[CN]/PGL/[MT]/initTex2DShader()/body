@@ -1,5 +1,7 @@
 {
-  PGL ppgl=primaryPGL ? this : graphics.getPrimaryPGL();
+  PGraphicsOpenGL g=graphics.get();
+  if (g == null)   return null;
+  PGL ppgl=primaryPGL ? this : g.getPrimaryPGL();
   if (!ppgl.loadedTex2DShader || ppgl.tex2DShaderContext != ppgl.glContext) {
     String[] preprocVertSrc=preprocessVertexSource(texVertShaderSource,getGLSLVersion());
     String vertSource=PApplet.join(preprocVertSrc,"\n");

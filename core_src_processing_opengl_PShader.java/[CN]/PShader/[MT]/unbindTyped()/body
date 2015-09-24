@@ -1,4 +1,6 @@
 {
+  PGraphicsOpenGL g=currentPG.get();
+  if (g == null)   return;
   if (-1 < offsetLoc)   pgl.disableVertexAttribArray(offsetLoc);
   if (-1 < directionLoc)   pgl.disableVertexAttribArray(directionLoc);
   if (-1 < textureLoc && texture != null) {
@@ -18,7 +20,7 @@
   if (-1 < ppixelsLoc) {
     pgl.enableFBOLayer();
     pgl.activeTexture(PGL.TEXTURE0 + ppixelsUnit);
-    currentPG.unbindFrontTexture();
+    g.unbindFrontTexture();
     pgl.activeTexture(PGL.TEXTURE0);
   }
   pgl.bindBuffer(PGL.ARRAY_BUFFER,0);

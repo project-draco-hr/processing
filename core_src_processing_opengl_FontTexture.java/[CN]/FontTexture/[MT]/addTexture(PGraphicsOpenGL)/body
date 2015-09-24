@@ -26,10 +26,13 @@
   }
  else   if (resize) {
     Texture tex0=textures[currentTex];
-    tex.pg.pushStyle();
-    tex.pg.blendMode(REPLACE);
-    tex.put(tex0);
-    tex.pg.popStyle();
+    PGraphicsOpenGL g=tex.pg.get();
+    if (g != null) {
+      g.pushStyle();
+      g.blendMode(REPLACE);
+      tex.put(tex0);
+      g.popStyle();
+    }
     textures[currentTex]=tex;
     pg.setCache(images[currentTex],tex);
     images[currentTex].width=tex.width;

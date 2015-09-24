@@ -1,28 +1,30 @@
 {
+  PGraphicsOpenGL g=currentPG.get();
+  if (g == null)   return;
   if (-1 < transformMatLoc) {
-    currentPG.updateGLProjmodelview();
-    setUniformMatrix(transformMatLoc,currentPG.glProjmodelview);
+    g.updateGLProjmodelview();
+    setUniformMatrix(transformMatLoc,g.glProjmodelview);
   }
   if (-1 < modelviewMatLoc) {
-    currentPG.updateGLModelview();
-    setUniformMatrix(modelviewMatLoc,currentPG.glModelview);
+    g.updateGLModelview();
+    setUniformMatrix(modelviewMatLoc,g.glModelview);
   }
   if (-1 < projectionMatLoc) {
-    currentPG.updateGLProjection();
-    setUniformMatrix(projectionMatLoc,currentPG.glProjection);
+    g.updateGLProjection();
+    setUniformMatrix(projectionMatLoc,g.glProjection);
   }
   if (-1 < viewportLoc) {
-    float x=currentPG.viewport.get(0);
-    float y=currentPG.viewport.get(1);
-    float w=currentPG.viewport.get(2);
-    float h=currentPG.viewport.get(3);
+    float x=g.viewport.get(0);
+    float y=g.viewport.get(1);
+    float w=g.viewport.get(2);
+    float h=g.viewport.get(3);
     setUniformValue(viewportLoc,x,y,w,h);
   }
   if (-1 < ppixelsLoc) {
     ppixelsUnit=getLastTexUnit() + 1;
     setUniformValue(ppixelsLoc,ppixelsUnit);
     pgl.activeTexture(PGL.TEXTURE0 + ppixelsUnit);
-    currentPG.bindFrontTexture();
+    g.bindFrontTexture();
   }
  else {
     ppixelsUnit=-1;

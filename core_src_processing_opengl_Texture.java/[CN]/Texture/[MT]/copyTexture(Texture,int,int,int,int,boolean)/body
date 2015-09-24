@@ -1,14 +1,16 @@
 {
+  PGraphicsOpenGL g=pg.get();
+  if (g == null)   return;
   if (tex == null) {
     throw new RuntimeException("Source texture is null");
   }
   if (tempFbo == null) {
-    tempFbo=new FrameBuffer(pg,glWidth,glHeight);
+    tempFbo=new FrameBuffer(g,glWidth,glHeight);
   }
   tempFbo.setColorBuffer(this);
   tempFbo.disableDepthTest();
-  pg.pushFramebuffer();
-  pg.setFramebuffer(tempFbo);
+  g.pushFramebuffer();
+  g.setFramebuffer(tempFbo);
   pgl.clearColor(0,0,0,0);
   pgl.clear(PGL.COLOR_BUFFER_BIT);
   if (scale) {
@@ -17,6 +19,6 @@
  else {
     pgl.drawTexture(tex.glTarget,tex.glName,tex.glWidth,tex.glHeight,0,0,tempFbo.width,tempFbo.height,1,x,y,x + w,y + h,x,y,x + w,y + h);
   }
-  pg.popFramebuffer();
+  g.popFramebuffer();
   updateTexels(x,y,w,h);
 }

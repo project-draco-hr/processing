@@ -1,37 +1,39 @@
 {
+  PGraphicsOpenGL g=pg.get();
+  if (g == null)   return;
   int size=tessGeo.polyVertexCount;
   int sizef=size * PGL.SIZEOF_FLOAT;
   int sizei=size * PGL.SIZEOF_INT;
   tessGeo.updatePolyVerticesBuffer();
-  if (bufPolyVertex == null)   bufPolyVertex=new VertexBuffer(pg,PGL.ARRAY_BUFFER,4,PGL.SIZEOF_FLOAT);
+  if (bufPolyVertex == null)   bufPolyVertex=new VertexBuffer(g,PGL.ARRAY_BUFFER,4,PGL.SIZEOF_FLOAT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPolyVertex.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,tessGeo.polyVerticesBuffer,glUsage);
   tessGeo.updatePolyColorsBuffer();
-  if (bufPolyColor == null)   bufPolyColor=new VertexBuffer(pg,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_INT);
+  if (bufPolyColor == null)   bufPolyColor=new VertexBuffer(g,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_INT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPolyColor.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyColorsBuffer,glUsage);
   tessGeo.updatePolyNormalsBuffer();
-  if (bufPolyNormal == null)   bufPolyNormal=new VertexBuffer(pg,PGL.ARRAY_BUFFER,3,PGL.SIZEOF_FLOAT);
+  if (bufPolyNormal == null)   bufPolyNormal=new VertexBuffer(g,PGL.ARRAY_BUFFER,3,PGL.SIZEOF_FLOAT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPolyNormal.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,3 * sizef,tessGeo.polyNormalsBuffer,glUsage);
   tessGeo.updatePolyTexCoordsBuffer();
-  if (bufPolyTexcoord == null)   bufPolyTexcoord=new VertexBuffer(pg,PGL.ARRAY_BUFFER,2,PGL.SIZEOF_FLOAT);
+  if (bufPolyTexcoord == null)   bufPolyTexcoord=new VertexBuffer(g,PGL.ARRAY_BUFFER,2,PGL.SIZEOF_FLOAT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPolyTexcoord.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,2 * sizef,tessGeo.polyTexCoordsBuffer,glUsage);
   tessGeo.updatePolyAmbientBuffer();
-  if (bufPolyAmbient == null)   bufPolyAmbient=new VertexBuffer(pg,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_INT);
+  if (bufPolyAmbient == null)   bufPolyAmbient=new VertexBuffer(g,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_INT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPolyAmbient.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyAmbientBuffer,glUsage);
   tessGeo.updatePolySpecularBuffer();
-  if (bufPolySpecular == null)   bufPolySpecular=new VertexBuffer(pg,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_INT);
+  if (bufPolySpecular == null)   bufPolySpecular=new VertexBuffer(g,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_INT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPolySpecular.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polySpecularBuffer,glUsage);
   tessGeo.updatePolyEmissiveBuffer();
-  if (bufPolyEmissive == null)   bufPolyEmissive=new VertexBuffer(pg,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_INT);
+  if (bufPolyEmissive == null)   bufPolyEmissive=new VertexBuffer(g,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_INT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPolyEmissive.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.polyEmissiveBuffer,glUsage);
   tessGeo.updatePolyShininessBuffer();
-  if (bufPolyShininess == null)   bufPolyShininess=new VertexBuffer(pg,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_FLOAT);
+  if (bufPolyShininess == null)   bufPolyShininess=new VertexBuffer(g,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_FLOAT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPolyShininess.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,sizef,tessGeo.polyShininessBuffer,glUsage);
   for (  String name : polyAttribs.keySet()) {
@@ -43,7 +45,7 @@
   }
   pgl.bindBuffer(PGL.ARRAY_BUFFER,0);
   tessGeo.updatePolyIndicesBuffer();
-  if (bufPolyIndex == null)   bufPolyIndex=new VertexBuffer(pg,PGL.ELEMENT_ARRAY_BUFFER,1,PGL.SIZEOF_INDEX,true);
+  if (bufPolyIndex == null)   bufPolyIndex=new VertexBuffer(g,PGL.ELEMENT_ARRAY_BUFFER,1,PGL.SIZEOF_INDEX,true);
   pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,bufPolyIndex.glId);
   pgl.bufferData(PGL.ELEMENT_ARRAY_BUFFER,tessGeo.polyIndexCount * PGL.SIZEOF_INDEX,tessGeo.polyIndicesBuffer,glUsage);
   pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,0);

@@ -12,15 +12,12 @@
     needEndDraw=true;
   }
   loadTexture();
-  Texture tex=texture.get();
-  Texture ftex=filterTexture.get();
-  if (ftex == null || ftex.contextIsOutdated()) {
-    ftex=new Texture(this,tex.width,tex.height,tex.getParameters());
-    ftex.invertedY(true);
-    filterImage=wrapTexture(ftex);
-    filterTexture=new WeakReference<Texture>(ftex);
+  if (filterTexture == null || filterTexture.contextIsOutdated()) {
+    filterTexture=new Texture(this,texture.width,texture.height,texture.getParameters());
+    filterTexture.invertedY(true);
+    filterImage=wrapTexture(filterTexture);
   }
-  ftex.set(tex);
+  filterTexture.set(texture);
   pgl.depthMask(false);
   pgl.disable(PGL.DEPTH_TEST);
   begin2D();

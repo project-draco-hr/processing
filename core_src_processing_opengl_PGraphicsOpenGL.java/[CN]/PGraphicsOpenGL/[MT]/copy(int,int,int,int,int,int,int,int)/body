@@ -1,14 +1,11 @@
 {
   if (primaryGraphics)   pgl.enableFBOLayer();
   loadTexture();
-  Texture tex=texture.get();
-  Texture ftex=filterTexture.get();
-  if (ftex == null || ftex.contextIsOutdated()) {
-    ftex=new Texture(this,tex.width,tex.height,tex.getParameters());
-    ftex.invertedY(true);
-    filterImage=wrapTexture(ftex);
-    filterTexture=new WeakReference<Texture>(ftex);
+  if (filterTexture == null || filterTexture.contextIsOutdated()) {
+    filterTexture=new Texture(this,texture.width,texture.height,texture.getParameters());
+    filterTexture.invertedY(true);
+    filterImage=wrapTexture(filterTexture);
   }
-  ftex.put(tex,sx,height - (sy + sh),sw,height - sy);
+  filterTexture.put(texture,sx,height - (sy + sh),sw,height - sy);
   copy(filterImage,sx,sy,sw,sh,dx,dy,dw,dh);
 }

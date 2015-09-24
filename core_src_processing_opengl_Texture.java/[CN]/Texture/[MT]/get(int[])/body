@@ -1,4 +1,6 @@
 {
+  PGraphicsOpenGL g=pg.get();
+  if (g == null)   return;
   if (pixels == null) {
     throw new RuntimeException("Trying to copy texture to null pixels array");
   }
@@ -6,13 +8,13 @@
     throw new RuntimeException("Trying to copy texture to pixels array of " + "wrong size");
   }
   if (tempFbo == null) {
-    tempFbo=new FrameBuffer(pg,glWidth,glHeight);
+    tempFbo=new FrameBuffer(g,glWidth,glHeight);
   }
   tempFbo.setColorBuffer(this);
-  pg.pushFramebuffer();
-  pg.setFramebuffer(tempFbo);
+  g.pushFramebuffer();
+  g.setFramebuffer(tempFbo);
   tempFbo.readPixels();
-  pg.popFramebuffer();
+  g.popFramebuffer();
   tempFbo.getPixels(pixels);
   convertToARGB(pixels);
   if (invertedX)   flipArrayOnX(pixels,1);

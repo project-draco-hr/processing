@@ -92,7 +92,9 @@
       }
  else       if (val.type == UniformValue.SAMPLER2D) {
         PImage img=(PImage)val.value;
-        Texture tex=currentPG.getTexture(img);
+        PGraphicsOpenGL g=currentPG.get();
+        if (g == null)         return;
+        Texture tex=g.getTexture(img);
         if (textures == null)         textures=new HashMap<Integer,Texture>();
         textures.put(loc,tex);
         if (texUnits == null)         texUnits=new HashMap<Integer,Integer>();

@@ -13,15 +13,7 @@
     setFramebuffer(drawFramebuffer);
   }
   if (pgl.isFBOBacked()) {
-    Texture tex0=texture.get();
-    Texture tex1=pgl.wrapBackTexture(tex0);
-    if (tex0 != tex1) {
-      texture=new WeakReference<Texture>(tex1);
-    }
-    Texture ptex0=ptexture.get();
-    Texture ptex1=pgl.wrapFrontTexture(ptex0);
-    if (ptex0 != ptex1) {
-      ptexture=new WeakReference<Texture>(ptex1);
-    }
+    texture=pgl.wrapBackTexture(texture);
+    ptexture=pgl.wrapFrontTexture(ptexture);
   }
 }

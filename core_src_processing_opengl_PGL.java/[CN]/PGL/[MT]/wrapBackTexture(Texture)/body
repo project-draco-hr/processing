@@ -1,10 +1,12 @@
 {
   if (texture == null) {
-    texture=new Texture(graphics);
-    texture.init(graphics.width,graphics.height,glColorTex.get(backTex),TEXTURE_2D,RGBA,fboWidth,fboHeight,NEAREST,NEAREST,CLAMP_TO_EDGE,CLAMP_TO_EDGE);
+    PGraphicsOpenGL g=graphics.get();
+    if (g == null)     return null;
+    texture=new Texture(g);
+    texture.init(g.width,g.height,glColorTex.get(backTex),TEXTURE_2D,RGBA,fboWidth,fboHeight,NEAREST,NEAREST,CLAMP_TO_EDGE,CLAMP_TO_EDGE);
     texture.invertedY(true);
     texture.colorBuffer(true);
-    graphics.setCache(graphics,texture);
+    g.setCache(g,texture);
   }
  else {
     texture.glName=glColorTex.get(backTex);
