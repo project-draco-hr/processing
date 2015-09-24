@@ -11,13 +11,22 @@
   if (getJavaEditor().isDebuggerEnabled()) {
     text=getTextArea().getGutterText(line);
   }
-  if (text == null) {
-    text=String.valueOf(line + 1);
-  }
-  char[] txt=text.toCharArray();
-  gfx.setFont(gutterTextFont);
-  int tx=Editor.LEFT_GUTTER - Editor.GUTTER_MARGIN - gfx.getFontMetrics().charsWidth(txt,0,txt.length);
   gfx.setColor(gutterTextColor);
-  int ty=textArea.lineToY(line) + fm.getHeight();
-  Utilities.drawTabbedText(new Segment(txt,0,text.length()),tx,ty,gfx,this,0);
+  int textRight=Editor.LEFT_GUTTER - Editor.GUTTER_MARGIN;
+  int textBaseline=textArea.lineToY(line) + fm.getHeight();
+  if (text != null) {
+    if (text.equals(JavaTextArea.BREAK_MARKER)) {
+      drawDiamond(gfx,textRight - 8,textBaseline - 8,8,8);
+    }
+ else     if (text.equals(JavaTextArea.STEP_MARKER)) {
+      drawRightArrow(gfx,textRight - 7,textBaseline - 7.5f,7,7);
+    }
+  }
+ else {
+    text=String.valueOf(line + 1);
+    gfx.setFont(gutterTextFont);
+    char[] txt=text.toCharArray();
+    int tx=textRight - gfx.getFontMetrics().charsWidth(txt,0,txt.length);
+    Utilities.drawTabbedText(new Segment(txt,0,text.length()),tx,textBaseline,gfx,this,0);
+  }
 }
