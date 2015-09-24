@@ -1,10 +1,8 @@
 {
-  String importRegex=errorCheckerService.importRegexp;
-  String tabCode;
   for (  SketchCode sc : sketch.getCode()) {
     if (sc.isExtension("pde")) {
-      tabCode=sc.getProgram();
-      String[][] pieces=PApplet.matchAll(tabCode,importRegex);
+      String tabCode=sc.getProgram();
+      String[][] pieces=PApplet.matchAll(tabCode,ErrorCheckerService.IMPORT_REGEX);
       if (pieces != null) {
         ArrayList<String> importHeaders=new ArrayList<String>();
         for (        String[] importStatement : pieces) {

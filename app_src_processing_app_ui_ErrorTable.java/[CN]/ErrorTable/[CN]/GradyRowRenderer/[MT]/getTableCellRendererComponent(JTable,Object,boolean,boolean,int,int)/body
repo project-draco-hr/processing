@@ -1,16 +1,39 @@
 {
+  Entry entry=(Entry)table.getValueAt(row,DATA_COLUMN);
   if (selected) {
     setForeground(textColorSelected);
-    setBackground(bgColorSelected);
+    if (entry.isError()) {
+      setBackground(bgColorError);
+    }
+ else     if (entry.isWarning()) {
+      setBackground(bgColorWarning);
+    }
+ else {
+      setBackground(bgColorSelected);
+    }
   }
  else {
     setForeground(textColor);
     setBackground(bgColor);
   }
-  if (column == DATA_COLUMN || value == null) {
+  if (column == DATA_COLUMN) {
+    setText("\u2022");
+    setHorizontalAlignment(SwingConstants.CENTER);
+    if (entry.isError()) {
+      setForeground(errorIndicatorColor);
+    }
+ else     if (entry.isWarning()) {
+      setForeground(warningIndicatorColor);
+    }
+ else {
+      setText("");
+    }
+  }
+ else   if (value == null) {
     setText("");
   }
  else {
+    setHorizontalAlignment(SwingConstants.LEFT);
     setText(value.toString());
   }
   return this;

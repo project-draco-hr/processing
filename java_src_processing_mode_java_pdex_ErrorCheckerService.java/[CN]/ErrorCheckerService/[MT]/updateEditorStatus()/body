@@ -1,19 +1,14 @@
 {
-  if (editor.getStatusMode() == EditorStatus.EDIT)   return;
   if (JavaMode.errorCheckEnabled) {
     LineMarker errorMarker=editor.findError(editor.getTextArea().getCaretLine());
     if (errorMarker != null) {
       if (errorMarker.getType() == LineMarker.WARNING) {
-        editor.statusMessage(errorMarker.getProblem().getMessage(),JavaEditor.STATUS_INFO);
+        editor.statusMessage(errorMarker.getProblem().getMessage(),EditorStatus.WARNING);
       }
  else {
-        editor.statusMessage(errorMarker.getProblem().getMessage(),JavaEditor.STATUS_COMPILER_ERR);
+        editor.statusMessage(errorMarker.getProblem().getMessage(),EditorStatus.COMPILER_ERROR);
       }
       return;
     }
-  }
-  if (editor.statusMessageType == JavaEditor.STATUS_COMPILER_ERR) {
-    editor.statusEmpty();
-    return;
   }
 }
