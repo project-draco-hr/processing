@@ -46,8 +46,14 @@
   sourceAlt=colorMatcher.replaceAll("int");
   checkForChangedImports();
   className=(editor == null) ? "DefaultClass" : editor.getSketch().getName();
-  String uncommented=PdePreprocessor.scrubComments(sourceAlt);
-  mode=PdePreprocessor.parseMode(uncommented);
+  try {
+    String uncommented=PdePreprocessor.scrubComments(sourceAlt);
+    mode=PdePreprocessor.parseMode(uncommented);
+  }
+ catch (  RuntimeException r) {
+    String uncommented=PdePreprocessor.scrubComments(sourceAlt + "*/");
+    mode=PdePreprocessor.parseMode(uncommented);
+  }
   StringBuilder sb=new StringBuilder();
   sb.append(xqpreproc.prepareImports(programImports));
   if (mode != PdePreprocessor.Mode.JAVA) {
