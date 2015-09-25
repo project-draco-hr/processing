@@ -1,0 +1,25 @@
+{
+  if (fences != null) {
+    while (size > 0) {
+      pgl.deleteSync(fences[tail]);
+      size--;
+      tail=(tail + 1) % BUFFER_COUNT;
+    }
+    fences=null;
+  }
+  if (pbos != null) {
+    for (int i=0; i < BUFFER_COUNT; i++) {
+      IntBuffer intBuffer=PGL.allocateIntBuffer(pbos);
+      pgl.deleteBuffers(BUFFER_COUNT,intBuffer);
+    }
+    pbos=null;
+  }
+  filenames=null;
+  widths=null;
+  heights=null;
+  size=0;
+  head=0;
+  tail=0;
+  calledThisFrame=false;
+  ongoingPixelTransfers.remove(this);
+}

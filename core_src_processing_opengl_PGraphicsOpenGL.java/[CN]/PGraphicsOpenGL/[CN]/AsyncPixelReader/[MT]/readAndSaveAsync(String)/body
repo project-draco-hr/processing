@@ -1,0 +1,12 @@
+{
+  if (size > 0) {
+    boolean shouldRead=(size == BUFFER_COUNT);
+    if (!shouldRead)     shouldRead=isLastTransferComplete();
+    if (shouldRead)     endTransfer();
+  }
+ else {
+    ongoingPixelTransfers.add(this);
+  }
+  beginTransfer(filename);
+  calledThisFrame=true;
+}

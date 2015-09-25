@@ -1,0 +1,18 @@
+{
+  if (widths[head] != pixelWidth || heights[head] != pixelHeight) {
+    if (widths[head] * heights[head] != pixelWidth * pixelHeight) {
+      pgl.bindBuffer(PGL.PIXEL_PACK_BUFFER,pbos[head]);
+      pgl.bufferData(PGL.PIXEL_PACK_BUFFER,Integer.BYTES * pixelWidth * pixelHeight,null,PGL.STREAM_READ);
+    }
+    widths[head]=pixelWidth;
+    heights[head]=pixelHeight;
+    pgl.bindBuffer(PGL.PIXEL_PACK_BUFFER,0);
+  }
+  pgl.bindBuffer(PGL.PIXEL_PACK_BUFFER,pbos[head]);
+  pgl.readPixels(0,0,width,height,PGL.RGBA,PGL.UNSIGNED_BYTE,0);
+  pgl.bindBuffer(PGL.PIXEL_PACK_BUFFER,0);
+  fences[head]=pgl.fenceSync(PGL.SYNC_GPU_COMMANDS_COMPLETE,0);
+  filenames[head]=filename;
+  head=(head + 1) % BUFFER_COUNT;
+  size++;
+}
