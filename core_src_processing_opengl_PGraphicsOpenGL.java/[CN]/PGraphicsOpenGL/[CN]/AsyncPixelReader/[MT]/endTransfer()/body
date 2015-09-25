@@ -1,0 +1,17 @@
+{
+  pgl.deleteSync(fences[tail]);
+  pgl.bindBuffer(PGL.PIXEL_PACK_BUFFER,pbos[tail]);
+  ByteBuffer readBuffer=pgl.mapBuffer(PGL.PIXEL_PACK_BUFFER,PGL.READ_ONLY);
+  if (readBuffer != null) {
+    int format=primaryGraphics ? OPENGL_NATIVE_OPAQUE : OPENGL_NATIVE;
+    PImage target=asyncImageSaver.getAvailableTarget(widths[tail],heights[tail],format);
+    if (target == null)     return;
+    readBuffer.rewind();
+    readBuffer.asIntBuffer().get(target.pixels);
+    pgl.unmapBuffer(PGL.PIXEL_PACK_BUFFER);
+    asyncImageSaver.saveTargetAsync(PGraphicsOpenGL.this,target,filenames[tail]);
+  }
+  pgl.bindBuffer(PGL.PIXEL_PACK_BUFFER,0);
+  size--;
+  tail=(tail + 1) % BUFFER_COUNT;
+}

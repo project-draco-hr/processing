@@ -1,0 +1,16 @@
+{
+  supportsAsyncTransfers=pgl.hasPBOs() && pgl.hasSynchronization();
+  if (supportsAsyncTransfers) {
+    pbos=new int[BUFFER_COUNT];
+    fences=new long[BUFFER_COUNT];
+    filenames=new String[BUFFER_COUNT];
+    widths=new int[BUFFER_COUNT];
+    heights=new int[BUFFER_COUNT];
+    IntBuffer intBuffer=PGL.allocateIntBuffer(BUFFER_COUNT);
+    intBuffer.rewind();
+    pgl.genBuffers(BUFFER_COUNT,intBuffer);
+    for (int i=0; i < BUFFER_COUNT; i++) {
+      pbos[i]=intBuffer.get(i);
+    }
+  }
+}

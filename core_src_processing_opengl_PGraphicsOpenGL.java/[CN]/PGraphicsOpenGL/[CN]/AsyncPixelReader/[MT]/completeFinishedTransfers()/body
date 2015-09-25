@@ -1,0 +1,13 @@
+{
+  if (size <= 0 || !asyncImageSaver.hasAvailableTarget())   return;
+  boolean needEndDraw=false;
+  if (!drawing) {
+    beginDraw();
+    needEndDraw=true;
+  }
+  while (asyncImageSaver.hasAvailableTarget() && isLastTransferComplete()) {
+    endTransfer();
+  }
+  if (size <= 0)   ongoingPixelTransfers.remove(this);
+  if (needEndDraw)   endDraw();
+}

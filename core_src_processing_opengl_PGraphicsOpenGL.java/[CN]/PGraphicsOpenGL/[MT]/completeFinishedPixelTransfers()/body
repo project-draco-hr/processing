@@ -1,0 +1,10 @@
+{
+  ongoingPixelTransfersIterable.addAll(ongoingPixelTransfers);
+  for (  PGraphicsOpenGL.AsyncPixelReader pixelReader : ongoingPixelTransfersIterable) {
+    if (!pixelReader.calledThisFrame) {
+      pixelReader.completeFinishedTransfers();
+    }
+    pixelReader.calledThisFrame=false;
+  }
+  ongoingPixelTransfersIterable.clear();
+}
