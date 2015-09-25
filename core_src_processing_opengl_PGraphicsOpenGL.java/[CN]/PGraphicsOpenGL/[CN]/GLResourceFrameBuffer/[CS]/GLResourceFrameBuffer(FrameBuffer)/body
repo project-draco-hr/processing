@@ -1,33 +1,36 @@
 {
   super(fb,refQueue);
   drainRefQueueBounded();
-  this.pgl=fb.pg.getPrimaryPGL();
-  if (!fb.screenFb) {
-    pgl.genFramebuffers(1,intBuffer);
-    fb.glFbo=intBuffer.get(0);
-    if (fb.multisample) {
-      pgl.genRenderbuffers(1,intBuffer);
-      fb.glMultisample=intBuffer.get(0);
-    }
-    if (fb.packedDepthStencil) {
-      pgl.genRenderbuffers(1,intBuffer);
-      fb.glDepthStencil=intBuffer.get(0);
-    }
+  PGraphicsOpenGL g=fb.pgl.graphics;
+  if (g != null) {
+    pgl=g.getPrimaryPGL();
+    if (!fb.screenFb) {
+      pgl.genFramebuffers(1,intBuffer);
+      fb.glFbo=intBuffer.get(0);
+      if (fb.multisample) {
+        pgl.genRenderbuffers(1,intBuffer);
+        fb.glMultisample=intBuffer.get(0);
+      }
+      if (fb.packedDepthStencil) {
+        pgl.genRenderbuffers(1,intBuffer);
+        fb.glDepthStencil=intBuffer.get(0);
+      }
  else {
-      if (0 < fb.depthBits) {
-        pgl.genRenderbuffers(1,intBuffer);
-        fb.glDepth=intBuffer.get(0);
+        if (0 < fb.depthBits) {
+          pgl.genRenderbuffers(1,intBuffer);
+          fb.glDepth=intBuffer.get(0);
+        }
+        if (0 < fb.stencilBits) {
+          pgl.genRenderbuffers(1,intBuffer);
+          fb.glStencil=intBuffer.get(0);
+        }
       }
-      if (0 < fb.stencilBits) {
-        pgl.genRenderbuffers(1,intBuffer);
-        fb.glStencil=intBuffer.get(0);
-      }
+      this.glFbo=fb.glFbo;
+      this.glDepth=fb.glDepth;
+      this.glStencil=fb.glStencil;
+      this.glDepthStencil=fb.glDepthStencil;
+      this.glMultisample=fb.glMultisample;
     }
-    this.glFbo=fb.glFbo;
-    this.glDepth=fb.glDepth;
-    this.glStencil=fb.glStencil;
-    this.glDepthStencil=fb.glDepthStencil;
-    this.glMultisample=fb.glMultisample;
   }
   this.context=fb.context;
   refList.add(this);

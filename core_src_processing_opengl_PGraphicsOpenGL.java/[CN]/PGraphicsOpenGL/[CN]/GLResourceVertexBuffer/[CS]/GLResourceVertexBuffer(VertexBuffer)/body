@@ -1,9 +1,12 @@
 {
   super(vbo,refQueue);
   drainRefQueueBounded();
-  this.pgl=vbo.pgl.graphics.getPrimaryPGL();
-  pgl.genBuffers(1,intBuffer);
-  vbo.glId=intBuffer.get(0);
+  PGraphicsOpenGL g=vbo.pgl.graphics;
+  if (g != null) {
+    pgl=g.getPrimaryPGL();
+    pgl.genBuffers(1,intBuffer);
+    vbo.glId=intBuffer.get(0);
+  }
   this.glId=vbo.glId;
   this.context=vbo.context;
   refList.add(this);

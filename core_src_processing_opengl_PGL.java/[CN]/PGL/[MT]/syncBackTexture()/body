@@ -4,8 +4,7 @@
     bindFramebufferImpl(READ_FRAMEBUFFER,glMultiFbo.get(0));
     bindFramebufferImpl(DRAW_FRAMEBUFFER,glColorFbo.get(0));
     int mask=COLOR_BUFFER_BIT;
-    PGraphicsOpenGL g=graphics.get();
-    if (g != null && g.getHint(PConstants.ENABLE_BUFFER_READING)) {
+    if (graphics.getHint(PConstants.ENABLE_BUFFER_READING)) {
       mask|=DEPTH_BUFFER_BIT | STENCIL_BUFFER_BIT;
     }
     blitFramebuffer(0,0,fboWidth,fboHeight,0,0,fboWidth,fboHeight,mask,NEAREST);
