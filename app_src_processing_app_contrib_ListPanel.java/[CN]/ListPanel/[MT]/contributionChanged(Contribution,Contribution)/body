@@ -10,8 +10,14 @@ synchronized (panelByContribution) {
           panelByContribution.remove(oldContrib);
           panel.setContribution(newContrib);
           panelByContribution.put(newContrib,panel);
-          updatePanelOrdering(panelByContribution.keySet());
         }
+      }
+synchronized (visibleContributions) {
+        if (visibleContributions.contains(oldContrib)) {
+          visibleContributions.remove(oldContrib);
+          visibleContributions.add(newContrib);
+        }
+        updatePanelOrdering(visibleContributions);
       }
     }
   }
