@@ -1,0 +1,15 @@
+{
+  if (hints[DISABLE_ASYNC_SAVEFRAME]) {
+    return super.save(filename);
+  }
+  if (asyncImageSaver == null) {
+    asyncImageSaver=new AsyncImageSaver();
+  }
+  if (!loaded)   loadPixels();
+  PImage target=asyncImageSaver.getAvailableTarget(pixelWidth,pixelHeight,format);
+  if (target == null)   return false;
+  int count=PApplet.min(pixels.length,target.pixels.length);
+  System.arraycopy(pixels,0,target.pixels,0,count);
+  asyncImageSaver.saveTargetAsync(this,target,filename);
+  return true;
+}

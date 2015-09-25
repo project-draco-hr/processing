@@ -1,0 +1,44 @@
+{
+  target.parent=renderer.parent;
+  if (target.parent.frameCount - 1 == lastFrameCount && TARGET_COUNT > 1) {
+    long avgTimePerFrame=avgNanos / (Math.max(1,TARGET_COUNT - 1));
+    long now=System.nanoTime();
+    long delay=PApplet.round((lastTime + avgTimePerFrame - now) / 1e6f);
+    try {
+      if (delay > 0)       Thread.sleep(delay);
+    }
+ catch (    InterruptedException e) {
+    }
+  }
+  lastFrameCount=target.parent.frameCount;
+  lastTime=System.nanoTime();
+  try {
+    saveExecutor.submit(new Runnable(){
+      @Override public void run(){
+        try {
+          long startTime=System.nanoTime();
+          renderer.processImageBeforeAsyncSave(target);
+          target.save(filename);
+          long saveNanos=System.nanoTime() - startTime;
+synchronized (AsyncImageSaver.this) {
+            if (avgNanos == 0) {
+              avgNanos=saveNanos;
+            }
+ else             if (saveNanos < avgNanos) {
+              avgNanos=(avgNanos * (TIME_AVG_FACTOR - 1) + saveNanos) / (TIME_AVG_FACTOR);
+            }
+ else {
+              avgNanos=saveNanos;
+            }
+          }
+        }
+  finally {
+          targetPool.offer(target);
+        }
+      }
+    }
+);
+  }
+ catch (  RejectedExecutionException e) {
+  }
+}

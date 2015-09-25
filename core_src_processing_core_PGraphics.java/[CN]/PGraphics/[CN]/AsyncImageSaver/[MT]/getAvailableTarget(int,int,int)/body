@@ -1,0 +1,22 @@
+{
+  try {
+    PImage target;
+    if (targetsCreated < TARGET_COUNT && targetPool.isEmpty()) {
+      target=new PImage(requestedWidth,requestedHeight);
+      targetsCreated++;
+    }
+ else {
+      target=targetPool.take();
+      if (target.width != requestedWidth || target.height != requestedHeight) {
+        target.width=requestedWidth;
+        target.height=requestedHeight;
+        target.pixels=new int[requestedWidth * requestedHeight];
+      }
+    }
+    target.format=format;
+    return target;
+  }
+ catch (  InterruptedException e) {
+    return null;
+  }
+}
