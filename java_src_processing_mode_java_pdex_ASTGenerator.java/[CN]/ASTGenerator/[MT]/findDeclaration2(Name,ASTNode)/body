@@ -84,6 +84,9 @@
       if (findMe instanceof QualifiedName) {
         QualifiedName qnn=(QualifiedName)findMe;
         SimpleType stp=extracTypeInfo(findDeclaration2((qnn.getQualifier()),alternateParent));
+        if (stp == null) {
+          return null;
+        }
         declaringClass=findDeclaration2(stp.getName(),alternateParent);
         constrains.clear();
         constrains.add(ASTNode.TYPE_DECLARATION);
