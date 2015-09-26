@@ -1,24 +1,22 @@
 {
-  PGraphicsOpenGL g=pg.get();
-  if (g == null)   return;
   int size=tessGeo.pointVertexCount;
   int sizef=size * PGL.SIZEOF_FLOAT;
   int sizei=size * PGL.SIZEOF_INT;
   tessGeo.updatePointVerticesBuffer();
-  if (bufPointVertex == null)   bufPointVertex=new VertexBuffer(g,PGL.ARRAY_BUFFER,4,PGL.SIZEOF_FLOAT);
+  if (bufPointVertex == null)   bufPointVertex=new VertexBuffer(pg,PGL.ARRAY_BUFFER,4,PGL.SIZEOF_FLOAT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPointVertex.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,4 * sizef,tessGeo.pointVerticesBuffer,glUsage);
   tessGeo.updatePointColorsBuffer();
-  if (bufPointColor == null)   bufPointColor=new VertexBuffer(g,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_INT);
+  if (bufPointColor == null)   bufPointColor=new VertexBuffer(pg,PGL.ARRAY_BUFFER,1,PGL.SIZEOF_INT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPointColor.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,sizei,tessGeo.pointColorsBuffer,glUsage);
   tessGeo.updatePointOffsetsBuffer();
-  if (bufPointAttrib == null)   bufPointAttrib=new VertexBuffer(g,PGL.ARRAY_BUFFER,2,PGL.SIZEOF_FLOAT);
+  if (bufPointAttrib == null)   bufPointAttrib=new VertexBuffer(pg,PGL.ARRAY_BUFFER,2,PGL.SIZEOF_FLOAT);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,bufPointAttrib.glId);
   pgl.bufferData(PGL.ARRAY_BUFFER,2 * sizef,tessGeo.pointOffsetsBuffer,glUsage);
   pgl.bindBuffer(PGL.ARRAY_BUFFER,0);
   tessGeo.updatePointIndicesBuffer();
-  if (bufPointIndex == null)   bufPointIndex=new VertexBuffer(g,PGL.ELEMENT_ARRAY_BUFFER,1,PGL.SIZEOF_INDEX,true);
+  if (bufPointIndex == null)   bufPointIndex=new VertexBuffer(pg,PGL.ELEMENT_ARRAY_BUFFER,1,PGL.SIZEOF_INDEX,true);
   pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,bufPointIndex.glId);
   pgl.bufferData(PGL.ELEMENT_ARRAY_BUFFER,tessGeo.pointIndexCount * PGL.SIZEOF_INDEX,tessGeo.pointIndicesBuffer,glUsage);
   pgl.bindBuffer(PGL.ELEMENT_ARRAY_BUFFER,0);
