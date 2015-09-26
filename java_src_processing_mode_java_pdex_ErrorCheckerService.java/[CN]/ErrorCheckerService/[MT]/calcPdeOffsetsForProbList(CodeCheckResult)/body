@@ -1,7 +1,7 @@
 {
   try {
     PlainDocument javaSource=new PlainDocument();
-    javaSource.insertString(0,lastCodeCheckResult.sourceCode,null);
+    javaSource.insertString(0,codeCheckResult.sourceCode,null);
     List<Document> pdeTabs=new ArrayList<>();
     for (    SketchCode sc : editor.getSketch().getCode()) {
       PlainDocument tab=new PlainDocument();
@@ -14,14 +14,14 @@
       pdeTabs.add(tab);
     }
     int pkgNameOffset=("package " + className + ";\n").length();
-    if (lastCodeCheckResult.sourceCodeOffset == 0) {
+    if (codeCheckResult.sourceCodeOffset == 0) {
       pkgNameOffset=0;
     }
-    for (    Problem p : lastCodeCheckResult.problems) {
+    for (    Problem p : codeCheckResult.problems) {
       int prbStart=p.getIProblem().getSourceStart() - pkgNameOffset;
       int prbEnd=p.getIProblem().getSourceEnd() - pkgNameOffset;
       int javaLineNumber=p.getSourceLineNumber() - 1;
-      javaLineNumber-=lastCodeCheckResult.sourceCodeOffset;
+      javaLineNumber-=codeCheckResult.sourceCodeOffset;
       if (javaLineNumber < 0) {
         javaLineNumber=0;
       }
