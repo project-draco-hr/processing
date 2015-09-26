@@ -6,6 +6,9 @@
   geomCount=0;
   pclearColor=clearColor;
   clearColor=false;
+  if (SINGLE_BUFFERED && sketch.frameCount == 1) {
+    restoreFirstFrame();
+  }
   if (fboLayerEnabledReq) {
     fboLayerEnabled=true;
     fboLayerEnabledReq=false;
@@ -15,7 +18,7 @@
       destroyFBOLayer();
       fbolayerResetReq=false;
     }
-    if (!fboLayerCreated && DOUBLE_BUFFERED) {
+    if (!fboLayerCreated) {
       createFBOLayer();
     }
     bindFramebufferImpl(FRAMEBUFFER,glColorFbo.get(0));

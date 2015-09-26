@@ -1,0 +1,42 @@
+{
+  if (getHint(DISABLE_ASYNC_SAVEFRAME)) {
+    if (primaryGraphics) {
+      int prevFormat=format;
+      format=RGB;
+      boolean result=super.save(filename);
+      format=prevFormat;
+      return result;
+    }
+    return super.save(filename);
+  }
+  if (asyncImageSaver == null) {
+    asyncImageSaver=new AsyncImageSaver();
+  }
+  if (!asyncPixelReaderInitialized) {
+    if (pgl.hasPBOs() && pgl.hasSynchronization()) {
+      asyncPixelReader=new AsyncPixelReader();
+    }
+    asyncPixelReaderInitialized=true;
+  }
+  if (asyncPixelReader != null && !loaded) {
+    boolean needEndDraw=false;
+    if (!drawing) {
+      beginDraw();
+      needEndDraw=true;
+    }
+    flush();
+    updatePixelSize();
+    asyncPixelReader.readAndSaveAsync(filename);
+    if (needEndDraw)     endDraw();
+  }
+ else {
+    if (!loaded)     loadPixels();
+    int format=primaryGraphics ? RGB : ARGB;
+    PImage target=asyncImageSaver.getAvailableTarget(pixelWidth,pixelHeight,format);
+    if (target == null)     return false;
+    int count=PApplet.min(pixels.length,target.pixels.length);
+    System.arraycopy(pixels,0,target.pixels,0,count);
+    asyncImageSaver.saveTargetAsync(this,target,filename);
+  }
+  return true;
+}

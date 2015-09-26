@@ -47,10 +47,15 @@
       fboLayerDisableReq=false;
     }
   }
- else   if (!clearColor && 0 < sketch.frameCount || !sketch.isLooping()) {
-    enableFBOLayer();
-  }
-  if (fboLayerEnabledReq && !fboLayerCreated && !DOUBLE_BUFFERED) {
-    createFBOLayer();
+ else {
+    if (SINGLE_BUFFERED && sketch.frameCount == 0) {
+      saveFirstFrame();
+    }
+    if (!clearColor && 0 < sketch.frameCount || !sketch.isLooping()) {
+      enableFBOLayer();
+      if (SINGLE_BUFFERED) {
+        createFBOLayer();
+      }
+    }
   }
 }
