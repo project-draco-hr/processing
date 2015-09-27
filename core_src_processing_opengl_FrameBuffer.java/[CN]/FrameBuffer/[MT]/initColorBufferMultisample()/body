@@ -1,11 +1,9 @@
 {
-  PGraphicsOpenGL g=pg.get();
-  if (g == null)   return;
   if (screenFb)   return;
-  g.pushFramebuffer();
-  g.setFramebuffer(this);
+  pg.pushFramebuffer();
+  pg.setFramebuffer(this);
   pgl.bindRenderbuffer(PGL.RENDERBUFFER,glMultisample);
   pgl.renderbufferStorageMultisample(PGL.RENDERBUFFER,nsamples,PGL.RGBA8,width,height);
   pgl.framebufferRenderbuffer(PGL.FRAMEBUFFER,PGL.COLOR_ATTACHMENT0,PGL.RENDERBUFFER,glMultisample);
-  g.popFramebuffer();
+  pg.popFramebuffer();
 }

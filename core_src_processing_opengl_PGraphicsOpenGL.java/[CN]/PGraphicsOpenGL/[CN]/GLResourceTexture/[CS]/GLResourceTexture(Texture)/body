@@ -1,12 +1,9 @@
 {
   super(tex,refQueue);
   drainRefQueueBounded();
-  PGraphicsOpenGL g=tex.pg.get();
-  if (g != null) {
-    pgl=g.getPrimaryPGL();
-    pgl.genTextures(1,intBuffer);
-    tex.glName=intBuffer.get(0);
-  }
+  pgl=tex.pg.getPrimaryPGL();
+  pgl.genTextures(1,intBuffer);
+  tex.glName=intBuffer.get(0);
   this.glName=tex.glName;
   this.context=tex.context;
   refList.add(this);

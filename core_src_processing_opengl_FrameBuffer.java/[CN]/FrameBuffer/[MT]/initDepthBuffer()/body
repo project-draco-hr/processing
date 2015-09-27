@@ -1,12 +1,10 @@
 {
-  PGraphicsOpenGL g=pg.get();
-  if (g == null)   return;
   if (screenFb)   return;
   if (width == 0 || height == 0) {
     throw new RuntimeException("PFramebuffer: size undefined.");
   }
-  g.pushFramebuffer();
-  g.setFramebuffer(this);
+  pg.pushFramebuffer();
+  pg.setFramebuffer(this);
   pgl.bindRenderbuffer(PGL.RENDERBUFFER,glDepth);
   int glConst=PGL.DEPTH_COMPONENT16;
   if (depthBits == 16) {
@@ -25,5 +23,5 @@
     pgl.renderbufferStorage(PGL.RENDERBUFFER,glConst,width,height);
   }
   pgl.framebufferRenderbuffer(PGL.FRAMEBUFFER,PGL.DEPTH_ATTACHMENT,PGL.RENDERBUFFER,glDepth);
-  g.popFramebuffer();
+  pg.popFramebuffer();
 }

@@ -1,6 +1,4 @@
 {
-  PGraphicsOpenGL g=pg.get();
-  if (g == null)   return null;
   int nind=3 * detailU + (6 * detailU + 3) * (detailV - 2) + 3 * detailU;
   int[] indices=new int[nind];
   int vertCount=0;
@@ -21,14 +19,14 @@
   u=1;
   v-=dv;
   for (int i=0; i < detailU; i++) {
-    setNormal(g.sphereX[i],g.sphereY[i],g.sphereZ[i]);
-    addVertex(r * g.sphereX[i],r * g.sphereY[i],r * g.sphereZ[i],u,v,VERTEX,false);
+    setNormal(pg.sphereX[i],pg.sphereY[i],pg.sphereZ[i]);
+    addVertex(r * pg.sphereX[i],r * pg.sphereY[i],r * pg.sphereZ[i],u,v,VERTEX,false);
     u-=du;
   }
   vertCount+=detailU;
   vert1=vertCount;
-  setNormal(g.sphereX[0],g.sphereY[0],g.sphereZ[0]);
-  addVertex(r * g.sphereX[0],r * g.sphereY[0],r * g.sphereZ[0],u,v,VERTEX,false);
+  setNormal(pg.sphereX[0],pg.sphereY[0],pg.sphereZ[0]);
+  addVertex(r * pg.sphereX[0],r * pg.sphereY[0],r * pg.sphereZ[0],u,v,VERTEX,false);
   vertCount++;
   for (int i=0; i < detailU; i++) {
     int i1=vert0 + i;
@@ -48,14 +46,14 @@
     v-=dv;
     for (int i=0; i < detailU; i++) {
       int ioff=offset + i;
-      setNormal(g.sphereX[ioff],g.sphereY[ioff],g.sphereZ[ioff]);
-      addVertex(r * g.sphereX[ioff],r * g.sphereY[ioff],r * g.sphereZ[ioff],u,v,VERTEX,false);
+      setNormal(pg.sphereX[ioff],pg.sphereY[ioff],pg.sphereZ[ioff]);
+      addVertex(r * pg.sphereX[ioff],r * pg.sphereY[ioff],r * pg.sphereZ[ioff],u,v,VERTEX,false);
       u-=du;
     }
     vertCount+=detailU;
     vert1=vertCount;
-    setNormal(g.sphereX[offset],g.sphereY[offset],g.sphereZ[offset]);
-    addVertex(r * g.sphereX[offset],r * g.sphereY[offset],r * g.sphereZ[offset],u,v,VERTEX,false);
+    setNormal(pg.sphereX[offset],pg.sphereY[offset],pg.sphereZ[offset]);
+    addVertex(r * pg.sphereX[offset],r * pg.sphereY[offset],r * pg.sphereZ[offset],u,v,VERTEX,false);
     vertCount++;
     for (int i=0; i < detailU; i++) {
       int i1=vert0 + i;
