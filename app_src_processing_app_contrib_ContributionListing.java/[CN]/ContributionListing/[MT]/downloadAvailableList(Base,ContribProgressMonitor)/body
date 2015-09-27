@@ -2,9 +2,8 @@
   new Thread(new Runnable(){
     public void run(){
       downloadingListingLock.lock();
-      URL url=null;
       try {
-        url=new URL(LISTING_URL);
+        URL url=new URL(LISTING_URL);
         File tempContribFile=Base.getSettingsFile("contribs.tmp");
         tempContribFile.setWritable(true);
         ContributionManager.download(url,base.getInstalledContribsInfo(),tempContribFile,progress);
@@ -15,7 +14,26 @@
           if (tempContribFile.renameTo(listingFile)) {
             listDownloaded=true;
             listDownloadFailed=false;
-            setAdvertisedList(listingFile);
+            try {
+              EventQueue.invokeAndWait(new Runnable(){
+                @Override public void run(){
+                  setAdvertisedList(listingFile);
+                }
+              }
+);
+            }
+ catch (            InterruptedException e) {
+              e.printStackTrace();
+            }
+catch (            InvocationTargetException e) {
+              Throwable cause=e.getCause();
+              if (cause instanceof RuntimeException) {
+                throw (RuntimeException)cause;
+              }
+ else {
+                cause.printStackTrace();
+              }
+            }
           }
  else {
             listDownloadFailed=true;
@@ -26,7 +44,9 @@
         progress.error(e);
         progress.finished();
       }
-      downloadingListingLock.unlock();
+ finally {
+        downloadingListingLock.unlock();
+      }
     }
   }
 ,"Contribution List Downloader").start();
