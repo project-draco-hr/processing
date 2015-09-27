@@ -7,10 +7,13 @@
 synchronized (panelByContribution) {
             panelByContribution.put(contribution,newPanel);
           }
+synchronized (visibleContributions) {
+            visibleContributions.add(contribution);
+          }
           if (newPanel != null) {
             newPanel.setContribution(contribution);
             add(newPanel);
-            updatePanelOrdering(panelByContribution.keySet());
+            updatePanelOrdering(visibleContributions);
             updateColors();
           }
         }

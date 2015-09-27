@@ -1,11 +1,11 @@
 {
-synchronized (panelByContribution) {
-    TreeSet<Contribution> panelInThisTab=new TreeSet<Contribution>(ContributionListing.COMPARATOR);
+synchronized (visibleContributions) {
+    visibleContributions.clear();
     for (    Contribution contribution : filteredContributions) {
       if (contribution.getType() == contributionTab.contribType) {
-        panelInThisTab.add(contribution);
+        visibleContributions.add(contribution);
       }
     }
-    updatePanelOrdering(panelInThisTab);
+    updatePanelOrdering(visibleContributions);
   }
 }

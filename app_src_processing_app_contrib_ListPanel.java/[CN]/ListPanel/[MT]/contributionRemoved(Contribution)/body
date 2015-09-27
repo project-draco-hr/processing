@@ -8,7 +8,10 @@ synchronized (panelByContribution) {
           panelByContribution.remove(contribution);
         }
       }
-      updatePanelOrdering(panelByContribution.keySet());
+synchronized (visibleContributions) {
+        visibleContributions.remove(contribution);
+      }
+      updatePanelOrdering(visibleContributions);
       updateColors();
       updateUI();
     }
