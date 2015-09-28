@@ -44,6 +44,7 @@
  else {
             contribListing.replaceContribution(LocalContribution.this,advertisedVersion);
           }
+          base.refreshContribs(LocalContribution.this.getType());
           base.setUpdatesAvailable(contribListing.countUpdates(base));
         }
       }
@@ -69,6 +70,7 @@ catch (    InvocationTargetException e) {
           EventQueue.invokeAndWait(new Runnable(){
             @Override public void run(){
               contribListing.replaceContribution(LocalContribution.this,LocalContribution.this);
+              base.refreshContribs(LocalContribution.this.getType());
               base.setUpdatesAvailable(contribListing.countUpdates(base));
             }
           }
@@ -92,7 +94,6 @@ catch (        InvocationTargetException e) {
       status.setErrorMessage("Could not delete the contribution's files");
     }
   }
-  base.refreshContribs(this.getType());
   if (success) {
     pm.finished();
   }
