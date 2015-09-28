@@ -12,9 +12,11 @@
       if (frame.isResizable()) {
         Frame farm=(Frame)e.getComponent();
         if (farm.isVisible()) {
-          Insets insets=farm.getInsets();
           Dimension windowSize=farm.getSize();
-          setSize(windowSize.width - insets.left - insets.right,windowSize.height - insets.top - insets.bottom);
+          int x=farm.getX() + currentInsets.left;
+          int y=farm.getY() + currentInsets.top;
+          setSize(windowSize.width - currentInsets.left - currentInsets.right,windowSize.height - currentInsets.top - currentInsets.bottom);
+          setLocation(x - currentInsets.left,y - currentInsets.top);
         }
       }
     }
