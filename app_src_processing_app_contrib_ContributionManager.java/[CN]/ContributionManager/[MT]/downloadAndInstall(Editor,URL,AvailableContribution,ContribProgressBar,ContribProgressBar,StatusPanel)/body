@@ -10,9 +10,22 @@
           download(url,null,contribZip,downloadProgress);
           if (!downloadProgress.isCanceled() && !downloadProgress.isError()) {
             installProgress.startTask(Language.text("contrib.progress.installing"),ContribProgressMonitor.UNKNOWN);
-            LocalContribution contribution=ad.install(editor.getBase(),contribZip,false,status);
+            final LocalContribution contribution=ad.install(editor.getBase(),contribZip,false,status);
             if (contribution != null) {
-              listing.replaceContribution(ad,contribution);
+              try {
+                EventQueue.invokeAndWait(new Runnable(){
+                  @Override public void run(){
+                    listing.replaceContribution(ad,contribution);
+                  }
+                }
+);
+              }
+ catch (              InterruptedException e) {
+                e.printStackTrace();
+              }
+catch (              InvocationTargetException e) {
+                throw (Exception)e.getCause();
+              }
               editor.getBase().refreshContribs(contribution.getType());
             }
             installProgress.finished();

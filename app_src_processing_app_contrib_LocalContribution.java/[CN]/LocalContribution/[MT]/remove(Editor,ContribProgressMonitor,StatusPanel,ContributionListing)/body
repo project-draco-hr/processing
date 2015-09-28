@@ -34,18 +34,56 @@
     success=!getFolder().exists();
   }
   if (success) {
-    Contribution advertisedVersion=contribListing.getAvailableContribution(this);
-    if (advertisedVersion == null) {
-      contribListing.removeContribution(this);
-    }
+    try {
+      EventQueue.invokeAndWait(new Runnable(){
+        @Override public void run(){
+          Contribution advertisedVersion=contribListing.getAvailableContribution(LocalContribution.this);
+          if (advertisedVersion == null) {
+            contribListing.removeContribution(LocalContribution.this);
+          }
  else {
-      contribListing.replaceContribution(this,advertisedVersion);
+            contribListing.replaceContribution(LocalContribution.this,advertisedVersion);
+          }
+        }
+      }
+);
+    }
+ catch (    InterruptedException e) {
+      e.printStackTrace();
+    }
+catch (    InvocationTargetException e) {
+      Throwable cause=e.getCause();
+      if (cause instanceof RuntimeException) {
+        throw (RuntimeException)cause;
+      }
+ else {
+        cause.printStackTrace();
+      }
     }
   }
  else {
     if (!doBackup || (doBackup && backup(editor,false,status))) {
       if (setDeletionFlag(true)) {
-        contribListing.replaceContribution(this,this);
+        try {
+          EventQueue.invokeAndWait(new Runnable(){
+            @Override public void run(){
+              contribListing.replaceContribution(LocalContribution.this,LocalContribution.this);
+            }
+          }
+);
+        }
+ catch (        InterruptedException e) {
+          e.printStackTrace();
+        }
+catch (        InvocationTargetException e) {
+          Throwable cause=e.getCause();
+          if (cause instanceof RuntimeException) {
+            throw (RuntimeException)cause;
+          }
+ else {
+            cause.printStackTrace();
+          }
+        }
       }
     }
  else {

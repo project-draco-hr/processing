@@ -8,10 +8,29 @@
         contribZip.setWritable(true);
         try {
           download(url,null,contribZip,null);
-          LocalContribution contribution=ad.install(base,contribZip,false,null);
+          final LocalContribution contribution=ad.install(base,contribZip,false,null);
           if (contribution != null) {
-            listing.replaceContribution(ad,contribution);
-            base.refreshContribs(contribution.getType());
+            try {
+              EventQueue.invokeAndWait(new Runnable(){
+                @Override public void run(){
+                  listing.replaceContribution(ad,contribution);
+                  base.refreshContribs(contribution.getType());
+                }
+              }
+);
+            }
+ catch (            InterruptedException e) {
+              e.printStackTrace();
+            }
+catch (            InvocationTargetException e) {
+              Throwable cause=e.getCause();
+              if (cause instanceof RuntimeException) {
+                throw (RuntimeException)cause;
+              }
+ else {
+                cause.printStackTrace();
+              }
+            }
           }
           contribZip.delete();
           handleUpdateFailedMarkers(ad,filename.substring(0,filename.lastIndexOf('.')));
