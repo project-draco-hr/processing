@@ -12,7 +12,7 @@
     for (    LocalContribution oldContrib : oldContribs) {
       if ((oldContrib.getFolder().exists() && oldContrib.getFolder().equals(contribFolder)) || (oldContrib.getId() != null && oldContrib.getId().equals(getId()))) {
         if (oldContrib.getType().requiresRestart()) {
-          if (!oldContrib.backup(editor,false,status)) {
+          if (!oldContrib.backup(false,status)) {
             return null;
           }
         }
@@ -22,7 +22,7 @@
           if (confirmReplace) {
             if (doBackup) {
               result=Messages.showYesNoQuestion(editor,"Replace","Replace pre-existing \"" + oldContrib.getName() + "\" library?","A pre-existing copy of the \"" + oldContrib.getName() + "\" library<br>"+ "has been found in your sketchbook. Clicking ???Yes???<br>"+ "will move the existing library to a backup folder<br>"+ "in <i>libraries/old</i> before replacing it.");
-              if (result != JOptionPane.YES_OPTION || !oldContrib.backup(editor,true,status)) {
+              if (result != JOptionPane.YES_OPTION || !oldContrib.backup(true,status)) {
                 return null;
               }
             }
@@ -34,7 +34,7 @@
             }
           }
  else {
-            if ((doBackup && !oldContrib.backup(editor,true,status)) || (!doBackup && !oldContrib.getFolder().delete())) {
+            if ((doBackup && !oldContrib.backup(true,status)) || (!doBackup && !oldContrib.getFolder().delete())) {
               return null;
             }
           }

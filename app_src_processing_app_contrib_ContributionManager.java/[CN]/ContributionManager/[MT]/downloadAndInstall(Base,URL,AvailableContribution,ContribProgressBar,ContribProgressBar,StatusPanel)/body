@@ -10,12 +10,14 @@
           download(url,null,contribZip,downloadProgress);
           if (!downloadProgress.isCanceled() && !downloadProgress.isError()) {
             installProgress.startTask(Language.text("contrib.progress.installing"),ContribProgressMonitor.UNKNOWN);
-            final LocalContribution contribution=ad.install(editor.getBase(),contribZip,false,status);
+            final LocalContribution contribution=ad.install(base,contribZip,false,status);
             if (contribution != null) {
               try {
                 EventQueue.invokeAndWait(new Runnable(){
                   @Override public void run(){
                     listing.replaceContribution(ad,contribution);
+                    base.refreshContribs(contribution.getType());
+                    base.setUpdatesAvailable(listing.countUpdates(base));
                   }
                 }
 );
@@ -26,7 +28,6 @@
 catch (              InvocationTargetException e) {
                 throw (Exception)e.getCause();
               }
-              editor.getBase().refreshContribs(contribution.getType());
             }
             installProgress.finished();
           }

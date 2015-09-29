@@ -5,7 +5,7 @@
   if (getType() == ContributionType.MODE) {
     boolean isModeActive=false;
     ModeContribution m=(ModeContribution)this;
-    Iterator<Editor> iter=editor.getBase().getEditors().iterator();
+    Iterator<Editor> iter=base.getEditors().iterator();
     while (iter.hasNext()) {
       Editor e=iter.next();
       if (e.getMode().equals(m.getMode())) {
@@ -14,7 +14,7 @@
       }
     }
     if (!isModeActive) {
-      m.clearClassLoader(editor.getBase());
+      m.clearClassLoader(base);
     }
  else {
       pm.cancel();
@@ -23,11 +23,11 @@
     }
   }
   if (getType() == ContributionType.TOOL) {
-    editor.getBase().clearToolMenus();
+    base.clearToolMenus();
     ((ToolContribution)this).clearClassLoader();
   }
   if (doBackup) {
-    success=backup(editor,true,status);
+    success=backup(true,status);
   }
  else {
     Util.removeDir(getFolder());
@@ -44,6 +44,8 @@
  else {
             contribListing.replaceContribution(LocalContribution.this,advertisedVersion);
           }
+          base.refreshContribs(LocalContribution.this.getType());
+          base.setUpdatesAvailable(contribListing.countUpdates(base));
         }
       }
 );
@@ -62,12 +64,14 @@ catch (    InvocationTargetException e) {
     }
   }
  else {
-    if (!doBackup || (doBackup && backup(editor,false,status))) {
+    if (!doBackup || (doBackup && backup(false,status))) {
       if (setDeletionFlag(true)) {
         try {
           EventQueue.invokeAndWait(new Runnable(){
             @Override public void run(){
               contribListing.replaceContribution(LocalContribution.this,LocalContribution.this);
+              base.refreshContribs(LocalContribution.this.getType());
+              base.setUpdatesAvailable(contribListing.countUpdates(base));
             }
           }
 );
@@ -90,7 +94,6 @@ catch (        InvocationTargetException e) {
       status.setErrorMessage("Could not delete the contribution's files");
     }
   }
-  editor.getBase().refreshContribs(this.getType());
   if (success) {
     pm.finished();
   }
