@@ -20,9 +20,9 @@
         long thisTime=event.getWhen();
         if (thisTime - lastTime > 100) {
           if (event.getX() < Editor.LEFT_GUTTER) {
-            int offset=getTextArea().xyToOffset(event.getX(),event.getY());
+            int offset=getJavaTextArea().xyToOffset(event.getX(),event.getY());
             if (offset >= 0) {
-              int lineIndex=getTextArea().getLineOfOffset(offset);
+              int lineIndex=getJavaTextArea().getLineOfOffset(offset);
               javaEditor.toggleBreakpoint(lineIndex);
             }
           }
@@ -46,7 +46,7 @@
         int errorEnd=lineOffset + problem.getPDELineStopOffset() + 1;
         int startOffset=Math.max(errorStart,lineStart) - lineStart;
         int stopOffset=Math.min(errorEnd,lineEnd) - lineStart;
-        if (x >= getTextArea().offsetToX(line,startOffset) && x <= getTextArea().offsetToX(line,stopOffset)) {
+        if (x >= getJavaTextArea().offsetToX(line,startOffset) && x <= getJavaTextArea().offsetToX(line,stopOffset)) {
           setToolTipText(problem.getMessage());
           evt.consume();
         }

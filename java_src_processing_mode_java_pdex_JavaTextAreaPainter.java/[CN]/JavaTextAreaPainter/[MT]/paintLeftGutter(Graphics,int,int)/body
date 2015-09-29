@@ -2,14 +2,16 @@
   int y=textArea.lineToY(line) + fm.getLeading() + fm.getMaxDescent();
   if (line == textArea.getSelectionStopLine()) {
     gfx.setColor(gutterLineHighlightColor);
+    gfx.fillRect(0,y,Editor.LEFT_GUTTER,fm.getHeight());
   }
  else {
-    gfx.setColor(getTextArea().gutterBgColor);
+    gfx.setClip(0,y,Editor.LEFT_GUTTER,fm.getHeight());
+    gfx.drawImage(getJavaTextArea().getGutterGradient(),0,0,getWidth(),getHeight(),this);
+    gfx.setClip(null);
   }
-  gfx.fillRect(0,y,Editor.LEFT_GUTTER,fm.getHeight());
   String text=null;
   if (getJavaEditor().isDebuggerEnabled()) {
-    text=getTextArea().getGutterText(line);
+    text=getJavaTextArea().getGutterText(line);
   }
   gfx.setColor(gutterTextColor);
   int textRight=Editor.LEFT_GUTTER - Editor.GUTTER_MARGIN;
