@@ -11,9 +11,12 @@
       e.printStackTrace();
       totalLines=1;
     }
+    int visibleLines=editor.getTextArea().getVisibleLines();
+    totalLines=PApplet.max(totalLines,visibleLines);
     for (    LineMarker m : errorPoints) {
       float y=(m.getLineNumber() + 1) / ((float)totalLines);
-      y*=getHeight() - 15;
+      y*=getHeight();
+      y-=15;
       m.setY((int)y);
     }
   }
