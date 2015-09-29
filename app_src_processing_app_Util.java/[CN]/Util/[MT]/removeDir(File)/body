@@ -1,8 +1,17 @@
 {
-  if (dir.exists()) {
-    removeDescendants(dir);
-    if (!dir.delete()) {
-      System.err.println("Could not delete " + dir);
+  if (!dir.exists())   return true;
+  boolean result=true;
+  File[] files=dir.listFiles();
+  if (files != null) {
+    for (    File child : files) {
+      if (child.isFile()) {
+        result&=child.delete();
+      }
+ else       if (child.isDirectory()) {
+        result&=removeDir(child);
+      }
     }
   }
+  result&=dir.delete();
+  return result;
 }
