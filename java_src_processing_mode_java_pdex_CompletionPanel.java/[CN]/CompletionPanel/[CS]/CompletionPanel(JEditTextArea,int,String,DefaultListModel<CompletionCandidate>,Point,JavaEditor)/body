@@ -8,14 +8,38 @@
  else {
     this.subWord=subWord;
   }
-  loadIcons();
+  if (classIcon == null) {
+    File dir=new File(editor.getMode().getFolder(),"theme/completion");
+    classIcon=Toolkit.getIconX(dir,"class_obj");
+    methodIcon=Toolkit.getIconX(dir,"methpub_obj");
+    fieldIcon=Toolkit.getIconX(dir,"field_protected_obj");
+    localVarIcon=Toolkit.getIconX(dir,"field_default_obj");
+  }
   popupMenu=new JPopupMenu();
   popupMenu.removeAll();
   popupMenu.setOpaque(false);
   popupMenu.setBorder(null);
   scrollPane=new JScrollPane();
-  styleScrollPane();
-  scrollPane.setViewportView(completionList=createSuggestionList(position,items));
+  completionList=new JList<CompletionCandidate>(items){
+{
+      setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      setSelectedIndex(0);
+      addMouseListener(new MouseAdapter(){
+        @Override public void mouseClicked(        MouseEvent e){
+          if (e.getClickCount() == 2) {
+            insertSelection(MOUSE_COMPLETION);
+            setInvisible();
+          }
+        }
+      }
+);
+      setCellRenderer(new CustomListRenderer());
+      setFocusable(false);
+    }
+  }
+;
+  scrollPane.setViewportView(completionList);
+  scrollPane.setBorder(null);
   popupMenu.add(scrollPane,BorderLayout.CENTER);
   popupMenu.setPopupSize(calcWidth(),calcHeight(items.getSize()));
   popupMenu.setFocusable(false);
