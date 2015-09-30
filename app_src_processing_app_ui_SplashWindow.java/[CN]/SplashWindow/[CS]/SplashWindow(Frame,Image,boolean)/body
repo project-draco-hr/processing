@@ -19,9 +19,12 @@ synchronized (this) {
   }
   int imgWidth=image.getWidth(this);
   int imgHeight=image.getHeight(this);
+  if (hidpi) {
+    imgWidth/=2;
+    imgHeight/=2;
+  }
   setSize(imgWidth,imgHeight);
-  Dimension screenDim=Toolkit.getDefaultToolkit().getScreenSize();
-  setLocation((screenDim.width - imgWidth) / 2,(screenDim.height - imgHeight) / 2);
+  setLocationRelativeTo(null);
   MouseAdapter disposeOnClick=new MouseAdapter(){
     public void mouseClicked(    MouseEvent evt){
 synchronized (SplashWindow.this) {
