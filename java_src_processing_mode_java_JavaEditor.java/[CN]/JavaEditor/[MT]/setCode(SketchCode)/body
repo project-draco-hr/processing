@@ -1,5 +1,10 @@
 {
+  Document oldDoc=code.getDocument();
   super.setCode(code);
+  Document newDoc=code.getDocument();
+  if (oldDoc != newDoc && errorCheckerService != null) {
+    errorCheckerService.addListener(newDoc);
+  }
   final JavaTextArea ta=getJavaTextArea();
   if (ta != null) {
     ta.clearLineBgColors();
