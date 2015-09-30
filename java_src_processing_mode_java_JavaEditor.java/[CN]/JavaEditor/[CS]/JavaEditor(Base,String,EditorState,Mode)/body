@@ -25,8 +25,15 @@
   }
   getSketch().setModified(false);
   hasJavaTabs=checkForJavaTabs();
-  errorCheckerService=new ErrorCheckerService(this);
-  errorCheckerService.start();
+{
+    errorCheckerService=new ErrorCheckerService(this);
+    Document currentDocument=currentDocument();
+    if (currentDocument != null) {
+      errorCheckerService.addListener(currentDocument);
+    }
+    errorCheckerService.start();
+    errorCheckerService.request();
+  }
   JPanel textAndError=new JPanel();
   Box box=(Box)textarea.getParent();
   box.remove(2);
