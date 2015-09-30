@@ -1,0 +1,18 @@
+{
+  if (instance == null && image != null) {
+    Frame f=new Frame();
+    instance=new SplashWindow(f,image);
+    instance.show();
+    if (!EventQueue.isDispatchThread() && Runtime.getRuntime().availableProcessors() == 1) {
+synchronized (instance) {
+        while (!instance.paintCalled) {
+          try {
+            instance.wait();
+          }
+ catch (          InterruptedException e) {
+          }
+        }
+      }
+    }
+  }
+}
