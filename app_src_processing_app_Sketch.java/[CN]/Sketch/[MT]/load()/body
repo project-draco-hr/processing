@@ -1,24 +1,16 @@
 {
   codeFolder=new File(folder,"code");
   dataFolder=new File(folder,"data");
-  String list[]=folder.list();
-  codeCount=0;
-  code=new SketchCode[list.length];
-  String[] extensions=mode.getExtensions();
-  for (  String filename : list) {
-    if (filename.startsWith("."))     continue;
-    if (new File(folder,filename).isDirectory())     continue;
-    String base=filename;
-    for (    String extension : extensions) {
-      if (base.toLowerCase().endsWith("." + extension)) {
-        base=base.substring(0,base.length() - (extension.length() + 1));
-        if (isSanitaryName(base)) {
-          code[codeCount++]=new SketchCode(new File(folder,filename),extension);
-        }
-      }
-    }
+  List<String> filenames=new ArrayList<>();
+  List<String> extensions=new ArrayList<>();
+  getSketchCodeFiles(filenames,extensions);
+  codeCount=filenames.size();
+  code=new SketchCode[codeCount];
+  for (int i=0; i < codeCount; i++) {
+    String filename=filenames.get(i);
+    String extension=extensions.get(i);
+    code[i]=new SketchCode(new File(folder,filename),extension);
   }
-  code=(SketchCode[])PApplet.subset(code,0,codeCount);
   for (int i=1; i < codeCount; i++) {
     if (code[i].getFile().equals(primaryFile)) {
       SketchCode temp=code[0];

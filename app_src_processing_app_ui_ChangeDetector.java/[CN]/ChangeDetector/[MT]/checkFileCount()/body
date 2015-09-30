@@ -1,17 +1,7 @@
 {
-  File sketchFolder=sketch.getFolder();
-  File[] sketchFiles=sketchFolder.listFiles(new FilenameFilter(){
-    @Override public boolean accept(    File dir,    String filename){
-      for (      String ext : editor.getMode().getExtensions()) {
-        if (filename.toLowerCase().endsWith(ext.toLowerCase())) {
-          return true;
-        }
-      }
-      return false;
-    }
-  }
-);
-  int fileCount=sketchFiles.length;
+  List<String> filenames=new ArrayList<>();
+  sketch.getSketchCodeFiles(filenames,null);
+  int fileCount=filenames.size();
   if (fileCount == sketch.getCodeCount()) {
     return false;
   }
