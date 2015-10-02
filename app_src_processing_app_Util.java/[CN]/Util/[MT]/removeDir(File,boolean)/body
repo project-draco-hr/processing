@@ -1,18 +1,20 @@
 {
   if (!dir.exists())   return true;
   boolean result=true;
-  File[] files=dir.listFiles();
-  if (files != null) {
-    for (    File child : files) {
-      if (child.isFile()) {
-        boolean deleted=child.delete();
-        if (!deleted && printErrorMessages) {
-          System.err.println("Could not delete " + child.getAbsolutePath());
+  if (!Files.isSymbolicLink(dir.toPath())) {
+    File[] files=dir.listFiles();
+    if (files != null) {
+      for (      File child : files) {
+        if (child.isFile()) {
+          boolean deleted=child.delete();
+          if (!deleted && printErrorMessages) {
+            System.err.println("Could not delete " + child.getAbsolutePath());
+          }
+          result&=deleted;
         }
-        result&=deleted;
-      }
- else       if (child.isDirectory()) {
-        result&=removeDir(child,printErrorMessages);
+ else         if (child.isDirectory()) {
+          result&=removeDir(child,printErrorMessages);
+        }
       }
     }
   }
