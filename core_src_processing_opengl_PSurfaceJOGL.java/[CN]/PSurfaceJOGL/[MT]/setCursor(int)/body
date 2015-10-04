@@ -1,4 +1,8 @@
 {
+  if (!cursorNames.containsKey(kind)) {
+    PGraphics.showWarning("Unknown cursor type: " + kind);
+    return;
+  }
   CursorInfo cursor=cursors.get(kind);
   if (cursor == null) {
     String name=cursorNames.get(kind);
@@ -22,9 +26,11 @@
       cursor=new CursorInfo(img,x,y);
       cursors.put(kind,cursor);
     }
+  }
+  if (cursor != null) {
     cursor.set();
   }
  else {
-    PGraphics.showWarning("Unknown cursor type: " + kind);
+    PGraphics.showWarning("Cannot load cursor type: " + kind);
   }
 }
