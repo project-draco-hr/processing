@@ -1,0 +1,40 @@
+{
+  NativeInterface.loadLibrary();
+  this.dev=dev;
+  try {
+    Path path=Paths.get("/sys/class/leds/" + dev + "/max_brightness");
+    String tmp=new String(Files.readAllBytes(path));
+    maxBrightness=Integer.parseInt(tmp.trim());
+  }
+ catch (  Exception e) {
+    System.err.println(e.getMessage());
+    throw new RuntimeException("Unable to read maximum brightness");
+  }
+  try {
+    Path path=Paths.get("/sys/class/leds/" + dev + "/trigger");
+    String tmp=new String(Files.readAllBytes(path));
+    int start=tmp.indexOf('[');
+    int end=tmp.indexOf(']',start);
+    if (start != -1 && end != -1) {
+      prevTrigger=tmp.substring(start + 1,end);
+    }
+  }
+ catch (  Exception e) {
+    System.err.println(e.getMessage());
+    throw new RuntimeException("Unable to read trigger setting");
+  }
+  try {
+    Path path=Paths.get("/sys/class/leds/" + dev + "/brightness");
+    String tmp=new String(Files.readAllBytes(path));
+    prevBrightness=Integer.parseInt(tmp.trim());
+  }
+ catch (  Exception e) {
+    System.err.println(e.getMessage());
+    throw new RuntimeException("Unable to read current brightness");
+  }
+  String fn="/sys/class/leds/" + dev + "/trigger";
+  int ret=NativeInterface.writeFile(fn,"none");
+  if (ret < 0) {
+    throw new RuntimeException(fn + ": " + NativeInterface.getError(ret));
+  }
+}

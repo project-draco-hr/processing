@@ -1,0 +1,28 @@
+{
+  NativeInterface.loadLibrary();
+  int pos=channel.indexOf("/pwm");
+  if (pos == -1) {
+    throw new IllegalArgumentException("Unsupported channel");
+  }
+  chip=channel.substring(0,pos);
+  this.channel=Integer.parseInt(channel.substring(pos + 4));
+  String fn="/sys/class/pwm/" + chip + "/export";
+  int ret=NativeInterface.writeFile(fn,Integer.toString(this.channel));
+  if (ret < 0) {
+    if (ret == -2) {
+      System.err.println("Make sure your kernel is compiled with PWM_SYSFS enabled and you have the necessary PWM driver for your platform");
+    }
+    if (ret == -22) {
+      System.err.println("PWM channel " + channel + " does not seem to be available on your platform");
+    }
+    if (ret != -16) {
+      throw new RuntimeException(fn + ": " + NativeInterface.getError(ret));
+    }
+  }
+  try {
+    Thread.sleep(500);
+  }
+ catch (  InterruptedException e) {
+    Thread.currentThread().interrupt();
+  }
+}

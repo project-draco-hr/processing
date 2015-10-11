@@ -1,0 +1,20 @@
+{
+  String curSettings=maxSpeed + "-" + dataOrder+ "-"+ mode;
+  if (!curSettings.equals(settings.get(dev))) {
+    int ret=NativeInterface.setSpiSettings(handle,maxSpeed,dataOrder,mode);
+    if (ret < 0) {
+      System.err.println(NativeInterface.getError(handle));
+      throw new RuntimeException("Error updating device configuration");
+    }
+    settings.put(dev,curSettings);
+  }
+  byte[] in=new byte[out.length];
+  int transferred=NativeInterface.transferSpi(handle,out,in);
+  if (transferred < 0) {
+    throw new RuntimeException(NativeInterface.getError(transferred));
+  }
+ else   if (transferred < out.length) {
+    throw new RuntimeException("Fewer bytes transferred than requested: " + transferred);
+  }
+  return in;
+}

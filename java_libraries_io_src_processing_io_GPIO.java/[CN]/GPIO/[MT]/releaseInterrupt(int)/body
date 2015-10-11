@@ -1,0 +1,16 @@
+{
+  Thread t=irqThreads.get(pin);
+  if (t == null) {
+    return;
+  }
+  t.interrupt();
+  try {
+    t.join();
+  }
+ catch (  InterruptedException e) {
+    System.err.println("Error joining thread in releaseInterrupt: " + e.getMessage());
+  }
+  t=null;
+  irqThreads.remove(pin);
+  disableInterrupt(pin);
+}

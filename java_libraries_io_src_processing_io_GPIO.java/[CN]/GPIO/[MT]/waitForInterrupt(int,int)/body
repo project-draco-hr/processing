@@ -1,0 +1,17 @@
+{
+  checkValidPin(pin);
+  String fn=String.format("/sys/class/gpio/gpio%d/value",pin);
+  int ret=NativeInterface.pollDevice(fn,timeout);
+  if (ret < 0) {
+    if (ret == -2) {
+      System.err.println("Make sure your called pinMode on the input pin");
+    }
+    throw new RuntimeException(NativeInterface.getError(ret));
+  }
+ else   if (ret == 0) {
+    return false;
+  }
+ else {
+    return true;
+  }
+}

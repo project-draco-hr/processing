@@ -1,0 +1,44 @@
+{
+  if (irqThreads.containsKey(pin)) {
+    throw new RuntimeException("You must call releaseInterrupt before attaching another interrupt on the same pin");
+  }
+  enableInterrupt(pin,mode);
+  final int irqPin=pin;
+  final PApplet irqObject=parent;
+  final Method irqMethod;
+  try {
+    irqMethod=parent.getClass().getMethod(method,int.class);
+  }
+ catch (  NoSuchMethodException e) {
+    throw new RuntimeException("Method " + method + " does not exist");
+  }
+  Thread t=new Thread(new Runnable(){
+    public void run(){
+      boolean gotInterrupt=false;
+      try {
+        do {
+          try {
+            if (waitForInterrupt(irqPin,100)) {
+              gotInterrupt=true;
+            }
+            if (gotInterrupt && serveInterrupts) {
+              irqMethod.invoke(irqObject,irqPin);
+              gotInterrupt=false;
+            }
+          }
+ catch (          RuntimeException e) {
+            Thread.sleep(100);
+          }
+        }
+ while (!Thread.currentThread().isInterrupted());
+      }
+ catch (      Exception e) {
+        System.err.println("Terminating interrupt handling for pin " + irqPin + " after catching: "+ e.getMessage());
+      }
+    }
+  }
+,"GPIO" + pin + " IRQ");
+  t.setPriority(Thread.MAX_PRIORITY);
+  t.start();
+  irqThreads.put(pin,t);
+}
