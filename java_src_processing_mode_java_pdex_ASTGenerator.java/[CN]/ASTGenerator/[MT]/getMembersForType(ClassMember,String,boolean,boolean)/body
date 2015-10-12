@@ -1,7 +1,7 @@
 {
   String child=childToLookFor.toLowerCase();
   ArrayList<CompletionCandidate> candidates=new ArrayList<>();
-  log("getMemFoType-> Looking for match " + child.toString() + " inside "+ tehClass+ " noCompare "+ noCompare+ " staticOnly "+ staticOnly);
+  log("getMemFoType-> Looking for match " + child + " inside "+ tehClass+ " noCompare "+ noCompare+ " staticOnly "+ staticOnly);
   if (tehClass == null) {
     return candidates;
   }
@@ -9,11 +9,11 @@
     TypeDeclaration td=(TypeDeclaration)tehClass.getDeclaringNode();
 {
       FieldDeclaration[] fields=td.getFields();
-      for (int i=0; i < fields.length; i++) {
-        if (staticOnly && !isStatic(fields[i].modifiers())) {
+      for (      FieldDeclaration field : fields) {
+        if (staticOnly && !isStatic(field.modifiers())) {
           continue;
         }
-        List<VariableDeclarationFragment> vdfs=fields[i].fragments();
+        List<VariableDeclarationFragment> vdfs=field.fragments();
         for (        VariableDeclarationFragment vdf : vdfs) {
           if (noCompare) {
             candidates.add(new CompletionCandidate(vdf));
@@ -24,17 +24,17 @@
     }
 {
       MethodDeclaration[] methods=td.getMethods();
-      for (int i=0; i < methods.length; i++) {
-        if (staticOnly && !isStatic(methods[i].modifiers())) {
+      for (      MethodDeclaration method : methods) {
+        if (staticOnly && !isStatic(method.modifiers())) {
           continue;
         }
         if (noCompare) {
-          candidates.add(new CompletionCandidate(methods[i]));
+          candidates.add(new CompletionCandidate(method));
         }
- else         if (methods[i].getName().toString().toLowerCase().startsWith(child))         candidates.add(new CompletionCandidate(methods[i]));
+ else         if (method.getName().toString().toLowerCase().startsWith(child))         candidates.add(new CompletionCandidate(method));
       }
     }
-    ArrayList<CompletionCandidate> superClassCandidates=new ArrayList<CompletionCandidate>();
+    ArrayList<CompletionCandidate> superClassCandidates;
     if (td.getSuperclassType() != null) {
       log(getNodeAsString(td.getSuperclassType()) + " <-Looking into superclass of " + tehClass);
       superClassCandidates=getMembersForType(new ClassMember(td.getSuperclassType()),childToLookFor,noCompare,staticOnly);

@@ -2,7 +2,7 @@
   ASTNode current=node.getNode().getParent();
   String type="";
   StringBuilder fullName=new StringBuilder();
-  Stack<String> parents=new Stack<String>();
+  Stack<String> parents=new Stack<>();
   String simpleName=(sn == null) ? node.getNode().toString() : sn.toString();
 switch (node.getNodeType()) {
 case ASTNode.TYPE_DECLARATION:
@@ -15,7 +15,7 @@ case ASTNode.FIELD_DECLARATION:
       current=current.getParent();
     }
   while (parents.size() > 0) {
-    fullName.append(parents.pop() + ".");
+    fullName.append(parents.pop()).append(".");
   }
 fullName.append(simpleName);
 if (node.getNode() instanceof MethodDeclaration) {
@@ -27,7 +27,7 @@ if (!md.parameters().isEmpty()) {
   for (  ASTNode par : params) {
     if (par instanceof SingleVariableDeclaration) {
       SingleVariableDeclaration svd=(SingleVariableDeclaration)par;
-      fullName.append(svd.getType() + " " + svd.getName()+ ",");
+      fullName.append(svd.getType()).append(" ").append(svd.getName()).append(",");
     }
   }
 }

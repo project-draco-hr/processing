@@ -3,7 +3,7 @@
     return null;
   }
   if (ignoredImportSuggestions == null) {
-    ignoredImportSuggestions=new TreeSet<String>();
+    ignoredImportSuggestions=new TreeSet<>();
   }
  else {
     if (ignoredImportSuggestions.contains(className)) {
@@ -14,10 +14,8 @@
   log("Looking for class " + className);
   RegExpResourceFilter regf=new RegExpResourceFilter(Pattern.compile(".*"),Pattern.compile(className + ".class",Pattern.CASE_INSENSITIVE));
   String[] resources=classPath.findResources("",regf);
-  List<String> candidates=new ArrayList<String>();
-  for (  String res : resources) {
-    candidates.add(res);
-  }
+  List<String> candidates=new ArrayList<>();
+  Collections.addAll(candidates,resources);
   for (  Library lib : editor.getMode().contribLibraries) {
     ClassPath cp=factory.createFromPath(lib.getClassPath());
     resources=cp.findResources("",regf);
