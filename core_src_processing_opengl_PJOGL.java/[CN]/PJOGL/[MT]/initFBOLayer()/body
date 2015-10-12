@@ -1,20 +1,6 @@
 {
   if (0 < sketch.frameCount) {
-    if (pclearColor || 0 < pgeomCount || !sketch.isLooping()) {
-      if (hasReadBuffer())       readBuffer(FRONT);
-    }
- else {
-      readBuffer(BACK);
-    }
-    bindFramebufferImpl(DRAW_FRAMEBUFFER,glColorFbo.get(0));
-    framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(frontTex),0);
-    if (hasDrawBuffer())     drawBuffer(COLOR_ATTACHMENT0);
-    blitFramebuffer(0,0,fboWidth,fboHeight,0,0,fboWidth,fboHeight,COLOR_BUFFER_BIT,NEAREST);
-    readBuffer(BACK);
-    bindFramebufferImpl(DRAW_FRAMEBUFFER,glColorFbo.get(0));
-    framebufferTexture2D(FRAMEBUFFER,COLOR_ATTACHMENT0,TEXTURE_2D,glColorTex.get(backTex),0);
-    drawBuffer(COLOR_ATTACHMENT0);
-    blitFramebuffer(0,0,fboWidth,fboHeight,0,0,fboWidth,fboHeight,COLOR_BUFFER_BIT,NEAREST);
-    bindFramebufferImpl(FRAMEBUFFER,0);
+    if (isES())     initFBOLayerES();
+ else     initFBOLayerGL();
   }
 }
