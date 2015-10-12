@@ -40,7 +40,7 @@
       }
     }
   }
-  String searchPath=((JavaMode)getEditor().getMode()).getSearchPath();
+  String searchPath=((JavaMode)editor.getMode()).getSearchPath();
   if (searchPath != null) {
     String[] modeJars=PApplet.split(searchPath,File.pathSeparatorChar);
     for (    String mj : modeJars) {
@@ -52,12 +52,35 @@
       }
     }
   }
-  new Thread(new Runnable(){
-    @Override public void run(){
-synchronized (astGenerator) {
-        astGenerator.loadJars();
-      }
+  for (  Library lib : editor.getMode().coreLibraries) {
+    try {
+      classpathJars.add(new File(lib.getJarPath()).toURI().toURL());
+    }
+ catch (    MalformedURLException e) {
+      e.printStackTrace();
     }
   }
-).start();
+  StringList entries=new StringList();
+  entries.append(System.getProperty("java.class.path").split(File.pathSeparator));
+  entries.append(System.getProperty("java.home") + File.separator + "lib"+ File.separator+ "rt.jar");
+  String modeClassPath=((JavaMode)editor.getMode()).getSearchPath();
+  if (modeClassPath != null) {
+    entries.append(modeClassPath);
+  }
+  for (  URL jarPath : classpathJars) {
+    entries.append(jarPath.getPath());
+  }
+synchronized (astGenerator) {
+    astGenerator.classPath=astGenerator.factory.createFromPath(entries.join(File.pathSeparator));
+    Messages.log("Classpath created " + (astGenerator.classPath != null));
+    Messages.log("Sketch classpath jars loaded.");
+    if (Platform.isMacOS()) {
+      File f=new File(System.getProperty("java.home") + File.separator + "bundle"+ File.separator+ "Classes"+ File.separator+ "classes.jar");
+      Messages.log(f.getAbsolutePath() + " | classes.jar found?" + f.exists());
+    }
+ else {
+      File f=new File(System.getProperty("java.home") + File.separator + "lib"+ File.separator+ "rt.jar"+ File.separator);
+      Messages.log(f.getAbsolutePath() + " | rt.jar found?" + f.exists());
+    }
+  }
 }
