@@ -32,7 +32,7 @@
     Matcher matcher=pattern.matcher(sourceAlt);
     sourceAlt=matcher.replaceAll("PApplet.parse" + Character.toUpperCase(dataType.charAt(0)) + dataType.substring(1)+ "(");
   }
-  final String webColorRegexp="#{1}[A-F|a-f|0-9]{6}\\W";
+  final String webColorRegexp="#[A-Fa-f0-9]{6}\\W";
   Pattern webPattern=Pattern.compile(webColorRegexp);
   Matcher webMatcher=webPattern.matcher(sourceAlt);
   while (webMatcher.find()) {
@@ -57,7 +57,7 @@
   StringBuilder sb=new StringBuilder();
   sb.append(xqpreproc.prepareImports(programImports));
   if (mode != PdePreprocessor.Mode.JAVA) {
-    sb.append("public class " + className + " extends PApplet {\n");
+    sb.append("public class ").append(className).append(" extends PApplet {\n");
     if (mode == PdePreprocessor.Mode.STATIC) {
       sb.append("public void setup() {\n");
     }

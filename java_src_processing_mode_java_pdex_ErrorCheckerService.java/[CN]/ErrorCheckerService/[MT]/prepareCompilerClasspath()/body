@@ -2,61 +2,58 @@
   if (!loadCompClass) {
     return;
   }
-synchronized (classpathJars) {
-    classpathJars=new ArrayList<URL>();
-    String entry="";
-    for (    ImportStatement impstat : programImports) {
-      String item=impstat.getImportName();
-      int dot=item.lastIndexOf('.');
-      entry=(dot == -1) ? item : item.substring(0,dot);
-      entry=entry.substring(6).trim();
-      if (ignorableImport(entry)) {
-        continue;
+  classpathJars=new ArrayList<>();
+  String entry;
+  for (  ImportStatement impstat : programImports) {
+    String item=impstat.getImportName();
+    int dot=item.lastIndexOf('.');
+    entry=(dot == -1) ? item : item.substring(0,dot);
+    entry=entry.substring(6).trim();
+    if (ignorableImport(entry)) {
+      continue;
+    }
+    try {
+      Library library=editor.getMode().getLibrary(entry);
+      String[] libraryPath=PApplet.split(library.getClassPath().substring(1).trim(),File.pathSeparatorChar);
+      for (      String pathItem : libraryPath) {
+        classpathJars.add(new File(pathItem).toURI().toURL());
       }
-      Library library=null;
+    }
+ catch (    Exception e) {
+      Messages.log("Encountered " + e + " while adding library to classpath");
+    }
+  }
+  if (editor.getSketch().hasCodeFolder()) {
+    File codeFolder=editor.getSketch().getCodeFolder();
+    String codeFolderClassPath=Util.contentsToClassPath(codeFolder);
+    if (!codeFolderClassPath.equalsIgnoreCase("")) {
+      Messages.log("Sketch has a code folder. Adding its jars");
+      String codeFolderPath[]=PApplet.split(codeFolderClassPath.substring(1).trim(),File.pathSeparatorChar);
       try {
-        library=editor.getMode().getLibrary(entry);
-        String[] libraryPath=PApplet.split(library.getClassPath().substring(1).trim(),File.pathSeparatorChar);
-        for (        String pathItem : libraryPath) {
+        for (        String pathItem : codeFolderPath) {
           classpathJars.add(new File(pathItem).toURI().toURL());
+          Messages.log("Addind cf jar: " + pathItem);
         }
       }
- catch (      Exception e) {
-        Messages.log("Encountered " + e + " while adding library to classpath");
-      }
-    }
-    if (editor.getSketch().hasCodeFolder()) {
-      File codeFolder=editor.getSketch().getCodeFolder();
-      String codeFolderClassPath=Util.contentsToClassPath(codeFolder);
-      if (!codeFolderClassPath.equalsIgnoreCase("")) {
-        Messages.log("Sketch has a code folder. Adding its jars");
-        String codeFolderPath[]=PApplet.split(codeFolderClassPath.substring(1).trim(),File.pathSeparatorChar);
-        try {
-          for (          String pathItem : codeFolderPath) {
-            classpathJars.add(new File(pathItem).toURI().toURL());
-            Messages.log("Addind cf jar: " + pathItem);
-          }
-        }
- catch (        Exception e2) {
-          e2.printStackTrace();
-        }
+ catch (      Exception e2) {
+        e2.printStackTrace();
       }
     }
-    String searchPath=((JavaMode)getEditor().getMode()).getSearchPath();
-    if (searchPath != null) {
-      String[] modeJars=PApplet.split(searchPath,File.pathSeparatorChar);
-      for (      String mj : modeJars) {
-        try {
-          classpathJars.add(new File(mj).toURI().toURL());
-        }
- catch (        MalformedURLException e) {
-          e.printStackTrace();
-        }
+  }
+  String searchPath=((JavaMode)getEditor().getMode()).getSearchPath();
+  if (searchPath != null) {
+    String[] modeJars=PApplet.split(searchPath,File.pathSeparatorChar);
+    for (    String mj : modeJars) {
+      try {
+        classpathJars.add(new File(mj).toURI().toURL());
+      }
+ catch (      MalformedURLException e) {
+        e.printStackTrace();
       }
     }
   }
   new Thread(new Runnable(){
-    public void run(){
+    @Override public void run(){
 synchronized (astGenerator) {
         astGenerator.loadJars();
       }
