@@ -1,0 +1,16 @@
+{
+  if (!transmitting) {
+    throw new RuntimeException("beginTransmisson has not been called");
+  }
+  byte[] in=new byte[len];
+  int ret=NativeInterface.transferI2c(handle,slave,out,in);
+  transmitting=false;
+  out=null;
+  if (ret < 0) {
+    if (ret == -5) {
+      System.err.println("The device did not respond. Check the cabling and whether you are using the correct address.");
+    }
+    throw new RuntimeException(NativeInterface.getError(ret));
+  }
+  return in;
+}
