@@ -1,11 +1,9 @@
 {
-  Stack<ASTNode> stack=new Stack<ASTNode>();
+  Stack<ASTNode> stack=new Stack<>();
   stack.push(root);
   while (!stack.isEmpty()) {
     ASTNode node=stack.pop();
-    Iterator<StructuralPropertyDescriptor> it=node.structuralPropertiesForType().iterator();
-    while (it.hasNext()) {
-      StructuralPropertyDescriptor prop=it.next();
+    for (    StructuralPropertyDescriptor prop : (Iterable<StructuralPropertyDescriptor>)node.structuralPropertiesForType()) {
       if (prop.isChildProperty() || prop.isSimpleProperty()) {
         if (node.getStructuralProperty(prop) instanceof ASTNode) {
           ASTNode temp=(ASTNode)node.getStructuralProperty(prop);

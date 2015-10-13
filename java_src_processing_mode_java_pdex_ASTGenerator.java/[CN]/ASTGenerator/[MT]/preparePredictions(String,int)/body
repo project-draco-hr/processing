@@ -29,7 +29,7 @@
       lineNumber+=len;
     }
   }
-  ASTNode nearestNode=null;
+  ASTNode nearestNode;
   ASTParser parser=ASTParser.newParser(AST.JLS8);
   parser.setKind(ASTParser.K_EXPRESSION);
   parser.setSource(phrase.toCharArray());
@@ -54,7 +54,7 @@
         if (td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY) != null) {
           SimpleType st=(SimpleType)td.getStructuralProperty(TypeDeclaration.SUPERCLASS_TYPE_PROPERTY);
           log("Superclass " + st.getName());
-          ArrayList<CompletionCandidate> tempCandidates=getMembersForType(st.getName().toString(),phrase,noCompare,false);
+          ArrayList<CompletionCandidate> tempCandidates=getMembersForType(st.getName().toString(),phrase,false,false);
           for (          CompletionCandidate can : tempCandidates) {
             candidates.add(can);
           }
@@ -62,14 +62,14 @@
       }
       List<StructuralPropertyDescriptor> sprops=nearestNode.structuralPropertiesForType();
       for (      StructuralPropertyDescriptor sprop : sprops) {
-        ASTNode cnode=null;
+        ASTNode cnode;
         if (!sprop.isChildListProperty()) {
           if (nearestNode.getStructuralProperty(sprop) instanceof ASTNode) {
             cnode=(ASTNode)nearestNode.getStructuralProperty(sprop);
             CompletionCandidate[] types=checkForTypes(cnode);
             if (types != null) {
-              for (int i=0; i < types.length; i++) {
-                if (types[i].getElementName().toLowerCase().startsWith(phrase.toLowerCase()))                 candidates.add(types[i]);
+              for (              CompletionCandidate type : types) {
+                if (type.getElementName().toLowerCase().startsWith(phrase.toLowerCase()))                 candidates.add(type);
               }
             }
           }
@@ -79,8 +79,8 @@
           for (          ASTNode clnode : nodelist) {
             CompletionCandidate[] types=checkForTypes(clnode);
             if (types != null) {
-              for (int i=0; i < types.length; i++) {
-                if (types[i].getElementName().toLowerCase().startsWith(phrase.toLowerCase()))                 candidates.add(types[i]);
+              for (              CompletionCandidate type : types) {
+                if (type.getElementName().toLowerCase().startsWith(phrase.toLowerCase()))                 candidates.add(type);
               }
             }
           }

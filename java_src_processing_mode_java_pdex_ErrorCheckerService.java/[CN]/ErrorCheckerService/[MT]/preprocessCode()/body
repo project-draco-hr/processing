@@ -1,5 +1,5 @@
 {
-  programImports=new ArrayList<>();
+  ArrayList<ImportStatement> scrappedImports=new ArrayList<>();
   StringBuilder rawCode=new StringBuilder();
   final Sketch sketch=editor.getSketch();
   try {
@@ -7,10 +7,10 @@
       if (sc.isExtension("pde")) {
         try {
           if (sketch.getCurrentCode().equals(sc)) {
-            rawCode.append(scrapImportStatements(sc.getDocumentText(),sketch.getCodeIndex(sc)));
+            rawCode.append(scrapImportStatements(sc.getDocumentText(),sketch.getCodeIndex(sc),scrappedImports));
           }
  else {
-            rawCode.append(scrapImportStatements(sc.getProgram(),sketch.getCodeIndex(sc)));
+            rawCode.append(scrapImportStatements(sc.getProgram(),sketch.getCodeIndex(sc),scrappedImports));
           }
           rawCode.append('\n');
         }
@@ -24,6 +24,7 @@
  catch (  Exception e) {
     Messages.log("Exception in preprocessCode()");
   }
+  this.programImports=scrappedImports;
   String sourceAlt=rawCode.toString();
   String dataTypeFunc[]={"int","char","float","boolean","byte"};
   for (  String dataType : dataTypeFunc) {
@@ -32,7 +33,7 @@
     Matcher matcher=pattern.matcher(sourceAlt);
     sourceAlt=matcher.replaceAll("PApplet.parse" + Character.toUpperCase(dataType.charAt(0)) + dataType.substring(1)+ "(");
   }
-  final String webColorRegexp="#{1}[A-F|a-f|0-9]{6}\\W";
+  final String webColorRegexp="#[A-Fa-f0-9]{6}\\W";
   Pattern webPattern=Pattern.compile(webColorRegexp);
   Matcher webMatcher=webPattern.matcher(sourceAlt);
   while (webMatcher.find()) {
@@ -45,7 +46,7 @@
   Matcher colorMatcher=colorPattern.matcher(sourceAlt);
   sourceAlt=colorMatcher.replaceAll("int");
   checkForChangedImports();
-  className=(editor == null) ? "DefaultClass" : editor.getSketch().getName();
+  className=editor.getSketch().getName();
   try {
     String uncommented=PdePreprocessor.scrubComments(sourceAlt);
     mode=PdePreprocessor.parseMode(uncommented);
@@ -55,9 +56,9 @@
     mode=PdePreprocessor.parseMode(uncommented);
   }
   StringBuilder sb=new StringBuilder();
-  sb.append(xqpreproc.prepareImports(programImports));
+  sb.append(xqpreproc.prepareImports(scrappedImports));
   if (mode != PdePreprocessor.Mode.JAVA) {
-    sb.append("public class " + className + " extends PApplet {\n");
+    sb.append("public class ").append(className).append(" extends PApplet {\n");
     if (mode == PdePreprocessor.Mode.STATIC) {
       sb.append("public void setup() {\n");
     }

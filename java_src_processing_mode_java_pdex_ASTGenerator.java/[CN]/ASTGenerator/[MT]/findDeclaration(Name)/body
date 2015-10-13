@@ -1,10 +1,10 @@
 {
-  ASTNode declaringClass=null;
+  ASTNode declaringClass;
   ASTNode parent=findMe.getParent();
-  ASTNode ret=null;
-  ArrayList<Integer> constrains=new ArrayList<Integer>();
+  ASTNode ret;
+  ArrayList<Integer> constrains=new ArrayList<>();
   if (parent.getNodeType() == ASTNode.METHOD_INVOCATION) {
-    Expression exp=(Expression)((MethodInvocation)parent).getStructuralProperty(MethodInvocation.EXPRESSION_PROPERTY);
+    Expression exp=(Expression)parent.getStructuralProperty(MethodInvocation.EXPRESSION_PROPERTY);
     if (((MethodInvocation)parent).getName().toString().equals(findMe.toString())) {
       constrains.add(ASTNode.METHOD_DECLARATION);
       if (exp != null) {
@@ -13,20 +13,20 @@
           SimpleType stp=extracTypeInfo(findDeclaration(((MethodInvocation)exp).getName()));
           if (stp == null)           return null;
           declaringClass=findDeclaration(stp.getName());
-          return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains,declaringClass);
+          return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains);
         }
  else         if (exp instanceof FieldAccess) {
           SimpleType stp=extracTypeInfo(findDeclaration(((FieldAccess)exp).getName()));
           if (stp == null)           return null;
           declaringClass=findDeclaration((stp.getName()));
-          return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains,declaringClass);
+          return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains);
         }
         if (exp instanceof SimpleName) {
           SimpleType stp=extracTypeInfo(findDeclaration(((SimpleName)exp)));
           if (stp == null)           return null;
           declaringClass=findDeclaration(stp.getName());
           constrains.add(ASTNode.METHOD_DECLARATION);
-          return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains,declaringClass);
+          return definedIn(declaringClass,((MethodInvocation)parent).getName().toString(),constrains);
         }
       }
     }
@@ -45,21 +45,21 @@
           SimpleType stp=extracTypeInfo(findDeclaration(((MethodInvocation)exp).getName()));
           if (stp == null)           return null;
           declaringClass=findDeclaration(stp.getName());
-          return definedIn(declaringClass,fa.getName().toString(),constrains,declaringClass);
+          return definedIn(declaringClass,fa.getName().toString(),constrains);
         }
  else         if (exp instanceof FieldAccess) {
           SimpleType stp=extracTypeInfo(findDeclaration(((FieldAccess)exp).getName()));
           if (stp == null)           return null;
           declaringClass=findDeclaration((stp.getName()));
           constrains.add(ASTNode.TYPE_DECLARATION);
-          return definedIn(declaringClass,fa.getName().toString(),constrains,declaringClass);
+          return definedIn(declaringClass,fa.getName().toString(),constrains);
         }
         if (exp instanceof SimpleName) {
           SimpleType stp=extracTypeInfo(findDeclaration(((SimpleName)exp)));
           if (stp == null)           return null;
           declaringClass=findDeclaration(stp.getName());
           constrains.add(ASTNode.METHOD_DECLARATION);
-          return definedIn(declaringClass,fa.getName().toString(),constrains,declaringClass);
+          return definedIn(declaringClass,fa.getName().toString(),constrains);
         }
       }
     }
@@ -78,7 +78,7 @@
       constrains.clear();
       constrains.add(ASTNode.TYPE_DECLARATION);
       constrains.add(ASTNode.FIELD_DECLARATION);
-      return definedIn(declaringClass,qn.getName().toString(),constrains,null);
+      return definedIn(declaringClass,qn.getName().toString(),constrains);
     }
  else {
       if (findMe instanceof QualifiedName) {
@@ -91,7 +91,7 @@
         constrains.clear();
         constrains.add(ASTNode.TYPE_DECLARATION);
         constrains.add(ASTNode.FIELD_DECLARATION);
-        return definedIn(declaringClass,qnn.getName().toString(),constrains,null);
+        return definedIn(declaringClass,qnn.getName().toString(),constrains);
       }
     }
   }
@@ -114,14 +114,14 @@
       StructuralPropertyDescriptor prop=(StructuralPropertyDescriptor)oprop;
       if (prop.isChildProperty() || prop.isSimpleProperty()) {
         if (parent.getStructuralProperty(prop) instanceof ASTNode) {
-          ret=definedIn((ASTNode)parent.getStructuralProperty(prop),findMe.toString(),constrains,declaringClass);
+          ret=definedIn((ASTNode)parent.getStructuralProperty(prop),findMe.toString(),constrains);
           if (ret != null)           return ret;
         }
       }
  else       if (prop.isChildListProperty()) {
         List<ASTNode> nodelist=(List<ASTNode>)parent.getStructuralProperty(prop);
         for (        ASTNode retNode : nodelist) {
-          ret=definedIn(retNode,findMe.toString(),constrains,declaringClass);
+          ret=definedIn(retNode,findMe.toString(),constrains);
           if (ret != null)           return ret;
         }
       }

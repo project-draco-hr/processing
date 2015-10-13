@@ -1,8 +1,8 @@
 {
   log("Resolve 3rdParty expr-- " + getNodeAsString(astNode) + " nearest node "+ getNodeAsString(nearestNode));
   if (astNode == null)   return null;
-  ClassMember scopeParent=null;
-  SimpleType stp=null;
+  ClassMember scopeParent;
+  SimpleType stp;
   if (astNode instanceof SimpleName) {
     ASTNode decl=findDeclaration2(((SimpleName)astNode),nearestNode);
     if (decl != null) {
@@ -50,7 +50,7 @@ case ASTNode.FIELD_ACCESS:
     if (fa.getExpression() instanceof SimpleName) {
       stp=extracTypeInfo(findDeclaration2((SimpleName)fa.getExpression(),nearestNode));
       if (stp == null) {
-        Class<?> tehClass=findClassIfExists(((SimpleName)fa.getExpression()).toString());
+        Class<?> tehClass=findClassIfExists(fa.getExpression().toString());
         if (tehClass != null) {
           return definedIn3rdPartyClass(new ClassMember(tehClass),fa.getName().toString());
         }
@@ -103,7 +103,7 @@ if (decl.getNodeType() == ASTNode.TYPE_DECLARATION) {
 }
 stp=extracTypeInfo(decl);
 if (stp == null) {
-  Class<?> tehClass=findClassIfExists(((SimpleName)mi.getExpression()).toString());
+  Class<?> tehClass=findClassIfExists(mi.getExpression().toString());
   if (tehClass != null) {
     return definedIn3rdPartyClass(new ClassMember(tehClass),mi.getName().toString());
   }
