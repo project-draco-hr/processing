@@ -22,16 +22,26 @@
       public void run(){
         runtime.launch(null);
         if (launchInteractive) {
-          editor.initEditorCode(parser.allHandles,false);
-          editor.stopTweakMode(parser.allHandles);
+          SwingUtilities.invokeLater(new Runnable(){
+            public void run(){
+              editor.initEditorCode(parser.allHandles,false);
+              editor.stopTweakMode(parser.allHandles);
+            }
+          }
+);
         }
       }
     }
 ).start();
     if (launchInteractive) {
-      editor.initEditorCode(parser.allHandles,false);
-      editor.updateInterface(parser.allHandles,parser.colorBoxes);
-      editor.startTweakMode();
+      SwingUtilities.invokeLater(new Runnable(){
+        public void run(){
+          editor.initEditorCode(parser.allHandles,false);
+          editor.updateInterface(parser.allHandles,parser.colorBoxes);
+          editor.startTweakMode();
+        }
+      }
+);
     }
     return runtime;
   }
