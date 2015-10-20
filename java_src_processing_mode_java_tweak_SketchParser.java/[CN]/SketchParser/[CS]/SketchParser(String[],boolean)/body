@@ -7,9 +7,9 @@
   for (  String code : codeTabs) {
     commentBlocks.add(getCommentBlocks(code));
   }
-  ignoreFunctions=new ArrayList<Range>();
-  ignoreFunctions.add(new Range(getVoidFunctionStart(codeTabs[0],"settings"),getVoidFunctionEnd(codeTabs[0],"settings")));
-  ignoreFunctions.add(new Range(getVoidFunctionStart(codeTabs[0],"setup"),getVoidFunctionEnd(codeTabs[0],"setup")));
+  ignoreFunctions=new ArrayList<>();
+  ignoreFunctions.add(Arrays.asList(new Range(getVoidFunctionStart(codeTabs[0],"settings"),getVoidFunctionEnd(codeTabs[0],"settings")),new Range(getVoidFunctionStart(codeTabs[0],"setup"),getVoidFunctionEnd(codeTabs[0],"setup"))));
+  for (int i=0; i < codeTabs.length - 1; i++)   ignoreFunctions.add(Collections.EMPTY_LIST);
   curlyScopes=new ArrayList<>();
   for (  String code : codeTabs) {
     curlyScopes.add(getCurlyScopes(code));
