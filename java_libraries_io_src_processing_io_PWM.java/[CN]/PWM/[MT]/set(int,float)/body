@@ -1,10 +1,10 @@
 {
-  String fn=fn=String.format("/sys/class/pwm/%s/gpio%d/period",chip,channel);
+  String fn=fn=String.format("/sys/class/pwm/%s/pwm%d/period",chip,channel);
   int ret=NativeInterface.writeFile(fn,String.format("%d",(int)(1000000000 / period)));
   if (ret < 0) {
     throw new RuntimeException(fn + ": " + NativeInterface.getError(ret));
   }
-  fn=fn=String.format("/sys/class/pwm/%s/gpio%d/duty",chip,channel);
+  fn=fn=String.format("/sys/class/pwm/%s/pwm%d/duty_cycle",chip,channel);
   if (duty < 0.0 || 1.0 < duty) {
     System.err.println("Duty cycle must be between 0.0 and 1.0.");
     throw new IllegalArgumentException("Illegal argument");
@@ -13,7 +13,7 @@
   if (ret < 0) {
     throw new RuntimeException(fn + ": " + NativeInterface.getError(ret));
   }
-  fn=String.format("/sys/class/pwm/%s/gpio%d/enable",chip,channel);
+  fn=String.format("/sys/class/pwm/%s/pwm%d/enable",chip,channel);
   ret=NativeInterface.writeFile(fn,"1");
   if (ret < 0) {
     throw new RuntimeException(fn + ": " + NativeInterface.getError(ret));
