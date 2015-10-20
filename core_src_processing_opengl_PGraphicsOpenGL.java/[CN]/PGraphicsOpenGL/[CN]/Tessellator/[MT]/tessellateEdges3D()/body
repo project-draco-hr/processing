@@ -2,6 +2,8 @@
   boolean bevel=!noCapsJoins();
   int nInVert=in.getNumEdgeVertices(bevel);
   int nInInd=in.getNumEdgeIndices(bevel);
+  int vcount0=tess.lineVertexCount;
+  int icount0=tess.lineIndexCount;
   tess.lineVertexCheck(nInVert);
   tess.lineIndexCheck(nInInd);
   int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
@@ -11,6 +13,8 @@
   short[] lastInd={-1,-1};
   int pi0=-1;
   int pi1=-1;
+  int[] tmp={0,0};
+  tess.lineIndexCache.setCounter(tmp);
   for (int i=0; i <= in.edgeCount - 1; i++) {
     int[] edge=in.edges[i];
     int i0=edge[0];
@@ -39,5 +43,8 @@
       pi1=i1;
     }
   }
+  tess.lineIndexCache.setCounter(null);
+  tess.lineIndexCount=icount0 + tmp[0];
+  tess.lineVertexCount=vcount0 + tmp[1];
   lastLineIndexCache=index;
 }

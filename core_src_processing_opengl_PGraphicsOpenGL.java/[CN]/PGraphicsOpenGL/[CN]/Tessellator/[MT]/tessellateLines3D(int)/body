@@ -1,14 +1,21 @@
 {
   int nvert=lineCount * 4;
   int nind=lineCount * 2 * 3;
+  int vcount0=tess.lineVertexCount;
+  int icount0=tess.lineIndexCount;
   tess.lineVertexCheck(nvert);
   tess.lineIndexCheck(nind);
   int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
   firstLineIndexCache=index;
+  int[] tmp={0,0};
+  tess.lineIndexCache.setCounter(tmp);
   for (int ln=0; ln < lineCount; ln++) {
     int i0=2 * ln + 0;
     int i1=2 * ln + 1;
     index=addLineSegment3D(i0,i1,i0 - 2,i1 - 1,index,null,false);
   }
+  tess.lineIndexCache.setCounter(null);
+  tess.lineIndexCount=icount0 + tmp[0];
+  tess.lineVertexCount=vcount0 + tmp[1];
   lastLineIndexCache=index;
 }

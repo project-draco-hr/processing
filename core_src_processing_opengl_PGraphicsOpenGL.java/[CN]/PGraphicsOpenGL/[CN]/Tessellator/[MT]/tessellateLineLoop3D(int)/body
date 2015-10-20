@@ -2,6 +2,8 @@
   int nBevelTr=noCapsJoins() ? 0 : lineCount;
   int nvert=lineCount * 4 + nBevelTr * 3;
   int nind=lineCount * 2 * 3 + nBevelTr * 2 * 3;
+  int vcount0=tess.lineVertexCount;
+  int icount0=tess.lineIndexCount;
   tess.lineVertexCheck(nvert);
   tess.lineIndexCheck(nind);
   int index=in.renderMode == RETAINED ? tess.lineIndexCache.addNew() : tess.lineIndexCache.getLast();
@@ -9,6 +11,8 @@
   int i0=0;
   int i1=-1;
   short[] lastInd={-1,-1};
+  int[] tmp={0,0};
+  tess.lineIndexCache.setCounter(tmp);
   for (int ln=0; ln < lineCount - 1; ln++) {
     i1=ln + 1;
     if (0 < nBevelTr) {
@@ -23,5 +27,8 @@
   if (0 < nBevelTr) {
     index=addBevel3D(0,1,in.vertexCount - 1,0,index,lastInd,false);
   }
+  tess.lineIndexCache.setCounter(null);
+  tess.lineIndexCount=icount0 + tmp[0];
+  tess.lineVertexCount=vcount0 + tmp[1];
   lastLineIndexCache=index;
 }
