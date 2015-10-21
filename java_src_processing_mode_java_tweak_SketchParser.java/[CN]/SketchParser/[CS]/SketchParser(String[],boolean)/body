@@ -8,8 +8,12 @@
     commentBlocks.add(getCommentBlocks(code));
   }
   ignoreFunctions=new ArrayList<>();
-  ignoreFunctions.add(Arrays.asList(new Range(getVoidFunctionStart(codeTabs[0],"settings"),getVoidFunctionEnd(codeTabs[0],"settings")),new Range(getVoidFunctionStart(codeTabs[0],"setup"),getVoidFunctionEnd(codeTabs[0],"setup"))));
-  for (int i=0; i < codeTabs.length - 1; i++)   ignoreFunctions.add(Collections.EMPTY_LIST);
+  Range settingsRange=getVoidFunctionRange(codeTabs[0],"settings");
+  Range setupRange=getVoidFunctionRange(codeTabs[0],"setup");
+  ignoreFunctions.add(Arrays.asList(settingsRange,setupRange));
+  for (int i=0; i < codeTabs.length - 1; i++) {
+    ignoreFunctions.add(new ArrayList<SketchParser.Range>());
+  }
   curlyScopes=new ArrayList<>();
   for (  String code : codeTabs) {
     curlyScopes.add(getCurlyScopes(code));
