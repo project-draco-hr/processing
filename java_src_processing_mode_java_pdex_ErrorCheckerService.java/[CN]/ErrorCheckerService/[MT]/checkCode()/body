@@ -1,24 +1,19 @@
 {
   CodeCheckResult result=new CodeCheckResult();
   result.sourceCode=preprocessCode();
-  result.sourceCodeOffset=0;
   char[] sourceCodeArray=result.sourceCode.toCharArray();
-  IProblem[] problems;
+  List<IProblem> problems;
 {
 {
       result.syntaxErrors=true;
       result.containsErrors=true;
       parser.setSource(sourceCodeArray);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
-      Map<String,String> options=JavaCore.getOptions();
-      JavaCore.setComplianceOptions(JavaCore.VERSION_1_8,options);
-      options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_8);
-      options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT,JavaCore.ENABLED);
-      parser.setCompilerOptions(options);
+      parser.setCompilerOptions(COMPILER_OPTIONS);
       parser.setStatementsRecovery(true);
       result.compilationUnit=(CompilationUnit)parser.createAST(null);
-      problems=result.compilationUnit.getProblems();
-      if (problems.length == 0) {
+      problems=Arrays.asList(result.compilationUnit.getProblems());
+      if (problems.isEmpty()) {
         result.syntaxErrors=false;
         result.containsErrors=false;
       }
@@ -28,37 +23,25 @@
       }
     }
   }
-  if (problems.length == 0 && !editor.hasJavaTabs()) {
+  if (problems.isEmpty() && !editor.hasJavaTabs()) {
     String sourceCode=xqpreproc.handle(result.sourceCode,programImports);
     prepareCompilerClasspath();
 {
 {
         parser.setSource(sourceCodeArray);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
-        Map<String,String> options=JavaCore.getOptions();
-        JavaCore.setComplianceOptions(JavaCore.VERSION_1_8,options);
-        options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_8);
-        options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT,JavaCore.ENABLED);
-        parser.setCompilerOptions(options);
+        parser.setCompilerOptions(COMPILER_OPTIONS);
         parser.setStatementsRecovery(true);
         result.compilationUnit=(CompilationUnit)parser.createAST(null);
         result.sourceCode=sourceCode;
-        result.sourceCodeOffset=1;
         try {
           if (loadCompClass) {
             classPath=new URL[classpathJars.size()];
             classPath=classpathJars.toArray(classPath);
-            compilationChecker=null;
-            classLoader=null;
-            System.gc();
             classLoader=new URLClassLoader(classPath);
-            compilationChecker=new CompilationChecker();
             loadCompClass=false;
           }
-          if (compilerSettings == null) {
-            prepareCompilerSetting();
-          }
-          problems=compilationChecker.getErrors(className,sourceCode,compilerSettings,classLoader);
+          problems=compileAndReturnProblems(className,sourceCode,COMPILER_OPTIONS,classLoader);
         }
  catch (        Exception e) {
           System.err.println("compileCheck() problem." + e);
@@ -77,7 +60,7 @@ catch (        NoClassDefFoundError e) {
       if (problem.getMessage().contains("Syntax error, insert \":: IdentifierOrNew\"")) {
         continue;
       }
-      int sourceLine=problem.getSourceLineNumber() - result.sourceCodeOffset;
+      int sourceLine=problem.getSourceLineNumber();
       int[] a=calculateTabIndexAndLineNumber(sourceLine);
       Problem p=new Problem(problem,a[0],a[1]);
       if (p.isError()) {

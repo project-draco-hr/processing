@@ -1,0 +1,34 @@
+{
+  final List<IProblem> problems=new ArrayList<>();
+  ICompilerRequestor requestor=new ICompilerRequestor(){
+    @Override public void acceptResult(    CompilationResult cr){
+      if (cr.hasProblems())       Collections.addAll(problems,cr.getProblems());
+    }
+  }
+;
+  final char[] contents=source.toCharArray();
+  final char[][] packageName=new char[][]{};
+  final char[] mainTypeName=sourceName.toCharArray();
+  final char[] fileName=(sourceName + ".java").toCharArray();
+  ICompilationUnit unit=new ICompilationUnit(){
+    @Override public char[] getContents(){
+      return contents;
+    }
+    @Override public char[][] getPackageName(){
+      return packageName;
+    }
+    @Override public char[] getMainTypeName(){
+      return mainTypeName;
+    }
+    @Override public char[] getFileName(){
+      return fileName;
+    }
+    @Override public boolean ignoreOptionalProblems(){
+      return false;
+    }
+  }
+;
+  org.eclipse.jdt.internal.compiler.Compiler compiler=new Compiler(new NameEnvironmentImpl(classLoader),DefaultErrorHandlingPolicies.proceedWithAllProblems(),new CompilerOptions(options),requestor,new DefaultProblemFactory(Locale.getDefault()));
+  compiler.compile(new ICompilationUnit[]{unit});
+  return problems;
+}
