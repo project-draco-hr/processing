@@ -10,12 +10,14 @@ case ACTIVE:
 MatchResult setupMatch=findInCurrentScope(VOID_SETUP_REGEX,uncommented);
 if (setupMatch != null) {
 int start=uncommented.indexOf("{",setupMatch.end());
-MatchResult match=findInCurrentScope(CLOSING_BRACE,uncommented,start);
-if (match != null) {
-  searchArea=uncommented.substring(start + 1,match.end() - 1);
-}
+if (start >= 0) {
+  MatchResult match=findInCurrentScope(CLOSING_BRACE,uncommented,start);
+  if (match != null) {
+    searchArea=uncommented.substring(start + 1,match.end() - 1);
+  }
  else {
-  throw new SketchException("Found a { that's missing a matching }",false);
+    throw new SketchException("Found a { that's missing a matching }",false);
+  }
 }
 }
 break;
