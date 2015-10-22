@@ -1,0 +1,14 @@
+{
+  String fullName=CharOperation.toString(parentPackageName);
+  if (packageName != null) {
+    if (fullName.length() > 0)     fullName+=".";
+    fullName+=new String(packageName);
+  }
+  if (readClassFile(fullName,classLoader) != null)   return false;
+  try {
+    return (classLoader.loadClass(fullName) == null);
+  }
+ catch (  ClassNotFoundException e) {
+    return true;
+  }
+}
