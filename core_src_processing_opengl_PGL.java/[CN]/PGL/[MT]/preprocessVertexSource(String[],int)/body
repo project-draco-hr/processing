@@ -4,15 +4,15 @@
   }
   String[] vertSrc;
   if (version < 130) {
-    String[] search={};
+    Pattern[] search={};
     String[] replace={};
     int offset=1;
     vertSrc=preprocessShaderSource(vertSrc0,search,replace,offset);
     vertSrc[0]="#version " + version;
   }
  else {
-    String[] search=new String[]{"varying","attribute","texture","texMap2DRect","texMap2D","texMap3D","texMapCube"};
-    String[] replace=new String[]{"out","in","texMap","texture","texture","texture","texture"};
+    Pattern[] search=new Pattern[]{Pattern.compile(String.format(GLSL_ID_REGEX,"varying")),Pattern.compile(String.format(GLSL_ID_REGEX,"attribute")),Pattern.compile(String.format(GLSL_ID_REGEX,"texture")),Pattern.compile(String.format(GLSL_FN_REGEX,"textureRect|texture2D|texture3D|textureCube"))};
+    String[] replace=new String[]{"out","in","texMap","texture"};
     int offset=1;
     vertSrc=preprocessShaderSource(vertSrc0,search,replace,offset);
     vertSrc[0]="#version " + version;

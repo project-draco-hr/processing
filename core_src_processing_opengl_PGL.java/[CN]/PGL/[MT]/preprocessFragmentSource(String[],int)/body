@@ -4,19 +4,19 @@
   }
   String[] fragSrc;
   if (version < 130) {
-    String[] search={};
+    Pattern[] search={};
     String[] replace={};
     int offset=1;
     fragSrc=preprocessShaderSource(fragSrc0,search,replace,offset);
     fragSrc[0]="#version " + version;
   }
  else {
-    String[] search=new String[]{"varying","attribute","texture","texMap2DRect","texMap2D","texMap3D","texMapCube","gl_FragColor"};
-    String[] replace=new String[]{"in","in","texMap","texture","texture","texture","texture","fragColor"};
+    Pattern[] search=new Pattern[]{Pattern.compile(String.format(GLSL_ID_REGEX,"varying|attribute")),Pattern.compile(String.format(GLSL_ID_REGEX,"texture")),Pattern.compile(String.format(GLSL_FN_REGEX,"textureRect|texture2D|texture3D|textureCube")),Pattern.compile(String.format(GLSL_ID_REGEX,"gl_FragColor"))};
+    String[] replace=new String[]{"in","texMap","texture","_fragColor"};
     int offset=2;
     fragSrc=preprocessShaderSource(fragSrc0,search,replace,offset);
     fragSrc[0]="#version " + version;
-    fragSrc[1]="out vec4 fragColor;";
+    fragSrc[1]="out vec4 _fragColor;";
   }
   return fragSrc;
 }
