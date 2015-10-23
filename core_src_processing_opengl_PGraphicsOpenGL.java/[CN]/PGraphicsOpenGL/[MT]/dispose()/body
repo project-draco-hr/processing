@@ -1,13 +1,9 @@
 {
-  super.dispose();
   if (asyncPixelReader != null) {
     asyncPixelReader.dispose();
     asyncPixelReader=null;
   }
-  if (primaryGraphics) {
-    deleteDefaultShaders();
-  }
- else {
+  if (!primaryGraphics) {
     deleteSurfaceTextures();
     FrameBuffer ofb=offscreenFramebuffer;
     FrameBuffer mfb=multisampleFramebuffer;
@@ -19,4 +15,5 @@
     }
   }
   pgl.dispose();
+  super.dispose();
 }
