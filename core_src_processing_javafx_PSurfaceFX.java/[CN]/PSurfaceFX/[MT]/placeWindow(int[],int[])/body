@@ -2,6 +2,8 @@
   if (sketch.sketchFullScreen()) {
     PApplet.hideMenuBar();
   }
+  int wide=sketch.width;
+  int high=sketch.height;
   if (location != null) {
     stage.setX(location[0]);
     stage.setY(location[1]);
@@ -9,13 +11,13 @@
  else   if (editorLocation != null) {
     int locationX=editorLocation[0] - 20;
     int locationY=editorLocation[1];
-    if (locationX - stage.getWidth() > 10) {
-      stage.setX(locationX - stage.getWidth());
+    if (locationX - wide > 10) {
+      stage.setX(locationX - wide);
       stage.setY(locationY);
     }
  else {
-      locationX=(int)((sketch.displayWidth - stage.getWidth()) / 2);
-      locationY=(int)((sketch.displayHeight - stage.getHeight()) / 2);
+      locationX=(sketch.displayWidth - wide) / 2;
+      locationY=(sketch.displayHeight - high) / 2;
       stage.setX(locationX);
       stage.setY(locationY);
     }
