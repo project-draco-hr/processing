@@ -1,0 +1,24 @@
+{
+  for (int i=0; i < nvert; i++) {
+    int inIdx=i0 + i;
+    int tessIdx=firstPolyVertex + i;
+    PApplet.arrayCopy(in.vertices,3 * inIdx,polyVertices,4 * tessIdx,3);
+    polyVertices[4 * tessIdx + 3]=1;
+    for (    String name : polyAttribs.keySet()) {
+      VertexAttribute attrib=polyAttribs.get(name);
+      if (!attrib.isPosition())       continue;
+      float[] inValues=in.fattribs.get(name);
+      float[] tessValues=fpolyAttribs.get(name);
+      PApplet.arrayCopy(inValues,3 * inIdx,tessValues,4 * tessIdx,3);
+      tessValues[4 * tessIdx + 3]=1;
+    }
+  }
+  PApplet.arrayCopy(in.normals,3 * i0,polyNormals,3 * firstPolyVertex,3 * nvert);
+  for (  String name : polyAttribs.keySet()) {
+    VertexAttribute attrib=polyAttribs.get(name);
+    if (!attrib.isPosition())     continue;
+    float[] inValues=in.fattribs.get(name);
+    float[] tessValues=fpolyAttribs.get(name);
+    PApplet.arrayCopy(inValues,3 * i0,tessValues,3 * firstPolyVertex,3 * nvert);
+  }
+}

@@ -1,0 +1,27 @@
+{
+  PApplet.arrayCopy(in.colors,i0,polyColors,firstPolyVertex,nvert);
+  PApplet.arrayCopy(in.texcoords,2 * i0,polyTexCoords,2 * firstPolyVertex,2 * nvert);
+  PApplet.arrayCopy(in.ambient,i0,polyAmbient,firstPolyVertex,nvert);
+  PApplet.arrayCopy(in.specular,i0,polySpecular,firstPolyVertex,nvert);
+  PApplet.arrayCopy(in.emissive,i0,polyEmissive,firstPolyVertex,nvert);
+  PApplet.arrayCopy(in.shininess,i0,polyShininess,firstPolyVertex,nvert);
+  for (  String name : polyAttribs.keySet()) {
+    VertexAttribute attrib=polyAttribs.get(name);
+    if (attrib.isPosition() || attrib.isNormal())     continue;
+    Object inValues=null;
+    Object tessValues=null;
+    if (attrib.isFloat()) {
+      inValues=in.fattribs.get(name);
+      tessValues=fpolyAttribs.get(name);
+    }
+ else     if (attrib.isInt()) {
+      inValues=in.iattribs.get(name);
+      tessValues=ipolyAttribs.get(name);
+    }
+ else     if (attrib.isBool()) {
+      inValues=in.battribs.get(name);
+      tessValues=bpolyAttribs.get(name);
+    }
+    PApplet.arrayCopy(inValues,attrib.size * i0,tessValues,attrib.tessSize * firstPolyVertex,attrib.size * nvert);
+  }
+}

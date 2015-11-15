@@ -1,0 +1,44 @@
+{
+  for (int i=0; i < nvert; i++) {
+    int inIdx=i0 + i;
+    int tessIdx=firstPolyVertex + i;
+    index=2 * inIdx;
+    float u=in.texcoords[index++];
+    float v=in.texcoords[index];
+    polyColors[tessIdx]=in.colors[inIdx];
+    index=2 * tessIdx;
+    polyTexCoords[index++]=u;
+    polyTexCoords[index]=v;
+    polyAmbient[tessIdx]=in.ambient[inIdx];
+    polySpecular[tessIdx]=in.specular[inIdx];
+    polyEmissive[tessIdx]=in.emissive[inIdx];
+    polyShininess[tessIdx]=in.shininess[inIdx];
+    for (    String name : polyAttribs.keySet()) {
+      VertexAttribute attrib=polyAttribs.get(name);
+      if (attrib.isPosition() || attrib.isNormal())       continue;
+      int index0=attrib.size * inIdx;
+      int index1=attrib.size * tessIdx;
+      if (attrib.isFloat()) {
+        float[] inValues=in.fattribs.get(name);
+        float[] tessValues=fpolyAttribs.get(name);
+        for (int n=0; n < attrib.size; n++) {
+          tessValues[index1++]=inValues[index0++];
+        }
+      }
+ else       if (attrib.isInt()) {
+        int[] inValues=in.iattribs.get(name);
+        int[] tessValues=ipolyAttribs.get(name);
+        for (int n=0; n < attrib.size; n++) {
+          tessValues[index1++]=inValues[index0++];
+        }
+      }
+ else       if (attrib.isBool()) {
+        byte[] inValues=in.battribs.get(name);
+        byte[] tessValues=bpolyAttribs.get(name);
+        for (int n=0; n < attrib.size; n++) {
+          tessValues[index1++]=inValues[index0++];
+        }
+      }
+    }
+  }
+}
