@@ -7,26 +7,19 @@
     params=new String[]{"open"};
   }
  else   if (platform == LINUX) {
-    if (openLauncher == null) {
+    final String[] launchers={"xdg-open","gnome-open","kde-open"};
+    for (    String l : launchers) {
+      if (openLauncher != null)       break;
       try {
-        Process p=Runtime.getRuntime().exec(new String[]{"gnome-open"});
+        Process p=Runtime.getRuntime().exec(new String[]{l});
         p.waitFor();
-        openLauncher="gnome-open";
+        openLauncher=l;
       }
  catch (      Exception e) {
       }
     }
     if (openLauncher == null) {
-      try {
-        Process p=Runtime.getRuntime().exec(new String[]{"kde-open"});
-        p.waitFor();
-        openLauncher="kde-open";
-      }
- catch (      Exception e) {
-      }
-    }
-    if (openLauncher == null) {
-      System.err.println("Could not find gnome-open or kde-open, " + "the open() command may not work.");
+      System.err.println("Could not find xdg-, gnome-, or kde-open: " + "the open() command may not work.");
     }
     if (openLauncher != null) {
       params=new String[]{openLauncher};
