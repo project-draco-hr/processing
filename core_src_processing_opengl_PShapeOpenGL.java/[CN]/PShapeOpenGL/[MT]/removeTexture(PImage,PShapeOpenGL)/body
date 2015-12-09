@@ -3,6 +3,7 @@
   boolean childHasTex=false;
   for (int i=0; i < childCount; i++) {
     PShapeOpenGL child=(PShapeOpenGL)children[i];
+    if (child == caller)     continue;
     if (child.hasTexture(tex)) {
       childHasTex=true;
       break;
@@ -15,6 +16,6 @@
     }
   }
   if (parent != null) {
-    ((PShapeOpenGL)parent).removeTexture(tex);
+    ((PShapeOpenGL)parent).removeTexture(tex,this);
   }
 }
