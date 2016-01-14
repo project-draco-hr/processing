@@ -1,6 +1,7 @@
 {
   if (first < last) {
     int index;
+    float matrixScale=matrixScale(tr);
     for (int i=first; i <= last; i++) {
       index=4 * i;
       float x=pointVertices[index++];
@@ -12,6 +13,9 @@
       pointVertices[index++]=x * tr.m10 + y * tr.m11 + z * tr.m12 + w * tr.m13;
       pointVertices[index++]=x * tr.m20 + y * tr.m21 + z * tr.m22 + w * tr.m23;
       pointVertices[index]=x * tr.m30 + y * tr.m31 + z * tr.m32 + w * tr.m33;
+      index=2 * i;
+      pointOffsets[index++]*=matrixScale;
+      pointOffsets[index]*=matrixScale;
     }
   }
 }

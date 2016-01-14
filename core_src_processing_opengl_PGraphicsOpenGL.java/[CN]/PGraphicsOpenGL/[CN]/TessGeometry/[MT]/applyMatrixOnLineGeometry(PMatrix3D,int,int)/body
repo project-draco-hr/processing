@@ -1,6 +1,7 @@
 {
   if (first < last) {
     int index;
+    float scaleFactor=matrixScale(tr);
     for (int i=first; i <= last; i++) {
       index=4 * i;
       float x=lineVertices[index++];
@@ -19,7 +20,8 @@
       index=4 * i;
       lineDirections[index++]=dx * tr.m00 + dy * tr.m01 + dz * tr.m02;
       lineDirections[index++]=dx * tr.m10 + dy * tr.m11 + dz * tr.m12;
-      lineDirections[index]=dx * tr.m20 + dy * tr.m21 + dz * tr.m22;
+      lineDirections[index++]=dx * tr.m20 + dy * tr.m21 + dz * tr.m22;
+      lineDirections[index]*=scaleFactor;
     }
   }
 }
