@@ -1,0 +1,22 @@
+{
+  boolean antialias=Preferences.getBoolean("editor.smooth");
+  TextAreaPainter painter=textArea.getPainter();
+  if (text.getEndIndex() - (text.getBeginIndex() + committedCount) > 0) {
+    composedTextString=new AttributedString(text,committedCount,text.getEndIndex(),CUSTOM_IM_ATTRIBUTES);
+    Font font=painter.getFontMetrics().getFont();
+    composedTextString.addAttribute(TextAttribute.FONT,font);
+    composedTextString.addAttribute(TextAttribute.BACKGROUND,Color.WHITE);
+    composedText=composedTextString.getIterator();
+  }
+ else {
+    composedTextString=new AttributedString("");
+    return null;
+  }
+  Graphics2D g2d=(Graphics2D)painter.getGraphics();
+  g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,antialias ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+  FontRenderContext frc=g2d.getFontRenderContext();
+  if (Base.DEBUG) {
+    Messages.log("debug: FontRenderContext is Antialiased = " + frc.getAntiAliasingHint());
+  }
+  return new TextLayout(composedTextString.getIterator(),frc);
+}

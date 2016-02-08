@@ -1,21 +1,46 @@
 {
+  composedText=null;
+  if (Base.DEBUG) {
+    StringBuilder sb=new StringBuilder();
+    sb.append("#Called inputMethodTextChanged");
+    sb.append("\t ID: " + event.getID());
+    sb.append("\t timestamp: " + new java.util.Date(event.getWhen()));
+    sb.append("\t parmString: " + event.paramString());
+    Messages.log(sb.toString());
+  }
   AttributedCharacterIterator text=event.getText();
   committed_count=event.getCommittedCharacterCount();
-  if (isFullWidthSpaceInput(text)) {
-    textManager.insertFullWidthSpace();
-    caretPositionChanged(event);
-    return;
+  textArea.setCaretVisible(false);
+  if (text != null && text.getEndIndex() - (text.getBeginIndex() + committed_count) <= 0) {
+    textArea.setCaretVisible(true);
   }
-  if (isBeginInputProcess(text,textManager)) {
-    textManager.beginCompositionText(text,committed_count);
-    caretPositionChanged(event);
-    return;
+  if (text == null) {
+    textArea.setCaretVisible(true);
   }
-  if (isInputProcess(text)) {
-    textManager.processCompositionText(text,committed_count);
-    caretPositionChanged(event);
-    return;
+  char c;
+  if (text != null) {
+    int toCopy=committed_count;
+    c=text.first();
+    while (toCopy-- > 0) {
+      if (Base.DEBUG) {
+        Messages.log("INSERT:'" + c + "'");
+      }
+      this.insertCharacter(c);
+      c=text.next();
+    }
+    CompositionTextPainter compositionPainter=textArea.getPainter().getCompositionTextpainter();
+    if (Base.DEBUG) {
+      Messages.log(" textArea.getCaretPosition() + committed_count: " + (textArea.getCaretPosition() + committed_count));
+    }
+    compositionPainter.setComposedTextLayout(getTextLayout(text,committed_count),textArea.getCaretPosition() + committed_count);
+    compositionPainter.setCaret(event.getCaret());
   }
-  textManager.endCompositionText(text,committed_count);
-  caretPositionChanged(event);
+ else {
+    CompositionTextPainter compositionPainter=textArea.getPainter().getCompositionTextpainter();
+    compositionPainter.setComposedTextLayout(null,0);
+    compositionPainter.setCaret(null);
+  }
+  caret=event.getCaret();
+  event.consume();
+  textArea.repaint();
 }
