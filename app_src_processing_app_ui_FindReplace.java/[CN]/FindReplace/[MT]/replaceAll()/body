@@ -1,10 +1,14 @@
 {
   editor.setSelection(0,0);
   boolean foundAtLeastOne=false;
-  int startTab=-1, startIndex=-1, c=50000;
-  while (--c > 0) {
+  int startTab=-1;
+  int startIndex=-1;
+  int counter=10000;
+  while (--counter > 0) {
     if (find(false,false)) {
-      if (editor.getSketch().getCurrentCodeIndex() == startTab && (editor.getSelectionStart() >= startIndex && (editor.getSelectionStart() <= startIndex + replaceField.getText().length()))) {
+      int caret=editor.getSelectionStart();
+      int stopIndex=startIndex + replaceField.getText().length();
+      if (editor.getSketch().getCurrentCodeIndex() == startTab && (caret >= startIndex && (caret <= stopIndex))) {
         Toolkit.beep();
         editor.statusNotice("Reached beginning of search!");
         break;
