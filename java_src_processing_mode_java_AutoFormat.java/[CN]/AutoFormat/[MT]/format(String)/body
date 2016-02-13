@@ -135,6 +135,7 @@ writeIndentedLine();
 tabs--;
 trimRight(result);
 result.append('\n');
+overflowFlag=false;
 printIndentation();
 result.append(c);
 if (peek() == ';') result.append(nextChar());
@@ -234,9 +235,14 @@ break;
 buf.append(c);
 inStatementFlag=false;
 arrayLevel=-1;
+if (tabs > 0) {
 tabs--;
 writeIndentedLine();
 tabs++;
+}
+ else {
+writeIndentedLine();
+}
 readForNewLine();
 writeIndentedLine();
 result.append('\n');
