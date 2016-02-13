@@ -1,5 +1,5 @@
 {
-  if (pos < 0 || pos > text.length())   return -1;
+  if (pos < 0 || pos >= text.length())   return -1;
   final char alpha=text.charAt(pos);
   final char beta;
   final int direction;
@@ -31,7 +31,7 @@ break;
 default :
 return -1;
 }
-if (offsets == null) parse(text);
+if (offsets == null || offsets.get(offsets.size() - 1) >= text.length()) parse(text);
 int p;
 for (p=0; p < offsets.size(); p++) if (offsets.get(p) == pos) break;
 if (p == offsets.size()) {
