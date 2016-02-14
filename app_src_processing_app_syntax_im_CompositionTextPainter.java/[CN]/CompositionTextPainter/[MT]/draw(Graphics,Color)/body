@@ -1,6 +1,24 @@
 {
-  assert(composedTextLayout != null);
-  Point composedLoc=getCaretLocation();
-  refillComposedArea(fillBackGroundColor,composedLoc.x,composedLoc.y);
-  composedTextLayout.draw((Graphics2D)gfx,composedLoc.x,composedLoc.y);
+  if (composedTextLayout != null) {
+    Point composedLoc=getCaretLocation();
+    composedTextLayout.draw((Graphics2D)gfx,composedLoc.x,composedLoc.y);
+    if (this.caret != null) {
+      int caretLocation=Math.round(composedTextLayout.getCaretInfo(caret)[0]);
+      Rectangle rect=new Rectangle(composedLoc.x + caretLocation,composedLoc.y - (int)composedTextLayout.getAscent(),1,(int)composedTextLayout.getAscent() + (int)composedTextLayout.getDescent());
+      if (Base.DEBUG) {
+        Messages.log(rect.toString());
+      }
+      Color c=gfx.getColor();
+      if (caretColorFlag) {
+        caretColorFlag=false;
+        gfx.setColor(Color.WHITE);
+      }
+ else {
+        caretColorFlag=true;
+        gfx.setColor(Color.BLACK);
+      }
+      gfx.fillRect(rect.x,rect.y,rect.width,rect.height);
+      gfx.setColor(c);
+    }
+  }
 }
