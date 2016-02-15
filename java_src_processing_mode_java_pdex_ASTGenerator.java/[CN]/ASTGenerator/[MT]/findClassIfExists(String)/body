@@ -10,8 +10,18 @@
   ArrayList<ImportStatement> imports=errorCheckerService.getProgramImports();
   for (  ImportStatement impS : imports) {
     String temp=impS.getPackageName();
-    if (impS.isStarredImport() && className.indexOf('.') == -1) {
-      temp=impS.getPackageName() + "." + className;
+    if (impS.isStarredImport()) {
+      if (className.indexOf('.') == -1) {
+        temp=impS.getPackageName() + "." + className;
+      }
+ else {
+        continue;
+      }
+    }
+ else {
+      if (!impS.getImportedClassName().equals(className)) {
+        continue;
+      }
     }
     tehClass=loadClass(temp);
     if (tehClass != null) {
@@ -21,8 +31,18 @@
   }
   for (  ImportStatement impS : errorCheckerService.codeFolderImports) {
     String temp=impS.getPackageName();
-    if (impS.isStarredImport() && className.indexOf('.') == -1) {
-      temp=impS.getPackageName() + "." + className;
+    if (impS.isStarredImport()) {
+      if (className.indexOf('.') == -1) {
+        temp=impS.getPackageName() + "." + className;
+      }
+ else {
+        continue;
+      }
+    }
+ else {
+      if (!impS.getImportedClassName().equals(className)) {
+        continue;
+      }
     }
     tehClass=loadClass(temp);
     if (tehClass != null) {
