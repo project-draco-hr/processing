@@ -4,6 +4,7 @@
   int startTab=-1;
   int startIndex=-1;
   int counter=10000;
+  editor.startCompoundEdit();
   while (--counter > 0) {
     if (find(false,false)) {
       int caret=editor.getSelectionStart();
@@ -18,12 +19,13 @@
         startTab=editor.getSketch().getCurrentCodeIndex();
         startIndex=editor.getSelectionStart();
       }
-      replace();
+      replace(false);
     }
  else {
       break;
     }
   }
+  editor.stopCompoundEdit();
   if (!foundAtLeastOne) {
     Toolkit.beep();
   }
