@@ -1,0 +1,15 @@
+{
+  if (bufferIndex == bufferLast)   return null;
+synchronized (buffer) {
+    int length=bufferLast - bufferIndex;
+    if (length > max)     length=max;
+    byte outgoing[]=new byte[length];
+    System.arraycopy(buffer,bufferIndex,outgoing,0,length);
+    bufferIndex+=length;
+    if (bufferIndex == bufferLast) {
+      bufferIndex=0;
+      bufferLast=0;
+    }
+    return outgoing;
+  }
+}
