@@ -1,28 +1,12 @@
 {
-  try {
-    new SwingWorker(){
-      protected Object doInBackground() throws Exception {
-        Sketch sketch=editor.getSketch();
-        int currentTab=sketch.getCurrentCodeIndex();
-        errorPoints=new ArrayList<>();
-synchronized (problems) {
-          for (          Problem problem : problems) {
-            if (problem.getTabIndex() == currentTab) {
-              errorPoints.add(new LineMarker(problem,problem.isError()));
-            }
-          }
-        }
-        recalculateMarkerPositions();
-        return null;
-      }
-      protected void done(){
-        repaint();
-        editor.getErrorChecker().updateEditorStatus();
-      }
+  Sketch sketch=editor.getSketch();
+  int currentTab=sketch.getCurrentCodeIndex();
+  errorPoints.clear();
+  for (  Problem problem : problems) {
+    if (problem.getTabIndex() == currentTab) {
+      errorPoints.add(new LineMarker(problem,problem.isError()));
     }
-.execute();
   }
- catch (  Exception ex) {
-    ex.printStackTrace();
-  }
+  repaint();
+  editor.getErrorChecker().updateEditorStatus();
 }
