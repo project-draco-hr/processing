@@ -1,5 +1,5 @@
 {
-  String newName=txtRenameField.getText().trim();
+  String newName=renameTextField.getText().trim();
   String selText=lastClickedWord == null ? getSelectedText() : lastClickedWord;
   DefaultMutableTreeNode defCU=findAllOccurrences();
   if (defCU == null) {
@@ -11,9 +11,9 @@
     return;
   }
   errorCheckerService.cancel();
-  if (refactorTree.isVisible()) {
-    refactorTree.setModel(new DefaultTreeModel(defCU));
-    ((DefaultTreeModel)refactorTree.getModel()).reload();
+  if (showUsageTree.isVisible()) {
+    showUsageTree.setModel(new DefaultTreeModel(defCU));
+    ((DefaultTreeModel)showUsageTree.getModel()).reload();
   }
   int lineOffsetDisplacementConst=newName.length() - selText.length();
   HashMap<Integer,Integer> lineOffsetDisplacement=new HashMap<>();
@@ -43,7 +43,7 @@
   errorCheckerService.request();
   editor.getSketch().setModified(true);
   errorCheckerService.request();
-  frmRename.setVisible(false);
+  renameWindow.setVisible(false);
   lastClickedWord=null;
   lastClickedWordNode=null;
 }

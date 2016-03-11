@@ -15,19 +15,19 @@
     editor.statusMessage(selText + " isn't defined in this sketch, " + "so it cannot be renamed",EditorStatus.ERROR);
     return;
   }
-  if (!frmRename.isVisible()) {
-    frmRename.setLocation(editor.getX() + (editor.getWidth() - frmRename.getWidth()) / 2,editor.getY() + (editor.getHeight() - frmRename.getHeight()) / 2);
-    frmRename.setVisible(true);
+  if (!renameWindow.isVisible()) {
+    renameWindow.setLocation(editor.getX() + (editor.getWidth() - renameWindow.getWidth()) / 2,editor.getY() + (editor.getHeight() - renameWindow.getHeight()) / 2);
+    renameWindow.setVisible(true);
     EventQueue.invokeLater(new Runnable(){
       @Override public void run(){
         String selText=lastClickedWord == null ? getSelectedText() : lastClickedWord;
-        frmOccurenceList.setTitle("All occurrences of " + selText);
-        lblRefactorOldName.setText("Current name: " + selText);
-        txtRenameField.setText("");
-        txtRenameField.requestFocus();
+        showUsageWindow.setTitle("All occurrences of " + selText);
+        renameOldNameLabel.setText("Current name: " + selText);
+        renameTextField.setText("");
+        renameTextField.requestFocus();
       }
     }
 );
   }
-  frmRename.toFront();
+  renameWindow.toFront();
 }

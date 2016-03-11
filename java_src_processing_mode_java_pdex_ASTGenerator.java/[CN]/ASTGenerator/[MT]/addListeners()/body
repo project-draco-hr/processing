@@ -1,27 +1,27 @@
 {
   if (SHOW_DEBUG_TREE)   addDebugTreeListener();
-  btnRename.addActionListener(new ActionListener(){
+  renameButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
-      if (txtRenameField.getText().length() == 0) {
+      if (renameTextField.getText().length() == 0) {
         return;
       }
       refactorIt();
     }
   }
 );
-  btnListOccurrence.addActionListener(new ActionListener(){
+  showUsageButton.addActionListener(new ActionListener(){
     @Override public void actionPerformed(    ActionEvent e){
       handleShowUsage();
     }
   }
 );
-  refactorTree.addTreeSelectionListener(new TreeSelectionListener(){
+  showUsageTree.addTreeSelectionListener(new TreeSelectionListener(){
     @Override public void valueChanged(    TreeSelectionEvent e){
       log(e);
-      if (refactorTree.getLastSelectedPathComponent() == null) {
+      if (showUsageTree.getLastSelectedPathComponent() == null) {
         return;
       }
-      DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)refactorTree.getLastSelectedPathComponent();
+      DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)showUsageTree.getLastSelectedPathComponent();
       if (tnode.getUserObject() instanceof ASTNodeWrapper) {
         ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
         awrap.highlightNode(editor);

@@ -1,39 +1,48 @@
 {
   if (SHOW_DEBUG_TREE)   initDebugWindow();
-  btnRename=new JButton("Rename");
-  btnListOccurrence=new JButton("Show Usage");
-  frmRename=new JFrame();
-  frmRename.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-  frmRename.setSize(250,130);
-  frmRename.setLayout(new BoxLayout(frmRename.getContentPane(),BoxLayout.Y_AXIS));
-  Toolkit.setIcon(frmRename);
-  JPanel panelTop=new JPanel(), panelBottom=new JPanel();
-  panelTop.setLayout(new BoxLayout(panelTop,BoxLayout.Y_AXIS));
-  panelTop.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-  panelBottom.setLayout(new BoxLayout(panelBottom,BoxLayout.X_AXIS));
-  panelBottom.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-  panelBottom.add(Box.createHorizontalGlue());
-  panelBottom.add(btnListOccurrence);
-  panelBottom.add(Box.createRigidArea(new Dimension(15,0)));
-  panelBottom.add(btnRename);
-  frmRename.setTitle("Enter new name:");
-  txtRenameField=new JTextField();
-  txtRenameField.setPreferredSize(new Dimension(150,60));
-  panelTop.add(txtRenameField);
-  lblRefactorOldName=new JLabel();
-  lblRefactorOldName.setText("Old Name: ");
-  panelTop.add(Box.createRigidArea(new Dimension(0,10)));
-  panelTop.add(lblRefactorOldName);
-  frmRename.add(panelTop);
-  frmRename.add(panelBottom);
-  frmRename.setMinimumSize(frmRename.getSize());
-  frmRename.setLocation(editor.getX() + (editor.getWidth() - frmRename.getWidth()) / 2,editor.getY() + (editor.getHeight() - frmRename.getHeight()) / 2);
-  frmOccurenceList=new JFrame();
-  frmOccurenceList.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-  frmOccurenceList.setSize(300,400);
-  Toolkit.setIcon(frmOccurenceList);
-  JScrollPane sp2=new JScrollPane();
-  refactorTree=new JTree();
-  sp2.setViewportView(refactorTree);
-  frmOccurenceList.add(sp2);
+{
+    renameWindow=new JFrame();
+    renameWindow.setTitle("Enter new name:");
+    renameWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+    renameWindow.setSize(250,130);
+    renameWindow.setLayout(new BoxLayout(renameWindow.getContentPane(),BoxLayout.Y_AXIS));
+    Toolkit.setIcon(renameWindow);
+{
+      renameTextField=new JTextField();
+      renameTextField.setPreferredSize(new Dimension(150,60));
+      renameOldNameLabel=new JLabel();
+      renameOldNameLabel.setText("Old Name: ");
+      JPanel panelTop=new JPanel();
+      panelTop.setLayout(new BoxLayout(panelTop,BoxLayout.Y_AXIS));
+      panelTop.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+      panelTop.add(renameTextField);
+      panelTop.add(Box.createRigidArea(new Dimension(0,10)));
+      panelTop.add(renameOldNameLabel);
+      renameWindow.add(panelTop);
+    }
+{
+      showUsageButton=new JButton("Show Usage");
+      renameButton=new JButton("Rename");
+      JPanel panelBottom=new JPanel();
+      panelBottom.setLayout(new BoxLayout(panelBottom,BoxLayout.X_AXIS));
+      panelBottom.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+      panelBottom.add(Box.createHorizontalGlue());
+      panelBottom.add(showUsageButton);
+      panelBottom.add(Box.createRigidArea(new Dimension(15,0)));
+      panelBottom.add(renameButton);
+      renameWindow.add(panelBottom);
+    }
+    renameWindow.setMinimumSize(renameWindow.getSize());
+    renameWindow.setLocation(editor.getX() + (editor.getWidth() - renameWindow.getWidth()) / 2,editor.getY() + (editor.getHeight() - renameWindow.getHeight()) / 2);
+  }
+{
+    showUsageWindow=new JFrame();
+    showUsageWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+    showUsageWindow.setSize(300,400);
+    Toolkit.setIcon(showUsageWindow);
+    JScrollPane sp2=new JScrollPane();
+    showUsageTree=new JTree();
+    sp2.setViewportView(showUsageTree);
+    showUsageWindow.add(sp2);
+  }
 }
