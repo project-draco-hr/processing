@@ -1,10 +1,8 @@
 {
   super(defaults,new JavaInputHandler(editor));
   this.editor=editor;
-  mouseListeners=painter.getMouseListeners();
-  MouseHandler mouseHandler=new MouseHandler();
-  painter.addMouseListener(mouseHandler);
-  painter.addMouseMotionListener(mouseHandler);
+  painter.addMouseListener(rightClickMouseAdapter);
+  painter.addMouseMotionListener(gutterCursorMouseAdapter);
   add(CENTER,painter);
   Mode mode=editor.getMode();
   gutterGradient=mode.makeGradient("editor",Editor.LEFT_GUTTER,500);
@@ -15,5 +13,4 @@
   prevMMotionListeners=painter.getMouseMotionListeners();
   prevKeyListeners=editor.getKeyListeners();
   tweakMode=false;
-  addPrevListeners();
 }
