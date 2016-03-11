@@ -4,7 +4,7 @@
       String tabCode=sc.getProgram();
       String[][] pieces=PApplet.matchAll(tabCode,ErrorCheckerService.IMPORT_REGEX);
       if (pieces != null) {
-        ArrayList<String> importHeaders=new ArrayList<String>();
+        ArrayList<String> importHeaders=new ArrayList<>();
         for (        String[] importStatement : pieces) {
           importHeaders.add(importStatement[2]);
         }
@@ -12,7 +12,7 @@
         if (!installLibsHeaders.isEmpty()) {
           StringBuilder libList=new StringBuilder("Would you like to install them now?");
           for (          AvailableContribution ac : installLibsHeaders) {
-            libList.append("\n  ??? " + ac.getName());
+            libList.append("\n  ??? ").append(ac.getName());
           }
           int option=Messages.showYesNoQuestion(this,Language.text("contrib.import.dialog.title"),Language.text("contrib.import.dialog.primary_text"),libList.toString());
           if (option == JOptionPane.YES_OPTION) {
