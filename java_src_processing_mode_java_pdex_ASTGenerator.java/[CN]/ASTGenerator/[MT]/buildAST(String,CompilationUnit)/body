@@ -17,21 +17,13 @@
     Messages.loge("No CU found!");
   }
   visitRecur((ASTNode)compilationUnit.types().get(0),codeTree);
-  EventQueue.invokeLater(new Runnable(){
-    public void run(){
-      if (codeTree != null) {
-        if (SHOW_AST) {
-          if (jtree.hasFocus() || frmASTView.hasFocus())           return;
-          jtree.setModel(new DefaultTreeModel(codeTree));
-          ((DefaultTreeModel)jtree.getModel()).reload();
-          jtree.validate();
-          if (!frmASTView.isVisible()) {
-            frmASTView.setVisible(true);
-          }
-        }
+  if (SHOW_DEBUG_TREE) {
+    EventQueue.invokeLater(new Runnable(){
+      @Override public void run(){
+        updateDebugTree(codeTree);
       }
     }
-  }
 );
+  }
   return codeTree;
 }
