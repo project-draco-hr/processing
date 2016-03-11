@@ -1,4 +1,5 @@
 {
+  Messages.log("* handleShowUsage");
   if (editor.hasJavaTabs())   return;
   log("Last clicked word:" + lastClickedWord);
   if (lastClickedWord == null && getSelectedText() == null) {
@@ -16,12 +17,7 @@
     return;
   }
   if (defCU.getChildCount() == 0)   return;
-  showUsageTree.setModel(new DefaultTreeModel(defCU));
-  ((DefaultTreeModel)showUsageTree.getModel()).reload();
-  showUsageTree.setRootVisible(false);
-  showUsageWindow.setTitle("Usage of \"" + selText + "\" : "+ defCU.getChildCount()+ " time(s)");
-  showUsageWindow.setLocation(editor.getX() + editor.getWidth(),editor.getY());
-  showUsageWindow.setVisible(true);
+  gui.handleShowUsage(selText,defCU);
   lastClickedWord=null;
   lastClickedWordNode=null;
 }

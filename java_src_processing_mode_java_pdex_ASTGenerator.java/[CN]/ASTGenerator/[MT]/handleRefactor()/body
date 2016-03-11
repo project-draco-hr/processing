@@ -1,4 +1,5 @@
 {
+  Messages.log("* handleRefactor");
   if (editor.hasJavaTabs())   return;
   log("Last clicked word:" + lastClickedWord);
   if (lastClickedWord == null && getSelectedText() == null) {
@@ -10,24 +11,15 @@
     return;
   }
   DefaultMutableTreeNode defCU=findAllOccurrences();
-  String selText=lastClickedWord == null ? getSelectedText() : lastClickedWord;
+  final String selText=lastClickedWord == null ? getSelectedText() : lastClickedWord;
   if (defCU == null) {
     editor.statusMessage(selText + " isn't defined in this sketch, " + "so it cannot be renamed",EditorStatus.ERROR);
     return;
   }
-  if (!renameWindow.isVisible()) {
-    renameWindow.setLocation(editor.getX() + (editor.getWidth() - renameWindow.getWidth()) / 2,editor.getY() + (editor.getHeight() - renameWindow.getHeight()) / 2);
-    renameWindow.setVisible(true);
-    EventQueue.invokeLater(new Runnable(){
-      @Override public void run(){
-        String selText=lastClickedWord == null ? getSelectedText() : lastClickedWord;
-        showUsageWindow.setTitle("All occurrences of " + selText);
-        renameOldNameLabel.setText("Current name: " + selText);
-        renameTextField.setText("");
-        renameTextField.requestFocus();
-      }
+  EventQueue.invokeLater(new Runnable(){
+    @Override public void run(){
+      gui.handleRefactor(selText);
     }
-);
   }
-  renameWindow.toFront();
+);
 }

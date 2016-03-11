@@ -1,4 +1,5 @@
 {
+  Messages.log("* buildAST");
   if (cu == null) {
     ASTParser parser=ASTParser.newParser(AST.JLS8);
     parser.setSource(source.toCharArray());
@@ -11,7 +12,6 @@
  else {
     compilationUnit=cu;
   }
-  getCodeComments();
   codeTree=new DefaultMutableTreeNode(new ASTNodeWrapper((ASTNode)compilationUnit.types().get(0)));
   if (compilationUnit.types() == null || compilationUnit.types().isEmpty()) {
     Messages.loge("No CU found!");
@@ -20,7 +20,7 @@
   if (SHOW_DEBUG_TREE) {
     EventQueue.invokeLater(new Runnable(){
       @Override public void run(){
-        updateDebugTree(codeTree);
+        gui.updateDebugTree(codeTree);
       }
     }
 );

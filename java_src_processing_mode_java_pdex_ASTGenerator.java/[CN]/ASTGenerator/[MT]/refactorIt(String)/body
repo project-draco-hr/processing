@@ -1,5 +1,4 @@
 {
-  String newName=renameTextField.getText().trim();
   String selText=lastClickedWord == null ? getSelectedText() : lastClickedWord;
   DefaultMutableTreeNode defCU=findAllOccurrences();
   if (defCU == null) {
@@ -7,14 +6,11 @@
     return;
   }
   if (!newName.matches("([a-zA-Z][a-zA-Z0-9_]*)|([_][a-zA-Z0-9_]+)")) {
-    JOptionPane.showConfirmDialog(new JFrame(),newName + " isn't a valid name.","Uh oh..",JOptionPane.PLAIN_MESSAGE);
+    JOptionPane.showMessageDialog(new JFrame(),newName + " isn't a valid name.","Uh oh..",JOptionPane.PLAIN_MESSAGE);
     return;
   }
   errorCheckerService.cancel();
-  if (showUsageTree.isVisible()) {
-    showUsageTree.setModel(new DefaultTreeModel(defCU));
-    ((DefaultTreeModel)showUsageTree.getModel()).reload();
-  }
+  gui.updateUsageTree(defCU);
   int lineOffsetDisplacementConst=newName.length() - selText.length();
   HashMap<Integer,Integer> lineOffsetDisplacement=new HashMap<>();
   int pdeOffsets[][]=new int[defCU.getChildCount()][3];
@@ -43,7 +39,6 @@
   errorCheckerService.request();
   editor.getSketch().setModified(true);
   errorCheckerService.request();
-  renameWindow.setVisible(false);
   lastClickedWord=null;
   lastClickedWordNode=null;
 }

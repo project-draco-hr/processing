@@ -11,9 +11,9 @@
         awrap.highlightNode(editor);
         try {
           int javaLineNumber=getLineNumber(awrap.getNode());
-          int pdeOffs[]=errorCheckerService.calculateTabIndexAndLineNumber(javaLineNumber);
+          int pdeOffs[]=editor.getErrorChecker().calculateTabIndexAndLineNumber(javaLineNumber);
           PlainDocument javaSource=new PlainDocument();
-          javaSource.insertString(0,errorCheckerService.lastCodeCheckResult.sourceCode,null);
+          javaSource.insertString(0,editor.getErrorChecker().lastCodeCheckResult.sourceCode,null);
           Element lineElement=javaSource.getDefaultRootElement().getElement(javaLineNumber - 1);
           if (lineElement == null) {
             return;
