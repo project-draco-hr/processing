@@ -1,11 +1,19 @@
 {
   Segment segment=new Segment();
-  getLineText(line,segment);
+  try {
+    Element element=doc.getDefaultRootElement().getElement(line);
+    int start=element.getStartOffset();
+    int stop=element.getEndOffset();
+    doc.getText(start,stop - start - 1,segment);
+  }
+ catch (  BadLocationException e) {
+    return;
+  }
   char[] segmentArray=segment.array;
   int limit=segment.getEndIndex();
   int segmentOffset=segment.offset;
   int segmentCount=segment.count;
-  TokenMarker tokenMarker=getTokenMarker();
+  TokenMarker tokenMarker=doc.getTokenMarker();
   if (tokenMarker == null) {
     for (int j=0; j < segmentCount; j++) {
       char c=segmentArray[j + segmentOffset];
@@ -13,23 +21,14 @@
     }
   }
  else {
-    Token tokens;
-    if ((painter.getCurrentLineIndex() == line) && (painter.getCurrentLineTokens() != null)) {
-      tokens=painter.getCurrentLineTokens();
-    }
- else {
-      painter.setCurrentLineIndex(line);
-      painter.setCurrentLineTokens(tokenMarker.markTokens(segment,line));
-      tokens=painter.getCurrentLineTokens();
-    }
+    Token tokens=tokenMarker.markTokens(segment,line);
     int offset=0;
     SyntaxStyle[] styles=painter.getStyles();
     for (; ; ) {
       byte id=tokens.id;
       if (id == Token.END) {
-        char c=segmentArray[segmentOffset + offset];
         if (segmentOffset + offset < limit) {
-          appendAsHTML(cf,c);
+          appendAsHTML(cf,segmentArray[segmentOffset + offset]);
         }
  else {
           cf.append('\n');
