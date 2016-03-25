@@ -7,7 +7,7 @@
     return tehClass;
   }
   log("Looking in the classloader for " + className);
-  ArrayList<ImportStatement> imports=errorCheckerService.getProgramImports();
+  List<ImportStatement> imports=Collections.emptyList();
   for (  ImportStatement impS : imports) {
     String temp=impS.getPackageName();
     if (impS.isStarredImport()) {
@@ -19,7 +19,7 @@
       }
     }
  else {
-      if (!impS.getImportedClassName().equals(className)) {
+      if (!impS.getClassName().equals(className)) {
         continue;
       }
     }
@@ -29,7 +29,8 @@
       return tehClass;
     }
   }
-  for (  ImportStatement impS : errorCheckerService.codeFolderImports) {
+  List<ImportStatement> codeFolderImports=Collections.emptyList();
+  for (  ImportStatement impS : codeFolderImports) {
     String temp=impS.getPackageName();
     if (impS.isStarredImport()) {
       if (className.indexOf('.') == -1) {
@@ -40,7 +41,7 @@
       }
     }
  else {
-      if (!impS.getImportedClassName().equals(className)) {
+      if (!impS.getClassName().equals(className)) {
         continue;
       }
     }

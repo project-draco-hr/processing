@@ -1,0 +1,40 @@
+{
+  boolean insideQuote=false;
+  int length=p.length();
+  int index=0;
+  while (index < length) {
+    if (!insideQuote && (p.charAt(index) == '/') && (index < length - 1)&& (p.charAt(index + 1) == '/')) {
+      p.setCharAt(index++,' ');
+      p.setCharAt(index++,' ');
+      while ((index < length) && (p.charAt(index) != '\n')) {
+        p.setCharAt(index++,' ');
+      }
+    }
+ else     if (!insideQuote && (p.charAt(index) == '/') && (index < length - 1)&& (p.charAt(index + 1) == '*')) {
+      p.setCharAt(index++,' ');
+      p.setCharAt(index++,' ');
+      boolean endOfRainbow=false;
+      while (index < length - 1) {
+        if ((p.charAt(index) == '*') && (p.charAt(index + 1) == '/')) {
+          p.setCharAt(index++,' ');
+          p.setCharAt(index++,' ');
+          endOfRainbow=true;
+          break;
+        }
+ else {
+          p.setCharAt(index++,' ');
+        }
+      }
+      if (!endOfRainbow) {
+        throw new RuntimeException("Missing the */ from the end of a " + "/* comment */");
+      }
+    }
+ else     if (p.charAt(index) == '"' && index > 0 && p.charAt(index - 1) != '\\') {
+      insideQuote=!insideQuote;
+      index++;
+    }
+ else {
+      index++;
+    }
+  }
+}

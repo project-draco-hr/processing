@@ -1,0 +1,66 @@
+{
+  final int inLength=input.length();
+  final int editCount=edits.size();
+  final StringBuilder output=new StringBuilder(inLength);
+  List<Edit> inEdits=new ArrayList<>();
+  for (  Edit edit : edits) {
+    inEdits.add(new Edit(edit));
+  }
+  List<Edit> outEdits=new ArrayList<>(inEdits);
+  Collections.sort(inEdits,INPUT_OFFSET_COMP);
+  Collections.sort(outEdits,OUTPUT_OFFSET_COMP);
+  for (int i=0, lastEnd=0; i < editCount; i++) {
+    Edit ch=inEdits.get(i);
+    if (ch.fromOffset < lastEnd) {
+      String error="Edits overlap in input! " + inEdits.get(i - 1) + ", "+ ch;
+      throw new IndexOutOfBoundsException(error);
+    }
+    lastEnd=ch.fromOffset + ch.fromLength;
+  }
+  ListIterator<Edit> inIt=inEdits.listIterator();
+  Edit inEdit=inIt.hasNext() ? inIt.next() : null;
+  int inEditOff=inEdit == null ? input.length() : inEdit.fromOffset;
+  ListIterator<Edit> outIt=outEdits.listIterator();
+  Edit outEdit=outIt.hasNext() ? outIt.next() : null;
+  int outEditOff=outEdit == null ? input.length() : outEdit.toOffset;
+  int offset=0;
+  inMap.clear();
+  outMap.clear();
+  while (offset < inLength || inEdit != null || outEdit != null) {
+{
+      int nextEditOffset=Math.min(inEditOff,outEditOff);
+{
+        int length=nextEditOffset - offset;
+        if (length > 0) {
+          Edit ch=Edit.move(offset,length,output.length());
+          inMap.add(ch);
+          outMap.add(ch);
+        }
+      }
+      output.append(input,offset,nextEditOffset);
+      offset=nextEditOffset;
+    }
+    while (inEdit != null && offset >= inEditOff) {
+      offset+=inEdit.fromLength;
+      inMap.add(inEdit);
+      inEdit=inIt.hasNext() ? inIt.next() : null;
+      inEditOff=inEdit != null ? inEdit.fromOffset : inLength;
+    }
+    while (outEdit != null && offset >= outEditOff) {
+      outEdit.toOffset=output.length();
+      outMap.add(outEdit);
+      if (outEdit.toLength > 0) {
+        if (outEdit.outputText != null) {
+          output.append(outEdit.outputText);
+        }
+ else {
+          output.append(input,outEdit.fromOffset,outEdit.fromOffset + outEdit.fromLength);
+        }
+      }
+      outEdit=outIt.hasNext() ? outIt.next() : null;
+      outEditOff=outEdit != null ? outEdit.toOffset : inLength;
+    }
+  }
+  applied=true;
+  return output.toString();
+}

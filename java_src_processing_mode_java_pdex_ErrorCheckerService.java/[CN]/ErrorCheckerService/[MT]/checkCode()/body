@@ -1,13 +1,71 @@
 {
   CodeCheckResult result=new CodeCheckResult();
-  result.sourceCode=preprocessCode();
-  char[] sourceCodeArray=result.sourceCode.toCharArray();
+  StringBuilder rawCode=new StringBuilder();
+  List<ImportStatement> coreAndDefaultImports=new ArrayList<>();
+  List<ImportStatement> codeFolderImports=new ArrayList<>();
+  List<ImportStatement> programImports=new ArrayList<>();
+  Sketch sketch=editor.getSketch();
+{
+    for (    SketchCode sc : sketch.getCode()) {
+      if (sc.isExtension("pde")) {
+        if (sketch.getCurrentCode().equals(sc)) {
+          try {
+            rawCode.append(sc.getDocumentText());
+          }
+ catch (          BadLocationException e) {
+            e.printStackTrace();
+          }
+        }
+ else {
+          rawCode.append(sc.getProgram());
+        }
+        rawCode.append('\n');
+      }
+    }
+  }
+  String className=sketch.getName();
+{
+    PdePreprocessor p=editor.createPreprocessor(null);
+    String[] defaultImports=p.getDefaultImports();
+    String[] coreImports=p.getCoreImports();
+    for (    String imp : coreImports) {
+      coreAndDefaultImports.add(ImportStatement.parse(imp));
+    }
+    for (    String imp : defaultImports) {
+      coreAndDefaultImports.add(ImportStatement.parse(imp));
+    }
+  }
+{
+    if (sketch.hasCodeFolder()) {
+      File codeFolder=sketch.getCodeFolder();
+      String codeFolderClassPath=Util.contentsToClassPath(codeFolder);
+      StringList codeFolderPackages=Util.packageListFromClassPath(codeFolderClassPath);
+      for (      String item : codeFolderPackages) {
+        codeFolderImports.add(ImportStatement.wholePackage(item));
+      }
+    }
+  }
+  SourceUtils.substituteUnicode(rawCode);
+  try {
+    SourceUtils.scrubComments(rawCode);
+  }
+ catch (  RuntimeException e) {
+  }
+  PdePreprocessor.Mode mode=PdePreprocessor.parseMode(rawCode);
+  SourceMapping mapping=new SourceMapping();
+  mapping.addAll(SourceUtils.insertImports(coreAndDefaultImports));
+  mapping.addAll(SourceUtils.insertImports(codeFolderImports));
+  mapping.addAll(SourceUtils.parseProgramImports(rawCode,programImports));
+  mapping.addAll(SourceUtils.replaceTypeConstructors(rawCode));
+  mapping.addAll(SourceUtils.replaceHexLiterals(rawCode));
+  mapping.addAll(SourceUtils.wrapSketch(mode,className,rawCode.length()));
+  result.sourceCode=mapping.apply(rawCode);
   List<IProblem> problems;
 {
 {
       result.syntaxErrors=true;
       result.containsErrors=true;
-      parser.setSource(sourceCodeArray);
+      parser.setSource(result.sourceCode.toCharArray());
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setCompilerOptions(COMPILER_OPTIONS);
       parser.setStatementsRecovery(true);
@@ -24,33 +82,43 @@
     }
   }
   if (problems.isEmpty() && !editor.hasJavaTabs()) {
-    String sourceCode=xqpreproc.handle(result.sourceCode,programImports);
-    prepareCompilerClasspath();
+    SourceMapping mapping2=new SourceMapping();
+    mapping2.addAll(SourceUtils.addPublicToTopLeveMethods(result.compilationUnit));
+    mapping2.addAll(SourceUtils.replaceColorAndFixFloats(result.compilationUnit));
+    result.sourceCode=mapping2.apply(result.sourceCode);
+    char[] chars=result.sourceCode.toCharArray();
+{
+      parser.setSource(chars);
+      parser.setKind(ASTParser.K_COMPILATION_UNIT);
+      parser.setCompilerOptions(COMPILER_OPTIONS);
+      parser.setStatementsRecovery(true);
+      result.compilationUnit=(CompilationUnit)parser.createAST(null);
+    }
 {
 {
-        parser.setSource(sourceCodeArray);
-        parser.setKind(ASTParser.K_COMPILATION_UNIT);
-        parser.setCompilerOptions(COMPILER_OPTIONS);
-        parser.setStatementsRecovery(true);
-        result.compilationUnit=(CompilationUnit)parser.createAST(null);
-        result.sourceCode=sourceCode;
-        try {
-          if (loadCompClass) {
-            classPath=new URL[classpathJars.size()];
-            classPath=classpathJars.toArray(classPath);
-            classLoader=new URLClassLoader(classPath,null);
-            loadCompClass=false;
+        boolean importsChanged=true;
+        List<String> classPath;
+        URLClassLoader classLoader=null;
+        if (!importsChanged) {
+        }
+ else {
+          classPath=prepareCompilerClasspath(programImports,sketch);
+          List<URL> urls=new ArrayList<>();
+          for (          String path : classPath) {
+            try {
+              urls.add(new File(path).toURI().toURL());
+            }
+ catch (            MalformedURLException e) {
+            }
           }
-          problems=compileAndReturnProblems(className,sourceCode,COMPILER_OPTIONS,classLoader);
+          URL[] classPathArray=urls.toArray(new URL[urls.size()]);
+          classLoader=new URLClassLoader(classPathArray,null);
         }
- catch (        Exception e) {
-          System.err.println("compileCheck() problem." + e);
-          e.printStackTrace();
-          cancel();
+        try {
+          problems=compileAndReturnProblems(className,chars,COMPILER_OPTIONS,classLoader);
         }
-catch (        NoClassDefFoundError e) {
+ catch (        NoClassDefFoundError e) {
           e.printStackTrace();
-          cancel();
         }
       }
     }

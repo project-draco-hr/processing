@@ -1,0 +1,54 @@
+{
+  JavaMode mode=(JavaMode)editor.getMode();
+  StringBuilder classPath=new StringBuilder();
+  for (  ImportStatement impstat : programImports) {
+    String entry=impstat.getPackageName();
+    if (!ignorableImport(entry)) {
+      try {
+        Library library=mode.getLibrary(entry);
+        classPath.append(library.getClassPath());
+      }
+ catch (      SketchException e) {
+      }
+    }
+  }
+  if (sketch.hasCodeFolder()) {
+    File codeFolder=sketch.getCodeFolder();
+    String codeFolderClassPath=Util.contentsToClassPath(codeFolder);
+    classPath.append(codeFolderClassPath);
+  }
+  String searchPath=mode.getSearchPath();
+  if (searchPath != null) {
+    if (!searchPath.startsWith(File.pathSeparator)) {
+      classPath.append(File.pathSeparator);
+    }
+    classPath.append(searchPath);
+  }
+  for (  Library lib : mode.coreLibraries) {
+    classPath.append(File.pathSeparator).append(lib.getJarPath());
+  }
+  String javaClassPath=System.getProperty("java.class.path");
+  if (!javaClassPath.startsWith(File.pathSeparator)) {
+    classPath.append(File.pathSeparator);
+  }
+  classPath.append(javaClassPath);
+  String rtPath=System.getProperty("java.home") + File.separator + "lib"+ File.separator+ "rt.jar";
+  if (new File(rtPath).exists()) {
+    classPath.append(File.pathSeparator).append(rtPath);
+  }
+ else {
+    rtPath=System.getProperty("java.home") + File.separator + "jre"+ File.separator+ "lib"+ File.separator+ "rt.jar";
+    if (new File(rtPath).exists()) {
+      classPath.append(File.pathSeparator).append(rtPath);
+    }
+  }
+  String[] paths=classPath.toString().split(File.pathSeparator);
+  List<String> entries=new ArrayList<>();
+  for (int i=0; i < paths.length; i++) {
+    String path=paths[i];
+    if (path != null && !path.trim().isEmpty()) {
+      entries.add(path);
+    }
+  }
+  return entries;
+}
