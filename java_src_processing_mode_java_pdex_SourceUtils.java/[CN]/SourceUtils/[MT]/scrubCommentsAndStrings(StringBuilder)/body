@@ -29,12 +29,24 @@
         throw new RuntimeException("Missing the */ from the end of a " + "/* comment */");
       }
     }
- else     if (p.charAt(index) == '"' && index > 0 && p.charAt(index - 1) != '\\') {
-      insideQuote=!insideQuote;
-      index++;
-    }
  else {
-      index++;
+      boolean isChar=index > 0 && p.charAt(index - 1) == '\\';
+      if ((insideQuote && p.charAt(index) == '\n') || (p.charAt(index) == '"' && !isChar)) {
+        insideQuote=!insideQuote;
+        index++;
+      }
+ else       if (insideQuote && index < p.length() - 1 && p.charAt(index) == '\\' && p.charAt(index + 1) == '"') {
+        p.setCharAt(index,' ');
+        p.setCharAt(index + 1,' ');
+        index++;
+      }
+ else       if (insideQuote) {
+        p.setCharAt(index,' ');
+        index++;
+      }
+ else {
+        index++;
+      }
     }
   }
 }
