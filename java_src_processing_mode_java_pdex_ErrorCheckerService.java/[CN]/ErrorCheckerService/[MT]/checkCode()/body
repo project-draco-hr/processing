@@ -80,7 +80,7 @@
       }
     }
   }
-  if (result.hasSyntaxErrors) {
+  if (!result.hasSyntaxErrors) {
 {
 {
         SourceMapping compilationMapping=new SourceMapping();
@@ -132,27 +132,9 @@
       }
     }
   }
-  if (!syntaxProblems.isEmpty()) {
-    for (    IProblem problem : syntaxProblems) {
-      if (problem.getMessage().contains("Syntax error, insert \":: IdentifierOrNew\"")) {
-        continue;
-      }
-      int start=problem.getSourceStart();
-      int end=problem.getSourceEnd() - 1;
-      int mappedStart=result.syntaxMapping.getInputOffset(start);
-      int mappedEnd=result.syntaxMapping.getInputOffset(end);
-      int tab=Arrays.binarySearch(result.tabStarts,mappedStart);
-      if (tab < 0) {
-        tab=-(tab + 1) - 1;
-      }
-      int tabStart=result.tabStarts[tab];
-      int line=Util.countLines(result.pdeCode.substring(tabStart,mappedStart));
-      Problem p=new Problem(problem,tab,line - 1);
-      if (p.isWarning() && !JavaMode.warningsEnabled) {
-        continue;
-      }
-      result.problems.add(p);
-    }
-  }
+  List<Problem> mappedSyntaxProblems=mapProblems(syntaxProblems,result.tabStarts,result.pdeCode,result.syntaxMapping);
+  List<Problem> mappedCompilationProblems=mapProblems(compilationProblems,result.tabStarts,result.pdeCode,result.compilationMapping,result.syntaxMapping);
+  result.problems.addAll(mappedSyntaxProblems);
+  result.problems.addAll(mappedCompilationProblems);
   return result;
 }

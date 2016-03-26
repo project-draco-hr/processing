@@ -4,11 +4,10 @@
     LineMarker marker=getJavaEditor().findError(line);
     if (marker != null) {
       Problem problem=marker.getProblem();
-      int lineOffset=textArea.getLineStartOffset(problem.getLineNumber());
       int lineStart=textArea.getLineStartOffset(line);
       int lineEnd=textArea.getLineStopOffset(line);
-      int errorStart=lineOffset + problem.getPDELineStartOffset();
-      int errorEnd=lineOffset + problem.getPDELineStopOffset() + 1;
+      int errorStart=problem.getStartOffset();
+      int errorEnd=problem.getStopOffset() + 1;
       int startOffset=Math.max(errorStart,lineStart) - lineStart;
       int stopOffset=Math.min(errorEnd,lineEnd) - lineStart;
       int x=evt.getX();
