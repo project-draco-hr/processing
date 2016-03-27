@@ -9,14 +9,6 @@
   List<Edit> outEdits=new ArrayList<>(inEdits);
   Collections.sort(inEdits,INPUT_OFFSET_COMP);
   Collections.sort(outEdits,OUTPUT_OFFSET_COMP);
-  for (int i=0, lastEnd=0; i < editCount; i++) {
-    Edit ch=inEdits.get(i);
-    if (ch.fromOffset < lastEnd) {
-      String error="Edits overlap in input! " + inEdits.get(i - 1) + ", "+ ch;
-      throw new IndexOutOfBoundsException(error);
-    }
-    lastEnd=ch.fromOffset + ch.fromLength;
-  }
   ListIterator<Edit> inIt=inEdits.listIterator();
   Edit inEdit=inIt.hasNext() ? inIt.next() : null;
   int inEditOff=inEdit == null ? input.length() : inEdit.fromOffset;
