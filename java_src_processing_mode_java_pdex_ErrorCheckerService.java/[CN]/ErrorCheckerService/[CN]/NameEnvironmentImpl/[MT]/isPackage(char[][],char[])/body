@@ -4,11 +4,5 @@
     if (fullName.length() > 0)     fullName+=".";
     fullName+=new String(packageName);
   }
-  if (readClassFile(fullName,classLoader) != null)   return false;
-  try {
-    return (classLoader.loadClass(fullName) == null);
-  }
- catch (  ClassNotFoundException e) {
-    return true;
-  }
+  return classPath.isPackage(fullName.replace('.','/'));
 }
