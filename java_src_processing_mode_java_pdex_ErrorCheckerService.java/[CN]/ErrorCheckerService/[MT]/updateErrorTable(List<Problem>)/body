@@ -2,6 +2,7 @@
   try {
     ErrorTable table=editor.getErrorTable();
     table.clearRows();
+    Map<String,String[]> suggestions=new HashMap<>();
     Sketch sketch=editor.getSketch();
     for (    Problem p : problems) {
       String message=p.getMessage();
@@ -10,9 +11,12 @@
           String[] args=p.getIProblem().getArguments();
           if (args.length > 0) {
             String missingClass=args[0];
-            String[] si;
+            String[] si=suggestions.get(missingClass);
+            if (si == null) {
 synchronized (astGenerator) {
-              si=astGenerator.getSuggestImports(missingClass);
+                si=astGenerator.getSuggestImports(missingClass);
+              }
+              suggestions.put(missingClass,si);
             }
             if (si != null && si.length > 0) {
               p.setImportSuggestions(si);
