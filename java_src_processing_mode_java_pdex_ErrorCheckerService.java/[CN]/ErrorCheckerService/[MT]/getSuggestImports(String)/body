@@ -1,9 +1,5 @@
 {
   Messages.log("* getSuggestImports");
-  if (classPath == null) {
-    return null;
-  }
-  log("Looking for class " + className);
   RegExpResourceFilter regf=new RegExpResourceFilter(Pattern.compile(".*"),Pattern.compile("(.*\\$)?" + className + "\\.class",Pattern.CASE_INSENSITIVE));
   List<String> candidates=new ArrayList<>();
 {
@@ -17,28 +13,25 @@
       }
     }
     String[] pathArray=entries.toArray(new String[entries.size()]);
-    classPath=factory.createFromPaths(pathArray);
+    ClassPath classPath=classPathFactory.createFromPaths(pathArray);
     String[] resources=classPath.findResources("",regf);
     for (    String res : resources) {
       candidates.add(res);
-      log("Res: " + res);
     }
   }
   for (  Library lib : editor.getMode().contribLibraries) {
-    ClassPath cp=factory.createFromPath(lib.getClassPath());
+    ClassPath cp=classPathFactory.createFromPath(lib.getClassPath());
     String[] resources=cp.findResources("",regf);
     for (    String res : resources) {
       candidates.add(res);
-      log("Res: " + res);
     }
   }
   if (editor.getSketch().hasCodeFolder()) {
     File codeFolder=editor.getSketch().getCodeFolder();
-    ClassPath cp=factory.createFromPath(Util.contentsToClassPath(codeFolder));
+    ClassPath cp=classPathFactory.createFromPath(Util.contentsToClassPath(codeFolder));
     String[] resources=cp.findResources("",regf);
     for (    String res : resources) {
       candidates.add(res);
-      log("Res: " + res);
     }
   }
   String[] resources=new String[candidates.size()];

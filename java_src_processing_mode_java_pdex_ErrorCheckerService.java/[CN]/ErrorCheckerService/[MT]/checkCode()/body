@@ -1,6 +1,6 @@
 {
   PreprocessedSketch result=new PreprocessedSketch();
-  PreprocessedSketch prevResult=null;
+  PreprocessedSketch prevResult=latestResult;
   List<ImportStatement> coreAndDefaultImports=result.coreAndDefaultImports;
   List<ImportStatement> codeFolderImports=result.codeFolderImports;
   List<ImportStatement> programImports=result.programImports;
@@ -48,8 +48,6 @@
       codeFolderImports.add(ImportStatement.wholePackage(item));
     }
   }
-  List<IProblem> syntaxProblems=Collections.emptyList();
-  List<IProblem> compilationProblems=Collections.emptyList();
   CompilationUnit syntaxCU;
 {
 {
@@ -68,16 +66,16 @@
       syntaxMapping.addAll(SourceUtils.wrapSketch(mode,className,workBuffer.length()));
       syntaxStage=syntaxMapping.apply(pdeStage);
       syntaxCU=makeAST(parser,syntaxStage.toCharArray(),COMPILER_OPTIONS);
-      syntaxProblems=Arrays.asList(syntaxCU.getProblems());
+      List<IProblem> syntaxProblems=Arrays.asList(syntaxCU.getProblems());
       result.mode=mode;
       result.syntaxMapping=syntaxMapping;
       result.compilationUnit=syntaxCU;
       result.preprocessedCode=syntaxStage;
       for (      IProblem problem : syntaxProblems) {
-        if (problem.isError()) {
-          result.hasSyntaxErrors=true;
-        }
+        result.hasSyntaxErrors|=problem.isError();
       }
+      List<Problem> mappedSyntaxProblems=mapProblems(syntaxProblems,result.tabStarts,result.pdeCode,result.syntaxMapping);
+      result.problems.addAll(mappedSyntaxProblems);
     }
   }
   if (!result.hasSyntaxErrors) {
@@ -113,28 +111,36 @@
           String[] pathArray=paths.toArray(new String[paths.size()]);
           classPath=classPathFactory.createFromPaths(pathArray);
         }
-        try {
-          compilationProblems=compileAndReturnProblems(className,javaStageChars,COMPILER_OPTIONS,classLoader,classPath);
-        }
- catch (        NoClassDefFoundError e) {
-          e.printStackTrace();
-        }
+        List<IProblem> compilationProblems=compileAndReturnProblems(className,javaStageChars,COMPILER_OPTIONS,classLoader,classPath);
         result.compilationMapping=compilationMapping;
         result.classPath=classPath;
         result.classLoader=classLoader;
         result.preprocessedCode=javaStage;
         result.compilationUnit=compilationCU;
-        for (        IProblem problem : compilationProblems) {
-          if (problem.isError()) {
-            result.hasCompilationErrors=true;
+        Map<String,String[]> importSuggestions=new HashMap<>();
+        if (Preferences.getBoolean(JavaMode.SUGGEST_IMPORTS_PREF)) {
+          for (          IProblem problem : compilationProblems) {
+            if (problem.getID() == IProblem.UndefinedType) {
+              String missingClass=problem.getArguments()[0];
+              if (!importSuggestions.containsKey(missingClass)) {
+                importSuggestions.put(missingClass,getSuggestImports(missingClass));
+              }
+            }
           }
         }
+        boolean hasCompilationErrors=false;
+        List<Problem> mappedCompilationProblems=mapProblems(compilationProblems,result.tabStarts,result.pdeCode,result.compilationMapping,result.syntaxMapping);
+        for (        Problem p : mappedCompilationProblems) {
+          hasCompilationErrors|=p.isError();
+          IProblem ip=p.getIProblem();
+          if (ip.getID() == IProblem.UndefinedType) {
+            p.setImportSuggestions(importSuggestions.get(ip.getArguments()[0]));
+          }
+        }
+        result.problems.addAll(mappedCompilationProblems);
+        result.hasCompilationErrors=hasCompilationErrors;
       }
     }
   }
-  List<Problem> mappedSyntaxProblems=mapProblems(syntaxProblems,result.tabStarts,result.pdeCode,result.syntaxMapping);
-  List<Problem> mappedCompilationProblems=mapProblems(compilationProblems,result.tabStarts,result.pdeCode,result.compilationMapping,result.syntaxMapping);
-  result.problems.addAll(mappedSyntaxProblems);
-  result.problems.addAll(mappedCompilationProblems);
   return result;
 }
