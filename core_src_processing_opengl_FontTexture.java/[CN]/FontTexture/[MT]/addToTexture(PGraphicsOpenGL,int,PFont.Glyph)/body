@@ -28,14 +28,13 @@
     }
     java.util.Arrays.fill(rgba,(h - 1) * w,h * w,0x00FFFFFF);
   }
-  if (offsetX + w > textures[currentTex].glWidth) {
+  if (offsetX + w > textures[lastTex].glWidth) {
     offsetX=0;
     offsetY+=lineHeight;
-    lineHeight=0;
   }
   lineHeight=Math.max(lineHeight,h);
   boolean resized=false;
-  if (offsetY + lineHeight > textures[currentTex].glHeight) {
+  if (offsetY + lineHeight > textures[lastTex].glHeight) {
     resized=addTexture(pg);
     if (resized) {
       updateGlyphsTexCoords();
@@ -46,7 +45,7 @@
       lineHeight=0;
     }
   }
-  TextureInfo tinfo=new TextureInfo(currentTex,offsetX,offsetY,w,h,rgba);
+  TextureInfo tinfo=new TextureInfo(lastTex,offsetX,offsetY,w,h,rgba);
   offsetX+=w;
   if (idx == glyphTexinfos.length) {
     TextureInfo[] temp=new TextureInfo[glyphTexinfos.length + 1];
