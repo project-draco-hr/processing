@@ -17,11 +17,8 @@
     Messages.loge("No CU found!");
   }
   visitRecur((ASTNode)compilationUnit.types().get(0),codeTree);
-  SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
-    @Override protected Object doInBackground() throws Exception {
-      return null;
-    }
-    @Override protected void done(){
+  EventQueue.invokeLater(new Runnable(){
+    public void run(){
       if (codeTree != null) {
         if (SHOW_AST) {
           if (jtree.hasFocus() || frmASTView.hasFocus())           return;
@@ -35,7 +32,6 @@
       }
     }
   }
-;
-  worker.execute();
+);
   return codeTree;
 }

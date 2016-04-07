@@ -84,21 +84,12 @@
         internalSelection=(false);
         return;
       }
-      SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
-        protected Object doInBackground() throws Exception {
-          return null;
-        }
-        protected void done(){
-          if (tabTree.getLastSelectedPathComponent() == null) {
-            return;
-          }
-          DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)tabTree.getLastSelectedPathComponent();
-          switchToTab(tnode.toString());
-          close();
-        }
+      if (tabTree.getLastSelectedPathComponent() == null) {
+        return;
       }
-;
-      worker.execute();
+      DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)tabTree.getLastSelectedPathComponent();
+      switchToTab(tnode.toString());
+      close();
     }
   }
 );

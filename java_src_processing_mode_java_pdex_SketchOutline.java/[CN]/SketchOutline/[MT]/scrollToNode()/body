@@ -1,20 +1,11 @@
 {
-  SwingWorker<Object,Object> worker=new SwingWorker<Object,Object>(){
-    protected Object doInBackground() throws Exception {
-      return null;
-    }
-    protected void done(){
-      if (soTree.getLastSelectedPathComponent() == null) {
-        return;
-      }
-      DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)soTree.getLastSelectedPathComponent();
-      if (tnode.getUserObject() instanceof ASTNodeWrapper) {
-        ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
-        awrap.highlightNode(editor);
-        close();
-      }
-    }
+  if (soTree.getLastSelectedPathComponent() == null) {
+    return;
   }
-;
-  worker.execute();
+  DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)soTree.getLastSelectedPathComponent();
+  if (tnode.getUserObject() instanceof ASTNodeWrapper) {
+    ASTNodeWrapper awrap=(ASTNodeWrapper)tnode.getUserObject();
+    awrap.highlightNode(editor);
+    close();
+  }
 }
