@@ -1,7 +1,12 @@
 {
   Messages.log("* preparePredictions");
   ASTNode astRootNode=(ASTNode)errorCheckerService.getLatestCU().types().get(0);
-  String phrase=ASTNodeWrapper.getJavaCode(pdePhrase);
+  SourceMapping mapping=new SourceMapping();
+  mapping.addAll(SourceUtils.replaceTypeConstructors(pdePhrase));
+  mapping.addAll(SourceUtils.replaceHexLiterals(pdePhrase));
+  mapping.addAll(SourceUtils.replaceColorRegex(pdePhrase));
+  mapping.addAll(SourceUtils.fixFloatsRegex(pdePhrase));
+  String phrase=mapping.apply(pdePhrase);
   boolean noCompare=phrase.endsWith(".");
   if (noCompare) {
     phrase=phrase.substring(0,phrase.length() - 1);

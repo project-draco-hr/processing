@@ -7,7 +7,7 @@
     return tehClass;
   }
   log("Looking in the classloader for " + className);
-  List<ImportStatement> imports=Collections.emptyList();
+  List<ImportStatement> imports=errorCheckerService.latestResult.programImports;
   for (  ImportStatement impS : imports) {
     String temp=impS.getPackageName();
     if (impS.isStarredImport()) {
@@ -29,7 +29,7 @@
       return tehClass;
     }
   }
-  List<ImportStatement> codeFolderImports=Collections.emptyList();
+  List<ImportStatement> codeFolderImports=errorCheckerService.latestResult.codeFolderImports;
   for (  ImportStatement impS : codeFolderImports) {
     String temp=impS.getPackageName();
     if (impS.isStarredImport()) {
@@ -51,21 +51,26 @@
       return tehClass;
     }
   }
-  PdePreprocessor p=editor.createPreprocessor(null);
-  for (  String impS : p.getCoreImports()) {
-    tehClass=loadClass(impS.substring(0,impS.length() - 1) + className);
+  List<ImportStatement> coreAndDefaultImports=errorCheckerService.latestResult.coreAndDefaultImports;
+  for (  ImportStatement impS : coreAndDefaultImports) {
+    String temp=impS.getPackageName();
+    if (impS.isStarredImport()) {
+      if (className.indexOf('.') == -1) {
+        temp=impS.getPackageName() + "." + className;
+      }
+ else {
+        continue;
+      }
+    }
+ else {
+      if (!impS.getClassName().equals(className)) {
+        continue;
+      }
+    }
+    tehClass=loadClass(temp);
     if (tehClass != null) {
       log(tehClass.getName() + " located.");
       return tehClass;
-    }
-  }
-  for (  String impS : p.getDefaultImports()) {
-    if (className.equals(impS) || impS.endsWith(className)) {
-      tehClass=loadClass(impS);
-      if (tehClass != null) {
-        log(tehClass.getName() + " located.");
-        return tehClass;
-      }
     }
   }
   String daddy="java.lang." + className;

@@ -13,7 +13,7 @@
   String nodeLabel=null;
   String nameOfNode=null;
   if (lineNode != null) {
-    String pdeCodeLine=errorCheckerService.getPdeCodeAtLine(editor.getSketch().getCurrentCodeIndex(),lineNumber);
+    String pdeCodeLine="";
     String javaCodeLine=getJavaSourceCodeLine(pdeLineNumber);
     OffsetMatcher ofm=new OffsetMatcher(pdeCodeLine,javaCodeLine);
     int javaOffset=ofm.getJavaOffForPdeOff(offset,name.length()) + lineNode.getStartPosition();
@@ -24,31 +24,26 @@ case ASTNode.TYPE_DECLARATION:
 case ASTNode.METHOD_DECLARATION:
 case ASTNode.FIELD_DECLARATION:
 case ASTNode.VARIABLE_DECLARATION_FRAGMENT:
-        decl=lineNode.getParent();
-      return new ASTNodeWrapper(decl,"");
+        return lineNode.getParent();
 default :
-    break;
-}
-}
-if (simpName instanceof SimpleName) {
-nameOfNode=simpName.toString();
-decl=findDeclaration((SimpleName)simpName);
-if (decl != null) {
-  nodeLabel=getLabelIfType(new ASTNodeWrapper(decl),(SimpleName)simpName);
-}
- else {
-  if (scrollOnly) {
-    editor.statusMessage(simpName + " is not defined in this sketch",EditorStatus.ERROR);
+      break;
   }
 }
+if (simpName instanceof SimpleName) {
+  nameOfNode=simpName.toString();
+  decl=findDeclaration((SimpleName)simpName);
+  if (decl != null) {
+    nodeLabel=getLabelIfType(decl);
+  }
+ else {
+    if (scrollOnly) {
+      editor.statusMessage(simpName + " is not defined in this sketch",EditorStatus.ERROR);
+    }
+  }
 }
 }
 if (decl != null && scrollOnly) {
 ASTNode simpName2=getNodeName(decl,nameOfNode);
-ASTNodeWrapper declWrap=new ASTNodeWrapper(simpName2,nodeLabel);
-if (!declWrap.highlightNode(editor)) {
-Messages.loge("Highlighting failed.");
 }
-}
-return new ASTNodeWrapper(decl,nodeLabel);
+return decl;
 }

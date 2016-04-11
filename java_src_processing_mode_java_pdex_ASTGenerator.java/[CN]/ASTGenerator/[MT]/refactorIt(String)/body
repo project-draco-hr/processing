@@ -15,23 +15,12 @@
   HashMap<Integer,Integer> lineOffsetDisplacement=new HashMap<>();
   int pdeOffsets[][]=new int[defCU.getChildCount()][3];
   for (int i=0; i < defCU.getChildCount(); i++) {
-    ASTNodeWrapper awrap=(ASTNodeWrapper)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
-    int ans[]=errorCheckerService.calculateTabIndexAndLineNumber(awrap.getLineNumber());
-    pdeOffsets[i][0]=ans[0];
-    pdeOffsets[i][1]=ans[1];
-    pdeOffsets[i][2]=awrap.getPDECodeOffsetForSN(this);
+    ASTNode awrap=(ASTNode)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
   }
   editor.startCompoundEdit();
   for (int i=0; i < defCU.getChildCount(); i++) {
-    ASTNodeWrapper awrap=(ASTNodeWrapper)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
+    ASTNode awrap=(ASTNode)((DefaultMutableTreeNode)(defCU.getChildAt(i))).getUserObject();
     int off=0;
-    if (lineOffsetDisplacement.get(awrap.getLineNumber()) != null) {
-      off=lineOffsetDisplacement.get(awrap.getLineNumber());
-      lineOffsetDisplacement.put(awrap.getLineNumber(),lineOffsetDisplacementConst + off);
-    }
- else {
-      lineOffsetDisplacement.put(awrap.getLineNumber(),lineOffsetDisplacementConst);
-    }
     editor.getTextArea().setSelectedText(newName);
   }
   editor.stopCompoundEdit();
