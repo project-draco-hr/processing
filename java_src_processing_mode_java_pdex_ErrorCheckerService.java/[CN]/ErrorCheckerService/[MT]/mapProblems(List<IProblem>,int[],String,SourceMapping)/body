@@ -1,27 +1,2 @@
 {
-  List<Problem> result=new ArrayList<>();
-  for (  IProblem problem : problems) {
-    if (problem.isWarning() && !JavaMode.warningsEnabled)     continue;
-    if (problem.getMessage().contains("Syntax error, insert \":: IdentifierOrNew\"")) {
-      continue;
-    }
-    int start=problem.getSourceStart();
-    int stop=problem.getSourceEnd();
-    for (    SourceMapping mapping : mappings) {
-      start=mapping.getInputOffset(start);
-      stop=mapping.getInputOffset(stop);
-    }
-    int pdeStart=PApplet.constrain(start,0,pdeCode.length() - 1);
-    int pdeStop=PApplet.constrain(stop + 1,1,pdeCode.length());
-    int tab=Arrays.binarySearch(tabStarts,pdeStart);
-    if (tab < 0) {
-      tab=-(tab + 1) - 1;
-    }
-    int tabStart=tabStarts[tab];
-    int line=Util.countLines(pdeCode.substring(tabStart,pdeStart)) - 1;
-    Problem p=new Problem(problem,tab,line);
-    p.setPDEOffsets(pdeStart - tabStart,pdeStop - tabStart);
-    result.add(p);
-  }
-  return result;
 }
