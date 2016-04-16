@@ -1,0 +1,26 @@
+{
+  Messages.log("* scrollToDeclaration");
+  ASTNode node=getASTNodeAt(offset);
+  if (node == null) {
+    return;
+  }
+  PreprocessedSketch ps=errorCheckerService.latestResult;
+  IBinding binding=resolveBinding(node);
+  if (binding == null) {
+    Messages.log("binding not resolved");
+    return;
+  }
+  String key=binding.getKey();
+  ASTNode decl=ps.compilationUnit.findDeclaringNode(key);
+  if (decl == null) {
+    Messages.log("decl not found");
+    return;
+  }
+  SimpleName declName=getNodeName(decl,name);
+  if (declName == null) {
+    Messages.log("decl name not found " + decl);
+    return;
+  }
+  Messages.log("decl " + decl.getStartPosition() + " "+ declName);
+  errorCheckerService.highlightJavaRange(declName.getStartPosition(),declName.getLength());
+}

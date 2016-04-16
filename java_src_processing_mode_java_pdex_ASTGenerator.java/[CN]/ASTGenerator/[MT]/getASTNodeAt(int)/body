@@ -1,0 +1,13 @@
+{
+  Messages.log("* getASTNodeAt");
+  PreprocessedSketch ps=errorCheckerService.latestResult;
+  int tabIndex=ps.sketch.getCodeIndex(editor.getCurrentTab());
+  int javaOffset=ps.tabOffsetToJavaOffset(tabIndex,offset);
+  ASTNode node=NodeFinder.perform(ps.compilationUnit,javaOffset,0);
+  if (node == null) {
+    Messages.log("no node found");
+    return null;
+  }
+  Messages.log("found " + node.toString());
+  return node;
+}

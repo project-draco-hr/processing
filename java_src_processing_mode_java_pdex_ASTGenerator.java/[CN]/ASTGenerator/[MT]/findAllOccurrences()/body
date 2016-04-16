@@ -4,10 +4,9 @@
   String selText=lastClickedWord == null ? ta.getSelectedText() : lastClickedWord;
   int line=ta.getSelectionStartLine();
   log(selText + "<- offsets " + (line)+ ", "+ (ta.getSelectionStart() - ta.getLineStartOffset(line))+ ", "+ (ta.getSelectionStop() - ta.getLineStartOffset(line)));
-  int offwhitespace=ta.getLineStartNonWhiteSpaceOffset(line);
   ASTNode wnode;
   if (lastClickedWord == null || lastClickedWordNode == null) {
-    wnode=getASTNodeAt(line + errorCheckerService.mainClassOffset,selText,ta.getSelectionStart() - offwhitespace,false);
+    wnode=getASTNodeAt(ta.getSelectionStart());
   }
  else {
     wnode=lastClickedWordNode;
