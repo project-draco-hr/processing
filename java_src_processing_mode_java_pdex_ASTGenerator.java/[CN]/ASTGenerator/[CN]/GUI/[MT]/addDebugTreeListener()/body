@@ -1,12 +1,15 @@
 {
   debugTree.addTreeSelectionListener(new TreeSelectionListener(){
     @Override public void valueChanged(    TreeSelectionEvent e){
-      Messages.log(e.toString());
       if (debugTree.getLastSelectedPathComponent() == null) {
         return;
       }
       DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)debugTree.getLastSelectedPathComponent();
       if (tnode.getUserObject() instanceof ASTNode) {
+        ASTNode node=(ASTNode)tnode.getUserObject();
+        int startOffset=node.getStartPosition();
+        int length=node.getLength();
+        astGen.errorCheckerService.highlightJavaRange(startOffset,length);
       }
     }
   }

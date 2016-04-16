@@ -25,6 +25,10 @@
       }
       DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)showUsageTree.getLastSelectedPathComponent();
       if (tnode.getUserObject() instanceof ASTNode) {
+        ASTNode node=(ASTNode)tnode.getUserObject();
+        int startOffset=node.getStartPosition();
+        int length=node.getLength();
+        astGen.errorCheckerService.highlightJavaRange(startOffset,length);
       }
     }
   }
