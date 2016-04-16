@@ -1,10 +1,11 @@
 {
   Messages.log("* scrollToDeclaration");
-  ASTNode node=getASTNodeAt(offset);
+  PreprocessedSketch ps=errorCheckerService.latestResult;
+  int javaOffset=ps.tabOffsetToJavaOffset(tabIndex,offset);
+  ASTNode node=getASTNodeAt(javaOffset);
   if (node == null) {
     return;
   }
-  PreprocessedSketch ps=errorCheckerService.latestResult;
   IBinding binding=resolveBinding(node);
   if (binding == null) {
     Messages.log("binding not resolved");

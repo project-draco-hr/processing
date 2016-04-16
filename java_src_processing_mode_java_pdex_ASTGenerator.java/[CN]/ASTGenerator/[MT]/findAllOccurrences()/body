@@ -4,9 +4,12 @@
   String selText=lastClickedWord == null ? ta.getSelectedText() : lastClickedWord;
   int line=ta.getSelectionStartLine();
   log(selText + "<- offsets " + (line)+ ", "+ (ta.getSelectionStart() - ta.getLineStartOffset(line))+ ", "+ (ta.getSelectionStop() - ta.getLineStartOffset(line)));
+  int tabIndex=editor.getSketch().getCurrentCodeIndex();
+  int offset=ta.getSelectionStart();
+  int javaOffset=errorCheckerService.latestResult.tabOffsetToJavaOffset(tabIndex,offset);
   ASTNode wnode;
   if (lastClickedWord == null || lastClickedWordNode == null) {
-    wnode=getASTNodeAt(ta.getSelectionStart());
+    wnode=getASTNodeAt(javaOffset);
   }
  else {
     wnode=lastClickedWordNode;
