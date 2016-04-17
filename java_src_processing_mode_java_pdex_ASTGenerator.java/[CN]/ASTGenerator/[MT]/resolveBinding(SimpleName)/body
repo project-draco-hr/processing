@@ -1,0 +1,23 @@
+{
+  IBinding binding=node.resolveBinding();
+  if (binding == null)   return null;
+  if (binding.getKind() == IBinding.TYPE) {
+    ASTNode context=node;
+    while (isNameOrType(context)) {
+      context=context.getParent();
+    }
+switch (context.getNodeType()) {
+case ASTNode.METHOD_DECLARATION:
+      MethodDeclaration decl=(MethodDeclaration)context;
+    if (decl.isConstructor()) {
+      binding=decl.resolveBinding();
+    }
+  break;
+case ASTNode.CLASS_INSTANCE_CREATION:
+ClassInstanceCreation cic=(ClassInstanceCreation)context;
+binding=cic.resolveConstructorBinding();
+break;
+}
+}
+return binding;
+}

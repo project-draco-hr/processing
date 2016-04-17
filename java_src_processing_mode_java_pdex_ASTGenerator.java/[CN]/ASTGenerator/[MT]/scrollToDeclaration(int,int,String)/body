@@ -2,11 +2,12 @@
   Messages.log("* scrollToDeclaration");
   PreprocessedSketch ps=errorCheckerService.latestResult;
   int javaOffset=ps.tabOffsetToJavaOffset(tabIndex,offset);
-  ASTNode node=getASTNodeAt(javaOffset);
-  if (node == null) {
+  SimpleName simpleName=getSimpleNameAt(javaOffset);
+  if (simpleName == null) {
+    Messages.log("nothing found");
     return;
   }
-  IBinding binding=resolveBinding(node);
+  IBinding binding=resolveBinding(simpleName);
   if (binding == null) {
     Messages.log("binding not resolved");
     return;
@@ -17,11 +18,22 @@
     Messages.log("decl not found");
     return;
   }
-  SimpleName declName=getNodeName(decl,name);
-  if (declName == null) {
-    Messages.log("decl name not found " + decl);
-    return;
-  }
-  Messages.log("decl " + decl.getStartPosition() + " "+ declName);
-  errorCheckerService.highlightJavaRange(declName.getStartPosition(),declName.getLength());
+  SimpleName declName=null;
+switch (binding.getKind()) {
+case IBinding.TYPE:
+    declName=((TypeDeclaration)decl).getName();
+  break;
+case IBinding.METHOD:
+declName=((MethodDeclaration)decl).getName();
+break;
+case IBinding.VARIABLE:
+declName=((VariableDeclaration)decl).getName();
+break;
+}
+if (declName == null) {
+Messages.log("decl name not found " + decl);
+return;
+}
+Messages.log("found declaration, offset " + decl.getStartPosition() + ", name: "+ declName);
+errorCheckerService.highlightJavaRange(declName.getStartPosition(),declName.getLength());
 }
