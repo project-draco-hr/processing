@@ -1,4 +1,5 @@
 {
+  int x0=x - textArea.getHorizontalOffset();
   for (; ; ) {
     byte id=tokens.id;
     if (id == Token.END)     break;
@@ -15,7 +16,7 @@
     line.count=length;
     for (int i=0; i < line.count; i++) {
       gfx.drawChars(line.array,line.offset + i,1,x,y);
-      x=line.array[line.offset + i] == '\t' ? (int)nextTabStop(x,i) : x + fm.charWidth(line.array[line.offset + i]);
+      x=line.array[line.offset + i] == '\t' ? x0 + (int)nextTabStop(x - x0,i) : x + fm.charWidth(line.array[line.offset + i]);
     }
     line.offset+=length;
     tokens=tokens.next;
