@@ -4,6 +4,12 @@
     renameWindow=new JFrame();
     renameWindow.setTitle("Enter new name:");
     renameWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+    renameWindow.addComponentListener(new ComponentAdapter(){
+      @Override public void componentHidden(      ComponentEvent e){
+        renameBinding=null;
+      }
+    }
+);
     renameWindow.setSize(250,130);
     renameWindow.setLayout(new BoxLayout(renameWindow.getContentPane(),BoxLayout.Y_AXIS));
     Toolkit.setIcon(renameWindow);
@@ -38,6 +44,13 @@
 {
     showUsageWindow=new JFrame();
     showUsageWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+    showUsageWindow.addComponentListener(new ComponentAdapter(){
+      @Override public void componentHidden(      ComponentEvent e){
+        showUsageBinding=null;
+        showUsageTree.setModel(null);
+      }
+    }
+);
     showUsageWindow.setSize(300,400);
     Toolkit.setIcon(showUsageWindow);
     JScrollPane sp2=new JScrollPane();

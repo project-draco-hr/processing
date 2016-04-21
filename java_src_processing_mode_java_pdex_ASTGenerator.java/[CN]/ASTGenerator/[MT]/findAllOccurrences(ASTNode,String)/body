@@ -1,12 +1,9 @@
 {
-  IBinding binding=resolveBinding(name);
-  if (binding == null)   return null;
-  String key=binding.getKey();
   List<SimpleName> occurences=new ArrayList<>();
-  name.getRoot().accept(new ASTVisitor(){
+  root.getRoot().accept(new ASTVisitor(){
     @Override public boolean visit(    SimpleName name){
       IBinding binding=resolveBinding(name);
-      if (binding != null && key.equals(binding.getKey())) {
+      if (binding != null && bindingKey.equals(binding.getKey())) {
         occurences.add(name);
       }
       return super.visit(name);
