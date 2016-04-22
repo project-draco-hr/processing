@@ -23,11 +23,9 @@
         return;
       }
       DefaultMutableTreeNode tnode=(DefaultMutableTreeNode)showUsageTree.getLastSelectedPathComponent();
-      if (tnode.getUserObject() instanceof ASTNode) {
-        ASTNode node=(ASTNode)tnode.getUserObject();
-        int startOffset=node.getStartPosition();
-        int length=node.getLength();
-        astGen.errorCheckerService.highlightJavaRange(startOffset,length);
+      if (tnode.getUserObject() instanceof ShowUsageTreeNode) {
+        ShowUsageTreeNode node=(ShowUsageTreeNode)tnode.getUserObject();
+        astGen.errorCheckerService.highlightTabRange(node.tabIndex,node.startTabOffset,node.stopTabOffset);
       }
     }
   }
