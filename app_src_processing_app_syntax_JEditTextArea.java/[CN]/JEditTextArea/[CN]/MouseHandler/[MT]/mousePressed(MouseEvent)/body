@@ -6,6 +6,12 @@
   }
   boolean windowsRightClick=Platform.isWindows() && (event.getButton() == MouseEvent.BUTTON3);
   if ((event.isPopupTrigger() || windowsRightClick) && (popup != null)) {
+    int offset=xyToOffset(event.getX(),event.getY());
+    int selectionStart=getSelectionStart();
+    int selectionStop=getSelectionStop();
+    if (offset < selectionStart || offset >= selectionStop) {
+      select(offset,offset);
+    }
     popup.show(painter,event.getX(),event.getY());
     return;
   }
