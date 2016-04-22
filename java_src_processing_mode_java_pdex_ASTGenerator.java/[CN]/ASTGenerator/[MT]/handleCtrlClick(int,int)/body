@@ -15,7 +15,8 @@
   String key=binding.getKey();
   ASTNode decl=ps.compilationUnit.findDeclaringNode(key);
   if (decl == null) {
-    Messages.log("decl not found");
+    Messages.log("decl not found, showing usage instead");
+    handleShowUsage(binding);
     return;
   }
   SimpleName declName=null;
@@ -34,6 +35,11 @@ if (declName == null) {
 Messages.log("decl name not found " + decl);
 return;
 }
+if (declName.equals(simpleName)) {
+handleShowUsage(binding);
+}
+ else {
 Messages.log("found declaration, offset " + decl.getStartPosition() + ", name: "+ declName);
 errorCheckerService.highlightJavaRange(declName.getStartPosition(),declName.getLength());
+}
 }
