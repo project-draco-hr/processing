@@ -2,9 +2,6 @@
   int tabStartLine=tabIndexToTabStartLine(tabIndex);
   int pdeLine=tabStartLine + tabLine;
   int pdeLineOffset=lineToOffset(pdeCode,pdeLine);
-  int javaLineOffset=syntaxMapping.getOutputOffset(pdeLineOffset);
-  if (compilationMapping != null) {
-    javaLineOffset=compilationMapping.getOutputOffset(javaLineOffset);
-  }
+  int javaLineOffset=offsetMapper.getOutputOffset(pdeLineOffset);
   return offsetToLine(javaCode,javaLineOffset);
 }
