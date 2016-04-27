@@ -2,11 +2,10 @@
   List<Edit> result=new ArrayList<>();
   Matcher matcher=IMPORT_REGEX.matcher(source);
   while (matcher.find()) {
-    String piece=matcher.group(1);
     ImportStatement is=ImportStatement.parse(matcher.toMatchResult());
     outImports.add(is);
-    int len=piece.length();
     int idx=matcher.start(1);
+    int len=matcher.end(1) - idx;
     result.add(Edit.move(idx,len,0));
     result.add(Edit.insert(0,"\n"));
   }

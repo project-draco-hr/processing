@@ -2,11 +2,11 @@
   for (  SketchCode sc : sketch.getCode()) {
     if (sc.isExtension("pde")) {
       String tabCode=sc.getProgram();
-      String[][] pieces=PApplet.matchAll(tabCode,ErrorCheckerService.IMPORT_REGEX);
-      if (pieces != null) {
+      List<ImportStatement> imports=SourceUtils.parseProgramImports(tabCode);
+      if (!imports.isEmpty()) {
         ArrayList<String> importHeaders=new ArrayList<>();
-        for (        String[] importStatement : pieces) {
-          importHeaders.add(importStatement[2]);
+        for (        ImportStatement importStatement : imports) {
+          importHeaders.add(importStatement.getFullClassName());
         }
         List<AvailableContribution> installLibsHeaders=getNotInstalledAvailableLibs(importHeaders);
         if (!installLibsHeaders.isEmpty()) {
