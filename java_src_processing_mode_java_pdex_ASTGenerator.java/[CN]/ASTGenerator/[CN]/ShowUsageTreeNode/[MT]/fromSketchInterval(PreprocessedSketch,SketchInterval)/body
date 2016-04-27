@@ -1,0 +1,19 @@
+{
+  int lineStartPdeOffset=ps.pdeCode.lastIndexOf('\n',in.startPdeOffset) + 1;
+  int lineStopPdeOffset=ps.pdeCode.indexOf('\n',in.stopPdeOffset);
+  int highlightStartOffset=in.startPdeOffset - lineStartPdeOffset;
+  int highlightStopOffset=in.stopPdeOffset - lineStartPdeOffset;
+  int tabLine=ps.tabOffsetToTabLine(in.tabIndex,in.startTabOffset);
+  String line=ps.pdeCode.substring(lineStartPdeOffset,lineStopPdeOffset);
+  String pre=line.substring(0,highlightStartOffset).replace("&","&amp;").replace(">","&gt;").replace("<","&lt;");
+  String highlight=line.substring(highlightStartOffset,highlightStopOffset).replace("&","&amp;").replace(">","&gt;").replace("<","&lt;");
+  String post=line.substring(highlightStopOffset).replace("&","&amp;").replace(">","&gt;").replace("<","&lt;");
+  line=pre + "<font color=#222222><b>" + highlight+ "</b></font>"+ post;
+  line=line.trim();
+  ShowUsageTreeNode node=new ShowUsageTreeNode();
+  node.tabIndex=in.tabIndex;
+  node.startTabOffset=in.startTabOffset;
+  node.stopTabOffset=in.stopTabOffset;
+  node.text="<html><font color=#bbbbbb>" + (tabLine + 1) + "</font> <font color=#777777>"+ line+ "</font></html>";
+  return node;
+}

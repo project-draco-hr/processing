@@ -27,7 +27,8 @@
   }
   PreprocessedSketch ps=errorCheckerService.latestResult;
   int codeIndex=editor.getSketch().getCodeIndex(editor.getCurrentTab());
-  int lineNumber=ps.tabLineToJavaLine(codeIndex,line);
+  int lineStartOffset=editor.getTextArea().getLineStartOffset(line);
+  int lineNumber=ps.tabOffsetToJavaLine(codeIndex,lineStartOffset);
   ASTNode nearestNode;
   ASTParser parser=ASTParser.newParser(AST.JLS8);
   parser.setKind(ASTParser.K_EXPRESSION);

@@ -2,7 +2,7 @@
   Messages.log("* scrollToDeclaration");
   PreprocessedSketch ps=errorCheckerService.latestResult;
   int javaOffset=ps.tabOffsetToJavaOffset(tabIndex,offset);
-  SimpleName simpleName=getSimpleNameAt(javaOffset);
+  SimpleName simpleName=getSimpleNameAt(javaOffset,javaOffset);
   if (simpleName == null) {
     Messages.log("nothing found");
     return;
@@ -40,6 +40,6 @@ handleShowUsage(binding);
 }
  else {
 Messages.log("found declaration, offset " + decl.getStartPosition() + ", name: "+ declName);
-errorCheckerService.highlightJavaRange(declName.getStartPosition(),declName.getLength());
+errorCheckerService.highlightNode(declName);
 }
 }
