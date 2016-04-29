@@ -1,7 +1,10 @@
 {
   cancel();
   running=false;
-  errorCheckerThread.interrupt();
+  if (errorCheckerThread != null) {
+    running=false;
+    errorCheckerThread.interrupt();
+  }
   if (scheduler != null) {
     scheduler.shutdownNow();
   }

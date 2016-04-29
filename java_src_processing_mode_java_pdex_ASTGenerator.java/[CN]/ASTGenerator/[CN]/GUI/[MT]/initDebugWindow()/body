@@ -14,10 +14,17 @@
     }
   }
 ;
+  debugTreeWindow.addComponentListener(new ComponentAdapter(){
+    @Override public void componentHidden(    ComponentEvent e){
+      astGen.ecs.unregisterDoneListener(updateDebugTreeListener);
+    }
+  }
+);
   debugTreeWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
   debugTreeWindow.setBounds(new Rectangle(680,100,460,620));
   debugTreeWindow.setTitle("AST View - " + editor.getSketch().getName());
   JScrollPane sp=new JScrollPane();
   sp.setViewportView(debugTree);
   debugTreeWindow.add(sp);
+  astGen.ecs.registerDoneListener(updateDebugTreeListener);
 }

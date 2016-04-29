@@ -1,6 +1,8 @@
 {
   g.drawImage(editor.getJavaTextArea().getGutterGradient(),0,0,getWidth(),getHeight(),this);
+  int currentTabIndex=editor.getSketch().getCurrentCodeIndex();
   for (  LineMarker m : errorPoints) {
+    if (m.getProblem().getTabIndex() != currentTabIndex)     continue;
     if (m.getType() == LineMarker.ERROR) {
       g.setColor(errorColor);
     }

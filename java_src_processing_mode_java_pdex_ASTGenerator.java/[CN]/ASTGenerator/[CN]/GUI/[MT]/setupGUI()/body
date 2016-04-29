@@ -5,9 +5,11 @@
     renameWindow.setTitle("Enter new name:");
     renameWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     renameWindow.setModal(true);
+    renameWindow.setResizable(false);
     renameWindow.addComponentListener(new ComponentAdapter(){
       @Override public void componentHidden(      ComponentEvent e){
         renameBinding=null;
+        ps=null;
       }
     }
 );
@@ -43,13 +45,17 @@
     renameWindow.setLocation(editor.getX() + (editor.getWidth() - renameWindow.getWidth()) / 2,editor.getY() + (editor.getHeight() - renameWindow.getHeight()) / 2);
   }
 {
-    showUsageWindow=new JFrame();
+    showUsageWindow=new JDialog(editor);
     showUsageWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     showUsageWindow.setAutoRequestFocus(false);
     showUsageWindow.addComponentListener(new ComponentAdapter(){
       @Override public void componentHidden(      ComponentEvent e){
         showUsageBinding=null;
         showUsageTree.setModel(null);
+        astGen.ecs.unregisterDoneListener(reloadShowUsageListener);
+      }
+      @Override public void componentShown(      ComponentEvent e){
+        astGen.ecs.registerDoneListener(reloadShowUsageListener);
       }
     }
 );
