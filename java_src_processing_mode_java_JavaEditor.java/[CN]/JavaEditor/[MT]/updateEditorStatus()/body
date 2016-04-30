@@ -1,0 +1,17 @@
+{
+  if (JavaMode.errorCheckEnabled) {
+    Problem problem=findError(textarea.getCaretLine());
+    if (problem != null) {
+      int type=problem.isError() ? EditorStatus.CURSOR_LINE_ERROR : EditorStatus.CURSOR_LINE_WARNING;
+      statusMessage(problem.getMessage(),type);
+    }
+ else {
+switch (getStatusMode()) {
+case EditorStatus.CURSOR_LINE_ERROR:
+case EditorStatus.CURSOR_LINE_WARNING:
+        statusEmpty();
+      break;
+  }
+}
+}
+}

@@ -1,7 +1,6 @@
 {
-  LineMarker marker=getJavaEditor().findError(line);
-  if (marker != null) {
-    Problem problem=marker.getProblem();
+  Problem problem=getJavaEditor().findError(line);
+  if (problem != null) {
     int startOffset=problem.getStartOffset();
     int stopOffset=problem.getStopOffset();
     int lineOffset=textArea.getLineStartOffset(line);
@@ -29,7 +28,7 @@
       x1+=Editor.LEFT_GUTTER;
       x2+=Editor.LEFT_GUTTER;
       gfx.setColor(errorUnderlineColor);
-      if (marker.getType() == LineMarker.WARNING) {
+      if (problem.isWarning()) {
         gfx.setColor(warningUnderlineColor);
       }
       paintSquiggle(gfx,y1,x1,x2);

@@ -1,15 +1,13 @@
 {
-  List<LineMarker> errorPoints=getErrorPoints();
   JavaTextArea textArea=getJavaTextArea();
   int currentTab=getSketch().getCurrentCodeIndex();
-  for (  LineMarker emarker : errorPoints) {
-    if (emarker.getProblem().getTabIndex() != currentTab)     continue;
-    Problem p=emarker.getProblem();
+  for (  Problem p : problems) {
+    if (p.getTabIndex() != currentTab)     continue;
     int pStartLine=p.getLineNumber();
     int pEndOffset=p.getStopOffset();
     int pEndLine=textArea.getLineOfOffset(pEndOffset);
     if (line >= pStartLine && line <= pEndLine) {
-      return emarker;
+      return p;
     }
   }
   return null;
