@@ -3,6 +3,13 @@
     public void rebuild(){
       super.rebuild();
       hasJavaTabs=checkForJavaTabs();
+      if (errorCheckerService != null) {
+        int currentTabCount=sketch.getCodeCount();
+        if (currentTabCount != previousTabCount) {
+          previousTabCount=currentTabCount;
+          errorCheckerService.notifySketchChanged();
+        }
+      }
     }
   }
 ;
