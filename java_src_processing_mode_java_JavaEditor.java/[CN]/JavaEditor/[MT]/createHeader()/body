@@ -2,8 +2,13 @@
   return new EditorHeader(this){
     public void rebuild(){
       super.rebuild();
-      hasJavaTabs=checkForJavaTabs();
+      boolean newHasJavaTabs=checkForJavaTabs();
+      boolean hasJavaTabsChanged=hasJavaTabs != newHasJavaTabs;
+      hasJavaTabs=newHasJavaTabs;
       if (errorCheckerService != null) {
+        if (hasJavaTabsChanged) {
+          errorCheckerService.handleHasJavaTabsChange(hasJavaTabs);
+        }
         int currentTabCount=sketch.getCodeCount();
         if (currentTabCount != previousTabCount) {
           previousTabCount=currentTabCount;

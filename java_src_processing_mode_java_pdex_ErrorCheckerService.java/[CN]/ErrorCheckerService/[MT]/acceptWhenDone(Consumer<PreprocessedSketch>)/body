@@ -1,3 +1,10 @@
 {
-  acceptWhenDone(callback,true);
+  if (!isEnabled)   return;
+synchronized (requestLock) {
+    if (needsCheck && !isContinuousCheckEnabled) {
+      needsCheck=false;
+      requestQueue.offer(Boolean.TRUE);
+    }
+    registerCallback(callback);
+  }
 }
