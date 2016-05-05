@@ -2,6 +2,9 @@
   if (!transmitting) {
     return;
   }
+  if (NativeInterface.isSimulated()) {
+    return;
+  }
   int ret=NativeInterface.transferI2c(handle,slave,out,null);
   transmitting=false;
   out=null;

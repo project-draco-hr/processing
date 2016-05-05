@@ -1,9 +1,11 @@
 {
   if (!loaded) {
-    if (!"Linux".equals(System.getProperty("os.name"))) {
-      throw new RuntimeException("The Processing I/O library is only supported on Linux");
+    if (isSimulated()) {
+      System.err.println("The Processing I/O library is not supported on this platform. Instead of values from actual hardware ports, your sketch will only receive stand-in values that allow you to test the remainder of its functionality.");
     }
-    System.loadLibrary("processing-io");
+ else {
+      System.loadLibrary("processing-io");
+    }
     loaded=true;
   }
 }

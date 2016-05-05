@@ -1,6 +1,9 @@
 {
   NativeInterface.loadLibrary();
   this.dev=dev;
+  if (NativeInterface.isSimulated()) {
+    return;
+  }
   try {
     Path path=Paths.get("/sys/class/leds/" + dev + "/max_brightness");
     String tmp=new String(Files.readAllBytes(path));

@@ -1,5 +1,8 @@
 {
   checkValidPin(pin);
+  if (NativeInterface.isSimulated()) {
+    return;
+  }
   String fn="/sys/class/gpio/export";
   int ret=NativeInterface.writeFile(fn,Integer.toString(pin));
   if (ret < 0) {

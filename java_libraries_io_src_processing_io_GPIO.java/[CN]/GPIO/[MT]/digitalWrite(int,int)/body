@@ -13,6 +13,9 @@
     System.err.println("Only GPIO.LOW and GPIO.HIGH, 0 and 1, or true and false, can be used.");
     throw new IllegalArgumentException("Illegal value");
   }
+  if (NativeInterface.isSimulated()) {
+    return;
+  }
   String fn=String.format("/sys/class/gpio/gpio%d/value",pin);
   int ret=NativeInterface.writeFile(fn,out);
   if (ret < 0) {

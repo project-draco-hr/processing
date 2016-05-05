@@ -3,6 +3,9 @@
     throw new RuntimeException("beginTransmisson has not been called");
   }
   byte[] in=new byte[len];
+  if (NativeInterface.isSimulated()) {
+    return in;
+  }
   int ret=NativeInterface.transferI2c(handle,slave,out,in);
   transmitting=false;
   out=null;
