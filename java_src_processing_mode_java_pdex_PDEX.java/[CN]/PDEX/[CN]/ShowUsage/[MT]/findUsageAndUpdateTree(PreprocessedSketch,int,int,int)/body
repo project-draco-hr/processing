@@ -1,0 +1,10 @@
+{
+  int startJavaOffset=ps.tabOffsetToJavaOffset(tabIndex,startTabOffset);
+  int stopJavaOffset=ps.tabOffsetToJavaOffset(tabIndex,stopTabOffset);
+  SimpleName name=ASTUtils.getSimpleNameAt(ps.compilationUnit,startJavaOffset,stopJavaOffset);
+  if (name == null)   return;
+  IBinding binding=ASTUtils.resolveBinding(name);
+  if (binding == null)   return;
+  this.binding=binding;
+  findUsageAndUpdateTree(ps,binding);
+}
