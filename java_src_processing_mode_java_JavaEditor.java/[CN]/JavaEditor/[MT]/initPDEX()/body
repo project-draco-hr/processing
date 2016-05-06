@@ -1,0 +1,24 @@
+{
+  preprocessingService=new PreprocessingService(this);
+  pdex=new PDEX(this,preprocessingService);
+  getJavaTextArea().getPainter().addMouseListener(new MouseAdapter(){
+    public void mouseReleased(    MouseEvent evt){
+      if (evt.getButton() == MouseEvent.BUTTON1) {
+        if ((evt.isControlDown() && !Platform.isMacOS()) || evt.isMetaDown()) {
+          handleCtrlClick(evt);
+        }
+      }
+ else       if (evt.getButton() == MouseEvent.BUTTON2) {
+        handleCtrlClick(evt);
+      }
+    }
+  }
+);
+  sketchChanged();
+  for (  SketchCode code : getSketch().getCode()) {
+    Document document=code.getDocument();
+    if (document != null) {
+      addDocumentListener(document);
+    }
+  }
+}

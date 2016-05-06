@@ -1,0 +1,28 @@
+{
+  running=true;
+  PreprocessedSketch prevResult=null;
+  Messages.log("PPS: Hi!");
+  while (running) {
+    try {
+      try {
+        requestQueue.take();
+      }
+ catch (      InterruptedException e) {
+        running=false;
+        break;
+      }
+      Messages.log("PPS: Starting");
+      prevResult=preprocessSketch(prevResult);
+synchronized (requestLock) {
+        if (requestQueue.isEmpty()) {
+          Messages.log("PPS: Completed");
+          preprocessingTask.complete(prevResult);
+        }
+      }
+    }
+ catch (    Exception e) {
+      Messages.loge("problem in preprocessor service loop",e);
+    }
+  }
+  Messages.log("PPS: Bye!");
+}

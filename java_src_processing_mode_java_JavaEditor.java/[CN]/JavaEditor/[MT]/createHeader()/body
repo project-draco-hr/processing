@@ -5,9 +5,9 @@
       boolean newHasJavaTabs=checkForJavaTabs();
       boolean hasJavaTabsChanged=hasJavaTabs != newHasJavaTabs;
       hasJavaTabs=newHasJavaTabs;
-      if (errorCheckerService != null) {
+      if (preprocessingService != null) {
         if (hasJavaTabsChanged) {
-          errorCheckerService.handleHasJavaTabsChange(hasJavaTabs);
+          preprocessingService.handleHasJavaTabsChange(hasJavaTabs);
           pdex.handleHasJavaTabsChange(hasJavaTabs);
           if (hasJavaTabs) {
             setProblemList(Collections.emptyList());
@@ -16,7 +16,7 @@
         int currentTabCount=sketch.getCodeCount();
         if (currentTabCount != previousTabCount) {
           previousTabCount=currentTabCount;
-          errorCheckerService.notifySketchChanged();
+          sketchChanged();
         }
       }
     }
