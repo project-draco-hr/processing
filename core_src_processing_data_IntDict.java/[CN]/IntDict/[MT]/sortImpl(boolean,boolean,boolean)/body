@@ -8,12 +8,12 @@
       if (useKeys) {
         diff=keys[a].compareToIgnoreCase(keys[b]);
         if (diff == 0) {
-          return values[a] - values[b];
+          diff=values[a] - values[b];
         }
       }
  else {
         diff=values[a] - values[b];
-        if (diff == 0) {
+        if (diff == 0 && stable) {
           diff=keys[a].compareToIgnoreCase(keys[b]);
         }
       }
@@ -25,4 +25,8 @@
   }
 ;
   s.run();
+  indices=new HashMap<String,Integer>();
+  for (int i=0; i < count; i++) {
+    indices.put(keys[i],i);
+  }
 }
