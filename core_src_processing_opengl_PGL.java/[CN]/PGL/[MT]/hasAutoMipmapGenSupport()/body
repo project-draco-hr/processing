@@ -1,10 +1,13 @@
 {
   int major=getGLVersion()[0];
-  if (major < 3) {
-    String ext=getString(EXTENSIONS);
-    return -1 < ext.indexOf("_generate_mipmap");
+  if (isES() && major >= 2) {
+    return true;
+  }
+ else   if (!isES() && major >= 3) {
+    return true;
   }
  else {
-    return true;
+    String ext=getString(EXTENSIONS);
+    return -1 < ext.indexOf("_generate_mipmap");
   }
 }
