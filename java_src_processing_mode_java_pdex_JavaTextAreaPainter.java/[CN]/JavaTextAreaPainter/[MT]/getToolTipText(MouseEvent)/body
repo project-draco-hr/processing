@@ -1,8 +1,8 @@
 {
   int line=evt.getY() / getFontMetrics().getHeight() + textArea.getFirstLine();
   if (line >= 0 || line < textArea.getLineCount()) {
-    Problem problem=getJavaEditor().findError(line);
-    if (problem != null) {
+    List<Problem> problems=getJavaEditor().findProblems(line);
+    for (    Problem problem : problems) {
       int lineStart=textArea.getLineStartOffset(line);
       int lineEnd=textArea.getLineStopOffset(line);
       int errorStart=problem.getStartOffset();
