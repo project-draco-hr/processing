@@ -1,14 +1,8 @@
 {
-  ErrorCheckerService ecs=getJavaEditor().getErrorChecker();
-  if (ecs == null || ecs.lastCodeCheckResult.problems.isEmpty()) {
-    return;
-  }
-  LineMarker marker=getJavaEditor().findError(line);
-  if (marker != null) {
-    Problem problem=marker.getProblem();
-    int offset=textArea.getLineStartOffset(problem.getLineNumber());
-    int startOffset=offset + problem.getPDELineStartOffset();
-    int stopOffset=offset + problem.getPDELineStopOffset() + 1;
+  List<Problem> problems=getJavaEditor().findProblems(line);
+  for (  Problem problem : problems) {
+    int startOffset=problem.getStartOffset();
+    int stopOffset=problem.getStopOffset();
     int lineOffset=textArea.getLineStartOffset(line);
     int wiggleStart=Math.max(startOffset,lineOffset);
     int wiggleStop=Math.min(stopOffset,textArea.getLineStopOffset(line));
@@ -27,14 +21,19 @@
       int trimmedLength=badCode.trim().length();
       int rightTrimmedLength=trimRight(badCode).length();
       int leftTrimLength=rightTrimmedLength - trimmedLength;
+      if (trimmedLength == 0) {
+        leftTrimLength=0;
+        rightTrimmedLength=badCode.length();
+      }
       int x1=textArea.offsetToX(line,goodCode.length() + leftTrimLength);
       int x2=textArea.offsetToX(line,goodCode.length() + rightTrimmedLength);
+      if (x1 == x2)       x2+=fm.stringWidth(" ");
       int y1=y + fm.getHeight() - 2;
       if (line != problem.getLineNumber()) {
         x1=Editor.LEFT_GUTTER;
       }
       gfx.setColor(errorUnderlineColor);
-      if (marker.getType() == LineMarker.WARNING) {
+      if (problem.isWarning()) {
         gfx.setColor(warningUnderlineColor);
       }
       paintSquiggle(gfx,y1,x1,x2);

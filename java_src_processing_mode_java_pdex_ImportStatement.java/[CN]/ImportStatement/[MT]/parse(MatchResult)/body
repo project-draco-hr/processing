@@ -1,0 +1,10 @@
+{
+  ImportStatement is=new ImportStatement();
+  is.isStatic=match.group(2) != null;
+  String pckg=match.group(3);
+  pckg=(pckg == null) ? "" : pckg.replaceAll("\\s","");
+  is.packageName=pckg.endsWith(".") ? pckg.substring(0,pckg.length() - 1) : pckg;
+  is.className=match.group(4);
+  is.isStarred=is.className.equals("*");
+  return is;
+}

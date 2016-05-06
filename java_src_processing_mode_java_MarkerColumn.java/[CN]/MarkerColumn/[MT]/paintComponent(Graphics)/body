@@ -1,12 +1,15 @@
 {
   g.drawImage(editor.getJavaTextArea().getGutterGradient(),0,0,getWidth(),getHeight(),this);
+  int currentTabIndex=editor.getSketch().getCurrentCodeIndex();
   for (  LineMarker m : errorPoints) {
-    if (m.getType() == LineMarker.ERROR) {
+    Problem problem=m.problem;
+    if (problem.getTabIndex() != currentTabIndex)     continue;
+    if (problem.isError()) {
       g.setColor(errorColor);
     }
  else {
       g.setColor(warningColor);
     }
-    g.drawLine(2,m.getY(),getWidth() - 2,m.getY());
+    g.drawLine(2,m.y,getWidth() - 2,m.y);
   }
 }

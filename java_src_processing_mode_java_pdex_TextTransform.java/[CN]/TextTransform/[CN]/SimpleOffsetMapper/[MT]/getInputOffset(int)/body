@@ -1,0 +1,13 @@
+{
+  if (outputOffset < outputOffsetOfInputStart)   return -1;
+  Edit searchKey=new Edit(0,0,outputOffset,Integer.MAX_VALUE,null);
+  int i=Collections.binarySearch(outMap,searchKey,OUTPUT_OFFSET_COMP);
+  if (i < 0) {
+    i=-(i + 1);
+    i-=1;
+  }
+  i=PApplet.constrain(i,0,outMap.size() - 1);
+  Edit edit=outMap.get(i);
+  int diff=outputOffset - edit.toOffset;
+  return edit.fromOffset + Math.min(diff,Math.max(0,edit.fromLength - 1));
+}

@@ -25,7 +25,6 @@
   }
   getSketch().setModified(false);
   hasJavaTabs=checkForJavaTabs();
-  initErrorChecker();
   JPanel textAndError=new JPanel();
   Box box=(Box)textarea.getParent();
   box.remove(2);
@@ -36,6 +35,7 @@
   textAndError.add(textarea);
   box.add(textAndError);
   getJavaTextArea().setMode(jmode);
+  initPDEX();
   addWindowFocusListener(new WindowFocusListener(){
     public void windowLostFocus(    WindowEvent e){
       getJavaTextArea().hideSuggestion();
@@ -46,7 +46,7 @@
 );
   textarea.addCaretListener(new CaretListener(){
     public void caretUpdate(    CaretEvent e){
-      errorCheckerService.updateEditorStatus();
+      updateEditorStatus();
     }
   }
 );

@@ -1,7 +1,6 @@
 {
   super(defaults,new JavaInputHandler(editor));
   this.editor=editor;
-  painter.addMouseListener(rightClickMouseAdapter);
   painter.addMouseMotionListener(gutterCursorMouseAdapter);
   add(CENTER,painter);
   Mode mode=editor.getMode();
@@ -10,5 +9,6 @@
   prevMouseListeners=painter.getMouseListeners();
   prevMMotionListeners=painter.getMouseMotionListeners();
   prevKeyListeners=editor.getKeyListeners();
+  suggestionGenerator=new CompletionGenerator();
   tweakMode=false;
 }

@@ -3,9 +3,11 @@
   File destFile=null;
   String codeExtension=null;
   boolean replacement=false;
+  boolean isCode=false;
   if (filename.toLowerCase().endsWith(".class") || filename.toLowerCase().endsWith(".jar") || filename.toLowerCase().endsWith(".dll")|| filename.toLowerCase().endsWith(".dylib")|| filename.toLowerCase().endsWith(".jnilib")|| filename.toLowerCase().endsWith(".so")) {
     prepareCodeFolder();
     destFile=new File(codeFolder,filename);
+    isCode=true;
   }
  else {
     for (    String extension : mode.getExtensions()) {
@@ -50,6 +52,9 @@
       Messages.showWarning(Language.text("add_file.messages.error_adding"),Language.interpolate("add_file.messages.cannot_add.description",filename),e);
       return false;
     }
+  }
+  if (isCode) {
+    editor.codeFolderChanged();
   }
   if (codeExtension != null) {
     SketchCode newCode=new SketchCode(destFile,codeExtension);

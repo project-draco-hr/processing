@@ -1,0 +1,14 @@
+{
+  StringBuilder classPath=new StringBuilder();
+  String rtPath=System.getProperty("java.home") + File.separator + "lib"+ File.separator+ "rt.jar";
+  if (new File(rtPath).exists()) {
+    classPath.append(File.pathSeparator).append(rtPath);
+  }
+ else {
+    rtPath=System.getProperty("java.home") + File.separator + "jre"+ File.separator+ "lib"+ File.separator+ "rt.jar";
+    if (new File(rtPath).exists()) {
+      classPath.append(File.pathSeparator).append(rtPath);
+    }
+  }
+  return sanitizeClassPath(classPath.toString());
+}
