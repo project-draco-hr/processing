@@ -1,5 +1,8 @@
 {
   checkValidPin(pin);
+  if (NativeInterface.isSimulated()) {
+    return LOW;
+  }
   String fn=String.format("/sys/class/gpio/gpio%d/value",pin);
   byte in[]=new byte[2];
   int ret=NativeInterface.readFile(fn,in);

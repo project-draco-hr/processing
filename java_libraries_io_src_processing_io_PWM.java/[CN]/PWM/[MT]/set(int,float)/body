@@ -1,4 +1,7 @@
 {
+  if (NativeInterface.isSimulated()) {
+    return;
+  }
   String fn=fn=String.format("/sys/class/pwm/%s/pwm%d/period",chip,channel);
   int ret=NativeInterface.writeFile(fn,String.format("%d",(int)(1000000000 / period)));
   if (ret < 0) {

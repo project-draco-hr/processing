@@ -1,5 +1,13 @@
 {
   checkValidPin(pin);
+  if (NativeInterface.isSimulated()) {
+    try {
+      Thread.sleep(200);
+    }
+ catch (    InterruptedException e) {
+    }
+    return true;
+  }
   String fn=String.format("/sys/class/gpio/gpio%d/value",pin);
   int ret=NativeInterface.pollDevice(fn,timeout);
   if (ret < 0) {

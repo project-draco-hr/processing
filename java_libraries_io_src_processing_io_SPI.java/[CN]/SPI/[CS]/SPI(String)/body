@@ -1,6 +1,9 @@
 {
   NativeInterface.loadLibrary();
   this.dev=dev;
+  if (NativeInterface.isSimulated()) {
+    return;
+  }
   handle=NativeInterface.openDevice("/dev/" + dev);
   if (handle < 0) {
     throw new RuntimeException(NativeInterface.getError(handle));

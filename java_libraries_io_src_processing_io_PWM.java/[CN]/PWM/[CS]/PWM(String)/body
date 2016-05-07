@@ -6,6 +6,9 @@
   }
   chip=channel.substring(0,pos);
   this.channel=Integer.parseInt(channel.substring(pos + 4));
+  if (NativeInterface.isSimulated()) {
+    return;
+  }
   String fn="/sys/class/pwm/" + chip + "/export";
   int ret=NativeInterface.writeFile(fn,Integer.toString(this.channel));
   if (ret < 0) {

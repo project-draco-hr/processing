@@ -16,6 +16,9 @@
  else {
     throw new IllegalArgumentException("Unknown mode");
   }
+  if (NativeInterface.isSimulated()) {
+    return;
+  }
   String fn=String.format("/sys/class/gpio/gpio%d/edge",pin);
   int ret=NativeInterface.writeFile(fn,out);
   if (ret < 0) {
