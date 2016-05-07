@@ -1,6 +1,7 @@
 {
   running=true;
   PreprocessedSketch prevResult=null;
+  CompletableFuture<?> runningCallbacks=null;
   Messages.log("PPS: Hi!");
   while (running) {
     try {
@@ -13,8 +14,17 @@
       }
       Messages.log("PPS: Starting");
       prevResult=preprocessSketch(prevResult);
+      while (requestQueue.isEmpty() && runningCallbacks != null) {
+        try {
+          runningCallbacks.get(10,TimeUnit.MILLISECONDS);
+          runningCallbacks=null;
+        }
+ catch (        TimeoutException e) {
+        }
+      }
 synchronized (requestLock) {
         if (requestQueue.isEmpty()) {
+          runningCallbacks=lastCallback;
           Messages.log("PPS: Done");
           preprocessingTask.complete(prevResult);
         }
