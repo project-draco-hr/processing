@@ -55,6 +55,23 @@
   JScrollPane treePane=new JScrollPane(tree);
   treePane.setPreferredSize(new Dimension(250,450));
   treePane.setBorder(new EmptyBorder(0,0,0,0));
-  getContentPane().add(treePane);
+  JPanel msgPane=new JPanel();
+  msgPane.setBackground(Color.WHITE);
+  msgPane.setPreferredSize(new Dimension(250,450));
+  JLabel emptysb=new JLabel("Empty Sketchbook");
+  emptysb.setForeground(Color.gray);
+  msgPane.add(emptysb);
+  DefaultMutableTreeNode checksb=new DefaultMutableTreeNode();
+  try {
+    if (base.addSketches(checksb,Base.getSketchbookFolder(),false)) {
+      getContentPane().add(treePane);
+    }
+ else {
+      setContentPane(msgPane);
+    }
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
   pack();
 }
