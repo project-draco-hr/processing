@@ -219,7 +219,8 @@
     File shellScript=new File(destFolder,sketch.getName());
     PrintWriter pw=PApplet.createWriter(shellScript);
     pw.print("#!/bin/sh\n\n");
-    pw.print("APPDIR=$(dirname \"$0\")\n");
+    pw.print("APPDIR=$(readlink -f \"$0\")\n");
+    pw.print("APPDIR=$(dirname \"$APPDIR\")\n");
     if (embedJava) {
       pw.print("$APPDIR/java/bin/");
     }
