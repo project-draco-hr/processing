@@ -1,0 +1,17 @@
+{
+  if (inBuffer == readOffset) {
+    return null;
+  }
+synchronized (buffer) {
+    int length=inBuffer - readOffset;
+    if (length > max)     length=max;
+    byte[] ret=new byte[length];
+    System.arraycopy(buffer,readOffset,ret,0,length);
+    readOffset+=length;
+    if (inBuffer == readOffset) {
+      inBuffer=0;
+      readOffset=0;
+    }
+    return ret;
+  }
+}
