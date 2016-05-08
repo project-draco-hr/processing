@@ -52,26 +52,21 @@
  else {
     tree.setToggleClickCount(1);
   }
-  JScrollPane treePane=new JScrollPane(tree);
-  treePane.setPreferredSize(new Dimension(250,450));
-  treePane.setBorder(new EmptyBorder(0,0,0,0));
-  try {
-    DefaultMutableTreeNode checkNode=new DefaultMutableTreeNode();
-    if (base.addSketches(checkNode,Base.getSketchbookFolder(),false)) {
-      getContentPane().add(treePane);
-    }
- else {
-      JPanel emptyPanel=new JPanel();
-      emptyPanel.setBackground(Color.WHITE);
-      emptyPanel.setPreferredSize(new Dimension(250,450));
-      JLabel emptyLabel=new JLabel("Empty Sketchbook");
-      emptyLabel.setForeground(Color.GRAY);
-      emptyPanel.add(emptyLabel);
-      setContentPane(emptyPanel);
-    }
+  TreeModel treeModel=tree.getModel();
+  if (treeModel.getChildCount(treeModel.getRoot()) != 0) {
+    JScrollPane treePane=new JScrollPane(tree);
+    treePane.setPreferredSize(new Dimension(250,450));
+    treePane.setBorder(new EmptyBorder(0,0,0,0));
+    getContentPane().add(treePane);
   }
- catch (  IOException e) {
-    e.printStackTrace();
+ else {
+    JPanel emptyPanel=new JPanel();
+    emptyPanel.setBackground(Color.WHITE);
+    emptyPanel.setPreferredSize(new Dimension(250,450));
+    JLabel emptyLabel=new JLabel("Empty Sketchbook");
+    emptyLabel.setForeground(Color.GRAY);
+    emptyPanel.add(emptyLabel);
+    setContentPane(emptyPanel);
   }
   pack();
 }
