@@ -3,9 +3,15 @@
   this.pps=pps;
   this.enabled=!editor.hasJavaTabs();
   errorChecker=new ErrorChecker(editor,pps);
+  inspectMode=new InspectMode(editor,pps);
   showUsage=new ShowUsage(editor,pps);
-  rename=new Rename(editor);
+  rename=new Rename(editor,pps);
   if (SHOW_DEBUG_TREE) {
     debugTree=new DebugTree(editor,pps);
   }
+  for (  SketchCode code : editor.getSketch().getCode()) {
+    Document document=code.getDocument();
+    addDocumentListener(document);
+  }
+  sketchChanged();
 }

@@ -1,0 +1,33 @@
+{
+  this.editor=editor;
+  this.pps=pps;
+  editor.getJavaTextArea().getPainter().addMouseListener(new MouseAdapter(){
+    @Override public void mousePressed(    MouseEvent e){
+      isMouseDown=true;
+    }
+    @Override public void mouseReleased(    MouseEvent evt){
+      isMouseDown=false;
+      if (inspectModeEnabled && evt.getButton() == MouseEvent.BUTTON1) {
+        handleInspect(evt);
+      }
+ else       if (!inspectModeEnabled && evt.getButton() == MouseEvent.BUTTON2) {
+        handleInspect(evt);
+      }
+      checkInspectMode();
+    }
+  }
+);
+  editor.getJavaTextArea().addKeyListener(new KeyAdapter(){
+    @Override public void keyPressed(    KeyEvent e){
+      isMetaDown=isMetaDown | e.getKeyCode() == KeyEvent.VK_META;
+      isCtrlDown=isCtrlDown | e.getKeyCode() == KeyEvent.VK_CONTROL;
+      if (!inspectModeEnabled)       checkInspectMode();
+    }
+    @Override public void keyReleased(    KeyEvent e){
+      isMetaDown=isMetaDown & e.getKeyCode() != KeyEvent.VK_META;
+      isCtrlDown=isCtrlDown & e.getKeyCode() != KeyEvent.VK_CONTROL;
+      if (inspectModeEnabled)       checkInspectMode();
+    }
+  }
+);
+}
