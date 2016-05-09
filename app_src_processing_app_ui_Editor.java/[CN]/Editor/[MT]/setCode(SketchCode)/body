@@ -1,7 +1,17 @@
 {
   SyntaxDocument document=(SyntaxDocument)code.getDocument();
   if (document == null) {
-    document=new SyntaxDocument();
+    document=new SyntaxDocument(){
+      @Override public void beginCompoundEdit(){
+        if (compoundEdit == null)         startCompoundEdit();
+        super.beginCompoundEdit();
+      }
+      @Override public void endCompoundEdit(){
+        stopCompoundEdit();
+        super.endCompoundEdit();
+      }
+    }
+;
     code.setDocument(document);
     document.setTokenMarker(mode.getTokenMarker());
     try {
@@ -12,16 +22,18 @@
     }
     document.addDocumentListener(new DocumentListener(){
       public void removeUpdate(      DocumentEvent e){
-        if (isInserting && isDirectEdit()) {
+        if (isInserting && isDirectEdit() && !textarea.isOverwriteEnabled()) {
           endTextEditHistory();
         }
         isInserting=false;
       }
       public void insertUpdate(      DocumentEvent e){
-        if (!isInserting && isDirectEdit()) {
+        if (!isInserting && !textarea.isOverwriteEnabled() && isDirectEdit()) {
           endTextEditHistory();
         }
-        isInserting=true;
+        if (!textarea.isOverwriteEnabled()) {
+          isInserting=true;
+        }
       }
       public void changedUpdate(      DocumentEvent e){
         endTextEditHistory();

@@ -1,23 +1,20 @@
 {
   if (!overwrite || selectionStart != selectionEnd) {
-    setSelectedText(str);
+    boolean isSelectAndReplaceOp=(selectionStart != selectionEnd);
+    setSelectedText(str,isSelectAndReplaceOp);
     return;
   }
   int caret=getCaretPosition();
   int caretLineEnd=getLineStopOffset(getCaretLine());
   if (caretLineEnd - caret <= str.length()) {
-    setSelectedText(str);
+    setSelectedText(str,false);
     return;
   }
-  document.beginCompoundEdit();
   try {
     document.remove(caret,str.length());
     document.insertString(caret,str,null);
   }
  catch (  BadLocationException bl) {
     bl.printStackTrace();
-  }
- finally {
-    document.endCompoundEdit();
   }
 }
