@@ -9,7 +9,7 @@
     }
     @Override public boolean visit(    NumberLiteral node){
       String s=node.getToken().toLowerCase();
-      if (!s.endsWith("f") && !s.endsWith("d") && (s.contains(".") || s.contains("e"))) {
+      if (FLOATING_POINT_LITERAL_VERIFIER.matcher(s).matches() && !s.endsWith("f") && !s.endsWith("d")) {
         edits.add(Edit.insert(node.getStartPosition() + node.getLength(),"f"));
       }
       return super.visit(node);
