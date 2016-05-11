@@ -1,0 +1,17 @@
+{
+  if (size <= 0)   return;
+  if (count <= 0)   return;
+  boolean needEndDraw=false;
+  if (!drawing) {
+    beginDraw();
+    needEndDraw=true;
+  }
+  while (size > 0 && count > 0) {
+    endTransfer();
+    count--;
+  }
+  if (size <= 0) {
+    ongoingPixelTransfers.remove(this);
+  }
+  if (needEndDraw)   endDraw();
+}
