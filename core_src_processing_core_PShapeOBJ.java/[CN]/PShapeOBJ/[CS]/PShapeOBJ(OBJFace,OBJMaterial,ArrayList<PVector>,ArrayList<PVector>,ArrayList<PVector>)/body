@@ -21,15 +21,21 @@
   vertexCount=face.vertIdx.size();
   vertices=new float[vertexCount][12];
   for (int j=0; j < face.vertIdx.size(); j++) {
-    int vertIdx, normIdx;
-    PVector vert, norms;
-    vert=norms=null;
+    int vertIdx, normIdx, texIdx;
+    PVector vert, norms, tex;
+    vert=norms=tex=null;
     vertIdx=face.vertIdx.get(j).intValue() - 1;
     vert=coords.get(vertIdx);
     if (j < face.normIdx.size()) {
       normIdx=face.normIdx.get(j).intValue() - 1;
       if (-1 < normIdx) {
         norms=normals.get(normIdx);
+      }
+    }
+    if (j < face.texIdx.size()) {
+      texIdx=face.texIdx.get(j).intValue() - 1;
+      if (-1 < texIdx) {
+        tex=texcoords.get(texIdx);
       }
     }
     vertices[j][X]=vert.x;
@@ -44,20 +50,12 @@
       vertices[j][PGraphics.NY]=norms.y;
       vertices[j][PGraphics.NZ]=norms.z;
     }
+    if (tex != null) {
+      vertices[j][PGraphics.U]=tex.x;
+      vertices[j][PGraphics.V]=tex.y;
+    }
     if (mtl != null && mtl.kdMap != null) {
-      int texIdx;
-      PVector tex=null;
-      if (j < face.texIdx.size()) {
-        texIdx=face.texIdx.get(j).intValue() - 1;
-        if (-1 < texIdx) {
-          tex=texcoords.get(texIdx);
-        }
-      }
       image=mtl.kdMap;
-      if (tex != null) {
-        vertices[j][PGraphics.U]=tex.x;
-        vertices[j][PGraphics.V]=tex.y;
-      }
     }
   }
 }
