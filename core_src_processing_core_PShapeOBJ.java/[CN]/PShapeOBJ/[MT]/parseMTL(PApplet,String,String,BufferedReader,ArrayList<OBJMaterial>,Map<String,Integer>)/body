@@ -19,7 +19,13 @@
             if (texname.indexOf(File.separator) == -1 && !path.equals("")) {
               texname=path + File.separator + texname;
             }
-            currentMtl.kdMap=parent.loadImage(texname);
+            File file=new File(parent.dataPath(texname));
+            if (file.exists()) {
+              currentMtl.kdMap=parent.loadImage(texname);
+            }
+ else {
+              System.err.println("The texture map \"" + texname + "\" "+ "in the materials definition file \""+ mtlfn+ "\" "+ "is missing or inaccessible, make sure "+ "the URL is valid or that the file has been "+ "added to your sketch and is readable.");
+            }
           }
  else           if (parts[0].equals("Ka") && parts.length > 3) {
             currentMtl.ka.x=Float.valueOf(parts[1]).floatValue();
