@@ -1,0 +1,13 @@
+{
+  Future<?> taskWithSameFilename;
+synchronized (runningTasksLock) {
+    taskWithSameFilename=runningTasks.get(absFilename);
+  }
+  if (taskWithSameFilename != null) {
+    try {
+      taskWithSameFilename.get();
+    }
+ catch (    InterruptedException|ExecutionException e) {
+    }
+  }
+}

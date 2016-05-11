@@ -1,0 +1,11 @@
+{
+  if (asyncPixelReader != null) {
+    ongoingPixelTransfersIterable.addAll(ongoingPixelTransfers);
+    String absFilename=parent.sketchPath(filename);
+    for (    AsyncPixelReader pixelReader : ongoingPixelTransfersIterable) {
+      pixelReader.awaitTransferCompletion(absFilename);
+    }
+    ongoingPixelTransfersIterable.clear();
+  }
+  super.awaitAsyncSaveCompletion(filename);
+}

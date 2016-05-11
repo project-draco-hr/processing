@@ -26,7 +26,7 @@
     }
     flush();
     updatePixelSize();
-    asyncPixelReader.readAndSaveAsync(filename);
+    asyncPixelReader.readAndSaveAsync(parent.sketchPath(filename));
     if (needEndDraw)     endDraw();
   }
  else {
@@ -36,7 +36,7 @@
     if (target == null)     return false;
     int count=PApplet.min(pixels.length,target.pixels.length);
     System.arraycopy(pixels,0,target.pixels,0,count);
-    asyncImageSaver.saveTargetAsync(this,target,filename);
+    asyncImageSaver.saveTargetAsync(this,target,parent.sketchPath(filename));
   }
   return true;
 }
