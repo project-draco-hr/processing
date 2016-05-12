@@ -3,6 +3,7 @@
   boolean header=false;
   String extension=null;
   boolean binary=false;
+  String encoding="UTF-8";
   String worksheet=null;
   final String sheetParam="worksheet=";
   String[] opts=null;
@@ -34,6 +35,9 @@
       }
  else       if (opt.startsWith("dictionary=")) {
       }
+ else       if (opt.startsWith("encoding=")) {
+        encoding=opt.substring(9);
+      }
  else {
         throw new IllegalArgumentException("'" + opt + "' is not a valid option for loading a Table");
       }
@@ -49,7 +53,8 @@
     odsParse(input,worksheet,header);
   }
  else {
-    BufferedReader reader=PApplet.createReader(input);
+    InputStreamReader isr=new InputStreamReader(input,encoding);
+    BufferedReader reader=new BufferedReader(isr);
     if (awfulCSV) {
       parseAwfulCSV(reader,header);
     }
