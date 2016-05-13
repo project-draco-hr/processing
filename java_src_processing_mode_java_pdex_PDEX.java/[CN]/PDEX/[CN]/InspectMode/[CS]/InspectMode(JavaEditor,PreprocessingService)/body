@@ -3,30 +3,52 @@
   this.pps=pps;
   editor.getJavaTextArea().getPainter().addMouseListener(new MouseAdapter(){
     @Override public void mousePressed(    MouseEvent e){
-      isMouseDown=true;
+      isMouse1Down=isMouse1Down || (e.getButton() == MouseEvent.BUTTON1);
+      isMouse2Down=isMouse2Down || (e.getButton() == MouseEvent.BUTTON2);
     }
-    @Override public void mouseReleased(    MouseEvent evt){
-      isMouseDown=false;
-      if (inspectModeEnabled && evt.getButton() == MouseEvent.BUTTON1) {
-        handleInspect(evt);
+    @Override public void mouseReleased(    MouseEvent e){
+      boolean releasingMouse1=e.getButton() == MouseEvent.BUTTON1;
+      boolean releasingMouse2=e.getButton() == MouseEvent.BUTTON2;
+      if (inspectModeEnabled && isMouse1Down && releasingMouse1) {
+        handleInspect(e);
       }
- else       if (!inspectModeEnabled && evt.getButton() == MouseEvent.BUTTON2) {
-        handleInspect(evt);
+ else       if (!inspectModeEnabled && isMouse2Down && releasingMouse2) {
+        handleInspect(e);
       }
-      checkInspectMode();
+      isMouse1Down=isMouse1Down && !releasingMouse1;
+      isMouse2Down=isMouse2Down && !releasingMouse2;
+    }
+  }
+);
+  editor.getJavaTextArea().getPainter().addMouseMotionListener(new MouseAdapter(){
+    @Override public void mouseDragged(    MouseEvent e){
+      if (editor.isSelectionActive()) {
+        inspectModeEnabled=false;
+        isMouse2Down=false;
+      }
+    }
+    @Override public void mouseMoved(    MouseEvent e){
+      isMouse1Down=false;
+      isMouse2Down=false;
+      isHotkeyDown=mouseEventHotkeyTest.test(e);
+      inspectModeEnabled=isHotkeyDown;
+    }
+  }
+);
+  editor.getJavaTextArea().addMouseWheelListener(new MouseAdapter(){
+    @Override public void mouseWheelMoved(    MouseWheelEvent e){
+      if (isMouse1Down)       inspectModeEnabled=false;
     }
   }
 );
   editor.getJavaTextArea().addKeyListener(new KeyAdapter(){
     @Override public void keyPressed(    KeyEvent e){
-      isMetaDown=isMetaDown || e.getKeyCode() == KeyEvent.VK_META;
-      isCtrlDown=isCtrlDown || e.getKeyCode() == KeyEvent.VK_CONTROL;
-      if (!inspectModeEnabled)       checkInspectMode();
+      isHotkeyDown=isHotkeyDown || keyEventHotkeyTest.test(e);
+      inspectModeEnabled=inspectModeEnabled || (!isMouse1Down && isHotkeyDown);
     }
     @Override public void keyReleased(    KeyEvent e){
-      isMetaDown=isMetaDown && e.getKeyCode() != KeyEvent.VK_META;
-      isCtrlDown=isCtrlDown && e.getKeyCode() != KeyEvent.VK_CONTROL;
-      if (inspectModeEnabled)       checkInspectMode();
+      isHotkeyDown=isHotkeyDown && !keyEventHotkeyTest.test(e);
+      inspectModeEnabled=inspectModeEnabled && isHotkeyDown;
     }
   }
 );
