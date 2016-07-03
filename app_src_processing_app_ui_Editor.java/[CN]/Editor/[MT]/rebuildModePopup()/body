@@ -6,18 +6,14 @@
     item.addActionListener(new ActionListener(){
       public void actionPerformed(      ActionEvent e){
         if (!sketch.isModified()) {
-          base.changeMode(m);
+          if (!base.changeMode(m)) {
+            reselectMode();
+            Messages.showWarning(Language.text("warn.cannot_change_mode.title"),Language.interpolate("warn.cannot_change_mode.body",m));
+          }
         }
  else {
+          reselectMode();
           Messages.showWarning("Save","Please save the sketch before changing the mode.");
-          for (          Component c : getModePopup().getComponents()) {
-            if (c instanceof JRadioButtonMenuItem) {
-              if (((JRadioButtonMenuItem)c).getText() == mode.getTitle()) {
-                ((JRadioButtonMenuItem)c).setSelected(true);
-                break;
-              }
-            }
-          }
         }
       }
     }
