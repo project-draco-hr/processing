@@ -1,0 +1,57 @@
+{
+  boolean hasEscapedQuotes=false;
+  boolean quoted=c[start] == '\"';
+  if (quoted) {
+    start++;
+  }
+  int i=start;
+  while (i < c.length) {
+    if (c[i] == '\"') {
+      if (quoted) {
+        if (i == c.length - 1) {
+          addPiece(start,i,hasEscapedQuotes);
+          start=c.length;
+          return true;
+        }
+ else         if (c[i + 1] == '\"') {
+          hasEscapedQuotes=true;
+          i+=2;
+        }
+ else         if (c[i + 1] == ',') {
+          addPiece(start,i,hasEscapedQuotes);
+          start=i + 2;
+          return true;
+        }
+      }
+ else {
+        if (i == c.length - 1) {
+          throw new RuntimeException("Unterminated quote at end of line");
+        }
+ else         if (c[i + 1] == '\"') {
+          hasEscapedQuotes=true;
+          i+=2;
+        }
+ else {
+          throw new RuntimeException("Unterminated quoted field mid-line");
+        }
+      }
+    }
+ else     if (!quoted && c[i] == ',') {
+      addPiece(start,i,hasEscapedQuotes);
+      start=i + 1;
+      return true;
+    }
+ else     if (!quoted && i == c.length - 1) {
+      addPiece(start,c.length,hasEscapedQuotes);
+      start=c.length;
+      return true;
+    }
+ else {
+      i++;
+    }
+  }
+  if (quoted) {
+    return false;
+  }
+  throw new RuntimeException("not sure how...");
+}

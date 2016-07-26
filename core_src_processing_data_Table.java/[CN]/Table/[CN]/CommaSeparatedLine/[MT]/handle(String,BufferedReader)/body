@@ -1,0 +1,34 @@
+{
+  start=0;
+  pieceCount=0;
+  c=line.toCharArray();
+  int cols=1;
+  boolean quote=false;
+  for (int i=0; i < c.length; i++) {
+    if (!quote && (c[i] == ',')) {
+      cols++;
+    }
+ else     if (c[i] == '\"') {
+      quote=!quote;
+    }
+  }
+  pieces=new String[cols];
+  while (start < c.length) {
+    boolean enough=ingest();
+    while (!enough) {
+      String nextLine=reader.readLine();
+      if (nextLine == null) {
+        throw new IOException("Found a quoted line that wasn't terminated properly.");
+      }
+      char[] temp=new char[c.length + 1 + nextLine.length()];
+      PApplet.arrayCopy(c,temp,c.length);
+      temp[c.length]='\n';
+      nextLine.getChars(0,nextLine.length(),temp,c.length + 1);
+      return handle(new String(temp),reader);
+    }
+  }
+  for (int i=pieceCount; i < pieces.length; i++) {
+    pieces[i]="";
+  }
+  return pieces;
+}
