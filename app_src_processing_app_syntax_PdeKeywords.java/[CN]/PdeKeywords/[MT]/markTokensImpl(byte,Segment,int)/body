@@ -1,8 +1,7 @@
 {
   char[] array=line.array;
   int offset=line.offset;
-  lastOffset=offset;
-  lastKeyword=offset;
+  MarkerState ms=new MarkerState(offset);
   int mlength=offset + line.count;
   boolean backslash=false;
   loop:   for (int i=offset; i < mlength; i++) {
@@ -19,47 +18,47 @@ case '#':
         if (backslash)         backslash=false;
       break;
 case '"':
-    doKeyword(line,i,c);
+    doKeyword(ms,line,i,c);
   if (backslash)   backslash=false;
  else {
-    addToken(i - lastOffset,token);
+    addToken(i - ms.lastOffset,token);
     token=Token.LITERAL1;
-    lastOffset=lastKeyword=i;
+    ms.lastOffset=ms.lastKeyword=i;
   }
 break;
 case '\'':
-doKeyword(line,i,c);
+doKeyword(ms,line,i,c);
 if (backslash) backslash=false;
  else {
-addToken(i - lastOffset,token);
+addToken(i - ms.lastOffset,token);
 token=Token.LITERAL2;
-lastOffset=lastKeyword=i;
+ms.lastOffset=ms.lastKeyword=i;
 }
 break;
 case ':':
-if (lastKeyword == offset) {
-if (doKeyword(line,i,c)) break;
+if (ms.lastKeyword == offset) {
+if (doKeyword(ms,line,i,c)) break;
 backslash=false;
-addToken(i1 - lastOffset,Token.LABEL);
-lastOffset=lastKeyword=i1;
+addToken(i1 - ms.lastOffset,Token.LABEL);
+ms.lastOffset=ms.lastKeyword=i1;
 }
- else if (doKeyword(line,i,c)) break;
+ else if (doKeyword(ms,line,i,c)) break;
 break;
 case '/':
 backslash=false;
-doKeyword(line,i,c);
+doKeyword(ms,line,i,c);
 if (mlength - i > 1) {
 switch (array[i1]) {
 case '*':
-addToken(i - lastOffset,token);
-lastOffset=lastKeyword=i;
+addToken(i - ms.lastOffset,token);
+ms.lastOffset=ms.lastKeyword=i;
 if (mlength - i > 2 && array[i + 2] == '*') token=Token.COMMENT2;
  else token=Token.COMMENT1;
 break;
 case '/':
-addToken(i - lastOffset,token);
+addToken(i - ms.lastOffset,token);
 addToken(mlength - i,Token.COMMENT1);
-lastOffset=lastKeyword=mlength;
+ms.lastOffset=ms.lastKeyword=mlength;
 break loop;
 }
 if (array[i1] != ' ') {
@@ -70,7 +69,7 @@ break;
 default :
 backslash=false;
 if (!Character.isLetterOrDigit(c) && c != '_') {
-doKeyword(line,i,c);
+doKeyword(ms,line,i,c);
 }
 break;
 }
@@ -81,26 +80,26 @@ backslash=false;
 if (c == '*' && mlength - i > 1) {
 if (array[i1] == '/') {
 i++;
-addToken((i + 1) - lastOffset,token);
+addToken((i + 1) - ms.lastOffset,token);
 token=Token.NULL;
-lastOffset=lastKeyword=i + 1;
+ms.lastOffset=ms.lastKeyword=i + 1;
 }
 }
 break;
 case Token.LITERAL1:
 if (backslash) backslash=false;
  else if (c == '"') {
-addToken(i1 - lastOffset,token);
+addToken(i1 - ms.lastOffset,token);
 token=Token.NULL;
-lastOffset=lastKeyword=i1;
+ms.lastOffset=ms.lastKeyword=i1;
 }
 break;
 case Token.LITERAL2:
 if (backslash) backslash=false;
  else if (c == '\'') {
-addToken(i1 - lastOffset,Token.LITERAL1);
+addToken(i1 - ms.lastOffset,Token.LITERAL1);
 token=Token.NULL;
-lastOffset=lastKeyword=i1;
+ms.lastOffset=ms.lastKeyword=i1;
 }
 break;
 default :
@@ -108,21 +107,21 @@ throw new InternalError("Invalid state: " + token);
 }
 }
 if (token == Token.NULL) {
-doKeyword(line,mlength,'\0');
+doKeyword(ms,line,mlength,'\0');
 }
 switch (token) {
 case Token.LITERAL1:
 case Token.LITERAL2:
-addToken(mlength - lastOffset,Token.INVALID);
+addToken(mlength - ms.lastOffset,Token.INVALID);
 token=Token.NULL;
 break;
 case Token.KEYWORD2:
-addToken(mlength - lastOffset,token);
+addToken(mlength - ms.lastOffset,token);
 if (!backslash) token=Token.NULL;
-addToken(mlength - lastOffset,token);
+addToken(mlength - ms.lastOffset,token);
 break;
 default :
-addToken(mlength - lastOffset,token);
+addToken(mlength - ms.lastOffset,token);
 break;
 }
 return token;
