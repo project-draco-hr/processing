@@ -14,6 +14,13 @@
       }
       return super.visit(node);
     }
+    @Override public boolean visit(    MethodDeclaration node){
+      int accessModifiers=node.getModifiers() & ACCESS_MODIFIERS_MASK;
+      if (accessModifiers == 0) {
+        edits.add(Edit.insert(node.getStartPosition(),"public "));
+      }
+      return super.visit(node);
+    }
   }
 );
   return edits;
