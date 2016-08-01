@@ -8,30 +8,26 @@
     Messages.log(sb.toString());
   }
   AttributedCharacterIterator text=event.getText();
-  committed_count=event.getCommittedCharacterCount();
+  committedCount=event.getCommittedCharacterCount();
   textArea.setCaretVisible(false);
-  if (text != null && text.getEndIndex() - (text.getBeginIndex() + committed_count) <= 0) {
+  if (text != null && text.getEndIndex() - (text.getBeginIndex() + committedCount) <= 0) {
     textArea.setCaretVisible(true);
   }
   if (text == null) {
     textArea.setCaretVisible(true);
   }
-  char c;
   if (text != null) {
-    int toCopy=committed_count;
-    c=text.first();
-    while (toCopy-- > 0) {
-      if (Base.DEBUG) {
-        Messages.log("INSERT:'" + c + "'");
-      }
-      this.insertCharacter(c);
+    int remaining=committedCount;
+    char c=text.first();
+    while (remaining-- > 0) {
+      insertCharacter(c);
       c=text.next();
     }
     CompositionTextPainter compositionPainter=textArea.getPainter().getCompositionTextpainter();
     if (Base.DEBUG) {
-      Messages.log(" textArea.getCaretPosition() + committed_count: " + (textArea.getCaretPosition() + committed_count));
+      Messages.log(" textArea.getCaretPosition() + committed_count: " + (textArea.getCaretPosition() + committedCount));
     }
-    compositionPainter.setComposedTextLayout(getTextLayout(text,committed_count),textArea.getCaretPosition() + committed_count);
+    compositionPainter.setComposedTextLayout(getTextLayout(text,committedCount),textArea.getCaretPosition() + committedCount);
     compositionPainter.setCaret(event.getCaret());
   }
  else {
