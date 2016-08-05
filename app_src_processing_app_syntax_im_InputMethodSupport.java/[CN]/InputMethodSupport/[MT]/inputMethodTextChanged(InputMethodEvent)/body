@@ -17,14 +17,16 @@
     textArea.setCaretVisible(true);
   }
   if (text != null) {
-    char[] insertion=new char[committedCount];
-    char c=text.first();
-    for (int i=0; i < committedCount; i++) {
-      insertion[i]=c;
-      c=text.next();
+    if (committedCount > 0) {
+      char[] insertion=new char[committedCount];
+      char c=text.first();
+      for (int i=0; i < committedCount; i++) {
+        insertion[i]=c;
+        c=text.next();
+      }
+      textArea.setSelectedText(new String(insertion),true);
+      inputHandler.handleInputMethodCommit();
     }
-    textArea.setSelectedText(new String(insertion),true);
-    inputHandler.handleInputMethodCommit();
     CompositionTextPainter compositionPainter=textArea.getPainter().getCompositionTextpainter();
     if (Base.DEBUG) {
       Messages.log(" textArea.getCaretPosition() + committed_count: " + (textArea.getCaretPosition() + committedCount));
