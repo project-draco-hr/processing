@@ -4,8 +4,11 @@
   if (text.getEndIndex() - (text.getBeginIndex() + committedCount) > 0) {
     composedTextString=new AttributedString(text,committedCount,text.getEndIndex(),CUSTOM_IM_ATTRIBUTES);
     Font font=painter.getFontMetrics().getFont();
+    TextAreaDefaults defaults=textArea.getDefaults();
+    Color bgColor=defaults.lineHighlight ? defaults.lineHighlightColor : defaults.bgcolor;
     composedTextString.addAttribute(TextAttribute.FONT,font);
-    composedTextString.addAttribute(TextAttribute.BACKGROUND,Color.WHITE);
+    composedTextString.addAttribute(TextAttribute.FOREGROUND,defaults.fgcolor);
+    composedTextString.addAttribute(TextAttribute.BACKGROUND,bgColor);
   }
  else {
     composedTextString=new AttributedString("");
