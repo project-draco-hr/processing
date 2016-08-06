@@ -1,0 +1,22 @@
+{
+  super(textArea,defaults);
+  addMouseListener(new MouseAdapter(){
+    long lastTime;
+    public void mousePressed(    MouseEvent event){
+      if (getEditor().isDebuggerEnabled()) {
+        long thisTime=event.getWhen();
+        if (thisTime - lastTime > 100) {
+          if (event.getX() < Editor.LEFT_GUTTER) {
+            int offset=textArea.xyToOffset(event.getX(),event.getY());
+            if (offset >= 0) {
+              int lineIndex=textArea.getLineOfOffset(offset);
+              getEditor().toggleBreakpoint(lineIndex);
+            }
+          }
+          lastTime=thisTime;
+        }
+      }
+    }
+  }
+);
+}
