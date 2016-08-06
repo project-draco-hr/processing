@@ -1,5 +1,5 @@
 {
-  int line=evt.getY() / getFontMetrics().getHeight() + textArea.getFirstLine();
+  int line=event.getY() / getFontMetrics().getHeight() + textArea.getFirstLine();
   if (line >= 0 || line < textArea.getLineCount()) {
     List<Problem> problems=getEditor().findProblems(line);
     for (    Problem problem : problems) {
@@ -9,13 +9,13 @@
       int errorEnd=problem.getStopOffset() + 1;
       int startOffset=Math.max(errorStart,lineStart) - lineStart;
       int stopOffset=Math.min(errorEnd,lineEnd) - lineStart;
-      int x=evt.getX();
-      if (x >= getJavaTextArea().offsetToX(line,startOffset) && x <= getJavaTextArea().offsetToX(line,stopOffset)) {
+      int x=event.getX();
+      if (x >= textArea.offsetToX(line,startOffset) && x <= textArea.offsetToX(line,stopOffset)) {
         getEditor().statusToolTip(this,problem.getMessage(),problem.isError());
-        return super.getToolTipText(evt);
+        return super.getToolTipText(event);
       }
     }
   }
   setToolTipText(null);
-  return super.getToolTipText(evt);
+  return super.getToolTipText(event);
 }
