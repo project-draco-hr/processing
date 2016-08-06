@@ -1,6 +1,69 @@
 {
-  addMouseListener(this);
-  addMouseMotionListener(this);
+  addMouseListener(new MouseListener(){
+    @Override public void mouseReleased(    MouseEvent e){
+      if (mouseHandle != null) {
+        mouseHandle.resetProgress();
+        mouseHandle=null;
+        updateCursor(e.getX(),e.getY());
+        repaint();
+      }
+    }
+    @Override public void mousePressed(    MouseEvent e){
+      int currentTab=getCurrentCodeIndex();
+      for (      Handle n : handles.get(currentTab)) {
+        if (n.pick(e.getX(),e.getY())) {
+          cursorType=-1;
+          JavaTextAreaPainter.this.setCursor(blankCursor);
+          mouseHandle=n;
+          mouseHandle.setCenterX(e.getX());
+          repaint();
+          return;
+        }
+      }
+      for (      ColorControlBox box : colorBoxes.get(currentTab)) {
+        if (box.pick(e.getX(),e.getY())) {
+          if (colorSelector != null) {
+            colorSelector.frame.dispatchEvent(new WindowEvent(colorSelector.frame,WindowEvent.WINDOW_CLOSING));
+          }
+          colorSelector=new ColorSelector(box);
+          colorSelector.frame.addWindowListener(new WindowAdapter(){
+            public void windowClosing(            WindowEvent e){
+              colorSelector.frame.setVisible(false);
+              colorSelector=null;
+            }
+          }
+);
+          colorSelector.show(getLocationOnScreen().x + e.getX() + 30,getLocationOnScreen().y + e.getY() - 130);
+        }
+      }
+    }
+    @Override public void mouseExited(    MouseEvent e){
+    }
+    @Override public void mouseEntered(    MouseEvent e){
+    }
+    @Override public void mouseClicked(    MouseEvent e){
+    }
+  }
+);
+  addMouseMotionListener(new MouseMotionListener(){
+    @Override public void mouseMoved(    MouseEvent e){
+      updateCursor(e.getX(),e.getY());
+      if (!Settings.alwaysShowColorBoxes) {
+        showHideColorBoxes(e.getY());
+      }
+    }
+    @Override public void mouseDragged(    MouseEvent e){
+      if (mouseHandle != null) {
+        mouseHandle.setCurrentX(e.getX());
+        updateCodeText();
+        if (colorSelector != null) {
+          colorSelector.refreshColor();
+        }
+        repaint();
+      }
+    }
+  }
+);
   tweakMode=true;
   setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
   repaint();

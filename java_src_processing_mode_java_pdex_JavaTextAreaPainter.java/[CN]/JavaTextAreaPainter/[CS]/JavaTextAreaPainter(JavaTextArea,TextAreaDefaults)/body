@@ -1,25 +1,5 @@
 {
   super(textArea,defaults);
-  addMouseListener(new MouseAdapter(){
-    long lastTime;
-    public void mousePressed(    MouseEvent event){
-      JavaEditor javaEditor=getJavaEditor();
-      if (javaEditor.isDebuggerEnabled()) {
-        long thisTime=event.getWhen();
-        if (thisTime - lastTime > 100) {
-          if (event.getX() < Editor.LEFT_GUTTER) {
-            int offset=getJavaTextArea().xyToOffset(event.getX(),event.getY());
-            if (offset >= 0) {
-              int lineIndex=getJavaTextArea().getLineOfOffset(offset);
-              javaEditor.toggleBreakpoint(lineIndex);
-            }
-          }
-          lastTime=thisTime;
-        }
-      }
-    }
-  }
-);
   tweakMode=false;
   cursorType=Cursor.DEFAULT_CURSOR;
 }
