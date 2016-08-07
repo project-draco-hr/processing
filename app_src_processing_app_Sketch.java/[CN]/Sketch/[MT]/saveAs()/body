@@ -73,9 +73,12 @@
       if (name.equals(".") || name.equals("..")) {
         return false;
       }
-      for (      String ignorable : mode.getIgnorable()) {
-        if (name.equals(ignorable)) {
-          return false;
+      String[] ignorable=mode.getIgnorable();
+      if (ignorable != null) {
+        for (        String ignore : ignorable) {
+          if (name.equals(ignore)) {
+            return false;
+          }
         }
       }
       for (      String ext : mode.getExtensions()) {
