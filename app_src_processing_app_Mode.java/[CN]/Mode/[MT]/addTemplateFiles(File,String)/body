@@ -1,0 +1,17 @@
+{
+  File newbieFile=new File(sketchFolder,sketchName + "." + getDefaultExtension());
+  File templateFolder=getTemplateFolder();
+  if (templateFolder.exists()) {
+    Util.copyDir(templateFolder,sketchFolder);
+    File templateFile=new File(sketchFolder,"sketch." + getDefaultExtension());
+    if (!templateFile.renameTo(newbieFile)) {
+      throw new IOException("Error while assigning the sketch template.");
+    }
+  }
+ else {
+    if (!newbieFile.createNewFile()) {
+      throw new IOException(newbieFile + " already exists.");
+    }
+  }
+  return newbieFile;
+}

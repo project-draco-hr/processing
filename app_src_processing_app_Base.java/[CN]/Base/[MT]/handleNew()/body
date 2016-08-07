@@ -35,10 +35,7 @@
     }
  while (newbieDir.exists() || new File(sketchbookFolder,newbieName).exists());
     newbieDir.mkdirs();
-    File newbieFile=new File(newbieDir,newbieName + "." + nextMode.getDefaultExtension());
-    if (!newbieFile.createNewFile()) {
-      throw new IOException(newbieFile + " already exists.");
-    }
+    File newbieFile=nextMode.addTemplateFiles(newbieDir,newbieName);
     if (!nextMode.equals(getDefaultMode())) {
       saveModeSettings(new File(newbieDir,"sketch.properties"),nextMode);
     }
