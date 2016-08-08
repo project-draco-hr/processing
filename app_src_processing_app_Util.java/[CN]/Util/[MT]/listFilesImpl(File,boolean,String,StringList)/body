@@ -1,0 +1,18 @@
+{
+  File[] items=folder.listFiles();
+  if (items != null) {
+    for (    File item : items) {
+      String name=item.getName();
+      if (name.charAt(0) != '.') {
+        if (item.isDirectory()) {
+          listFilesImpl(item,relative,extension,list);
+        }
+ else {
+          if (extension == null || name.endsWith(extension)) {
+            list.append(item.getAbsolutePath());
+          }
+        }
+      }
+    }
+  }
+}

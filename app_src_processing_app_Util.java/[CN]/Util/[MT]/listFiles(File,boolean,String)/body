@@ -1,13 +1,18 @@
 {
-  String path=folder.getAbsolutePath();
-  Vector<String> vector=new Vector<String>();
   if (extension != null) {
     if (!extension.startsWith(".")) {
       extension="." + extension;
     }
   }
-  listFiles(relative ? (path + File.separator) : "",path,extension,vector);
-  String outgoing[]=new String[vector.size()];
-  vector.copyInto(outgoing);
-  return outgoing;
+  StringList list=new StringList();
+  listFilesImpl(folder,relative,extension,list);
+  if (relative) {
+    String[] outgoing=new String[list.size()];
+    int prefixLength=folder.getAbsolutePath().length() + 1;
+    for (int i=0; i < outgoing.length; i++) {
+      outgoing[i]=list.get(i).substring(prefixLength);
+    }
+    return outgoing;
+  }
+  return list.array();
 }
