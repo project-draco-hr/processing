@@ -1,6 +1,9 @@
 {
   File newbieFile=new File(sketchFolder,sketchName + "." + getDefaultExtension());
-  File templateFolder=getTemplateFolder();
+  File templateFolder=getUserTemplateFolder();
+  if (!templateFolder.exists()) {
+    templateFolder=getTemplateFolder();
+  }
   if (templateFolder.exists()) {
     Util.copyDir(templateFolder,sketchFolder);
     File templateFile=new File(sketchFolder,"sketch." + getDefaultExtension());
