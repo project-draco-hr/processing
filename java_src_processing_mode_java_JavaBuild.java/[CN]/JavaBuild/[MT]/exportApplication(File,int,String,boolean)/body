@@ -49,7 +49,7 @@
     }
   }
   if (!jarFolder.exists())   jarFolder.mkdirs();
-  Vector<String> jarListVector=new Vector<String>();
+  StringList jarList=new StringList();
   FileOutputStream zipOutputFile=new FileOutputStream(new File(jarFolder,sketch.getName() + ".jar"));
   ZipOutputStream zos=new ZipOutputStream(zipOutputFile);
   addManifest(zos);
@@ -70,7 +70,7 @@
         File exportFile=new File(codeList[i]);
         String exportFilename=exportFile.getName();
         Util.copyFile(exportFile,new File(jarFolder,exportFilename));
-        jarListVector.add(exportFilename);
+        jarList.append(exportFilename);
       }
  else {
       }
@@ -78,7 +78,7 @@
   }
   zos.flush();
   zos.close();
-  jarListVector.add(sketch.getName() + ".jar");
+  jarList.append(sketch.getName() + ".jar");
   for (  Library library : importedLibraries) {
     for (    File exportFile : library.getApplicationExports(exportPlatform,exportVariant)) {
       String exportName=exportFile.getName();
@@ -90,33 +90,22 @@
       }
  else       if (exportName.toLowerCase().endsWith(".zip") || exportName.toLowerCase().endsWith(".jar")) {
         Util.copyFile(exportFile,new File(jarFolder,exportName));
-        jarListVector.add(exportName);
+        jarList.append(exportName);
       }
  else {
         Util.copyFile(exportFile,new File(jarFolder,exportName));
       }
     }
   }
-  String jarList[]=new String[jarListVector.size()];
-  jarListVector.copyInto(jarList);
-  StringBuilder exportClassPath=new StringBuilder();
+  String exportClassPath=null;
   if (exportPlatform == PConstants.MACOSX) {
-    for (int i=0; i < jarList.length; i++) {
-      if (i != 0)       exportClassPath.append(":");
-      exportClassPath.append("$JAVAROOT/" + jarList[i]);
-    }
+    exportClassPath="$JAVAROOT/" + jarList.join(":$JAVAROOT/");
   }
  else   if (exportPlatform == PConstants.WINDOWS) {
-    for (int i=0; i < jarList.length; i++) {
-      if (i != 0)       exportClassPath.append(",");
-      exportClassPath.append(jarList[i]);
-    }
+    exportClassPath=jarList.join(",");
   }
  else   if (exportPlatform == PConstants.LINUX) {
-    exportClassPath.append("$APPDIR");
-    for (int i=0; i < jarList.length; i++) {
-      exportClassPath.append(":$APPDIR/lib/" + jarList[i]);
-    }
+    exportClassPath="$APPDIR" + ":$APPDIR/lib/" + jarList.join(":$APPDIR/lib/");
   }
   StringList runOptions=new StringList();
   if (Preferences.getBoolean("run.options.memory") && !exportVariant.equals("armv6hf")) {
