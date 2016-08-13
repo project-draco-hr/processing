@@ -1,11 +1,31 @@
 {
-  if (preferencesFile == null)   return;
-  PrintWriter writer=PApplet.createWriter(preferencesFile);
-  String[] keyList=table.keySet().toArray(new String[table.size()]);
-  keyList=PApplet.sort(keyList);
-  for (  String key : keyList) {
-    writer.println(key + "=" + table.get(key));
+  if (preferencesFile != null) {
+    try {
+      File dir=preferencesFile.getParentFile();
+      File preferencesTemp=File.createTempFile("preferences",".txt",dir);
+      PrintWriter writer=PApplet.createWriter(preferencesTemp);
+      String[] keyList=table.keySet().toArray(new String[table.size()]);
+      keyList=PApplet.sort(keyList);
+      for (      String key : keyList) {
+        writer.println(key + "=" + table.get(key));
+      }
+      writer.flush();
+      writer.close();
+      File oldPreferences=new File(dir,"preferences.old");
+      if (oldPreferences.exists()) {
+        if (!oldPreferences.delete()) {
+          throw new IOException("Could not delete preferences.old");
+        }
+      }
+      if (!preferencesFile.renameTo(oldPreferences)) {
+        throw new IOException("Could not replace preferences.old");
+      }
+      if (!preferencesTemp.renameTo(preferencesFile)) {
+        throw new IOException("Could not move preferences file into place");
+      }
+    }
+ catch (    IOException e) {
+      Messages.showWarning("Preferences","Could not save the Preferences file.",e);
+    }
   }
-  writer.flush();
-  writer.close();
 }
