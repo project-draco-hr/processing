@@ -25,11 +25,8 @@
       throw new RuntimeException("The jogl library folder needs to be " + "specified with -Djava.library.path=/path/to/jogl");
     }
  else {
-      ite.getTargetException().printStackTrace();
+      printStackTrace(ite.getTargetException());
       Throwable target=ite.getTargetException();
-      if (platform == MACOSX) {
-        target.printStackTrace(System.out);
-      }
       throw new RuntimeException(target.getMessage());
     }
   }
@@ -47,16 +44,13 @@ catch (  Exception e) {
         throw new RuntimeException(e);
       }
  else {
-        e.printStackTrace();
+        printStackTrace(e);
         String msg=renderer + " needs to be updated " + "for the current release of Processing.";
         throw new RuntimeException(msg);
       }
     }
  else {
-      if (platform == MACOSX) {
-        e.printStackTrace(System.out);
-      }
-      e.printStackTrace();
+      printStackTrace(e);
       throw new RuntimeException(e.getMessage());
     }
   }
