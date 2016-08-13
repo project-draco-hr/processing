@@ -1,0 +1,27 @@
+{
+  StringBuilder cf=new StringBuilder();
+  int selStart=getSelectionStart();
+  int selStop=getSelectionStop();
+  int startLine=getSelectionStartLine();
+  int stopLine=getSelectionStopLine();
+  if (doc != null) {
+    startLine=0;
+    stopLine=doc.getDefaultRootElement().getElementCount() - 1;
+  }
+ else   if (selStart == selStop) {
+    startLine=0;
+    stopLine=getLineCount() - 1;
+  }
+ else {
+    if (getLineStartOffset(stopLine) == selStop) {
+      stopLine--;
+    }
+  }
+  if (doc == null) {
+    doc=getDocument();
+  }
+  for (int i=startLine; i <= stopLine; i++) {
+    emitAsHTML(cf,i,doc);
+  }
+  return cf.toString();
+}
