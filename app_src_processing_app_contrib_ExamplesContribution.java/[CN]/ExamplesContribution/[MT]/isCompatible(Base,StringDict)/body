@@ -1,17 +1,3 @@
 {
-  Mode mode=base.getActiveEditor().getMode();
-  String currentIdentifier=mode.getIdentifier();
-  StringList compatibleList=parseModeList(props);
-  if (compatibleList.size() == 0) {
-    if (mode.requireExampleCompatibility()) {
-      return false;
-    }
-    return true;
-  }
-  for (  String c : compatibleList) {
-    if (c.equals(currentIdentifier)) {
-      return true;
-    }
-  }
-  return false;
+  return isCompatible(base.getActiveEditor().getMode(),props);
 }
