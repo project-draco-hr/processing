@@ -17,7 +17,7 @@
           throw new IOException("Could not delete preferences.old");
         }
       }
-      if (!preferencesFile.renameTo(oldPreferences)) {
+      if (preferencesFile.exists() && !preferencesFile.renameTo(oldPreferences)) {
         throw new IOException("Could not replace preferences.old");
       }
       if (!preferencesTemp.renameTo(preferencesFile)) {
