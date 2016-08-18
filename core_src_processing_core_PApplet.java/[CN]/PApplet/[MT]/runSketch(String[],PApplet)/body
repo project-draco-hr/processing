@@ -1,6 +1,13 @@
 {
   System.setProperty("sun.awt.noerasebackground","true");
   System.setProperty("javafx.animation.fullspeed","true");
+  Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler(){
+    public void uncaughtException(    Thread t,    Throwable e){
+      e.printStackTrace();
+      uncaughtThrowable=e;
+    }
+  }
+);
   try {
     Toolkit.getDefaultToolkit().setDynamicLayout(true);
   }
