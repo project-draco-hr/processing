@@ -1,7 +1,12 @@
 {
   if (targetFolder != null) {
     if (Preferences.getBoolean("export.delete_target_folder")) {
-      Platform.deleteFile(targetFolder);
+      try {
+        Platform.deleteFile(targetFolder);
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+      }
     }
     targetFolder.mkdirs();
   }
