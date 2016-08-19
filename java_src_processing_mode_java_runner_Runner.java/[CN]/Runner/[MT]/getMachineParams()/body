@@ -14,6 +14,14 @@
     params.append("-Xms" + Preferences.get("run.options.memory.initial") + "m");
     params.append("-Xmx" + Preferences.get("run.options.memory.maximum") + "m");
   }
+  params.append("-Djna.nosys=true");
+  try {
+    String extPath=new File(Platform.getJavaHome(),"lib/ext").getCanonicalPath();
+    params.append("-Djava.ext.dirs=" + extPath);
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
   if (Platform.isMacOS()) {
     params.append("-Xdock:name=" + build.getSketchClassName());
   }
