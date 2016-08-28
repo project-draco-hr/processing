@@ -1,10 +1,15 @@
 {
+  boolean registerFont=false;
   File fontFile=new File(System.getProperty("java.home"),"lib/fonts/" + filename);
   if (!fontFile.exists()) {
+    registerFont=true;
     fontFile=new File(System.getProperty("user.dir"),"../build/shared/lib/fonts/" + filename);
   }
   if (!fontFile.exists()) {
     fontFile=new File(System.getProperty("user.dir"),"../../shared/lib/fonts/" + filename);
+  }
+  if (!fontFile.exists()) {
+    fontFile=Platform.getContentFile("lib/fonts/" + filename);
   }
   if (!fontFile.exists()) {
     String msg="Could not find required fonts. ";
@@ -19,5 +24,9 @@
   BufferedInputStream input=new BufferedInputStream(new FileInputStream(fontFile));
   Font font=Font.createFont(Font.TRUETYPE_FONT,input);
   input.close();
+  if (registerFont) {
+    GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+    ge.registerFont(font);
+  }
   return font.deriveFont((float)size);
 }
