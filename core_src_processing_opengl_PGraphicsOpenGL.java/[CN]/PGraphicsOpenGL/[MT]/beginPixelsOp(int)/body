@@ -1,36 +1,43 @@
 {
   FrameBuffer pixfb=null;
+  FrameBuffer currfb=getCurrentFB();
   if (primaryGraphics) {
-    if (op == OP_READ) {
-      if (pgl.isFBOBacked() && pgl.isMultisampled()) {
-        pgl.syncBackTexture();
-        pixfb=readFramebuffer;
-      }
+    FrameBuffer rfb=readFramebuffer;
+    FrameBuffer dfb=drawFramebuffer;
+    if ((currfb == rfb) || (currfb == dfb)) {
+      if (op == OP_READ) {
+        if (pgl.isFBOBacked() && pgl.isMultisampled()) {
+          pgl.syncBackTexture();
+          pixfb=rfb;
+        }
  else {
-        pixfb=drawFramebuffer;
+          pixfb=dfb;
+        }
       }
-    }
- else     if (op == OP_WRITE) {
-      pixfb=drawFramebuffer;
+ else       if (op == OP_WRITE) {
+        pixfb=dfb;
+      }
     }
   }
  else {
     FrameBuffer ofb=offscreenFramebuffer;
     FrameBuffer mfb=multisampleFramebuffer;
-    if (op == OP_READ) {
-      if (offscreenMultisample) {
-        int mask=PGL.COLOR_BUFFER_BIT;
-        if (hints[ENABLE_BUFFER_READING]) {
-          mask|=PGL.DEPTH_BUFFER_BIT | PGL.STENCIL_BUFFER_BIT;
+    if ((currfb == ofb) || (currfb == mfb)) {
+      if (op == OP_READ) {
+        if (offscreenMultisample) {
+          int mask=PGL.COLOR_BUFFER_BIT;
+          if (hints[ENABLE_BUFFER_READING]) {
+            mask|=PGL.DEPTH_BUFFER_BIT | PGL.STENCIL_BUFFER_BIT;
+          }
+          if (ofb != null && mfb != null) {
+            mfb.copy(ofb,mask);
+          }
         }
-        if (ofb != null && mfb != null) {
-          mfb.copy(ofb,mask);
-        }
+        pixfb=ofb;
       }
-      pixfb=ofb;
-    }
- else     if (op == OP_WRITE) {
-      pixfb=offscreenMultisample ? mfb : ofb;
+ else       if (op == OP_WRITE) {
+        pixfb=offscreenMultisample ? mfb : ofb;
+      }
     }
   }
   if (pixfb != null && pixfb != getCurrentFB()) {
