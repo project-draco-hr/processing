@@ -16,7 +16,10 @@
             if (htmlFilename.endsWith("_")) {
               keyword+="_";
             }
-            keywordToReference.put(keyword,htmlFilename);
+            boolean seen=keywordToReference.containsKey(keyword);
+            if (!seen || (seen && keyword.equals(htmlFilename))) {
+              keywordToReference.put(keyword,htmlFilename);
+            }
           }
         }
       }
