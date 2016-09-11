@@ -4,15 +4,23 @@
   empty();
   updateMode();
   addMouseListener(new MouseAdapter(){
-    public void mouseEntered(    MouseEvent e){
-      if (url != null) {
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      }
+    @Override public void mouseEntered(    MouseEvent e){
+      updateMouse();
     }
-    public void mousePressed(    MouseEvent e){
-      if (url != null) {
+    @Override public void mousePressed(    MouseEvent e){
+      if (inside) {
         Platform.openURL(url);
       }
+    }
+    @Override public void mouseExited(    MouseEvent e){
+      updateMouse();
+    }
+  }
+);
+  addMouseMotionListener(new MouseMotionAdapter(){
+    @Override public void mouseMoved(    MouseEvent e){
+      mouseX=e.getX();
+      updateMouse();
     }
   }
 );

@@ -24,7 +24,12 @@
   g.setColor(fgColor[mode]);
   if (message != null) {
     g.setFont(font);
+    inside=(mouseX > LEFT_MARGIN && mouseX < rightEdge);
+    if (inside) {
+      g.setColor(urlColor);
+    }
     g.drawString(message,LEFT_MARGIN,(sizeH + ascent) / 2);
+    rightEdge=LEFT_MARGIN + g.getFontMetrics().stringWidth(message);
   }
   if (indeterminate) {
     int w=Toolkit.getButtonWidth();
